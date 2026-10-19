@@ -77,9 +77,12 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.MatrixPowerBounds`](LeanCanny/Algebra/MatrixPowerBounds.lean), [`MatrixPowerEncoding`](LeanCanny/Algebra/MatrixPowerEncoding.lean) | Every reachable state has at most `e.size` frames. A binary state representation is injective when its scalar representation is. For residues modulo nonzero `m`, complete states have at most `64*(N.size + e.size + m.size + 1)^2` bits for an `N`-dimensional matrix supplied as an entry function. |
 | [`Encoding.BinaryNatFP`](LeanCanny/Encoding/BinaryNatFP.lean) | Machine-certified polynomial-time normalization, successor, truncated predecessor, floor half, and ceiling half directly on binary words. The arithmetic specifications cover arbitrary little-endian inputs and produce canonical outputs; no magnitude is expanded to unary. Canonical binary words have an `FP` recognizer. |
 | [`Encoding.BinaryAddFP`](LeanCanny/Encoding/BinaryAddFP.lean) | Binary natural-number addition belongs to Complexitylib's machine-level `FP`. A Horner fold doubles the partial sum and adds the two digits by binary increment; every intermediate word is linearly bounded in the input length. Correctness covers arbitrary little-endian words and canonical output has at most `a.length+b.length+1` bits. |
-| [`Encoding.BinaryMulFP`](LeanCanny/Encoding/BinaryMulFP.lean) | Binary natural-number multiplication and multiply-accumulate belong to `FP`. Every partial product in the shift-and-add fold is canonical and has at most the sum of the operand bit lengths. Correctness includes zero, empty words, and redundant high zeroes. Reduction modulo a runtime modulus remains open. |
+| [`Encoding.BinaryMulFP`](LeanCanny/Encoding/BinaryMulFP.lean) | Binary natural-number multiplication and multiply-accumulate belong to `FP`. Every partial product in the shift-and-add fold is canonical and has at most the sum of the operand bit lengths. Correctness includes zero, empty words, and redundant high zeroes. |
+| [`Encoding.BinarySubFP`](LeanCanny/Encoding/BinarySubFP.lean) | Comparison and truncated subtraction on binary natural words have machine-level polynomial-time certificates. Fixed-width complement addition detects the subtraction carry; the low bits recover the difference. All specifications include noncanonical inputs. |
+| [`Encoding.BinaryModFP`](LeanCanny/Encoding/BinaryModFP.lean) | Uniform `FP` modular reduction and modular multiply-accumulate, with the modulus supplied in binary. Long division uses one comparison and at most one subtraction per digit. Every partial remainder is canonical and no longer than the processed dividend; modulus zero follows `a % 0 = a`. |
 | [`Algebra.MatrixPowerQueryFP`](LeanCanny/Algebra/MatrixPowerQueryFP.lean) | Total `FP` writers for the initial query and both child queries agree with the typed machine. Initial height comes from the exponent word's bit length. |
 | [`Algebra.MatrixPowerDecoding`](LeanCanny/Algebra/MatrixPowerDecoding.lean) | Exact decoders for queries, frames, stacks, residues, and complete states. Successful state decoding characterizes equality with the canonical encoding. A total encoded transition agrees with the typed step, computes the required entry after the specified number of iterations, and inherits the quadratic modular-state bound. Its full `FP` certificate remains open. |
+| [`Algebra.MatrixPowerArithmeticFP`](LeanCanny/Algebra/MatrixPowerArithmeticFP.lean) | The uniform modular multiply-accumulate routine agrees exactly with `ZMod` residue encodings for every nonzero modulus. Encoded zero and one are certified too, including modulus one. The modulus is an input field of one FP routine. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -113,15 +116,15 @@ The streamed matrix-power primitive now has a verified continuation machine and
 binary state-size bounds. Its abstract run takes at most
 `2^((N.size+2)*e.size+1)` transitions. Entry access and scalar arithmetic count as
 single abstract operations here. Exact decoding and certified initial/child-query
-writers are now provided. The full encoded step still needs an `FP` certificate,
-including certified parsing, matrix-entry access, and modular arithmetic. A
-determinant algorithm using this primitive also remains to be supplied before
-obtaining the report's machine-level space theorem.
+writers and modular scalar arithmetic are now provided. The full encoded step
+still needs an `FP` certificate, including parsing, control flow, and uniform
+matrix-entry access. A determinant algorithm using this primitive also remains
+to be supplied before obtaining the report's machine-level space theorem.
 
-Binary addition, multiplication, and multiply-accumulate now have uniform `FP`
-certificates on paired words, with exact natural-number semantics and bounds on
-all intermediate fold states. Modular reduction is the remaining arithmetic
-operation needed to instantiate these routines for the modular power machine.
+Binary addition, multiplication, comparison, subtraction, and modular reduction
+now have uniform `FP` certificates, with exact semantics and bounds on intermediate
+states. Their modular multiply-accumulate composition supplies the scalar arithmetic
+callback required by the modular power machine.
 
 ## Next obligations
 

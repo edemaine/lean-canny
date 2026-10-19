@@ -18,8 +18,9 @@ is injective. Its length is bounded throughout the run when scalar codes have a
 uniform bit bound; residues modulo a nonzero runtime modulus supply such codes.
 
 Exact decoding is developed in `MatrixPowerDecoding`, and certified binary query
-writers in `MatrixPowerQueryFP`. A full FP certificate for the encoded step,
-including parsing, entry access, and scalar arithmetic, remains separate.
+writers in `MatrixPowerQueryFP`. `MatrixPowerArithmeticFP` supplies certified
+modular scalar operations. Assembling the full FP transition still requires
+parsing, control flow, and matrix-entry access.
 -/
 
 @[expose] public section

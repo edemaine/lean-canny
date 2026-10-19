@@ -20,6 +20,7 @@ import LeanCanny.Algebra.ResultantBounds
 import LeanCanny.Algebra.MatrixPowerEncoding
 import LeanCanny.Algebra.MatrixPowerDecoding
 import LeanCanny.Algebra.MatrixPowerQueryFP
+import LeanCanny.Algebra.MatrixPowerArithmeticFP
 
 /-!
 # Canny's algebraic and geometric computations in polynomial space
