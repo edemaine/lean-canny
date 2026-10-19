@@ -104,6 +104,18 @@ formats still must validate/default inputs and supply the uniform residue routin
 and bit budget. Integer sign/digit computation, symbolic coefficients, and the
 report's ETR upper bound remain open.
 
+The integer determinant theorem now also has a resultant instantiation. Binary
+guards and offset writers implement exactly Mathlib's two Sylvester column
+blocks through coefficient queries. They preserve the specified degree parameters,
+including after a specialization lowers an actual degree. A common coefficient
+bound `2^b` gives the computed resultant bit budget `N.size*N+N*b+1`, with `N=m+n`.
+`Resultant.Access.zeroLanguage_mem_PSPACE` proves resultant zero testing under
+FP degree and coefficient-budget fields and uniform FP coefficient-residue access
+on all contexts and indices. A corollary uses the ordinary resultant when the
+degree fields equal the actual polynomial degrees. This does not yet compute
+symbolic resultant coefficients or signs, or supply residue algorithms for all
+polynomial constructions used in the report.
+
 ## TM2 versus Complexitylib's machines
 
 The distinction affects implementation and resource-accounting effort, even though

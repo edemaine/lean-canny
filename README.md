@@ -105,6 +105,8 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.IntegerModular`](LeanCanny/Algebra/IntegerModular.lean) | An integer with at most `B` magnitude bits is zero exactly when its residues modulo `1,...,2*B+4` all vanish. An LCM growth estimate keeps the scan linear in the bit budget. The criterion applies to determinants; column entry bounds give determinant bit budgets, including empty matrices. |
 | [`Computation.BoundedScan`](LeanCanny/Computation/BoundedScan.lean), [`BoundedScanPSPACE`](LeanCanny/Computation/BoundedScanPSPACE.lean) | An FP binary bound permits exponentially many sequential calls to a certified space decider. The input, counter, and accumulated answer are retained while each child runs. Correctness, first halting time, combined workspace, and expanded physical clock yield a reusable PSPACE certificate for the universal scan. |
 | [`Algebra.IntegerDeterminantPSPACE`](LeanCanny/Algebra/IntegerDeterminantPSPACE.lean) | Integer determinant zero testing belongs to PSPACE under FP dimension and binary bit-budget access and uniform FP original-entry residue access. The scan instantiates the modular determinant decider, including its factor children. Integer entries and the determinant bit budget may be exponentially long/large respectively; their complete integer values are never stored. |
+| [`Algebra.SylvesterAccessFP`](LeanCanny/Algebra/SylvesterAccessFP.lean), [`SylvesterAccessCorrect`](LeanCanny/Algebra/SylvesterAccessCorrect.lean) | FP binary guards and query writers access the two shifted coefficient blocks of Mathlib's Sylvester matrix. Entry correctness holds for arbitrary scalar encodings with empty-word zero. If coefficients have magnitude at most `2^b`, the resultant has at most `N.size*N+N*b+1` magnitude bits, where `N=m+n`; its budget writer is FP. |
+| [`Algebra.ResultantPSPACE`](LeanCanny/Algebra/ResultantPSPACE.lean) | Zero testing for a specified-degree integer resultant belongs to PSPACE under FP binary degree/budget fields and uniform FP coefficient-residue access. The integer determinant decider runs on streamed Sylvester entries with a computed bit budget. A corollary covers the ordinary resultant when the supplied degrees equal the actual polynomial degrees. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -196,6 +198,16 @@ and factor child. These contracts cover all input strings; concrete formats
 still must supply validation/defaults and prove the access and budget properties.
 Integer sign/digit computation, symbolic determinant coefficients, and Canny's
 remaining algebraic and geometric arguments remain open.
+
+`Resultant.Access.zeroLanguage_mem_PSPACE` instantiates the integer determinant
+theorem with streamed Sylvester access. Both degree parameters and a common
+coefficient magnitude-bit budget are FP fields; coefficient residues must have
+uniform FP access on all modular contexts and indices. The determinant budget
+is computed from these fields. The main theorem retains the specified degree
+parameters even when specialization lowers a polynomial's degree; the ordinary
+resultant follows when those parameters equal the actual degrees. This is zero
+testing of integer resultants. Symbolic coefficients, signs, and uniform residue
+algorithms for the report's constructed polynomial families still require proofs.
 
 Binary addition, multiplication, comparison, subtraction, division, and modular reduction
 now have uniform `FP` certificates, with exact semantics and bounds on intermediate
