@@ -6,15 +6,16 @@ module
 
 public import LeanCanny.Algebra.ChineseRemainderDigitSpace
 public import LeanCanny.Algebra.IntegerRankSpace
+public import LeanCanny.Algebra.IndexedSumSpace
 
 /-!
-# Integer magnitude digits from residue access and large-product bit sources
+# Integer magnitude digits from certified residue access
 
-Uniform residue access supplies the rank and sign computations automatically.
-The two remaining algorithmic inputs are bit routines for the combined modulus
-product and the inverse-weighted integer sum. The resulting routine computes
-arbitrary magnitude bits with the complete composed workspace/clock certificate.
-Implementing those two bit routines remains necessary for full digit recovery.
+Uniform residue access and an FP binary bit budget supply rank, sign, combined
+modulus-product bits, and inverse-weighted integer-sum bits. The resulting
+routine computes arbitrary magnitude bits with the complete composed workspace
+and clock certificate. The lower-level composition also permits other operand
+implementations with the same contracts.
 -/
 
 @[expose] public section
@@ -71,5 +72,35 @@ noncomputable def evaluatorOfProducts {rho fm fs : List Bool → List Bool} (R :
     exact ArithmeticBits.bitValue_packet (IntegerRankBits.rank budget z) c k
   · intro c
     by_cases hn : z c < 0 <;> simp [hn]
+
+noncomputable def evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
+    (budget : List Bool → List Bool) (hb : budget ∈ FP) (z : List Bool → ℤ)
+    (hbudget : ∀ c, (z c).natAbs.size ≤ Nat.fromBitsLE (budget c))
+    (hres : ∀ c (m : ℕ), 0 < m →
+      rho (pair c (BinaryNatCode.encode (m - 1))) = BinaryNatCode.encode ((z c : ZMod m).val)) :
+    SpaceFunction (ArithmeticBits.bitValue (fun c => (z c).natAbs)) := by
+  have hbound := IntegerSignBits.bound_mem_FP hb
+  refine evaluatorOfProducts R budget hb z hbudget hres
+    (IndexedProductBits.productEvaluator (IntegerSignBits.bound budget) hbound)
+    (IndexedSumBits.evaluator R (IntegerSignBits.bound budget) hbound) ?_ ?_
+  · intro c k
+    exact IndexedProductBits.productValue_packet (IntegerSignBits.bound budget) c k
+  · intro c k
+    exact IndexedSumBits.value_packet (IntegerSignBits.bound budget) rho c (z c) (hres c) k
+
+def magnitudeBitLanguage (z : List Bool → ℤ) : Language :=
+  {p | ((z (pairFst p)).natAbs).testBit (Nat.fromBitsLE (pairSnd p)) = true}
+
+theorem magnitudeBitLanguage_mem_PSPACE {rho : List Bool → List Bool} (R : SpaceFunction rho)
+    (budget : List Bool → List Bool) (hb : budget ∈ FP) (z : List Bool → ℤ)
+    (hbudget : ∀ c, (z c).natAbs.size ≤ Nat.fromBitsLE (budget c))
+    (hres : ∀ c (m : ℕ), 0 < m →
+      rho (pair c (BinaryNatCode.encode (m - 1))) = BinaryNatCode.encode ((z c : ZMod m).val)) :
+    magnitudeBitLanguage z ∈ PSPACE := by
+  have hflag := (FPPred.getBit id_mem_FP (UnaryFn.const 0)).flag_mem_FP
+  apply ((evaluator R budget hb z hbudget hres).decider (fun w => w[0]?.getD false) hflag ?_).mem_PSPACE
+  intro p
+  simp only [magnitudeBitLanguage, Set.mem_ofPred_eq, ArithmeticBits.bitValue]
+  cases ((z (pairFst p)).natAbs).testBit (Nat.fromBitsLE (pairSnd p)) <;> simp
 
 end LeanCanny.Algebra.IntegerDigitBits

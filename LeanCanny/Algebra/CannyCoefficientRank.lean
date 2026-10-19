@@ -12,7 +12,8 @@ public import LeanCanny.Algebra.IntegerRankSpace
 
 The concrete resultant and all-branch coordinate coefficient interfaces supply
 the uniform residue routine and FP magnitude budget needed for rank bit access.
-Full coefficient digit access still needs streamed large-product arithmetic.
+`CannyCoefficientDigits` supplies full magnitude-bit access through streamed
+large-product arithmetic.
 -/
 
 @[expose] public section

@@ -46,8 +46,9 @@ Interior subresultants now have explicit determinant definitions, coefficient bi
 and certified modular evaluation. The nonzero linear-GCD bridge now proves symbolic
 coordinate recovery for input degrees greater than one and nonzero directions.
 Direct linear branches extend recovery to every degree and direction under the
-separating-pair hypotheses. Integer digit recovery and the report's remaining space
-bounds are open. Integer negativity is certified
+separating-pair hypotheses. Integer magnitude-bit recovery is certified from
+residue access and an FP budget; the report's remaining space bounds are open.
+Integer negativity is certified
 from residue access and a binary bit budget, with a full three-way sign evaluator
 for Canny's concrete resultant coefficient.
 The modules below give certified modular determinant/resultant coefficient
@@ -108,8 +109,8 @@ and factor child. Dimension, entry bit lengths, and the determinant bit budget c
 be exponential in the input length; complete integer entries are not stored.
 The access contract covers all contexts and positive binary moduli. Concrete
 formats still must validate/default inputs and supply the uniform residue routine
-and bit budget. The generic sign evaluator below consumes these contracts;
-integer digit recovery and the report's ETR upper bound remain open.
+and bit budget. The generic sign and magnitude-bit evaluators consume these
+contracts; the report's ETR upper bound remains open.
 
 The integer determinant theorem now also has a resultant instantiation. Binary
 guards and offset writers implement exactly Mathlib's two Sylvester column
@@ -158,8 +159,8 @@ scan. `Resultant.Access.zeroLanguage_mem_PSPACE_of_evaluators` consequently
 proves integer resultant zero testing under FP degree/budget fields and
 `SpaceFunction` coefficient-residue certificates. The ordinary-resultant
 corollary requires the supplied degrees to equal the actual degrees. Symbolic
-coefficient evaluation for Canny's resultant is supplied by the specialization below;
-integer digit recovery still requires work.
+coefficient evaluation for Canny's resultant is supplied by the specialization below,
+as are its integer signs and magnitude bits.
 
 The symbolic coefficient reduction now has a scalar matrix representation.
 `PolynomialCoefficientMatrix.scalarHom` maps a polynomial to its lower
@@ -212,7 +213,8 @@ and encoded word lengths give FP budget writers. The bounded modulus scan
 then composes the concrete residue decider and tests moduli `1,...,2*B+4`, with
 all child states included. FP source-bit-budget fields and the residue-access
 contracts suffice, even when `B` is exponential. The sign evaluator below uses
-the same budget and residue-access contracts; integer digit recovery remains open.
+the same budget and residue-access contracts; the magnitude-bit evaluator below
+also consumes these contracts.
 
 The reconstruction specification now has a proved CRT route. A coprime modulus
 system uses locally reduced inverse-weighted numerators `aᵢ`; the fractional part
@@ -286,7 +288,7 @@ to the actual integer coefficient and combines it with the existing zero decider
 Its tags are `0` for zero, `1` for negative, and `2` for positive. Both the negative
 and positive languages are in PSPACE under the existing FP source degree,
 direction, selected-degree, coefficient-residue, and source-bit-budget contracts.
-Integer digit recovery, the full coordinate computation's space bound, and the
+The full coordinate computation's space bound and the
 critical-point/ETR argument remain open.
 
 The subresultant determinant specification is now explicit. For interior order
@@ -353,7 +355,7 @@ branches as well. Their FP budget writer adds the shifted-input and right-input
 allowances to the full resultant budget; the uniform coefficient theorem bounds
 every branch by this sum. The zero and both strict-sign languages belong to PSPACE
 under the existing FP source metadata, selection, residues, and source-bit budgets.
-Signs at algebraic parameter values, integer digit recovery, and the complete
+Signs at algebraic parameter values and the complete
 coordinate computation's space bound remain open.
 
 `ChineseRemainderDigits` supplies the exact reconstruction arithmetic behind
@@ -383,8 +385,8 @@ the product modulo `2^(k+1)`. Each shifted summand's bit is the conjunction of
 one left-selector bit, an index guard, and a shifted right bit. Sequentially
 composed operand routines supply these bits to `SumBits.evaluator`, whose carry,
 workspace, and physical-clock proofs give the product certificate. Both operands
-may be implicit and exponentially long. Balanced products of a variable factor
-family and the complete CRT digit evaluator remain open.
+may be implicit and exponentially long. The balanced-product and complete CRT
+digit evaluators below use this primitive.
 
 `SubtractBits.evaluator` now certifies ordered natural-number subtraction. At
 selected bit `k`, the complemented low `k+1` bits of the second operand plus
@@ -399,11 +401,12 @@ then runs one selected child, with all workspace and clocks counted.
 ordered subtraction, and computed selection certificates into the final CRT
 magnitude-digit computation. The centered residue is `I-Q*M`; negativity selects
 `M-(I-Q*M)` when needed. `IntegerDigitBits.evaluatorOfProducts` supplies rank and
-sign directly from the original uniform residue routine and FP bit budget. Its
-remaining algorithmic inputs are precisely bit routines for the combined product
-`M` and inverse-weighted sum `I`. The uniform balanced-product evaluator is now
-certified. Its concrete CRT instantiation and the weighted-sum source remain
-open; the final digit composition is conditional on these sources.
+sign directly from the original uniform residue routine and FP bit budget.
+`IntegerDigitBits.evaluator` also supplies both large operand sources internally,
+using the indexed product and weighted-sum implementations below. It computes any
+selected magnitude bit from residue access and the FP budget alone;
+`magnitudeBitLanguage_mem_PSPACE` places the corresponding query language in
+Complexitylib's PSPACE.
 
 `BalancedProduct` now defines the complete product tree, with height-`h` node
 `i` covering the factor interval starting at `2^h*i`. Its typed continuation
@@ -425,7 +428,21 @@ space-bounded factor-bit evaluator. Suspended calls retain the parent stack;
 both child workspace and the expanded physical clock are counted.
 `BalancedProduct.evaluator` and `cofactorEvaluator` mask padding and omitted
 leaves with FP bits of one, requiring factor-bit correctness only at retained
-indices. The count stays binary throughout. Concrete CRT instantiation remains.
+indices. The count stays binary throughout.
+
+`IndexedProductBits.productEvaluator` and `cofactorEvaluator` instantiate this
+algorithm with the certified indexed-modulus evaluator. `BinaryNat.bitAt` reads
+word bits at binary indices using unary conversion capped at the word length;
+`WordBits.evaluator` retains the query while the word routine runs.
+`IndexedSumBits.evaluator` combines local reduced-numerator words, cofactor bits,
+the two-operand product evaluator, and the streamed sum evaluator to compute bits
+of the inverse-weighted CRT integer sum. Exact semantics identify these operands
+with the indexed CRT system used by rank and sign recovery. The complete digit
+certificate includes every parent and child workspace and expanded clock.
+`CannyCoefficientDigits` specializes it to the actual resultant and all-branch
+coordinate coefficients under their existing uniform source/residue/budget contracts.
+Signs at algebraic parameter values and the remaining critical-point/ETR argument
+are still open.
 
 ## TM2 versus Complexitylib's machines
 

@@ -14,8 +14,8 @@ public import LeanCanny.Computation.SpaceFunctionSelect
 Bit routines for the full product, inverse-weighted sum, and correction rank,
 plus a sign routine, suffice for certified magnitude-digit access. Multiplication,
 ordered subtraction, and computed-predicate selection implement the centered
-reconstruction expression. The full product and weighted-sum routines are still
-explicit inputs; their balanced streamed implementations remain obligations.
+reconstruction expression. These operands remain explicit inputs to this generic
+composition; `IntegerDigitSpace` supplies them for the indexed CRT system.
 -/
 
 @[expose] public section

@@ -12,8 +12,8 @@ public import LeanCanny.Algebra.ChineseRemainderSignBit
 The truncation error has an integer expression as a sum of local remainders
 times cofactors. Precision larger than the number of moduli times their product
 makes upward rounding recover the full CRT integer sum exactly. These identities
-are the arithmetic specification for digit recovery; their large operands still
-require streamed bit algorithms.
+are the arithmetic specification for digit recovery; `IntegerDigitSpace`
+implements the large-operand arithmetic through streamed bit algorithms.
 -/
 
 @[expose] public section
