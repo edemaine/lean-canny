@@ -81,6 +81,7 @@ import LeanCanny.Algebra.TarskiSeedDegreeSpace
 import LeanCanny.Algebra.SignStatisticQuery
 import LeanCanny.Algebra.PrincipalCoefficientQuery
 import LeanCanny.Algebra.TarskiQueryPSPACE
+import LeanCanny.Algebra.DyadicTarskiSpace
 import LeanCanny.Algebra.SignQueryTarskiSpace
 import LeanCanny.Algebra.IntegerSumSpace
 import LeanCanny.Algebra.SignPatternCountSpace

@@ -733,6 +733,33 @@ at the end of Lemma 2.4. The finite-family root-sign count below complements it;
 Lemma 2.3's full implicit-family and algebraic-parameter specialization remains
 open.
 
+`EffectiveInfinitesimalSign` makes the integer small-parameter bound explicit:
+coefficient mass at most `2^b` and `b < s` suffice throughout
+`0 < β ≤ 2^(-s)`. The proof factors the lowest power of β and bounds the remaining
+tail by the coefficient mass. It includes the zero polynomial and provides the
+same threshold for any family with a uniform mass bound.
+`DyadicSpecialization` represents `2^(s*D) * p(2^(-s))` as an integer sum and
+bounds its binary magnitude by `b+s*D+1` for degree at most `D`.
+`DyadicBits.residueEvaluator` streams that sum using modular powers and suspended
+original coefficient calls; `signEvaluator` adds the certified CRT sign routine.
+No denominator or full specialized integer is stored.
+
+`DyadicPolynomial` specializes coefficients of a polynomial in T over ℤ[β],
+using one common clearing degree. Its real image is a positive constant times
+the polynomial evaluated at the dyadic β. The smallness bound preserves its
+outer degree; without a smallness assumption its degree and mass still have
+explicit upper bounds. `DyadicPolynomialBits.residueEvaluator` derives uniform
+specialized coefficient access from the original two-index source.
+`DyadicTarskiBits.evaluator` composes two such readers with the complete integer
+Tarski evaluator. Nonzero scaling preserves roots, and positive scaling
+preserves query signs, so the output is exactly the Tarski query of the two
+real polynomials at their common selected dyadic parameter. FP bounds and
+space-bounded original bivariate readers suffice; query positivity is in PSPACE.
+This is a selected-parameter result. To finish the small-parameter algebraic-root
+argument, one must bound all test polynomials that govern the root-sign counts
+and prove a common interval of stability. Canny's implicit family bounds and
+critical-point construction remain separate obligations.
+
 `ScaledSignQueries` starts the algebraic-root counting stage. At each sign value
 `t∈{-1,0,1}`, the integer quadratics `2-2*t²`, `t²-t`, and `t²+t` are twice the
 indicators of zero, negative, and positive respectively. Expanding a product of

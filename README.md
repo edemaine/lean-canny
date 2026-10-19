@@ -320,6 +320,28 @@ now have uniform `FP` certificates, with exact semantics and bounds on intermedi
 states. Their modular multiply-accumulate composition supplies the scalar arithmetic
 callback required by the modular power machine.
 
+The small-parameter pipeline now has an effective specialization as well.
+[`EffectiveInfinitesimalSign`](LeanCanny/Algebra/EffectiveInfinitesimalSign.lean)
+proves that an integer polynomial of coefficient mass at most `2^b` has its
+trailing coefficient's sign throughout `0 < β ≤ 2^(-s)` whenever `b < s`.
+[`DyadicSpecialization`](LeanCanny/Algebra/DyadicSpecialization.lean) and
+[`DyadicSpecializationSpace`](LeanCanny/Algebra/DyadicSpecializationSpace.lean)
+clear denominators by `2^(s*D)` and compute the resulting integer's residues and
+sign from suspended original coefficient readers and FP binary bounds.
+[`DyadicPolynomialSpecialization`](LeanCanny/Algebra/DyadicPolynomialSpecialization.lean)
+applies the same factor to every coefficient of a parameterized root polynomial;
+it proves degree preservation under the smallness bound and derives coefficient
+mass bounds.
+[`DyadicPolynomialSpace`](LeanCanny/Algebra/DyadicPolynomialSpace.lean) supplies
+its uniform coefficient evaluator.
+[`DyadicTarskiSpace`](LeanCanny/Algebra/DyadicTarskiSpace.lean) composes these
+readers with the complete Tarski evaluator, computing the exact real-root query
+at the selected dyadic parameter. Its positive-query language belongs to PSPACE.
+All specialized coefficient routines and budgets are derived from the original
+bivariate sources. Eventual stability of algebraic-root sign patterns still
+requires common bounds on the polynomials governing their changes; the chosen
+dyadic query alone does not establish that stability or all of Lemma 2.4.
+
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.
