@@ -159,8 +159,14 @@ triangular coefficient matrix of width `d+1`, preserving addition and
 multiplication. Entrywise application and block flattening preserve powers.
 `Berkowitz.det_coeff_eq_coefficientPower` consequently expresses degree `d`
 of a determinant over `R[X]` as a signed power entry over `R`, in dimension
-`(n+1)^2*(d+1)`. This is a proved algebraic identity; an encoded evaluator must
-still supply space-bounded access to coefficients of the layered factors.
+`(n+1)^2*(d+1)`. `PolynomialPower.ModularAccess.evaluator` now implements the
+generic polynomial matrix-power coefficient operation. FP binary controls
+and a `SpaceFunction` routine for original entry coefficients suffice. The
+flattened accessor decodes each coordinate by division/remainder and returns
+one input coefficient or zero, with its own space certificate. This covers
+all binary contexts and gives modular coefficient zero testing in PSPACE.
+The determinant instantiation must still supply space-bounded access to
+coefficients of the layered factors.
 
 ## TM2 versus Complexitylib's machines
 
