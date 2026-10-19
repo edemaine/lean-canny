@@ -132,7 +132,8 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.Subresultant`](LeanCanny/Algebra/Subresultant.lean), [`SubresultantMinor`](LeanCanny/Algebra/SubresultantMinor.lean), [`SubresultantBounds`](LeanCanny/Algebra/SubresultantBounds.lean) | Interior subresultants (`k<m,n`) are explicit Sylvester minors with Mathlib's column order. Order zero equals its resultant; coefficient-ring maps commute; degree is at most `k`; order one is explicitly linear. Injective binary row/column formulas embed each minor in the full Sylvester matrix. Column budgets bound every integer/parameter coefficient. |
 | [`SubresultantAccessFP`](LeanCanny/Algebra/SubresultantAccessFP.lean), [`SubresultantEntrySpace`](LeanCanny/Algebra/SubresultantEntrySpace.lean), [`SubresultantPolynomialSpace`](LeanCanny/Algebra/SubresultantPolynomialSpace.lean) | Binary index transformations are FP. Given FP metadata and uniform space-bounded input coefficient routines, a certified evaluator computes a selected modular coefficient of any interior symbolic subresultant; its zero language is in PSPACE. Invalid orders/indices return zero, including empty-minor cases. |
 | [`SubresultantRoot`](LeanCanny/Algebra/SubresultantRoot.lean), [`SubresultantGCD`](LeanCanny/Algebra/SubresultantGCD.lean) | For degree bounds `m,n>1`, the first subresultant is `D*(X-b)` at every common root `b`. Removing the common factor `X-b` identifies `D` with the quotient resultant. A nonzero linear GCD makes the quotients coprime and proves `D≠0` at the actual input degrees. |
-| [`SubresultantRecovery`](LeanCanny/Algebra/SubresultantRecovery.lean), [`SubresultantRecoveryBounds`](LeanCanny/Algebra/SubresultantRecoveryBounds.lean) | Symbolic parameter polynomials `N,D` recover both coordinates at separating root pairs: `D(θ)≠0`, `b=-N(θ)/D(θ)`, `a=θ+c*N(θ)/D(θ)`, for nonzero direction and input degrees greater than one. Both polynomials have degree at most `(d₂-1)*d₁`, with explicit integer coefficient bit bounds. Degree-one boundary cases and the full coordinate computation's space bound remain open. |
+| [`SubresultantRecovery`](LeanCanny/Algebra/SubresultantRecovery.lean), [`SubresultantRecoveryBounds`](LeanCanny/Algebra/SubresultantRecoveryBounds.lean) | Symbolic parameter polynomials `N,D` recover both coordinates at separating root pairs: `D(θ)≠0`, `b=-N(θ)/D(θ)`, `a=θ+c*N(θ)/D(θ)`, for nonzero direction and input degrees greater than one. Both polynomials have degree at most `(d₂-1)*d₁`, with explicit integer coefficient bit bounds. |
+| [`CoordinateRecovery`](LeanCanny/Algebra/CoordinateRecovery.lean), [`CoordinateRecoveryBounds`](LeanCanny/Algebra/CoordinateRecoveryBounds.lean) | Direct linear-input branches extend the recovery formulas to every input degree and direction under the separating-root-pair hypotheses. A zero direction forces the second input to be linear. Numerator and denominator have degree at most `max 1 ((d₂-1)*d₁)` and explicit integer coefficient bit bounds. The full coordinate computation's space bound remains open. |
 | [`Algebra.SylvesterSpaceAccess`](LeanCanny/Algebra/SylvesterSpaceAccess.lean), [`ResultantSpaceEntries`](LeanCanny/Algebra/ResultantSpaceEntries.lean) | Integer resultant zero testing accepts certified space-bounded coefficient-residue routines under FP degree/budget fields. Sylvester access selects a coefficient child or zero, and the strengthened integer determinant decider consumes the resulting entry routine. A corollary covers ordinary resultants at the actual degrees. |
 | [`Algebra.SylvesterPolynomialSpace`](LeanCanny/Algebra/SylvesterPolynomialSpace.lean), [`ResultantPolynomialSpace`](LeanCanny/Algebra/ResultantPolynomialSpace.lean) | A selected coefficient of a specified-degree resultant over a polynomial residue ring has a `SpaceFunction` evaluator. The Sylvester accessor carries the coefficient degree into either input routine, and the polynomial determinant evaluator consumes these space-bounded calls. FP input-degree/modulus/output-degree fields suffice. Modular coefficient zero testing belongs to PSPACE. |
 | [`Algebra.CannyResultantResidue`](LeanCanny/Algebra/CannyResultantResidue.lean) | The actual integer `cannyResultant` has a certified modular coefficient evaluator. Shifted-coefficient evaluation supplies `p₁(θ-c*x)`; an FP guard supplies `p₂(x)`. FP source-degree/direction/output-degree fields and uniform FP original-coefficient residue access suffice. Reduction commutes with the resultant at the fixed integer source degrees, including modular degree drops. Its modular coefficient zero test is in PSPACE. |
@@ -167,8 +168,8 @@ has at most `d₁*d₂+1` supported coefficients. Writing `N = d₁+d₂` and
 has binary length at most `N.size*N + d₂*b + d₁*H₂.size + 1` when the input
 coefficient magnitudes are bounded by `H₁,H₂`. Integer sign recovery is certified
 below from residue access and a binary bit budget. Symbolic subresultant coefficients
-have explicit bit bounds and certified modular evaluation. Digit recovery, the
-degree-one coordinate-recovery cases, and the report's remaining
+have explicit bit bounds and certified modular evaluation. Direct linear branches
+also handle degree-one recovery and zero directions. Digit recovery and the report's remaining
 polylogarithmic-space computations remain open.
 
 The streamed matrix-power primitive now has a verified continuation machine and
@@ -294,8 +295,9 @@ callback required by the modular power machine.
    formats and uniform entry evaluators;
    instantiate the suspended-entry interface when the whole entry computation
    requires more than polynomial time.
-3. Recover integer digits from certified residue access. Handle degree-one recovery
-   cases and prove the full coordinate computation's space bound, including algebraic parameter values;
+3. Recover integer digits from certified residue access. Include the direct linear
+   branches in the certified coefficient pipeline and prove the full coordinate
+   computation's space bound, including algebraic parameter values;
    formalize the remaining parallel/streamed algebra used by the report.
 4. Formalize critical points, perturbations, sign tests, and the correctness of Canny's
    ETR decision procedure; prove `ETR ∈ PSPACE`.

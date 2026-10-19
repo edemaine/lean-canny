@@ -13,7 +13,7 @@ public import LeanCanny.Algebra.SubresultantGCD
 The first subresultant of `p₁(θ-c*x)` and `p₂(x)` supplies parameter polynomials
 `N(θ)` and `D(θ)`. At a separating root pair, with nonzero direction and both
 input degrees greater than one, `D(θ)≠0`, `b=-N(θ)/D(θ)`, and
-`a=θ+c*N(θ)/D(θ)`. Top-degree boundary cases remain separate obligations.
+`a=θ+c*N(θ)/D(θ)`. `CoordinateRecovery` handles linear inputs directly.
 -/
 
 @[expose] public section

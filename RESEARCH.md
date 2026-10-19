@@ -45,7 +45,8 @@ are bounded explicitly in the input degrees, coefficient lengths, and direction 
 Interior subresultants now have explicit determinant definitions, coefficient bit bounds,
 and certified modular evaluation. The nonzero linear-GCD bridge now proves symbolic
 coordinate recovery for input degrees greater than one and nonzero directions.
-Integer digit recovery, degree-one recovery cases, and the report's remaining space
+Direct linear branches extend recovery to every degree and direction under the
+separating-pair hypotheses. Integer digit recovery and the report's remaining space
 bounds are open. Integer negativity is certified
 from residue access and a binary bit budget, with a full three-way sign evaluator
 for Canny's concrete resultant coefficient.
@@ -334,8 +335,16 @@ resultant budget, so the existing FP budget and modulus-scan writers also certif
 integer zero testing. Streamed integer sign recovery supplies negativity and the
 full three-way sign; zero and both strict-sign languages are in PSPACE under the
 same FP metadata, selection, source-residue, and source-bit-budget contracts.
-Top-order/degree-one recovery cases, signs at algebraic parameter values, integer
-digit recovery, and the complete coordinate computation's space bound remain open.
+`coordinate_recovery_spec` now removes the interior-degree and nonzero-direction
+restrictions from the algebraic recovery statement. If `p₂` is linear, its constant
+coefficients recover `b`; otherwise a linear `p₁` uses the shifted input's coefficients;
+the remaining case uses the first subresultant. For a separating pair with zero
+direction, all roots of `p₂` coincide; separability and splitting therefore force
+`p₂` to be linear. Both coordinate polynomials have parameter degree at most
+`max 1 ((d₂-1)*d₁)` and a uniform integer coefficient bit budget across the branches.
+Including these direct linear branches in the certified coefficient evaluator,
+signs at algebraic parameter values, integer digit recovery, and the complete
+coordinate computation's space bound remain open.
 
 ## TM2 versus Complexitylib's machines
 

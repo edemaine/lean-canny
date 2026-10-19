@@ -14,7 +14,8 @@ have exactly one common root, namely `b`. Separability makes their GCD linear.
 Its first two coefficients recover `b` and then `a`, with a nonzero denominator.
 This verifies the GCD specification. `SubresultantRecovery` connects it to a
 symbolic first subresultant for nonzero directions and input degrees greater
-than one; the full coordinate computation's space bound remains open.
+than one. `CoordinateRecovery` includes the linear and zero-direction cases;
+the full coordinate computation's space bound remains open.
 -/
 
 @[expose] public section
