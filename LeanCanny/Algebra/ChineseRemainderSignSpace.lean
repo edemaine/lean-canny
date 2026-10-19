@@ -72,6 +72,23 @@ noncomputable def signEvaluator {f : List Bool → List Bool} (E : SpaceFunction
   rw [hsum, hidx]
   simp only [← hsign]
 
+/-- A count writer can describe a separately named index cardinality. This
+avoids transporting the dependent modulus family by hand at each application. -/
+noncomputable def signEvaluatorOfCount {f : List Bool → List Bool} (E : SpaceFunction f)
+    (count precision : List Bool → List Bool) (hc : count ∈ FP) (hp : precision ∈ FP)
+    (N : List Bool → ℕ) (hcount : ∀ c, Nat.fromBitsLE (count c) = N c)
+    (F : (c : List Bool) → System (Fin (N c))) (r : (c : List Bool) → Fin (N c) → ℕ) (z : List Bool → ℤ)
+    (hres : ∀ c i, (r c i : ZMod ((F c).modulus i)) = z c)
+    (hmag : ∀ c, 2 * (z c).natAbs < (F c).product)
+    (hprecision : ∀ c, 0 < Nat.fromBitsLE (precision c) ∧
+      2 * N c * (F c).product < 2 ^ Nat.fromBitsLE (precision c))
+    (hprep : ∀ c (i : Fin (N c)), f (pair c (BinaryNatCode.encode i.val)) =
+      pair (BinaryNatCode.encode ((F c).numerator (r c) i)) (BinaryNatCode.encode ((F c).modulus i - 1))) :
+    SpaceFunction (fun c => if z c < 0 then [true] else []) := by
+  have he : (fun c => Nat.fromBitsLE (count c)) = N := funext hcount
+  subst N
+  exact signEvaluator E count precision hc hp F r z hres hmag hprecision hprep
+
 theorem negativeLanguage_mem_PSPACE {f : List Bool → List Bool} (E : SpaceFunction f)
     (count precision : List Bool → List Bool) (hc : count ∈ FP) (hp : precision ∈ FP)
     (F : (c : List Bool) → System (Fin (Nat.fromBitsLE (count c))))

@@ -120,9 +120,11 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.BerkowitzSpaceEntries`](LeanCanny/Algebra/BerkowitzSpaceEntries.lean), [`IntegerDeterminantSpaceEntries`](LeanCanny/Algebra/IntegerDeterminantSpaceEntries.lean) | Modular and integer determinant zero testing accept `SpaceFunction` original-entry residue routines. FP dimension/modulus or dimension/bit-budget fields suffice. The nested power, factor, moment, original-entry, and modulus-scan certificates account for every suspended state and child clock. |
 | [`Algebra.IntegerModular`](LeanCanny/Algebra/IntegerModular.lean) | An integer with at most `B` magnitude bits is zero exactly when its residues modulo `1,...,2*B+4` all vanish. An LCM growth estimate keeps the scan linear in the bit budget. The criterion applies to determinants; column entry bounds give determinant bit budgets, including empty matrices. |
 | [`Algebra.IntegerReconstruction`](LeanCanny/Algebra/IntegerReconstruction.lean), [`ChineseRemainderSum`](LeanCanny/Algebra/ChineseRemainderSum.lean), [`ChineseRemainderSign`](LeanCanny/Algebra/ChineseRemainderSign.lean), [`SmallModulusCRT`](LeanCanny/Algebra/SmallModulusCRT.lean) | A bounded integer's sign is determined by a sum of small CRT fractions. Local inverse-weighted numerators are reduced modulo their own moduli. Downward truncation at denominator `D > 2*card*product` preserves the sign test after zero is excluded. Maximal prime powers up to `N=2*B+6` have product `lcmUpto N`, individual moduli at most `N`, and sufficient dyadic precision exponent `(N+2)*N.size+2`. The certified streamed evaluator below implements these specifications given local preparation. |
-| [`Algebra.ChineseRemainderSignBit`](LeanCanny/Algebra/ChineseRemainderSignBit.lean), [`DyadicSumSpace`](LeanCanny/Algebra/DyadicSumSpace.lean), [`ChineseRemainderSignSpace`](LeanCanny/Algebra/ChineseRemainderSignSpace.lean) | One selected bit of the truncated CRT sum determines the integer sign, including zero through vanishing local numerators. A certified space-bounded routine returning each local numerator/modulus pair, FP count/precision writers, and the magnitude/precision bounds give a complete sign `SpaceFunction` and PSPACE negative-language theorem. Constructing that local preparation routine from residue access remains open. |
+| [`Algebra.ChineseRemainderSignBit`](LeanCanny/Algebra/ChineseRemainderSignBit.lean), [`DyadicSumSpace`](LeanCanny/Algebra/DyadicSumSpace.lean), [`ChineseRemainderSignSpace`](LeanCanny/Algebra/ChineseRemainderSignSpace.lean) | One selected bit of the truncated CRT sum determines the integer sign, including zero through vanishing local numerators. A certified local preparation routine, FP count/precision writers, and the magnitude/precision bounds give a complete sign `SpaceFunction` and PSPACE negative-language theorem. Local preparation is implemented below. |
 | [`Algebra.IndexedModulusCRT`](LeanCanny/Algebra/IndexedModulusCRT.lean) | Indexing `0,...,N` uses maximal prime powers at prime indices and modulus one elsewhere. The count is exactly `N+1`, the product remains `lcmUpto N`, and the same precision exponent suffices. For positive `N`, each modulus is at most `N`. No compressed prime enumeration or prime-counting routine is required. |
-| [`Algebra.PrimalitySpace`](LeanCanny/Algebra/PrimalitySpace.lean), [`PrimePowerSpace`](LeanCanny/Algebra/PrimePowerSpace.lean), [`IndexedModulusSpace`](LeanCanny/Algebra/IndexedModulusSpace.lean) | The indexed CRT modulus has a `SpaceFunction` evaluator on arbitrary binary words `pair N i`. Trial division agrees with `Nat.Prime`, including zero and one. A capped multiplication fold returns exactly `i^(log i N)`, retaining magnitudes at most `N+1`, including zero/one bases and bound zero. Sequential composition and FP selection supply the prime-power-or-one result. Complementary products and local inverse-weighted residues remain to be implemented. |
+| [`Algebra.PrimalitySpace`](LeanCanny/Algebra/PrimalitySpace.lean), [`PrimePowerSpace`](LeanCanny/Algebra/PrimePowerSpace.lean), [`IndexedModulusSpace`](LeanCanny/Algebra/IndexedModulusSpace.lean) | The indexed CRT modulus has a `SpaceFunction` evaluator on arbitrary binary words `pair N i`. Trial division agrees with `Nat.Prime`, including zero and one. A capped multiplication fold returns exactly `i^(log i N)`, retaining magnitudes at most `N+1`, including zero/one bases and bound zero. Sequential composition and FP selection supply the prime-power-or-one result. |
+| [`Algebra.CofactorProductSpace`](LeanCanny/Algebra/CofactorProductSpace.lean), [`CofactorResidueSpace`](LeanCanny/Algebra/CofactorResidueSpace.lean), [`ModularInverseSpace`](LeanCanny/Algebra/ModularInverseSpace.lean), [`CRTWeightSpace`](LeanCanny/Algebra/CRTWeightSpace.lean), [`CRTPreparationSpace`](LeanCanny/Algebra/CRTPreparationSpace.lean) | Certified local CRT preparation computes the selected modulus, streams its complementary product modulo that modulus, searches for the unique inverse, and combines it with a space-bounded integer-residue query. The output agrees exactly with the CRT numerator/modulus specification, including modulus one; every parent and child state is counted. |
+| [`Algebra.IntegerSignSpace`](LeanCanny/Algebra/IntegerSignSpace.lean), [`CannyResultantSign`](LeanCanny/Algebra/CannyResultantSign.lean), [`Computation.SpaceDeciderOutput`](LeanCanny/Computation/SpaceDeciderOutput.lean) | A uniform `SpaceFunction` residue routine and FP binary magnitude-bit budget suffice for integer negativity in PSPACE, even with an exponential bit budget. Canny's selected integer resultant coefficient instantiates the theorem using its proved source-derived budget. Its negative and positive languages are in PSPACE, and a certified three-way evaluator returns canonical tags `0` for zero, `1` for negative, and `2` for positive. |
 | [`Computation.BoundedScan`](LeanCanny/Computation/BoundedScan.lean), [`BoundedScanPSPACE`](LeanCanny/Computation/BoundedScanPSPACE.lean) | An FP binary bound permits exponentially many sequential calls to a certified space decider. The input, counter, and accumulated answer are retained while each child runs. Correctness, first halting time, combined workspace, and expanded physical clock yield a reusable PSPACE certificate for the universal scan. |
 | [`Algebra.IntegerDeterminantPSPACE`](LeanCanny/Algebra/IntegerDeterminantPSPACE.lean) | Integer determinant zero testing belongs to PSPACE under FP dimension and binary bit-budget access and uniform FP original-entry residue access. The scan instantiates the modular determinant decider, including its factor children. Integer entries and the determinant bit budget may be exponentially long/large respectively; their complete integer values are never stored. |
 | [`Algebra.SylvesterAccessFP`](LeanCanny/Algebra/SylvesterAccessFP.lean), [`SylvesterAccessCorrect`](LeanCanny/Algebra/SylvesterAccessCorrect.lean) | FP binary guards and query writers access the two shifted coefficient blocks of Mathlib's Sylvester matrix. Entry correctness holds for arbitrary scalar encodings with empty-word zero. If coefficients have magnitude at most `2^b`, the resultant has at most `N.size*N+N*b+1` magnitude bits, where `N=m+n`; its budget writer is FP. |
@@ -158,9 +160,10 @@ direct formulas and integer bit-length bounds. The unnormalized integer resultan
 has at most `d₁*d₂+1` supported coefficients. Writing `N = d₁+d₂` and
 `b = (d₁+1).size + d₁ + H₁.size + (c+1).size*d₁`, each coefficient's magnitude
 has binary length at most `N.size*N + d₂*b + d₁*H₂.size + 1` when the input
-coefficient magnitudes are bounded by `H₁,H₂`. Integer determinant sign and digit computation,
-symbolic subresultant recovery and its output-size bounds, and the report's
-polylogarithmic-space computation remain open.
+coefficient magnitudes are bounded by `H₁,H₂`. Integer sign recovery is certified
+below from residue access and a binary bit budget. Digit recovery, symbolic
+subresultant recovery and its output-size bounds, and the report's remaining
+polylogarithmic-space computations remain open.
 
 The streamed matrix-power primitive now has a verified continuation machine and
 binary state-size bounds. Its abstract run takes at most
@@ -222,8 +225,8 @@ An FP budget word gives polynomial-length modulus counters and exponentially man
 calls. The combined bound includes the saved scan parent, modular controller,
 and factor child. These contracts cover all input strings; concrete formats
 still must supply validation/defaults and prove the access and budget properties.
-Integer sign/digit computation, integer coefficient recovery, and Canny's
-remaining algebraic and geometric arguments remain open.
+The sign evaluator below consumes these residue/budget contracts. Integer digit
+recovery and Canny's remaining algebraic and geometric arguments remain open.
 
 `Resultant.Access.zeroLanguage_mem_PSPACE` instantiates the integer determinant
 theorem with streamed Sylvester access. Both degree parameters and a common
@@ -233,8 +236,8 @@ is computed from these fields. The main theorem retains the specified degree
 parameters even when specialization lowers a polynomial's degree; the ordinary
 resultant follows when those parameters equal the actual degrees. This is zero
 testing of integer resultants. The symbolic modular coefficient evaluator below
-extends this pipeline; signs and concrete residue algorithms for the report's
-remaining constructed polynomial families still require proofs.
+extends this pipeline. Concrete residue algorithms for the report's remaining
+constructed polynomial families still require proofs.
 
 `BinomialResidue.evaluator` now supplies one ingredient of the shifted-coefficient
 formula: a certified space-bounded routine returning `choose n k mod m`. Input
@@ -265,8 +268,13 @@ input coefficient routines. `CannyResultantBits.Access.evaluator` specializes it
 to the actual `cannyResultant` using the shifted-coefficient child and FP
 original-coefficient residue access. `CannyResultantBits.IntegerAccess.decider`
 adds a budget computed from source coefficient-bit bounds and the modulus scan,
-giving PSPACE zero testing of the actual integer coefficient. Integer coefficient
-digit recovery and sign algorithms remain open.
+giving PSPACE zero testing of the actual integer coefficient.
+`IntegerSignBits.evaluator` now constructs local CRT numerators and computes the
+required truncated-sum bit from certified residue access and an FP bit budget.
+`CannyResultantBits.IntegerAccess.signumEvaluator` combines this negativity test
+with the zero decider, returning the full three-way sign of that coefficient.
+Its negative and positive languages belong to PSPACE under the same source-access
+and bit-budget contracts. Integer digit recovery remains open.
 
 Binary addition, multiplication, comparison, subtraction, division, and modular reduction
 now have uniform `FP` certificates, with exact semantics and bounds on intermediate
@@ -280,9 +288,7 @@ callback required by the modular power machine.
    formats and uniform entry evaluators;
    instantiate the suspended-entry interface when the whole entry computation
    requires more than polynomial time.
-3. Construct certified local CRT numerator/modulus preparation from residue access
-   to instantiate the proved streamed sign evaluator. Recover integer digits.
-   Supply encoded subresultant computation
+3. Recover integer digits from certified residue access. Supply encoded subresultant computation
    and its remaining output-size bounds; formalize the parallel/streamed algebra used by the report.
 4. Formalize critical points, perturbations, sign tests, and the correctness of Canny's
    ETR decision procedure; prove `ETR ∈ PSPACE`.

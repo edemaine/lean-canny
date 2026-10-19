@@ -42,8 +42,10 @@ The project now bounds coefficients of polynomial determinants by column coeffic
 masses, and specializes this estimate to the integer resultant. Its degree is at most
 `d₁*d₂` without nonzero or separability hypotheses, and its coefficient bit lengths
 are bounded explicitly in the input degrees, coefficient lengths, and direction length.
-Integer determinant/coefficient digit recovery and signs, subresultant computation
-and output-size bounds, and the report's remaining space bounds are open.
+Integer digit recovery, subresultant computation and output-size bounds, and the
+report's remaining space bounds are open. Integer negativity is now certified
+from residue access and a binary bit budget, with a full three-way sign evaluator
+for Canny's concrete resultant coefficient.
 The modules below give certified modular determinant/resultant coefficient
 evaluation and integer zero testing, including Canny's concrete resultant family.
 
@@ -102,8 +104,8 @@ and factor child. Dimension, entry bit lengths, and the determinant bit budget c
 be exponential in the input length; complete integer entries are not stored.
 The access contract covers all contexts and positive binary moduli. Concrete
 formats still must validate/default inputs and supply the uniform residue routine
-and bit budget. Integer sign/digit computation, integer coefficient recovery, and the
-report's ETR upper bound remain open.
+and bit budget. The generic sign evaluator below consumes these contracts;
+integer digit recovery and the report's ETR upper bound remain open.
 
 The integer determinant theorem now also has a resultant instantiation. Binary
 guards and offset writers implement exactly Mathlib's two Sylvester column
@@ -114,8 +116,8 @@ bound `2^b` gives the computed resultant bit budget `N.size*N+N*b+1`, with `N=m+
 FP degree and coefficient-budget fields and uniform FP coefficient-residue access
 on all contexts and indices. A corollary uses the ordinary resultant when the
 degree fields equal the actual polynomial degrees. Later modules provide symbolic
-modular coefficient evaluation; signs and residue algorithms for all polynomial
-constructions used in the report remain open.
+modular coefficient evaluation and generic integer sign recovery. Residue algorithms
+for all polynomial constructions used in the report remain open.
 
 The project now supplies an explicit binomial-residue routine for the shifted
 coefficient formula. The lower bidiagonal matrix with diagonal and subdiagonal
@@ -153,7 +155,7 @@ proves integer resultant zero testing under FP degree/budget fields and
 `SpaceFunction` coefficient-residue certificates. The ordinary-resultant
 corollary requires the supplied degrees to equal the actual degrees. Symbolic
 coefficient evaluation for Canny's resultant is supplied by the specialization below;
-integer recovery and sign algorithms still require work.
+integer digit recovery still requires work.
 
 The symbolic coefficient reduction now has a scalar matrix representation.
 `PolynomialCoefficientMatrix.scalarHom` maps a polynomial to its lower
@@ -205,8 +207,8 @@ The previous coefficient-size theorem proves this budget; binary arithmetic
 and encoded word lengths give FP budget writers. The bounded modulus scan
 then composes the concrete residue decider and tests moduli `1,...,2*B+4`, with
 all child states included. FP source-bit-budget fields and the residue-access
-contracts suffice, even when `B` is exponential. Integer coefficient digit
-recovery and sign algorithms remain open.
+contracts suffice, even when `B` is exponential. The sign evaluator below uses
+the same budget and residue-access contracts; integer digit recovery remains open.
 
 The reconstruction specification now has a proved CRT route. A coprime modulus
 system uses locally reduced inverse-weighted numerators `aᵢ`; the fractional part
@@ -217,8 +219,8 @@ each fraction by `floor(D*aᵢ/mᵢ)/D` has total downward error at most `card/D
 `N=2*B+6` instantiate this specification for a magnitude-bit budget `B`, with
 every individual modulus at most `N` and sufficient precision
 `D=2^((N+2)*N.size+2)`. The proof uses large products and sums only as mathematical
-specifications. Certified local CRT preparation is still required to obtain
-integer sign recovery in PSPACE from residue access alone.
+specifications. The local preparation and streamed arithmetic below now certify
+integer sign recovery from residue access and a binary bit budget.
 
 Individual bits of the dyadic quotients now have a uniform FP accessor.
 `DyadicQuotientBits.value` takes binary `a,m-1,p,k`, assuming `a<m`, and returns
@@ -241,8 +243,8 @@ bound rules out equality at the half threshold, so only one selected sum bit is
 needed. If the integer is zero, every local numerator and the whole truncated
 sum vanish. `ChineseRemainder.signEvaluator` and `negativeLanguage_mem_PSPACE`
 therefore include zero without a separate oracle, under the explicit local
-preparation, FP count/precision, and magnitude/precision contracts. Constructing
-the preparation routine from residue access remains open.
+preparation, FP count/precision, and magnitude/precision contracts. The preparation
+routine is now constructed from residue access below.
 
 `indexedSystem N` uses all indices `0,...,N`, assigning modulus one to nonprime
 indices. Its count is exactly `N+1`, while its product is still `lcmUpto N` and
@@ -256,8 +258,31 @@ multiplication routine returns `i^(log i N)`, with each stored magnitude at most
 `N+1`, for all binary `N,i`. `ModulusBits.evaluator` composes the routines and
 uses FP selection to return the prime power or one. `BoundedFold.evaluator`
 accounts for sequential space-bounded updates, and `SpaceFunction.chain` proves
-sequential composition using polynomial output bounds. Complementary modular
-products and the inverse-weighted residue preparation remain open.
+sequential composition using polynomial output bounds.
+
+`CofactorBits.evaluator` streams the complementary product, skips the selected
+index, and reduces after each multiplication. Its output agrees with the actual
+CRT cofactor modulo the selected modulus. `ModularInverseBits.evaluator` scans
+candidates below a positive modulus; coprimality proves that the result equals
+`ZMod`'s inverse value, including modulus one. `WeightBits.evaluator` composes
+these routines, and `PreparationBits.evaluator` calls the original integer-residue
+routine and performs FP modular multiplication to return exactly the local CRT
+numerator and modulus-minus-one code.
+
+`IntegerSignBits.evaluator` closes the sign-recovery pipeline. FP writers compute
+`N=2*B+6`, count `N+1`, and precision exponent `(N+2)*N.size+2` from the binary
+magnitude-bit budget. Indexed-system product, magnitude, and precision theorems
+discharge the sign wrapper's remaining hypotheses. A uniform space-bounded
+integer-residue routine and FP bit-budget writer therefore give a certified
+integer negativity evaluator and PSPACE negative-language theorem. Neither the
+integer nor the large CRT modulus or truncated sums are stored.
+
+`CannyResultantBits.IntegerAccess.signumEvaluator` specializes this construction
+to the actual integer coefficient and combines it with the existing zero decider.
+Its tags are `0` for zero, `1` for negative, and `2` for positive. Both the negative
+and positive languages are in PSPACE under the existing FP source degree,
+direction, selected-degree, coefficient-residue, and source-bit-budget contracts.
+Integer digit recovery, subresultants, and the critical-point/ETR argument remain open.
 
 ## TM2 versus Complexitylib's machines
 
