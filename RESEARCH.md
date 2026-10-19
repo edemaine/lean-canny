@@ -208,6 +208,19 @@ all child states included. FP source-bit-budget fields and the residue-access
 contracts suffice, even when `B` is exponential. Integer coefficient digit
 recovery and sign algorithms remain open.
 
+The reconstruction specification now has a proved CRT route. A coprime modulus
+system uses locally reduced inverse-weighted numerators `aᵢ`; the fractional part
+of `Σ aᵢ/mᵢ` equals the combined residue divided by the product `M`. For a nonzero
+integer with `2*|z| < M`, comparison with `1/2` determines its sign. Replacing
+each fraction by `floor(D*aᵢ/mᵢ)/D` has total downward error at most `card/D`;
+`D > 2*card*M` preserves the comparison. The maximal prime powers up to
+`N=2*B+6` instantiate this specification for a magnitude-bit budget `B`, with
+every individual modulus at most `N` and sufficient precision
+`D=2^((N+2)*N.size+2)`. The proof uses large products and sums only as mathematical
+specifications. A streamed quotient/sum-bit implementation and its space
+certificate are still required; this does not yet prove integer sign recovery
+in PSPACE.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

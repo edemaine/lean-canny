@@ -45,6 +45,7 @@ import LeanCanny.Algebra.ResultantSpaceEntries
 import LeanCanny.Algebra.ResultantPolynomialSpace
 import LeanCanny.Algebra.CannyResultantResidue
 import LeanCanny.Algebra.CannyResultantInteger
+import LeanCanny.Algebra.SmallModulusCRT
 import LeanCanny.Algebra.BinomialResidue
 import LeanCanny.Algebra.ShiftCoefficientResidue
 
