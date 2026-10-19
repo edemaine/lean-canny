@@ -106,9 +106,11 @@ a quadratic bound in the binary lengths of the dimension, exponent, and modulus.
 Exact decoding and a total encoded transition now preserve the typed run and its
 state-size bound. Binary normalization, successor, predecessor, and exponent halves
 have actual Complexitylib FP certificates, as do the initial and child-query writers.
+Binary natural-number addition, multiplication, and multiply-accumulate are now
+certified too, with exact semantics on all words and bounds on every fold state.
 The run still uses a supplied entry function and abstract scalar operations.
 Certifying the full encoded step, including parsing, uniform entry access, and
-modular arithmetic, remains the backend obligation; the representation bound alone
+modular reduction, remains the backend obligation; the representation bound alone
 is not a TM space certificate.
 
 Local comparison sources, at `lean-trominoes` commit
