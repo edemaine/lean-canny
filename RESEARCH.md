@@ -348,9 +348,13 @@ coefficient, shifted left coefficient, or first-subresultant routine. The explic
 selection identities connect its integer specification to the combined coordinate
 numerator and denominator. Its modular coefficient zero language is in PSPACE
 under the same FP source-metadata, selection, and original-residue contracts.
-Integer zero/sign wrappers covering the direct linear branches, signs at algebraic
-parameter values, integer digit recovery, and the complete coordinate computation's
-space bound remain open.
+`CannyCoordinateBits.integerDecider` and `signumEvaluator` now cover the direct linear
+branches as well. Their FP budget writer adds the shifted-input and right-input
+allowances to the full resultant budget; the uniform coefficient theorem bounds
+every branch by this sum. The zero and both strict-sign languages belong to PSPACE
+under the existing FP source metadata, selection, residues, and source-bit budgets.
+Signs at algebraic parameter values, integer digit recovery, and the complete
+coordinate computation's space bound remain open.
 
 ## TM2 versus Complexitylib's machines
 
