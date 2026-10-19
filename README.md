@@ -84,6 +84,8 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.MatrixPowerDecoding`](LeanCanny/Algebra/MatrixPowerDecoding.lean) | Exact decoders for queries, frames, stacks, residues, and complete states. Successful state decoding characterizes equality with the canonical encoding. A checked total transition agrees with the typed step and inherits its result and quadratic modular-state bound. |
 | [`Algebra.MatrixPowerArithmeticFP`](LeanCanny/Algebra/MatrixPowerArithmeticFP.lean) | The uniform modular multiply-accumulate routine agrees exactly with `ZMod` residue encodings for every nonzero modulus. Encoded zero and one are certified too, including modulus one. The modulus is an input field of one FP routine. |
 | [`Algebra.MatrixPowerController`](LeanCanny/Algebra/MatrixPowerController.lean), [`MatrixPowerControllerCorrect`](LeanCanny/Algebra/MatrixPowerControllerCorrect.lean) | A total context-carrying bitstring transition belongs to `FP` when its explicit callbacks do. It simulates every typed transition on encoded states. The modular specialization supplies scalar callbacks and retains the original context for entry access. Packet initialization is certified too. Every modular packet has at most `2*c.length+2+64*(N.size+e.size+m.size+1)^2` bits throughout the run. |
+| [`Computation.HaltingIteration`](LeanCanny/Computation/HaltingIteration.lean) | An FP initializer, transition, halting test, and answer yield a PSPACE decision procedure when states have polynomial length and the first halting time is at most exponential in a polynomial. The wrapper supplies the exact completion/answer protocol required by Complexitylib's `SpaceIter`; the clock need not be computed. |
+| [`Algebra.MatrixPowerHalting`](LeanCanny/Algebra/MatrixPowerHalting.lean), [`MatrixPowerPSPACE`](LeanCanny/Algebra/MatrixPowerPSPACE.lean) | The controller first finishes at exactly `work N e.size e + 1` steps. Testing whether a selected entry of a modular matrix power is zero belongs to Complexitylib's `PSPACE`, given canonical FP field writers and uniform FP entry access on every input. Dimensions and exponents may be exponentially large; only their binary descriptions enter the bound. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -121,8 +123,13 @@ writers and modular scalar arithmetic are now provided. The context-carrying
 controller has a complete `FP` transition certificate given certified dimension,
 modulus, and matrix-entry callbacks. It simulates the typed run on encoded states;
 the initial packet writer is `FP` given certified exponent and index writers.
-Input validation and integration with `SpaceIter`, and a determinant algorithm
-using this primitive, remain before obtaining the report's space theorem.
+`ModularAccess.zeroLanguage_mem_PSPACE` connects this controller to `SpaceIter`:
+zero testing of a selected modular power entry is in `PSPACE` under the explicit
+FP access contract. The contract specifies a nonzero modulus and valid indices
+on every binary input; a concrete input format must supply validation and defaults.
+Entry evaluators requiring space rather than polynomial time need their machine
+states integrated into the controller. A determinant algorithm using this primitive
+and Canny's remaining algebraic and geometric arguments remain open.
 
 Binary addition, multiplication, comparison, subtraction, and modular reduction
 now have uniform `FP` certificates, with exact semantics and bounds on intermediate
@@ -132,8 +139,8 @@ callback required by the modular power machine.
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.
-2. Connect the certified modular power controller to `SpaceIter`, with validated
-   input initialization and result access. Supply uniform entry evaluators;
+2. Instantiate the modular power PSPACE theorem with concrete validated input
+   formats and uniform entry evaluators;
    incorporate their machine states when entry access needs a space certificate
    rather than an FP callback.
 3. Implement encoded determinant and subresultant algorithms for the verified

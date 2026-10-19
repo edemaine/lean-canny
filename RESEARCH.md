@@ -114,8 +114,14 @@ The full context-carrying controller now has an FP certificate from explicit FP
 callbacks, including matrix-entry access. Its correctness theorem simulates every
 typed transition on encoded states; the modular specialization supplies the scalar
 callbacks. Packet initialization is FP from certified binary field writers, and
-the size bound includes the retained original context. Validated initialization,
-result access, and integration with SpaceIter remain before a PSPACE theorem.
+the size bound includes the retained original context. The project now proves
+`ModularAccess.zeroLanguage_mem_PSPACE`: testing whether a selected modular
+matrix-power entry is zero belongs to Complexitylib's PSPACE under canonical FP
+field/entry access on every context. The proof supplies the exact first halting
+time, FP completion and answer tests, and a general halting-loop wrapper for
+SpaceIter. Dimension and exponent can be exponential in the context length.
+A concrete input format still must validate or default malformed inputs to meet
+the access contract, including valid indices and a nonzero modulus.
 The callback contract specifically requires FP entry access. A space-certified
 entry evaluator must instead be integrated as an additional machine phase with
 its workspace accounted for; it cannot be treated as a free callback here.
