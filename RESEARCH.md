@@ -143,9 +143,9 @@ convention for the zero polynomial. The output encodes the query's canonical
 positive and negative parts. `TarskiQueryBits.zeroLanguage_mem_PSPACE`,
 `positiveLanguage_mem_PSPACE`, and `negativeLanguage_mem_PSPACE` give decision
 consequences under the same original-source contracts. The remaining root-sign
-work composes this evaluator with the product-query sources, query selection,
-and the sign-pattern count; critical-point correctness and `ETR ∈ PSPACE` remain
-open.
+work composes explicit query enumeration, pattern weights, and the sign-pattern
+count; the product-query source composition is supplied below. Critical-point
+correctness and `ETR ∈ PSPACE` remain open.
 
 No existing encoded ∃ℝ complexity-class definition or formal proof of `ETR ∈ PSPACE`
 was found in the inspected Mathlib, Complexitylib, CSLib, TauCeti, or adjacent projects.
@@ -750,6 +750,25 @@ use polynomial space. Empty products and modulus one are covered. Coefficient
 maps commute with the query polynomial at fixed exponents, including modular
 degree drops.
 
+`SignQueryBits.evaluator` now combines that modular product reader with the
+original-source Tarski evaluator. Its only arithmetic children read coefficients
+of the root and indexed original polynomials. FP readers give the number of
+polynomials, ternary exponents, and original degree/mass allowances. Product
+query degree and mass budgets are derived internally as `2*k*D` and `2*k*B`.
+Uniform residues normalize the modulus protocol and preserve the selected
+coefficient. Empty products and modulus one are covered, and the query's zero,
+positive, and negative languages belong to PSPACE under these source contracts.
+
+`IntegerSumBits.evaluator` supplies the outer signed summation primitive for a
+binary FP count and a suspended summand evaluator. It accumulates the positive
+and negative parts separately, then subtracts them into a canonical signed
+result. The summand evaluator's polynomial output bound controls both prefix
+counters: their bit lengths grow by at most the binary length of the number of
+terms. This includes every nested summand state and clock. FP signed
+multiplication is also proved for the pattern-weight products. The explicit
+ternary enumeration and pattern-weight reader still need to be composed with
+these routines; no complete scaled-count resource theorem is claimed yet.
+
 `SignQueryBounds` proves query degree at most `2*k*D` and integer coefficient
 magnitude-bit length at most `2*k*(b+(D+1).size)+1` for input degree allowance `D`
 and coefficient magnitude allowance `2^b`. A Tarski query lies between minus and
@@ -764,9 +783,13 @@ The integer formulation here supplies explicit bit budgets and a certified
 streamed coefficient routine for each product query. The full expansion has
 `3^k` queries. It establishes the counting identity, without establishing Canny's
 polylogarithmic dependence on the number of input polynomials. Tarski queries
-now have an original-source space evaluator. Composing all product-query sources,
-implementing suitable query selection and its workspace bound, and composing
-the general algebraic-root sign decider remain open.
+now include the original indexed product-query sources, and signed summation
+has a resource certificate. Explicit ternary enumeration and pattern weights,
+suitable query selection and its workspace bound, and the general algebraic-root
+sign decider remain open. Direct enumeration of `3^k` exponent vectors retains
+an index with order `k` bits, so that implementation requires a polynomial bound
+on `k`; the binary-count interface for an individual product query alone does
+not provide this bound.
 
 ## TM2 versus Complexitylib's machines
 
