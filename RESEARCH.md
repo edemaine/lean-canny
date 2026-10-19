@@ -404,6 +404,19 @@ remaining algorithmic inputs are precisely bit routines for the combined product
 `M` and inverse-weighted sum `I`. The uniform balanced-product implementation and
 weighted-sum source remain open; the final composition is conditional on them.
 
+`BalancedProduct` now defines the complete product tree, with height-`h` node
+`i` covering the factor interval starting at `2^h*i`. Its typed continuation
+controller computes one product bit by recursively requesting the two child bits
+for each term of a streamed column sum. Frames retain the parent query, scan
+counter, carry, and at most one returned selector bit. A carry/continuation
+invariant proves the answer. The live-query invariant keeps heights decreasing,
+node addresses inside the root tree, and bit indices below the root index `K`;
+the stack contains at most `H` frames. A strictly decreasing work allowance proves
+termination, the first halting time, and abstract clock bound
+`2^(H*(2*K.size+5)+1)`. Leaf access counts as one abstract step here. Binary state
+size bounds, the FP encoded controller, suspended leaf costs, and its concrete
+CRT instantiation remain necessary for the full product-bit space certificate.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

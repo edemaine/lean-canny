@@ -13,6 +13,7 @@ import LeanCanny.Encoding.BinaryMulFP
 import LeanCanny.Encoding.DyadicQuotientBitFP
 import LeanCanny.Computation.SumBitSpace
 import LeanCanny.Computation.ProductBitSpace
+import LeanCanny.Algebra.BalancedProductWork
 import LeanCanny.Computation.ArithmeticBitSpace
 import LeanCanny.Computation.SpaceFunctionSelect
 import LeanCanny.ETR.EquationListComplexity
