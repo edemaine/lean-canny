@@ -151,7 +151,8 @@ scan. `Resultant.Access.zeroLanguage_mem_PSPACE_of_evaluators` consequently
 proves integer resultant zero testing under FP degree/budget fields and
 `SpaceFunction` coefficient-residue certificates. The ordinary-resultant
 corollary requires the supplied degrees to equal the actual degrees. Symbolic
-coefficient access for Canny's resultant inputs and sign algorithms still require work.
+coefficient evaluation for Canny's resultant is supplied by the specialization below;
+integer recovery and sign algorithms still require work.
 
 The symbolic coefficient reduction now has a scalar matrix representation.
 `PolynomialCoefficientMatrix.scalarHom` maps a polynomial to its lower
@@ -183,8 +184,17 @@ routine for symbolic resultants. Its Sylvester accessor carries the requested
 degree into each input coefficient routine, reusing the existing scalar guards
 and indexing proof. FP input-degree/modulus/output-degree fields and certified
 space-bounded bivariate coefficient routines suffice; modular resultant
-coefficient zero testing is in PSPACE. Concrete Canny-family instantiations,
-integer coefficient recovery, and sign algorithms remain open.
+coefficient zero testing is in PSPACE.
+
+`CannyResultantBits.Access.evaluator` now supplies the concrete Canny
+instantiation. The shifted-coefficient child accesses `p₁(θ-c*x)` and an FP
+degree-zero guard accesses `p₂(x)`. The result is proved equal to a coefficient
+of the existing integer `cannyResultant`, reduced modulo any positive modulus.
+The fixed integer source degrees are preserved through modular reduction.
+The contract requires FP source degrees, direction, and selected output degree,
+plus uniform FP residue access to both original integer coefficient functions.
+Its modular coefficient zero test is in PSPACE. Integer coefficient recovery
+and sign algorithms remain open.
 
 ## TM2 versus Complexitylib's machines
 

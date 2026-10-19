@@ -88,6 +88,14 @@ noncomputable def Family.value (F : Family) (p : List Bool) : List Bool :=
   residueBits (((((shiftFamily (F.polynomial (original p)) (F.direction (original p))).coeff (iValue p)).coeff
     (jValue p) : ℤ) : ZMod (mValue p)))
 
+theorem Family.value_packet (F : Family) (q : List Bool) (i j : ℕ) :
+    F.value (pair q (pair (BinaryNatCode.encode i) (BinaryNatCode.encode j))) =
+      residueBits (((((shiftFamily (F.polynomial (pairFst q)) (F.direction (pairFst q))).coeff i).coeff j : ℤ) :
+        ZMod (Nat.fromBitsLE (pairSnd q) + 1))) := by
+  unfold Family.value mValue modulusMinusOne
+  rw [pairFst_pair]
+  simp only [original, iValue, jValue, leftIndex, rightIndex, pairFst_pair, pairSnd_pair, code_value]
+
 structure Represents (a : Access) (F : Family) : Prop where
   direction : ∀ c, a.direction c = BinaryNatCode.encode (F.direction c)
   coefficient : ∀ q k, a.coefficient (pair q (BinaryNatCode.encode k)) =

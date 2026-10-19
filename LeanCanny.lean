@@ -42,6 +42,7 @@ import LeanCanny.Algebra.ResultantPSPACE
 import LeanCanny.Algebra.SylvesterSpaceAccess
 import LeanCanny.Algebra.ResultantSpaceEntries
 import LeanCanny.Algebra.ResultantPolynomialSpace
+import LeanCanny.Algebra.CannyResultantResidue
 import LeanCanny.Algebra.BinomialResidue
 import LeanCanny.Algebra.ShiftCoefficientResidue
 

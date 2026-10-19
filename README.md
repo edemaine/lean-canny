@@ -120,6 +120,7 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.ResultantPSPACE`](LeanCanny/Algebra/ResultantPSPACE.lean) | Zero testing for a specified-degree integer resultant belongs to PSPACE under FP binary degree/budget fields and uniform FP coefficient-residue access. The integer determinant decider runs on streamed Sylvester entries with a computed bit budget. A corollary covers the ordinary resultant when the supplied degrees equal the actual polynomial degrees. |
 | [`Algebra.SylvesterSpaceAccess`](LeanCanny/Algebra/SylvesterSpaceAccess.lean), [`ResultantSpaceEntries`](LeanCanny/Algebra/ResultantSpaceEntries.lean) | Integer resultant zero testing accepts certified space-bounded coefficient-residue routines under FP degree/budget fields. Sylvester access selects a coefficient child or zero, and the strengthened integer determinant decider consumes the resulting entry routine. A corollary covers ordinary resultants at the actual degrees. |
 | [`Algebra.SylvesterPolynomialSpace`](LeanCanny/Algebra/SylvesterPolynomialSpace.lean), [`ResultantPolynomialSpace`](LeanCanny/Algebra/ResultantPolynomialSpace.lean) | A selected coefficient of a specified-degree resultant over a polynomial residue ring has a `SpaceFunction` evaluator. The Sylvester accessor carries the coefficient degree into either input routine, and the polynomial determinant evaluator consumes these space-bounded calls. FP input-degree/modulus/output-degree fields suffice. Modular coefficient zero testing belongs to PSPACE. |
+| [`Algebra.CannyResultantResidue`](LeanCanny/Algebra/CannyResultantResidue.lean) | The actual integer `cannyResultant` has a certified modular coefficient evaluator. Shifted-coefficient evaluation supplies `p₁(θ-c*x)`; an FP guard supplies `p₂(x)`. FP source-degree/direction/output-degree fields and uniform FP original-coefficient residue access suffice. Reduction commutes with the resultant at the fixed integer source degrees, including modular degree drops. Its modular coefficient zero test is in PSPACE. |
 | [`Algebra.BinomialPower`](LeanCanny/Algebra/BinomialPower.lean), [`BinomialResidue`](LeanCanny/Algebra/BinomialResidue.lean) | The nth power of the lower bidiagonal matrix with diagonal and subdiagonal one contains `choose n k` at row `k`, column zero, in dimension `k+1`. An explicit FP entry accessor and binary field writers instantiate modular powering to return the complete binomial residue with a `SpaceFunction` certificate. It handles all words, modulus one, and `k>n`; its zero-test language is in PSPACE. |
 | [`Algebra.ShiftCoefficientFP`](LeanCanny/Algebra/ShiftCoefficientFP.lean), [`ShiftCoefficientResidue`](LeanCanny/Algebra/ShiftCoefficientResidue.lean) | A certified space-bounded evaluator returns the coefficient of `x^i θ^j` in `p(θ-c*x)` modulo a positive binary modulus. It retains the query while the binomial child runs, then performs FP coefficient lookup, negative-direction powering, and modular multiplication. The contract requires FP original-coefficient residue access and a canonical FP direction writer. Result correctness and modular zero testing in PSPACE hold on every binary input. |
 
@@ -250,8 +251,10 @@ proves integer resultant zero testing from space-bounded coefficient routines,
 with only degree and bit-budget fields required to be FP.
 `ResultantPolynomial.ModularAccess.evaluator` now returns selected symbolic
 resultant coefficients over a positive modulus from space-bounded bivariate
-input coefficient routines. Concrete instantiations for Canny's constructed
-families, integer coefficient recovery, and sign algorithms remain open.
+input coefficient routines. `CannyResultantBits.Access.evaluator` specializes it
+to the actual `cannyResultant` using the shifted-coefficient child and FP
+original-coefficient residue access. Integer coefficient recovery and sign
+algorithms remain open.
 
 Binary addition, multiplication, comparison, subtraction, division, and modular reduction
 now have uniform `FP` certificates, with exact semantics and bounds on intermediate
