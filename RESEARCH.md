@@ -377,6 +377,15 @@ coordinate coefficients. The remaining digit certificate must stream the large
 product, inverse-weighted sum, and rank-product subtraction; none is claimed
 to fit as a complete binary word in polynomial space.
 
+`ProductBits.evaluator` now supplies the two-operand multiplication primitive.
+For selected index `k`, truncating the left factor to its first `k+1` bits preserves
+the product modulo `2^(k+1)`. Each shifted summand's bit is the conjunction of
+one left-selector bit, an index guard, and a shifted right bit. Sequentially
+composed operand routines supply these bits to `SumBits.evaluator`, whose carry,
+workspace, and physical-clock proofs give the product certificate. Both operands
+may be implicit and exponentially long. Balanced products of a variable factor
+family, subtraction, and the complete CRT digit evaluator remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

@@ -12,6 +12,7 @@ import LeanCanny.Encoding.DynamicTreeFold
 import LeanCanny.Encoding.BinaryMulFP
 import LeanCanny.Encoding.DyadicQuotientBitFP
 import LeanCanny.Computation.SumBitSpace
+import LeanCanny.Computation.ProductBitSpace
 import LeanCanny.ETR.EquationListComplexity
 import LeanCanny.ETR.NNFComplexity
 import LeanCanny.ETR.EquationCompilerFP
