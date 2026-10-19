@@ -45,8 +45,8 @@ as the existing streamed subresultants, and `signedPsc_size_le` transfers their
 integer bit budget, including the terminal principal index. The integer pseudo-seed
 construction below supplies a streamed alternative to rational remainder access.
 Actual-degree routines and the sign-statistic scan now have resource proofs.
-Their composition with boundary handling and the actual principal-determinant
-sign reader remains open.
+Principal-determinant signs are now supplied by the project pipeline below.
+Retaining the computed degrees and composing all source routines remains open.
 
 `PseudoRemainder` now replaces rational polynomial division by a fixed linear
 operator. Splitting `g` into its coefficients below degree `d` and shifted high
@@ -67,8 +67,8 @@ If head and input coefficient masses are bounded by `2^bp` and `2^bg`, a coeffic
 after `n` steps has at most `n*(bp+1)+bg+1` magnitude bits. FP binary writers supply
 this budget from original degree/coefficient bounds. The derivative-product
 source instantiation, integer coefficient signs, and actual-degree routines are
-now proved below. Their assembly with the constant-head branch and actual
-principal-determinant sign reader remains open; the full `ETR ∈ PSPACE` theorem
+now proved below. Their assembly with the constant-head branch and the
+principal-determinant pipeline remains open; the full `ETR ∈ PSPACE` theorem
 is not yet established.
 
 `DerivativeBits.evaluator` reads an original coefficient at binary index `k+1`
@@ -109,6 +109,24 @@ costs, and returns the integer answer as canonical positive and negative parts.
 Tarski formula, assuming certified signed-principal-coefficient signs and an
 actual positive head-degree writer. This is a composition interface, not yet a
 Tarski evaluator derived solely from the original two coefficient routines.
+
+`PrincipalMinor.minor_eq_submatrix` extends the Sylvester embedding to terminal
+orders using non-strict bounds. `PrincipalMinorBits.Access.residueEvaluator`
+computes their full modular determinant residues from suspended original
+coefficient readers. The scalar Berkowitz evaluator now includes the parity
+correction needed to return the determinant rather than its characteristic
+coefficient. Empty minors and modulus one are included.
+
+`PrincipalCoefficientBits.signEvaluator` supplies the complete signed-principal
+coefficient reader: inside the principal range it normalizes the determinant;
+outside it selects the retained input leading coefficient or zero. The CRT
+bit budget is derived from the common input coefficient bound and the two
+binary degree parameters. The reader covers every requested order and input
+word. `queryEvaluator` composes it with the descending sign-statistic scan;
+no principal-sign oracle is assumed. With the head and its integer pseudo-seed
+as inputs and actual degree metadata, `tarskiEvaluator` returns the real-root
+Tarski query. Combining the already computed degrees and original head/query
+readers into this context, including the constant-head branch, remains open.
 
 No existing encoded ∃ℝ complexity-class definition or formal proof of `ETR ∈ PSPACE`
 was found in the inspected Mathlib, Complexitylib, CSLib, TauCeti, or adjacent projects.

@@ -81,5 +81,8 @@ connects the determinant formula to real-root Tarski queries and sign-pattern
 counts, with rational and integer input specializations.
 
 These are kernel-checked mathematical correctness results. The reference uses
-Mathlib's noncomputable polynomial operations. It does not yet give an encoded
-polynomial-space implementation of signed remainders or Tarski-query evaluation.
+Mathlib's noncomputable polynomial operations. The project modules
+`PrincipalCoefficientSpace.lean` and `PrincipalCoefficientQuery.lean` supply an
+encoded principal-sign pipeline from polynomial coefficient readers and FP degree
+metadata. Retaining computed degrees and composing this pipeline with the
+original head/query sources remains open.
