@@ -373,9 +373,9 @@ is bounded by the modulus count and its binary width by the FP count word length
 The indexed precision and magnitude theorems also specialize the exact centered
 reconstruction formula to a binary magnitude budget. `CannyCoefficientRank`
 instantiates the rank-bit evaluator for the actual resultant and all-branch
-coordinate coefficients. The remaining digit certificate must stream the large
-product, inverse-weighted sum, and rank-product subtraction; none is claimed
-to fit as a complete binary word in polynomial space.
+coordinate coefficients. Digit reconstruction uses the large product,
+inverse-weighted sum, and rank-product subtraction; none is claimed to fit as a
+complete binary word in polynomial space.
 
 `ProductBits.evaluator` now supplies the two-operand multiplication primitive.
 For selected index `k`, truncating the left factor to its first `k+1` bits preserves
@@ -394,6 +394,15 @@ the carry. `ArithmeticBits` supplies uniform `pair context binaryIndex` product
 and subtraction interfaces so their outputs can feed further arithmetic.
 `SpaceFunction.select` first runs a space-bounded predicate, retains its response,
 then runs one selected child, with all workspace and clocks counted.
+
+`ChineseRemainder.magnitudeBitEvaluatorOfOperands` now composes the product,
+ordered subtraction, and computed selection certificates into the final CRT
+magnitude-digit computation. The centered residue is `I-Q*M`; negativity selects
+`M-(I-Q*M)` when needed. `IntegerDigitBits.evaluatorOfProducts` supplies rank and
+sign directly from the original uniform residue routine and FP bit budget. Its
+remaining algorithmic inputs are precisely bit routines for the combined product
+`M` and inverse-weighted sum `I`. The uniform balanced-product implementation and
+weighted-sum source remain open; the final composition is conditional on them.
 
 ## TM2 versus Complexitylib's machines
 
