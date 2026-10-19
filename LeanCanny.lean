@@ -73,6 +73,7 @@ import LeanCanny.Algebra.InfinitesimalResidueSpace
 import LeanCanny.Algebra.RationalSubstitutionBudget
 import LeanCanny.Algebra.RationalSubstitutionMap
 import LeanCanny.Algebra.RationalSubstitutionSign
+import LeanCanny.Algebra.SturmQuery
 import LeanCanny.Algebra.SignQueryBudget
 import LeanCanny.Algebra.SignQueryProductSpace
 import LeanCanny.Algebra.IntegerDigitSpace

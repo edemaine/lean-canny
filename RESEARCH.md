@@ -22,6 +22,19 @@ searches checked; they are not claims that no such formalization exists anywhere
   [MathComp CAD](https://github.com/math-comp/cad). These are additional prior work,
   rather than Lean complexity-class interfaces.
 
+The project now adapts a selected Sturm–Tarski proof slice from TauCeti revision
+`034e577c895d28c058d92af4036f7ce0b03081cf`. Its
+[seed and common-factor proof](https://github.com/TauCetiProject/TauCeti/blob/034e577c895d28c058d92af4036f7ce0b03081cf/TauCeti/Algebra/Polynomial/Sturm/Tarski.lean)
+handles repeated roots and queries that vanish at roots. Its
+[infinite-endpoint formula](https://github.com/TauCetiProject/TauCeti/blob/034e577c895d28c058d92af4036f7ce0b03081cf/TauCeti/Algebra/Polynomial/Sturm/Infinity.lean)
+uses leading coefficients and degree parity. The local adaptation specializes
+analytic results to ℝ and uses Mathlib's intermediate value theorem, with no
+new dependency; see [source attribution and changes](STURM_SOURCES.md).
+`RootSignQueries.tarskiQuery_eq_coefficientQuery` connects this formula to the
+existing sign-count identity. `tarskiQuery_rat` proves that rational input
+polynomials need only rational signed remainders. The mathematical formula is
+proved; an encoded implementation with Canny's workspace bound remains open.
+
 No existing encoded ∃ℝ complexity-class definition or formal proof of `ETR ∈ PSPACE`
 was found in the inspected Mathlib, Complexitylib, CSLib, TauCeti, or adjacent projects.
 The ∃ℝ definition in this project uses the standard reduction-class formulation;
