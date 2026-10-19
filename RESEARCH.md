@@ -413,9 +413,13 @@ invariant proves the answer. The live-query invariant keeps heights decreasing,
 node addresses inside the root tree, and bit indices below the root index `K`;
 the stack contains at most `H` frames. A strictly decreasing work allowance proves
 termination, the first halting time, and abstract clock bound
-`2^(H*(2*K.size+5)+1)`. Leaf access counts as one abstract step here. Binary state
-size bounds, the FP encoded controller, suspended leaf costs, and its concrete
-CRT instantiation remain necessary for the full product-bit space certificate.
+`2^(H*(2*K.size+5)+1)`. Every reachable binary state has at most
+`128*(H+K.size+1)^2` bits; pairing keeps the continuation tail undoubled.
+Initial and child query writers are FP, including binary division for scan
+coordinates. Padding with ones identifies complete trees with finite products
+and omitted-factor cofactors, including empty families. Leaf access counts as
+one abstract step here. The FP encoded transition, suspended leaf costs, and
+concrete CRT instantiation remain necessary for the full product-bit space certificate.
 
 ## TM2 versus Complexitylib's machines
 
