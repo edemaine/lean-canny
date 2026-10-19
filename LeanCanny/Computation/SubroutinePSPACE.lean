@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Computation.SubroutineBounds
+public import LeanCanny.Computation.SpaceDecider
 
 /-!
 # Polynomial-space iteration with non-polynomial-time subroutine calls
@@ -21,7 +22,7 @@ unreachable malformed states.
 namespace LeanCanny.Computation.SubroutineIteration
 open Complexity
 
-theorem mem_PSPACE {L : Language} (P : Program) (hP : P.PolyTime)
+noncomputable def decider {L : Language} (P : Program) (hP : P.PolyTime)
     (init : List Bool → List Bool) (hi : init ∈ FP)
     (H answer : List Bool → Bool)
     (hH : (fun p => [H p]) ∈ FP) (ha : (fun p => [answer p]) ∈ FP)
@@ -37,14 +38,26 @@ theorem mem_PSPACE {L : Language} (P : Program) (hP : P.PolyTime)
       T ((abstractStep P T)^[k] (init x)) ≤ 2 ^ v.eval x.length)
     (hbefore : ∀ x k, k < N x → H ((abstractStep P T)^[k] (init x)) = false)
     (hafter : ∀ x, H ((abstractStep P T)^[N x] (init x)) = true)
-    (hanswer : ∀ x, x ∈ L ↔ answer ((abstractStep P T)^[N x] (init x)) = true) : L ∈ PSPACE := by
+    (hanswer : ∀ x, x ∈ L ↔ answer ((abstractStep P T)^[N x] (init x)) = true) :
+    SpaceDecider L := by
   have hstart := mem_FP_comp hi (Cobham.cons_mem_FP false)
   have hans := mem_FP_comp (drop_mem_FP id_mem_FP (UnaryFn.const 1)) ha
-  refine HaltingIteration.mem_PSPACE
-    (init := fun x => parent (init x)) (advance := step P)
-    (halt := halted H) (answer := fun bits => answer (bits.drop 1))
-    hstart (step_mem_FP P hP) (halted_mem_FP hH) hans
-    (2 * r + u + 3) (w + v + 2) (fun x => clock P T (init x) (N x)) ?_ ?_ ?_ ?_ ?_
+  refine { init := fun x => parent (init x)
+           advance := step P
+           halt := halted H
+           answer := fun bits => answer (bits.drop 1)
+           initFP := hstart
+           advanceFP := step_mem_FP P hP
+           haltFP := halted_mem_FP hH
+           answerFP := hans
+           space := 2 * r + u + 3
+           clock := w + v + 2
+           time := fun x => clock P T (init x) (N x)
+           length_le := ?_
+           time_le := ?_
+           before := ?_
+           after := ?_
+           correct := ?_ }
   · intro x t ht
     simpa only [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat] using
       iterate_length_le P T (init x) (N x) (r.eval x.length) (u.eval x.length)
@@ -65,5 +78,24 @@ theorem mem_PSPACE {L : Language} (P : Program) (hP : P.PolyTime)
   · intro x
     rw [iterate_clock P T (init x) (N x) (hT x)]
     simpa only [parent, List.drop_succ_cons, List.drop_zero] using hanswer x
+
+theorem mem_PSPACE {L : Language} (P : Program) (hP : P.PolyTime)
+    (init : List Bool → List Bool) (hi : init ∈ FP)
+    (H answer : List Bool → Bool)
+    (hH : (fun p => [H p]) ∈ FP) (ha : (fun p => [answer p]) ∈ FP)
+    (T : List Bool → ℕ) (N : List Bool → ℕ) (r u w v : Polynomial ℕ)
+    (hT : ∀ x k, k < N x → P.request ((abstractStep P T)^[k] (init x)) = true →
+      TerminatesAt P ((abstractStep P T)^[k] (init x)) (T ((abstractStep P T)^[k] (init x))))
+    (hp : ∀ x k, k ≤ N x → ((abstractStep P T)^[k] (init x)).length ≤ r.eval x.length)
+    (hu : ∀ x k, k < N x → P.request ((abstractStep P T)^[k] (init x)) = true →
+      ∀ j, j ≤ T ((abstractStep P T)^[k] (init x)) →
+        (P.advance^[j] (P.start ((abstractStep P T)^[k] (init x)))).length ≤ u.eval x.length)
+    (hN : ∀ x, N x ≤ 2 ^ w.eval x.length)
+    (hchild : ∀ x k, k < N x → P.request ((abstractStep P T)^[k] (init x)) = true →
+      T ((abstractStep P T)^[k] (init x)) ≤ 2 ^ v.eval x.length)
+    (hbefore : ∀ x k, k < N x → H ((abstractStep P T)^[k] (init x)) = false)
+    (hafter : ∀ x, H ((abstractStep P T)^[N x] (init x)) = true)
+    (hanswer : ∀ x, x ∈ L ↔ answer ((abstractStep P T)^[N x] (init x)) = true) : L ∈ PSPACE :=
+  (decider P hP init hi H answer hH ha T N r u w v hT hp hu hN hchild hbefore hafter hanswer).mem_PSPACE
 
 end LeanCanny.Computation.SubroutineIteration

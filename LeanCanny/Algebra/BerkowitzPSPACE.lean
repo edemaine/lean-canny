@@ -39,8 +39,8 @@ structure ModularAccess (F : ModularFamily) where
 
 namespace ModularAccess
 
-theorem zeroLanguage_mem_PSPACE {F : ModularFamily} (a : ModularAccess F)
-    (ha : a.access.PolyTime) : F.zeroLanguage ∈ PSPACE := by
+noncomputable def decider {F : ModularFamily} (a : ModularAccess F)
+    (ha : a.access.PolyTime) : SpaceDecider F.zeroLanguage := by
   let ac := a.access
   let P := Suspended.program ac
   let T := Suspended.childTime ac
@@ -48,10 +48,18 @@ theorem zeroLanguage_mem_PSPACE {F : ModularFamily} (a : ModularAccess F)
   let f := SubroutineIteration.abstractStep P T
   have hbitsFP := mem_FP_comp (mem_FP_comp ha.dimension BinaryNat.succ_mem_FP)
     BinaryNat.succ_mem_FP
-  obtain ⟨pd, hd⟩ := Cobham.output_length_poly_of_mem_FP ha.dimension
-  obtain ⟨pm, hm⟩ := Cobham.output_length_poly_of_mem_FP ha.modulus
-  obtain ⟨pq, hq⟩ := Cobham.output_length_poly_of_mem_FP hbitsFP
-  obtain ⟨pe, he⟩ := Cobham.output_length_poly_of_mem_FP Controller.entryInput_mem_FP
+  let pd := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.dimension)
+  have hd : ∀ c, (a.access.dimension c).length ≤ pd.eval c.length :=
+    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.dimension)
+  let pm := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.modulus)
+  have hm : ∀ c, (a.access.modulus c).length ≤ pm.eval c.length :=
+    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.modulus)
+  let pq := Classical.choose (Cobham.output_length_poly_of_mem_FP hbitsFP)
+  have hq : ∀ c, ((BinaryNat.succ ∘ BinaryNat.succ ∘ a.access.dimension) c).length ≤ pq.eval c.length :=
+    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hbitsFP)
+  let pe := Classical.choose (Cobham.output_length_poly_of_mem_FP Controller.entryInput_mem_FP)
+  have he : ∀ c, (Controller.entryInput c).length ≤ pe.eval c.length :=
+    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP Controller.entryInput_mem_FP)
   let p := pd + pm + pq
   let r := 2 * Polynomial.X + 2 + 64 * (4 * p + 2) ^ 2
   let u := 2 * pe.comp r + 2 + 64 * (3 * p + 1) ^ 2
@@ -78,7 +86,7 @@ theorem zeroLanguage_mem_PSPACE {F : ModularFamily} (a : ModularAccess F)
     simp only [r, Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat,
       Polynomial.eval_X, Polynomial.eval_pow]
     exact hl.trans (Nat.add_le_add_left (Nat.mul_le_mul_left 64 hpow) _)
-  refine SubroutineIteration.mem_PSPACE P (Suspended.program_polyTime ac ha)
+  refine SubroutineIteration.decider P (Suspended.program_polyTime ac ha)
     (Suspended.init ac) (Suspended.init_mem_FP ac ha) Controller.halted Controller.zeroAnswer
     Controller.halted_mem_FP Controller.zeroAnswer_mem_FP T N r u
     ((2 * p + 3) * p + 1) ((p + 2) * p + 1) ?_ ?_ ?_ ?_ ?_ ?_ ?_ ?_
@@ -141,6 +149,9 @@ theorem zeroLanguage_mem_PSPACE {F : ModularFamily} (a : ModularAccess F)
       (a.correct c).dimension]
     exact (controller_zero_iff _ c (F.modulus c) (F.matrix c)
       (Suspended.ops_correctAt ac c (F.modulus c) (F.dimension c) (F.matrix c) (a.correct c))).symm
+
+theorem zeroLanguage_mem_PSPACE {F : ModularFamily} (a : ModularAccess F)
+    (ha : a.access.PolyTime) : F.zeroLanguage ∈ PSPACE := (decider a ha).mem_PSPACE
 
 end ModularAccess
 end LeanCanny.Algebra.Berkowitz
