@@ -16,6 +16,7 @@ import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates
 import LeanCanny.Algebra.ShiftCoefficients
 import LeanCanny.Algebra.ResultantBounds
+import LeanCanny.Algebra.MatrixPowerEncoding
 
 /-!
 # Canny's algebraic and geometric computations in polynomial space

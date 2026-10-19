@@ -98,6 +98,15 @@ reduction infrastructure; the algorithm backend remains undecided. A separate mo
 would be justified by reusable interfaces or proved interoperability, not merely by
 having fewer files.
 
+The project now supplies a concrete benchmark for that comparison: a continuation
+machine for one entry of a matrix power, with balanced recursion and a streamed
+summation. Its result, exact abstract transition count, and logarithmic frame count
+are proved. Its binary representation is injective, and states over `ZMod m` have
+a quadratic bound in the binary lengths of the dimension, exponent, and modulus.
+This uses a supplied entry function and abstract scalar operations. Implementing
+the encoded step with certified entry access and arithmetic remains the backend
+obligation; the representation bound alone is not a TM space certificate.
+
 Local comparison sources, at `lean-trominoes` commit
 `6fe52dd234bb616fd4fb3c1e7b0a203de1482bc5`:
 

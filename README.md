@@ -73,6 +73,8 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.ShiftCoefficients`](LeanCanny/Algebra/ShiftCoefficients.lean) | Direct access to the coefficient of `x^i θ^j` in `p(θ-c*x)`: `choose(i+j,i)*p[i+j]*(-c)^i`. For degree `d` and integer input coefficient bound `H`, its magnitude is at most `2^d*H*(c+1)^d` and its bit length at most `d + H.size + (c+1).size*d + 1`. |
 | [`Algebra.CoefficientBounds`](LeanCanny/Algebra/CoefficientBounds.lean) | A polynomial determinant with column coefficient-mass bounds `Bⱼ` has each coefficient bounded by `N! * ∏ Bⱼ`. Power-of-two column budgets give explicit binary length bounds. Column degree bounds also bound the determinant's degree, including empty matrices. |
 | [`Algebra.ResultantBounds`](LeanCanny/Algebra/ResultantBounds.lean) | The unnormalized integer resultant has explicit coefficient magnitude and binary length bounds. Its degree is at most `d₁*d₂` over any commutative ring, without separability or nonzero hypotheses. The two input orders have equal coefficient magnitudes. |
+| [`Algebra.MatrixPowerEntry`](LeanCanny/Algebra/MatrixPowerEntry.lean), [`MatrixPowerMachine`](LeanCanny/Algebra/MatrixPowerMachine.lean), [`MatrixPowerWork`](LeanCanny/Algebra/MatrixPowerWork.lean) | A continuation machine computes one entry of `A^e` over any semiring by balanced recursion, streaming the summation through a counter and accumulator. Correctness and the exact abstract transition count are proved; no intermediate matrix power is stored. |
+| [`Algebra.MatrixPowerBounds`](LeanCanny/Algebra/MatrixPowerBounds.lean), [`MatrixPowerEncoding`](LeanCanny/Algebra/MatrixPowerEncoding.lean) | Every reachable state has at most `e.size` frames. A binary state representation is injective when its scalar representation is. For residues modulo nonzero `m`, complete states have at most `64*(N.size + e.size + m.size + 1)^2` bits for an `N`-dimensional matrix supplied as an entry function. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -101,6 +103,13 @@ has binary length at most `N.size*N + d₂*b + d₁*H₂.size + 1` when the inpu
 coefficient magnitudes are bounded by `H₁,H₂`. Encoded determinant computation,
 symbolic subresultant recovery and its output-size bounds, and the report's
 polylogarithmic-space computation remain open.
+
+The streamed matrix-power primitive now has a verified continuation machine and
+binary state-size bounds. Its abstract run takes at most
+`2^((N.size+2)*e.size+1)` transitions. Entry access and scalar arithmetic count as
+single abstract operations here. A decoder, certified implementations of the
+encoded step and its arithmetic, and a determinant algorithm using this primitive
+remain to be supplied before obtaining a machine-level space theorem.
 
 ## Next obligations
 
