@@ -86,6 +86,7 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.MatrixPowerArithmeticFP`](LeanCanny/Algebra/MatrixPowerArithmeticFP.lean) | The uniform modular multiply-accumulate routine agrees exactly with `ZMod` residue encodings for every nonzero modulus. Encoded zero and one are certified too, including modulus one. The modulus is an input field of one FP routine. |
 | [`Algebra.MatrixPowerController`](LeanCanny/Algebra/MatrixPowerController.lean), [`MatrixPowerControllerCorrect`](LeanCanny/Algebra/MatrixPowerControllerCorrect.lean) | A total context-carrying bitstring transition belongs to `FP` when its explicit callbacks do. It simulates every typed transition on encoded states. The modular specialization supplies scalar callbacks and retains the original context for entry access. Packet initialization is certified too. Every modular packet has at most `2*c.length+2+64*(N.size+e.size+m.size+1)^2` bits throughout the run. |
 | [`Computation.HaltingIteration`](LeanCanny/Computation/HaltingIteration.lean) | An FP initializer, transition, halting test, and answer yield a PSPACE decision procedure when states have polynomial length and the first halting time is at most exponential in a polynomial. The wrapper supplies the exact completion/answer protocol required by Complexitylib's `SpaceIter`; the clock need not be computed. |
+| [`Computation.SpaceDecider`](LeanCanny/Computation/SpaceDecider.lean) | A reusable decision procedure packages its FP primitives, first halting time, polynomial workspace, exponential clock, and language correctness. Suspended iteration and modular determinant evaluation now expose these certificates for further composition. |
 | [`Algebra.MatrixPowerHalting`](LeanCanny/Algebra/MatrixPowerHalting.lean), [`MatrixPowerPSPACE`](LeanCanny/Algebra/MatrixPowerPSPACE.lean) | The controller first finishes at exactly `work N e.size e + 1` steps. Testing whether a selected entry of a modular matrix power is zero belongs to Complexitylib's `PSPACE`, given canonical FP field writers and uniform FP entry access on every input. Dimensions and exponents may be exponentially large; only their binary descriptions enter the bound. |
 | [`Algebra.CharacteristicAdjugate`](LeanCanny/Algebra/CharacteristicAdjugate.lean), [`BorderedDeterminant`](LeanCanny/Algebra/BorderedDeterminant.lean) | Every coefficient of `adj(XI-A)` is a sum of characteristic coefficients times powers of `A`. Block elimination proves the bordered determinant formula by cancellation of a regular determinant; a monic characteristic polynomial supplies that cancellation over arbitrary commutative rings. |
 | [`Algebra.BerkowitzRecurrence`](LeanCanny/Algebra/BerkowitzRecurrence.lean), [`BerkowitzCoefficients`](LeanCanny/Algebra/BerkowitzCoefficients.lean) | The division-free bordered characteristic-coefficient recurrence uses scalar moments `r A^k c`. A recursive reference on `Fin n` matrices agrees with every Mathlib characteristic coefficient, and its signed constant coefficient equals the determinant, including the empty matrix. This reference has linear recursion depth and no space certificate. |
@@ -101,6 +102,9 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.BerkowitzQueryFP`](LeanCanny/Algebra/BerkowitzQueryFP.lean), [`BerkowitzMomentAccessFP`](LeanCanny/Algebra/BerkowitzMomentAccessFP.lean) | FP division/remainder decodes flattened layer and coefficient indices. FP writers supply the trailing dimension, offset, moment exponent, and four-case selector, with exact numeric specifications. Offset query writers access the original input matrix and give certified callbacks for exactly the trailing block and border vectors in the moment formula. |
 | [`Algebra.BerkowitzFactorChild`](LeanCanny/Algebra/BerkowitzFactorChild.lean), [`BerkowitzFactorChildCorrect`](LeanCanny/Algebra/BerkowitzFactorChildCorrect.lean), [`BerkowitzFactorChildBounds`](LeanCanny/Algebra/BerkowitzFactorChildBounds.lean) | The complete factor child combines immediate values with the scalar-moment controller. Its initialization, transition, halting test, and output are FP. Correct layered entries, exact first halting time, packet-size bounds, and an exponential clock bound are proved from original-matrix access. |
 | [`Algebra.BerkowitzSuspended`](LeanCanny/Algebra/BerkowitzSuspended.lean), [`BerkowitzSuspendedBounds`](LeanCanny/Algebra/BerkowitzSuspendedBounds.lean), [`BerkowitzPSPACE`](LeanCanny/Algebra/BerkowitzPSPACE.lean) | Modular determinant zero testing belongs to Complexitylib's PSPACE under canonical FP dimension, nonzero modulus, and original-entry access on every input. The physical controller runs the factor child, saves the parent, and includes both packets in the polynomial workspace bound. Dimension may be exponential in input length. |
+| [`Algebra.IntegerModular`](LeanCanny/Algebra/IntegerModular.lean) | An integer with at most `B` magnitude bits is zero exactly when its residues modulo `1,...,2*B+4` all vanish. An LCM growth estimate keeps the scan linear in the bit budget. The criterion applies to determinants; column entry bounds give determinant bit budgets, including empty matrices. |
+| [`Computation.BoundedScan`](LeanCanny/Computation/BoundedScan.lean), [`BoundedScanPSPACE`](LeanCanny/Computation/BoundedScanPSPACE.lean) | An FP binary bound permits exponentially many sequential calls to a certified space decider. The input, counter, and accumulated answer are retained while each child runs. Correctness, first halting time, combined workspace, and expanded physical clock yield a reusable PSPACE certificate for the universal scan. |
+| [`Algebra.IntegerDeterminantPSPACE`](LeanCanny/Algebra/IntegerDeterminantPSPACE.lean) | Integer determinant zero testing belongs to PSPACE under FP dimension and binary bit-budget access and uniform FP original-entry residue access. The scan instantiates the modular determinant decider, including its factor children. Integer entries and the determinant bit budget may be exponentially long/large respectively; their complete integer values are never stored. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -126,7 +130,7 @@ direct formulas and integer bit-length bounds. The unnormalized integer resultan
 has at most `d₁*d₂+1` supported coefficients. Writing `N = d₁+d₂` and
 `b = (d₁+1).size + d₁ + H₁.size + (c+1).size*d₁`, each coefficient's magnitude
 has binary length at most `N.size*N + d₂*b + d₁*H₂.size + 1` when the input
-coefficient magnitudes are bounded by `H₁,H₂`. Encoded integer determinant computation,
+coefficient magnitudes are bounded by `H₁,H₂`. Integer determinant sign and digit computation,
 symbolic subresultant recovery and its output-size bounds, and the report's
 polylogarithmic-space computation remain open.
 
@@ -179,7 +183,18 @@ the outer controller and proves modular determinant zero testing in PSPACE.
 Its access contract specifies canonical dimension/modulus fields and original
 matrix entries on every input, with a nonzero modulus; concrete formats must
 supply validation and defaults. It assumes no FP evaluator for whole factor
-entries. Integer reconstruction, symbolic determinant coefficients, and Canny's
+entries.
+
+`Berkowitz.IntegerAccess.zeroLanguage_mem_PSPACE` extends the result to integer
+determinant zero testing. Its canonical FP budget field bounds the determinant's
+magnitude bit length; the entry routine supplies residues modulo every positive
+binary modulus. The integer entries need not fit in polynomial space. The
+certified scan tests only the moduli `1,...,2*B+4`, where `B` is that bit budget.
+An FP budget word gives polynomial-length modulus counters and exponentially many
+calls. The combined bound includes the saved scan parent, modular controller,
+and factor child. These contracts cover all input strings; concrete formats
+still must supply validation/defaults and prove the access and budget properties.
+Integer sign/digit computation, symbolic determinant coefficients, and Canny's
 remaining algebraic and geometric arguments remain open.
 
 Binary addition, multiplication, comparison, subtraction, division, and modular reduction
@@ -194,8 +209,8 @@ callback required by the modular power machine.
    formats and uniform entry evaluators;
    instantiate the suspended-entry interface when the whole entry computation
    requires more than polynomial time.
-3. Extend modular determinant zero testing to encoded integer and symbolic
-   determinant computations. Supply encoded subresultant computation
+3. Extend integer determinant zero testing to sign/digit and symbolic coefficient
+   computations, with concrete uniform residue access. Supply encoded subresultant computation
    and its remaining output-size bounds; formalize the parallel/streamed algebra used by the report.
 4. Formalize critical points, perturbations, sign tests, and the correctness of Canny's
    ETR decision procedure; prove `ETR ∈ PSPACE`.

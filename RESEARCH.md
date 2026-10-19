@@ -42,9 +42,9 @@ The project now bounds coefficients of polynomial determinants by column coeffic
 masses, and specializes this estimate to the integer resultant. Its degree is at most
 `d₁*d₂` without nonzero or separability hypotheses, and its coefficient bit lengths
 are bounded explicitly in the input degrees, coefficient lengths, and direction length.
-Encoded integer/symbolic determinant and subresultant algorithms, subresultant
-output-size bounds, and the report's space bounds remain open; the size estimates alone do not establish
-an algorithm with the required workspace.
+Integer determinant sign/digit and symbolic coefficient algorithms, subresultant
+computation and output-size bounds, and the report's remaining space bounds are
+open. Integer determinant zero testing now has the conditional PSPACE theorem below.
 
 The project also proves the division-free bordered characteristic-polynomial
 recurrence behind Berkowitz's algorithm. Coefficients of `adj(XI-A)` are expressed
@@ -88,8 +88,21 @@ It assumes FP canonical dimension/modulus fields and FP original-matrix entries
 on every input, with a nonzero modulus. Dimension can be exponential in the input
 length. The proof includes the retained parent and child packets and the expanded
 physical clock; it assumes no FP computation of whole factor entries.
-Integer reconstruction, symbolic coefficients, and the report's ETR upper bound
-remain open.
+Integer determinant zero testing now also belongs to PSPACE under FP dimension
+and binary determinant-bit-budget access and uniform FP original-entry residue
+access. Mathlib's LCM growth bound implies that an integer of at most `B`
+magnitude bits is zero exactly when its residues modulo `1,...,2*B+4` vanish.
+The project proves this criterion and the determinant specialization. A generic
+bounded universal scan retains a binary counter and one answer bit while each
+space-certified child runs. Modular determinant evaluation now exposes a reusable
+`SpaceDecider` with its FP primitives and full resource/correctness certificates.
+The scan composes that decider, accounting for the scan parent, modular controller,
+and factor child. Dimension, entry bit lengths, and the determinant bit budget can
+be exponential in the input length; complete integer entries are not stored.
+The access contract covers all contexts and positive binary moduli. Concrete
+formats still must validate/default inputs and supply the uniform residue routine
+and bit budget. Integer sign/digit computation, symbolic coefficients, and the
+report's ETR upper bound remain open.
 
 ## TM2 versus Complexitylib's machines
 
