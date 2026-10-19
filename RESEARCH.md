@@ -153,6 +153,15 @@ proves integer resultant zero testing under FP degree/budget fields and
 corollary requires the supplied degrees to equal the actual degrees. Symbolic
 resultant coefficient and sign algorithms still require work.
 
+The symbolic coefficient reduction now has a scalar matrix representation.
+`PolynomialCoefficientMatrix.scalarHom` maps a polynomial to its lower
+triangular coefficient matrix of width `d+1`, preserving addition and
+multiplication. Entrywise application and block flattening preserve powers.
+`Berkowitz.det_coeff_eq_coefficientPower` consequently expresses degree `d`
+of a determinant over `R[X]` as a signed power entry over `R`, in dimension
+`(n+1)^2*(d+1)`. This is a proved algebraic identity; an encoded evaluator must
+still supply space-bounded access to coefficients of the layered factors.
+
 ## TM2 versus Complexitylib's machines
 
 The distinction affects implementation and resource-accounting effort, even though
