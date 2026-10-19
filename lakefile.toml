@@ -1,0 +1,15 @@
+name = "lean_canny"
+version = "0.1.0"
+defaultTargets = ["LeanCanny"]
+
+[leanOptions]
+relaxedAutoImplicit = false
+maxHeartbeats = 2000000
+
+[[require]]
+name = "complexitylib"
+git = "https://github.com/SamuelSchlesinger/complexitylib"
+rev = "add0aca8ee0d71e68969f2cb45cf91554a50f787"
+
+[[lean_lib]]
+name = "LeanCanny"
