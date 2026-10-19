@@ -84,5 +84,7 @@ These are kernel-checked mathematical correctness results. The reference uses
 Mathlib's noncomputable polynomial operations. The project modules
 `PrincipalCoefficientSpace.lean` and `PrincipalCoefficientQuery.lean` supply an
 encoded principal-sign pipeline from polynomial coefficient readers and FP degree
-metadata. Retaining computed degrees and composing this pipeline with the
-original head/query sources remains open.
+metadata. `TarskiQuerySpace.lean` composes it with computed actual degrees and
+the original head/query coefficient readers, with full space/clock certificates.
+The full ETR decision procedure and its critical-point correctness proof remain
+open.

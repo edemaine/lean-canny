@@ -46,7 +46,8 @@ integer bit budget, including the terminal principal index. The integer pseudo-s
 construction below supplies a streamed alternative to rational remainder access.
 Actual-degree routines and the sign-statistic scan now have resource proofs.
 Principal-determinant signs are now supplied by the project pipeline below.
-Retaining the computed degrees and composing all source routines remains open.
+The computed degrees and all source routines are composed in the original-source
+Tarski evaluator below.
 
 `PseudoRemainder` now replaces rational polynomial division by a fixed linear
 operator. Splitting `g` into its coefficients below degree `d` and shifted high
@@ -67,9 +68,8 @@ If head and input coefficient masses are bounded by `2^bp` and `2^bg`, a coeffic
 after `n` steps has at most `n*(bp+1)+bg+1` magnitude bits. FP binary writers supply
 this budget from original degree/coefficient bounds. The derivative-product
 source instantiation, integer coefficient signs, and actual-degree routines are
-now proved below. Their assembly with the constant-head branch and the
-principal-determinant pipeline remains open; the full `ETR ∈ PSPACE` theorem
-is not yet established.
+now composed with the constant-head branch and principal-determinant pipeline
+below. The full `ETR ∈ PSPACE` theorem is not yet established.
 
 `DerivativeBits.evaluator` reads an original coefficient at binary index `k+1`
 and multiplies it modulo the supplied modulus. `DerivativeProductBits.Access.evaluator`
@@ -95,8 +95,8 @@ returns Mathlib's natural degree, including zero for the zero polynomial.
 The original head and computed seed have concrete degree evaluators using
 these scans and the certified integer coefficient signs. These outputs may
 use polynomial space; they are not asserted to be FP functions of the original
-input. Composing them as retained metadata for the principal-determinant sign
-scan remains to be proved.
+input. Their retained metadata now feeds the principal-determinant sign scan
+through the total contexts below.
 
 `SignStatisticBits.evaluator` now supplies the full permanences-minus-variations
 scan from a suspended sign reader and an FP binary count. Its state keeps the
@@ -107,8 +107,8 @@ costs, and returns the integer answer as canonical positive and negative parts.
 `descendingEvaluator` derives descending coefficient indices in FP.
 `tarskiEvaluator` connects this implementation to the integer pseudo-seed
 Tarski formula, assuming certified signed-principal-coefficient signs and an
-actual positive head-degree writer. This is a composition interface, not yet a
-Tarski evaluator derived solely from the original two coefficient routines.
+actual positive head-degree writer. The original-source evaluator below
+instantiates both of these intermediate assumptions.
 
 `PrincipalMinor.minor_eq_submatrix` extends the Sylvester embedding to terminal
 orders using non-strict bounds. `PrincipalMinorBits.Access.residueEvaluator`
@@ -125,8 +125,27 @@ binary degree parameters. The reader covers every requested order and input
 word. `queryEvaluator` composes it with the descending sign-statistic scan;
 no principal-sign oracle is assumed. With the head and its integer pseudo-seed
 as inputs and actual degree metadata, `tarskiEvaluator` returns the real-root
-Tarski query. Combining the already computed degrees and original head/query
-readers into this context, including the constant-head branch, remains open.
+Tarski query. The total contexts below supply this metadata from the original
+head/query readers, including the constant-head branch.
+
+`TarskiQueryBits.evaluator` now evaluates the full signed integer Tarski query
+from the original two uniform coefficient-residue readers. The FP metadata
+contains only upper degree and coefficient-mass bounds. It computes the actual
+head degree first and retains it in the context. A positive degree cap truncates
+the head on arbitrary metadata words, so every intermediate source contract
+holds; at the computed degree, this truncation is the original polynomial.
+The actual integer seed degree is then computed and retained before the
+principal-sign scan. All nested coefficient, CRT, matrix, and scan costs are
+included by the space-function composition certificates.
+
+A separate constant-head branch returns zero, including Mathlib's finite-root
+convention for the zero polynomial. The output encodes the query's canonical
+positive and negative parts. `TarskiQueryBits.zeroLanguage_mem_PSPACE`,
+`positiveLanguage_mem_PSPACE`, and `negativeLanguage_mem_PSPACE` give decision
+consequences under the same original-source contracts. The remaining root-sign
+work composes this evaluator with the product-query sources, query selection,
+and the sign-pattern count; critical-point correctness and `ETR ∈ PSPACE` remain
+open.
 
 No existing encoded ∃ℝ complexity-class definition or formal proof of `ETR ∈ PSPACE`
 was found in the inspected Mathlib, Complexitylib, CSLib, TauCeti, or adjacent projects.
@@ -744,9 +763,10 @@ and [adapted matrices](https://github.com/TauCetiProject/TauCeti/blob/main/TauCe
 The integer formulation here supplies explicit bit budgets and a certified
 streamed coefficient routine for each product query. The full expansion has
 `3^k` queries. It establishes the counting identity, without establishing Canny's
-polylogarithmic dependence on the number of input polynomials. Evaluating Tarski
-queries from input coefficients, implementing suitable query selection and its
-workspace bound, and composing the general algebraic-root sign decider remain open.
+polylogarithmic dependence on the number of input polynomials. Tarski queries
+now have an original-source space evaluator. Composing all product-query sources,
+implementing suitable query selection and its workspace bound, and composing
+the general algebraic-root sign decider remain open.
 
 ## TM2 versus Complexitylib's machines
 
