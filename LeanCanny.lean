@@ -35,6 +35,7 @@ import LeanCanny.Algebra.BerkowitzPSPACE
 import LeanCanny.Algebra.IntegerDeterminantPSPACE
 import LeanCanny.Algebra.ResultantPSPACE
 import LeanCanny.Algebra.BinomialResidue
+import LeanCanny.Algebra.ShiftCoefficientResidue
 
 /-!
 # Canny's algebraic and geometric computations in polynomial space

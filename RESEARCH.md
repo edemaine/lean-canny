@@ -125,9 +125,18 @@ composite moduli and modulus one. `BinomialResidue.evaluator` returns the comple
 residue through a `SpaceFunction` certificate with first halting time, polynomial
 state bounds, and an exponential clock. All binary input words are covered;
 `k>n` returns zero. Modular power evaluation now exposes the same output interface,
-and FP final predicates derive PSPACE decision procedures from it. Combining the
-binomial routine with the remaining shifted-coefficient arithmetic and allowing
-space-bounded coefficient calls in the resultant evaluator still require work.
+and FP final predicates derive PSPACE decision procedures from it.
+The shifted-coefficient residue evaluator now combines the binomial child with
+the original coefficient and the power of the negative direction. Binary modular
+exponentiation has an FP certificate by repeated squaring, with every fold result
+bounded by the modulus word. FP input preparation and an explicit input-retention
+wrapper preserve the complete resource certificates. `ShiftCoefficientBits.certified`
+returns exactly the coefficient of `x^i θ^j` in `p(θ-c*x)` modulo the supplied
+positive modulus, assuming FP original-coefficient residue access and a canonical
+FP direction writer. Its modular zero-test language is in PSPACE. All binary
+queries, zero coefficients/direction, and modulus one are covered. Allowing these
+space-bounded coefficient calls in the resultant evaluator and computing symbolic
+resultant coefficients still require work.
 
 ## TM2 versus Complexitylib's machines
 
