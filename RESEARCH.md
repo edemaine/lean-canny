@@ -401,8 +401,9 @@ magnitude-digit computation. The centered residue is `I-Q*M`; negativity selects
 `M-(I-Q*M)` when needed. `IntegerDigitBits.evaluatorOfProducts` supplies rank and
 sign directly from the original uniform residue routine and FP bit budget. Its
 remaining algorithmic inputs are precisely bit routines for the combined product
-`M` and inverse-weighted sum `I`. The uniform balanced-product implementation and
-weighted-sum source remain open; the final composition is conditional on them.
+`M` and inverse-weighted sum `I`. The uniform balanced-product evaluator is now
+certified. Its concrete CRT instantiation and the weighted-sum source remain
+open; the final digit composition is conditional on these sources.
 
 `BalancedProduct` now defines the complete product tree, with height-`h` node
 `i` covering the factor interval starting at `2^h*i`. Its typed continuation
@@ -417,9 +418,14 @@ termination, the first halting time, and abstract clock bound
 `128*(H+K.size+1)^2` bits; pairing keeps the continuation tail undoubled.
 Initial and child query writers are FP, including binary division for scan
 coordinates. Padding with ones identifies complete trees with finite products
-and omitted-factor cofactors, including empty families. Leaf access counts as
-one abstract step here. The FP encoded transition, suspended leaf costs, and
-concrete CRT instantiation remain necessary for the full product-bit space certificate.
+and omitted-factor cofactors, including empty families. The binary controller is
+FP and simulates every typed transition. `BalancedProduct.treeEvaluator` supplies
+a complete `SpaceFunction` certificate from FP count/index writers and a
+space-bounded factor-bit evaluator. Suspended calls retain the parent stack;
+both child workspace and the expanded physical clock are counted.
+`BalancedProduct.evaluator` and `cofactorEvaluator` mask padding and omitted
+leaves with FP bits of one, requiring factor-bit correctness only at retained
+indices. The count stays binary throughout. Concrete CRT instantiation remains.
 
 ## TM2 versus Complexitylib's machines
 
