@@ -12,8 +12,9 @@ public import LeanCanny.Algebra.PrimitiveCoordinates
 For a separating value `θ = a + c*b`, the polynomials `p₁(θ-c*x)` and `p₂(x)`
 have exactly one common root, namely `b`. Separability makes their GCD linear.
 Its first two coefficients recover `b` and then `a`, with a nonzero denominator.
-This verifies the GCD specification; relating it to a symbolic subresultant and
-proving the computation's space bound remain separate obligations.
+This verifies the GCD specification. `SubresultantRecovery` connects it to a
+symbolic first subresultant for nonzero directions and input degrees greater
+than one; the full coordinate computation's space bound remains open.
 -/
 
 @[expose] public section

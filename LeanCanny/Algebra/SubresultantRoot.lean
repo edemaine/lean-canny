@@ -16,7 +16,7 @@ the high-coefficient matrix multiplies its determinant by `-b`. This gives
 the ratio identity needed for the first subresultant. For degree bounds `m,n>1`,
 the first subresultant is its linear coefficient times `X-b`. Over a field the
 root is the negative coefficient ratio when the denominator is nonzero.
-Nonvanishing from a linear GCD is a separate obligation.
+Nonvanishing from a linear GCD is proved in `SubresultantGCD`.
 -/
 
 @[expose] public section

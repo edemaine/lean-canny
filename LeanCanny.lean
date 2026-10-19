@@ -24,6 +24,7 @@ import LeanCanny.Algebra.SubresultantBounds
 import LeanCanny.Algebra.SubresultantMinor
 import LeanCanny.Algebra.SubresultantRoot
 import LeanCanny.Algebra.SubresultantPolynomialSpace
+import LeanCanny.Algebra.SubresultantRecoveryBounds
 import LeanCanny.Algebra.MatrixPowerEncoding
 import LeanCanny.Algebra.MatrixPowerDecoding
 import LeanCanny.Algebra.MatrixPowerQueryFP

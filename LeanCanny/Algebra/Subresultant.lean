@@ -15,8 +15,8 @@ columns. Its coefficient `r` selects row `r`, then rows `k+1,k+2,...`.
 This fixes the convention by making order zero exactly Mathlib's resultant.
 
 The polynomial is defined for `k < m` and `k < n`; other orders default to zero.
-The top-order boundary cases require a separate interface. In particular this
-file does not yet prove the GCD/subresultant theorem needed for coordinate recovery.
+The top-order boundary cases require a separate interface. The first-subresultant
+GCD relation for interior degrees is proved in `SubresultantGCD`.
 -/
 
 @[expose] public section

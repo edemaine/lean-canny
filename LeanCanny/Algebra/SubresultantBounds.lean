@@ -40,6 +40,14 @@ theorem minor_natDegree_le {R : Type*} [CommRing R] (f g : Polynomial (Polynomia
   have h := det_natDegree_le (minor f g m n k r) (fun j => j.addCases (fun _ => Dg) (fun _ => Df)) hcol
   simpa only [Fin.sum_univ_add, Fin.addCases_left, Fin.addCases_right, Fin.sum_const, smul_eq_mul] using h
 
+theorem coeff_natDegree_le {R : Type*} [CommRing R] (f g : Polynomial (Polynomial R))
+    (m n k r Df Dg : ℕ) (hf : ∀ i, (f.coeff i).natDegree ≤ Df) (hg : ∀ i, (g.coeff i).natDegree ≤ Dg) :
+    ((polynomial f g m n k).coeff r).natDegree ≤ (m - k) * Dg + (n - k) * Df := by
+  rw [coeff]
+  split_ifs
+  · exact minor_natDegree_le f g m n k r Df Dg hf hg
+  · simp
+
 theorem minor_det_size_le (f g : Polynomial ℤ) (m n k r bf bg : ℕ)
     (hf : ∀ i, (f.coeff i).natAbs ≤ 2 ^ bf) (hg : ∀ i, (g.coeff i).natAbs ≤ 2 ^ bg) :
     (minor f g m n k r).det.natAbs.size ≤ budget m n k bf bg := by

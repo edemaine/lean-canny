@@ -43,8 +43,10 @@ masses, and specializes this estimate to the integer resultant. Its degree is at
 `d₁*d₂` without nonzero or separability hypotheses, and its coefficient bit lengths
 are bounded explicitly in the input degrees, coefficient lengths, and direction length.
 Interior subresultants now have explicit determinant definitions, coefficient bit bounds,
-and certified modular evaluation. Integer digit recovery, the nonzero subresultant/GCD
-bridge for coordinate recovery, and the report's remaining space bounds are open. Integer negativity is certified
+and certified modular evaluation. The nonzero linear-GCD bridge now proves symbolic
+coordinate recovery for input degrees greater than one and nonzero directions.
+Integer digit recovery, degree-one recovery cases, and the report's remaining space
+bounds are open. Integer negativity is certified
 from residue access and a binary bit budget, with a full three-way sign evaluator
 for Canny's concrete resultant coefficient.
 The modules below give certified modular determinant/resultant coefficient
@@ -283,7 +285,7 @@ to the actual integer coefficient and combines it with the existing zero decider
 Its tags are `0` for zero, `1` for negative, and `2` for positive. Both the negative
 and positive languages are in PSPACE under the existing FP source degree,
 direction, selected-degree, coefficient-residue, and source-bit-budget contracts.
-Integer digit recovery, the full subresultant coordinate-recovery bridge, and the
+Integer digit recovery, the full coordinate computation's space bound, and the
 critical-point/ETR argument remain open.
 
 The subresultant determinant specification is now explicit. For interior order
@@ -308,8 +310,24 @@ would otherwise be one. The corresponding zero language is in PSPACE.
 `Subresultant.first_eq_mul_X_sub_C` proves that for degree bounds `m,n>1`, the first
 subresultant equals `D*(X-b)` at any common root `b`: the root equations express
 the constant row as a linear combination of the positive-degree rows. Hence the
-determinant ratio recovers `b` whenever `D≠0`. Top-order boundary cases and the
-nonzero first-subresultant/GCD theorem are still required for Canny's coordinate recovery.
+determinant ratio recovers `b` whenever `D≠0`.
+
+`Subresultant.minor_first_one_det_linear_factor` identifies `D` with the resultant
+of the quotients after removing `X-b`: the high-coefficient minor is the quotient
+Sylvester matrix multiplied by an upper triangular matrix with diagonal entries
+one. A Bezout identity for a nonzero linear GCD makes these quotients coprime,
+so their resultant is nonzero. Thus `first_spec_of_linear_gcd` proves that the
+first subresultant is linear with a nonzero linear coefficient at the actual
+input degrees, when both exceed one.
+
+`subresultant_recovery_spec` specializes symbolic parameter polynomials `N,D` to
+`p₁(θ-c*x),p₂(x)` and applies the existing separating-pair GCD theorem. For input
+degrees greater than one and nonzero direction it proves `D(θ)≠0`,
+`b=-N(θ)/D(θ)`, and `a=θ+c*N(θ)/D(θ)`. Both parameter degrees are bounded by
+`(d₂-1)*d₁`; their integer coefficients satisfy the reduced-column bit budget.
+Top-order/degree-one boundary cases and specialization of the certified modular
+evaluator to these concrete coordinate polynomials remain open, along with the
+complete coordinate computation's space bound.
 
 ## TM2 versus Complexitylib's machines
 

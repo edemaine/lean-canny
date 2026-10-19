@@ -12,8 +12,9 @@ public import Mathlib.Algebra.CharZero.Infinite
 
 The parameter polynomial is the normalized Sylvester determinant, rather than
 an existentially chosen polynomial. A bounded common separating direction makes
-it separable. The coordinate polynomials still come from Galois descent; symbolic
-subresultant recovery and machine-level computation bounds remain open.
+it separable. The coordinate polynomials here come from Galois descent.
+`SubresultantRecovery` proves symbolic recovery for interior degrees and nonzero
+directions; the full coordinate computation's machine-level space bound remains open.
 -/
 
 @[expose] public section
