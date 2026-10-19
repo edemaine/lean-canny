@@ -342,9 +342,15 @@ the remaining case uses the first subresultant. For a separating pair with zero
 direction, all roots of `p₂` coincide; separability and splitting therefore force
 `p₂` to be linear. Both coordinate polynomials have parameter degree at most
 `max 1 ((d₂-1)*d₁)` and a uniform integer coefficient bit budget across the branches.
-Including these direct linear branches in the certified coefficient evaluator,
-signs at algebraic parameter values, integer digit recovery, and the complete
-coordinate computation's space bound remain open.
+`CannyCoordinateBits.evaluator` includes these direct branches in the certified
+modular coefficient evaluator. FP degree comparisons select the constant right
+coefficient, shifted left coefficient, or first-subresultant routine. The explicit
+selection identities connect its integer specification to the combined coordinate
+numerator and denominator. Its modular coefficient zero language is in PSPACE
+under the same FP source-metadata, selection, and original-residue contracts.
+Integer zero/sign wrappers covering the direct linear branches, signs at algebraic
+parameter values, integer digit recovery, and the complete coordinate computation's
+space bound remain open.
 
 ## TM2 versus Complexitylib's machines
 
