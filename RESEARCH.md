@@ -42,9 +42,10 @@ The project now bounds coefficients of polynomial determinants by column coeffic
 masses, and specializes this estimate to the integer resultant. Its degree is at most
 `d₁*d₂` without nonzero or separability hypotheses, and its coefficient bit lengths
 are bounded explicitly in the input degrees, coefficient lengths, and direction length.
-Integer determinant sign/digit and symbolic coefficient algorithms, subresultant
-computation and output-size bounds, and the report's remaining space bounds are
-open. Integer determinant zero testing now has the conditional PSPACE theorem below.
+Integer determinant/coefficient digit recovery and signs, subresultant computation
+and output-size bounds, and the report's remaining space bounds are open.
+The modules below give certified modular determinant/resultant coefficient
+evaluation and integer zero testing, including Canny's concrete resultant family.
 
 The project also proves the division-free bordered characteristic-polynomial
 recurrence behind Berkowitz's algorithm. Coefficients of `adj(XI-A)` are expressed
@@ -193,8 +194,19 @@ of the existing integer `cannyResultant`, reduced modulo any positive modulus.
 The fixed integer source degrees are preserved through modular reduction.
 The contract requires FP source degrees, direction, and selected output degree,
 plus uniform FP residue access to both original integer coefficient functions.
-Its modular coefficient zero test is in PSPACE. Integer coefficient recovery
-and sign algorithms remain open.
+Its modular coefficient zero test is in PSPACE.
+
+`CannyResultantBits.IntegerAccess.decider` extends this to zero testing of the
+integer coefficient. For source degrees `m,n`, direction `c`, and coefficient
+bounds `2^b₁,2^b₂`, its computed budget is
+`B = (m+n).size*(m+n) + n*S + m*(b₂+1) + 1`, where
+`S = (m+1).size + m + (b₁+1) + (c+1).size*m`.
+The previous coefficient-size theorem proves this budget; binary arithmetic
+and encoded word lengths give FP budget writers. The bounded modulus scan
+then composes the concrete residue decider and tests moduli `1,...,2*B+4`, with
+all child states included. FP source-bit-budget fields and the residue-access
+contracts suffice, even when `B` is exponential. Integer coefficient digit
+recovery and sign algorithms remain open.
 
 ## TM2 versus Complexitylib's machines
 
