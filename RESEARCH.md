@@ -67,8 +67,15 @@ entry access as one operation. A generic suspension wrapper and PSPACE compositi
 theorem now account for a saved parent alongside a running child. The power
 controller intercepts exponent-one entry queries, runs the child through FP steps,
 and resumes the original stack with its output. Correct and terminating calls
-simulate the full abstract power run. Uniform binary access to trailing blocks and
-scalar moments, with the concrete child evaluator's resource bounds, remains open.
+simulate the full abstract power run. Direct factor access is now proved through
+the trailing principal block, with no lookup of preceding factors. The factor
+cases are one, a negative diagonal entry, a negative scalar moment, or zero.
+Adding a source and sink reduces `r A^k c` to a power entry in dimension `n+2`.
+Given FP binary fields, row, column, and original-entry access, a uniform controller
+computes this moment. Its first halting time, result, and packet bounds are proved;
+FP modular negation supplies the negative output, including modulus one.
+Binary query decoding, the factor-case dispatcher and field writers, and the
+combined resource contracts for the complete determinant child remain open.
 These results do not yet establish determinant membership in PSPACE.
 
 ## TM2 versus Complexitylib's machines
@@ -154,8 +161,10 @@ child runs. A prefix classification accounts for every intermediate physical
 state; parent/child bounds `S,U` give `2*S+U+3` bits. Polynomial state bounds and
 exponential parent-step and child-run clocks yield Complexitylib PSPACE through
 `SubroutineIteration.mem_PSPACE`. Its hypotheses concern only reachable parent
-states and requested calls. The determinant-factor evaluator must still provide
-these correctness and resource contracts; the mechanism supplies no free oracle.
+states and requested calls. The direct factor formulas and the uniform scalar-moment
+child now supply parts of the determinant-factor evaluator. Its remaining binary
+dispatcher and field writers must still meet the full correctness and resource
+contracts; the mechanism supplies no free oracle.
 
 Local comparison sources, at `lean-trominoes` commit
 `6fe52dd234bb616fd4fb3c1e7b0a203de1482bc5`:

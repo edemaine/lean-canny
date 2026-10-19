@@ -93,7 +93,10 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.LayeredMatrix`](LeanCanny/Algebra/LayeredMatrix.lean), [`LayeredMatrixMachine`](LeanCanny/Algebra/LayeredMatrixMachine.lean) | An ordered product interval is one entry of a layered matrix power. Flattening the layer-coordinate pairs gives `Fin` indices. The existing streamed power machine and context-carrying controller evaluate the product under their entry-access contract, with the inherited exact clock and modular state bound. |
 | [`Algebra.BerkowitzPower`](LeanCanny/Algebra/BerkowitzPower.lean) | The `n`th power of an `(n+1)^2`-dimensional layered matrix contains every characteristic coefficient. The power machine computes them, and its encoded controller tests determinant zero under the explicit callback contract. Stored residue states have at most `64*(3*n.size+m.size+2)^2` bits; controller packets add `2*c.length+2`. Factor-access workspace is excluded and remains open. |
 | [`Computation.SubroutineIteration`](LeanCanny/Computation/SubroutineIteration.lean), [`SubroutineBounds`](LeanCanny/Computation/SubroutineBounds.lean), [`SubroutinePSPACE`](LeanCanny/Computation/SubroutinePSPACE.lean) | An FP transition suspends a parent while a child evaluator runs, retaining both encoded states. A variable clock simulates the abstract parent iteration and classifies every intermediate state. Parent and child bounds `S,U` give at most `2*S+U+3` stored bits. Polynomial state bounds and exponential parent/child clocks yield PSPACE without requiring an entire child call to be FP. |
-| [`Algebra.MatrixPowerSubroutine`](LeanCanny/Algebra/MatrixPowerSubroutine.lean) | Exponent-one queries launch a child entry evaluator; its output resumes the saved power stack. Request writing, resumption, and the complete suspended step have FP certificates from the control operations and child primitives. Correct, terminating child calls simulate the original power controller and preserve the final matrix-power result at the expanded clock. Concrete determinant-factor child evaluation remains open. |
+| [`Algebra.MatrixPowerSubroutine`](LeanCanny/Algebra/MatrixPowerSubroutine.lean) | Exponent-one queries launch a child entry evaluator; its output resumes the saved power stack. Request writing, resumption, and the complete suspended step have FP certificates from the control operations and child primitives. Correct, terminating child calls simulate the original power controller and preserve the final matrix-power result at the expanded clock. The determinant-factor dispatcher remains open; its scalar-moment child is supplied below. |
+| [`Algebra.BerkowitzFactorAccess`](LeanCanny/Algebra/BerkowitzFactorAccess.lean) | Factor `s` is accessed directly through the trailing block `A[s+i,s+j]`, with a proved identity default beyond the last factor. Its entries split into one, a negated diagonal entry, a negated scalar moment, or zero. The moment case is exactly the negative of an augmented matrix-power entry. No preceding factors or coefficient vectors are needed. |
+| [`Algebra.MatrixMomentPower`](LeanCanny/Algebra/MatrixMomentPower.lean), [`MatrixMomentFP`](LeanCanny/Algebra/MatrixMomentFP.lean) | Adding a source and sink makes `r A^k c` one entry of the `(k+2)`nd power of an `(n+2)`-dimensional matrix. Uniform FP binary field, row, column, and original-entry access gives certified augmented-entry access, child initialization, and a complete power controller. Result extraction, first halting time, and every packet's size are proved. The child computes one moment without storing its summands. |
+| [`Algebra.ModularNegFP`](LeanCanny/Algebra/ModularNegFP.lean) | Uniform FP negation of binary residues agrees with `ZMod`, including modulus one. Reducing, subtracting from the modulus, and reducing again handles arbitrary binary input words. The moment child has a certified negated-output projection for the factor evaluator. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -150,8 +153,15 @@ power machine, so no separate outer-product controller is needed. Its matrix has
 dimension `(n+1)^2`, and stored residue states have at most
 `64*(3*n.size+m.size+2)^2` bits. The abstract clock is at most
 `2^((2*n.size+3)*n.size+1)`, counting entry access as one operation.
-Uniform binary access to trailing blocks and scalar moments, with workspace and
-time bounds for the suspended child evaluator, remains necessary. This evaluator and
+Direct trailing-block access now agrees with the recursive factor specification.
+The nontrivial moment `r A^k c` is one power entry after adding a source and sink.
+Its uniform child controller has FP initialization, transition, halting test,
+result extraction, and modular negation, given certified binary fields and
+row/column/matrix access.
+For inner dimension `d`, exponent `k`, modulus `m`, and context `c`, every child
+packet has at most `2*c.length+2+64*((d+2).size+(k+2).size+m.size+1)^2` bits.
+The factor-case dispatcher, binary query decoding and field writers, and the
+combined parent/child resource proof still need to be supplied. This evaluator and
 Canny's remaining algebraic and geometric arguments remain open; a determinant
 PSPACE theorem is not yet proved.
 
@@ -167,12 +177,11 @@ callback required by the modular power machine.
    formats and uniform entry evaluators;
    instantiate the suspended-entry interface when the whole entry computation
    requires more than polynomial time.
-3. Instantiate the suspended-entry controller with uniform encoded access for the
-   layered determinant matrix, including trailing blocks and scalar moments.
-   Prove the child evaluator's workspace, time, and correctness contracts.
-   Supply encoded subresultant computation
-   and its remaining output-size bounds; formalize the parallel/streamed algebra
-   used by the report.
+3. Assemble the determinant-factor child from direct trailing-block access,
+   the scalar-moment child, and modular negation. Supply binary query decoding,
+   the factor-case dispatcher, and its field writers; prove the combined resource
+   contracts for the suspended controller. Supply encoded subresultant computation
+   and its remaining output-size bounds; formalize the parallel/streamed algebra used by the report.
 4. Formalize critical points, perturbations, sign tests, and the correctness of Canny's
    ETR decision procedure; prove `ETR ∈ PSPACE`.
 5. Supply the required closure of PSPACE under polynomial-time reductions to derive
