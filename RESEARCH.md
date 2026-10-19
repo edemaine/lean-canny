@@ -35,6 +35,18 @@ existing sign-count identity. `tarskiQuery_rat` proves that rational input
 polynomials need only rational signed remainders. The mathematical formula is
 proved; an encoded implementation with Canny's workspace bound remains open.
 
+The local proof now also includes TauCeti's signed-principal-subresultant
+Euclidean identities and its permanences-minus-variations formula, adapted to
+a coefficient-variation index over ordered fields. `tarskiQuery_eq_principalQuery`
+reduces each real-root query to signs of explicit determinants after reducing
+the derivative product modulo the head. Rational and integer input versions are
+proved. `PrincipalSubresultant.matrix_eq_minor` verifies the same matrix convention
+as the existing streamed subresultants, and `signedPsc_size_le` transfers their
+integer bit budget, including the terminal principal index. An encoded evaluator
+still needs reduced-seed coefficient access, degree selection, boundary handling,
+and the sign-statistic scan; these mathematical identities alone do not prove
+Canny's workspace bound.
+
 No existing encoded ∃ℝ complexity-class definition or formal proof of `ETR ∈ PSPACE`
 was found in the inspected Mathlib, Complexitylib, CSLib, TauCeti, or adjacent projects.
 The ∃ℝ definition in this project uses the standard reduction-class formulation;
