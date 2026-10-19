@@ -444,6 +444,32 @@ coordinate coefficients under their existing uniform source/residue/budget contr
 Signs at algebraic parameter values and the remaining critical-point/ETR argument
 are still open.
 
+The explicit sign transformations in Lemma 2.4 now have two further components.
+`RationalSubstitution.cleared` expands the substitution `xᵢ=nᵢ(θ)/dᵢ(θ)` after
+multiplication by `∏ dᵢ(θ)^(2*degreeOfᵢ p)`. Its exact evaluation identity proves
+sign preservation wherever the coordinate denominators are nonzero. The even
+powers make this denominator positive, including negative coordinate denominators.
+The numerator degree is at most
+`∑ᵢ 2*degreeOfᵢ p*max(deg nᵢ,deg dᵢ)`. These algebraic statements include zero
+and constant polynomials and empty coordinate families. Coefficient budgets and
+encoded modular evaluation of this substitution remain to be supplied.
+
+`InfinitesimalSign` proves that a real polynomial's sign on some interval
+`0<β<δ` equals its trailing coefficient's sign, with a common interval for any
+finite family. Injective coefficient maps preserve trailing degree and
+coefficient, giving the same theorem for integer polynomials evaluated in the
+reals. `InfinitesimalSign.evaluator` scans coefficients in increasing degree and
+keeps the first nonzero sign; its accumulator has at most two bits, even when
+the degree bound is exponential. Every coefficient call is a suspended child.
+`IntegerSignumBits.evaluator` computes three-way integer signs from residue access
+by testing negativity of the integer and its negation, with FP modular negation
+of residue words. `InfinitesimalSign.evaluatorOfResidues` therefore needs only a
+uniform coefficient-residue evaluator and FP binary degree/coefficient-budget
+writers, with their semantic bounds. Its output agrees with the sign for all
+sufficiently small positive parameters. This implements the small-parameter rule
+at the end of Lemma 2.4; it does not yet implement the BKR algebraic-root
+sign-determination theorem invoked in Lemma 2.3.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
