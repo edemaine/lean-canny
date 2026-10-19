@@ -16,9 +16,10 @@ no recursion through earlier factors or coefficient vectors is necessary.
 The total direct accessor agrees with the previous recursive specification,
 including its identity default after the final factor.
 
-These are mathematical access formulas. Binary factor selection and field
-writing remain separate obligations; `MatrixMomentFP` supplies the certified
-scalar-moment child given encoded access to its input entries.
+These are mathematical access formulas. `BerkowitzQueryFP` certifies binary
+field decoding and factor-case selection; `BerkowitzMomentAccessFP` certifies
+the offset query writers for the scalar-moment child in `MatrixMomentFP`.
+Assembling the complete factor child and its resource contracts remains open.
 -/
 
 @[expose] public section

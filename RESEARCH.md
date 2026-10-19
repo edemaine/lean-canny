@@ -74,8 +74,14 @@ Adding a source and sink reduces `r A^k c` to a power entry in dimension `n+2`.
 Given FP binary fields, row, column, and original-entry access, a uniform controller
 computes this moment. Its first halting time, result, and packet bounds are proved;
 FP modular negation supplies the negative output, including modulus one.
-Binary query decoding, the factor-case dispatcher and field writers, and the
-combined resource contracts for the complete determinant child remain open.
+Uniform FP binary quotient/remainder now decodes the flattened query indices.
+Its quotient fold keeps every partial word bounded by the processed dividend's
+length, including noncanonical inputs and division by zero. FP field writers
+supply the trailing dimension, offset, moment exponent, and four-case selector.
+Offset query writers give exactly the original matrix entries for the trailing
+block and border vectors, with a certified moment-child callback contract.
+Assembling the immediate and moment cases into one factor child, and proving
+its combined resource contracts, remain open.
 These results do not yet establish determinant membership in PSPACE.
 
 ## TM2 versus Complexitylib's machines
@@ -162,9 +168,10 @@ state; parent/child bounds `S,U` give `2*S+U+3` bits. Polynomial state bounds an
 exponential parent-step and child-run clocks yield Complexitylib PSPACE through
 `SubroutineIteration.mem_PSPACE`. Its hypotheses concern only reachable parent
 states and requested calls. The direct factor formulas and the uniform scalar-moment
-child now supply parts of the determinant-factor evaluator. Its remaining binary
-dispatcher and field writers must still meet the full correctness and resource
-contracts; the mechanism supplies no free oracle.
+child now supply parts of the determinant-factor evaluator. Binary case selection
+and trailing-block query writers are certified too. The complete factor child
+must still meet the full correctness and combined resource contracts; the
+mechanism supplies no free oracle.
 
 Local comparison sources, at `lean-trominoes` commit
 `6fe52dd234bb616fd4fb3c1e7b0a203de1482bc5`:
