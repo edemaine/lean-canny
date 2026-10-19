@@ -510,8 +510,8 @@ evaluator and these budgets with integer sign recovery and the infinitesimal
 scan. The output is the cleared numerator's sign throughout some sufficiently
 small positive interval. For even width it is also the rational substitution's
 sign wherever all coordinate denominators are nonzero. The ETR source bridge
-below supplies part of the encoded instantiation; the BKR algebraic-root sign
-routine is still required.
+below supplies the encoded source instantiation; the BKR algebraic-root sign
+routine and the critical-point decision argument are still required.
 
 `ETR.IndexedExpansion` constructs indexed source monomials directly from the
 arithmetic expression tree: addition concatenates the two index intervals, and
@@ -537,8 +537,7 @@ binary output length even on malformed syntax. `ETR.MonomialCount.read` (in
 raw children and their binary counts; its length is at most ten times the raw
 frame size. The tree-fold proof bounds every intermediate stack on all binary
 inputs. On an encoded term, the reader returns its exact canonical count.
-The exponent reader below supplies individual exponent access; indexed coefficient
-residues remain to be implemented before the syntax-derived family can instantiate
+The exponent and coefficient readers below supply individual indexed access for
 the full streamed substitution certificate.
 
 `MonomialReaderMachine` visits a selected source monomial without expanding its
@@ -563,9 +562,34 @@ accumulator is at most the number of steps. Consequently
 `MonomialReader.sourceExponent` is a complete uniform FP exponent reader on
 `pair context (pair monomialIndex variableIndex)`, with exact canonical output
 for the syntax-derived source family. No variable index is expanded to unary.
-The coefficient leaf operation and its modulus-bounded accumulator specialization
-are the next source-reader obligation; the generic traversal already proves the
-corresponding coefficient-fold semantics.
+
+`IntegerResidueFP` reads the original integer payloads and computes residues in
+FP, incrementing the stored magnitude before negation for `-(n+1)`. It handles
+modulus one. `MonomialCoefficientAtom` multiplies the accumulator by a constant
+residue or by one for a variable. Every partial accumulator fits in the positive
+modulus word. `MonomialReader.sourceCoefficient` therefore has a uniform FP
+certificate on `pair (pair context monomialIndex) (m-1)`, with exact integer-cast
+semantics for every positive modulus. No complete indexed coefficient is stored.
+
+`EncodedRationalSource` supplies a complete source adapter from an FP term field
+and FP arity allowance. The default allowance is the validated term's literal
+length `N`; the clearing width is `2*N`. Counts, exponent access, coefficient
+residues, and source magnitude-bit budgets all have concrete FP implementations.
+`RationalSubstitutionBits.Coordinates.evaluator` (in `EncodedRationalSubstitution`) needs only the coordinate
+coefficient routines and their residue contracts. Its sign evaluator additionally
+uses FP coordinate degree/coefficient bounds and supplies the source budget
+internally. The semantic sign theorem refers to `Term.eval` on the actual rational
+coordinate values throughout a sufficiently small positive interval, wherever
+all coordinate denominators are nonzero.
+
+`CompiledRationalSource` extracts the source term from the existing verified FP
+compiler for arbitrary encoded ETR formulas. Every input produces a well-formed
+term, whose real zero set is nonempty exactly when the original input belongs to
+ETR. In particular, malformed formula inputs keep the compiler's unsatisfiable
+default, even though the lower-level term reader uses zero for malformed term
+fields. The source side is thus instantiated for general ETR inputs; constructing
+the decision procedure's coordinates, determining signs at algebraic parameter
+roots, and the critical-point correctness argument remain open.
 
 `InfinitesimalSign` proves that a real polynomial's sign on some interval
 `0<β<δ` equals its trailing coefficient's sign, with a common interval for any

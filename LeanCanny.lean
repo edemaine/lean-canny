@@ -22,6 +22,7 @@ import LeanCanny.ETR.EquationCompilerFP
 import LeanCanny.ETR.IndexedRationalSubstitution
 import LeanCanny.ETR.MonomialCountFP
 import LeanCanny.ETR.MonomialExponentFP
+import LeanCanny.ETR.CompiledRationalSource
 import LeanCanny.Algebra.Separation
 import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates
