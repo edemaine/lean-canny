@@ -101,7 +101,7 @@ and factor child. Dimension, entry bit lengths, and the determinant bit budget c
 be exponential in the input length; complete integer entries are not stored.
 The access contract covers all contexts and positive binary moduli. Concrete
 formats still must validate/default inputs and supply the uniform residue routine
-and bit budget. Integer sign/digit computation, symbolic coefficients, and the
+and bit budget. Integer sign/digit computation, integer coefficient recovery, and the
 report's ETR upper bound remain open.
 
 The integer determinant theorem now also has a resultant instantiation. Binary
@@ -112,9 +112,9 @@ bound `2^b` gives the computed resultant bit budget `N.size*N+N*b+1`, with `N=m+
 `Resultant.Access.zeroLanguage_mem_PSPACE` proves resultant zero testing under
 FP degree and coefficient-budget fields and uniform FP coefficient-residue access
 on all contexts and indices. A corollary uses the ordinary resultant when the
-degree fields equal the actual polynomial degrees. This does not yet compute
-symbolic resultant coefficients or signs, or supply residue algorithms for all
-polynomial constructions used in the report.
+degree fields equal the actual polynomial degrees. Later modules provide symbolic
+modular coefficient evaluation; signs and residue algorithms for all polynomial
+constructions used in the report remain open.
 
 The project now supplies an explicit binomial-residue routine for the shifted
 coefficient formula. The lower bidiagonal matrix with diagonal and subdiagonal
@@ -151,7 +151,7 @@ scan. `Resultant.Access.zeroLanguage_mem_PSPACE_of_evaluators` consequently
 proves integer resultant zero testing under FP degree/budget fields and
 `SpaceFunction` coefficient-residue certificates. The ordinary-resultant
 corollary requires the supplied degrees to equal the actual degrees. Symbolic
-resultant coefficient and sign algorithms still require work.
+coefficient access for Canny's resultant inputs and sign algorithms still require work.
 
 The symbolic coefficient reduction now has a scalar matrix representation.
 `PolynomialCoefficientMatrix.scalarHom` maps a polynomial to its lower
@@ -178,8 +178,13 @@ parity test then give `BerkowitzPolynomial.ModularAccess.evaluator`, returning
 the selected determinant coefficient with the Berkowitz sign. Its contract
 requires FP dimension/modulus/degree fields and a `SpaceFunction` routine for
 original entry coefficients; modular coefficient zero testing is in PSPACE.
-Integer coefficient recovery, resultant-family
-instantiations, and sign algorithms remain open.
+`ResultantPolynomial.ModularAccess.evaluator` now instantiates this determinant
+routine for symbolic resultants. Its Sylvester accessor carries the requested
+degree into each input coefficient routine, reusing the existing scalar guards
+and indexing proof. FP input-degree/modulus/output-degree fields and certified
+space-bounded bivariate coefficient routines suffice; modular resultant
+coefficient zero testing is in PSPACE. Concrete Canny-family instantiations,
+integer coefficient recovery, and sign algorithms remain open.
 
 ## TM2 versus Complexitylib's machines
 

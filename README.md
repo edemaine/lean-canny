@@ -119,6 +119,7 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.SylvesterAccessFP`](LeanCanny/Algebra/SylvesterAccessFP.lean), [`SylvesterAccessCorrect`](LeanCanny/Algebra/SylvesterAccessCorrect.lean) | FP binary guards and query writers access the two shifted coefficient blocks of Mathlib's Sylvester matrix. Entry correctness holds for arbitrary scalar encodings with empty-word zero. If coefficients have magnitude at most `2^b`, the resultant has at most `N.size*N+N*b+1` magnitude bits, where `N=m+n`; its budget writer is FP. |
 | [`Algebra.ResultantPSPACE`](LeanCanny/Algebra/ResultantPSPACE.lean) | Zero testing for a specified-degree integer resultant belongs to PSPACE under FP binary degree/budget fields and uniform FP coefficient-residue access. The integer determinant decider runs on streamed Sylvester entries with a computed bit budget. A corollary covers the ordinary resultant when the supplied degrees equal the actual polynomial degrees. |
 | [`Algebra.SylvesterSpaceAccess`](LeanCanny/Algebra/SylvesterSpaceAccess.lean), [`ResultantSpaceEntries`](LeanCanny/Algebra/ResultantSpaceEntries.lean) | Integer resultant zero testing accepts certified space-bounded coefficient-residue routines under FP degree/budget fields. Sylvester access selects a coefficient child or zero, and the strengthened integer determinant decider consumes the resulting entry routine. A corollary covers ordinary resultants at the actual degrees. |
+| [`Algebra.SylvesterPolynomialSpace`](LeanCanny/Algebra/SylvesterPolynomialSpace.lean), [`ResultantPolynomialSpace`](LeanCanny/Algebra/ResultantPolynomialSpace.lean) | A selected coefficient of a specified-degree resultant over a polynomial residue ring has a `SpaceFunction` evaluator. The Sylvester accessor carries the coefficient degree into either input routine, and the polynomial determinant evaluator consumes these space-bounded calls. FP input-degree/modulus/output-degree fields suffice. Modular coefficient zero testing belongs to PSPACE. |
 | [`Algebra.BinomialPower`](LeanCanny/Algebra/BinomialPower.lean), [`BinomialResidue`](LeanCanny/Algebra/BinomialResidue.lean) | The nth power of the lower bidiagonal matrix with diagonal and subdiagonal one contains `choose n k` at row `k`, column zero, in dimension `k+1`. An explicit FP entry accessor and binary field writers instantiate modular powering to return the complete binomial residue with a `SpaceFunction` certificate. It handles all words, modulus one, and `k>n`; its zero-test language is in PSPACE. |
 | [`Algebra.ShiftCoefficientFP`](LeanCanny/Algebra/ShiftCoefficientFP.lean), [`ShiftCoefficientResidue`](LeanCanny/Algebra/ShiftCoefficientResidue.lean) | A certified space-bounded evaluator returns the coefficient of `x^i θ^j` in `p(θ-c*x)` modulo a positive binary modulus. It retains the query while the binomial child runs, then performs FP coefficient lookup, negative-direction powering, and modular multiplication. The contract requires FP original-coefficient residue access and a canonical FP direction writer. Result correctness and modular zero testing in PSPACE hold on every binary input. |
 
@@ -210,7 +211,7 @@ An FP budget word gives polynomial-length modulus counters and exponentially man
 calls. The combined bound includes the saved scan parent, modular controller,
 and factor child. These contracts cover all input strings; concrete formats
 still must supply validation/defaults and prove the access and budget properties.
-Integer sign/digit computation, symbolic determinant coefficients, and Canny's
+Integer sign/digit computation, integer coefficient recovery, and Canny's
 remaining algebraic and geometric arguments remain open.
 
 `Resultant.Access.zeroLanguage_mem_PSPACE` instantiates the integer determinant
@@ -220,8 +221,9 @@ uniform FP access on all modular contexts and indices. The determinant budget
 is computed from these fields. The main theorem retains the specified degree
 parameters even when specialization lowers a polynomial's degree; the ordinary
 resultant follows when those parameters equal the actual degrees. This is zero
-testing of integer resultants. Symbolic coefficients, signs, and uniform residue
-algorithms for the report's constructed polynomial families still require proofs.
+testing of integer resultants. The symbolic modular coefficient evaluator below
+extends this pipeline; signs and concrete residue algorithms for the report's
+constructed polynomial families still require proofs.
 
 `BinomialResidue.evaluator` now supplies one ingredient of the shifted-coefficient
 formula: a certified space-bounded routine returning `choose n k mod m`. Input
@@ -245,8 +247,11 @@ now propagates space-bounded original-entry calls through the augmented moment,
 factor, and outer power evaluators. The integer modulus scan retains the same
 contract. `Resultant.Access.zeroLanguage_mem_PSPACE_of_evaluators` therefore
 proves integer resultant zero testing from space-bounded coefficient routines,
-with only degree and bit-budget fields required to be FP. Evaluating symbolic
-resultant coefficients and signs remains open.
+with only degree and bit-budget fields required to be FP.
+`ResultantPolynomial.ModularAccess.evaluator` now returns selected symbolic
+resultant coefficients over a positive modulus from space-bounded bivariate
+input coefficient routines. Concrete instantiations for Canny's constructed
+families, integer coefficient recovery, and sign algorithms remain open.
 
 Binary addition, multiplication, comparison, subtraction, division, and modular reduction
 now have uniform `FP` certificates, with exact semantics and bounds on intermediate
