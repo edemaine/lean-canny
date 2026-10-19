@@ -217,8 +217,9 @@ each fraction by `floor(D*aᵢ/mᵢ)/D` has total downward error at most `card/D
 `N=2*B+6` instantiate this specification for a magnitude-bit budget `B`, with
 every individual modulus at most `N` and sufficient precision
 `D=2^((N+2)*N.size+2)`. The proof uses large products and sums only as mathematical
-specifications. A streamed sum-bit implementation and certified CRT preparation
-are still required; this does not yet prove integer sign recovery in PSPACE.
+specifications. Connecting the streamed sum-bit evaluator and certified CRT
+preparation is still required; this does not yet prove integer sign recovery
+in PSPACE.
 
 Individual bits of the dyadic quotients now have a uniform FP accessor.
 `DyadicQuotientBits.value` takes binary `a,m-1,p,k`, assuming `a<m`, and returns
@@ -226,7 +227,14 @@ bit `k` of `floor(2^p*a/m)`. For `k≤p`, the bit is
 `((2^(p-k)*a) mod (2*m))/m`; modular exponentiation keeps each word short.
 Indices above `p` return zero. The proof covers arbitrary input words and
 modulus one, and the implementation's FP theorem holds on every raw string.
-Accumulating many such bit streams with carries remains to be certified.
+`SumBits.evaluator` now certifies accumulation of these bit streams. The carry
+is at most the summand count `N`, and every partial column accumulator is at
+most `2N`. A single binary counter locates the column and summand, with one
+division-by-two step between columns. The exact abstract run returns bit `K`
+after `K*(N+1)+N` steps, including `N=0`. The physical suspended evaluator
+accounts for child runs and returns a `SpaceFunction` certificate from FP
+count/index writers and certified space-bounded summand-bit access. CRT local
+numerator preparation and the sign-specific instantiation remain open.
 
 ## TM2 versus Complexitylib's machines
 
