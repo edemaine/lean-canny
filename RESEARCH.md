@@ -143,9 +143,9 @@ convention for the zero polynomial. The output encodes the query's canonical
 positive and negative parts. `TarskiQueryBits.zeroLanguage_mem_PSPACE`,
 `positiveLanguage_mem_PSPACE`, and `negativeLanguage_mem_PSPACE` give decision
 consequences under the same original-source contracts. The remaining root-sign
-work composes explicit query enumeration, pattern weights, and the sign-pattern
-count; the product-query source composition is supplied below. Critical-point
-correctness and `ETR ∈ PSPACE` remain open.
+work now has a complete enumeration, pattern-weight, and exact-count composition
+for polynomially bounded family size, as described below. Canny's stronger query
+selection, critical-point correctness, and `ETR ∈ PSPACE` remain open.
 
 No existing encoded ∃ℝ complexity-class definition or formal proof of `ETR ∈ PSPACE`
 was found in the inspected Mathlib, Complexitylib, CSLib, TauCeti, or adjacent projects.
@@ -635,8 +635,8 @@ evaluator and these budgets with integer sign recovery and the infinitesimal
 scan. The output is the cleared numerator's sign throughout some sufficiently
 small positive interval. For even width it is also the rational substitution's
 sign wherever all coordinate denominators are nonzero. The ETR source bridge
-below supplies the encoded source instantiation; the BKR algebraic-root sign
-routine and the critical-point decision argument are still required.
+below supplies the encoded source instantiation. The full BKR specialization
+used by Canny and the critical-point decision argument are still required.
 
 `ETR.IndexedExpansion` constructs indexed source monomials directly from the
 arithmetic expression tree: addition concatenates the two index intervals, and
@@ -729,8 +729,9 @@ of residue words. `InfinitesimalSign.evaluatorOfResidues` therefore needs only a
 uniform coefficient-residue evaluator and FP binary degree/coefficient-budget
 writers, with their semantic bounds. Its output agrees with the sign for all
 sufficiently small positive parameters. This implements the small-parameter rule
-at the end of Lemma 2.4; it does not yet implement the BKR algebraic-root
-sign-determination theorem invoked in Lemma 2.3.
+at the end of Lemma 2.4. The finite-family root-sign count below complements it;
+Lemma 2.3's full implicit-family and algebraic-parameter specialization remains
+open.
 
 `ScaledSignQueries` starts the algebraic-root counting stage. At each sign value
 `t∈{-1,0,1}`, the integer quadratics `2-2*t²`, `t²-t`, and `t²+t` are twice the
@@ -765,9 +766,9 @@ and negative parts separately, then subtracts them into a canonical signed
 result. The summand evaluator's polynomial output bound controls both prefix
 counters: their bit lengths grow by at most the binary length of the number of
 terms. This includes every nested summand state and clock. FP signed
-multiplication is also proved for the pattern-weight products. The explicit
-ternary enumeration and pattern-weight reader still need to be composed with
-these routines; no complete scaled-count resource theorem is claimed yet.
+multiplication is also proved for the pattern-weight products. The complete
+scaled-count evaluator below now composes these routines with explicit ternary
+enumeration and a certified pattern-weight reader.
 
 `SignQueryBounds` proves query degree at most `2*k*D` and integer coefficient
 magnitude-bit length at most `2*k*(b+(D+1).size)+1` for input degree allowance `D`
@@ -779,17 +780,31 @@ count and degree words, without unary expansion of their values.
 The ternary moment formulation also appears in TauCeti's
 [polynomial sign-sum identities](https://github.com/TauCetiProject/TauCeti/blob/main/TauCeti/Geometry/RealAlgebraic/SignDetermination/Polynomial.lean)
 and [adapted matrices](https://github.com/TauCetiProject/TauCeti/blob/main/TauCeti/Geometry/RealAlgebraic/SignDetermination/Adapted.lean).
-The integer formulation here supplies explicit bit budgets and a certified
-streamed coefficient routine for each product query. The full expansion has
-`3^k` queries. It establishes the counting identity, without establishing Canny's
-polylogarithmic dependence on the number of input polynomials. Tarski queries
-now include the original indexed product-query sources, and signed summation
-has a resource certificate. Explicit ternary enumeration and pattern weights,
-suitable query selection and its workspace bound, and the general algebraic-root
-sign decider remain open. Direct enumeration of `3^k` exponent vectors retains
-an index with order `k` bits, so that implementation requires a polynomial bound
-on `k`; the binary-count interface for an individual product query alone does
-not provide this bound.
+The complete direct expansion now has a space certificate. `Ternary.count` and
+`Ternary.digit` compute binary `3^k` and its query digits with FP modular
+exponentiation using a modulus of `2*k+1` bits. The proof matches the enumeration
+to Mathlib's equivalence between `Fin k → Fin 3` and `Fin (3^k)`, including `k=0`.
+A unary FP certificate for `k` ensures polynomial output length; the binary
+count writer alone would not provide this bound.
+
+`SignPatternBits.weightEvaluator` selects the signed factors in the indicator
+expansion and multiplies them with a complete suspended-call certificate. Each
+factor has magnitude at most two, so every prefix product has at most order `k`
+bits. `summandEvaluator` multiplies this weight by the original-source product
+Tarski query. `evaluator` sums all `3^k` terms and proves exact agreement with
+`scaledRootCount`. `rootCountEvaluator` then uses FP division by `2^k` to return
+the binary number of distinct realizing roots. The only arithmetic children
+read original root and indexed-polynomial coefficients; the pattern reader and
+metadata writers are FP.
+
+The realizability language is in PSPACE when the root polynomial is nonzero.
+An unconditional guarded-language theorem includes nonzeroness as part of the
+language. Repeated roots are counted once; empty families and the zero
+polynomial's empty-root convention are covered. This proves direct sign-pattern
+counting for polynomially bounded family size. It does not establish Canny's
+stronger polylogarithmic dependence on an implicitly large polynomial family,
+its full algebraic-parameter specialization, or the critical-point correctness
+argument. Those obligations and `ETR ∈ PSPACE` remain open.
 
 ## TM2 versus Complexitylib's machines
 

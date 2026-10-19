@@ -83,6 +83,7 @@ import LeanCanny.Algebra.PrincipalCoefficientQuery
 import LeanCanny.Algebra.TarskiQueryPSPACE
 import LeanCanny.Algebra.SignQueryTarskiSpace
 import LeanCanny.Algebra.IntegerSumSpace
+import LeanCanny.Algebra.SignPatternCountSpace
 import LeanCanny.Algebra.SignQueryBudget
 import LeanCanny.Algebra.SignQueryProductSpace
 import LeanCanny.Algebra.IntegerDigitSpace
