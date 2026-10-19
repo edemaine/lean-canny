@@ -767,10 +767,27 @@ guarded-realizability languages are in PSPACE. A root mass bound `2^b` with
 unguarded realizability under that effective hypothesis. These results cover
 empty query families and the zero-polynomial finite-root convention.
 
-These are selected-parameter results. To finish the small-parameter algebraic-root
-argument, one must bound all test polynomials that govern the root-sign counts
-and prove a common interval of stability. Canny's implicit family bounds and
-critical-point construction remain separate obligations.
+These evaluator statements concern the selected parameter. The mathematical
+stability argument is now proved in `ParameterizedTarski` and
+`ParameterizedSignPatterns`. A symbolic pseudo-seed is formed over ℤ[β] at the
+original outer degree and derivative-product degree bound. Its leading
+coefficient and the head's leading coefficient keep both outer degrees fixed
+on a sufficiently small interval. Fixed-bound signed principal coefficients
+commute with parameter evaluation. Their trailing-coefficient signs therefore
+give the same Tarski query throughout the interval, including constant and zero
+heads. `budget` is the binary size of the sum of these finitely many test masses;
+`query_eq_value_on_interval` uses β at most `2^(-(budget+1))`.
+
+`patternBudget` takes the maximum test budget over all ternary product queries.
+It is independent of the requested sign pattern. `rootCount_stable` proves that
+every pattern's exact number of distinct roots is constant on the resulting
+common interval. `realizable_stable` derives the same assertion for actual
+realizability when the symbolic root polynomial is nonzero; its nonvanishing
+throughout the interval is also proved. These budgets are expressions in the
+constructed symbolic polynomials. Deriving FP upper bounds from original source
+metadata remains necessary to combine this interval with the selected-parameter
+space evaluator. Canny's stronger implicit family bounds and critical-point
+construction remain separate obligations.
 
 `ScaledSignQueries` starts the algebraic-root counting stage. At each sign value
 `t∈{-1,0,1}`, the integer quadratics `2-2*t²`, `t²-t`, and `t²+t` are twice the

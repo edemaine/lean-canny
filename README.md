@@ -348,9 +348,20 @@ root polynomial suffices for unguarded realizability; specialization preserves
 its nonvanishing.
 
 All specialized coefficient routines and budgets are derived from the original
-bivariate sources. Eventual stability of algebraic-root sign patterns still
-requires common bounds on the polynomials governing their changes; the chosen
-dyadic query alone does not establish that stability or all of Lemma 2.4.
+bivariate sources.
+
+[`ParameterizedTarski`](LeanCanny/Algebra/ParameterizedTarski.lean) now proves
+eventual query stability from explicit polynomial tests in β: the leading
+coefficients of the head and symbolic pseudo-seed and their signed principal
+coefficients. A budget formed from their coefficient masses gives a dyadic
+interval throughout which the query equals the trailing-coefficient sign formula.
+[`ParameterizedSignPatterns`](LeanCanny/Algebra/ParameterizedSignPatterns.lean)
+takes a maximum over the ternary product queries. One interval works for every
+sign pattern; exact root counts are constant there, and realizability is constant
+for a nonzero symbolic root polynomial. These are mathematical stability results.
+An FP upper bound on these symbolic test budgets, derived from the original
+source metadata, is still needed to finish the space analysis. Canny's implicit
+family bounds and critical-point argument also remain open.
 
 ## Next obligations
 
