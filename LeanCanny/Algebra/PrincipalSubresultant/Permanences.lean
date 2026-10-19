@@ -67,6 +67,32 @@ each intervening zero gap. Leading and trailing zeros contribute nothing. -/
 def permanencesMinusVariations {R : Type*} [Zero R] [LinearOrder R]
     (l : List R) : ℤ := pmvAux 0 0 (l.map SignType.sign)
 
+/-- The contribution of a zero gap between consecutive nonzero signs. -/
+def zeroGapWeight (k : ℕ) : ℤ := gapWeight k
+
+theorem zeroGapWeight_def (k : ℕ) :
+    zeroGapWeight k = if Even k then (-1 : ℤ) ^ k.choose 2 else 0 := by rfl
+
+/-- The remaining statistic after a previous sign and a pending zero gap. -/
+def signTail (a : SignType) (k : ℕ) (l : List SignType) : ℤ := pmvAux a k l
+
+@[simp] theorem signTail_nil (a : SignType) (k : ℕ) : signTail a k [] = 0 := by rfl
+
+theorem signTail_cons (a b : SignType) (k : ℕ) (l : List SignType) :
+    signTail a k (b :: l) =
+      if b = 0 then signTail a (k + 1) l
+      else zeroGapWeight k * (a : ℤ) * (b : ℤ) + signTail b 0 l := by rfl
+
+/-- The continuation interface agrees with the public statistic on sign lists. -/
+theorem permanencesMinusVariations_eq_signTail (l : List SignType) :
+    permanencesMinusVariations l = signTail 0 0 l := by
+  have hs : l.map SignType.sign = l := by
+    have he : (SignType.sign : SignType → SignType) = id := by
+      funext s
+      cases s <;> rfl
+    rw [he, List.map_id]
+  simp only [permanencesMinusVariations, hs, signTail]
+
 variable {R S : Type*} [Zero R] [LinearOrder R] [Zero S] [LinearOrder S]
 
 @[simp] theorem permanencesMinusVariations_nil :

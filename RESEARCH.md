@@ -44,8 +44,9 @@ proved. `PrincipalSubresultant.matrix_eq_minor` verifies the same matrix convent
 as the existing streamed subresultants, and `signedPsc_size_le` transfers their
 integer bit budget, including the terminal principal index. The integer pseudo-seed
 construction below supplies a streamed alternative to rational remainder access.
-Actual-degree routines are now proved below. Their composition with boundary
-handling and the complete sign-statistic scan still needs a resource proof.
+Actual-degree routines and the sign-statistic scan now have resource proofs.
+Their composition with boundary handling and the actual principal-determinant
+sign reader remains open.
 
 `PseudoRemainder` now replaces rational polynomial division by a fixed linear
 operator. Splitting `g` into its coefficients below degree `d` and shifted high
@@ -66,9 +67,9 @@ If head and input coefficient masses are bounded by `2^bp` and `2^bg`, a coeffic
 after `n` steps has at most `n*(bp+1)+bg+1` magnitude bits. FP binary writers supply
 this budget from original degree/coefficient bounds. The derivative-product
 source instantiation, integer coefficient signs, and actual-degree routines are
-now proved below. Their assembly with the constant-head branch and composed
-principal-sign scan remains open; the full `ETR ∈ PSPACE` theorem is not yet
-established.
+now proved below. Their assembly with the constant-head branch and actual
+principal-determinant sign reader remains open; the full `ETR ∈ PSPACE` theorem
+is not yet established.
 
 `DerivativeBits.evaluator` reads an original coefficient at binary index `k+1`
 and multiplies it modulo the supplied modulus. `DerivativeProductBits.Access.evaluator`
@@ -96,6 +97,18 @@ these scans and the certified integer coefficient signs. These outputs may
 use polynomial space; they are not asserted to be FP functions of the original
 input. Composing them as retained metadata for the principal-determinant sign
 scan remains to be proved.
+
+`SignStatisticBits.evaluator` now supplies the full permanences-minus-variations
+scan from a suspended sign reader and an FP binary count. Its state keeps the
+previous nonzero sign, the length of the pending zero gap, and positive and
+negative contribution counts. After `k` entries, the encoded state has at most
+`5*k.size + 10` bits. The certificate includes all sign-reader state and clock
+costs, and returns the integer answer as canonical positive and negative parts.
+`descendingEvaluator` derives descending coefficient indices in FP.
+`tarskiEvaluator` connects this implementation to the integer pseudo-seed
+Tarski formula, assuming certified signed-principal-coefficient signs and an
+actual positive head-degree writer. This is a composition interface, not yet a
+Tarski evaluator derived solely from the original two coefficient routines.
 
 No existing encoded ∃ℝ complexity-class definition or formal proof of `ETR ∈ PSPACE`
 was found in the inspected Mathlib, Complexitylib, CSLib, TauCeti, or adjacent projects.

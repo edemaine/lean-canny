@@ -68,6 +68,11 @@ an analytic Cauchy-index dependency. `Sturm.remainderIndex` is defined directly
 by coefficient variations; its recurrence and the subresultant formula work
 over ordered fields.
 
+The local permanences-minus-variations module also exposes the zero-gap weight
+and a continuation recurrence. The project uses this API to prove the streaming
+accumulator in `SignStatistic.lean` and its encoded space bound in
+`SignStatisticSpace.lean`; these two modules are new project proofs.
+
 [`PrincipalSubresultant/Minor.lean`](LeanCanny/Algebra/PrincipalSubresultant/Minor.lean)
 is the project's convention bridge: each principal matrix equals the existing
 Sylvester minor, including terminal indices, and the signed integer coefficients

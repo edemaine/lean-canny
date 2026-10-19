@@ -78,6 +78,7 @@ import LeanCanny.Algebra.PrincipalQuery
 import LeanCanny.Algebra.PseudoRemainderQuery
 import LeanCanny.Algebra.PseudoRemainderBudget
 import LeanCanny.Algebra.TarskiSeedDegreeSpace
+import LeanCanny.Algebra.SignStatisticQuery
 import LeanCanny.Algebra.SignQueryBudget
 import LeanCanny.Algebra.SignQueryProductSpace
 import LeanCanny.Algebra.IntegerDigitSpace
