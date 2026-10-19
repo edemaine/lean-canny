@@ -86,4 +86,14 @@ noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
   let Q := BoundedFold.evaluator (updateEvaluator E modulus hm) count (fun _ => []) hc (constFn_mem_FP []) p hstate
   exact Q.congr (funext fun c => fold_eq_sum modulus f c _ (a c) (hpos c) (hf c) _ le_rfl)
 
+noncomputable def evaluatorWithModulus {f : List Bool → List Bool} (E : SpaceFunction f)
+    (count modulus : List Bool → List Bool) (hc : count ∈ FP) (hm : modulus ∈ FP)
+    (m : List Bool → ℕ) (hvalue : (fun c => Nat.fromBitsLE (modulus c)) = m)
+    (a : (c : List Bool) → ℕ → ZMod (m c)) (hpos : ∀ c, 0 < m c)
+    (hf : ∀ c i, i < Nat.fromBitsLE (count c) →
+      f (pair c (BinaryNatCode.encode i)) = residueBits (a c i)) :
+    SpaceFunction (fun c => residueBits (∑ i ∈ Finset.range (Nat.fromBitsLE (count c)), a c i)) := by
+  subst m
+  exact evaluator E count modulus hc hm a hpos hf
+
 end LeanCanny.Algebra.ModularSum

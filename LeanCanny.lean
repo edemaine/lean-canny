@@ -68,6 +68,7 @@ import LeanCanny.Algebra.CannyCoefficientDigits
 import LeanCanny.Algebra.InfinitesimalResidueSpace
 import LeanCanny.Algebra.RationalSubstitutionBudget
 import LeanCanny.Algebra.RationalSubstitutionMap
+import LeanCanny.Algebra.RationalSubstitutionSign
 import LeanCanny.Algebra.IntegerDigitSpace
 import LeanCanny.Algebra.SmallModulusCRT
 import LeanCanny.Algebra.IndexedModulusCRT

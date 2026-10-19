@@ -468,7 +468,8 @@ magnitudes at most `2^b` therefore give the explicit coefficient bit budget
 `2*A*D*E`. `RationalSubstitutionBudget` supplies FP binary writers and semantic
 budget theorems for these quantities from arbitrary binary metadata words;
 neither a whole source coefficient mass nor the expanded polynomial is computed.
-Encoded modular evaluation of the substitution remains to be supplied.
+The streamed indexed-source evaluator below supplies modular evaluation with
+explicit source access contracts.
 
 `PolynomialProduct` now reduces an indexed polynomial product to one entry of
 a shift-matrix power. A one-coordinate layer carries each factor, and exact
@@ -481,6 +482,36 @@ zero language is in PSPACE. `ModularSum.evaluator` adds canonical summand residu
 through suspended calls, reducing after every addition. The accumulator fits in
 the modulus word, including modulus one; the empty sum is zero. These primitives
 supply the product and outer-sum computations needed by rational substitution.
+
+`IndexedRationalSubstitution` represents the source as `M` indexed monomials in
+`A` variables, allowing repeated exponent vectors, zero coefficients, and
+cancellation. A fixed width `W` bounds every exponent; clearing produces
+`∑ᵣ aᵣ ∏ᵢ nᵢ^eᵣᵢ dᵢ^(W-eᵣᵢ)`. Coefficient-ring maps commute with this expression.
+For even `W`, exact evaluation preserves the source expression's sign wherever
+the coordinate denominators are nonzero.
+
+`RationalSubstitution.evaluator` (in `RationalSubstitutionSpace`) computes any selected modular coefficient
+by streaming coordinate-factor products, source scalar multiplication, and the
+outer term sum through suspended routines. Term/variable counts and width stay
+binary; exponent access is FP, and source/coordinate coefficient access may use
+polynomial space. Invalid term indices are masked before source access.
+`RationalSubstitution.IntegerBits.Access.evaluator` supplies uniform residues of
+the actual cleared integer polynomial at packets
+`pair (pair context selectedDegree) (m-1)`. It normalizes the modulus field for
+source calls and preserves the original width under modular degree drops.
+
+`IndexedRationalSubstitutionBounds` proves degree at most `A*W*E` and coefficient
+magnitude-bit length at most `M.size+s+A*W*b+1`, where source coefficients have
+magnitude at most `2^s` and coordinate coefficient masses at most `2^b`.
+Coordinate degree and coefficient bounds give `b=b₁+(E+1).size`.
+`IndexedRationalSubstitutionBudget` writes these bounds in FP, using normalized
+word length for `M.size`. `RationalSubstitutionSign` combines the actual residue
+evaluator and these budgets with integer sign recovery and the infinitesimal
+scan. The output is the cleared numerator's sign throughout some sufficiently
+small positive interval. For even width it is also the rational substitution's
+sign wherever all coordinate denominators are nonzero. Connecting encoded ETR
+inputs to this indexed source interface and proving the BKR algebraic-root sign
+routine are still required.
 
 `InfinitesimalSign` proves that a real polynomial's sign on some interval
 `0<β<δ` equals its trailing coefficient's sign, with a common interval for any
