@@ -19,7 +19,8 @@ including its identity default after the final factor.
 These are mathematical access formulas. `BerkowitzQueryFP` certifies binary
 field decoding and factor-case selection; `BerkowitzMomentAccessFP` certifies
 the offset query writers for the scalar-moment child in `MatrixMomentFP`.
-Assembling the complete factor child and its resource contracts remains open.
+`BerkowitzFactorChild` and its correctness/bound modules assemble the complete
+factor child; `BerkowitzFactorSpace` also permits space-bounded original entries.
 -/
 
 @[expose] public section

@@ -169,8 +169,17 @@ all binary contexts and gives modular coefficient zero testing in PSPACE.
 `r A^k c`: taking an entry coefficient commutes with source/sink augmentation,
 so FP guards and degree-carrying query writers select a vector or matrix
 coefficient routine. These routines may each use polynomial space.
-The determinant instantiation must still supply space-bounded access to
-coefficients of the layered factors.
+The determinant instantiation now supplies the layered factor coefficients.
+`BerkowitzPolynomial.ModularAccess.momentEvaluator` carries coefficient degrees
+through offset queries to the original trailing block and its border vectors.
+The four factor cases have a certified evaluator and agree with coefficients
+of the layered matrix on all valid indices. Polynomial powering and an FP
+parity test then give `BerkowitzPolynomial.ModularAccess.evaluator`, returning
+the selected determinant coefficient with the Berkowitz sign. Its contract
+requires FP dimension/modulus/degree fields and a `SpaceFunction` routine for
+original entry coefficients; modular coefficient zero testing is in PSPACE.
+Integer coefficient recovery, resultant-family
+instantiations, and sign algorithms remain open.
 
 ## TM2 versus Complexitylib's machines
 
