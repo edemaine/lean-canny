@@ -165,6 +165,10 @@ and a `SpaceFunction` routine for original entry coefficients suffice. The
 flattened accessor decodes each coordinate by division/remainder and returns
 one input coefficient or zero, with its own space certificate. This covers
 all binary contexts and gives modular coefficient zero testing in PSPACE.
+`PolynomialMoment.ModularAccess.evaluator` specializes it to coefficients of
+`r A^k c`: taking an entry coefficient commutes with source/sink augmentation,
+so FP guards and degree-carrying query writers select a vector or matrix
+coefficient routine. These routines may each use polynomial space.
 The determinant instantiation must still supply space-bounded access to
 coefficients of the layered factors.
 
