@@ -470,6 +470,18 @@ budget theorems for these quantities from arbitrary binary metadata words;
 neither a whole source coefficient mass nor the expanded polynomial is computed.
 Encoded modular evaluation of the substitution remains to be supplied.
 
+`PolynomialProduct` now reduces an indexed polynomial product to one entry of
+a shift-matrix power. A one-coordinate layer carries each factor, and exact
+power semantics identify the first-to-last entry with the full product, including
+the empty family. `PolynomialProduct.ModularAccess.evaluator` uses the existing
+polynomial coefficient-matrix and suspended matrix-power certificates. Its FP
+control fields supply the factor count, positive modulus, and selected degree;
+factor-coefficient access can use polynomial space. The selected-coefficient
+zero language is in PSPACE. `ModularSum.evaluator` adds canonical summand residues
+through suspended calls, reducing after every addition. The accumulator fits in
+the modulus word, including modulus one; the empty sum is zero. These primitives
+supply the product and outer-sum computations needed by rational substitution.
+
 `InfinitesimalSign` proves that a real polynomial's sign on some interval
 `0<β<δ` equals its trailing coefficient's sign, with a common interval for any
 finite family. Injective coefficient maps preserve trailing degree and

@@ -42,6 +42,8 @@ import LeanCanny.Algebra.BerkowitzBalanced
 import LeanCanny.Algebra.BerkowitzPower
 import LeanCanny.Algebra.BerkowitzCoefficientPower
 import LeanCanny.Algebra.PolynomialPowerSpace
+import LeanCanny.Algebra.PolynomialProductSpace
+import LeanCanny.Algebra.ModularSumSpace
 import LeanCanny.Algebra.PolynomialMomentSpace
 import LeanCanny.Algebra.BerkowitzPolynomialSpace
 import LeanCanny.Algebra.MatrixPowerSubroutine
