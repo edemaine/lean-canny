@@ -24,6 +24,13 @@ open Polynomial
 def budget (m n k bf bg : ℕ) : ℕ :=
   ((m - k) + (n - k)).size * ((m - k) + (n - k)) + (m - k) * bg + (n - k) * bf + 1
 
+theorem budget_le_full (m n k bf bg : ℕ) :
+    budget m n k bf bg ≤ (m + n).size * (m + n) + m * bg + n * bf + 1 := by
+  have hs : (m - k) + (n - k) ≤ m + n := Nat.add_le_add (Nat.sub_le _ _) (Nat.sub_le _ _)
+  exact Nat.add_le_add_right
+    (Nat.add_le_add (Nat.add_le_add (Nat.mul_le_mul (Nat.size_le_size hs) hs)
+      (Nat.mul_le_mul_right bg (Nat.sub_le m k))) (Nat.mul_le_mul_right bf (Nat.sub_le n k))) 1
+
 theorem minor_natDegree_le {R : Type*} [CommRing R] (f g : Polynomial (Polynomial R))
     (m n k r Df Dg : ℕ) (hf : ∀ i, (f.coeff i).natDegree ≤ Df) (hg : ∀ i, (g.coeff i).natDegree ≤ Dg) :
     (minor f g m n k r).det.natDegree ≤ (m - k) * Dg + (n - k) * Df := by

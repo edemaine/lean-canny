@@ -53,6 +53,7 @@ import LeanCanny.Algebra.ResultantPolynomialSpace
 import LeanCanny.Algebra.CannyResultantResidue
 import LeanCanny.Algebra.CannyResultantInteger
 import LeanCanny.Algebra.CannyResultantSign
+import LeanCanny.Algebra.CannySubresultantSign
 import LeanCanny.Algebra.SmallModulusCRT
 import LeanCanny.Algebra.IndexedModulusCRT
 import LeanCanny.Algebra.IndexedModulusSpace

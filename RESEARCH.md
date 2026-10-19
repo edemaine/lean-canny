@@ -325,9 +325,17 @@ input degrees, when both exceed one.
 degrees greater than one and nonzero direction it proves `D(θ)≠0`,
 `b=-N(θ)/D(θ)`, and `a=θ+c*N(θ)/D(θ)`. Both parameter degrees are bounded by
 `(d₂-1)*d₁`; their integer coefficients satisfy the reduced-column bit budget.
-Top-order/degree-one boundary cases and specialization of the certified modular
-evaluator to these concrete coordinate polynomials remain open, along with the
-complete coordinate computation's space bound.
+`CannySubresultantBits.Access.evaluator` now specializes the modular evaluator to
+these concrete integer numerator/denominator coefficients, reusing the shifted-input
+and constant-input routines. Selection zero is explicitly identified with `N`, and
+selection one with `D`. Fixed source degrees preserve the specification through
+modular degree drops. The reduced-column coefficient budget is bounded by the full
+resultant budget, so the existing FP budget and modulus-scan writers also certify
+integer zero testing. Streamed integer sign recovery supplies negativity and the
+full three-way sign; zero and both strict-sign languages are in PSPACE under the
+same FP metadata, selection, source-residue, and source-bit-budget contracts.
+Top-order/degree-one recovery cases, signs at algebraic parameter values, integer
+digit recovery, and the complete coordinate computation's space bound remain open.
 
 ## TM2 versus Complexitylib's machines
 
