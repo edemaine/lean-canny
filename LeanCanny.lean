@@ -10,6 +10,7 @@ import LeanCanny.Encoding.TreeFoldFP
 import LeanCanny.ETR.Grammar
 import LeanCanny.Encoding.DynamicTreeFold
 import LeanCanny.Encoding.BinaryMulFP
+import LeanCanny.Encoding.DyadicQuotientBitFP
 import LeanCanny.ETR.EquationListComplexity
 import LeanCanny.ETR.NNFComplexity
 import LeanCanny.ETR.EquationCompilerFP

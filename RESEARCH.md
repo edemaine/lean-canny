@@ -217,9 +217,16 @@ each fraction by `floor(D*aᵢ/mᵢ)/D` has total downward error at most `card/D
 `N=2*B+6` instantiate this specification for a magnitude-bit budget `B`, with
 every individual modulus at most `N` and sufficient precision
 `D=2^((N+2)*N.size+2)`. The proof uses large products and sums only as mathematical
-specifications. A streamed quotient/sum-bit implementation and its space
-certificate are still required; this does not yet prove integer sign recovery
-in PSPACE.
+specifications. A streamed sum-bit implementation and certified CRT preparation
+are still required; this does not yet prove integer sign recovery in PSPACE.
+
+Individual bits of the dyadic quotients now have a uniform FP accessor.
+`DyadicQuotientBits.value` takes binary `a,m-1,p,k`, assuming `a<m`, and returns
+bit `k` of `floor(2^p*a/m)`. For `k≤p`, the bit is
+`((2^(p-k)*a) mod (2*m))/m`; modular exponentiation keeps each word short.
+Indices above `p` return zero. The proof covers arbitrary input words and
+modulus one, and the implementation's FP theorem holds on every raw string.
+Accumulating many such bit streams with carries remains to be certified.
 
 ## TM2 versus Complexitylib's machines
 
