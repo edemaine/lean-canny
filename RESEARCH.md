@@ -44,8 +44,8 @@ proved. `PrincipalSubresultant.matrix_eq_minor` verifies the same matrix convent
 as the existing streamed subresultants, and `signedPsc_size_le` transfers their
 integer bit budget, including the terminal principal index. The integer pseudo-seed
 construction below supplies a streamed alternative to rational remainder access.
-Actual-degree selection, boundary handling, and the complete sign-statistic scan
-still need resource proofs.
+Actual-degree routines are now proved below. Their composition with boundary
+handling and the complete sign-statistic scan still needs a resource proof.
 
 `PseudoRemainder` now replaces rational polynomial division by a fixed linear
 operator. Splitting `g` into its coefficients below degree `d` and shifted high
@@ -65,9 +65,37 @@ Fixed bounds commute with coefficient maps even if the modular head degree drops
 If head and input coefficient masses are bounded by `2^bp` and `2^bg`, a coefficient
 after `n` steps has at most `n*(bp+1)+bg+1` magnitude bits. FP binary writers supply
 this budget from original degree/coefficient bounds. The derivative-product
-source instantiation, computed actual-degree metadata, constant-head branch, and
-composed principal-sign scan remain open; the full `ETR ∈ PSPACE` theorem is
-not yet established.
+source instantiation, integer coefficient signs, and actual-degree routines are
+now proved below. Their assembly with the constant-head branch and composed
+principal-sign scan remains open; the full `ETR ∈ PSPACE` theorem is not yet
+established.
+
+`DerivativeBits.evaluator` reads an original coefficient at binary index `k+1`
+and multiplies it modulo the supplied modulus. `DerivativeProductBits.Access.evaluator`
+then computes a selected coefficient of the actual product `f*p'` from the two
+original coefficient routines. `TarskiSeedBits.Access.evaluator` supplies this
+product internally to the division-free reduction; its degree bound is the sum
+of the original degree bounds. Differentiation increases integer coefficient
+mass by at most the degree, so FP seed bit-budget writers depend only on the
+original polynomial bounds.
+
+`IntegerTarskiSeedBits.Access.residueEvaluator` supplies uniform residues of an
+actual integer seed coefficient for every positive modulus. It normalizes the
+modulus and selected index for the original source protocol and returns zero
+outside the reduction bound. `signEvaluator` composes the certified CRT sign
+routine with these residues and the derived binary magnitude budget. The only
+external arithmetic routines read coefficients of the original head and query.
+
+`PolynomialDegreeBits.offsetEvaluator` scans coefficient-zero answers while
+retaining just the binary index of the last nonzero coefficient, plus one.
+Zero represents the zero polynomial, and one a nonzero constant. Its prefix
+state/clock bounds include all suspended zero-test work. `degreeEvaluator`
+returns Mathlib's natural degree, including zero for the zero polynomial.
+The original head and computed seed have concrete degree evaluators using
+these scans and the certified integer coefficient signs. These outputs may
+use polynomial space; they are not asserted to be FP functions of the original
+input. Composing them as retained metadata for the principal-determinant sign
+scan remains to be proved.
 
 No existing encoded ∃ℝ complexity-class definition or formal proof of `ETR ∈ PSPACE`
 was found in the inspected Mathlib, Complexitylib, CSLib, TauCeti, or adjacent projects.
