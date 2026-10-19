@@ -23,6 +23,7 @@ import LeanCanny.Algebra.MatrixPowerQueryFP
 import LeanCanny.Algebra.MatrixPowerArithmeticFP
 import LeanCanny.Algebra.MatrixPowerControllerCorrect
 import LeanCanny.Algebra.MatrixPowerPSPACE
+import LeanCanny.Algebra.MatrixPowerSpaceEntries
 import LeanCanny.Algebra.BerkowitzCoefficients
 import LeanCanny.Algebra.BerkowitzBalanced
 import LeanCanny.Algebra.BerkowitzPower
@@ -34,6 +35,7 @@ import LeanCanny.Algebra.BerkowitzFactorChildBounds
 import LeanCanny.Algebra.BerkowitzPSPACE
 import LeanCanny.Algebra.IntegerDeterminantPSPACE
 import LeanCanny.Algebra.ResultantPSPACE
+import LeanCanny.Algebra.SylvesterSpaceAccess
 import LeanCanny.Algebra.BinomialResidue
 import LeanCanny.Algebra.ShiftCoefficientResidue
 

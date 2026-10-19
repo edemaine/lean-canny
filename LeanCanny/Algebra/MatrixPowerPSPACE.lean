@@ -18,8 +18,9 @@ Neither the dimension nor the exponent is required to be polynomially bounded:
 only their binary descriptions are. No dense matrix is constructed.
 
 The access contract covers every input string. A concrete input format must
-supply validation/defaults satisfying it. Entry access must have an FP
-certificate; a space-only entry evaluator requires a further simulation.
+supply validation/defaults satisfying it. This direct interface requires an FP
+entry certificate. `MatrixPowerSpaceEntries` supplies the suspended simulation
+for a certified space-bounded entry evaluator.
 -/
 
 @[expose] public section

@@ -134,9 +134,16 @@ wrapper preserve the complete resource certificates. `ShiftCoefficientBits.certi
 returns exactly the coefficient of `x^i θ^j` in `p(θ-c*x)` modulo the supplied
 positive modulus, assuming FP original-coefficient residue access and a canonical
 FP direction writer. Its modular zero-test language is in PSPACE. All binary
-queries, zero coefficients/direction, and modulus one are covered. Allowing these
-space-bounded coefficient calls in the resultant evaluator and computing symbolic
-resultant coefficients still require work.
+queries, zero coefficients/direction, and modulus one are covered.
+Modular powering now also accepts a `SpaceFunction` entry routine under FP field
+writers. `MatrixPower.ModularAccess.evaluatorWithEntry` supplies the saved-parent,
+query-length, child-workspace, and expanded-clock proofs for the complete output;
+zero testing is in PSPACE under the same contracts. An FP-controlled branch
+certificate lets Sylvester access select either coefficient routine or zero.
+`Resultant.Access.integer_entryEvaluator` exposes a certified routine for the
+exact integer-entry function used by the existing resultant encoding. Propagating
+these space-bounded original entry calls through the determinant factor/moment
+pipeline and computing symbolic resultant coefficients still require work.
 
 ## TM2 versus Complexitylib's machines
 
