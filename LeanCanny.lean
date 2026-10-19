@@ -1,5 +1,6 @@
 import LeanCanny.ETR.EncodingBounds
 import LeanCanny.ETR.Complexity
+import LeanCanny.ETR.PSPACEClosure
 import LeanCanny.ETR.Normalization
 import LeanCanny.ETR.SingleEquation
 import LeanCanny.ETR.EquationDegree

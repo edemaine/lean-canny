@@ -210,6 +210,17 @@ recovery and sign algorithms remain open.
 
 ## TM2 versus Complexitylib's machines
 
+The project now fills one class-level composition gap in Complexitylib's pinned
+API. `nonempty_spaceDecider_of_mem_PSPACE` encodes any PSPACE machine using
+Cobham's fixed-block representation in a polynomial space window. FP transition,
+halting, and verdict operations, exact run simulation, and the existing
+configuration-count theorem supply a complete `SpaceDecider` certificate.
+`SpaceDecider.precompose` composes its space/clock polynomials with the output
+length polynomial of an FP preprocessing function. Consequently PSPACE is
+proved closed under FP preimages and polynomial-time many-one reductions.
+`existsReal_subset_PSPACE_iff` discharges the class-theoretic consequence:
+`∃ℝ ⊆ PSPACE ↔ ETR ∈ PSPACE`. This leaves the ETR algorithm proof open.
+
 The distinction affects implementation and resource-accounting effort, even though
 the intended polynomial-space classes agree mathematically.
 
