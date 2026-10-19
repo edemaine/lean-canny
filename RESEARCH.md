@@ -607,6 +607,41 @@ sufficiently small positive parameters. This implements the small-parameter rule
 at the end of Lemma 2.4; it does not yet implement the BKR algebraic-root
 sign-determination theorem invoked in Lemma 2.3.
 
+`ScaledSignQueries` starts the algebraic-root counting stage. At each sign value
+`t∈{-1,0,1}`, the integer quadratics `2-2*t²`, `t²-t`, and `t²+t` are twice the
+indicators of zero, negative, and positive respectively. Expanding a product of
+these indicators proves that an integer combination of ternary product Tarski
+queries equals `2^k` times the number of distinct real roots realizing the
+requested sign pattern. For a nonzero root polynomial, strict positivity is
+equivalent to an actual realizing real root. Repeated roots are counted once;
+zero query values and an empty query family are included. The zero root polynomial
+uses Mathlib's empty root multiset and is excluded from the realization theorem.
+
+`SignQueryProductSpace.queryProductEvaluator` computes a selected modular
+coefficient of `∏ Qᵢ^eᵢ`, `eᵢ∈{0,1,2}`, through the existing suspended product
+machine. Two factor slots per polynomial suffice, with unit padding. Binary
+count/exponent/modulus/degree fields are FP, and source coefficient routines may
+use polynomial space. Empty products and modulus one are covered. Coefficient
+maps commute with the query polynomial at fixed exponents, including modular
+degree drops.
+
+`SignQueryBounds` proves query degree at most `2*k*D` and integer coefficient
+magnitude-bit length at most `2*k*(b+(D+1).size)+1` for input degree allowance `D`
+and coefficient magnitude allowance `2^b`. A Tarski query lies between minus and
+plus the root degree. The scaled count has at most `k+rootDegree.size+1` magnitude
+bits. `SignQueryBudget` gives FP binary writers and semantic budget theorems from
+count and degree words, without unary expansion of their values.
+
+The ternary moment formulation also appears in TauCeti's
+[polynomial sign-sum identities](https://github.com/TauCetiProject/TauCeti/blob/main/TauCeti/Geometry/RealAlgebraic/SignDetermination/Polynomial.lean)
+and [adapted matrices](https://github.com/TauCetiProject/TauCeti/blob/main/TauCeti/Geometry/RealAlgebraic/SignDetermination/Adapted.lean).
+The integer formulation here supplies explicit bit budgets and a certified
+streamed coefficient routine for each product query. The full expansion has
+`3^k` queries. It establishes the counting identity, without establishing Canny's
+polylogarithmic dependence on the number of input polynomials. Evaluating Tarski
+queries from input coefficients, implementing suitable query selection and its
+workspace bound, and composing the general algebraic-root sign decider remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
