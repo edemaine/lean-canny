@@ -509,9 +509,37 @@ word length for `M.size`. `RationalSubstitutionSign` combines the actual residue
 evaluator and these budgets with integer sign recovery and the infinitesimal
 scan. The output is the cleared numerator's sign throughout some sufficiently
 small positive interval. For even width it is also the rational substitution's
-sign wherever all coordinate denominators are nonzero. Connecting encoded ETR
-inputs to this indexed source interface and proving the BKR algebraic-root sign
-routine are still required.
+sign wherever all coordinate denominators are nonzero. The ETR source bridge
+below supplies part of the encoded instantiation; the BKR algebraic-root sign
+routine is still required.
+
+`ETR.IndexedExpansion` constructs indexed source monomials directly from the
+arithmetic expression tree: addition concatenates the two index intervals, and
+multiplication uses quotient/remainder to flatten their Cartesian product.
+The sum is exactly `Term.toPolynomial`, with no collection of equal monomials.
+`IndexedExpansionBounds` proves finite-variable evaluation agrees with the term,
+each exponent is at most `Term.degreeBound`, and unused variables have exponent
+zero. The count is at most `2^leafCount`. For literal term bit length `N`,
+`IndexedExpansionSize` gives count bit length at most `N+1` and indexed coefficient
+magnitude at most `2^N`, including negative constants with the original codec.
+
+`ETR.IndexedRationalSubstitution` applies the even-width construction directly
+to these syntax-derived monomials. Its evaluation and sign theorems refer to
+`Term.eval` of the actual rational coordinate functions. Its degree is at most
+`A*(2*degreeBound)*E`, and coefficient magnitude-bit length is at most
+`2*N+A*(2*degreeBound)*b+2` when coordinate coefficient masses are at most `2^b`.
+The compiled single-equation semantics proves ETR satisfiability equivalent to
+the corresponding finite-variable indexed equation.
+
+`MonomialCountData` extends the count algebra to all raw trees, with linear
+binary output length even on malformed syntax. `ETR.MonomialCount.read` (in
+`MonomialCountFP`) is a uniform FP implementation over the original bracket encoding. Each frame keeps
+raw children and their binary counts; its length is at most ten times the raw
+frame size. The tree-fold proof bounds every intermediate stack on all binary
+inputs. On an encoded term, the reader returns its exact canonical count.
+Encoded readers for individual indexed coefficients and exponents remain to be
+implemented before the syntax-derived family can instantiate the full streamed
+substitution certificate.
 
 `InfinitesimalSign` proves that a real polynomial's sign on some interval
 `0<β<δ` equals its trailing coefficient's sign, with a common interval for any

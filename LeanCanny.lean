@@ -19,6 +19,8 @@ import LeanCanny.Computation.SpaceFunctionSelect
 import LeanCanny.ETR.EquationListComplexity
 import LeanCanny.ETR.NNFComplexity
 import LeanCanny.ETR.EquationCompilerFP
+import LeanCanny.ETR.IndexedRationalSubstitution
+import LeanCanny.ETR.MonomialCountFP
 import LeanCanny.Algebra.Separation
 import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates
