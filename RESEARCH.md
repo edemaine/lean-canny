@@ -217,9 +217,8 @@ each fraction by `floor(D*aᵢ/mᵢ)/D` has total downward error at most `card/D
 `N=2*B+6` instantiate this specification for a magnitude-bit budget `B`, with
 every individual modulus at most `N` and sufficient precision
 `D=2^((N+2)*N.size+2)`. The proof uses large products and sums only as mathematical
-specifications. Connecting the streamed sum-bit evaluator and certified CRT
-preparation is still required; this does not yet prove integer sign recovery
-in PSPACE.
+specifications. Certified local CRT preparation is still required to obtain
+integer sign recovery in PSPACE from residue access alone.
 
 Individual bits of the dyadic quotients now have a uniform FP accessor.
 `DyadicQuotientBits.value` takes binary `a,m-1,p,k`, assuming `a<m`, and returns
@@ -233,8 +232,22 @@ most `2N`. A single binary counter locates the column and summand, with one
 division-by-two step between columns. The exact abstract run returns bit `K`
 after `K*(N+1)+N` steps, including `N=0`. The physical suspended evaluator
 accounts for child runs and returns a `SpaceFunction` certificate from FP
-count/index writers and certified space-bounded summand-bit access. CRT local
-numerator preparation and the sign-specific instantiation remain open.
+count/index writers and certified space-bounded summand-bit access.
+
+The sign-specific instantiation is now proved. `DyadicSumBits.evaluator` retains
+each query while a certified routine prepares its local numerator/modulus pair,
+then reads the dyadic quotient bit with FP postprocessing. The strict magnitude
+bound rules out equality at the half threshold, so only one selected sum bit is
+needed. If the integer is zero, every local numerator and the whole truncated
+sum vanish. `ChineseRemainder.signEvaluator` and `negativeLanguage_mem_PSPACE`
+therefore include zero without a separate oracle, under the explicit local
+preparation, FP count/precision, and magnitude/precision contracts. Constructing
+the preparation routine from residue access remains open.
+
+`indexedSystem N` uses all indices `0,...,N`, assigning modulus one to nonprime
+indices. Its count is exactly `N+1`, while its product is still `lcmUpto N` and
+the previous precision bound still suffices. This avoids requiring an FP prime
+count or a compressed prime enumeration in the eventual implementation.
 
 ## TM2 versus Complexitylib's machines
 
