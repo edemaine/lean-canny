@@ -31,6 +31,7 @@ import LeanCanny.Algebra.BerkowitzFactorAccess
 import LeanCanny.Algebra.MatrixMomentFP
 import LeanCanny.Algebra.BerkowitzMomentAccessFP
 import LeanCanny.Algebra.BerkowitzFactorChildBounds
+import LeanCanny.Algebra.BerkowitzPSPACE
 
 /-!
 # Canny's algebraic and geometric computations in polynomial space

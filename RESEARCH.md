@@ -42,8 +42,8 @@ The project now bounds coefficients of polynomial determinants by column coeffic
 masses, and specializes this estimate to the integer resultant. Its degree is at most
 `d₁*d₂` without nonzero or separability hypotheses, and its coefficient bit lengths
 are bounded explicitly in the input degrees, coefficient lengths, and direction length.
-Encoded determinant and subresultant algorithms, subresultant output-size bounds,
-and the report's space bounds remain open; the size estimates alone do not establish
+Encoded integer/symbolic determinant and subresultant algorithms, subresultant
+output-size bounds, and the report's space bounds remain open; the size estimates alone do not establish
 an algorithm with the required workspace.
 
 The project also proves the division-free bordered characteristic-polynomial
@@ -57,7 +57,7 @@ square transformations on padded vectors; their ordered product contains the
 characteristic coefficients in its first column. A generic balanced interval
 recursion preserves factor order, and `Berkowitz.balancedDeterminant` uses height
 `n.size` to recover the determinant. The factor accessor avoids building the full
-list, but no complexity bound for that accessor is asserted. The layered matrix
+list. The layered matrix
 construction now converts this ordered product to a single power, with dimension
 `(n+1)^2` and exponent `n`. It therefore reuses the existing continuation machine
 and bitstring controller under their explicit entry-access contract. Stored residue
@@ -80,9 +80,16 @@ length, including noncanonical inputs and division by zero. FP field writers
 supply the trailing dimension, offset, moment exponent, and four-case selector.
 Offset query writers give exactly the original matrix entries for the trailing
 block and border vectors, with a certified moment-child callback contract.
-Assembling the immediate and moment cases into one factor child, and proving
-its combined resource contracts, remain open.
-These results do not yet establish determinant membership in PSPACE.
+The complete factor child now combines the immediate and moment cases, with
+correct results, exact first halting time, and concrete workspace/clock bounds.
+`Berkowitz.ModularAccess.zeroLanguage_mem_PSPACE` instantiates the suspended
+controller and proves modular determinant zero testing in Complexitylib's PSPACE.
+It assumes FP canonical dimension/modulus fields and FP original-matrix entries
+on every input, with a nonzero modulus. Dimension can be exponential in the input
+length. The proof includes the retained parent and child packets and the expanded
+physical clock; it assumes no FP computation of whole factor entries.
+Integer reconstruction, symbolic coefficients, and the report's ETR upper bound
+remain open.
 
 ## TM2 versus Complexitylib's machines
 
@@ -153,7 +160,7 @@ callbacks, including matrix-entry access. Its correctness theorem simulates ever
 typed transition on encoded states; the modular specialization supplies the scalar
 callbacks. Packet initialization is FP from certified binary field writers, and
 the size bound includes the retained original context. The project now proves
-`ModularAccess.zeroLanguage_mem_PSPACE`: testing whether a selected modular
+`MatrixPower.ModularAccess.zeroLanguage_mem_PSPACE`: testing whether a selected modular
 matrix-power entry is zero belongs to Complexitylib's PSPACE under canonical FP
 field/entry access on every context. The proof supplies the exact first halting
 time, FP completion and answer tests, and a general halting-loop wrapper for
@@ -172,9 +179,9 @@ child now form the complete determinant-factor evaluator, including certified
 binary case selection and trailing-block query writers. Its result correctness,
 exact first halting time, quadratic workspace bound in the dimension/modulus
 binary lengths, and exponential clock bound are proved. Its saved query packet
-is included in that workspace bound. Combining this child with the suspended
-outer determinant controller still requires the parent/child resource proof;
-the mechanism supplies no free oracle.
+is included in that workspace bound. The suspended outer determinant controller
+now meets the combined polynomial-workspace and exponential-time contracts,
+giving the modular determinant PSPACE theorem above.
 
 Local comparison sources, at `lean-trominoes` commit
 `6fe52dd234bb616fd4fb3c1e7b0a203de1482bc5`:

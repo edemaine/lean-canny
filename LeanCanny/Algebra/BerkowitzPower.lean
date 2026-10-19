@@ -19,9 +19,9 @@ of the constant coefficient tests the determinant.
 The stored power states over residues have an explicit quadratic bound in
 the binary lengths of n and the modulus. This excludes the workspace for
 accessing layered entries: those entries still involve scalar power moments.
-The abstract clock similarly counts entry access as one operation. A uniform
-encoded factor evaluator, with its workspace incorporated, is still required
-before claiming a determinant complexity-class upper bound.
+The abstract clock similarly counts entry access as one operation. The later
+`BerkowitzPSPACE` module incorporates a uniform encoded factor evaluator and its
+workspace to prove modular determinant zero testing in PSPACE.
 -/
 
 @[expose] public section
