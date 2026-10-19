@@ -75,6 +75,8 @@ import LeanCanny.Algebra.RationalSubstitutionMap
 import LeanCanny.Algebra.RationalSubstitutionSign
 import LeanCanny.Algebra.SturmQuery
 import LeanCanny.Algebra.PrincipalQuery
+import LeanCanny.Algebra.PseudoRemainderQuery
+import LeanCanny.Algebra.PseudoRemainderBudget
 import LeanCanny.Algebra.SignQueryBudget
 import LeanCanny.Algebra.SignQueryProductSpace
 import LeanCanny.Algebra.IntegerDigitSpace

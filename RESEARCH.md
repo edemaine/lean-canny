@@ -42,10 +42,32 @@ reduces each real-root query to signs of explicit determinants after reducing
 the derivative product modulo the head. Rational and integer input versions are
 proved. `PrincipalSubresultant.matrix_eq_minor` verifies the same matrix convention
 as the existing streamed subresultants, and `signedPsc_size_le` transfers their
-integer bit budget, including the terminal principal index. An encoded evaluator
-still needs reduced-seed coefficient access, degree selection, boundary handling,
-and the sign-statistic scan; these mathematical identities alone do not prove
-Canny's workspace bound.
+integer bit budget, including the terminal principal index. The integer pseudo-seed
+construction below supplies a streamed alternative to rational remainder access.
+Actual-degree selection, boundary handling, and the complete sign-statistic scan
+still need resource proofs.
+
+`PseudoRemainder` now replaces rational polynomial division by a fixed linear
+operator. Splitting `g` into its coefficients below degree `d` and shifted high
+part gives `T(g) = a*low(g) - low(p)*high(g)`, for `a = p[d]`.
+When `degree(p) ≤ d`, this equals `a*g - p*high(g)`. With input degree bound `D`,
+`2*(D+1)` iterations lower the result below `d` and give a positive scaling when
+`p` has actual degree `d > 0`. The integer Tarski-query theorem therefore uses
+an integral seed and integral principal determinants.
+
+The operator is represented by a `(D+1)`-dimensional scalar matrix. Each entry
+is zero, an original head coefficient, or its negation. The certified entry
+controller derives all source queries and modular negations internally.
+`PseudoRemainderBits.DataAccess.evaluator` combines suspended original-head and
+input coefficient routines with the existing scalar-moment evaluator, proving
+complete modular coefficient access without storing any intermediate remainder.
+Fixed bounds commute with coefficient maps even if the modular head degree drops.
+If head and input coefficient masses are bounded by `2^bp` and `2^bg`, a coefficient
+after `n` steps has at most `n*(bp+1)+bg+1` magnitude bits. FP binary writers supply
+this budget from original degree/coefficient bounds. The derivative-product
+source instantiation, computed actual-degree metadata, constant-head branch, and
+composed principal-sign scan remain open; the full `ETR ∈ PSPACE` theorem is
+not yet established.
 
 No existing encoded ∃ℝ complexity-class definition or formal proof of `ETR ∈ PSPACE`
 was found in the inspected Mathlib, Complexitylib, CSLib, TauCeti, or adjacent projects.
