@@ -86,6 +86,8 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.MatrixPowerController`](LeanCanny/Algebra/MatrixPowerController.lean), [`MatrixPowerControllerCorrect`](LeanCanny/Algebra/MatrixPowerControllerCorrect.lean) | A total context-carrying bitstring transition belongs to `FP` when its explicit callbacks do. It simulates every typed transition on encoded states. The modular specialization supplies scalar callbacks and retains the original context for entry access. Packet initialization is certified too. Every modular packet has at most `2*c.length+2+64*(N.size+e.size+m.size+1)^2` bits throughout the run. |
 | [`Computation.HaltingIteration`](LeanCanny/Computation/HaltingIteration.lean) | An FP initializer, transition, halting test, and answer yield a PSPACE decision procedure when states have polynomial length and the first halting time is at most exponential in a polynomial. The wrapper supplies the exact completion/answer protocol required by Complexitylib's `SpaceIter`; the clock need not be computed. |
 | [`Algebra.MatrixPowerHalting`](LeanCanny/Algebra/MatrixPowerHalting.lean), [`MatrixPowerPSPACE`](LeanCanny/Algebra/MatrixPowerPSPACE.lean) | The controller first finishes at exactly `work N e.size e + 1` steps. Testing whether a selected entry of a modular matrix power is zero belongs to Complexitylib's `PSPACE`, given canonical FP field writers and uniform FP entry access on every input. Dimensions and exponents may be exponentially large; only their binary descriptions enter the bound. |
+| [`Algebra.CharacteristicAdjugate`](LeanCanny/Algebra/CharacteristicAdjugate.lean), [`BorderedDeterminant`](LeanCanny/Algebra/BorderedDeterminant.lean) | Every coefficient of `adj(XI-A)` is a sum of characteristic coefficients times powers of `A`. Block elimination proves the bordered determinant formula by cancellation of a regular determinant; a monic characteristic polynomial supplies that cancellation over arbitrary commutative rings. |
+| [`Algebra.BerkowitzRecurrence`](LeanCanny/Algebra/BerkowitzRecurrence.lean), [`BerkowitzCoefficients`](LeanCanny/Algebra/BerkowitzCoefficients.lean) | The division-free bordered characteristic-coefficient recurrence uses scalar moments `r A^k c`. A recursive reference on `Fin n` matrices agrees with every Mathlib characteristic coefficient, and its signed constant coefficient equals the determinant, including the empty matrix. This reference has linear recursion depth and no space certificate. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -128,7 +130,10 @@ zero testing of a selected modular power entry is in `PSPACE` under the explicit
 FP access contract. The contract specifies a nonzero modulus and valid indices
 on every binary input; a concrete input format must supply validation and defaults.
 Entry evaluators requiring space rather than polynomial time need their machine
-states integrated into the controller. A determinant algorithm using this primitive
+states integrated into the controller. The division-free bordered recurrence behind
+Berkowitz's algorithm is now proved, together with a recursive determinant reference.
+That reference recurses once per dimension. Balanced products of coefficient
+transformations, an encoded streamed determinant evaluator, its workspace bound,
 and Canny's remaining algebraic and geometric arguments remain open.
 
 Binary addition, multiplication, comparison, subtraction, and modular reduction
@@ -143,9 +148,10 @@ callback required by the modular power machine.
    formats and uniform entry evaluators;
    incorporate their machine states when entry access needs a space certificate
    rather than an FP callback.
-3. Implement encoded determinant and subresultant algorithms for the verified
-   construction, with workspace bounds and the remaining subresultant output-size
-   bounds; formalize the parallel/streamed algebra used by the report.
+3. Turn the verified bordered coefficient recurrence into balanced transformation
+   products and an encoded streamed determinant algorithm. Supply its workspace
+   bound, encoded subresultant computation, and the remaining subresultant
+   output-size bounds; formalize the parallel/streamed algebra used by the report.
 4. Formalize critical points, perturbations, sign tests, and the correctness of Canny's
    ETR decision procedure; prove `ETR ∈ PSPACE`.
 5. Supply the required closure of PSPACE under polynomial-time reductions to derive

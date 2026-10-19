@@ -46,6 +46,15 @@ Encoded determinant and subresultant algorithms, subresultant output-size bounds
 and the report's space bounds remain open; the size estimates alone do not establish
 an algorithm with the required workspace.
 
+The project also proves the division-free bordered characteristic-polynomial
+recurrence behind Berkowitz's algorithm. Coefficients of `adj(XI-A)` are expressed
+through powers of `A`; cancellation of the monic characteristic polynomial proves
+the bordered identity even over rings with zero divisors. A recursive reference
+on `Fin n` matrices returns exactly Mathlib's characteristic coefficients and
+determinant, including dimension zero. Its linear recursion depth does not supply
+the report's polylogarithmic workspace. Balanced products of coefficient
+transformations, streamed evaluation, and their machine certificates remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The distinction affects implementation and resource-accounting effort, even though
