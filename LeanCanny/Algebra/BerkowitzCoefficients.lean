@@ -15,8 +15,9 @@ from smaller principal matrices and scalar matrix-power moments. Its constant
 coefficient recovers the determinant, including the empty matrix.
 
 This function is an algebraic correctness reference. Its recursion has linear
-depth in the dimension; no complexity bound is claimed. Balanced products of
-coefficient transformations and a streamed implementation are still needed.
+depth in the dimension; no complexity bound is claimed. `BerkowitzBalanced`
+supplies a transformation product and balanced entry recursion. An encoded
+streamed implementation and its workspace bound remain separate obligations.
 -/
 
 @[expose] public section

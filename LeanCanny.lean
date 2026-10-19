@@ -24,6 +24,7 @@ import LeanCanny.Algebra.MatrixPowerArithmeticFP
 import LeanCanny.Algebra.MatrixPowerControllerCorrect
 import LeanCanny.Algebra.MatrixPowerPSPACE
 import LeanCanny.Algebra.BerkowitzCoefficients
+import LeanCanny.Algebra.BerkowitzBalanced
 
 /-!
 # Canny's algebraic and geometric computations in polynomial space

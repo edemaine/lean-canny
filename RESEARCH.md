@@ -52,8 +52,14 @@ through powers of `A`; cancellation of the monic characteristic polynomial prove
 the bordered identity even over rings with zero divisors. A recursive reference
 on `Fin n` matrices returns exactly Mathlib's characteristic coefficients and
 determinant, including dimension zero. Its linear recursion depth does not supply
-the report's polylogarithmic workspace. Balanced products of coefficient
-transformations, streamed evaluation, and their machine certificates remain open.
+the report's polylogarithmic workspace. The coefficient recurrence now acts by
+square transformations on padded vectors; their ordered product contains the
+characteristic coefficients in its first column. A generic balanced interval
+recursion preserves factor order, and `Berkowitz.balancedDeterminant` uses height
+`n.size` to recover the determinant. The factor accessor avoids building the full
+list, but no complexity bound for that accessor is asserted. Encoded sum streaming,
+uniform binary access to trailing blocks and scalar power moments, and a complete
+workspace certificate remain open.
 
 ## TM2 versus Complexitylib's machines
 

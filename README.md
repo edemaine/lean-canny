@@ -88,6 +88,8 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.MatrixPowerHalting`](LeanCanny/Algebra/MatrixPowerHalting.lean), [`MatrixPowerPSPACE`](LeanCanny/Algebra/MatrixPowerPSPACE.lean) | The controller first finishes at exactly `work N e.size e + 1` steps. Testing whether a selected entry of a modular matrix power is zero belongs to Complexitylib's `PSPACE`, given canonical FP field writers and uniform FP entry access on every input. Dimensions and exponents may be exponentially large; only their binary descriptions enter the bound. |
 | [`Algebra.CharacteristicAdjugate`](LeanCanny/Algebra/CharacteristicAdjugate.lean), [`BorderedDeterminant`](LeanCanny/Algebra/BorderedDeterminant.lean) | Every coefficient of `adj(XI-A)` is a sum of characteristic coefficients times powers of `A`. Block elimination proves the bordered determinant formula by cancellation of a regular determinant; a monic characteristic polynomial supplies that cancellation over arbitrary commutative rings. |
 | [`Algebra.BerkowitzRecurrence`](LeanCanny/Algebra/BerkowitzRecurrence.lean), [`BerkowitzCoefficients`](LeanCanny/Algebra/BerkowitzCoefficients.lean) | The division-free bordered characteristic-coefficient recurrence uses scalar moments `r A^k c`. A recursive reference on `Fin n` matrices agrees with every Mathlib characteristic coefficient, and its signed constant coefficient equals the determinant, including the empty matrix. This reference has linear recursion depth and no space certificate. |
+| [`Algebra.BerkowitzTransform`](LeanCanny/Algebra/BerkowitzTransform.lean), [`BerkowitzProduct`](LeanCanny/Algebra/BerkowitzProduct.lean) | Padded coefficient vectors turn each bordered recurrence into a square matrix action. The ordered product's first column gives all characteristic coefficients; its signed top-left entry is the determinant. Factor entries depend on input entries and scalar power moments, without using characteristic coefficients. |
+| [`Algebra.MatrixProductEntry`](LeanCanny/Algebra/MatrixProductEntry.lean), [`BerkowitzBalanced`](LeanCanny/Algebra/BerkowitzBalanced.lean) | Balanced interval recursion computes an entry of any ordered matrix product over a semiring, preserving factor order. Applied to the coefficient transformations, height `n.size` suffices to recover every characteristic coefficient and the determinant. A factor accessor avoids constructing the full list. These are algebraic specifications, without an encoded evaluator or workspace certificate yet. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -132,9 +134,13 @@ on every binary input; a concrete input format must supply validation and defaul
 Entry evaluators requiring space rather than polynomial time need their machine
 states integrated into the controller. The division-free bordered recurrence behind
 Berkowitz's algorithm is now proved, together with a recursive determinant reference.
-That reference recurses once per dimension. Balanced products of coefficient
-transformations, an encoded streamed determinant evaluator, its workspace bound,
-and Canny's remaining algebraic and geometric arguments remain open.
+Padded coefficient transformations give an ordered matrix product whose first
+column contains the characteristic coefficients. `Berkowitz.balancedDeterminant`
+recovers the determinant using product-entry recursion of height `n.size`.
+An encoded evaluator must still stream the finite sums and supply uniform binary
+access to trailing blocks and scalar moments, with their workspace accounted for.
+That evaluator, its workspace bound, and Canny's remaining algebraic and geometric
+arguments remain open.
 
 Binary addition, multiplication, comparison, subtraction, and modular reduction
 now have uniform `FP` certificates, with exact semantics and bounds on intermediate
@@ -148,8 +154,8 @@ callback required by the modular power machine.
    formats and uniform entry evaluators;
    incorporate their machine states when entry access needs a space certificate
    rather than an FP callback.
-3. Turn the verified bordered coefficient recurrence into balanced transformation
-   products and an encoded streamed determinant algorithm. Supply its workspace
+3. Implement an encoded streamed evaluator for the verified balanced determinant
+   construction, including factor and scalar-moment access. Supply its workspace
    bound, encoded subresultant computation, and the remaining subresultant
    output-size bounds; formalize the parallel/streamed algebra used by the report.
 4. Formalize critical points, perturbations, sign tests, and the correctness of Canny's

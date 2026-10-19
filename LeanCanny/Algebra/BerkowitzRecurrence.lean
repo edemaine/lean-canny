@@ -14,8 +14,9 @@ For a matrix bordered by scalar `a`, row `r`, and column `c`, the new
 characteristic polynomial is `(X-a) χ_A - r adj(XI-A) c`. Every coefficient
 of the correction is a convolution of characteristic coefficients with
 the scalar moments `r A^k c`. These identities hold over any commutative
-ring. Balanced products, encoded evaluation, and workspace certification
-of the resulting determinant algorithm are separate obligations.
+ring. `BerkowitzProduct` and `BerkowitzBalanced` give the product formulation
+and balanced entry recursion. Encoded evaluation and workspace certification
+of the resulting determinant algorithm remain separate obligations.
 -/
 
 @[expose] public section
