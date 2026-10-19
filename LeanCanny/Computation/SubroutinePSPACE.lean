@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Computation.SubroutineBounds
-public import LeanCanny.Computation.SpaceDecider
+public import LeanCanny.Computation.SubroutineFunction
 
 /-!
 # Polynomial-space iteration with non-polynomial-time subroutine calls
@@ -40,44 +39,13 @@ noncomputable def decider {L : Language} (P : Program) (hP : P.PolyTime)
     (hafter : ∀ x, H ((abstractStep P T)^[N x] (init x)) = true)
     (hanswer : ∀ x, x ∈ L ↔ answer ((abstractStep P T)^[N x] (init x)) = true) :
     SpaceDecider L := by
-  have hstart := mem_FP_comp hi (Cobham.cons_mem_FP false)
-  have hans := mem_FP_comp (drop_mem_FP id_mem_FP (UnaryFn.const 1)) ha
-  refine { init := fun x => parent (init x)
-           advance := step P
-           halt := halted H
-           answer := fun bits => answer (bits.drop 1)
-           initFP := hstart
-           advanceFP := step_mem_FP P hP
-           haltFP := halted_mem_FP hH
-           answerFP := hans
-           space := 2 * r + u + 3
-           clock := w + v + 2
-           time := fun x => clock P T (init x) (N x)
-           length_le := ?_
-           time_le := ?_
-           before := ?_
-           after := ?_
-           correct := ?_ }
-  · intro x t ht
-    simpa only [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat] using
-      iterate_length_le P T (init x) (N x) (r.eval x.length) (u.eval x.length)
-        (hT x) (hp x) (hu x) t ht
-  · intro x
-    have hc := clock_le P T (init x) (N x) (2 ^ v.eval x.length) (hchild x)
-    have hv : 2 ^ v.eval x.length + 2 ≤ 2 ^ v.eval x.length * 4 := by
-      have hpos : 0 < 2 ^ v.eval x.length := pow_pos (by decide) _
-      omega
-    have h := hc.trans (Nat.mul_le_mul (hN x) hv)
-    simpa only [Polynomial.eval_add, Polynomial.eval_ofNat, pow_add,
-      show (2 : ℕ) ^ 2 = 4 from rfl, Nat.mul_assoc] using h
-  · intro x t ht
-    exact halted_before P T (init x) (N x) (hT x) H (hbefore x) t ht
-  · intro x
-    rw [iterate_clock P T (init x) (N x) (hT x), halted_parent]
-    exact hafter x
-  · intro x
-    rw [iterate_clock P T (init x) (N x) (hT x)]
-    simpa only [parent, List.drop_succ_cons, List.drop_zero] using hanswer x
+  have E := evaluator P hP init hi H (fun p => [answer p]) hH ha T N r u w v
+    hT hp hu hN hchild hbefore hafter
+  have haccept : (fun bits : List Bool => [bits[0]?.getD false]) ∈ FP :=
+    (FPPred.getBit id_mem_FP (UnaryFn.const 0)).flag_mem_FP
+  refine E.decider (fun bits => bits[0]?.getD false) haccept ?_
+  intro x
+  simpa only [List.getElem?_cons_zero, Option.getD_some] using hanswer x
 
 theorem mem_PSPACE {L : Language} (P : Program) (hP : P.PolyTime)
     (init : List Bool → List Bool) (hi : init ∈ FP)
