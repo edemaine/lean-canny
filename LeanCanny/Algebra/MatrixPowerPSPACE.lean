@@ -5,14 +5,15 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.MatrixPowerHalting
-public import LeanCanny.Computation.HaltingIteration
+public import LeanCanny.Computation.SpaceFunction
 
 /-!
 # Polynomial-space modular matrix powering
 
 A context specifies a matrix by an entry function, a nonzero modulus, a binary
 exponent, and a pair of valid indices. Certified FP writers for these fields and
-entries suffice to decide whether the selected power entry is zero in PSPACE.
+entries give a certified space-bounded evaluator for the selected power entry,
+and suffice to decide whether it is zero in PSPACE.
 Neither the dimension nor the exponent is required to be polynomially bounded:
 only their binary descriptions are. No dense matrix is constructed.
 
@@ -40,6 +41,9 @@ structure ModularFamily where
 def ModularFamily.zeroLanguage (F : ModularFamily) : Language :=
   {c | (F.matrix c ^ F.exponent c) (F.row c) (F.col c) = 0}
 
+noncomputable def ModularFamily.value (F : ModularFamily) (c : List Bool) : List Bool :=
+  residueBits ((F.matrix c ^ F.exponent c) (F.row c) (F.col c))
+
 /-- Canonical binary field access and uniform entry access, on all contexts. -/
 structure ModularAccess (F : ModularFamily) where
   dimension : List Bool → List Bool
@@ -66,9 +70,18 @@ structure ModularAccess.PolyTime {F : ModularFamily} (a : ModularAccess F) : Pro
 
 namespace ModularAccess
 open Controller
+open LeanCanny.Encoding.Brackets
 
-theorem zeroLanguage_mem_PSPACE {F : ModularFamily} (a : ModularAccess F) (ha : a.PolyTime) :
-    F.zeroLanguage ∈ PSPACE := by
+def valueBits (packet : List Bool) : List Bool := (pairSnd packet).drop 1
+
+theorem valueBits_mem_FP : valueBits ∈ FP := drop_mem_FP pairSnd_mem_FP (UnaryFn.const 1)
+
+theorem valueBits_done {R : Type*} {n : ℕ} (c : List Bool) (enc : R → List Bool) (x : R) :
+    valueBits (pair c (stateBits (n := n) enc (.done x))) = enc x := by
+  simp [valueBits, stateBits]
+
+noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.PolyTime) :
+    Computation.SpaceFunction F.value := by
   let ops := modularCallbacks a.dimension a.modulus a.entry
   let T := fun c => work (F.dimension c) (F.exponent c).size (F.exponent c) + 1
   have hc (c : List Bool) : CorrectAt ops c (F.matrix c) residueBits := by
@@ -80,9 +93,15 @@ theorem zeroLanguage_mem_PSPACE {F : ModularFamily} (a : ModularAccess F) (ha : 
       (.eval ⟨(F.exponent c).size, F.exponent c, F.row c, F.col c⟩ [])) :=
     initialPacket_encode a.exponent a.row a.col c (residueBits (m := F.modulus c)) (F.exponent c)
       (F.row c) (F.col c) (a.exponent_eq c) (a.row_eq c) (a.col_eq c)
-  obtain ⟨pd, hd⟩ := Cobham.output_length_poly_of_mem_FP ha.dimension
-  obtain ⟨pm, hm⟩ := Cobham.output_length_poly_of_mem_FP ha.modulus
-  obtain ⟨pe, he⟩ := Cobham.output_length_poly_of_mem_FP ha.exponent
+  let pd := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.dimension)
+  have hd : ∀ c, (a.dimension c).length ≤ pd.eval c.length :=
+    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.dimension)
+  let pm := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.modulus)
+  have hm : ∀ c, (a.modulus c).length ≤ pm.eval c.length :=
+    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.modulus)
+  let pe := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.exponent)
+  have he : ∀ c, (a.exponent c).length ≤ pe.eval c.length :=
+    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.exponent)
   let p := pd + pe + pm
   have hbits (c : List Bool) :
       (F.dimension c).size + (F.exponent c).size + (F.modulus c).size ≤ p.eval c.length := by
@@ -94,11 +113,22 @@ theorem zeroLanguage_mem_PSPACE {F : ModularFamily} (a : ModularAccess F) (ha : 
     rw [a.exponent_eq, BinaryNatCode.length_encode] at hec
     simp only [p, Polynomial.eval_add]
     omega
-  refine Computation.HaltingIteration.mem_PSPACE
-    (initialPacket_mem_FP ha.exponent ha.row ha.col)
-    (step_mem_FP ops (modularCallbacks_polyTime ha.dimension ha.modulus ha.entry))
-    halted_mem_FP zeroAnswer_mem_FP
-    (2 * Polynomial.X + 2 + 64 * (p + 1) ^ 2) ((p + 2) * p + 1) T ?_ ?_ ?_ ?_ ?_
+  refine { init := initialPacket a.exponent a.row a.col
+           advance := Controller.step ops
+           halt := halted
+           output := valueBits
+           initFP := initialPacket_mem_FP ha.exponent ha.row ha.col
+           advanceFP := step_mem_FP ops (modularCallbacks_polyTime ha.dimension ha.modulus ha.entry)
+           haltFP := halted_mem_FP
+           outputFP := valueBits_mem_FP
+           space := 2 * Polynomial.X + 2 + 64 * (p + 1) ^ 2
+           clock := (p + 2) * p + 1
+           time := T
+           length_le := ?_
+           time_le := ?_
+           before := ?_
+           after := ?_
+           correct := ?_ }
   · intro c t _
     let : NeZero (F.modulus c) := ⟨F.modulus_ne_zero c⟩
     rw [hinit c]
@@ -128,7 +158,20 @@ theorem zeroLanguage_mem_PSPACE {F : ModularFamily} (a : ModularAccess F) (ha : 
     let : NeZero (F.modulus c) := ⟨F.modulus_ne_zero c⟩
     rw [hinit c, show T c = work (F.dimension c) (F.exponent c).size (F.exponent c) + 1 from rfl,
       Controller.run_pow ops c (F.matrix c) residueBits (hc c)]
-    exact (zeroAnswer_done c (F.modulus c) _).symm
+    rw [valueBits_done]
+    rfl
+
+theorem zeroLanguage_mem_PSPACE {F : ModularFamily} (a : ModularAccess F) (ha : a.PolyTime) :
+    F.zeroLanguage ∈ PSPACE := by
+  let accept := fun bits : List Bool => decide (bits = [])
+  have haFP : (fun bits => [accept bits]) ∈ FP :=
+    (stringEq_fppred id_mem_FP (constFn_mem_FP [])).flag_mem_FP
+  apply ((evaluator a ha).decider accept haFP ?_).mem_PSPACE
+  intro c
+  let : NeZero (F.modulus c) := ⟨F.modulus_ne_zero c⟩
+  have hz : residueBits (0 : ZMod (F.modulus c)) = [] := by simp [residueBits, BinaryNatCode.encode]
+  change ((F.matrix c ^ F.exponent c) (F.row c) (F.col c) = 0) ↔ decide (F.value c = []) = true
+  rw [decide_eq_true_eq, ModularFamily.value, ← hz, (residueBits_injective (F.modulus c)).eq_iff]
 
 end ModularAccess
 end LeanCanny.Algebra.MatrixPower
