@@ -116,6 +116,19 @@ degree fields equal the actual polynomial degrees. This does not yet compute
 symbolic resultant coefficients or signs, or supply residue algorithms for all
 polynomial constructions used in the report.
 
+The project now supplies an explicit binomial-residue routine for the shifted
+coefficient formula. The lower bidiagonal matrix with diagonal and subdiagonal
+one has `choose n k` at row `k`, column zero of its nth power in dimension `k+1`.
+This identity holds over any semiring. Concrete FP binary writers and entry
+access instantiate the modular power controller, including arbitrary positive
+composite moduli and modulus one. `BinomialResidue.evaluator` returns the complete
+residue through a `SpaceFunction` certificate with first halting time, polynomial
+state bounds, and an exponential clock. All binary input words are covered;
+`k>n` returns zero. Modular power evaluation now exposes the same output interface,
+and FP final predicates derive PSPACE decision procedures from it. Combining the
+binomial routine with the remaining shifted-coefficient arithmetic and allowing
+space-bounded coefficient calls in the resultant evaluator still require work.
+
 ## TM2 versus Complexitylib's machines
 
 The distinction affects implementation and resource-accounting effort, even though
