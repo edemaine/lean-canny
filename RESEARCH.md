@@ -168,10 +168,13 @@ state; parent/child bounds `S,U` give `2*S+U+3` bits. Polynomial state bounds an
 exponential parent-step and child-run clocks yield Complexitylib PSPACE through
 `SubroutineIteration.mem_PSPACE`. Its hypotheses concern only reachable parent
 states and requested calls. The direct factor formulas and the uniform scalar-moment
-child now supply parts of the determinant-factor evaluator. Binary case selection
-and trailing-block query writers are certified too. The complete factor child
-must still meet the full correctness and combined resource contracts; the
-mechanism supplies no free oracle.
+child now form the complete determinant-factor evaluator, including certified
+binary case selection and trailing-block query writers. Its result correctness,
+exact first halting time, quadratic workspace bound in the dimension/modulus
+binary lengths, and exponential clock bound are proved. Its saved query packet
+is included in that workspace bound. Combining this child with the suspended
+outer determinant controller still requires the parent/child resource proof;
+the mechanism supplies no free oracle.
 
 Local comparison sources, at `lean-trominoes` commit
 `6fe52dd234bb616fd4fb3c1e7b0a203de1482bc5`:

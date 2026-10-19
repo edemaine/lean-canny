@@ -165,8 +165,13 @@ packet has at most `2*c.length+2+64*((d+2).size+(k+2).size+m.size+1)^2` bits.
 Binary division/remainder, query decoding, and case selection now have FP
 certificates. The offset writers supply exactly the trailing block and border
 vectors from the original matrix, giving certified moment-child callbacks.
-The immediate and moment cases still need to be assembled into one factor child,
-with a combined parent/child resource proof. This evaluator and
+The complete factor child now combines the immediate and moment cases. Its
+initializer, transition, halting test, and output projection are FP under the
+original matrix access contract. It returns the correct layered entry and halts
+for the first time at its stated clock. For original dimension `n`, modulus `m`,
+and query packet `p`, its packets through termination have at most
+`2*p.length+2+64*(2*(n+2).size+m.size+1)^2` bits, and its clock is at most
+`2^(((n+2).size+2)*(n+2).size+1)`. The combined parent/child resource proof and
 Canny's remaining algebraic and geometric arguments remain open; a determinant
 PSPACE theorem is not yet proved.
 
@@ -182,10 +187,9 @@ callback required by the modular power machine.
    formats and uniform entry evaluators;
    instantiate the suspended-entry interface when the whole entry computation
    requires more than polynomial time.
-3. Assemble the determinant-factor child from the certified case selector,
-   trailing-block query writers, scalar-moment child, and modular negation.
-   Prove its complete correctness, termination, and combined resource contracts
-   for the suspended controller. Supply encoded subresultant computation
+3. Instantiate the suspended determinant controller with the complete factor child
+   and prove the combined polynomial workspace and exponential clock bounds.
+   Supply encoded subresultant computation
    and its remaining output-size bounds; formalize the parallel/streamed algebra used by the report.
 4. Formalize critical points, perturbations, sign tests, and the correctness of Canny's
    ETR decision procedure; prove `ETR ∈ PSPACE`.
