@@ -17,8 +17,9 @@ pairing. The state representation is injective whenever the scalar representatio
 is injective. Its length is bounded throughout the run when scalar codes have a
 uniform bit bound; residues modulo a nonzero runtime modulus supply such codes.
 
-This is a representation-size theorem. A decoder, an FP implementation of the
-encoded step, and costs for entry access and arithmetic are not supplied here.
+Exact decoding is developed in `MatrixPowerDecoding`, and certified binary query
+writers in `MatrixPowerQueryFP`. A full FP certificate for the encoded step,
+including parsing, entry access, and scalar arithmetic, remains separate.
 -/
 
 @[expose] public section

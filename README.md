@@ -75,6 +75,9 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.ResultantBounds`](LeanCanny/Algebra/ResultantBounds.lean) | The unnormalized integer resultant has explicit coefficient magnitude and binary length bounds. Its degree is at most `d₁*d₂` over any commutative ring, without separability or nonzero hypotheses. The two input orders have equal coefficient magnitudes. |
 | [`Algebra.MatrixPowerEntry`](LeanCanny/Algebra/MatrixPowerEntry.lean), [`MatrixPowerMachine`](LeanCanny/Algebra/MatrixPowerMachine.lean), [`MatrixPowerWork`](LeanCanny/Algebra/MatrixPowerWork.lean) | A continuation machine computes one entry of `A^e` over any semiring by balanced recursion, streaming the summation through a counter and accumulator. Correctness and the exact abstract transition count are proved; no intermediate matrix power is stored. |
 | [`Algebra.MatrixPowerBounds`](LeanCanny/Algebra/MatrixPowerBounds.lean), [`MatrixPowerEncoding`](LeanCanny/Algebra/MatrixPowerEncoding.lean) | Every reachable state has at most `e.size` frames. A binary state representation is injective when its scalar representation is. For residues modulo nonzero `m`, complete states have at most `64*(N.size + e.size + m.size + 1)^2` bits for an `N`-dimensional matrix supplied as an entry function. |
+| [`Encoding.BinaryNatFP`](LeanCanny/Encoding/BinaryNatFP.lean) | Machine-certified polynomial-time normalization, successor, truncated predecessor, floor half, and ceiling half directly on binary words. The arithmetic specifications cover arbitrary little-endian inputs and produce canonical outputs; no magnitude is expanded to unary. Canonical binary words have an `FP` recognizer. |
+| [`Algebra.MatrixPowerQueryFP`](LeanCanny/Algebra/MatrixPowerQueryFP.lean) | Total `FP` writers for the initial query and both child queries agree with the typed machine. Initial height comes from the exponent word's bit length. |
+| [`Algebra.MatrixPowerDecoding`](LeanCanny/Algebra/MatrixPowerDecoding.lean) | Exact decoders for queries, frames, stacks, residues, and complete states. Successful state decoding characterizes equality with the canonical encoding. A total encoded transition agrees with the typed step, computes the required entry after the specified number of iterations, and inherits the quadratic modular-state bound. Its full `FP` certificate remains open. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -107,9 +110,11 @@ polylogarithmic-space computation remain open.
 The streamed matrix-power primitive now has a verified continuation machine and
 binary state-size bounds. Its abstract run takes at most
 `2^((N.size+2)*e.size+1)` transitions. Entry access and scalar arithmetic count as
-single abstract operations here. A decoder, certified implementations of the
-encoded step and its arithmetic, and a determinant algorithm using this primitive
-remain to be supplied before obtaining a machine-level space theorem.
+single abstract operations here. Exact decoding and certified initial/child-query
+writers are now provided. The full encoded step still needs an `FP` certificate,
+including certified parsing, matrix-entry access, and modular arithmetic. A
+determinant algorithm using this primitive also remains to be supplied before
+obtaining the report's machine-level space theorem.
 
 ## Next obligations
 
