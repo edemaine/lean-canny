@@ -384,7 +384,16 @@ one left-selector bit, an index guard, and a shifted right bit. Sequentially
 composed operand routines supply these bits to `SumBits.evaluator`, whose carry,
 workspace, and physical-clock proofs give the product certificate. Both operands
 may be implicit and exponentially long. Balanced products of a variable factor
-family, subtraction, and the complete CRT digit evaluator remain open.
+family and the complete CRT digit evaluator remain open.
+
+`SubtractBits.evaluator` now certifies ordered natural-number subtraction. At
+selected bit `k`, the complemented low `k+1` bits of the second operand plus
+one turn subtraction into a three-term sum modulo `2^(k+1)`. The complement
+routine uses a source bit and a width guard, and the existing sum machine handles
+the carry. `ArithmeticBits` supplies uniform `pair context binaryIndex` product
+and subtraction interfaces so their outputs can feed further arithmetic.
+`SpaceFunction.select` first runs a space-bounded predicate, retains its response,
+then runs one selected child, with all workspace and clocks counted.
 
 ## TM2 versus Complexitylib's machines
 
