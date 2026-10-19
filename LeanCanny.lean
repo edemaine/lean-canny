@@ -49,6 +49,7 @@ import LeanCanny.Algebra.CannyResultantResidue
 import LeanCanny.Algebra.CannyResultantInteger
 import LeanCanny.Algebra.SmallModulusCRT
 import LeanCanny.Algebra.IndexedModulusCRT
+import LeanCanny.Algebra.IndexedModulusSpace
 import LeanCanny.Algebra.ChineseRemainderSignSpace
 import LeanCanny.Algebra.BinomialResidue
 import LeanCanny.Algebra.ShiftCoefficientResidue

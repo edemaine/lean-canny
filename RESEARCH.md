@@ -249,6 +249,16 @@ indices. Its count is exactly `N+1`, while its product is still `lcmUpto N` and
 the previous precision bound still suffices. This avoids requiring an FP prime
 count or a compressed prime enumeration in the eventual implementation.
 
+Indexed moduli now have an actual certified evaluator. `PrimalityBits.evaluator`
+scans trial divisors with FP modular reduction and retains one Boolean flag;
+its answer agrees with `Nat.Prime`, including zero and one. A separate bounded
+multiplication routine returns `i^(log i N)`, with each stored magnitude at most
+`N+1`, for all binary `N,i`. `ModulusBits.evaluator` composes the routines and
+uses FP selection to return the prime power or one. `BoundedFold.evaluator`
+accounts for sequential space-bounded updates, and `SpaceFunction.chain` proves
+sequential composition using polynomial output bounds. Complementary modular
+products and the inverse-weighted residue preparation remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
