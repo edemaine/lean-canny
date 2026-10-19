@@ -38,16 +38,34 @@ noncomputable def scaledValue {J : Type*} [Fintype J]
     (p : (ℤ[X])[X]) (Q : J → (ℤ[X])[X]) (σ : J → SignType) : ℤ :=
   ∑ e : J → Fin 3, patternWeight σ e * value p (queryPolynomial Q e)
 
-theorem scaled_eq_value {J : Type*} [Fintype J] (p : (ℤ[X])[X]) (Q : J → (ℤ[X])[X]) (σ : J → SignType)
-    (x : ℝ) (hx : 0 < x) (hxs : x ≤ InfinitesimalSign.dyadic (patternBudget p Q + 1)) :
+theorem scaled_eq_value_of_bounded {J : Type*} [Fintype J]
+    (p : (ℤ[X])[X]) (Q : J → (ℤ[X])[X]) (σ : J → SignType) (b s : ℕ)
+    (h : ∀ e : J → Fin 3, Bounded p (queryPolynomial Q e) b) (hs : b < s)
+    (x : ℝ) (hx : 0 < x) (hxs : x ≤ InfinitesimalSign.dyadic s) :
     scaledRootCount (p.map (evalHom x)) (fun i => (Q i).map (evalHom x)) σ = scaledValue p Q σ := by
   classical
   unfold scaledRootCount scaledValue
   apply Finset.sum_congr rfl
   intro e _
   rw [← map_queryPolynomial]
-  exact congrArg (patternWeight σ e * ·)
-    (query_eq_value p (queryPolynomial Q e) _ _ (pattern_bounded p Q e) (Nat.lt_succ_self _) x hx hxs)
+  exact congrArg (patternWeight σ e * ·) (query_eq_value p (queryPolynomial Q e) b s (h e) hs x hx hxs)
+
+theorem scaled_eq_value {J : Type*} [Fintype J] (p : (ℤ[X])[X]) (Q : J → (ℤ[X])[X]) (σ : J → SignType)
+    (x : ℝ) (hx : 0 < x) (hxs : x ≤ InfinitesimalSign.dyadic (patternBudget p Q + 1)) :
+    scaledRootCount (p.map (evalHom x)) (fun i => (Q i).map (evalHom x)) σ = scaledValue p Q σ :=
+  scaled_eq_value_of_bounded p Q σ _ _ (pattern_bounded p Q) (Nat.lt_succ_self _) x hx hxs
+
+theorem rootCount_eq_reference {J : Type*} [Fintype J]
+    (p : (ℤ[X])[X]) (Q : J → (ℤ[X])[X]) (σ : J → SignType) (b s : ℕ)
+    (h : ∀ e : J → Fin 3, Bounded p (queryPolynomial Q e) b) (hs : b < s)
+    (x : ℝ) (hx : 0 < x) (hxs : x ≤ InfinitesimalSign.dyadic s) :
+    signCount (p.map (evalHom x)).roots.toFinset (fun i => (Q i).map (evalHom x)) σ =
+      signCount (p.map (evalHom (InfinitesimalSign.dyadic (patternBudget p Q + 1)))).roots.toFinset
+        (fun i => (Q i).map (evalHom (InfinitesimalSign.dyadic (patternBudget p Q + 1)))) σ := by
+  have he := (scaled_eq_value_of_bounded p Q σ b s h hs x hx hxs).trans
+    (scaled_eq_value p Q σ _ (InfinitesimalSign.dyadic_pos _) le_rfl).symm
+  rw [scaledRootCount_eq, scaledRootCount_eq] at he
+  exact Int.natCast_inj.mp (mul_left_cancel₀ (pow_ne_zero _ (by decide : (2 : ℤ) ≠ 0)) he)
 
 theorem scaled_stable {J : Type*} [Fintype J] (p : (ℤ[X])[X]) (Q : J → (ℤ[X])[X]) (σ : J → SignType)
     (x y : ℝ) (hx : 0 < x) (hy : 0 < y)

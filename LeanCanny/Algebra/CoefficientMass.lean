@@ -44,6 +44,14 @@ theorem coefficientMass_sum_le {ι : Type*} (s : Finset ι) (f : ι → ℤ[X]) 
     rw [Finset.sum_insert hi, Finset.sum_insert hi]
     exact (coefficientMass_add_le _ _).trans (Nat.add_le_add_left ih _)
 
+@[simp] theorem coefficientMass_neg (p : ℤ[X]) : coefficientMass (-p) = coefficientMass p := by
+  rw [coefficientMass, coefficientMass, Polynomial.sum_def, Polynomial.sum_def]
+  simp only [Polynomial.support_neg, Polynomial.coeff_neg, Int.natAbs_neg]
+
+theorem coefficientMass_sub_le (p q : ℤ[X]) :
+    coefficientMass (p - q) ≤ coefficientMass p + coefficientMass q := by
+  simpa only [sub_eq_add_neg, coefficientMass_neg] using coefficientMass_add_le p (-q)
+
 @[simp] theorem coefficientMass_monomial (n : ℕ) (a : ℤ) : coefficientMass (monomial n a) = a.natAbs :=
   Polynomial.sum_monomial_index a _ rfl
 

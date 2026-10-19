@@ -784,10 +784,27 @@ every pattern's exact number of distinct roots is constant on the resulting
 common interval. `realizable_stable` derives the same assertion for actual
 realizability when the symbolic root polynomial is nonzero; its nonvanishing
 throughout the interval is also proved. These budgets are expressions in the
-constructed symbolic polynomials. Deriving FP upper bounds from original source
-metadata remains necessary to combine this interval with the selected-parameter
-space evaluator. Canny's stronger implicit family bounds and critical-point
-construction remain separate obligations.
+constructed symbolic polynomials.
+
+`NestedCoefficientMass` now proves subadditivity, submultiplicativity, derivative,
+and pseudo-reduction estimates for the sum of all absolute bivariate integer
+coefficients. `PrincipalParameterMass` bounds an entire determinant's coefficient
+mass by a factorial times its column allowances. This bounds the signed principal
+tests directly, including terminal and zero branches, without parameter degrees.
+`ParameterSourceBounds` combines these estimates. With outer bounds `dp,df` and
+total mass bounds `2^bp,2^bf`, the seed mass exponent is
+`2*(dp+df+1)*(bp+1)+bf+dp.size+bp`. The principal-test exponent is bounded using
+matrix size at most `2*dp`. Original coefficient-mass allowances are converted to
+total-mass exponents by adding `(degree+1).size`. For ternary products the uniform
+total-mass exponent is `2*k*(bf+(D+1).size)` and the outer degree is at most
+`2*k*D`. Hence one source-derived bound works for every ternary query, without
+constructing or enumerating the symbolic test polynomials.
+
+`ParameterSourceBudget` provides FP binary writers for these expressions, including
+binary size via normalized-word length. The contracts cover all raw metadata
+words. Composing this effective choice with the selected-parameter root-count
+evaluator remains the next step. Canny's stronger implicit family bounds and
+critical-point construction remain separate obligations.
 
 `ScaledSignQueries` starts the algebraic-root counting stage. At each sign value
 `t∈{-1,0,1}`, the integer quadratics `2-2*t²`, `t²-t`, and `t²+t` are twice the

@@ -359,9 +359,17 @@ interval throughout which the query equals the trailing-coefficient sign formula
 takes a maximum over the ternary product queries. One interval works for every
 sign pattern; exact root counts are constant there, and realizability is constant
 for a nonzero symbolic root polynomial. These are mathematical stability results.
-An FP upper bound on these symbolic test budgets, derived from the original
-source metadata, is still needed to finish the space analysis. Canny's implicit
-family bounds and critical-point argument also remain open.
+[`NestedCoefficientMass`](LeanCanny/Algebra/NestedCoefficientMass.lean) and
+[`PrincipalParameterMass`](LeanCanny/Algebra/PrincipalParameterMass.lean) bound
+the whole coefficient mass of the bivariate pseudo-seed and its principal tests.
+[`ParameterSourceBounds`](LeanCanny/Algebra/ParameterSourceBounds.lean) derives
+a uniform test bound from the original outer degrees and coefficient masses,
+including every ternary product query. No test-polynomial enumeration or β-degree
+is needed for this bound.
+[`ParameterSourceBudget`](LeanCanny/Algebra/ParameterSourceBudget.lean) gives
+its FP binary writer on arbitrary metadata words. Composing the resulting
+parameter choice with the root-count evaluator is the next step. Canny's
+implicit family bounds and critical-point argument also remain open.
 
 ## Next obligations
 

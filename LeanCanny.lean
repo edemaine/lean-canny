@@ -84,6 +84,7 @@ import LeanCanny.Algebra.TarskiQueryPSPACE
 import LeanCanny.Algebra.DyadicTarskiSpace
 import LeanCanny.Algebra.DyadicSignPatternSpace
 import LeanCanny.Algebra.ParameterizedSignPatterns
+import LeanCanny.Algebra.ParameterSourceBudget
 import LeanCanny.Algebra.SignQueryTarskiSpace
 import LeanCanny.Algebra.IntegerSumSpace
 import LeanCanny.Algebra.SignPatternCountSpace
