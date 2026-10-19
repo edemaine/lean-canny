@@ -14,9 +14,10 @@ The stack parser uses fuel bounded by the input's bit length. Re-encoding checks
 make successful decoding equivalent to equality with the canonical code, even
 when a supplied scalar decoder accepts additional representations.
 
-The resulting total encoded step agrees with the abstract machine on every
-encoded state. Its full `FP` certificate still requires certified scalar
-arithmetic, entry access, and parsing operations.
+The resulting checked transition agrees with the abstract machine on every
+encoded state. `MatrixPowerController` supplies an FP transition using direct
+string projections and an invariant of encoded states; the checked decoder
+transition here remains a separate reference implementation.
 -/
 
 @[expose] public section

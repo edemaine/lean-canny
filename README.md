@@ -81,8 +81,9 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Encoding.BinarySubFP`](LeanCanny/Encoding/BinarySubFP.lean) | Comparison and truncated subtraction on binary natural words have machine-level polynomial-time certificates. Fixed-width complement addition detects the subtraction carry; the low bits recover the difference. All specifications include noncanonical inputs. |
 | [`Encoding.BinaryModFP`](LeanCanny/Encoding/BinaryModFP.lean) | Uniform `FP` modular reduction and modular multiply-accumulate, with the modulus supplied in binary. Long division uses one comparison and at most one subtraction per digit. Every partial remainder is canonical and no longer than the processed dividend; modulus zero follows `a % 0 = a`. |
 | [`Algebra.MatrixPowerQueryFP`](LeanCanny/Algebra/MatrixPowerQueryFP.lean) | Total `FP` writers for the initial query and both child queries agree with the typed machine. Initial height comes from the exponent word's bit length. |
-| [`Algebra.MatrixPowerDecoding`](LeanCanny/Algebra/MatrixPowerDecoding.lean) | Exact decoders for queries, frames, stacks, residues, and complete states. Successful state decoding characterizes equality with the canonical encoding. A total encoded transition agrees with the typed step, computes the required entry after the specified number of iterations, and inherits the quadratic modular-state bound. Its full `FP` certificate remains open. |
+| [`Algebra.MatrixPowerDecoding`](LeanCanny/Algebra/MatrixPowerDecoding.lean) | Exact decoders for queries, frames, stacks, residues, and complete states. Successful state decoding characterizes equality with the canonical encoding. A checked total transition agrees with the typed step and inherits its result and quadratic modular-state bound. |
 | [`Algebra.MatrixPowerArithmeticFP`](LeanCanny/Algebra/MatrixPowerArithmeticFP.lean) | The uniform modular multiply-accumulate routine agrees exactly with `ZMod` residue encodings for every nonzero modulus. Encoded zero and one are certified too, including modulus one. The modulus is an input field of one FP routine. |
+| [`Algebra.MatrixPowerController`](LeanCanny/Algebra/MatrixPowerController.lean), [`MatrixPowerControllerCorrect`](LeanCanny/Algebra/MatrixPowerControllerCorrect.lean) | A total context-carrying bitstring transition belongs to `FP` when its explicit callbacks do. It simulates every typed transition on encoded states. The modular specialization supplies scalar callbacks and retains the original context for entry access. Packet initialization is certified too. Every modular packet has at most `2*c.length+2+64*(N.size+e.size+m.size+1)^2` bits throughout the run. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -116,10 +117,12 @@ The streamed matrix-power primitive now has a verified continuation machine and
 binary state-size bounds. Its abstract run takes at most
 `2^((N.size+2)*e.size+1)` transitions. Entry access and scalar arithmetic count as
 single abstract operations here. Exact decoding and certified initial/child-query
-writers and modular scalar arithmetic are now provided. The full encoded step
-still needs an `FP` certificate, including parsing, control flow, and uniform
-matrix-entry access. A determinant algorithm using this primitive also remains
-to be supplied before obtaining the report's machine-level space theorem.
+writers and modular scalar arithmetic are now provided. The context-carrying
+controller has a complete `FP` transition certificate given certified dimension,
+modulus, and matrix-entry callbacks. It simulates the typed run on encoded states;
+the initial packet writer is `FP` given certified exponent and index writers.
+Input validation and integration with `SpaceIter`, and a determinant algorithm
+using this primitive, remain before obtaining the report's space theorem.
 
 Binary addition, multiplication, comparison, subtraction, and modular reduction
 now have uniform `FP` certificates, with exact semantics and bounds on intermediate
@@ -129,9 +132,10 @@ callback required by the modular power machine.
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.
-2. Choose an algorithm interface after comparing a representative arithmetic routine
-   and its workspace proof in Complexitylib and the Mathlib/TM2 evaluator used by
-   `lean-trominoes`. A smaller dependency alone does not justify a separate library.
+2. Connect the certified modular power controller to `SpaceIter`, with validated
+   input initialization and result access. Supply uniform entry evaluators;
+   incorporate their machine states when entry access needs a space certificate
+   rather than an FP callback.
 3. Implement encoded determinant and subresultant algorithms for the verified
    construction, with workspace bounds and the remaining subresultant output-size
    bounds; formalize the parallel/streamed algebra used by the report.

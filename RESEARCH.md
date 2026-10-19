@@ -93,10 +93,10 @@ computability simulations cannot simply be assumed to preserve the required spac
 The useful benchmark is a concrete symbolic-arithmetic routine with encoded inputs,
 encoded intermediate states, and a workspace proof through the intended iteration
 interface. For Canny, streamed access to large symbolic objects matters more than
-the surface machine language alone. Complexitylib is currently pinned for its
-reduction infrastructure; the algorithm backend remains undecided. A separate module
-would be justified by reusable interfaces or proved interoperability, not merely by
-having fewer files.
+the surface machine language alone. The current arithmetic and power-controller
+implementation targets Complexitylib's FP/SpaceIter interface. A separate reusable
+module would be justified by its interfaces or proved interoperability, not merely
+by having fewer files; the TM2 evaluator remains a possible comparison target.
 
 The project now supplies a concrete benchmark for that comparison: a continuation
 machine for one entry of a matrix power, with balanced recursion and a streamed
@@ -110,9 +110,15 @@ Binary addition, multiplication, comparison, subtraction, and modular reduction 
 certified too, with exact semantics on all words and bounds on intermediate states.
 A uniform modular multiply-accumulate callback takes the modulus as a binary input
 and agrees with the machine's `ZMod` residue encoding, including modulus one.
-Assembling the full encoded step's certificate, including parsing, control flow,
-and uniform matrix-entry access, remains the backend obligation; the representation
-bound alone is not a TM space certificate.
+The full context-carrying controller now has an FP certificate from explicit FP
+callbacks, including matrix-entry access. Its correctness theorem simulates every
+typed transition on encoded states; the modular specialization supplies the scalar
+callbacks. Packet initialization is FP from certified binary field writers, and
+the size bound includes the retained original context. Validated initialization,
+result access, and integration with SpaceIter remain before a PSPACE theorem.
+The callback contract specifically requires FP entry access. A space-certified
+entry evaluator must instead be integrated as an additional machine phase with
+its workspace accounted for; it cannot be treated as a free callback here.
 
 Local comparison sources, at `lean-trominoes` commit
 `6fe52dd234bb616fd4fb3c1e7b0a203de1482bc5`:

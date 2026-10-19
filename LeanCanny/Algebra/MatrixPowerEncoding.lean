@@ -19,8 +19,9 @@ uniform bit bound; residues modulo a nonzero runtime modulus supply such codes.
 
 Exact decoding is developed in `MatrixPowerDecoding`, and certified binary query
 writers in `MatrixPowerQueryFP`. `MatrixPowerArithmeticFP` supplies certified
-modular scalar operations. Assembling the full FP transition still requires
-parsing, control flow, and matrix-entry access.
+modular scalar operations. `MatrixPowerController` assembles an FP transition
+with explicit FP callbacks; its correctness and context-inclusive size bounds
+are proved in `MatrixPowerControllerCorrect`.
 -/
 
 @[expose] public section

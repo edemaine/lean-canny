@@ -15,8 +15,8 @@ machine. A uniform FP routine computes `acc + lhs*rhs` modulo that field and
 agrees with the residue encoding of the corresponding ZMod operation for every
 nonzero modulus. The encoded one also handles modulus one, where it equals zero.
 
-These arithmetic routines do not yet constitute an FP certificate for the full
-power-machine transition, which also requires parsing, control, and entry access.
+`MatrixPowerController` assembles the full control transition with these scalar
+callbacks. Matrix-entry access must also be supplied with an FP certificate.
 -/
 
 @[expose] public section
