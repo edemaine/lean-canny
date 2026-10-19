@@ -356,6 +356,27 @@ under the existing FP source metadata, selection, residues, and source-bit budge
 Signs at algebraic parameter values, integer digit recovery, and the complete
 coordinate computation's space bound remain open.
 
+`ChineseRemainderDigits` supplies the exact reconstruction arithmetic behind
+integer digit access. Writing `I` for the inverse-weighted integer sum, `M` for
+the modulus product, and `T` for the truncated quotient sum at scale `D`, it proves
+`D*I=M*T+E`, where `E` is the sum of each local division remainder times its
+cofactor and `E≤card*M`. Thus `D>card*M` gives
+`I=(M*T+D-1)/D`. It also proves the exact correction rank `T/D=I/M`, including
+zero residues, and hence the combined residue is `I-(T/D)*M`. Centered reconstruction
+recovers a signed integer under `2*natAbs<M`, with an explicit identity for each
+magnitude digit.
+
+`ChineseRemainder.rankBitEvaluator` reads rank bit `k` by reading truncated-sum
+bit `precision+k`. `IntegerRankBits.evaluator` combines this with the existing
+indexed modulus, inverse-weight, and local preparation certificates. Its rank
+is bounded by the modulus count and its binary width by the FP count word length.
+The indexed precision and magnitude theorems also specialize the exact centered
+reconstruction formula to a binary magnitude budget. `CannyCoefficientRank`
+instantiates the rank-bit evaluator for the actual resultant and all-branch
+coordinate coefficients. The remaining digit certificate must stream the large
+product, inverse-weighted sum, and rank-product subtraction; none is claimed
+to fit as a complete binary word in polynomial space.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

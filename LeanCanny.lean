@@ -57,6 +57,7 @@ import LeanCanny.Algebra.CannyResultantSign
 import LeanCanny.Algebra.CannySubresultantSign
 import LeanCanny.Algebra.CannyCoordinateResidue
 import LeanCanny.Algebra.CannyCoordinateSign
+import LeanCanny.Algebra.CannyCoefficientRank
 import LeanCanny.Algebra.SmallModulusCRT
 import LeanCanny.Algebra.IndexedModulusCRT
 import LeanCanny.Algebra.IndexedModulusSpace
