@@ -36,6 +36,7 @@ import LeanCanny.Algebra.BerkowitzPSPACE
 import LeanCanny.Algebra.IntegerDeterminantPSPACE
 import LeanCanny.Algebra.ResultantPSPACE
 import LeanCanny.Algebra.SylvesterSpaceAccess
+import LeanCanny.Algebra.ResultantSpaceEntries
 import LeanCanny.Algebra.BinomialResidue
 import LeanCanny.Algebra.ShiftCoefficientResidue
 

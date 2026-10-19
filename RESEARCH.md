@@ -141,9 +141,17 @@ query-length, child-workspace, and expanded-clock proofs for the complete output
 zero testing is in PSPACE under the same contracts. An FP-controlled branch
 certificate lets Sylvester access select either coefficient routine or zero.
 `Resultant.Access.integer_entryEvaluator` exposes a certified routine for the
-exact integer-entry function used by the existing resultant encoding. Propagating
-these space-bounded original entry calls through the determinant factor/moment
-pipeline and computing symbolic resultant coefficients still require work.
+exact integer-entry function used by the existing resultant encoding. This now
+feeds the complete determinant pipeline: augmented scalar moments accept
+space-bounded vector/matrix routines, offset queries specialize them to trailing
+blocks, and the factor evaluator selects an immediate value or the moment child.
+`Berkowitz.ModularAccess.deciderWithEntry` consumes the resulting factor routine
+in the outer power; `Berkowitz.IntegerAccess.deciderWithEntry` adds the modulus
+scan. `Resultant.Access.zeroLanguage_mem_PSPACE_of_evaluators` consequently
+proves integer resultant zero testing under FP degree/budget fields and
+`SpaceFunction` coefficient-residue certificates. The ordinary-resultant
+corollary requires the supplied degrees to equal the actual degrees. Symbolic
+resultant coefficient and sign algorithms still require work.
 
 ## TM2 versus Complexitylib's machines
 
