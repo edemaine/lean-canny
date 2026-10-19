@@ -89,7 +89,9 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.CharacteristicAdjugate`](LeanCanny/Algebra/CharacteristicAdjugate.lean), [`BorderedDeterminant`](LeanCanny/Algebra/BorderedDeterminant.lean) | Every coefficient of `adj(XI-A)` is a sum of characteristic coefficients times powers of `A`. Block elimination proves the bordered determinant formula by cancellation of a regular determinant; a monic characteristic polynomial supplies that cancellation over arbitrary commutative rings. |
 | [`Algebra.BerkowitzRecurrence`](LeanCanny/Algebra/BerkowitzRecurrence.lean), [`BerkowitzCoefficients`](LeanCanny/Algebra/BerkowitzCoefficients.lean) | The division-free bordered characteristic-coefficient recurrence uses scalar moments `r A^k c`. A recursive reference on `Fin n` matrices agrees with every Mathlib characteristic coefficient, and its signed constant coefficient equals the determinant, including the empty matrix. This reference has linear recursion depth and no space certificate. |
 | [`Algebra.BerkowitzTransform`](LeanCanny/Algebra/BerkowitzTransform.lean), [`BerkowitzProduct`](LeanCanny/Algebra/BerkowitzProduct.lean) | Padded coefficient vectors turn each bordered recurrence into a square matrix action. The ordered product's first column gives all characteristic coefficients; its signed top-left entry is the determinant. Factor entries depend on input entries and scalar power moments, without using characteristic coefficients. |
-| [`Algebra.MatrixProductEntry`](LeanCanny/Algebra/MatrixProductEntry.lean), [`BerkowitzBalanced`](LeanCanny/Algebra/BerkowitzBalanced.lean) | Balanced interval recursion computes an entry of any ordered matrix product over a semiring, preserving factor order. Applied to the coefficient transformations, height `n.size` suffices to recover every characteristic coefficient and the determinant. A factor accessor avoids constructing the full list. These are algebraic specifications, without an encoded evaluator or workspace certificate yet. |
+| [`Algebra.MatrixProductEntry`](LeanCanny/Algebra/MatrixProductEntry.lean), [`BerkowitzBalanced`](LeanCanny/Algebra/BerkowitzBalanced.lean) | Balanced interval recursion computes an entry of any ordered matrix product over a semiring, preserving factor order. Applied to the coefficient transformations, height `n.size` suffices to recover every characteristic coefficient and the determinant. A factor accessor avoids constructing the full list. These identities establish correctness and recursion height; the power-machine bridge below still needs certified factor access. |
+| [`Algebra.LayeredMatrix`](LeanCanny/Algebra/LayeredMatrix.lean), [`LayeredMatrixMachine`](LeanCanny/Algebra/LayeredMatrixMachine.lean) | An ordered product interval is one entry of a layered matrix power. Flattening the layer-coordinate pairs gives `Fin` indices. The existing streamed power machine and context-carrying controller evaluate the product under their entry-access contract, with the inherited exact clock and modular state bound. |
+| [`Algebra.BerkowitzPower`](LeanCanny/Algebra/BerkowitzPower.lean) | The `n`th power of an `(n+1)^2`-dimensional layered matrix contains every characteristic coefficient. The power machine computes them, and its encoded controller tests determinant zero under the explicit callback contract. Stored residue states have at most `64*(3*n.size+m.size+2)^2` bits; controller packets add `2*c.length+2`. Factor-access workspace is excluded and remains open. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -137,10 +139,15 @@ Berkowitz's algorithm is now proved, together with a recursive determinant refer
 Padded coefficient transformations give an ordered matrix product whose first
 column contains the characteristic coefficients. `Berkowitz.balancedDeterminant`
 recovers the determinant using product-entry recursion of height `n.size`.
-An encoded evaluator must still stream the finite sums and supply uniform binary
-access to trailing blocks and scalar moments, with their workspace accounted for.
-That evaluator, its workspace bound, and Canny's remaining algebraic and geometric
-arguments remain open.
+The layered construction reduces that ordered product to the existing streamed
+power machine, so no separate outer-product controller is needed. Its matrix has
+dimension `(n+1)^2`, and stored residue states have at most
+`64*(3*n.size+m.size+2)^2` bits. The abstract clock is at most
+`2^((2*n.size+3)*n.size+1)`, counting entry access as one operation.
+Uniform binary access to trailing blocks and scalar moments, with their workspace
+incorporated into the controller, remains necessary. This entry evaluator and
+Canny's remaining algebraic and geometric arguments remain open; a determinant
+PSPACE theorem is not yet proved.
 
 Binary addition, multiplication, comparison, subtraction, and modular reduction
 now have uniform `FP` certificates, with exact semantics and bounds on intermediate
@@ -154,10 +161,11 @@ callback required by the modular power machine.
    formats and uniform entry evaluators;
    incorporate their machine states when entry access needs a space certificate
    rather than an FP callback.
-3. Implement an encoded streamed evaluator for the verified balanced determinant
-   construction, including factor and scalar-moment access. Supply its workspace
-   bound, encoded subresultant computation, and the remaining subresultant
-   output-size bounds; formalize the parallel/streamed algebra used by the report.
+3. Supply uniform encoded entry access for the layered determinant matrix,
+   including trailing blocks and scalar moments, with its workspace incorporated
+   into the certified power controller. Supply encoded subresultant computation
+   and its remaining output-size bounds; formalize the parallel/streamed algebra
+   used by the report.
 4. Formalize critical points, perturbations, sign tests, and the correctness of Canny's
    ETR decision procedure; prove `ETR ∈ PSPACE`.
 5. Supply the required closure of PSPACE under polynomial-time reductions to derive

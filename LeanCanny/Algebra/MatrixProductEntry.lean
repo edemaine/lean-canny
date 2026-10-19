@@ -14,7 +14,8 @@ A matrix family is accessed by its natural-number position. A product interval
 is represented by its start and length. Balanced entry recursion splits the
 interval in half, preserving factor order and needing only the binary length
 of the interval as recursion height. Finite sums here are mathematical
-specifications; a continuation machine must stream them to certify workspace.
+specifications. `LayeredMatrixMachine` reduces this ordered product to the
+existing streamed power machine, with factor-access costs still explicit.
 -/
 
 @[expose] public section

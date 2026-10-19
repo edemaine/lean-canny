@@ -15,10 +15,11 @@ requested coefficient transformation. Balanced interval recursion then
 computes a characteristic coefficient, and hence the determinant, at height
 `n.size`. The accessor does not construct the full factor list.
 
-This proves algebraic correctness and the recursion-height requirement. Finite
-sum streaming, binary access to trailing blocks and scalar power moments,
-and a complete workspace certificate remain to be implemented. In particular,
-no complexity bound for the recursive factor accessor is asserted here.
+This proves algebraic correctness and the recursion-height requirement.
+`BerkowitzPower` reduces the outer product to the existing streamed power
+machine. Uniform binary factor access, including trailing blocks and scalar
+power moments with their workspace, is still required. In particular, no
+complexity bound for the recursive factor accessor is asserted here.
 -/
 
 @[expose] public section

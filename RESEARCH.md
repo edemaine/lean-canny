@@ -57,9 +57,15 @@ square transformations on padded vectors; their ordered product contains the
 characteristic coefficients in its first column. A generic balanced interval
 recursion preserves factor order, and `Berkowitz.balancedDeterminant` uses height
 `n.size` to recover the determinant. The factor accessor avoids building the full
-list, but no complexity bound for that accessor is asserted. Encoded sum streaming,
-uniform binary access to trailing blocks and scalar power moments, and a complete
-workspace certificate remain open.
+list, but no complexity bound for that accessor is asserted. The layered matrix
+construction now converts this ordered product to a single power, with dimension
+`(n+1)^2` and exponent `n`. It therefore reuses the existing continuation machine
+and bitstring controller under their explicit entry-access contract. Stored residue
+states have at most `64*(3*n.size+m.size+2)^2` bits; retaining context `c` adds
+`2*c.length+2`. The abstract clock is at most `2^((2*n.size+3)*n.size+1)`, counting
+entry access as one operation. Uniform binary access to trailing blocks and scalar
+moments, and accounting for its workspace inside the controller, remain open.
+These results do not yet establish determinant membership in PSPACE.
 
 ## TM2 versus Complexitylib's machines
 
