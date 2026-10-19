@@ -129,7 +129,9 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.IntegerDeterminantPSPACE`](LeanCanny/Algebra/IntegerDeterminantPSPACE.lean) | Integer determinant zero testing belongs to PSPACE under FP dimension and binary bit-budget access and uniform FP original-entry residue access. The scan instantiates the modular determinant decider, including its factor children. Integer entries and the determinant bit budget may be exponentially long/large respectively; their complete integer values are never stored. |
 | [`Algebra.SylvesterAccessFP`](LeanCanny/Algebra/SylvesterAccessFP.lean), [`SylvesterAccessCorrect`](LeanCanny/Algebra/SylvesterAccessCorrect.lean) | FP binary guards and query writers access the two shifted coefficient blocks of Mathlib's Sylvester matrix. Entry correctness holds for arbitrary scalar encodings with empty-word zero. If coefficients have magnitude at most `2^b`, the resultant has at most `N.size*N+N*b+1` magnitude bits, where `N=m+n`; its budget writer is FP. |
 | [`Algebra.ResultantPSPACE`](LeanCanny/Algebra/ResultantPSPACE.lean) | Zero testing for a specified-degree integer resultant belongs to PSPACE under FP binary degree/budget fields and uniform FP coefficient-residue access. The integer determinant decider runs on streamed Sylvester entries with a computed bit budget. A corollary covers the ordinary resultant when the supplied degrees equal the actual polynomial degrees. |
-| [`Algebra.Subresultant`](LeanCanny/Algebra/Subresultant.lean), [`SubresultantMinor`](LeanCanny/Algebra/SubresultantMinor.lean), [`SubresultantBounds`](LeanCanny/Algebra/SubresultantBounds.lean) | Interior subresultants (`k<m,n`) are explicit Sylvester minors with Mathlib's column order. Order zero equals its resultant; coefficient-ring maps commute; degree is at most `k`; order one is explicitly linear. Injective binary row/column formulas embed each minor in the full Sylvester matrix. Column budgets bound every integer/parameter coefficient. Encoded evaluation, top-order boundary conventions, and the GCD/subresultant bridge remain separate obligations. |
+| [`Algebra.Subresultant`](LeanCanny/Algebra/Subresultant.lean), [`SubresultantMinor`](LeanCanny/Algebra/SubresultantMinor.lean), [`SubresultantBounds`](LeanCanny/Algebra/SubresultantBounds.lean) | Interior subresultants (`k<m,n`) are explicit Sylvester minors with Mathlib's column order. Order zero equals its resultant; coefficient-ring maps commute; degree is at most `k`; order one is explicitly linear. Injective binary row/column formulas embed each minor in the full Sylvester matrix. Column budgets bound every integer/parameter coefficient. |
+| [`SubresultantAccessFP`](LeanCanny/Algebra/SubresultantAccessFP.lean), [`SubresultantEntrySpace`](LeanCanny/Algebra/SubresultantEntrySpace.lean), [`SubresultantPolynomialSpace`](LeanCanny/Algebra/SubresultantPolynomialSpace.lean) | Binary index transformations are FP. Given FP metadata and uniform space-bounded input coefficient routines, a certified evaluator computes a selected modular coefficient of any interior symbolic subresultant; its zero language is in PSPACE. Invalid orders/indices return zero, including empty-minor cases. |
+| [`SubresultantRoot`](LeanCanny/Algebra/SubresultantRoot.lean) | For degree bounds `m,n>1`, the first subresultant is `D*(X-b)` at every common root `b`. Over a field, `b=-N/D` when `D≠0`. Nonvanishing from a linear GCD and top-order boundary conventions remain open. |
 | [`Algebra.SylvesterSpaceAccess`](LeanCanny/Algebra/SylvesterSpaceAccess.lean), [`ResultantSpaceEntries`](LeanCanny/Algebra/ResultantSpaceEntries.lean) | Integer resultant zero testing accepts certified space-bounded coefficient-residue routines under FP degree/budget fields. Sylvester access selects a coefficient child or zero, and the strengthened integer determinant decider consumes the resulting entry routine. A corollary covers ordinary resultants at the actual degrees. |
 | [`Algebra.SylvesterPolynomialSpace`](LeanCanny/Algebra/SylvesterPolynomialSpace.lean), [`ResultantPolynomialSpace`](LeanCanny/Algebra/ResultantPolynomialSpace.lean) | A selected coefficient of a specified-degree resultant over a polynomial residue ring has a `SpaceFunction` evaluator. The Sylvester accessor carries the coefficient degree into either input routine, and the polynomial determinant evaluator consumes these space-bounded calls. FP input-degree/modulus/output-degree fields suffice. Modular coefficient zero testing belongs to PSPACE. |
 | [`Algebra.CannyResultantResidue`](LeanCanny/Algebra/CannyResultantResidue.lean) | The actual integer `cannyResultant` has a certified modular coefficient evaluator. Shifted-coefficient evaluation supplies `p₁(θ-c*x)`; an FP guard supplies `p₂(x)`. FP source-degree/direction/output-degree fields and uniform FP original-coefficient residue access suffice. Reduction commutes with the resultant at the fixed integer source degrees, including modular degree drops. Its modular coefficient zero test is in PSPACE. |
@@ -162,8 +164,9 @@ has at most `d₁*d₂+1` supported coefficients. Writing `N = d₁+d₂` and
 `b = (d₁+1).size + d₁ + H₁.size + (c+1).size*d₁`, each coefficient's magnitude
 has binary length at most `N.size*N + d₂*b + d₁*H₂.size + 1` when the input
 coefficient magnitudes are bounded by `H₁,H₂`. Integer sign recovery is certified
-below from residue access and a binary bit budget. Digit recovery, symbolic
-subresultant recovery and its output-size bounds, and the report's remaining
+below from residue access and a binary bit budget. Symbolic subresultant coefficients
+have explicit bit bounds and certified modular evaluation. Digit recovery, the
+nonzero subresultant/GCD bridge for coordinate recovery, and the report's remaining
 polylogarithmic-space computations remain open.
 
 The streamed matrix-power primitive now has a verified continuation machine and
@@ -289,8 +292,9 @@ callback required by the modular power machine.
    formats and uniform entry evaluators;
    instantiate the suspended-entry interface when the whole entry computation
    requires more than polynomial time.
-3. Recover integer digits from certified residue access. Supply encoded subresultant computation
-   and its remaining output-size bounds; formalize the parallel/streamed algebra used by the report.
+3. Recover integer digits from certified residue access. Prove subresultant nonvanishing
+   from a linear GCD, handle top-order cases, and connect the evaluator to coordinate recovery;
+   formalize the remaining parallel/streamed algebra used by the report.
 4. Formalize critical points, perturbations, sign tests, and the correctness of Canny's
    ETR decision procedure; prove `ETR ∈ PSPACE`.
 5. Apply the proved PSPACE reduction closure once ETR membership is established;
