@@ -63,8 +63,12 @@ construction now converts this ordered product to a single power, with dimension
 and bitstring controller under their explicit entry-access contract. Stored residue
 states have at most `64*(3*n.size+m.size+2)^2` bits; retaining context `c` adds
 `2*c.length+2`. The abstract clock is at most `2^((2*n.size+3)*n.size+1)`, counting
-entry access as one operation. Uniform binary access to trailing blocks and scalar
-moments, and accounting for its workspace inside the controller, remain open.
+entry access as one operation. A generic suspension wrapper and PSPACE composition
+theorem now account for a saved parent alongside a running child. The power
+controller intercepts exponent-one entry queries, runs the child through FP steps,
+and resumes the original stack with its output. Correct and terminating calls
+simulate the full abstract power run. Uniform binary access to trailing blocks and
+scalar moments, with the concrete child evaluator's resource bounds, remains open.
 These results do not yet establish determinant membership in PSPACE.
 
 ## TM2 versus Complexitylib's machines
@@ -143,9 +147,15 @@ time, FP completion and answer tests, and a general halting-loop wrapper for
 SpaceIter. Dimension and exponent can be exponential in the context length.
 A concrete input format still must validate or default malformed inputs to meet
 the access contract, including valid indices and a nonzero modulus.
-The callback contract specifically requires FP entry access. A space-certified
-entry evaluator must instead be integrated as an additional machine phase with
-its workspace accounted for; it cannot be treated as a free callback here.
+The direct callback contract still requires FP entry access. The new suspended
+entry interface requires FP certificates only for the child initializer,
+transition, halting test, and output projection. It saves the parent while the
+child runs. A prefix classification accounts for every intermediate physical
+state; parent/child bounds `S,U` give `2*S+U+3` bits. Polynomial state bounds and
+exponential parent-step and child-run clocks yield Complexitylib PSPACE through
+`SubroutineIteration.mem_PSPACE`. Its hypotheses concern only reachable parent
+states and requested calls. The determinant-factor evaluator must still provide
+these correctness and resource contracts; the mechanism supplies no free oracle.
 
 Local comparison sources, at `lean-trominoes` commit
 `6fe52dd234bb616fd4fb3c1e7b0a203de1482bc5`:

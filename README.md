@@ -92,6 +92,8 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`Algebra.MatrixProductEntry`](LeanCanny/Algebra/MatrixProductEntry.lean), [`BerkowitzBalanced`](LeanCanny/Algebra/BerkowitzBalanced.lean) | Balanced interval recursion computes an entry of any ordered matrix product over a semiring, preserving factor order. Applied to the coefficient transformations, height `n.size` suffices to recover every characteristic coefficient and the determinant. A factor accessor avoids constructing the full list. These identities establish correctness and recursion height; the power-machine bridge below still needs certified factor access. |
 | [`Algebra.LayeredMatrix`](LeanCanny/Algebra/LayeredMatrix.lean), [`LayeredMatrixMachine`](LeanCanny/Algebra/LayeredMatrixMachine.lean) | An ordered product interval is one entry of a layered matrix power. Flattening the layer-coordinate pairs gives `Fin` indices. The existing streamed power machine and context-carrying controller evaluate the product under their entry-access contract, with the inherited exact clock and modular state bound. |
 | [`Algebra.BerkowitzPower`](LeanCanny/Algebra/BerkowitzPower.lean) | The `n`th power of an `(n+1)^2`-dimensional layered matrix contains every characteristic coefficient. The power machine computes them, and its encoded controller tests determinant zero under the explicit callback contract. Stored residue states have at most `64*(3*n.size+m.size+2)^2` bits; controller packets add `2*c.length+2`. Factor-access workspace is excluded and remains open. |
+| [`Computation.SubroutineIteration`](LeanCanny/Computation/SubroutineIteration.lean), [`SubroutineBounds`](LeanCanny/Computation/SubroutineBounds.lean), [`SubroutinePSPACE`](LeanCanny/Computation/SubroutinePSPACE.lean) | An FP transition suspends a parent while a child evaluator runs, retaining both encoded states. A variable clock simulates the abstract parent iteration and classifies every intermediate state. Parent and child bounds `S,U` give at most `2*S+U+3` stored bits. Polynomial state bounds and exponential parent/child clocks yield PSPACE without requiring an entire child call to be FP. |
+| [`Algebra.MatrixPowerSubroutine`](LeanCanny/Algebra/MatrixPowerSubroutine.lean) | Exponent-one queries launch a child entry evaluator; its output resumes the saved power stack. Request writing, resumption, and the complete suspended step have FP certificates from the control operations and child primitives. Correct, terminating child calls simulate the original power controller and preserve the final matrix-power result at the expanded clock. Concrete determinant-factor child evaluation remains open. |
 
 The full equation compiler is now certified in polynomial time. It pushes negations
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
@@ -133,8 +135,12 @@ the initial packet writer is `FP` given certified exponent and index writers.
 zero testing of a selected modular power entry is in `PSPACE` under the explicit
 FP access contract. The contract specifies a nonzero modulus and valid indices
 on every binary input; a concrete input format must supply validation and defaults.
-Entry evaluators requiring space rather than polynomial time need their machine
-states integrated into the controller. The division-free bordered recurrence behind
+`MatrixPowerSubroutine` now supplies a second interface: a child evaluator runs
+through FP steps while the outer state is saved. Its whole entry computation need
+not be FP. `SubroutineIteration.mem_PSPACE` accounts for both states and the expanded
+clock, under explicit polynomial workspace and exponential time bounds on the
+reachable parent run and its child calls. The determinant-factor evaluator still
+must instantiate those contracts. The division-free bordered recurrence behind
 Berkowitz's algorithm is now proved, together with a recursive determinant reference.
 Padded coefficient transformations give an ordered matrix product whose first
 column contains the characteristic coefficients. `Berkowitz.balancedDeterminant`
@@ -144,8 +150,8 @@ power machine, so no separate outer-product controller is needed. Its matrix has
 dimension `(n+1)^2`, and stored residue states have at most
 `64*(3*n.size+m.size+2)^2` bits. The abstract clock is at most
 `2^((2*n.size+3)*n.size+1)`, counting entry access as one operation.
-Uniform binary access to trailing blocks and scalar moments, with their workspace
-incorporated into the controller, remains necessary. This entry evaluator and
+Uniform binary access to trailing blocks and scalar moments, with workspace and
+time bounds for the suspended child evaluator, remains necessary. This evaluator and
 Canny's remaining algebraic and geometric arguments remain open; a determinant
 PSPACE theorem is not yet proved.
 
@@ -159,11 +165,12 @@ callback required by the modular power machine.
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.
 2. Instantiate the modular power PSPACE theorem with concrete validated input
    formats and uniform entry evaluators;
-   incorporate their machine states when entry access needs a space certificate
-   rather than an FP callback.
-3. Supply uniform encoded entry access for the layered determinant matrix,
-   including trailing blocks and scalar moments, with its workspace incorporated
-   into the certified power controller. Supply encoded subresultant computation
+   instantiate the suspended-entry interface when the whole entry computation
+   requires more than polynomial time.
+3. Instantiate the suspended-entry controller with uniform encoded access for the
+   layered determinant matrix, including trailing blocks and scalar moments.
+   Prove the child evaluator's workspace, time, and correctness contracts.
+   Supply encoded subresultant computation
    and its remaining output-size bounds; formalize the parallel/streamed algebra
    used by the report.
 4. Formalize critical points, perturbations, sign tests, and the correctness of Canny's
