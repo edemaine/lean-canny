@@ -537,9 +537,35 @@ binary output length even on malformed syntax. `ETR.MonomialCount.read` (in
 raw children and their binary counts; its length is at most ten times the raw
 frame size. The tree-fold proof bounds every intermediate stack on all binary
 inputs. On an encoded term, the reader returns its exact canonical count.
-Encoded readers for individual indexed coefficients and exponents remain to be
-implemented before the syntax-derived family can instantiate the full streamed
-substitution certificate.
+The exponent reader below supplies individual exponent access; indexed coefficient
+residues remain to be implemented before the syntax-derived family can instantiate
+the full streamed substitution certificate.
+
+`MonomialReaderMachine` visits a selected source monomial without expanding its
+siblings: addition chooses one child, and multiplication divides the index by
+the right child's count and visits both children. A monoid-valued leaf fold
+describes coefficient multiplication and exponent addition. Exact execution takes
+at most the original term's encoded size. Pending subtree sizes never increase,
+and every child index is at most the initial index.
+
+`MonomialReaderEncoding` supplies FP binary transitions using the actual count
+reader and binary arithmetic. `MonomialReaderCorrect` proves exact simulation;
+`MonomialReaderBounds` bounds the context, complete task stack, and accumulator
+by `2*context.length+4+(4*index.size+20)*termSize+accumulator.length` throughout.
+`MonomialReaderFP.reader_mem_FP` combines these results with FP input fields and
+a polynomial accumulator bound, accounting for all intermediate states and the
+polynomial traversal clock.
+
+`TermView` validates arbitrary term strings in FP, replacing malformed syntax by
+the zero expression. `MonomialExponentAtom` compares the selected binary variable
+index with each visited unary variable payload and adds zero or one. Its
+accumulator is at most the number of steps. Consequently
+`MonomialReader.sourceExponent` is a complete uniform FP exponent reader on
+`pair context (pair monomialIndex variableIndex)`, with exact canonical output
+for the syntax-derived source family. No variable index is expanded to unary.
+The coefficient leaf operation and its modulus-bounded accumulator specialization
+are the next source-reader obligation; the generic traversal already proves the
+corresponding coefficient-fold semantics.
 
 `InfinitesimalSign` proves that a real polynomial's sign on some interval
 `0<β<δ` equals its trailing coefficient's sign, with a common interval for any
