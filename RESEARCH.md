@@ -451,8 +451,24 @@ sign preservation wherever the coordinate denominators are nonzero. The even
 powers make this denominator positive, including negative coordinate denominators.
 The numerator degree is at most
 `∑ᵢ 2*degreeOfᵢ p*max(deg nᵢ,deg dᵢ)`. These algebraic statements include zero
-and constant polynomials and empty coordinate families. Coefficient budgets and
-encoded modular evaluation of this substitution remain to be supplied.
+and constant polynomials and empty coordinate families.
+`RationalSubstitutionMap.clearedWith` retains explicit degree allowances, proving
+that coefficient-ring maps commute with the construction even when modular
+reduction kills coefficients and lowers actual degrees.
+
+`CoefficientMass` proves subadditivity, submultiplicativity, and finite
+sum/product/power bounds for the sum of absolute integer coefficients.
+`RationalSubstitutionBounds` bounds the cleared numerator's coefficient mass by
+the source coefficient mass times `∏ Mᵢ^(2*degreeOfᵢ p)` when `Mᵢ` bounds both
+coordinate masses. For `A` variables and source variable degrees bounded by `D`,
+there are at most `(D+1)^A` supported monomials. Source coefficient magnitudes
+at most `2^b₀`, coordinate degrees at most `E`, and coordinate coefficient
+magnitudes at most `2^b` therefore give the explicit coefficient bit budget
+`b₀+A*(D+1).size+2*A*D*(b+(E+1).size)+1`. The uniform degree allowance is
+`2*A*D*E`. `RationalSubstitutionBudget` supplies FP binary writers and semantic
+budget theorems for these quantities from arbitrary binary metadata words;
+neither a whole source coefficient mass nor the expanded polynomial is computed.
+Encoded modular evaluation of the substitution remains to be supplied.
 
 `InfinitesimalSign` proves that a real polynomial's sign on some interval
 `0<β<δ` equals its trailing coefficient's sign, with a common interval for any
