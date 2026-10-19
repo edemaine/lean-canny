@@ -59,6 +59,20 @@ theorem numerator_eq_zero_iff (p : ℤ[X]) (D s b : ℕ) (hD : p.natDegree ≤ D
   · intro hz
     rw [hz, DyadicSpecialization.numerator_zero]
 
+theorem specialize_eq_zero_iff (p : (ℤ[X])[X]) (D s b : ℕ) (hD : ∀ i, (p.coeff i).natDegree ≤ D)
+    (hm : ∀ i, coefficientMass (p.coeff i) ≤ 2 ^ b) (hs : b < s) :
+    specialize p D s = 0 ↔ p = 0 := by
+  constructor
+  · intro hz
+    apply Polynomial.ext
+    intro i
+    rw [Polynomial.coeff_zero]
+    have hc := congrArg (fun q : ℤ[X] => q.coeff i) hz
+    rw [coeff_specialize, Polynomial.coeff_zero] at hc
+    exact (numerator_eq_zero_iff _ _ _ _ (hD i) (hm i) hs).mp hc
+  · intro hz
+    rw [hz, specialize_zero]
+
 theorem natDegree_eq (p : (ℤ[X])[X]) (D s b : ℕ) (hD : ∀ i, (p.coeff i).natDegree ≤ D)
     (hm : ∀ i, coefficientMass (p.coeff i) ≤ 2 ^ b) (hs : b < s) :
     (specialize p D s).natDegree = p.natDegree := by

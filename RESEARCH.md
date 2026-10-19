@@ -755,7 +755,19 @@ Tarski evaluator. Nonzero scaling preserves roots, and positive scaling
 preserves query signs, so the output is exactly the Tarski query of the two
 real polynomials at their common selected dyadic parameter. FP bounds and
 space-bounded original bivariate readers suffice; query positivity is in PSPACE.
-This is a selected-parameter result. To finish the small-parameter algebraic-root
+
+`DyadicSignPatternBits.rootCountEvaluator` extends the specialization to an
+indexed family of query polynomials, with uniform degree and inner mass bounds
+and the integer evaluator's unary FP family-size certificate. It computes the
+exact number of distinct roots realizing the requested signs at the selected
+parameter. The coefficient adapters normalize nested indices and supply all
+specialized readers from the original bivariate sources. The positivity and
+guarded-realizability languages are in PSPACE. A root mass bound `2^b` with
+`b < s` preserves nonvanishing of a nonzero original root polynomial, giving
+unguarded realizability under that effective hypothesis. These results cover
+empty query families and the zero-polynomial finite-root convention.
+
+These are selected-parameter results. To finish the small-parameter algebraic-root
 argument, one must bound all test polynomials that govern the root-sign counts
 and prove a common interval of stability. Canny's implicit family bounds and
 critical-point construction remain separate obligations.

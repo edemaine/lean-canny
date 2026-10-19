@@ -328,6 +328,7 @@ trailing coefficient's sign throughout `0 < β ≤ 2^(-s)` whenever `b < s`.
 [`DyadicSpecializationSpace`](LeanCanny/Algebra/DyadicSpecializationSpace.lean)
 clear denominators by `2^(s*D)` and compute the resulting integer's residues and
 sign from suspended original coefficient readers and FP binary bounds.
+
 [`DyadicPolynomialSpecialization`](LeanCanny/Algebra/DyadicPolynomialSpecialization.lean)
 applies the same factor to every coefficient of a parameterized root polynomial;
 it proves degree preservation under the smallness bound and derives coefficient
@@ -337,6 +338,15 @@ its uniform coefficient evaluator.
 [`DyadicTarskiSpace`](LeanCanny/Algebra/DyadicTarskiSpace.lean) composes these
 readers with the complete Tarski evaluator, computing the exact real-root query
 at the selected dyadic parameter. Its positive-query language belongs to PSPACE.
+
+[`DyadicSignPatternSource`](LeanCanny/Algebra/DyadicSignPatternSource.lean) and
+[`DyadicSignPatternSpace`](LeanCanny/Algebra/DyadicSignPatternSpace.lean) extend
+this to exact counts of distinct real roots realizing an indexed sign pattern,
+with a unary FP bound on the query-family size. Positive counts and guarded
+realizability are in PSPACE. Under the root's smallness bound, a nonzero original
+root polynomial suffices for unguarded realizability; specialization preserves
+its nonvanishing.
+
 All specialized coefficient routines and budgets are derived from the original
 bivariate sources. Eventual stability of algebraic-root sign patterns still
 requires common bounds on the polynomials governing their changes; the chosen
