@@ -284,6 +284,20 @@ and positive languages are in PSPACE under the existing FP source degree,
 direction, selected-degree, coefficient-residue, and source-bit-budget contracts.
 Integer digit recovery, subresultants, and the critical-point/ETR argument remain open.
 
+The subresultant determinant specification is now explicit. For interior order
+`k<m,n`, coefficient `r≤k` is the minor with `m-k` shifted `g` columns and `n-k`
+shifted `f` columns, selecting coefficient row `r` followed by rows `k+1,k+2,...`.
+This follows the ascending-coefficient determinantal construction in
+[Definition 1 of the Inria report](https://who.rocq.inria.fr/Alban.Quadrat/PubsTemporaire/RR-9044.pdf),
+with Mathlib's block order; its zeroth member is proved equal to Mathlib's
+resultant. Mapping coefficients commutes with the construction, its degree is
+at most `k`, and the first member is an explicit linear polynomial. Injective
+index formulas identify these matrices with submatrices of the full Sylvester
+matrix. Integer and parameter-coefficient budgets follow with the reduced
+column counts. This supplies the determinant foundation; the encoded evaluator,
+top-order boundary cases, and the nonzero first-subresultant/GCD theorem are
+still required for Canny's coordinate recovery.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

@@ -20,6 +20,8 @@ import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates
 import LeanCanny.Algebra.ShiftCoefficients
 import LeanCanny.Algebra.ResultantBounds
+import LeanCanny.Algebra.SubresultantBounds
+import LeanCanny.Algebra.SubresultantMinor
 import LeanCanny.Algebra.MatrixPowerEncoding
 import LeanCanny.Algebra.MatrixPowerDecoding
 import LeanCanny.Algebra.MatrixPowerQueryFP
