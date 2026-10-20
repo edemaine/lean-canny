@@ -23,7 +23,10 @@ namespace LeanCanny.Algebra.GenericProjectionFinite
 open MvPolynomial
 open scoped BigOperators
 
-variable {K B ι : Type*} [Field K] [Field B] [Algebra K B] [Fintype ι]
+variable {K ι : Type*} [Field K] [Fintype ι]
+
+section CoefficientRing
+variable {B : Type*} [CommRing B] [Algebra K B]
 
 noncomputable def liftPolynomial (p : MvPolynomial ι K) : MvPolynomial (Option ι) B :=
   rename some (p.map (algebraMap K B))
@@ -36,6 +39,10 @@ noncomputable def equation (p : MvPolynomial ι K) (base : ι) (v : ι → B) :
 
 noncomputable def ideal (p : MvPolynomial ι K) (base : ι) (v : ι → B) : Ideal (MvPolynomial (Option ι) B) :=
   Ideal.span (Set.range (equation p base v))
+
+end CoefficientRing
+
+variable {B : Type*} [Field B] [Algebra K B]
 
 omit [Fintype ι] in
 theorem zeroSet_iff (p : MvPolynomial ι K) (base : ι) (v : ι → B) (z : Option ι → B) :
@@ -115,11 +122,12 @@ theorem finite_extended_solutions [CharZero K] (p : MvPolynomial ι K) (base : �
     exact algebraic_extended_coordinates p base v z hbase hind hz
   exact hfin.subset (fun z hz => (zeroSet_iff p base v z).mpr hz)
 
-theorem finite_regular_projection_roots [CharZero K] (p : MvPolynomial ι K) (base : ι) (v : ι → B)
-    (hbase : v base = 1) (hind : AlgebraicIndependent K (fun i : {i : ι // i ≠ base} => v i)) :
+omit [Fintype ι] in
+theorem finite_regular_projection_roots_of_extended (p : MvPolynomial ι K) (base : ι) (v : ι → B)
+    (hfinite : {z : Option ι → B | ∀ j, aeval z (equation p base v j) = 0}.Finite) :
     {x : ι → B | aeval x p = 0 ∧
       (∀ i, aeval x (pderiv i p) = v i * aeval x (pderiv base p)) ∧ aeval x (pderiv base p) ≠ 0}.Finite := by
-  apply ((finite_extended_solutions p base v hbase hind).image (fun z i => z (some i))).subset
+  apply (hfinite.image (fun z i => z (some i))).subset
   rintro x ⟨hp, hpartial, hne⟩
   let z : Option ι → B := fun j => j.elim ((aeval x (pderiv base p))⁻¹) x
   have hzx : (fun i => z (some i)) = x := rfl
@@ -133,5 +141,11 @@ theorem finite_regular_projection_roots [CharZero K] (p : MvPolynomial ι K) (ba
       exact sub_eq_zero.mpr (inv_mul_cancel₀ hne)
   · rw [equation, map_sub, map_mul, aeval_C, eval_liftPolynomial, eval_liftPolynomial, hzx]
     exact sub_eq_zero.mpr (hpartial i)
+
+theorem finite_regular_projection_roots [CharZero K] (p : MvPolynomial ι K) (base : ι) (v : ι → B)
+    (hbase : v base = 1) (hind : AlgebraicIndependent K (fun i : {i : ι // i ≠ base} => v i)) :
+    {x : ι → B | aeval x p = 0 ∧
+      (∀ i, aeval x (pderiv i p) = v i * aeval x (pderiv base p)) ∧ aeval x (pderiv base p) ≠ 0}.Finite :=
+  finite_regular_projection_roots_of_extended p base v (finite_extended_solutions p base v hbase hind)
 
 end LeanCanny.Algebra.GenericProjectionFinite

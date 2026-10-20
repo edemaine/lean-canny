@@ -594,6 +594,21 @@ this qualitative finite-sampling criterion equivalent to ETR satisfiability
 on all encoded inputs. Effective direction search, root enumeration, parameter
 bounds, and the full PSPACE decision procedure remain open.
 
+[`FiniteFiberSpecialization`](LeanCanny/Algebra/FiniteFiberSpecialization.lean)
+clears generic coordinate annihilators to the parameter ring. One nonzero
+parameter element suffices to preserve finite fibers under every field
+specialization where that element stays nonzero.
+[`ProjectionFiniteSpecialization`](LeanCanny/Algebra/ProjectionFiniteSpecialization.lean)
+applies this to symbolic normalized projection directions and gives a nonzero
+exceptional polynomial whose nonvanishing ensures finite extended projection
+fibers.
+[`PolynomialGridAvoidance`](LeanCanny/Algebra/PolynomialGridAvoidance.lean) avoids
+nonzero exceptional polynomials on the integer grid `0,…,B` when B bounds their
+total degree, including finite families of conditions. A normalized direction
+with natural-number coordinates and a finite extended projection fiber therefore
+exists. Bounding the exceptional polynomial in terms of the input and preserving
+the required positive sample under an encoded direction choice remain open.
+
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.

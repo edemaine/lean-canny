@@ -1341,6 +1341,35 @@ to every encoded ETR input. Effective finite direction search, root enumeration,
 quantitative parameter and annihilator bounds, and the complete PSPACE decision
 procedure are not yet established.
 
+## Finite-fiber specialization and integer direction grids
+
+`FiniteFiberSpecialization` clears a fraction-field coordinate annihilator to
+a nonzero polynomial over the parameter ring. Localization of radical ideals
+gives a further nonzero parameter multiple whose coordinate evaluation lies
+in the original radical. Multiplying these parameter factors and the cleared
+polynomials' leading coefficients gives one nonzero element d. Under any field
+specialization where d stays nonzero, the specialized coordinate polynomials
+remain nonzero and vanish on every solution. Their root sets give a finite
+product containing the entire specialized zero set. No bound on d is supplied.
+
+`ProjectionFiniteSpecialization` treats the non-base direction coordinates as
+polynomial parameters. Their fraction-field images are independent, so generic
+coordinate algebraicity applies to each minimal-prime quotient field. The
+specialization theorem yields a nonzero exceptional polynomial in the direction
+parameters. Its nonvanishing guarantees a finite extended projection fiber,
+without requiring the specialized direction itself to be independent.
+
+`PolynomialGridAvoidance` uses Mathlib's combinatorial Nullstellensatz: a nonzero
+polynomial cannot vanish on a product of sets larger than its coordinate
+degrees. In characteristic zero, coordinates in `0,...,B` suffice whenever B
+bounds its total degree. Products give simultaneous avoidance for finite
+families, using a bound on the sum of their degrees. Consequently a normalized
+direction with natural-number coordinates and a finite extended projection
+fiber exists. The current grid bound is the degree of an existential exceptional
+polynomial; an input-size bound, a certified construction of that polynomial,
+and preservation of the required positive sample under encoded direction
+selection remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
