@@ -31,6 +31,7 @@ import LeanCanny.ETR.RegularRadiusSource
 import LeanCanny.ETR.CriticalPointSource
 import LeanCanny.ETR.TubeSource
 import LeanCanny.ETR.TubeConvergenceSource
+import LeanCanny.ETR.TubeFeasibilitySource
 import LeanCanny.Geometry.ProjectionCritical
 import LeanCanny.Algebra.Separation
 import LeanCanny.Algebra.GCDRecovery

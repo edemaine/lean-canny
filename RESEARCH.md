@@ -1128,8 +1128,41 @@ with nonnegative inactive constraints has a feasible limit in the original
 perturbed set. `ETR.TubeConvergenceSource.approximation_of_strict_maximum`
 instantiates the critical approximation with sign preservation on every encoded
 input. Strictness remains an explicit hypothesis. Establishing suitable generic
-directions, finite sampling, a bounded sampling converse, and effective parameter
-selection remain open; this is not yet the complete ETR decision argument.
+directions, finite sampling, and effective parameter selection remain open;
+this is not yet the complete ETR decision argument.
+
+## Compact tube sampling converse
+
+`TubeBounds` controls samples with alpha at most one and nonnegative inactive
+constraints. The tube's radius-residual square is at most alpha, so the squared
+shift norm is at most `delta²+1` and each shift has magnitude at most `delta+1`.
+Each active constraint has square at most alpha; inactive constraints are
+nonnegative. Thus every constraint is at least -1. The cube constraints give
+spatial coordinate bounds `[-(delta+3),delta+3]` when epsilon and delta are
+nonnegative. All point coordinates lie in [-4,4] if delta is also at most one.
+These bounds are independent of the polynomial and active set.
+
+`TubeFeasibility` selects levels below both the desired squared error and one.
+Both signs of the radius equation and all original inequalities then satisfy
+the same approximate-feasibility allowance in a common compact box. Compact
+approximation supplies an exact feasible point. Active sets may vary with each
+sample; no convergent choice of samples or fixed active set is assumed.
+
+The forward direction uses the radial recovery path near any feasible point
+at positive radius. Its exact active set has positive inactive constraints in
+a common neighborhood, producing positive-inactive samples on every sufficiently
+small positive level. For nonnegative epsilon and positive delta, perturbed
+feasibility is therefore equivalent both to arbitrarily small weak-inactive
+samples and to one active set supplying eventual positive-inactive samples.
+
+`TubeProjectionFeasibility` extracts the tube equation from the first row of the
+expanded integer projection system. Arbitrarily small projection roots with
+nonnegative inactive constraints imply feasibility, even if active sets and
+directions vary. `ETR.TubeFeasibilitySource` translates the two equivalences into
+ETR correctness statements and proves soundness of the projection-root criterion
+for every encoded input. The restriction of the forward direction to a finite
+set of critical samples remains open, together with generic direction selection,
+coefficient-access machines, and effective parameter choices.
 
 ## TM2 versus Complexitylib's machines
 

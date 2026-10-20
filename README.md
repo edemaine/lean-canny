@@ -499,9 +499,25 @@ constraints and proves that convergent tube samples with nonnegative inactive
 constraints have feasible limits.
 [`TubeConvergenceSource`](LeanCanny/ETR/TubeConvergenceSource.lean) instantiates
 the approximation theorem for encoded ETR, with the strict local maximum
-hypothesis explicit. Generic directions ensuring finite critical sets and
-strict maxima, effective parameter bounds, coefficient access, and the full
-sampling decision argument remain open.
+hypothesis explicit.
+
+[`TubeBounds`](LeanCanny/Geometry/TubeBounds.lean) bounds small tube samples with
+nonnegative inactive constraints in a common compact box: shifts have magnitude
+at most δ+1 and spatial coordinates at most δ+3. For δ≤1 and α≤1, every coordinate
+lies in [-4,4].
+[`TubeFeasibility`](LeanCanny/Geometry/TubeFeasibility.lean) proves perturbed
+feasibility from arbitrarily small tube samples, allowing their active sets to
+vary. At nonnegative ε and positive δ, feasibility is also equivalent to one
+fixed active set supplying samples with positive inactive constraints at every
+sufficiently small positive α.
+[`TubeProjectionFeasibility`](LeanCanny/Geometry/TubeProjectionFeasibility.lean)
+extracts the tube equation from the integer projection system, proving soundness
+of arbitrarily small projection-root samples.
+[`TubeFeasibilitySource`](LeanCanny/ETR/TubeFeasibilitySource.lean) gives both
+semantic ETR characterizations and projection-sampling soundness on all inputs.
+Generic directions ensuring finite critical sets and strict maxima, effective
+parameter bounds, coefficient access, and the full sampling decision procedure
+remain open.
 
 ## Next obligations
 
