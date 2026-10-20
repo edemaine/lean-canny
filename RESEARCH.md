@@ -2106,9 +2106,43 @@ and coordinate-bound writers. Throughout this interval the projection polynomial
 is nonzero, and extraction of the lowest deformation coefficient commutes with
 perturbation specialization.
 
-This does not yet compute the lowest deformation index or its coefficient
-reader. Geometric root persistence, resultant-factor extraction, and the
-quantitative conditions needed for tube sampling remain open.
+The lowest deformation index and coefficient reader are computed below.
+Geometric root persistence, resultant-factor extraction, and the quantitative
+conditions needed for tube sampling remain open.
+
+## Computing the symbolic lowest deformation coefficient
+
+`LowestCoefficientSpace` searches coefficient indices in increasing order using
+certified space-bounded zero tests. The accumulator retains the first nonzero
+index plus one, with zero as the unset marker. A final predecessor gives the
+natural trailing degree, including the zero-polynomial convention. Its length
+is bounded by the binary search-counter length. An FP binary degree allowance
+therefore suffices for the full suspended fold certificate.
+
+`TubeBivariateReindex` transports all original parameter-coordinate and direction
+readers through FP context preparation and replaces selected degree fields.
+`TubeDeformationCoefficientPolynomial` bounds each encoded coefficient
+polynomial's degree by `M*Eencoded` and proves exact zero preservation and scalar
+quotient/remainder access. `TubeDeformationCoefficientZero` scans the corresponding
+`M*Eencoded+1` scalar coefficients, calling the complete integer zero evaluator.
+Coefficients outside that allowance vanish. This gives whole deformation
+coefficient-polynomial identity testing in PSPACE without materializing either
+the original bivariate coefficient or its encoding.
+
+`TubeDeformationLowestSpace` uses those identity tests and the proved deformation
+degree bound `M` to compute the actual determinant's lowest nonzero deformation
+index. Its specification includes minimality and the dimension bound. The result
+is retained with the original context and passed to the complete coefficient
+reader. Selected residues and three-way integer signs of the lowest bivariate
+coefficient now have full space certificates. `TubeDeformationLowestLanguages`
+proves selected coefficient zero, negativity, and positivity in PSPACE.
+All saved search and identity-test states and original parameter-reader costs
+are included. There is no additional supplied deformation index or row, entry,
+determinant, or sign oracle.
+
+The object computed is the lowest coefficient of the padded determinant
+candidate. Identifying its relevant resultant factors and proving geometric
+root persistence remain necessary for the eliminant and sampling algorithm.
 
 ## TM2 versus Complexitylib's machines
 
