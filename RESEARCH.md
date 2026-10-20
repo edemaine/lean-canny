@@ -1101,11 +1101,55 @@ for the eliminant and coordinate data. One common integer direction gives these
 representations for a finite family of rational input surfaces.
 
 This reaches the coefficient type used by the existing integer-polynomial sign
-and substitution interfaces. It does not supply those interfaces with certified
-coefficient readers: the localization normalization is used as an existence
-construction, and no bound on the clearing scales or resulting coefficient bit
-lengths is proved. Effective multivariate construction, source coefficient
-bounds and algorithms, and `ETR ∈ PSPACE` remain open.
+and substitution interfaces. The localization normalization is an existence
+construction. The explicit alternative below now supplies bounds and coefficient
+access from rational source contracts. Effective multivariate construction and
+derivation of those source contracts from the original input remain open, as
+does `ETR ∈ PSPACE`.
+
+## Constructive normalization bounds and streamed coefficient signs
+
+`FiniteDenominatorClearing` replaces a chosen localization multiple with the
+product M of the canonical positive denominators of a finite rational family.
+Its cleared value at i is the integer numerator at i times the product of all
+other denominators. The value is exactly `M*qᵢ` over the rationals. If every
+numerator magnitude and denominator has at most B bits and the family has N
+entries, M and every cleared value have at most `B*N+1` bits.
+
+`RationalPolynomialClearing` enumerates all coefficients through a common degree
+cap D in a finite polynomial family, including high zero coefficients. Their
+denominators are one. `Polynomial.ofFn` builds the explicit integer polynomials;
+the common scalar identity proves equality after mapping to the rational field,
+and injectivity preserves the original degrees. `BoundedIntegerCoordinates`
+applies this to the eliminant and all coordinate pairs at once. For n coordinates
+there are `(2*n+1)*(D+1)` entries, yielding the coefficient and scale budget
+`B*((2*n+1)*(D+1))+1`. The resulting `IntegerData` uses this specified positive
+scale and retains the existing root, decoding, and nonvanishing theorems.
+
+`DenominatorClearingSpace.Access.evaluator` computes one normalized integer value
+modulo a binary positive modulus. A suspended denominator evaluator supplies
+one factor at a time, with the selected factor replaced by one; the modular
+product is then multiplied by the selected numerator residue. Thus the modulus
+may divide any denominator: no modular inverse or integer quotient is required.
+The product, factor branching and final multiplication have separate correctness
+proofs. All saved inputs, child computations and clocks are included through
+the existing modular-product and space-function composition interfaces.
+
+`DenominatorClearingSign.SourceAccess` supplies an original query context,
+canonical numerator/denominator residue routines, and FP binary count, selected
+index and component-bit-bound writers. Its FP budget writer computes `B*N+1`.
+The uniform positive-modulus packet protocol connects the complete modular
+product evaluator to indexed CRT sign recovery and the small-modulus zero scan.
+The cleared coefficient's three-way sign has a space-function evaluator;
+zero, negative and positive languages belong to Complexitylib's PSPACE.
+The count, bit bound and normalized integer may be exponentially large; the
+routines do not store the full scale, normalized integer or coefficient array.
+
+These results certify the normalization stage under explicit rational-source
+contracts. They do not yet construct canonical rational component residues,
+degree bounds or bit bounds for the multivariate critical eliminants. Those
+source algorithms and quantitative estimates, and the final PSPACE composition,
+remain open.
 
 ## Compactification before critical points
 

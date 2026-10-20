@@ -88,6 +88,11 @@ import LeanCanny.Algebra.ProjectionAnnihilatorDirections
 import LeanCanny.Algebra.CompleteProjectionCoordinates
 import LeanCanny.Algebra.IntegerCoordinatePolynomials
 import LeanCanny.Algebra.IntegerProjectionCoordinates
+import LeanCanny.Algebra.FiniteDenominatorClearing
+import LeanCanny.Algebra.RationalPolynomialClearing
+import LeanCanny.Algebra.BoundedIntegerCoordinates
+import LeanCanny.Algebra.DenominatorClearingSpace
+import LeanCanny.Algebra.DenominatorClearingSign
 import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates
 import LeanCanny.Algebra.ShiftCoefficients
