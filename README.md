@@ -538,9 +538,9 @@ a finite-critical-set hypothesis.
 therefore gives unconditional semantic ETR equivalences for both arbitrarily
 small projection roots and eventual roots with one fixed normalized direction
 and active set. These are real existence statements.
-Generic directions ensuring finite critical sets, finite tube root sets, effective
-parameter bounds, coefficient access, and the full sampling decision procedure
-remain open.
+Existence and effective selection of suitable finite-sampling directions,
+effective parameter bounds, coefficient access, and the full sampling decision
+procedure remain open.
 
 [`MvCoefficientDerivation`](LeanCanny/Algebra/MvCoefficientDerivation.lean) and
 [`FieldDerivationExtension`](LeanCanny/Algebra/FieldDerivationExtension.lean)
@@ -555,8 +555,18 @@ the direction field, including normalized directions whose other coordinates
 are algebraically independent.
 [`FiniteAlgebraicZeros`](LeanCanny/Algebra/FiniteAlgebraicZeros.lean) converts
 algebraicity in minimal-prime quotient fields into coordinate annihilators
-and a finite zero set. Effective bounds and its application to the actual
-projection systems remain separate steps.
+and a finite zero set.
+[`GenericProjectionFinite`](LeanCanny/Algebra/GenericProjectionFinite.lean) applies
+this to normalized projection equations with a reciprocal variable excluding
+singular roots.
+[`FiniteProjectionRoots`](LeanCanny/Geometry/FiniteProjectionRoots.lean) proves
+finiteness of all projection-system roots on a regular real hypersurface when
+the non-base direction coordinates are algebraically independent over its
+coefficient field.
+[`TubeFiniteRoots`](LeanCanny/Geometry/TubeFiniteRoots.lean) gives this result for
+the actual expanded integer tube systems on their common small-level regularity
+interval, assuming the specialization factors through such a field. Existence
+and effective selection of directions and effective bounds remain open.
 
 ## Next obligations
 

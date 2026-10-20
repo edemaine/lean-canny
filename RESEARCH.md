@@ -1253,7 +1253,37 @@ polynomial ideal, each coordinate has a nonzero univariate annihilator modulo
 the radical. Products over the finitely many minimal primes supply these
 annihilators uniformly. The zero set lies in the finite product of their root
 sets. No effective bounds on these annihilators are supplied yet; applying the
-criterion to the regular projection systems remains a separate step.
+criterion to the regular projection systems is established below.
+
+## Finite generic tube projection roots
+
+`GenericProjectionFinite` adjoins one reciprocal variable t to the normalized
+projection equations and adds `t*partial_base(p)-1=0`. At every solution in a
+field extension, stationarity holds with multiplier t. Generic normalized
+coordinate algebraicity makes all point coordinates algebraic over the direction
+field; t is algebraic too because it is the reciprocal of a polynomial value
+at those coordinates. Applying this argument in every minimal-prime quotient
+field gives a finite extended zero set. Its projection contains all roots with
+nonzero base partial derivative, so that regular projection-root set is finite.
+
+`FiniteProjectionRoots` connects the algebraic statement to analytic regularity.
+If a normalized projection root had zero base partial, its equations would
+force every partial derivative to vanish, contradicting surjectivity of the
+real hypersurface derivative. Thus every projection root on a regular
+hypersurface belongs to the finite set just constructed. Coefficients may be
+specialized through a smaller characteristic-zero field; independence is
+required only over that field.
+
+`TubeFiniteRoots` applies the theorem to the actual expanded integer projection
+systems. At each sufficiently small regular positive alpha level, the root set
+is finite whenever coefficient specialization factors through a field K and
+the non-base direction coordinates are algebraically independent over K. The
+common regularity interval is independent of this choice. The statement permits
+a field and direction appropriate to the chosen level; it does not assert one
+field containing every real alpha while retaining independent real directions.
+Constructing suitable fields and directions, finite effective direction search,
+uniform parameter specialization, quantitative annihilator bounds, and the full
+sampling algorithm remain open.
 
 ## TM2 versus Complexitylib's machines
 
