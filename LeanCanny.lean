@@ -24,6 +24,7 @@ import LeanCanny.ETR.MonomialCountFP
 import LeanCanny.ETR.MonomialExponentFP
 import LeanCanny.ETR.CompiledRationalSource
 import LeanCanny.ETR.CompactSource
+import LeanCanny.ETR.PerturbedSource
 import LeanCanny.Algebra.Separation
 import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates

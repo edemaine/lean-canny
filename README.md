@@ -398,8 +398,25 @@ the verified ETR compiler. An input is a yes-instance exactly when some positive
 margin gives a nonempty compact zero set; every smaller positive margin also
 works. This includes malformed-input rejection and zero-variable equations.
 Dimension and degree upper bounds have FP binary writers, using the normalized
-source length. Coefficient access for the compactified polynomial, perturbation,
-and the critical-point construction remain open.
+source length.
+
+[`CompactApproximation`](LeanCanny/Geometry/CompactApproximation.lean) proves
+exact feasibility from arbitrarily accurate approximations on a compact set.
+[`PolynomialPerturbation`](LeanCanny/Geometry/PolynomialPerturbation.lean)
+applies it to the equation/cube system with independent shifts of prescribed
+squared radius. Nonemptiness is equivalent to nonemptiness for every sufficiently
+small positive radius, and each fixed-radius perturbed set is compact.
+[`PerturbationPolynomials`](LeanCanny/Geometry/PerturbationPolynomials.lean)
+gives the actual integer polynomials, with ε and δ as parameter variables.
+[`PerturbedSource`](LeanCanny/ETR/PerturbedSource.lean) proves this equivalence
+for every encoded ETR input, with FP bounds on variable count, inequality count,
+and degree.
+
+[`AdditiveSubmersion`](LeanCanny/Geometry/AdditiveSubmersion.lean) proves that the
+full additive family is smooth and its derivative is surjective, using the shift
+variables. This includes the compiled ETR family. Generic regularity after fixing
+the radius, streamed coefficient access for the new polynomials, and the
+critical-point construction remain open.
 
 ## Next obligations
 

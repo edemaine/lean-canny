@@ -926,9 +926,44 @@ degree is at most `4*arity*degreeBound`, hence at most `4*dataSize²`.
 binary inputs. `correct_all_small_margins` gives nonempty compact zero sets for
 every sufficiently small positive margin exactly on ETR yes-instances.
 The normalized source length provides certified FP dimension and degree upper
-bounds. This establishes the semantic compactness stage. Streamed coefficient
-access for the new polynomial, perturbation/regularity, and construction of the
-critical-point equations remain to be proved.
+bounds. This establishes the semantic compactness stage.
+
+## Additive perturbations
+
+`Geometry.CompactApproximation` proves exact feasibility of a finite continuous
+system on a compact set from uniform arbitrarily small violations. The proof
+minimizes the sum of negative parts. Approximate feasibility forces this minimum
+to be zero, giving an actual point satisfying all constraints.
+
+`PolynomialPerturbation` represents the compactified equation `q=0` by `q≥0`
+and `-q≥0`, together with two inner-cube inequalities per coordinate. Each
+constraint has an independent additive shift `a_i`, with
+`sum_i a_i² = δ²`. A feasible original point gives a perturbed point at every
+nonnegative radius by placing a nonnegative shift in one inequality. Conversely,
+arbitrarily small feasible perturbations bound the spatial points in `[-2,2]^n`
+and give uniform small violations; compact approximation recovers an unperturbed
+point. This proves the nonemptiness equivalence used in Lemma 3.2 for the compiled
+equation route, including zero-variable inputs. Fixed-radius perturbed sets are
+closed and lie in an explicitly bounded product of cubes, hence are compact.
+
+`PerturbationPolynomials` realizes the constraints as integer multivariate
+polynomials with separate ε, δ, spatial, and shift variables. For `n` spatial
+variables there are `2+2*n` inequalities and `4+3*n` total variables including
+the two parameters. Inequality degrees are at most `max(degree(q),1)` and the
+radius equation has degree at most two. `ETR.PerturbedSource.correct` instantiates
+the construction for every encoded ETR input:
+`ETR(bits) ↔ ∃ ε>0, ∃ d>0, ∀ δ, 0<δ<d → Nonempty(T(bits,ε,δ))`.
+The equivalent arbitrarily-small-radius statement is also proved. Dimension,
+inequality-count, and degree upper bounds have FP binary writers. Compactness
+gives extrema for every continuous objective on each nonempty perturbed set.
+
+`AdditiveSubmersion` proves that `(x,a) ↦ f(x)+a` has derivative
+`(h,b) ↦ Df(x)h+b`, which is onto via `b ↦ (0,b)`. Polynomial evaluation and
+the actual equation/cube constraint maps are smooth, so the result applies to
+the full parameterized ETR family. The remaining differential-topological step
+is generic regularity of the fixed-radius slices. Streamed coefficient access
+for these polynomials and construction/correctness of the critical-point
+equations also remain open.
 
 ## TM2 versus Complexitylib's machines
 
