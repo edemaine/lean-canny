@@ -453,6 +453,22 @@ satisfiability is equivalent to nonemptiness throughout such a regular interval.
 Effective radius bounds, streamed coefficient access for the new polynomials,
 and critical-point sampling remain open.
 
+[`ActiveExtremum`](LeanCanny/Geometry/ActiveExtremum.lean) localizes a maximum
+to its active equality fiber and normalizes the Lagrange multipliers when the
+constraint derivative is onto.
+[`PerturbedCriticalPoint`](LeanCanny/Geometry/PerturbedCriticalPoint.lean)
+applies this to compact regular perturbations.
+[`CriticalPointSource`](LeanCanny/ETR/CriticalPointSource.lean) characterizes ETR
+satisfiability by the existence of such critical maxima for every linear
+projection throughout a small regular-radius interval.
+[`ProjectionEquations`](LeanCanny/Algebra/ProjectionEquations.lean) constructs
+the hypersurface projection system, with exactly n equations and degree at most
+`max(degree(p),1)`, including direction variables.
+[`ProjectionCritical`](LeanCanny/Geometry/ProjectionCritical.lean) proves that
+local projection maxima on a regular hypersurface satisfy this system when the
+base direction coordinate is one. Tube specialization, generic directions with
+finite critical sets, and convergence back to the original strata remain open.
+
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.

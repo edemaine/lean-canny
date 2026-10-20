@@ -1035,6 +1035,35 @@ below this margin. Every active augmented derivative is then surjective for all
 perturbation correctness theorem on every encoded input. Effective radius
 selection, streamed coefficient access, and critical-point sampling remain open.
 
+## Critical projection maxima
+
+`ActiveExtremum.isLocalMaxOn_fiber` proves that inactive inequalities remain
+positive near a feasible maximum. Fixing the active constraint values and the
+radius equation therefore gives a fiber on which the objective is locally
+maximal. Its multiplier theorem uses Mathlib's Lagrange theorem and surjectivity
+of the equality derivative to exclude a zero objective multiplier. Normalization
+gives `L(h)=Λ(DF(h))` for a linear functional Λ on the constraint codomain.
+
+`PerturbedCriticalPoint` proves smoothness of the actual active augmented maps,
+selects exactly the constraints vanishing at the maximum, and obtains normalized
+multipliers at a maximum of any continuous linear projection on a nonempty
+compact regular perturbation. `ETR.CriticalPointSource.correct` applies this to
+every encoded input: satisfiability is equivalent to the existence of these
+critical maxima for every projection throughout a small regular-radius interval.
+
+`ProjectionEquations` constructs the hypersurface system `p=0` and
+`partial_i(p)-v_i*partial_base(p)=0` for `i≠base`. Point and direction variables
+are separate blocks; the direction is a parameter in the sampling problem.
+There are exactly n equations for n point coordinates. Their total degree,
+including the direction block, is at most `max(degree(p),1)`. The coefficient
+ring is arbitrary, and integer coefficients remain integer coefficients.
+`ProjectionCritical` proves that a local projection maximum on a regular
+hypersurface satisfies this system when `v_base=1`. Its coefficient homomorphism
+can specialize additional polynomial parameters to real values. This does not
+yet instantiate the system with the tube source: tube regularity, selection of
+directions with finite critical sets, convergence to the original active strata,
+and the corresponding coefficient-access certificates remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
