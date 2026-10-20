@@ -145,7 +145,7 @@ positive and negative parts. `TarskiQueryBits.zeroLanguage_mem_PSPACE`,
 consequences under the same original-source contracts. The remaining root-sign
 work now has a complete enumeration, pattern-weight, and exact-count composition
 for polynomially bounded family size, as described below. Canny's stronger query
-selection, critical-point correctness, and `ETR ∈ PSPACE` remain open.
+selection, the effective critical-point algorithm, and `ETR ∈ PSPACE` remain open.
 
 No existing encoded ∃ℝ complexity-class definition or formal proof of `ETR ∈ PSPACE`
 was found in the inspected Mathlib, Complexitylib, CSLib, TauCeti, or adjacent projects.
@@ -414,7 +414,7 @@ Its tags are `0` for zero, `1` for negative, and `2` for positive. Both the nega
 and positive languages are in PSPACE under the existing FP source degree,
 direction, selected-degree, coefficient-residue, and source-bit-budget contracts.
 The full coordinate computation's space bound and the
-critical-point/ETR argument remain open.
+effective critical-point/ETR decision argument remain open.
 
 The subresultant determinant specification is now explicit. For interior order
 `k<m,n`, coefficient `r≤k` is the minor with `m-k` shifted `g` columns and `n-k`
@@ -714,7 +714,7 @@ ETR. In particular, malformed formula inputs keep the compiler's unsatisfiable
 default, even though the lower-level term reader uses zero for malformed term
 fields. The source side is thus instantiated for general ETR inputs; constructing
 the decision procedure's coordinates, determining signs at algebraic parameter
-roots, and the critical-point correctness argument remain open.
+roots, and the effective critical-point decision argument remain open.
 
 `InfinitesimalSign` proves that a real polynomial's sign on some interval
 `0<β<δ` equals its trailing coefficient's sign, with a common interval for any
@@ -893,7 +893,7 @@ language. Repeated roots are counted once; empty families and the zero
 polynomial's empty-root convention are covered. This proves direct sign-pattern
 counting for polynomially bounded family size. It does not establish Canny's
 stronger polylogarithmic dependence on an implicitly large polynomial family,
-its full algebraic-parameter specialization, or the critical-point correctness
+its full algebraic-parameter specialization, or the effective critical-point
 argument. Those obligations and `ETR ∈ PSPACE` remain open.
 
 ## Compactification before critical points
@@ -1033,7 +1033,7 @@ over all active sets. Restricting also to radii below one ensures that δ² lies
 below this margin. Every active augmented derivative is then surjective for all
 `0<δ<d`. `ETR.RegularRadiusSource.correct` combines this interval with the compact
 perturbation correctness theorem on every encoded input. Effective radius
-selection, streamed coefficient access, and critical-point sampling remain open.
+selection, streamed coefficient access, and effective critical-point sampling remain open.
 
 ## Critical projection maxima
 
@@ -1129,7 +1129,7 @@ perturbed set. `ETR.TubeConvergenceSource.approximation_of_strict_maximum`
 instantiates the critical approximation with sign preservation on every encoded
 input. Strictness is an explicit hypothesis of that theorem; the supporting
 projection construction below now proves existence of a suitable strict
-maximum. Finite sampling and effective parameter selection remain open.
+maximum. Effective finite sampling and parameter selection remain open.
 
 ## Compact tube sampling converse
 
@@ -1160,9 +1160,9 @@ expanded integer projection system. Arbitrarily small projection roots with
 nonnegative inactive constraints imply feasibility, even if active sets and
 directions vary. `ETR.TubeFeasibilitySource` translates the two equivalences into
 ETR correctness statements and proves soundness of the projection-root criterion
-for every encoded input. The restriction of the forward direction to a finite
-set of critical samples remains open, together with generic direction selection,
-coefficient-access machines, and effective parameter choices.
+for every encoded input. The qualitative forward direction with finite critical
+root sets is supplied below. Effective direction selection, coefficient-access
+machines, and parameter choices remain open.
 
 ## Finite critical sets imply strict maxima
 
@@ -1188,8 +1188,8 @@ perturbed feasibility. `ETR.TubeCriticalSamplingSource` gives the corresponding
 ETR equivalence retaining finite active critical sets for the chosen direction,
 assuming suitable finite-critical directions exist throughout a small-radius
 interval. The converse needs no such assumption. Existence and effective
-selection of those directions, and finiteness of tube root sets,
-remain unproved.
+selection of directions with finite active critical sets remain open. Later
+modules establish tube-root finiteness and qualitative sampling completeness.
 
 ## Compact supporting projections and semantic completeness
 
@@ -1216,10 +1216,10 @@ direction and active set.
 `ETR.TubeSupportingSamplingSource` makes the projection-root semantic criterion
 unconditionally equivalent to ETR satisfiability on all encoded inputs. It also
 proves equivalence to arbitrarily small projection samples, where directions
-and active sets may vary. These are existence statements over the reals;
-finiteness and effective selection of sample roots and directions, effective
-parameter bounds, coefficient-access machines, and the full PSPACE decision
-procedure remain open.
+and active sets may vary. These are existence statements over the reals.
+Finite root sets containing suitable samples are supplied below; effective
+selection and enumeration, parameter bounds, coefficient-access machines, and
+the full PSPACE decision procedure remain open.
 
 ## Algebraic generic coordinates
 
@@ -1306,8 +1306,40 @@ normalized real direction. `TubeGenericDirections` combines this density with
 the actual tube parameter field and regularity interval: at each sufficiently
 small positive level, directions yielding finite projection root sets for all
 active sets occur in every such neighborhood. The choice may vary with the
-level. Preserving positive inactive signs under the direction change and
-effective finite direction selection remain separate steps.
+level. Positive inactive signs are preserved by the argument below; effective
+finite direction selection remains open.
+
+## Qualitative finite tube sampling correctness
+
+`ProjectionContinuity` proves joint continuity of projection evaluation in the
+direction and point. Compactness makes changes of direction uniformly small
+over a compact point set.
+
+`CompactLevelPerturbedMaxima` strengthens small-level recovery near a unique
+zero-level maximum. Its conclusion holds for any continuous objective
+uniformly close to the original objective on the compact neighborhood. Compact
+separation supplies a positive objective margin; recovery supplies a level
+point within one third of that margin. Uniform changes smaller than one third
+leave every maximizing point above the separation threshold, inside the
+prescribed neighborhood and the interior of the compact set.
+
+`TubeFiniteSampling` starts with a strict supporting projection maximum and
+chooses a compact neighborhood and a positive-inactive neighborhood around it.
+At each sufficiently small positive alpha, dense generic directions give a
+nearby normalized direction with finite projection root sets for every active
+set. The uniform objective bound keeps a local tube maximum in the
+positive-inactive neighborhood. Regularity makes it a root of the actual
+expanded integer projection system.
+
+The resulting `EventualFiniteProjectionSamples` criterion uses one fixed
+active set throughout the interval. The normalized real direction may vary
+with alpha; all active root sets are finite for each chosen direction, and
+one of them contains a sample with positive inactive constraints. Perturbed
+feasibility is equivalent to this criterion when epsilon is nonnegative and
+delta is positive. `ETR.TubeFiniteSamplingSource.correct` lifts that equivalence
+to every encoded ETR input. Effective finite direction search, root enumeration,
+quantitative parameter and annihilator bounds, and the complete PSPACE decision
+procedure are not yet established.
 
 ## TM2 versus Complexitylib's machines
 

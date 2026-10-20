@@ -379,7 +379,7 @@ that a positive count is equivalent, for a nonzero symbolic root polynomial,
 to a realizing real root for every sufficiently small positive β. The guarded
 language includes symbolic nonvanishing and belongs to PSPACE on all inputs;
 the unguarded theorem assumes nonvanishing on every input. Canny's stronger
-implicit family bounds and critical-point argument remain open.
+implicit family bounds and effective critical-point algorithm remain open.
 
 The compactness stage now starts from the compiled equation for every encoded
 ETR input.
@@ -451,7 +451,7 @@ interval where every active augmented derivative is surjective.
 [`RegularRadiusSource`](LeanCanny/ETR/RegularRadiusSource.lean) proves that ETR
 satisfiability is equivalent to nonemptiness throughout such a regular interval.
 Effective radius bounds, streamed coefficient access for the new polynomials,
-and critical-point sampling remain open.
+and effective critical-point sampling remain open.
 
 [`ActiveExtremum`](LeanCanny/Geometry/ActiveExtremum.lean) localizes a maximum
 to its active equality fiber and normalizes the Lagrange multipliers when the
@@ -579,8 +579,20 @@ direction.
 [`TubeGenericDirections`](LeanCanny/Geometry/TubeGenericDirections.lean) therefore
 proves that directions giving finite projection root sets for every active tube
 are dense at each sufficiently small positive level. The directions may depend
-on the level; preserving a suitable positive-inactive sample and making the
-selection effective remain separate steps.
+on the level.
+[`ProjectionContinuity`](LeanCanny/Geometry/ProjectionContinuity.lean) controls
+direction changes uniformly on compact sets.
+[`CompactLevelPerturbedMaxima`](LeanCanny/Geometry/CompactLevelPerturbedMaxima.lean)
+shows that nearby continuous objectives retain small-level local maxima near
+a unique zero-level maximum.
+[`TubeFiniteSampling`](LeanCanny/Geometry/TubeFiniteSampling.lean) combines these
+facts: one active set supplies positive-inactive samples at every sufficiently
+small level, with a normalized real direction giving finite root sets for all
+active sets. The direction may vary with the level.
+[`TubeFiniteSamplingSource`](LeanCanny/ETR/TubeFiniteSamplingSource.lean) proves
+this qualitative finite-sampling criterion equivalent to ETR satisfiability
+on all encoded inputs. Effective direction search, root enumeration, parameter
+bounds, and the full PSPACE decision procedure remain open.
 
 ## Next obligations
 
