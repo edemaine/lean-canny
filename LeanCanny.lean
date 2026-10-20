@@ -156,6 +156,7 @@ import LeanCanny.ETR.TubeMacaulayUniversal
 import LeanCanny.Algebra.MacaulayUniversalExact
 import LeanCanny.Algebra.MacaulayPivotBoundary
 import LeanCanny.Algebra.KoszulSubsetDeterminant
+import LeanCanny.Algebra.MacaulayEligibleMonotonic
 import LeanCanny.Algebra.MacaulayKoszulExteriorBridge
 import LeanCanny.Algebra.MacaulayLastParameterDegree
 import LeanCanny.Algebra.FiniteDenominatorClearing

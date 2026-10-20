@@ -7,6 +7,7 @@ module
 public import LeanCanny.Algebra.MacaulayUniversalSystem
 public import LeanCanny.Algebra.KoszulSpecializationExact
 public import LeanCanny.Algebra.KoszulPivotContraction
+public import LeanCanny.Algebra.MacaulayEligibilityLevels
 
 /-! # Exactness of the universal finite weighted Koszul complex
 
@@ -42,6 +43,19 @@ theorem zero_contraction_det_specialization (d : Fin n → ℕ) (W : ℕ)
   KoszulWeighted.zeroContractionMatrix_det_specialization (MvPolynomial.eval (powerPoint d))
     (system d W π) (d ∘ π) W (system_homogeneous d W π) hW
     (system_power_specialization d W hdegree π)
+
+theorem eligibility_det_specialization (d : Fin n → ℕ) (W : ℕ)
+    (hdegree : ∀ i, d i < 2 ^ W) (π : Equiv.Perm (Fin n)) (h : ℕ) :
+    MvPolynomial.eval (powerPoint (R := R) d)
+      (Macaulay.eligibilityMinor (system d W π) (d ∘ π) W h).det = 1 :=
+  Macaulay.eligibilityMinor_det_power_specialization (MvPolynomial.eval (powerPoint d))
+    (system d W π) (d ∘ π) W h (system_power_specialization d W hdegree π)
+
+theorem eligibility_det_ne_zero [Nontrivial R] (d : Fin n → ℕ) (W : ℕ)
+    (hdegree : ∀ i, d i < 2 ^ W) (π : Equiv.Perm (Fin n)) (h : ℕ) :
+    (Macaulay.eligibilityMinor (system (R := R) d W π) (d ∘ π) W h).det ≠ 0 :=
+  Macaulay.eligibilityMinor_det_ne_zero_of_power_specialization (MvPolynomial.eval (powerPoint d))
+    (system d W π) (d ∘ π) W h (system_power_specialization d W hdegree π)
 
 noncomputable def fractionSystem (d : Fin n → ℕ) (W : ℕ) (π : Equiv.Perm (Fin n)) (i : Fin n) :
     MvPolynomial (Fin n) (FractionRing (CoefficientRing n R)) :=

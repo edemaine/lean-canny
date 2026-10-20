@@ -2928,10 +2928,51 @@ have empty index types and determinant one. Adjacent conjugacy transfers
 this product to `det(P_(k+1))`. All identities hold over any commutative ring.
 
 This proves the exterior-subset stage of the higher determinant decomposition.
-The remaining combinatorial stage partitions the eligible-coordinate sequence
-by the positions of the selected exterior coordinates. Identifying the
-resulting factors and their binomial multiplicities, comparing orderings,
-and cancelling the extraneous polynomial remain open.
+The next stage partitions the eligible-coordinate sequence by the positions
+of the selected exterior coordinates. The following modules construct those
+indices and counts and prove triangularity by the greatest position.
+
+`KoszulEligibleIndices` gives an exact description of each fixed-subset
+factor using active monomials alone. For exterior subset `s` of cardinality
+`k+1`, its index monomial `t` satisfies `s ⊆ eligible(t)` and omits the
+least eligible coordinate. The inverse subtracts `subsetExponent d s` from
+`t`; exponent bounds, weight, and the inverse identities are proved.
+Reindexing gives an equal determinant of the corresponding eligible
+principal submatrix, with no exterior-algebra coordinates in its definition.
+
+`FinitePositionMasks` orders a finite coordinate set decreasingly and
+identifies its `k`-element subsets with `k`-element position masks.
+`KoszulEligiblePositions` applies this to the eligible coordinates with
+the pivot erased. It gives a global bijection between actual nonpivot
+indices and pairs of an active monomial and a position mask. If `q` is the
+number of eligible coordinates of that monomial, its fiber has cardinality
+`choose(q-1,k+1)`. Every mask of cardinality `k+1` has a unique greatest
+position `j`, and the actual index stratum at that position has cardinality
+`choose(j,k)`. Writing `h=j+2` gives the expected `choose(h-2,k)` count.
+These are proved counts of index strata, not yet determinant powers.
+
+`MacaulayEligibleMonotonic` connects the positions to the matrices. A nonzero
+entry forces the source remainder to divide the target monomial, preserving
+all source eligible coordinates except possibly the pivot. The decreasing
+rank of a retained selected coordinate is its number of larger eligible
+coordinates, and cannot decrease along such an entry. In a fixed nonempty
+exterior subset, the smallest coordinate has the greatest position in the
+mask. This proves triangularity and a determinant product by that position.
+
+`MacaulayEligibilityLevels` defines the concrete higher minor at level `h`
+on active monomials with at least `h` eligible coordinates. Level one
+recovers the active numerator, level two the extraneous minor, and levels
+above the arity have determinant one. All levels commute with coefficient
+maps and are the identity at coordinate powers. The standard subtractive
+shift gives their characteristic pencils and nonzero determinants over a
+domain. `MacaulayUniversalExact` proves their universal power specialization
+is one and hence their nonvanishing, for every ordering. A greatest-position
+stratum at `j` supplies an index of the actual level-`j+2` minor.
+
+Full position-mask triangularity and identification of its diagonal factors
+with these higher minors are still needed to turn the binomial counts into
+the determinant-power formula. Ordering comparisons, cancellation of the
+extraneous polynomial, and resultant identification remain open.
 
 ## TM2 versus Complexitylib's machines
 
