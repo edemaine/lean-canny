@@ -367,9 +367,19 @@ a uniform test bound from the original outer degrees and coefficient masses,
 including every ternary product query. No test-polynomial enumeration or β-degree
 is needed for this bound.
 [`ParameterSourceBudget`](LeanCanny/Algebra/ParameterSourceBudget.lean) gives
-its FP binary writer on arbitrary metadata words. Composing the resulting
-parameter choice with the root-count evaluator is the next step. Canny's
-implicit family bounds and critical-point argument also remain open.
+its FP binary writer on arbitrary metadata words.
+
+[`InfinitesimalRootCountSpace`](LeanCanny/Algebra/InfinitesimalRootCountSpace.lean)
+chooses the dyadic exponent internally from these original source bounds and
+returns the exact eventual root-sign count in polynomial space. Its only
+suspended arithmetic sources are the original bivariate coefficient readers.
+The query-family size retains the explicit unary FP bound.
+[`InfinitesimalRootPSPACE`](LeanCanny/Algebra/InfinitesimalRootPSPACE.lean) proves
+that a positive count is equivalent, for a nonzero symbolic root polynomial,
+to a realizing real root for every sufficiently small positive β. The guarded
+language includes symbolic nonvanishing and belongs to PSPACE on all inputs;
+the unguarded theorem assumes nonvanishing on every input. Canny's stronger
+implicit family bounds and critical-point argument remain open.
 
 ## Next obligations
 

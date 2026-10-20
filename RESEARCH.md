@@ -802,9 +802,26 @@ constructing or enumerating the symbolic test polynomials.
 
 `ParameterSourceBudget` provides FP binary writers for these expressions, including
 binary size via normalized-word length. The contracts cover all raw metadata
-words. Composing this effective choice with the selected-parameter root-count
-evaluator remains the next step. Canny's stronger implicit family bounds and
-critical-point construction remain separate obligations.
+words.
+
+`InfinitesimalRootBits.parameterCode` chooses one more than the uniform
+source-derived test bound. `effective_rootCount` proves that the selected-dyadic
+count equals the eventual count specified by the symbolic stability interval.
+`rootCountEvaluator` then composes the parameter writer with the existing
+specialization and integer sign-pattern machines. All specialized coefficient
+access is derived from the original bivariate readers.
+The original FP degree/mass writers, an FP pattern reader, and a unary FP family
+size certificate suffice. Arbitrary metadata encodings, empty query families,
+repeated roots, and the zero-polynomial finite-root convention are covered.
+
+`InfinitesimalRootPSPACE` gives the eventual count its quantified semantics.
+For a nonzero symbolic root polynomial, positivity is equivalent to
+`∃ δ>0, ∀ β, 0<β<δ → ∃ a`, with `a` a real root realizing all requested signs.
+The guarded language also requires that symbolic nonvanishing, and belongs to
+PSPACE on every input. The unguarded language belongs to PSPACE when all symbolic
+root inputs are nonzero. Thus the polynomially bounded finite-family
+small-parameter root-sign stage has a complete space certificate. Canny's stronger
+implicit family bounds and critical-point construction remain separate obligations.
 
 `ScaledSignQueries` starts the algebraic-root counting stage. At each sign value
 `t∈{-1,0,1}`, the integer quadratics `2-2*t²`, `t²-t`, and `t²+t` are twice the
