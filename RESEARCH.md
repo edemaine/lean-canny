@@ -2144,6 +2144,42 @@ The object computed is the lowest coefficient of the padded determinant
 candidate. Identifying its relevant resultant factors and proving geometric
 root persistence remain necessary for the eliminant and sampling algorithm.
 
+## Affine deformation and the characteristic numerator
+
+`PolynomialAffineReparametrization` homogenizes a polynomial to a certified
+degree allowance and substitutes `(X,1-X)`. The resulting finite sum has terms
+`p_i*X^i*(1-X)^(M-i)`. Coefficients below the original lowest order vanish;
+at that order only the original lowest term contributes, with constant factor
+one. Thus both the order and coefficient are preserved over every commutative
+ring. `PolynomialSignedReflection` proves that replacing `X` by `-X` preserves
+the order and multiplies its coefficient by the corresponding power of `-1`.
+
+`AffineCharacteristic` proves that homogenization commutes with determinants
+of matrices whose entries have degree at most one. Consequently
+`F(ε)=det(A+ε*(I-A))` is the homogeneous substitution of `P(s)=det(A+sI)`.
+For `Q(s)=det(A-sI)`, the exact identities are
+`Q(s)=(-1)^M*χ_A(s)`, `ord(Q)=ord(F)=k`, and
+`trail(Q)=(-1)^k*trail(F)`. No division or domain hypothesis is needed.
+
+`MacaulayCharacteristic` and `TubeDeformationCharacteristic` apply these
+identities to the actual padded full tube matrix. Its subtractive characteristic
+numerator has a nonzero lowest coefficient, whose selected scalar coefficients
+differ from the computed affine ones by exactly the lowest-order sign.
+After every coefficient-ring specialization, vanishing of the two lowest
+coefficients is equivalent.
+
+`SignedTagSpace` supplies an FP parity correction of three-way integer signs.
+`TubeDeformationCharacteristicSpace` pairs the complete lowest-index and sign
+evaluators and applies that correction. Selected lowest characteristic-numerator
+coefficient zero, negative, and positive tests are in PSPACE under the existing
+reader contracts. The computation accounts for both child routines and assumes
+no additional index or sign reader.
+
+This removes the parameter-convention gap between the existing interpolation
+and the characteristic numerator. It does not identify the extraneous Macaulay
+minor or prove its resultant quotient formula. Those algebraic obligations,
+geometric root persistence, and effective sampling remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
