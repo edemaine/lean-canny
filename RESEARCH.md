@@ -960,10 +960,41 @@ gives extrema for every continuous objective on each nonempty perturbed set.
 `AdditiveSubmersion` proves that `(x,a) ↦ f(x)+a` has derivative
 `(h,b) ↦ Df(x)h+b`, which is onto via `b ↦ (0,b)`. Polynomial evaluation and
 the actual equation/cube constraint maps are smooth, so the result applies to
-the full parameterized ETR family. The remaining differential-topological step
-is generic regularity of the fixed-radius slices. Streamed coefficient access
-for these polynomials and construction/correctness of the critical-point
-equations also remain open.
+the full parameterized ETR family.
+
+## Radius slices and critical values
+
+`RadiusLinearization` computes the derivative of
+`((x,a),δ) ↦ (f(x)+a, r(a)-δ²)`. Its final coordinate includes `-2*δ*dδ`, so
+an explicit preimage proves surjectivity whenever `δ≠0`. At fixed radius the
+derivative is `(h,b) ↦ (Df(x)h+b, Dr(a)b)`; it is onto exactly when
+`Dr(a) ∘ Df(x)` is nonzero. `SquaredRadius` specializes these formulas to
+`r(a)=sum_i a_i²`, with `Dr(a)b=2*sum_i a_i*b_i`, and applies the joint result
+to the actual equation/cube family.
+
+`ActiveRadiusLinearization` handles an arbitrary active constraint set S. The
+augmented fixed-radius derivative, retaining only the S coordinates and the
+radius equation, is onto exactly when either some inactive shift `a_j` is
+nonzero or `Dr(a) ∘ Df(x)` is nonzero. The proof supplies explicit derivative
+preimages, including an inactive coordinate direction when available.
+
+`ActiveRadiusCritical` uses this criterion at a point with `f_i(x)+a_i=0` for
+every active i. A nonsurjective derivative forces all inactive shifts to vanish.
+Its weighted spatial derivative is then the negative derivative of
+`g_S(x)=sum_{i∈S} f_i(x)²`. The sphere equation gives `g_S(x)=δ²` and the
+derivative of `g_S` is zero. Thus every radius failing this active-set
+submersion test yields a critical value of a concrete sum-of-squares function.
+
+`CriticalEnergyPolynomial` realizes `g_S` using the existing integer constraint
+polynomials after subtracting their shift variables. Its evaluation is independent
+of those shifts and of δ, and its total degree is at most
+`2*max(degree(q),1)` for the compactified equation q. `ETR.RadiusSource` proves
+the joint and active-set statements for every encoded source and supplies an FP
+binary degree allowance `8*sourceSize²+4` for the energy polynomial.
+Finiteness and effective bounds for these critical values remain to be proved;
+they are not hypotheses discharged by the current construction. Generic
+fixed-radius regularity, streamed coefficient access, and the critical-point
+sampling construction therefore remain open.
 
 ## TM2 versus Complexitylib's machines
 

@@ -414,9 +414,23 @@ and degree.
 
 [`AdditiveSubmersion`](LeanCanny/Geometry/AdditiveSubmersion.lean) proves that the
 full additive family is smooth and its derivative is surjective, using the shift
-variables. This includes the compiled ETR family. Generic regularity after fixing
-the radius, streamed coefficient access for the new polynomials, and the
-critical-point construction remain open.
+variables. This includes the compiled ETR family.
+[`RadiusLinearization`](LeanCanny/Geometry/RadiusLinearization.lean) and
+[`SquaredRadius`](LeanCanny/Geometry/SquaredRadius.lean) compute the joint
+derivative including the radius parameter and prove it is onto when δ is nonzero.
+[`ActiveRadiusLinearization`](LeanCanny/Geometry/ActiveRadiusLinearization.lean)
+gives the fixed-radius criterion for each active constraint set.
+
+[`ActiveRadiusCritical`](LeanCanny/Geometry/ActiveRadiusCritical.lean) proves
+that a singular active-set point makes δ² a critical value of the sum of squares
+of the unshifted active constraints.
+[`CriticalEnergyPolynomial`](LeanCanny/Geometry/CriticalEnergyPolynomial.lean)
+realizes that function as an integer polynomial.
+[`RadiusSource`](LeanCanny/ETR/RadiusSource.lean) instantiates these results for
+all encoded ETR inputs and supplies an FP degree bound. Finiteness and effective
+bounds for these critical values, generic fixed-radius regularity, streamed
+coefficient access for the new polynomials, and critical-point sampling remain
+open.
 
 ## Next obligations
 
