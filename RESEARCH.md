@@ -1621,8 +1621,27 @@ source times a linear shift, and the same tube with source zero. The square's
 multiplicity is the number of active source-equation constraints, at most two.
 The linear shift has at most their two shift coordinates. Thus the only dense
 product needed for tube access is already supplied by the power routine.
-Encoded access to the zero-source tube and the shifted source coefficients,
-then composition with projection derivatives, remains open.
+`EmbeddedCoefficient` proves exact guarded access through injective variable
+embeddings: all other coordinate exponents must be zero. Multiplication by one
+variable shifts the source query by one. Embedded partial derivatives need one
+incremented source query, multiplied by its integer exponent.
+`TubeCoefficientFormula.coeff_integerPolynomial` extracts one source-square
+coefficient, two possible shifted source coefficients, and one zero-source tube
+coefficient. `ProjectionCoefficientFormula` expresses a flattened partial row
+using two embedded derivative queries and a direction-variable shift.
+`TubeCoefficientFormula` specializes both level and partial formulas to the
+existing `integerProjection` definition.
+
+`TermArityFP` computes the exact syntax arity with a raw tree fold, then validates
+the source view. Numeric payload subtrees cannot contribute spurious variable
+indices. Every encoded frame and stack has linear length in its raw tree,
+including malformed inputs. A cap by validated source length yields a unary FP
+arity reader as well as binary output. `TubeEncoding` gives explicit finite
+equivalences for the point/shift/parameter coordinate layout and the constraint
+order. Its active-set bitmask has exactly `2+2*n` bits and a proved round trip.
+
+Encoded access to the zero-source tube and shifted source coefficients, and
+composition of the full tube/projection coefficient machines, remain open.
 
 ## TM2 versus Complexitylib's machines
 

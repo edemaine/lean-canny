@@ -28,6 +28,9 @@ import LeanCanny.ETR.CompactCoefficientSpace
 import LeanCanny.ETR.CompactSourceCoefficient
 import LeanCanny.ETR.CompactPowerCoefficient
 import LeanCanny.Geometry.TubeCoefficientDecomposition
+import LeanCanny.Geometry.TubeCoefficientFormula
+import LeanCanny.ETR.TermArityFP
+import LeanCanny.ETR.TubeEncoding
 import LeanCanny.ETR.CompactCoefficientSign
 import LeanCanny.ETR.CompactCoefficientZero
 import LeanCanny.ETR.SourceDegreeSpace

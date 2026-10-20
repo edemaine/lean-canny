@@ -746,7 +746,15 @@ uses this to access coefficients of powers of the original compact polynomial.
 [`TubeCoefficientDecomposition`](LeanCanny/Geometry/TubeCoefficientDecomposition.lean)
 expresses the integer tube as its source square with multiplicity at most two,
 the source times a linear shift supported at two coordinates, and the
-zero-source tube. Combining these with encoded sparse/shift access remains open.
+zero-source tube.
+[`TubeCoefficientFormula`](LeanCanny/Geometry/TubeCoefficientFormula.lean)
+extracts each tube coefficient from these three dense queries and one zero-source
+tube coefficient. It also connects the projection coefficient formulas to the
+actual integer projection system: each partial row uses two shifted tube queries.
+[`TermArityFP`](LeanCanny/ETR/TermArityFP.lean) computes exact source syntax arity
+in FP. [`TubeEncoding`](LeanCanny/ETR/TubeEncoding.lean) supplies the coordinate
+layout and active-set bitmask round trip. Encoded zero-source/shift access and
+composition of the full tube/projection coefficient machines remain open.
 
 ## Next obligations
 
