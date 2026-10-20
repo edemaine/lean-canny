@@ -1077,6 +1077,36 @@ encoded coefficient algorithm. Bounds on the exceptional polynomial, critical
 point count and coefficient sizes, the multivariate eliminant computation,
 and the full `ETR ∈ PSPACE` proof remain open.
 
+## Integer coefficient data for critical representations
+
+`IntegerCoordinatePolynomials` clears rational coefficient denominators using
+Mathlib's localization normalization. Each coordinate numerator and denominator
+receives the same nonzero integer scale: separately normalize them and multiply
+each result by the other's scale. The parameter eliminant receives its own
+nonzero integer scale. `IntegerData` records the exact polynomial-map identities
+over the rationals, rather than assuming the quotients are unchanged.
+
+Every resulting polynomial has exactly its original degree. The integer
+eliminant remains separable after mapping to the rational coefficient field;
+separability over the integer ring itself is not asserted. In any rational
+extension field, including the reals, eliminant roots are unchanged, integer
+coordinate ratios equal the original rational ratios, and denominator
+nonvanishing is equivalent. These statements also cover a zero numerator.
+
+`IntegerProjectionCoordinates` combines this conversion with certified critical
+representations. `integerRegularRootEquiv` gives the full target-field bijection
+with regular critical points. `exists_regularPoint_iff_integer` transfers any
+additional predicate to decoded roots using only integer univariate polynomials
+for the eliminant and coordinate data. One common integer direction gives these
+representations for a finite family of rational input surfaces.
+
+This reaches the coefficient type used by the existing integer-polynomial sign
+and substitution interfaces. It does not supply those interfaces with certified
+coefficient readers: the localization normalization is used as an existence
+construction, and no bound on the clearing scales or resulting coefficient bit
+lengths is proved. Effective multivariate construction, source coefficient
+bounds and algorithms, and `ETR ∈ PSPACE` remain open.
+
 ## Compactification before critical points
 
 The report's §3.1 starts by substituting `x_i = y_i/(1-y_i²)` and bounding the

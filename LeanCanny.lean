@@ -86,6 +86,8 @@ import LeanCanny.Algebra.ProjectionCoordinateTransfer
 import LeanCanny.Algebra.CoordinateAnnihilatorSpecialization
 import LeanCanny.Algebra.ProjectionAnnihilatorDirections
 import LeanCanny.Algebra.CompleteProjectionCoordinates
+import LeanCanny.Algebra.IntegerCoordinatePolynomials
+import LeanCanny.Algebra.IntegerProjectionCoordinates
 import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates
 import LeanCanny.Algebra.ShiftCoefficients
