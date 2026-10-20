@@ -1059,10 +1059,41 @@ including the direction block, is at most `max(degree(p),1)`. The coefficient
 ring is arbitrary, and integer coefficients remain integer coefficients.
 `ProjectionCritical` proves that a local projection maximum on a regular
 hypersurface satisfies this system when `v_base=1`. Its coefficient homomorphism
-can specialize additional polynomial parameters to real values. This does not
-yet instantiate the system with the tube source: tube regularity, selection of
-directions with finite critical sets, convergence to the original active strata,
-and the corresponding coefficient-access certificates remain open.
+can specialize additional polynomial parameters to real values.
+
+## Active tubes and their integer projection systems
+
+`TubePolynomial` represents ε, δ, and α in the coefficient ring `Z[Option Bool]`.
+The outer variables are the original spatial coordinates and every shift
+coordinate. Its energy is the square of the radius equation plus the sum of
+squares of the active shifted inequalities. Subtracting α gives the tube; its
+zero level at α = 0 is exactly the original active common-zero set.
+
+`RegularPolynomialLevels` uses finite critical values to find a positive margin
+below every positive critical value of any real polynomial. The derivatives on
+levels within that margin are surjective. `TubeRegularity` specializes the tube
+energy at fixed ε and δ and takes a common margin over the finitely many active
+sets. `TubeProjection` then applies the hypersurface projection theorem. A
+root-shift coordinate supplies the base direction coordinate, including when
+the compiled source has zero spatial arity.
+
+`NestedPolynomial` uses Mathlib's sum-ring equivalence to expand coefficient
+parameters into a variable block. It preserves evaluation and commutes with
+point renaming and formal point partial derivatives. `ProjectionFlatten` bounds
+the expanded projection equations by the expanded hypersurface degree.
+`TubeExpanded` relates the expanded constraints to the earlier integer
+perturbation polynomials and proves the full total-degree bound
+`2*max(degree(q),2)` for both tube and projection systems. This counts parameter
+and direction variables, not just the outer point variables.
+
+`ETR.TubeSource` instantiates the symbolic and ordinary integer systems on every
+encoded input. For normalized source size N it supplies FP equation-count
+allowance `2+3*N`, point/direction-variable allowance `4+6*N`, expanded-variable
+allowance `7+6*N`, and full degree allowance `8*N²+4`. Its common regular α
+interval is qualitative and depends on fixed ε and δ. FP writers currently
+certify these size bounds; coefficient-access machines, finite generic
+direction selection, convergence to the original active strata, and effective
+parameter selection remain open.
 
 ## TM2 versus Complexitylib's machines
 

@@ -466,8 +466,25 @@ the hypersurface projection system, with exactly n equations and degree at most
 `max(degree(p),1)`, including direction variables.
 [`ProjectionCritical`](LeanCanny/Geometry/ProjectionCritical.lean) proves that
 local projection maxima on a regular hypersurface satisfy this system when the
-base direction coordinate is one. Tube specialization, generic directions with
-finite critical sets, and convergence back to the original strata remain open.
+base direction coordinate is one.
+
+[`TubePolynomial`](LeanCanny/Geometry/TubePolynomial.lean) forms the sum of
+squares of the active shifted constraints and the radius equation, minus α.
+At α = 0, its zeros are exactly their common zeros.
+[`RegularPolynomialLevels`](LeanCanny/Geometry/RegularPolynomialLevels.lean)
+and [`TubeRegularity`](LeanCanny/Geometry/TubeRegularity.lean) give a common
+interval of regular positive α levels for all active sets at fixed ε and δ.
+[`TubeProjection`](LeanCanny/Geometry/TubeProjection.lean) applies the projection
+equations to these tubes.
+[`TubeExpanded`](LeanCanny/Geometry/TubeExpanded.lean) expands the parameter
+coefficients into ordinary integer polynomials, preserving evaluation and point
+derivatives; the full degree, including parameters and directions, is at most
+`2*max(degree(p),2)`.
+[`TubeSource`](LeanCanny/ETR/TubeSource.lean) supplies these systems for every
+encoded ETR input, with FP upper-bound writers for equation count, variable count,
+and degree. Generic directions with finite critical sets, convergence back to
+the original strata, effective parameter bounds, and coefficient access remain
+open.
 
 ## Next obligations
 
