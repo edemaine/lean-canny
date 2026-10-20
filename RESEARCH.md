@@ -938,8 +938,9 @@ L(x), with denominator degree at most `max 1 ((N-1)*N)` and numerator degree at
 most one more. `exists_bounded_rational_coordinates` assembles the bounded choices,
 a separable projection eliminant, and simultaneous exact coordinate recovery.
 
-`VectorGaloisDescent` supplies the base-field coefficient step for vectors in a
-finite Galois extension L/K. An automorphism permuting S fixes every nodal
+`GaloisFixedPolynomial` applies the infinite Galois fixed-field theorem, removing
+the finite-dimensional hypothesis from coefficient descent. `VectorGaloisDescent`
+supplies the base-field coefficient step for vectors in any Galois extension L/K. An automorphism permuting S fixes every nodal
 polynomial whose node map commutes with the automorphism. This product argument
 retains multiplicities and does not require injective nodes. Original and
 asymmetrically shifted integer projections commute with every K-automorphism,
@@ -952,8 +953,9 @@ roots in L. It returns a monic separable degree-N polynomial over K with exactly
 the projected points as roots in L, plus numerator and denominator polynomials
 over K for every coordinate. The same degree bounds and nonzero-denominator
 specifications hold simultaneously, including empty sets and linear inputs.
-The finite Galois ambient extension and stable finite point set are hypotheses;
-this theorem does not yet construct them from an encoded multivariate input.
+The ambient Galois extension and stable finite point set are hypotheses of this
+finite-set theorem; the full-zero-set application below supplies them directly
+in an algebraic closure.
 
 These are finite-set algebraic theorems over a characteristic-zero field.
 The nodal products use the supplied point set; they are not yet constructed from
@@ -961,6 +963,44 @@ encoded multivariate equations, and no descent to integer coefficients or
 multivariate eliminant coefficient routine is supplied by these modules.
 The remaining effective multivariate construction, its complexity bounds, and
 `ETR ∈ PSPACE` remain open.
+
+## Rational representations of full finite zero sets
+
+`FiniteSystemCoordinates.zeroSet` evaluates a family of multivariate equations
+over K in an extension L. Its `Representation` records an integer direction,
+a monic separable eliminant of degree equal to the full solution count N, and
+numerator/denominator polynomials over K for every coordinate. Direction
+coefficients are at most `(n+1)*N^4`; denominator degrees are at most
+`max 1 ((N-1)*N)` and numerator degrees at most one more. Denominators do not
+vanish on solutions, and the eliminant has exactly the projected solutions as
+roots in L. `Representation.rootEquiv` is an actual bijection between eliminant
+roots and system solutions, obtained by the rational decoding formulas.
+
+`nonempty_representation` proves existence for any full finite zero set in a
+characteristic-zero Galois extension. Stability follows from the equations.
+`nonempty_algebraicClosure_representation` specializes this to the algebraic
+closure of K, whose Galois structure follows from characteristic zero. Neither
+a finite ambient extension nor a separately supplied stability proof is needed.
+This is an algebraic existence result under a full-zero-set finiteness hypothesis;
+it does not compute the zero set or construct the polynomials from encoded inputs.
+
+`ProjectionSystemCoordinates.equations` instantiates the system with a surface
+polynomial, its normalized projection equations, and a reciprocal for the base
+partial derivative. `exists_representation` uses the existing exceptional
+polynomial and integer-grid avoidance to choose a direction whose full extended
+fiber is finite over the algebraic closure. Evaluation commutes with the base-field
+embedding, so the direction and all equations still have coefficients over K.
+The finite-system representation then applies. `exists_family_representations`
+uses simultaneous avoidance to give one integer direction for every surface in
+a finite family. `decode_regular_point` proves that each eliminant root decodes
+to a point on the original surface, satisfying all normalized projection equations
+with nonzero base partial after the reciprocal coordinate is discarded.
+
+This connects the qualitative critical-fiber and rational-coordinate results.
+The direction grid still depends on the degree of an existential exceptional
+polynomial; an input-size bound on that degree, a bound on the number of critical
+points, multivariate eliminant coefficient algorithms, and their space bounds
+remain open. `ETR ∈ PSPACE` is not proved.
 
 ## Compactification before critical points
 

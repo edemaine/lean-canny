@@ -97,7 +97,7 @@ theorem exists_rational_coordinates (s : Finset (ι → L)) (c : ι → ℕ) (k 
 
 /-- All finite-set coordinate formulas can be chosen over the input field,
 with bounded integer projection data and explicit polynomial degree bounds. -/
-theorem exists_bounded_coordinates [FiniteDimensional K L] [IsGalois K L] [CharZero L]
+theorem exists_bounded_coordinates [IsGalois K L] [CharZero L]
     (s : Finset (ι → L)) (hs : VectorGaloisDescent.Stable (K := K) s) :
     ∃ (k : ℕ) (c : ι → ℕ) (q : K[X]) (num den : ι → K[X]),
       0 < k ∧ k ≤ s.card ^ 4 + 1 ∧

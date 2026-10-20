@@ -76,8 +76,11 @@ import LeanCanny.Algebra.VectorSeparation
 import LeanCanny.Algebra.AffineGridAvoidance
 import LeanCanny.Algebra.AsymmetricProjection
 import LeanCanny.Algebra.AsymmetricCoordinateRecovery
+import LeanCanny.Algebra.GaloisFixedPolynomial
 import LeanCanny.Algebra.VectorGaloisDescent
 import LeanCanny.Algebra.AsymmetricBaseCoordinates
+import LeanCanny.Algebra.FiniteSystemCoordinates
+import LeanCanny.Algebra.ProjectionSystemCoordinates
 import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates
 import LeanCanny.Algebra.ShiftCoefficients

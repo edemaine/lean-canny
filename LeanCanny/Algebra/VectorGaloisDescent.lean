@@ -5,13 +5,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.AsymmetricCoordinateRecovery
-public import LeanCanny.Algebra.GaloisDescent
+public import LeanCanny.Algebra.GaloisFixedPolynomial
 public import Mathlib.Algebra.MvPolynomial.Eval
 
 /-! # Descent of finite vector projection polynomials
 
 Automorphisms permuting a finite vector set fix every nodal polynomial with
-an equivariant node map, including asymmetric shifted projections. In a finite
+an equivariant node map, including asymmetric shifted projections. In a
 Galois extension these polynomials therefore have coefficients in the base field.
 A finite full zero set of base-field polynomial equations is stable as required.
 -/
@@ -87,21 +87,21 @@ theorem minus_act (σ : L ≃ₐ[K] L) (c : ι → ℕ) (j : ι) (x : ι → L) 
     minus c j (act σ x) = σ (minus c j x) := by
   simp [minus, projection_act, act]
 
-variable [FiniteDimensional K L] [IsGalois K L]
+variable [IsGalois K L]
 
 theorem exists_projection_polynomial (s : Finset (ι → L)) (hs : Stable (K := K) s) (c : ι → ℕ) :
     ∃ q : Polynomial K, q.map (algebraMap K L) = Lagrange.nodal s (projection c) :=
-  exists_polynomial_of_fixed _ (nodal_fixed s hs _ (fun σ x => projection_act σ c x))
+  exists_polynomial_of_galois_fixed _ (nodal_fixed s hs _ (fun σ x => projection_act σ c x))
 
 theorem exists_plus_polynomial (s : Finset (ι → L)) (hs : Stable (K := K) s)
     (c : ι → ℕ) (k : ℕ) (j : ι) :
     ∃ q : Polynomial K, q.map (algebraMap K L) = Lagrange.nodal s (plus c k j) :=
-  exists_polynomial_of_fixed _ (nodal_fixed s hs _ (fun σ x => plus_act σ c k j x))
+  exists_polynomial_of_galois_fixed _ (nodal_fixed s hs _ (fun σ x => plus_act σ c k j x))
 
 theorem exists_minus_polynomial (s : Finset (ι → L)) (hs : Stable (K := K) s)
     (c : ι → ℕ) (j : ι) :
     ∃ q : Polynomial K, q.map (algebraMap K L) = Lagrange.nodal s (minus c j) :=
-  exists_polynomial_of_fixed _ (nodal_fixed s hs _ (fun σ x => minus_act σ c j x))
+  exists_polynomial_of_galois_fixed _ (nodal_fixed s hs _ (fun σ x => minus_act σ c j x))
 
 end Projection
 end LeanCanny.Algebra.VectorGaloisDescent
