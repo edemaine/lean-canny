@@ -137,6 +137,8 @@ import LeanCanny.ETR.TubeDeformationSign
 import LeanCanny.ETR.TubeDeformationSpecialization
 import LeanCanny.ETR.TubeDeformationLowestLanguages
 import LeanCanny.ETR.TubeDeformationCharacteristicSpace
+import LeanCanny.ETR.TubeExtraneousSpace
+import LeanCanny.ETR.TubeExtraneousCharacteristic
 import LeanCanny.Algebra.FiniteDenominatorClearing
 import LeanCanny.Algebra.RationalPolynomialClearing
 import LeanCanny.Algebra.BoundedIntegerCoordinates

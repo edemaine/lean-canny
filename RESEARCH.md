@@ -2176,9 +2176,47 @@ reader contracts. The computation accounts for both child routines and assumes
 no additional index or sign reader.
 
 This removes the parameter-convention gap between the existing interpolation
-and the characteristic numerator. It does not identify the extraneous Macaulay
-minor or prove its resultant quotient formula. Those algebraic obligations,
-geometric root persistence, and effective sampling remain open.
+and the characteristic numerator. The extraneous minor construction below
+addresses the denominator. Its resultant quotient formula, geometric root
+persistence, and effective sampling remain open.
+
+## Extraneous Macaulay minor and its costed deformation
+
+`MacaulayExtraneous` selects the active level monomials divisible by at least
+two distinct designated coordinate powers: the eligible coordinate set has
+cardinality greater than one. Inactive fixed-width padding indices are excluded.
+The extraneous matrix is the actual principal submatrix on this finite set.
+`PrincipalPadding` proves that replacing every omitted row by its identity row
+preserves the principal determinant. Affine deformation commutes with this
+padding, so the extraneous deformation evaluates to one at deformation parameter
+one and is nonzero. Coefficient-ring maps commute with the construction.
+
+`MacaulayExtraneousControl` recognizes this set in FP by counting eligible
+coordinates through the existing fixed-width row reader. It does not enumerate
+the principal subtype or assume an FP procedure for its cardinality.
+`PolynomialPrincipalSpace` branches between the suspended original entry reader
+and an identity coefficient. Its generic affine determinant evaluator includes
+the original entry child's workspace.
+
+`TubeExtraneousSystem`, `TubeExtraneousModular`, and `TubeExtraneousSpace`
+instantiate this construction with the full tube matrix over `ℤ[θ][T][ε]`.
+The shared parameter radix still recovers every selected coefficient; indices
+outside its valid perturbation range give zero. Complete polynomial-space
+residue evaluators use the existing coordinate readers and bounds without
+new row, matrix-entry, or determinant readers.
+
+`TubeExtraneousCharacteristic` uses the actual principal minor, rather than the
+full padded matrix, for the subtractive characteristic denominator. Its lowest
+order equals the extraneous affine deformation's lowest order, and its trailing
+coefficient differs by `(-1)^order`. These lowest coefficients vanish under
+exactly the same coefficient-ring specializations. The characteristic lowest
+coefficient is nonzero.
+
+The resultant quotient identity has not been proved. Integer coefficient bounds,
+integer signs, and computed lowest-index extraction for this extraneous
+family also remain open; the new complexity result evaluates modular
+coefficients. The analogous complete integer and lowest-index computations
+for the full numerator are already proved above.
 
 ## TM2 versus Complexitylib's machines
 
