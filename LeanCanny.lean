@@ -108,6 +108,14 @@ import LeanCanny.Algebra.HomogenizationSpace
 import LeanCanny.Algebra.HomogeneousSubstitution
 import LeanCanny.ETR.TubeHomogenization
 import LeanCanny.ETR.TubeMacaulaySystem
+import LeanCanny.Algebra.ReciprocalEquation
+import LeanCanny.Algebra.ReciprocalBounds
+import LeanCanny.Algebra.ReciprocalSpace
+import LeanCanny.ETR.TubeRegularSource
+import LeanCanny.ETR.TubeRegularDerivative
+import LeanCanny.ETR.TubeRegularSpace
+import LeanCanny.ETR.TubeRegularHomogenization
+import LeanCanny.ETR.TubeRegularMacaulay
 import LeanCanny.Algebra.FiniteDenominatorClearing
 import LeanCanny.Algebra.RationalPolynomialClearing
 import LeanCanny.Algebra.BoundedIntegerCoordinates
