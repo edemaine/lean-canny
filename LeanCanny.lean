@@ -124,6 +124,7 @@ import LeanCanny.ETR.TubeParameterSubstitution
 import LeanCanny.ETR.TubeParameterCorrect
 import LeanCanny.ETR.TubeParameterBounds
 import LeanCanny.ETR.TubeParameterDecisions
+import LeanCanny.ETR.TubeClearedCoefficientSpace
 import LeanCanny.Algebra.FiniteDenominatorClearing
 import LeanCanny.Algebra.RationalPolynomialClearing
 import LeanCanny.Algebra.BoundedIntegerCoordinates
