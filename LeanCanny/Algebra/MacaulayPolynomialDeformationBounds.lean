@@ -19,6 +19,40 @@ mass allowance gains only two bits after any second coefficient encoding.
 namespace LeanCanny.Algebra.Macaulay
 open scoped Classical
 
+theorem polynomial_entry_degree_le {R : Type*} [CommRing R] {n : ℕ}
+    (p : Fin n → MvPolynomial (Fin n) (Polynomial R)) (d : Fin n → ℕ) (W E : ℕ)
+    (hp : ∀ i e, ((p i).coeff e).natDegree ≤ E) (r s : Index n W) :
+    (matrix p d W r s).natDegree ≤ E := by
+  by_cases hr : (FixedWidthPolynomial.vector n W r).degree = level d
+  · rw [entry_active p d W r s hr]
+    split_ifs
+    · exact hp _ _
+    · simp
+  · simp only [matrix, dite_eq_right hr]
+    change (if r = s then (1 : Polynomial R) else 0).natDegree ≤ E
+    split_ifs <;> simp
+
+theorem polynomial_deformation_entry_inner_degree {R : Type*} [CommRing R] {n : ℕ}
+    (p : Fin n → MvPolynomial (Fin n) (Polynomial R)) (d : Fin n → ℕ) (W E : ℕ)
+    (hp : ∀ i e, ((p i).coeff e).natDegree ≤ E) (r s : Index n W) (j : ℕ) :
+    ((matrix (deformation p d) d W r s).coeff j).natDegree ≤ E := by
+  rw [matrix_deformation_coefficient]
+  split_ifs
+  · exact polynomial_entry_degree_le p d W E hp r s
+  · apply (Polynomial.natDegree_sub_le _ _).trans
+    apply max_le
+    · by_cases hrs : r = s <;> simp [Matrix.one_apply, hrs]
+    · exact polynomial_entry_degree_le p d W E hp r s
+  · simp
+
+theorem det_polynomial_deformation_inner_degree {R : Type*} [CommRing R] {n : ℕ}
+    (p : Fin n → MvPolynomial (Fin n) (Polynomial R)) (d : Fin n → ℕ) (W E : ℕ)
+    (hp : ∀ i e, ((p i).coeff e).natDegree ≤ E) (j : ℕ) :
+    ((matrix (deformation p d) d W).det.coeff j).natDegree ≤ FixedWidthPolynomial.count n W * E := by
+  have h := PolynomialKronecker.determinant_inner_degree (matrix (deformation p d) d W) (fun _ => E)
+    (polynomial_deformation_entry_inner_degree p d W E hp) j
+  simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul] using h
+
 theorem coefficient_deformation_affine {R : Type*} [CommRing R] {n : ℕ}
     (p : Fin n → MvPolynomial (Fin n) (Polynomial R)) (d : Fin n → ℕ) (i : Fin n) (e : Fin n →₀ ℕ) :
     (deformation p d i).coeff e = PolynomialAffineDeformation.affine ((p i).coeff e)
