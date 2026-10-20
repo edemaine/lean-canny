@@ -1092,8 +1092,44 @@ allowance `2+3*N`, point/direction-variable allowance `4+6*N`, expanded-variable
 allowance `7+6*N`, and full degree allowance `8*N²+4`. Its common regular α
 interval is qualitative and depends on fixed ε and δ. FP writers currently
 certify these size bounds; coefficient-access machines, finite generic
-direction selection, convergence to the original active strata, and effective
-parameter selection remain open.
+direction selection, and effective parameter selection remain open.
+
+## Tube approximation at strict maxima
+
+`CompactLevelConvergence` proves that small nonnegative levels in a compact
+set lie in any open neighborhood containing its zero locus. It also gives a
+joint energy/objective margin near a unique zero-level maximum: sufficiently
+small energy and an objective value sufficiently close to the maximum force
+the point into any specified neighborhood. The proof uses compact approximate
+feasibility for the two inequalities, avoiding a choice of convergent samples.
+An arbitrary filtered family whose energy tends to zero and whose objective
+value tends to the unique maximum consequently converges to that maximizer.
+
+`LocalLevelApproximation` uses the intermediate value theorem along a continuous
+path with zero initial energy and positive energy for positive times. Every
+neighborhood of the initial point contains points on all sufficiently small
+positive levels. `CompactLevelMaxima` combines this recovery property with
+compact separation. Maximizing over a compact level produces local maxima on
+the full level, inside any prescribed neighborhood of a unique zero-level
+maximum in the interior of the compact set.
+
+`TubeApproximation` supplies the recovery path for the actual tubes at positive
+delta: scale the shift vector by `1+t`. Its squared radius strictly increases
+for positive t, so the sum-of-squares tube energy is positive. `TubeConvergence`
+uses a small compact closed ball to turn a strict local projection maximum
+on the active zero locus into the required unique compact maximum. In every
+neighborhood, all sufficiently small positive alpha levels then have local
+projection maxima satisfying the expanded integer critical equations.
+
+`TubeSigns` preserves all positive inactive constraints in a common neighborhood,
+so the approximating critical points can preserve these signs too. It also
+proves the converse limit fact: a convergent family of vanishing tube levels
+with nonnegative inactive constraints has a feasible limit in the original
+perturbed set. `ETR.TubeConvergenceSource.approximation_of_strict_maximum`
+instantiates the critical approximation with sign preservation on every encoded
+input. Strictness remains an explicit hypothesis. Establishing suitable generic
+directions, finite sampling, a bounded sampling converse, and effective parameter
+selection remain open; this is not yet the complete ETR decision argument.
 
 ## TM2 versus Complexitylib's machines
 

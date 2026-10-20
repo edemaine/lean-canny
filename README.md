@@ -482,9 +482,26 @@ derivatives; the full degree, including parameters and directions, is at most
 `2*max(degree(p),2)`.
 [`TubeSource`](LeanCanny/ETR/TubeSource.lean) supplies these systems for every
 encoded ETR input, with FP upper-bound writers for equation count, variable count,
-and degree. Generic directions with finite critical sets, convergence back to
-the original strata, effective parameter bounds, and coefficient access remain
-open.
+and degree.
+
+[`CompactLevelConvergence`](LeanCanny/Geometry/CompactLevelConvergence.lean)
+proves uniform compact control of small levels and approximate maxima.
+[`LocalLevelApproximation`](LeanCanny/Geometry/LocalLevelApproximation.lean)
+and [`CompactLevelMaxima`](LeanCanny/Geometry/CompactLevelMaxima.lean) produce
+nearby local maxima on positive levels near a unique zero-level maximum.
+[`TubeApproximation`](LeanCanny/Geometry/TubeApproximation.lean) supplies a
+continuous radial path giving nearby tube levels at positive radius.
+[`TubeConvergence`](LeanCanny/Geometry/TubeConvergence.lean) proves that strict
+local projection maxima are approximated in every neighborhood by local tube
+maxima satisfying the integer critical equations.
+[`TubeSigns`](LeanCanny/Geometry/TubeSigns.lean) preserves positive inactive
+constraints and proves that convergent tube samples with nonnegative inactive
+constraints have feasible limits.
+[`TubeConvergenceSource`](LeanCanny/ETR/TubeConvergenceSource.lean) instantiates
+the approximation theorem for encoded ETR, with the strict local maximum
+hypothesis explicit. Generic directions ensuring finite critical sets and
+strict maxima, effective parameter bounds, coefficient access, and the full
+sampling decision argument remain open.
 
 ## Next obligations
 
