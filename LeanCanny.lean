@@ -39,6 +39,7 @@ import LeanCanny.Geometry.ProjectionCritical
 import LeanCanny.Geometry.TubeFiniteRoots
 import LeanCanny.Geometry.TubeGenericDirections
 import LeanCanny.Geometry.TubeIntegerDirections
+import LeanCanny.Geometry.TubeRationalDirections
 import LeanCanny.Algebra.ProjectionCoordinateAlgebraic
 import LeanCanny.Algebra.ProjectionFiniteSpecialization
 import LeanCanny.Algebra.FiniteAlgebraicZeros

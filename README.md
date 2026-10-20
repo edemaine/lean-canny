@@ -619,6 +619,19 @@ grid bound and direction may depend on the real parameters and level. A common
 integer choice throughout an interval, preservation of a positive-inactive sample,
 and an input-size bound remain open.
 
+[`PolynomialRationalAvoidance`](LeanCanny/Geometry/PolynomialRationalAvoidance.lean)
+places finite rational grids inside arbitrary open coordinate boxes and avoids
+nonzero real exceptional polynomials there.
+[`RationalProjectionDirections`](LeanCanny/Geometry/RationalProjectionDirections.lean)
+therefore gives a normalized rational finite-root direction near any normalized
+real direction, for a finite regular family.
+[`TubeRationalDirections`](LeanCanny/Geometry/TubeRationalDirections.lean) applies
+this to all active tubes at every sufficiently small positive level.
+The compact sampling argument now accepts a direction predicate and retains
+it in its witnesses, allowing these rational choices to be used without
+duplicating the objective-stability proof. Effective numerator and denominator
+bounds remain open.
+
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.

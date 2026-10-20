@@ -1387,6 +1387,28 @@ yet give one integer direction throughout a small-alpha interval or ensure
 that the chosen direction preserves a positive-inactive sample. These and
 the quantitative input-size bound remain open.
 
+## Nearby rational directions avoiding exceptional conditions
+
+`PolynomialRationalAvoidance` puts an arbitrarily large finite rational grid
+inside any nonempty real interval. Applying the combinatorial Nullstellensatz
+to the real images of such grids finds a rational tuple avoiding any nonzero
+real polynomial inside any prescribed open coordinate box. Products give
+simultaneous avoidance of finite families of exceptional polynomials.
+
+`RationalProjectionDirections` keeps the base coordinate equal to one and
+chooses the other coordinates in a sufficiently small rational box. Every
+neighborhood of a normalized direction consequently contains a normalized
+rational direction whose projection root sets are finite for every member of
+a regular finite hypersurface family. `TubeRationalDirections` supplies these
+nearby rational directions for all active tubes at each small regular level.
+
+The compact small-level sampling argument in `TubeFiniteSampling` now accepts
+a predicate on directions. A nearby finite-root selector satisfying that
+predicate yields samples whose directions retain it. The original unrestricted
+sampling theorems use the always-true predicate. This interface preserves the
+single active set and all positive inactive signs while supporting restricted
+direction witnesses. Effective rational height bounds remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
