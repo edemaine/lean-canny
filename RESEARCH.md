@@ -1744,9 +1744,33 @@ machines, with FP source, active-mask, row, and modulus fields. The mathematical
 term family is never materialized. `TubeIndexedBounds` retains the actual source
 coefficient mass bound for every rank and supplies an FP even denominator-power
 allowance `2^W`, bounded by twice the full degree allowance. These establish the
-source-side contracts for streamed rational substitution. Composing substitution
-with coordinate readers, quantitative parameter selection, and the complete ETR
-PSPACE decision procedure remain open.
+source-side contracts for streamed rational substitution.
+
+`TubeRationalSource` instantiates the existing integer substitution family with
+actual tube or projection coefficients. A static flag chooses the layout;
+source, active mask, and row are FP fields of the caller context. The rank/modulus
+packet conversion has a full space certificate and canonical residue equality.
+`TubeRationalSubstitution` supplies the source and metadata internally. Its only
+remaining coefficient-reader parameters are the rational-coordinate numerator
+and denominator readers, each with a complete space certificate and modular
+query contract.
+
+`TubeRationalCorrect` proves exact equality with even denominator clearing of
+the native tube/projection polynomial. The original rational evaluation and the
+cleared polynomial's trailing coefficient have the same sign for sufficiently
+small positive parameters wherever all coordinate denominators are nonzero.
+A native row wrapper keeps the projection decoder's metadata arity separate
+from the statement's native coordinate type.
+
+`TubeRationalBounds` derives FP output-degree and coefficient-bit writers from
+coordinate degree/coefficient bounds and actual source mass bounds. No actual
+output-degree oracle or assumed source-coefficient bound is used.
+`TubeRationalDecisions` composes the complete residue child with CRT sign
+recovery, small-modulus zero testing, and the streamed trailing-coefficient scan.
+The coefficient zero/negative tests are in PSPACE. `TubeRationalLanguages`
+proves polynomial identity and either strict trailing-coefficient sign in PSPACE
+under the same coordinate-reader contracts. Concrete sampler coordinate readers, quantitative
+parameter selection, and the complete ETR PSPACE decision procedure remain open.
 
 ## TM2 versus Complexitylib's machines
 

@@ -817,8 +817,24 @@ readers for these indexed coefficients, parameterized by FP source, active-set,
 row, and modulus fields.
 [`TubeIndexedBounds`](LeanCanny/ETR/TubeIndexedBounds.lean) supplies uniform
 coefficient bounds and an FP even denominator-clearing allowance at most twice
-the full degree bound. These are the source-side contracts for streamed rational
-substitution. The substitution composition and effective sampling remain open.
+the full degree bound.
+[`TubeRationalSource`](LeanCanny/ETR/TubeRationalSource.lean) packages those actual
+sources for rational substitution, including canonical modular coefficient
+packets. [`TubeRationalSubstitution`](LeanCanny/ETR/TubeRationalSubstitution.lean)
+composes the complete residue evaluator with certified rational-coordinate
+readers. [`TubeRationalCorrect`](LeanCanny/ETR/TubeRationalCorrect.lean) proves
+that the result is exactly denominator clearing of the native integer tube or
+projection row, and that its trailing-coefficient sign equals the original
+rational evaluation's sign on a sufficiently small positive interval wherever
+coordinate denominators are nonzero.
+[`TubeRationalBounds`](LeanCanny/ETR/TubeRationalBounds.lean) derives FP output
+degree and coefficient-bit bounds from coordinate bounds and actual source
+bounds. [`TubeRationalDecisions`](LeanCanny/ETR/TubeRationalDecisions.lean) supplies
+coefficient sign/zero tests and a three-way infinitesimal sign evaluator.
+[`TubeRationalLanguages`](LeanCanny/ETR/TubeRationalLanguages.lean) proves
+polynomial identity and either strict trailing-coefficient sign in PSPACE under
+the same coordinate-reader contracts. Concrete sampler coordinate readers,
+quantitative parameter selection, and the full ETR algorithm remain open.
 
 ## Next obligations
 
