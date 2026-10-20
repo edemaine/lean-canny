@@ -34,6 +34,7 @@ import LeanCanny.ETR.TubeEncoding
 import LeanCanny.ETR.TubeZeroSpace
 import LeanCanny.ETR.TubeZeroQuery
 import LeanCanny.ETR.TubeDenseQuery
+import LeanCanny.ETR.TubeSourceCoefficient
 import LeanCanny.ETR.CompactCoefficientSign
 import LeanCanny.ETR.CompactCoefficientZero
 import LeanCanny.ETR.SourceDegreeSpace

@@ -769,8 +769,15 @@ on every binary target word.
 summands: an embedded positive source power, optionally times either source
 shift variable. FP pattern and degree guards force zero on rejected queries;
 valid queries call the full source-power evaluator. All target words and modulus
-one are covered. Assembly of the full tube/projection coefficient machines
-remains open.
+one are covered.
+[`TubeCoefficientSpace`](LeanCanny/ETR/TubeCoefficientSpace.lean) combines all
+four children into a polynomial-space residue evaluator for the full integer
+tube, using sequential output pairing and FP modular addition.
+[`TubeSourceCoefficient`](LeanCanny/ETR/TubeSourceCoefficient.lean) instantiates
+this evaluator on compiled ETR inputs and proves native-coordinate query
+correctness, including modulus one. Every nonzero tube coefficient has a query
+of polynomial length. Assembly of the projection coefficient machines remains
+open.
 
 ## Next obligations
 
