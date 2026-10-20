@@ -2870,6 +2870,36 @@ numerator/extraneous ratios across orderings, including the higher Macaulay
 factors and signs. Exactness and the monomial block factorization alone do
 not prove these comparisons or polynomial cancellation.
 
+`KoszulPivotEquiv` now identifies adjacent monomial summands over the
+original commutative coefficient ring. The kernel of `H_k` is the pivot
+span in every degree, including degree zero, where both are zero. The
+first isomorphism theorem and the monomial complement therefore give an
+explicit linear equivalence from the nonpivot span in degree `k` to the
+pivot span in degree `k+1`, whose forward map is `H_k`. Projection to the
+nonpivot span preserves homotopy images and canonical nonpivot coordinates.
+
+`KoszulAdjacentBlocks` restricts the contraction to the pivot span and
+projects it to the nonpivot span. Their matrices in the restricted monomial
+bases are the two existing principal blocks. Commutation with `H` makes
+the pivot operator in the next degree conjugate to the projected nonpivot
+operator. `MatrixBasisConjugate` compares their determinants in the specified
+finite bases, even with different index types. This gives an exact equality
+over any commutative ring, without an unspecified sign or field extension.
+
+Write `P_k` and `Q_k` for the pivot and nonpivot blocks of the contraction
+on exterior degree `k+1`. The proved recurrence is
+`det(P_(k+1)) = det(Q_k)`, and hence
+`det(L_(k+1)) = det(Q_k) * det(Q_(k+1))`.
+`MacaulayPivotBoundary` supplies its concrete initial terms. The degree-zero
+contraction reindexes exactly to `activeMinor`, and the degree-zero homotopy
+conjugates it to the first pivot block, so `det(P_0) = det(activeMinor)`.
+The canonical nonpivot indices in degree one are precisely the unselected
+Macaulay multiplier indices. Explicit reindexing identifies `Q_0` with
+`relationMinor` over any commutative ring. Thus `det(P_1)` is the relation
+determinant, already factored as `det(extraneousMinor)*higherRelationFactor`.
+The remaining task is to identify and compare the higher factors across
+orderings; the recurrence does not by itself cancel the extraneous factor.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
