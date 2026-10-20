@@ -2212,11 +2212,41 @@ coefficient differs by `(-1)^order`. These lowest coefficients vanish under
 exactly the same coefficient-ring specializations. The characteristic lowest
 coefficient is nonzero.
 
-The resultant quotient identity has not been proved. Integer coefficient bounds,
-integer signs, and computed lowest-index extraction for this extraneous
-family also remain open; the new complexity result evaluates modular
-coefficients. The analogous complete integer and lowest-index computations
-for the full numerator are already proved above.
+`PrincipalPolynomialBounds` proves that identity row padding preserves uniform
+entry degree and coefficient-mass allowances. For an affine determinant over
+integer polynomial entries, a second bounded radix encoding gives the scalar
+coefficient bit bound `M.size*M + M*(b+2) + 1`, where `M` is the padded dimension
+and each original entry mass is at most `2^b`. `MacaulayExtraneousBounds` applies
+this to the extraneous deformation. `TubeExtraneousBudget` reuses the full
+numerator's FP binary budget; `TubeExtraneousResidue` and `TubeExtraneousSign`
+combine the complete varying-modulus evaluator with streamed CRT to give
+integer zero tests and three-way signs. Zero and either strict sign are in
+PSPACE under the existing coordinate-reader contracts.
+
+`TubeExtraneousCoefficientPolynomial` proves degree-bounded scalar recovery
+and zero preservation for each encoded deformation coefficient.
+`TubeExtraneousCoefficientZero` reuses the full numerator's FP quotient/remainder
+queries and coefficient-count code to scan every scalar coefficient, including
+the complete integer-zero child's cost. `TubeExtraneousLowestSpace` feeds these
+whole-coefficient tests into the certified bounded first-index search. The
+computed index is exactly the actual extraneous determinant's natural trailing
+degree, is at most the padded dimension, and is minimal with nonzero coefficient.
+Sequential composition gives selected residues and integer signs of that actual
+lowest bivariate coefficient; `TubeExtraneousLowestLanguages` proves its scalar
+zero, negative, and positive languages in PSPACE. Specialization remains
+nonzero, and vanishing of the symbolic lowest coefficient is equivalent to
+an increase in deformation order after specialization.
+
+`TubeExtraneousCharacteristicSpace` pairs the complete lowest-index and sign
+evaluators, then applies the FP order-parity correction to compute the true
+principal minor's lowest characteristic-denominator coefficient signs. Both
+child costs are included; no index, coefficient, or sign oracle is introduced.
+The corresponding zero and strict-sign tests are in PSPACE.
+
+The resultant quotient identity, geometric root persistence, effective sampling,
+and ETR membership in PSPACE remain open. Both the full numerator and extraneous
+denominator now have complete lowest-index and integer-sign computations under
+the same original coordinate-reader contracts.
 
 ## TM2 versus Complexitylib's machines
 

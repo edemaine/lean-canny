@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.ETR.TubeExtraneousSystem
+public import LeanCanny.ETR.TubeExtraneousLowestLanguages
 
 /-! # Characteristic denominator of the actual extraneous principal minor
 
@@ -19,7 +19,7 @@ namespace LeanCanny.ETR.TubeExtraneous
 open Complexity LeanCanny.Encoding LeanCanny.Algebra
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree
-attribute [local irreducible] Macaulay.matrix Matrix.det
+attribute [local irreducible] Macaulay.matrix Matrix.det lowestCoefficient lowestScalar
 
 noncomputable def principalMatrix (source active : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) :=
@@ -67,5 +67,26 @@ theorem characteristicLowest_ne_zero (source active : List Bool → List Bool)
   intro hz
   have hd := (characteristicLowest_eval_zero_iff (RingHom.id (Polynomial (Polynomial ℤ))) source active n d ell c).mp hz
   exact determinant_ne_zero source active n d ell c (Polynomial.trailingCoeff_eq_zero.mp hd)
+
+noncomputable def characteristicScalar (source active inner middle : List Bool → List Bool)
+    (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) : ℤ :=
+  (((characteristicPolynomial source active n d ell c).trailingCoeff).coeff (Nat.fromBitsLE (middle c))).coeff (Nat.fromBitsLE (inner c))
+
+theorem characteristicScalar_eq (source active inner middle : List Bool → List Bool)
+    (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) :
+    characteristicScalar source active inner middle n d ell c =
+      (-1 : ℤ) ^ Nat.fromBitsLE (lowestIndex source active n d ell c) * lowestScalar source active inner middle n d ell c := by
+  rw [characteristicScalar, (characteristicPolynomial_lowest source active n d ell c).2, ← lowestIndex_value]
+  have hs : Polynomial.C (Polynomial.C ((-1 : ℤ) ^ Nat.fromBitsLE (lowestIndex source active n d ell c))) =
+      (-1 : Polynomial (Polynomial ℤ)) ^ Nat.fromBitsLE (lowestIndex source active n d ell c) := by
+    simp only [map_pow, map_neg, map_one]
+  rw [← hs, Polynomial.coeff_C_mul, Polynomial.coeff_C_mul]
+  unfold lowestScalar lowestCoefficient
+  rfl
+
+theorem characteristicScalar_zero_iff (source active inner middle : List Bool → List Bool)
+    (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) :
+    characteristicScalar source active inner middle n d ell c = 0 ↔ lowestScalar source active inner middle n d ell c = 0 := by
+  rw [characteristicScalar_eq, PolynomialSignedReflection.sign_mul_eq_zero_iff]
 
 end LeanCanny.ETR.TubeExtraneous
