@@ -83,6 +83,9 @@ import LeanCanny.Algebra.FiniteSystemCoordinates
 import LeanCanny.Algebra.ProjectionSystemCoordinates
 import LeanCanny.Algebra.RationalRepresentationTransfer
 import LeanCanny.Algebra.ProjectionCoordinateTransfer
+import LeanCanny.Algebra.CoordinateAnnihilatorSpecialization
+import LeanCanny.Algebra.ProjectionAnnihilatorDirections
+import LeanCanny.Algebra.CompleteProjectionCoordinates
 import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates
 import LeanCanny.Algebra.ShiftCoefficients

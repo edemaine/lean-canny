@@ -124,33 +124,39 @@ theorem eval_equation {L : Type*} [Field L] [Algebra K L] (p : MvPolynomial ι K
 
 universe uL
 
+theorem generic_quotient_coordinates_algebraic [CharZero K] [Fintype ι]
+    (p : MvPolynomial ι K) (base : ι) :
+    ∀ P ∈ ((GenericProjectionFinite.ideal p base (parameterDirection (K := K) base)).map
+      (algebraMap (MvPolynomial (Option ι) (ParameterRing K base))
+        (MvPolynomial (Option ι) (DirectionField K base)))).minimalPrimes,
+      ∀ i, IsAlgebraic (DirectionField K base) (FiniteAlgebraicZeros.quotientPoint P i) := by
+  let A := ParameterRing K base
+  let F := DirectionField K base
+  intro P hP
+  let : P.IsPrime := hP.isPrime
+  let z := FiniteAlgebraicZeros.quotientPoint P
+  have hz : ∀ j, MvPolynomial.aeval z (GenericProjectionFinite.equation p base (genericDirection (K := K) base) j) = 0 := by
+    intro j
+    have he : algebraMap (MvPolynomial (Option ι) A) (MvPolynomial (Option ι) F)
+        (GenericProjectionFinite.equation p base (parameterDirection (K := K) base) j) =
+          GenericProjectionFinite.equation p base (genericDirection (K := K) base) j := by
+      rw [MvPolynomial.algebraMap_def, map_equation]
+      rfl
+    rw [FiniteAlgebraicZeros.eval_quotientPoint]
+    have hmem : GenericProjectionFinite.equation p base (genericDirection (K := K) base) j ∈ P := by
+      rw [← he]
+      exact hP.le (Ideal.mem_map_of_mem _ (Ideal.subset_span (Set.mem_range_self j)))
+    rw [Ideal.Quotient.eq_zero_iff_mem.mpr hmem, map_zero]
+  exact GenericProjectionFinite.algebraic_extended_coordinates p base (genericDirection (K := K) base) z
+    (genericDirection_base base) (independent_genericDirection base) hz
+
 theorem exists_finite_specialization_polynomial [CharZero K] [Fintype ι]
     (p : MvPolynomial ι K) (base : ι) :
     ∃ d : ParameterRing K base, d ≠ 0 ∧ ∀ (L : Type uL) [Field L] (φ : ParameterRing K base →+* L), φ d ≠ 0 →
       {z : Option ι → L | ∀ j,
         (GenericProjectionFinite.equation p base (parameterDirection base) j).eval₂ φ z = 0}.Finite := by
-  let A := ParameterRing K base
-  let F := DirectionField K base
   let I := GenericProjectionFinite.ideal p base (parameterDirection (K := K) base)
-  have hcoords : ∀ P ∈ (I.map (algebraMap (MvPolynomial (Option ι) A) (MvPolynomial (Option ι) F))).minimalPrimes,
-      ∀ i, IsAlgebraic F (FiniteAlgebraicZeros.quotientPoint P i) := by
-    intro P hP
-    let : P.IsPrime := hP.isPrime
-    let z := FiniteAlgebraicZeros.quotientPoint P
-    have hz : ∀ j, MvPolynomial.aeval z (GenericProjectionFinite.equation p base (genericDirection (K := K) base) j) = 0 := by
-      intro j
-      have he : algebraMap (MvPolynomial (Option ι) A) (MvPolynomial (Option ι) F)
-          (GenericProjectionFinite.equation p base (parameterDirection (K := K) base) j) =
-            GenericProjectionFinite.equation p base (genericDirection (K := K) base) j := by
-        rw [MvPolynomial.algebraMap_def, map_equation]
-        rfl
-      rw [FiniteAlgebraicZeros.eval_quotientPoint]
-      have hmem : GenericProjectionFinite.equation p base (genericDirection (K := K) base) j ∈ P := by
-        rw [← he]
-        exact hP.le (Ideal.mem_map_of_mem _ (Ideal.subset_span (Set.mem_range_self j)))
-      rw [Ideal.Quotient.eq_zero_iff_mem.mpr hmem, map_zero]
-    exact GenericProjectionFinite.algebraic_extended_coordinates p base (genericDirection (K := K) base) z
-      (genericDirection_base base) (independent_genericDirection base) hz
+  have hcoords := generic_quotient_coordinates_algebraic p base
   obtain ⟨d, hd, hfinite⟩ := FiniteFiberSpecialization.exists_finite_specialization_certificate I hcoords
   refine ⟨d, hd, ?_⟩
   intro L _ φ hφ

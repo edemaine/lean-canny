@@ -1034,10 +1034,48 @@ without a Galois hypothesis on that target.
 reciprocal of its base partial. Algebraicity of the original coordinates implies
 algebraicity of the reciprocal, so the point is recovered at an eliminant root
 in the same target field. In particular this covers real algebraic critical
-points for rational inputs. Proving that all target solutions of the chosen
-systems have algebraic coordinates still requires the annihilator certificates.
-The coefficient algorithms and bounds and the final PSPACE composition also
-remain open; the algebraic-closure bijection alone does not establish them.
+points for rational inputs. The retained annihilator certificates below now
+prove algebraicity of every target solution for certified selected directions.
+The coefficient algorithms and bounds and the final PSPACE composition remain
+open; the algebraic-closure bijection alone does not establish them.
+
+## Complete real-field critical representations from annihilator certificates
+
+`CoordinateAnnihilatorSpecialization.Certificate` retains the cleared coordinate
+polynomials Qᵢ, nonzero parameter factors sᵢ, and identities
+`C(sᵢ)*Qᵢ(Xᵢ) ∈ radical(I)` from the existing finite-fiber proof. Their product
+`d=∏ᵢ sᵢ*leadingCoeff(Qᵢ)` is nonzero. At any specialization φ into a field K
+with `φ(d)≠0`, each `Qᵢ.map φ` is a nonzero polynomial over K. Every solution in
+every extension E/K is annihilated coordinatewise by those same K-polynomials.
+Thus all coordinates are algebraic over K, even when E itself is not algebraic.
+The certificate also supplies finiteness in every such target field.
+
+`ProjectionFiniteSpecialization.generic_quotient_coordinates_algebraic` extracts
+the generic-coordinate step previously internal to finite-fiber specialization.
+`ProjectionAnnihilatorDirections` uses it to construct certificates for the
+actual normalized critical equations with reciprocal base partial. A certified
+integer direction records both its certificate and nonvanishing specialization.
+The common integer-grid argument gives one direction certified simultaneously
+for a finite surface family. The grid bound remains the total degree of
+existential certificate polynomials, with no input-size estimate.
+
+`CompleteProjectionCoordinates` combines these certificates with rational
+representations over the algebraic closure. `CertifiedDirection.rootEquivOver`
+is a bijection between eliminant roots and full extended-system solutions over
+any target extension E/K, requiring neither algebraicity nor a Galois structure
+of E. The reciprocal coordinate is uniquely determined by the nonzero base
+partial. Removing it gives `regularRootEquiv`, a bijection with regular critical
+points of the original hypersurface in that same field. This applies to real
+solutions over rational inputs without an extra algebraicity assumption.
+
+`exists_regularPoint_iff` transfers any predicate on those critical points to
+their rationally decoded univariate parameter roots. For example, it applies to
+additional polynomial inequalities used to retain positive-inactive samples.
+One common integer direction admits these complete representations for every
+surface in a finite family. This proves the semantic coordinate step, not an
+encoded coefficient algorithm. Bounds on the exceptional polynomial, critical
+point count and coefficient sizes, the multivariate eliminant computation,
+and the full `ETR ∈ PSPACE` proof remain open.
 
 ## Compactification before critical points
 
