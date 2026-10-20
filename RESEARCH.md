@@ -1127,9 +1127,9 @@ proves the converse limit fact: a convergent family of vanishing tube levels
 with nonnegative inactive constraints has a feasible limit in the original
 perturbed set. `ETR.TubeConvergenceSource.approximation_of_strict_maximum`
 instantiates the critical approximation with sign preservation on every encoded
-input. Strictness remains an explicit hypothesis. Establishing suitable generic
-directions, finite sampling, and effective parameter selection remain open;
-this is not yet the complete ETR decision argument.
+input. Strictness is an explicit hypothesis of that theorem; the supporting
+projection construction below now proves existence of a suitable strict
+maximum. Finite sampling and effective parameter selection remain open.
 
 ## Compact tube sampling converse
 
@@ -1185,10 +1185,41 @@ positive inactive constraints on every sufficiently small positive tube level.
 One direction and one active set work throughout the interval. For a normalized
 direction with finite active critical sets, this criterion is equivalent to
 perturbed feasibility. `ETR.TubeCriticalSamplingSource` gives the corresponding
-ETR equivalence assuming suitable finite-critical directions exist throughout
-a small-radius interval. The converse needs no such assumption. Existence and
-effective selection of those directions, and finiteness of tube root sets,
+ETR equivalence retaining finite active critical sets for the chosen direction,
+assuming suitable finite-critical directions exist throughout a small-radius
+interval. The converse needs no such assumption. Existence and effective
+selection of those directions, and finiteness of tube root sets,
 remain unproved.
+
+## Compact supporting projections and semantic completeness
+
+`CompactSupportingProjection` supplies a strict linear projection maximum on
+any nonempty compact set in finite-dimensional real coordinate space. Choose a
+center whose designated coordinate is one below the minimum on the compact
+set, then maximize squared Euclidean distance from that center. If p is a
+maximizer, the identity
+
+`D(a,x)-D(a,p) = 2*(p-a)·(x-p)+D(p,x)`, where `D(a,x)=Σᵢ(xᵢ-aᵢ)²`,
+
+shows that `(p-a)·x < (p-a)·p` for every other point x in the set. The designated
+coordinate of p-a is positive, so positive rescaling normalizes it to one.
+This argument does not assume finite critical sets or genericity.
+
+`TubeSupportingSampling` applies the construction to the compact perturbed
+inequality set. Near a feasible maximum, all inactive constraints remain
+positive, so the active zero locus is feasible there. The supporting maximum
+is consequently strict on that zero locus. The existing tube approximation
+then supplies integer projection-system roots with positive inactive signs at
+every sufficiently small positive alpha, for one fixed normalized real
+direction and active set.
+
+`ETR.TubeSupportingSamplingSource` makes the projection-root semantic criterion
+unconditionally equivalent to ETR satisfiability on all encoded inputs. It also
+proves equivalence to arbitrarily small projection samples, where directions
+and active sets may vary. These are existence statements over the reals;
+finiteness and effective selection of sample roots and directions, effective
+parameter bounds, coefficient-access machines, and the full PSPACE decision
+procedure remain open.
 
 ## TM2 versus Complexitylib's machines
 

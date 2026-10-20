@@ -82,8 +82,9 @@ theorem exists_eventual_projection_samples (p : MvPolynomial ι ℤ) (epsilon de
     (he : 0 ≤ epsilon) (hd : 0 < delta)
     (hn : (PolynomialPerturbation.perturbed p epsilon delta).Nonempty)
     (hregular : RegularActiveFibers p epsilon delta) (hfinite : HasFiniteCriticalDirection p epsilon delta) :
-    ∃ v : Coordinate ι → ℝ, v (base ι) = 1 ∧ EventualProjectionSamples p epsilon delta v := by
+    ∃ v : Coordinate ι → ℝ, v (base ι) = 1 ∧ FiniteActiveCriticalSets p epsilon delta v ∧
+      EventualProjectionSamples p epsilon delta v := by
   obtain ⟨v, hv, hfin⟩ := hfinite
-  exact ⟨v, hv, eventual_projection_samples_of_finite_critical p epsilon delta v he hd hn hv hregular hfin⟩
+  exact ⟨v, hv, hfin, eventual_projection_samples_of_finite_critical p epsilon delta v he hd hn hv hregular hfin⟩
 
 end LeanCanny.Geometry.TubePolynomial

@@ -524,7 +524,20 @@ positive-inactive integer projection roots at every sufficiently small tube
 level, with one fixed direction and active set.
 [`TubeCriticalSamplingSource`](LeanCanny/ETR/TubeCriticalSamplingSource.lean)
 gives the corresponding ETR equivalence under an explicit finite-critical-direction
-hypothesis; it requires no additional nondegeneracy assumption.
+hypothesis and retains finiteness of the chosen direction's active critical
+sets; it requires no additional nondegeneracy assumption.
+
+[`CompactSupportingProjection`](LeanCanny/Geometry/CompactSupportingProjection.lean)
+proves that every nonempty compact set has a strict supporting linear projection
+whose chosen coordinate is one. A farthest point from a center below the set in
+that coordinate supplies the direction.
+[`TubeSupportingSampling`](LeanCanny/Geometry/TubeSupportingSampling.lean) uses
+this to prove existence of eventual positive-inactive projection roots without
+a finite-critical-set hypothesis.
+[`TubeSupportingSamplingSource`](LeanCanny/ETR/TubeSupportingSamplingSource.lean)
+therefore gives unconditional semantic ETR equivalences for both arbitrarily
+small projection roots and eventual roots with one fixed normalized direction
+and active set. These are real existence statements.
 Generic directions ensuring finite critical sets, finite tube root sets, effective
 parameter bounds, coefficient access, and the full sampling decision procedure
 remain open.

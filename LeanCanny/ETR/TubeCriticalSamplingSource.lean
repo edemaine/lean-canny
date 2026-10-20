@@ -40,6 +40,7 @@ theorem correct_given_finite_critical_directions (bits : List Bool)
       ∃ epsilon : ℝ, 0 < epsilon ∧ ∃ d : ℝ, 0 < d ∧ ∀ delta : ℝ, 0 < delta → delta < d →
         ∃ v : TubeSource.Coordinate bits → ℝ,
           v (TubePolynomial.base (Fin (CompactSource.term bits).arity)) = 1 ∧
+            TubePolynomial.FiniteActiveCriticalSets (CompactSource.polynomial bits) epsilon delta v ∧
             TubePolynomial.EventualProjectionSamples (CompactSource.polynomial bits) epsilon delta v := by
   constructor
   · intro h
@@ -59,7 +60,7 @@ theorem correct_given_finite_critical_directions (bits : List Bool)
     apply of_eventual_projection_samples bits
     refine ⟨epsilon, he, d, hd, ?_⟩
     intro delta hp hr
-    obtain ⟨v, _, hv⟩ := hs delta hp hr
+    obtain ⟨v, _, _, hv⟩ := hs delta hp hr
     exact ⟨v, hv⟩
 
 end LeanCanny.ETR.TubeCriticalSamplingSource
