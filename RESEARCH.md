@@ -2293,6 +2293,35 @@ and equals the multivariate resultant of the shifted system remains open.
 Computing polynomial-quotient coefficients, proving geometric root persistence,
 and completing the sampling algorithm remain further obligations.
 
+## Reduced-monomial count and characteristic quotient degree
+
+`MacaulayReducedCount` gives an explicit bijection for positive homogeneous
+degrees with `level d < 2^W`. A reduced level monomial has exactly one eligible
+coordinate `i`. Its other exponents range independently from zero to `dⱼ-1`;
+the level fixes its exponent at `i`. The constructed exponent vector has the
+required level, exactly that eligible coordinate, and fits the existing binary
+rank representation. Injectivity and surjectivity give
+`card(active) = card(extraneous) + Σᵢ ∏ⱼ≠ᵢ dⱼ`.
+
+`CharacteristicQuotientDegree` proves that every subtractive characteristic
+determinant over an integral domain is nonzero and has natural degree equal to
+its matrix dimension. After an injective coefficient embedding in a field,
+Mathlib's `RatFunc.intDegree` of the determinant quotient is therefore exactly
+`D = Σᵢ ∏ⱼ≠ᵢ dⱼ`. This calculation does not require the quotient to be a
+polynomial. The coefficient extension is an injective rational-function ring
+homomorphism and maps fraction presentations to their coefficientwise images.
+
+`TubeCharacteristicQuotientDegree` applies the count using the actual tube's
+proved positive degrees and fixed-width coverage. The existing tube quotient
+maps faithfully to the quotient over the fraction field of `ℤ[θ][T]`, with
+integer degree `D`. The tube's `D` is positive and at most the padded matrix
+dimension. If a polynomial quotient identity is later proved over the original
+coefficient ring, its natural degree is exactly `D`.
+
+Polynomiality and multivariate resultant identification remain open. The degree
+calculation supplies the expected matrix-size difference without assuming
+either assertion.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
