@@ -2775,12 +2775,71 @@ provide that divisibility.
 Two sources for the remaining step were checked on 2026-10-20.
 [Quitté–Tête's combinatorial treatment](https://arxiv.org/abs/2308.12232)
 uses the multiplicative structure of graded Koszul resolutions together
-with Macaulay decompositions to obtain denominator formulas; its detailed
-argument still needs inspection. [D'Andrea–Dickenstein, §3](https://arxiv.org/html/math/0007036v1)
+with Macaulay decompositions to obtain denominator formulas. Its
+Theorem XIII.4.1 (printed pp. 244–245) was subsequently inspected, including
+the rendered pages: its induction uses a polynomial resultant already
+constructed earlier in the text. That proof cannot be used before
+constructing that resultant. [D'Andrea–Dickenstein, §3](https://arxiv.org/html/math/0007036v1)
 gives generalized quotient formulas, but the proof of Lemma 3.3 invokes
 the classical Macaulay formula when the degree exceeds the critical degree.
 That lemma therefore cannot supply an independent proof of the classical
 case needed here.
+
+## Universal denominator cancellation and the comparison obligation
+
+`GroupedPolynomialDivisors` proves that a divisor of a nonzero polynomial
+can use only variables present in that polynomial. If every variable has
+an input-group owner and denominator `b_i` omits group `i`, a common divisor
+of all the denominators has no variables and is constant. If all `b_i`
+evaluate to one at a common assignment, the constant divisor is a unit.
+This holds over any integral domain, including integer coefficients.
+
+`GroupedDenominatorCancellation` uses reduced fractions over a UFD. The
+reduced denominator divides every polynomial denominator representing the
+same fraction. Thus a family with the property above forces that fraction
+to be a polynomial. In particular, identities `a_i*b_j=a_j*b_i` produce
+one polynomial `q` with `a_i=b_i*q` for every `i`.
+
+`MacaulayUniversalSystem` constructs the homogeneous input polynomials
+explicitly from coefficient variables `(input, exponent)` and fixed-width
+monomial sums. Its permuted form permutes both input and spatial indices.
+The coefficient assignment selecting the original coordinate powers
+specializes every such system to the corresponding diagonal power system.
+Every homogeneous system with fitting exponents is reconstructed by its
+own coefficient assignment.
+
+`MacaulayUniversalDenominators` applies the common-divisor theorem to the
+actual universal extraneous determinants. A coefficient-group erasure map
+fixes the determinant because the extraneous matrix never uses its last
+input. Swapping each input with the last one gives the required family,
+and the common power specialization is one. The universal active
+determinants have that same normalization. Consequently the actual
+cross-comparison identities for these universal numerator/denominator pairs
+are equivalent to existence of a unique common polynomial quotient
+normalized to one at the power system. The equivalence is proved; the
+cross-comparison identities are not.
+
+`MacaulayUniversalSpecialization` proves that positive input degrees fit
+whenever the usual Macaulay-level width fits. It specializes the universal
+system and both determinants, and transfers universal polynomial
+divisibility to the actual system. `TubeMacaulayUniversal` instantiates
+these reconstruction and determinant identities for the actual tube
+subtractive system over the polynomial characteristic-parameter ring.
+
+This order of proof matters: specialize a universal polynomial quotient
+after proving it exists. The absence of a common nonunit divisor in the
+universal denominator family need not survive specialization. The next
+explicit obligation is to prove the universal numerator/denominator
+cross-comparisons from the Koszul determinant structure; it is not an
+assumed algebraic certificate in a completed Canny theorem.
+
+A concrete next step is to use the power specialization and coefficient-map
+identities to prove that each universal finite homotopy determinant is
+nonzero, then obtain exactness over the universal coefficient fraction
+field. A determinant-of-complex comparison must still identify the concrete
+numerator/extraneous ratios across orderings, including the higher factors.
+These steps are planned; they are not consequences already supplied by the
+denominator criterion.
 
 ## TM2 versus Complexitylib's machines
 
