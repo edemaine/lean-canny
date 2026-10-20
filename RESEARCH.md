@@ -938,6 +938,23 @@ L(x), with denominator degree at most `max 1 ((N-1)*N)` and numerator degree at
 most one more. `exists_bounded_rational_coordinates` assembles the bounded choices,
 a separable projection eliminant, and simultaneous exact coordinate recovery.
 
+`VectorGaloisDescent` supplies the base-field coefficient step for vectors in a
+finite Galois extension L/K. An automorphism permuting S fixes every nodal
+polynomial whose node map commutes with the automorphism. This product argument
+retains multiplicities and does not require injective nodes. Original and
+asymmetrically shifted integer projections commute with every K-automorphism,
+so their nodal polynomials descend to K. `stable_of_zero_set` proves the stability
+hypothesis for a full finite zero set of multivariate equations over K.
+
+`AsymmetricBaseCoordinates.exists_bounded_coordinates` combines this descent with
+the bounded asymmetric choice and the existing recovery theorem over K with
+roots in L. It returns a monic separable degree-N polynomial over K with exactly
+the projected points as roots in L, plus numerator and denominator polynomials
+over K for every coordinate. The same degree bounds and nonzero-denominator
+specifications hold simultaneously, including empty sets and linear inputs.
+The finite Galois ambient extension and stable finite point set are hypotheses;
+this theorem does not yet construct them from an encoded multivariate input.
+
 These are finite-set algebraic theorems over a characteristic-zero field.
 The nodal products use the supplied point set; they are not yet constructed from
 encoded multivariate equations, and no descent to integer coefficients or
