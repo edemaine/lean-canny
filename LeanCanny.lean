@@ -26,6 +26,7 @@ import LeanCanny.ETR.CompiledRationalSource
 import LeanCanny.ETR.CompactSource
 import LeanCanny.ETR.PerturbedSource
 import LeanCanny.ETR.RadiusSource
+import LeanCanny.ETR.RadiusCriticalSource
 import LeanCanny.Algebra.Separation
 import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates

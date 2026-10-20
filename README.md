@@ -427,8 +427,20 @@ of the unshifted active constraints.
 [`CriticalEnergyPolynomial`](LeanCanny/Geometry/CriticalEnergyPolynomial.lean)
 realizes that function as an integer polynomial.
 [`RadiusSource`](LeanCanny/ETR/RadiusSource.lean) instantiates these results for
-all encoded ETR inputs and supplies an FP degree bound. Finiteness and effective
-bounds for these critical values, generic fixed-radius regularity, streamed
+all encoded ETR inputs and supplies an FP degree bound.
+
+[`PolynomialCalculus`](LeanCanny/Geometry/PolynomialCalculus.lean) identifies
+analytic critical points with common zeros of formal partial derivatives.
+[`SpatialPolynomialCalculus`](LeanCanny/Geometry/SpatialPolynomialCalculus.lean)
+proves the corresponding statement with the perturbation parameters fixed.
+[`RadiusCriticalEquations`](LeanCanny/Geometry/RadiusCriticalEquations.lean)
+gives the integer system consisting of the energy minus δ² and its spatial
+partial derivatives; every singular active point yields a common zero.
+[`RadiusCriticalSource`](LeanCanny/ETR/RadiusCriticalSource.lean) supplies the
+system for every encoded ETR input, with FP upper bounds on equation count and
+degree. [`PartialDerivativeDegree`](LeanCanny/Algebra/PartialDerivativeDegree.lean)
+proves that partial derivatives have degree at most the original degree minus one.
+Finiteness and effective bounds for these critical values, generic fixed-radius regularity, streamed
 coefficient access for the new polynomials, and critical-point sampling remain
 open.
 

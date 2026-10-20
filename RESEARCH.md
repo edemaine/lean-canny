@@ -991,6 +991,25 @@ of those shifts and of δ, and its total degree is at most
 `2*max(degree(q),1)` for the compactified equation q. `ETR.RadiusSource` proves
 the joint and active-set statements for every encoded source and supplies an FP
 binary degree allowance `8*sourceSize²+4` for the energy polynomial.
+
+`PolynomialCalculus` proves the analytic derivative formula for evaluation of a
+multivariate polynomial over any coefficient semiring with a homomorphism to ℝ.
+The derivative is the sum of evaluated formal partial derivatives times coordinate
+projections. Its vanishing is equivalent to the vanishing of every formal partial,
+including in zero spatial dimensions. `SpatialPolynomialCalculus` differentiates
+the parameter assignment explicitly, so specializing ε, δ, and shifts retains only
+the spatial partials.
+
+`RadiusCriticalEquations` consequently gives an integer polynomial system
+`g_S-δ²=0`, `∂g_S/∂y_i=0`, whose zeros are exactly the critical points with value
+δ². Every singular active point supplies a zero with the shift coordinates set
+to zero. `PartialDerivativeDegree` proves the degree bound `degree(p)-1` for
+formal partial derivatives. All equations have degree at most
+`2*max(degree(q),1)`. `ETR.RadiusCriticalSource` instantiates the system on every
+encoded input, with FP count allowance `sourceSize+1` and degree allowance
+`8*sourceSize²+4`. These are size-bound writers, not yet coefficient-access
+certificates for the system.
+
 Finiteness and effective bounds for these critical values remain to be proved;
 they are not hypotheses discharged by the current construction. Generic
 fixed-radius regularity, streamed coefficient access, and the critical-point
