@@ -1221,6 +1221,40 @@ finiteness and effective selection of sample roots and directions, effective
 parameter bounds, coefficient-access machines, and the full PSPACE decision
 procedure remain open.
 
+## Algebraic generic coordinates
+
+`MvCoefficientDerivation` applies a derivation coefficientwise to a multivariate
+polynomial, fixing its variables. `FieldDerivationExtension` holds a
+transcendence basis fixed, then uses localization and separability to extend
+any derivation through an arbitrary characteristic-zero field extension.
+`CoordinateDerivation` instead differentiates one generator of an independent
+family and fixes all the others, after extending that family to a basis.
+
+`AlgebraicDerivative` differentiates a minimal polynomial with respect to both
+its coefficients and its root. Separability makes the root derivative's
+coefficient nonzero. The derivative is a quotient of polynomial values at the
+root, and is therefore algebraic over the coefficient field whenever that
+field is preserved by the derivation.
+
+`ProjectionCoordinateAlgebraic` applies these results to normalized stationarity
+on a common zero locus. A coefficient-field derivation kills the projection
+value because the stationarity equation turns its derivative into a linear
+combination of the constraint derivatives. The value is therefore algebraic
+over the direction field. A derivation with respect to one independent direction
+coordinate differentiates that value into the corresponding point coordinate.
+Every point coordinate is consequently algebraic. For directions normalized
+at one coordinate, independence of the remaining direction coordinates
+suffices: they recover the other point coordinates, and the projection value
+then recovers the normalized coordinate.
+
+`FiniteAlgebraicZeros` proves a general finiteness criterion. If all coordinates
+are algebraic in the fraction field of each minimal-prime quotient of a
+polynomial ideal, each coordinate has a nonzero univariate annihilator modulo
+the radical. Products over the finitely many minimal primes supply these
+annihilators uniformly. The zero set lies in the finite product of their root
+sets. No effective bounds on these annihilators are supplied yet; applying the
+criterion to the regular projection systems remains a separate step.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

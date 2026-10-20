@@ -542,6 +542,22 @@ Generic directions ensuring finite critical sets, finite tube root sets, effecti
 parameter bounds, coefficient access, and the full sampling decision procedure
 remain open.
 
+[`MvCoefficientDerivation`](LeanCanny/Algebra/MvCoefficientDerivation.lean) and
+[`FieldDerivationExtension`](LeanCanny/Algebra/FieldDerivationExtension.lean)
+extend coefficient derivations through arbitrary characteristic-zero field
+extensions. [`AlgebraicDerivative`](LeanCanny/Algebra/AlgebraicDerivative.lean)
+proves that such derivations preserve algebraicity over the coefficient field.
+[`CoordinateDerivation`](LeanCanny/Algebra/CoordinateDerivation.lean) differentiates
+one generator of an algebraically independent family while fixing the others.
+[`ProjectionCoordinateAlgebraic`](LeanCanny/Algebra/ProjectionCoordinateAlgebraic.lean)
+uses these facts to prove that stationary point coordinates are algebraic over
+the direction field, including normalized directions whose other coordinates
+are algebraically independent.
+[`FiniteAlgebraicZeros`](LeanCanny/Algebra/FiniteAlgebraicZeros.lean) converts
+algebraicity in minimal-prime quotient fields into coordinate annihilators
+and a finite zero set. Effective bounds and its application to the actual
+projection systems remain separate steps.
+
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.
