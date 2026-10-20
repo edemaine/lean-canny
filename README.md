@@ -732,7 +732,12 @@ proves that zero-padding preserves original compactified coefficients.
 [`CompactSourceCoefficient`](LeanCanny/ETR/CompactSourceCoefficient.lean)
 instantiates the evaluator for compiled ETR inputs and proves exact access to
 `CompactSource.polynomial`. Every nonzero coefficient has a query of length
-`N*(4*N²+1)`. Tube coefficient access remains open.
+`N*(4*N²+1)`.
+[`CompactCoefficientSign`](LeanCanny/ETR/CompactCoefficientSign.lean) supplies
+the `N+2*N²+1` magnitude-bit budget and proves coefficient negativity in PSPACE.
+[`CompactCoefficientZero`](LeanCanny/ETR/CompactCoefficientZero.lean) proves
+coefficient zero testing in PSPACE using the complete residue evaluator.
+Tube coefficient access remains open.
 
 ## Next obligations
 

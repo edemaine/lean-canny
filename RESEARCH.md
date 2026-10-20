@@ -1592,8 +1592,16 @@ extra variables have source degree zero and contribute a factor of one.
 exact query correctness for `CompactSource.polynomial`. The exponent query
 has length `N*(4*N²+1)`; the proved compactification degree bound ensures every
 nonzero coefficient is representable. Malformed source strings retain the
-compiler's existing default semantics. Propagating access through tube and
-projection equations remains open.
+compiler's existing default semantics.
+
+`CompactCoefficientSign` proves a coefficient mass bound of `2^(N+2*N²)`
+for the padded compactification, hence a magnitude-bit budget of
+`N+2*N²+1` with an FP writer. The full residue evaluator instantiates CRT
+sign recovery, proving coefficient negativity in Complexitylib's PSPACE.
+`CompactCoefficientZero` scans the small moduli justified by the same budget
+and proves coefficient zero testing in PSPACE. Both routines include the
+actual-degree and binomial children; they assume no coefficient oracle.
+Propagating access through tube and projection equations remains open.
 
 ## TM2 versus Complexitylib's machines
 
