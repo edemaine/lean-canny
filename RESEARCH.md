@@ -1671,8 +1671,25 @@ into a nonzero coefficient. The complete guarded evaluator has a
 `SpaceFunction` certificate on all inputs, including short/redundant words,
 zero-width blocks, empty active sets, and modulus one.
 
-Dense source-power/shift query access and composition of the full tube/projection
-coefficient machines remain open.
+`EmbeddedMonomialCoefficient` proves coefficient lookup for an injectively
+embedded polynomial multiplied by a monomial disjoint from its variable image.
+The restricted point exponent determines the only possible source query; a
+single exponent-pattern equality checks the other coordinates.
+`TubeDenseEncoding` turns that equality into the explicit native tube layout,
+and `TubeDenseGuard` certifies its bounded binary-coordinate check in FP.
+
+`TubeDenseMetadata` supplies the exact source arity and the written source-power
+size M. The actual integer compact polynomial power has total degree at most
+`4*M²`, with an FP bound and query-width writer. `TubeDenseQuery` checks both
+that degree allowance on point exponents and the required zero/unit pattern
+elsewhere. Rejection provably gives coefficient zero. Accepted queries are
+repacked into the complete compactified-power evaluator. The resulting
+`SpaceFunction` covers positive fixed powers, either source-shift variable,
+malformed source defaults, arbitrary target words, and modulus one.
+Its unshifted square and shifted first powers agree exactly with the three
+dense terms in the existing tube coefficient formula.
+
+Assembly of the complete tube and projection coefficient machines remains open.
 
 ## TM2 versus Complexitylib's machines
 

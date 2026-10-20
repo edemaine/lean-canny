@@ -764,8 +764,13 @@ and coverage of every nonzero coefficient.
 access, zero-padding/repacking, and coordinate guards.
 [`TubeZeroQuery`](LeanCanny/ETR/TubeZeroQuery.lean) uses the degree-four bound to
 reject oversized exponents before repacking, giving exact sparse tube residues
-on every binary target word. Dense shifted-source query access and composition
-of the full tube/projection coefficient machines remain open.
+on every binary target word.
+[`TubeDenseQuery`](LeanCanny/ETR/TubeDenseQuery.lean) supplies the remaining dense
+summands: an embedded positive source power, optionally times either source
+shift variable. FP pattern and degree guards force zero on rejected queries;
+valid queries call the full source-power evaluator. All target words and modulus
+one are covered. Assembly of the full tube/projection coefficient machines
+remains open.
 
 ## Next obligations
 
