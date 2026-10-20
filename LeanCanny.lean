@@ -36,6 +36,7 @@ import LeanCanny.ETR.TubeCriticalSamplingSource
 import LeanCanny.ETR.TubeSupportingSamplingSource
 import LeanCanny.Geometry.ProjectionCritical
 import LeanCanny.Geometry.TubeFiniteRoots
+import LeanCanny.Geometry.TubeGenericDirections
 import LeanCanny.Algebra.ProjectionCoordinateAlgebraic
 import LeanCanny.Algebra.FiniteAlgebraicZeros
 import LeanCanny.Algebra.Separation

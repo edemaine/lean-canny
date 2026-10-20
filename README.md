@@ -538,9 +538,8 @@ a finite-critical-set hypothesis.
 therefore gives unconditional semantic ETR equivalences for both arbitrarily
 small projection roots and eventual roots with one fixed normalized direction
 and active set. These are real existence statements.
-Existence and effective selection of suitable finite-sampling directions,
-effective parameter bounds, coefficient access, and the full sampling decision
-procedure remain open.
+Effective direction selection, parameter bounds, coefficient access, and the
+full sampling decision procedure remain open.
 
 [`MvCoefficientDerivation`](LeanCanny/Algebra/MvCoefficientDerivation.lean) and
 [`FieldDerivationExtension`](LeanCanny/Algebra/FieldDerivationExtension.lean)
@@ -566,7 +565,22 @@ coefficient field.
 [`TubeFiniteRoots`](LeanCanny/Geometry/TubeFiniteRoots.lean) gives this result for
 the actual expanded integer tube systems on their common small-level regularity
 interval, assuming the specialization factors through such a field. Existence
-and effective selection of directions and effective bounds remain open.
+of the field and directions is supplied below; effective selection and bounds
+remain open.
+
+[`TubeParameterField`](LeanCanny/Geometry/TubeParameterField.lean) constructs the
+countable real field obtained by adjoining ε, δ, and α to ℚ and factors tube
+specialization through it.
+[`IndependentRealDirections`](LeanCanny/Geometry/IndependentRealDirections.lean)
+constructs independent real tuples inside any product of nonempty open intervals.
+[`GenericDirectionNeighborhood`](LeanCanny/Geometry/GenericDirectionNeighborhood.lean)
+keeps one coordinate normalized to one while approximating any normalized
+direction.
+[`TubeGenericDirections`](LeanCanny/Geometry/TubeGenericDirections.lean) therefore
+proves that directions giving finite projection root sets for every active tube
+are dense at each sufficiently small positive level. The directions may depend
+on the level; preserving a suitable positive-inactive sample and making the
+selection effective remain separate steps.
 
 ## Next obligations
 

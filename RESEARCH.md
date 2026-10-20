@@ -1281,9 +1281,33 @@ the non-base direction coordinates are algebraically independent over K. The
 common regularity interval is independent of this choice. The statement permits
 a field and direction appropriate to the chosen level; it does not assert one
 field containing every real alpha while retaining independent real directions.
-Constructing suitable fields and directions, finite effective direction search,
-uniform parameter specialization, quantitative annihilator bounds, and the full
-sampling algorithm remain open.
+Suitable fields and directions are constructed below. Finite effective direction
+search, uniform parameter specialization, quantitative annihilator bounds, and
+the full sampling algorithm remain open.
+
+## Countable parameter fields and dense finite-root directions
+
+`TubeParameterField` adjoins the three specialized real parameters to the
+rationals. Cardinality bounds for finitely generated intermediate fields make
+this field countable. Its coefficient map composes with the real inclusion to
+give the actual tube specialization.
+
+`IndependentRealDirections` proves that algebraic real elements over a countable
+embedded coefficient ring form a countable union of finite polynomial root
+sets. Every nonempty real interval therefore contains a transcendental element.
+Induction on finite coordinate types constructs an independent tuple inside
+any prescribed product of nonempty open intervals. At each step the already
+generated polynomial algebra is countable.
+
+`GenericDirectionNeighborhood` fixes the designated coordinate at one and
+applies the interval construction to the remaining coordinates. Independent
+normalized directions consequently occur in every neighborhood of every
+normalized real direction. `TubeGenericDirections` combines this density with
+the actual tube parameter field and regularity interval: at each sufficiently
+small positive level, directions yielding finite projection root sets for all
+active sets occur in every such neighborhood. The choice may vary with the
+level. Preserving positive inactive signs under the direction change and
+effective finite direction selection remain separate steps.
 
 ## TM2 versus Complexitylib's machines
 
