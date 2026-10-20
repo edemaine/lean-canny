@@ -92,6 +92,10 @@ import LeanCanny.Algebra.MacaulayMatrix
 import LeanCanny.Algebra.MacaulayRoots
 import LeanCanny.Algebra.MacaulayDeformation
 import LeanCanny.Algebra.MacaulayBounds
+import LeanCanny.Algebra.MacaulayEntryControl
+import LeanCanny.Algebra.MacaulayEntrySpace
+import LeanCanny.Algebra.MacaulayEntryCorrect
+import LeanCanny.Algebra.MacaulayPSPACE
 import LeanCanny.Algebra.FiniteDenominatorClearing
 import LeanCanny.Algebra.RationalPolynomialClearing
 import LeanCanny.Algebra.BoundedIntegerCoordinates
