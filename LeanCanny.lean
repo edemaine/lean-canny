@@ -43,6 +43,7 @@ import LeanCanny.Geometry.TubeIntegerDirections
 import LeanCanny.Geometry.TubeRationalDirections
 import LeanCanny.Algebra.ProjectionCoordinateAlgebraic
 import LeanCanny.Algebra.ProjectionParameterCoordinates
+import LeanCanny.Algebra.LevelProjectionSpecialization
 import LeanCanny.Algebra.ProjectionFiniteSpecialization
 import LeanCanny.Algebra.FiniteAlgebraicZeros
 import LeanCanny.Algebra.Separation

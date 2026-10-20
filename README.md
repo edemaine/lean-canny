@@ -649,6 +649,10 @@ and [`ProjectionParameterCoordinates`](LeanCanny/Algebra/ProjectionParameterCoor
 prove critical-coordinate algebraicity when direction derivations fix the
 constraint polynomials. This allows symbolic level parameters to remain fixed,
 including in the extended system with its reciprocal variable.
+[`LevelProjectionSpecialization`](LeanCanny/Algebra/LevelProjectionSpecialization.lean)
+uses this to construct a nonzero joint exceptional polynomial in the level and
+direction coordinates. Every specialization avoiding it has a finite extended
+projection fiber. No degree or coefficient bound is supplied.
 
 ## Next obligations
 
