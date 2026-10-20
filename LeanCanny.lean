@@ -96,6 +96,12 @@ import LeanCanny.Algebra.MacaulayEntryControl
 import LeanCanny.Algebra.MacaulayEntrySpace
 import LeanCanny.Algebra.MacaulayEntryCorrect
 import LeanCanny.Algebra.MacaulayPSPACE
+import LeanCanny.Algebra.MacaulayEntryEncoding
+import LeanCanny.Algebra.MacaulayPolynomialSpace
+import LeanCanny.Algebra.MacaulayAffineDeformation
+import LeanCanny.Algebra.MacaulayDeformationSpace
+import LeanCanny.Algebra.MacaulayDeformationResidue
+import LeanCanny.Algebra.MacaulayDeformationSign
 import LeanCanny.Algebra.FiniteDenominatorClearing
 import LeanCanny.Algebra.RationalPolynomialClearing
 import LeanCanny.Algebra.BoundedIntegerCoordinates
