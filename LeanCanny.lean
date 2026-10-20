@@ -116,6 +116,14 @@ import LeanCanny.ETR.TubeRegularDerivative
 import LeanCanny.ETR.TubeRegularSpace
 import LeanCanny.ETR.TubeRegularHomogenization
 import LeanCanny.ETR.TubeRegularMacaulay
+import LeanCanny.Algebra.PartialCoefficient
+import LeanCanny.Algebra.PartialCoefficientSpace
+import LeanCanny.ETR.TubeParameterLayout
+import LeanCanny.ETR.TubeParameterSource
+import LeanCanny.ETR.TubeParameterSubstitution
+import LeanCanny.ETR.TubeParameterCorrect
+import LeanCanny.ETR.TubeParameterBounds
+import LeanCanny.ETR.TubeParameterDecisions
 import LeanCanny.Algebra.FiniteDenominatorClearing
 import LeanCanny.Algebra.RationalPolynomialClearing
 import LeanCanny.Algebra.BoundedIntegerCoordinates
