@@ -1370,6 +1370,23 @@ polynomial; an input-size bound, a certified construction of that polynomial,
 and preservation of the required positive sample under encoded direction
 selection remain open.
 
+`IntegerProjectionDirections` transfers the finite extended-fiber theorem to
+the actual projection equations on regular real hypersurfaces. Regularity
+forces a nonzero base partial at each root; the reciprocal variable therefore
+covers every projection root. For a finite family of hypersurfaces, multiply
+their exceptional conditions and use a grid bound given by the sum of their
+degrees. One normalized direction with natural-number non-base coordinates
+gives finite root sets for the whole family. Coefficients can be supplied by
+any homomorphism into the reals.
+
+`TubeIntegerDirections` instantiates this family with all active tubes. Every
+sufficiently small positive level has a finite natural-number direction grid
+containing a common direction with finite root sets for every active set.
+The bound and direction may depend on epsilon, delta, and alpha. This does not
+yet give one integer direction throughout a small-alpha interval or ensure
+that the chosen direction preserves a positive-inactive sample. These and
+the quantitative input-size bound remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

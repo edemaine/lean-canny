@@ -609,6 +609,16 @@ with natural-number coordinates and a finite extended projection fiber therefore
 exists. Bounding the exceptional polynomial in terms of the input and preserving
 the required positive sample under an encoded direction choice remain open.
 
+[`IntegerProjectionDirections`](LeanCanny/Geometry/IntegerProjectionDirections.lean)
+gives one normalized natural-number direction with finite projection root sets
+for every hypersurface in a finite regular family. It combines their exceptional
+polynomials using the common-grid theorem.
+[`TubeIntegerDirections`](LeanCanny/Geometry/TubeIntegerDirections.lean) applies
+this to every active tube at each sufficiently small positive level. The finite
+grid bound and direction may depend on the real parameters and level. A common
+integer choice throughout an interval, preservation of a positive-inactive sample,
+and an input-size bound remain open.
+
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.
