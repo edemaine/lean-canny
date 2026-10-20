@@ -1424,17 +1424,44 @@ constraints. This criterion is equivalent to perturbed feasibility for
 nonnegative epsilon and positive delta. `ETR.TubeRationalSamplingSource.correct`
 proves the corresponding equivalence for every encoded ETR input.
 
-This establishes compatibility of rational finite-root direction choices with
-the required positive sample. It does not provide one direction throughout
-the interval, a numerator/denominator bit bound, effective parameter choices,
-root enumeration, or the full PSPACE decision procedure.
+The following stronger result now supplies a direction fixed across the interval.
 
-A possible route to a direction fixed across levels is to retain alpha as a
-symbolic parameter in the exceptional polynomial, choose a rational direction
-preserving a nonzero alpha coefficient, and shrink the interval below its
-positive roots. This requires extending the derivation argument to moving
-polynomial coefficients and clearing denominators in the combined parameter
-ring. Those steps and their quantitative bounds remain unformalized.
+## One rational direction throughout a tube-level interval
+
+`MvCoefficientChainRule` differentiates a polynomial's coefficients and its
+evaluation point. `ProjectionParameterAlgebraic` uses direction derivations
+that fix the constraint polynomial, even when some coefficients lie outside
+the derivations' base field. Extending these derivations to the critical-point
+field makes every point coordinate algebraic over the coefficient field.
+`ProjectionParameterCoordinates` includes the reciprocal of the base partial
+derivative in this conclusion.
+
+`LevelProjectionSpecialization` uses the joint ring of level and direction
+parameters. Coordinate derivations differentiate a direction parameter while
+fixing the level. Algebraicity in minimal-prime quotient fields and denominator
+clearing give a nonzero joint exceptional polynomial. Every field specialization
+avoiding it has finitely many extended projection roots. No evaluation of a
+rational-function field at a real level is needed.
+
+`UniformRationalProjectionDirections` views the exceptional polynomial as a
+univariate polynomial in alpha with direction-polynomial coefficients. A nearby
+rational direction avoids its nonzero leading coefficient, leaving a nonzero
+univariate polynomial. Its trailing-coefficient sign theorem gives an interval
+of positive levels where it never vanishes. Products handle finite families.
+Regularity then removes the reciprocal variable and gives finite projection
+root sets. `TubeUniformRationalDirections` applies this to the actual tube
+energies and expanded integer systems for all active sets.
+
+`TubeFiniteSampling.exists_sample_neighborhood_of_strict` factors the compact
+objective-stability argument: every normalized direction in one neighborhood
+has positive-inactive samples on every sufficiently small positive level.
+Choosing the uniform rational finite-root direction there proves
+`UniformRationalFiniteProjectionSamples`. One active set and one rational tuple
+work throughout the interval; the tuple may depend on epsilon and delta.
+`ETR.TubeUniformRationalSamplingSource.correct` proves this criterion equivalent
+to encoded ETR satisfiability. Quantitative exceptional-polynomial bounds,
+rational height bounds, effective parameter choices, root enumeration, and
+the full PSPACE decision procedure remain open.
 
 ## TM2 versus Complexitylib's machines
 

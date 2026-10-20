@@ -639,8 +639,23 @@ direction gives finite projection root sets for every active set, with a
 suitable sample in one of them.
 [`TubeRationalSamplingSource`](LeanCanny/ETR/TubeRationalSamplingSource.lean)
 proves this criterion equivalent to ETR satisfiability on all encoded inputs.
-The rational tuple may vary with the level. A uniform choice, bit-size bounds,
-effective parameter selection, and the full PSPACE algorithm remain open.
+This criterion allows the rational tuple to vary with the level.
+
+[`UniformRationalProjectionDirections`](LeanCanny/Geometry/UniformRationalProjectionDirections.lean)
+avoids a nonzero level coefficient of the joint exceptional polynomial. One
+nearby rational direction therefore works throughout a small positive level
+interval, for an entire finite hypersurface family.
+[`TubeUniformRationalDirections`](LeanCanny/Geometry/TubeUniformRationalDirections.lean)
+applies this to every active tube. The sampling-neighborhood lemma retains
+positive inactive signs for every nearby normalized direction throughout a
+common small interval.
+[`TubeUniformRationalSampling`](LeanCanny/Geometry/TubeUniformRationalSampling.lean)
+combines them: one active set and one rational direction supply finite root
+sets containing suitable samples at every sufficiently small positive level.
+[`TubeUniformRationalSamplingSource`](LeanCanny/ETR/TubeUniformRationalSamplingSource.lean)
+proves the stronger criterion equivalent to encoded ETR satisfiability.
+The direction may depend on epsilon and delta. Bit-size bounds, effective
+parameter selection, and the full PSPACE algorithm remain open.
 
 [`MvCoefficientChainRule`](LeanCanny/Algebra/MvCoefficientChainRule.lean)
 extends the polynomial chain rule to varying coefficients.

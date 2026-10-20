@@ -57,14 +57,15 @@ theorem finite_samples_of_with (P : (Coordinate ι → ℝ) → Prop) (p : MvPol
   obtain ⟨v, hv, _, hfin, x, hx, hi⟩ := hr alpha hp hs
   exact ⟨v, hv, hfin, x, hx, hi⟩
 
-theorem eventual_finite_samples_of_strict_with (P : (Coordinate ι → ℝ) → Prop)
-    (p : MvPolynomial ι ℤ) (epsilon delta : ℝ)
+theorem exists_sample_neighborhood_of_strict (p : MvPolynomial ι ℤ) (epsilon delta : ℝ)
     (v : Coordinate ι → ℝ) (z : (ι → ℝ) × (PolynomialPerturbation.Constraint ι → ℝ))
     (hd : 0 < delta) (hz : z ∈ PolynomialPerturbation.perturbed p epsilon delta)
-    (hv : v (base ι) = 1)
-    (hstrict : StrictLocalMaximum p (PolynomialPerturbation.activeSet p epsilon z) epsilon delta v z)
-    (hdirections : NearbyFiniteProjectionDirections P p epsilon delta) :
-    EventualFiniteProjectionSamplesWith P p epsilon delta := by
+    (hstrict : StrictLocalMaximum p (PolynomialPerturbation.activeSet p epsilon z) epsilon delta v z) :
+    ∃ U : Set (Coordinate ι → ℝ), U ∈ nhds v ∧ ∃ a : ℝ, 0 < a ∧
+      ∀ alpha : ℝ, 0 < alpha → alpha < a → ∀ w ∈ U, w (base ι) = 1 →
+        ∃ x ∈ projectionRootSet p (PolynomialPerturbation.activeSet p epsilon z) epsilon delta alpha w,
+          ∀ i, i ∉ PolynomialPerturbation.activeSet p epsilon z →
+            0 < PolynomialPerturbation.parameterMap p epsilon (splitPoint x) i := by
   let s := PolynomialPerturbation.activeSet p epsilon z
   obtain ⟨r, hr, hball⟩ := Metric.mem_nhds_iff.mp hstrict
   let K := Metric.closedBall (point z) (r / 2)
@@ -90,15 +91,11 @@ theorem eventual_finite_samples_of_strict_with (P : (Coordinate ι → ℝ) → 
   let U : Set (Coordinate ι → ℝ) :=
     {w | ∀ x ∈ K, |ProjectionCritical.projection w x - ProjectionCritical.projection v x| < e}
   have hU : U ∈ nhds v := ProjectionCritical.close_on_compact K hK v e he
-  obtain ⟨b, hb, hfinite⟩ := hdirections
   obtain ⟨c, hc, hprojection⟩ := exists_integer_projection_interval p epsilon delta
-  refine ⟨s, min a (min b c), lt_min ha (lt_min hb hc), ?_⟩
-  intro alpha hp hs
+  refine ⟨U, hU, min a c, lt_min ha hc, ?_⟩
+  intro alpha hp hs w hwU hw
   have has : alpha < a := lt_of_lt_of_le hs (min_le_left _ _)
-  have hbc : alpha < min b c := lt_of_lt_of_le hs (min_le_right _ _)
-  have hbs : alpha < b := lt_of_lt_of_le hbc (min_le_left _ _)
-  have hcs : alpha < c := lt_of_lt_of_le hbc (min_le_right _ _)
-  obtain ⟨w, hwU, hw, hP, hfin⟩ := hfinite alpha hp hbs v hv U hU
+  have hcs : alpha < c := lt_of_lt_of_le hs (min_le_right _ _)
   obtain ⟨x, hxW, hlevel, hmax⟩ := hm alpha hp has (ProjectionCritical.projection w)
     (ProjectionCritical.projection w).continuous hwU
   have hx : (polynomial p s).eval₂ (coefficientMap epsilon delta alpha) x = 0 := by
@@ -106,7 +103,22 @@ theorem eventual_finite_samples_of_strict_with (P : (Coordinate ι → ℝ) → 
   have hmaxTube : IsLocalMaxOn (ProjectionCritical.projection w)
       {y | (polynomial p s).eval₂ (coefficientMap epsilon delta alpha) y = 0} x := by
     simpa only [eval_as_realEnergy, sub_eq_zero] using hmax
-  exact ⟨w, hw, hP, hfin, x, hprojection alpha hp hcs s x w hw hx hmaxTube, hxW⟩
+  exact ⟨x, hprojection alpha hp hcs s x w hw hx hmaxTube, hxW⟩
+
+theorem eventual_finite_samples_of_strict_with (P : (Coordinate ι → ℝ) → Prop)
+    (p : MvPolynomial ι ℤ) (epsilon delta : ℝ)
+    (v : Coordinate ι → ℝ) (z : (ι → ℝ) × (PolynomialPerturbation.Constraint ι → ℝ))
+    (hd : 0 < delta) (hz : z ∈ PolynomialPerturbation.perturbed p epsilon delta)
+    (hv : v (base ι) = 1)
+    (hstrict : StrictLocalMaximum p (PolynomialPerturbation.activeSet p epsilon z) epsilon delta v z)
+    (hdirections : NearbyFiniteProjectionDirections P p epsilon delta) :
+    EventualFiniteProjectionSamplesWith P p epsilon delta := by
+  obtain ⟨U, hU, a, ha, hsamples⟩ := exists_sample_neighborhood_of_strict p epsilon delta v z hd hz hstrict
+  obtain ⟨b, hb, hfinite⟩ := hdirections
+  refine ⟨PolynomialPerturbation.activeSet p epsilon z, min a b, lt_min ha hb, ?_⟩
+  intro alpha hp hs
+  obtain ⟨w, hwU, hw, hP, hfin⟩ := hfinite alpha hp (hs.trans_le (min_le_right _ _)) v hv U hU
+  exact ⟨w, hw, hP, hfin, hsamples alpha hp (hs.trans_le (min_le_left _ _)) w hwU hw⟩
 
 theorem eventual_finite_samples_of_strict (p : MvPolynomial ι ℤ) (epsilon delta : ℝ)
     (v : Coordinate ι → ℝ) (z : (ι → ℝ) × (PolynomialPerturbation.Constraint ι → ℝ))
