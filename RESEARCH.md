@@ -2900,6 +2900,39 @@ determinant, already factored as `det(extraneousMinor)*higherRelationFactor`.
 The remaining task is to identify and compare the higher factors across
 orderings; the recurrence does not by itself cancel the extraneous factor.
 
+`KoszulExteriorSupport` and `KoszulNonpivotRows` supply the higher-degree
+row formula. For a nonpivot monomial/exterior basis index `(m,s)`, its
+multidegree pivot `i` is absent from `s`, is smaller than every element of
+`s`, and satisfies `d_i ≤ m_i`. The homotopy divides by `X_i^d_i` and
+inserts `i`. After projection to the nonpivot summand, the contraction is
+`D H`; the other term is killed. Applying the exterior Leibniz identity
+gives multiplication by `p_i` after division, plus terms whose exterior
+subset contains `i`. The latter have zero coordinate on every target
+subset omitting `i`. Thus the same-subset entry is precisely the coefficient
+of `X^(m')` in `X^(m-d_i e_i) p_i`.
+
+`KoszulNonpivotMacaulay` sends each basis index to the active monomial
+`m + subsetExponent d s`, with an explicit fixed-width rank. On a fixed
+exterior subset, this map is injective. Multiplying by that subset's
+coordinate powers identifies the diagonal entries exactly with the
+corresponding active Macaulay entries. Every fixed-subset block is therefore
+a concrete principal submatrix of `activeMinor`, without a field extension
+or a sign ambiguity.
+
+`KoszulNonpivotBlocks` proves triangularity by the least exterior coordinate.
+Inside each such diagonal block, entries between different exterior subsets
+vanish. `KoszulSubsetDeterminant` removes the empty intermediate blocks:
+`det(Q_k)` is the product, over all exterior subsets, of these concrete
+Macaulay principal-submatrix determinants. Subsets of the wrong cardinality
+have empty index types and determinant one. Adjacent conjugacy transfers
+this product to `det(P_(k+1))`. All identities hold over any commutative ring.
+
+This proves the exterior-subset stage of the higher determinant decomposition.
+The remaining combinatorial stage partitions the eligible-coordinate sequence
+by the positions of the selected exterior coordinates. Identifying the
+resulting factors and their binomial multiplicities, comparing orderings,
+and cancelling the extraneous polynomial remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
