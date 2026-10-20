@@ -2587,9 +2587,54 @@ coordinate-reader or algebraic certificate.
 The grading here is exterior degree over the localized spatial polynomial
 ring. The homotopy coefficients may contain inverted spatial coordinates.
 Exactness on these charts does not by itself prove higher exactness in the
-finite weighted polynomial grade used by the Macaulay determinant. That
-bridge, the resultant quotient identity, and the full ETR algorithm remain
-open; no algorithmic space bound for these homotopies is asserted.
+finite weighted polynomial grade used by the Macaulay determinant. Passing
+from chart exactness to higher exactness of the finite complex remains open,
+as do the resultant quotient identity and the full ETR algorithm. No
+algorithmic space bound for these homotopies is asserted.
+
+## The finite weighted Koszul complex
+
+`KoszulWeightedSpace` works inside the exterior algebra over the spatial
+polynomial ring, viewed as a module over the coefficient ring. A generator
+is a monomial times an exterior word of coordinate basis vectors. Its weight
+is the monomial degree plus the sum of the corresponding input degrees.
+At weight `L` and exterior degree `k`, all words `Fin k → Fin n` and all
+compatible fixed-width monomial ranks form a finite spanning family. This
+family may be redundant: the exterior algebra already imposes alternation
+and makes repeated coordinates zero. Its span is a finite coefficient
+module, agrees for any two widths with `L<2^W`, and is zero for `k>n`.
+
+`KoszulWeightedComplex` proves that homogeneous inputs preserve this weight.
+On one more exterior generator, contraction is the input polynomial times
+the tail minus that generator times the contracted tail. Expanding a
+homogeneous polynomial into monomials proves membership in the target
+weighted span; exterior multiplication contributes precisely the removed
+input degree. Restricting the exterior differential gives a Mathlib chain
+complex of these finite modules, with proved zero consecutive compositions.
+This construction is over any commutative coefficient ring.
+
+`KoszulWeightedMatrix` chooses finite bases over a coefficient field and
+transposes the usual linear-map matrices to use the project's row-vector
+convention. Their consecutive products are zero. The spanning-family count
+gives dimension bound `n^k*(2^W)^n`. These bases are noncomputable and are
+not supplied with polynomial-space coefficient readers.
+
+`MacaulayWeightedBridge` puts every existing multiplier row into the
+degree-one weighted generating family at `L=1+Σᵢ(dᵢ−1)`. Its differential
+is exactly the scalar embedding of that polynomial row. Applying the
+exterior algebra's scalar retraction and a target-monomial coefficient query
+recovers each entry of the original full rectangular Macaulay matrix.
+This identifies the first linear operation on its canonical generators;
+the general higher matrices use the separately chosen finite bases.
+
+`TubeMacaulayWeightedKoszul` instantiates the complex and its matrices for
+the actual generic shifted tube system, using its proved homogeneous
+degrees and exponent width. It includes finite pieces, vanishing above the
+spatial arity, the dimension bound, and zero consecutive matrix products.
+Higher exactness in this finite weighted complex is still unproved. The
+coordinate-chart homotopies may use inverse coordinates and do not yet
+restrict to these finite pieces. That exactness bridge, determinant
+cancellation/resultant identification, and the ETR space bound remain open.
 
 ## TM2 versus Complexitylib's machines
 

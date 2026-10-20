@@ -147,6 +147,7 @@ import LeanCanny.ETR.TubeMacaulayKoszulExact
 import LeanCanny.ETR.TubeMacaulayKernelBasis
 import LeanCanny.ETR.TubeMacaulayRelationFactor
 import LeanCanny.ETR.TubeMacaulayLocalizedKoszul
+import LeanCanny.ETR.TubeMacaulayWeightedKoszul
 import LeanCanny.Algebra.MacaulayKoszulExteriorBridge
 import LeanCanny.Algebra.MacaulayLastParameterDegree
 import LeanCanny.Algebra.FiniteDenominatorClearing
