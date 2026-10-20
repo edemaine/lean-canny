@@ -1657,7 +1657,21 @@ and zero testing have complete polynomial-space certificates. Arity and active
 mask fields are arbitrary unary FP/FP functions, so the exact compiled-source
 arity reader supplies the required dimension without an oracle.
 
-Uniform FP query repacking/shifting and composition of the full tube/projection
+`FixedWidthQuery` supplies FP binary-indexed coordinate access, with indices
+capped for polynomial-time block slicing. Coordinates beyond the declared
+prefix return zero. A certified repacker changes widths and pads coordinates,
+and bounded coordinate guards are in FP.
+
+`TubeZeroQuery` accepts an arbitrary FP exponent-block width and target word.
+An FP guard checks every native coordinate against four. Failure forces the
+actual integer tube coefficient to vanish by its proved degree bound; success
+makes every exponent fit the sparse reader's format. The repacker has an exact
+native-coordinate round trip, so truncation cannot turn an oversized exponent
+into a nonzero coefficient. The complete guarded evaluator has a
+`SpaceFunction` certificate on all inputs, including short/redundant words,
+zero-width blocks, empty active sets, and modulus one.
+
+Dense source-power/shift query access and composition of the full tube/projection
 coefficient machines remain open.
 
 ## TM2 versus Complexitylib's machines

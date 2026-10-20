@@ -32,6 +32,7 @@ import LeanCanny.Geometry.TubeCoefficientFormula
 import LeanCanny.ETR.TermArityFP
 import LeanCanny.ETR.TubeEncoding
 import LeanCanny.ETR.TubeZeroSpace
+import LeanCanny.ETR.TubeZeroQuery
 import LeanCanny.ETR.CompactCoefficientSign
 import LeanCanny.ETR.CompactCoefficientZero
 import LeanCanny.ETR.SourceDegreeSpace

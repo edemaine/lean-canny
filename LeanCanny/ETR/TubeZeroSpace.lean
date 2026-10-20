@@ -26,6 +26,9 @@ open Algebra.RationalSubstitution.Indexed Algebra.MatrixPower
 def size (n : List Bool → ℕ) (active : List Bool → List Bool) (c : List Bool) : ℕ :=
   CollectedCoefficient.dimension (write n active) c
 
+theorem size_unary {n : List Bool → ℕ} {active : List Bool → List Bool} (hn : UnaryFn n) (ha : active ∈ FP) :
+    UnaryFn (size n active) := CollectedCoefficient.dimension_unary (write_mem_FP hn ha)
+
 noncomputable def coefficient (n : List Bool → ℕ) (active target : List Bool → List Bool) (c : List Bool) : ℤ :=
   CollectedCoefficient.coefficient (write n active) target c
 

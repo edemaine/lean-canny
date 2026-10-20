@@ -759,8 +759,13 @@ tube by a short expression and proves equality with the existing integer
 polynomial. [`TubeZeroFP`](LeanCanny/ETR/TubeZeroFP.lean) certifies its writer in FP.
 [`TubeZeroSpace`](LeanCanny/ETR/TubeZeroSpace.lean) supplies coefficient residues,
 negativity and zero testing in PSPACE, with native-coordinate query correctness
-and coverage of every nonzero coefficient. Encoded shifted/repacked queries and
-composition of the full tube/projection coefficient machines remain open.
+and coverage of every nonzero coefficient.
+[`FixedWidthQuery`](LeanCanny/Encoding/FixedWidthQuery.lean) supplies FP block
+access, zero-padding/repacking, and coordinate guards.
+[`TubeZeroQuery`](LeanCanny/ETR/TubeZeroQuery.lean) uses the degree-four bound to
+reject oversized exponents before repacking, giving exact sparse tube residues
+on every binary target word. Dense shifted-source query access and composition
+of the full tube/projection coefficient machines remain open.
 
 ## Next obligations
 
