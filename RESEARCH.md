@@ -2346,6 +2346,24 @@ full determinant by its inverse explicitly constructs a nonzero polynomial
 in `K(s)[u]`. The image of the original characteristic determinant quotient is
 exactly this polynomial.
 
+`MacaulayPivotCount` restricts the reduced-monomial bijection to the last pivot.
+Every active row with that pivot is reduced, since an unreduced row cannot
+choose the last coordinate. There are exactly `∏ⱼ≠last dⱼ` such rows when the
+degrees are positive and the fixed-width blocks cover the Macaulay level.
+
+`MacaulayLastParameterDegree` bounds a parameter-dependent row by the source
+coefficient degree and all other rows by zero. Transposing the matrix permits
+the existing columnwise determinant degree theorem to sum these row bounds.
+If coefficients of the last input have degree at most `E` in `u`, the full
+mapped determinant and the quotient polynomial have degree at most
+`E*∏ⱼ≠last dⱼ`. Multiplication by the nonzero constant denominator inverse
+preserves the numerator degree exactly.
+
+The explicit affine family `f_last+u*h` has coefficient degree at most one.
+It preserves the specified spatial homogeneity when the original inputs and
+variation are homogeneous of the corresponding degrees. The resulting
+nonzero quotient polynomial in `K(s)[u]` has degree at most `∏ⱼ≠last dⱼ`.
+
 This proves polynomiality in a coefficient parameter confined to the last
 input. Polynomiality in the characteristic parameter `s`, the full
 multivariate resultant identity, and the subsequent sampling argument remain
