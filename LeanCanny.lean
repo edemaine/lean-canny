@@ -88,6 +88,10 @@ import LeanCanny.Algebra.ProjectionAnnihilatorDirections
 import LeanCanny.Algebra.CompleteProjectionCoordinates
 import LeanCanny.Algebra.IntegerCoordinatePolynomials
 import LeanCanny.Algebra.IntegerProjectionCoordinates
+import LeanCanny.Algebra.MacaulayMatrix
+import LeanCanny.Algebra.MacaulayRoots
+import LeanCanny.Algebra.MacaulayDeformation
+import LeanCanny.Algebra.MacaulayBounds
 import LeanCanny.Algebra.FiniteDenominatorClearing
 import LeanCanny.Algebra.RationalPolynomialClearing
 import LeanCanny.Algebra.BoundedIntegerCoordinates
