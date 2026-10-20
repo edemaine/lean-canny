@@ -2027,6 +2027,45 @@ proves polynomial identity and either strict trailing-coefficient sign in PSPACE
 under the same coordinate-reader contracts. Concrete sampler coordinate readers, quantitative
 parameter selection, and the complete ETR PSPACE decision procedure remain open.
 
+## Full three-parameter tube deformation coefficients
+
+The homogeneous cleared regular rows and the projection equation form the full
+bivariate tube system. Parameter-coordinate readers and bounds, plus FP encoded
+integer direction access, supply every row coefficient internally. The padded
+Macaulay determinant has complete modular and integer-sign evaluators with all
+suspended reader costs included.
+
+The undeformed determinant can vanish identically. `TubeDeformationSystem`
+therefore retains an independent deformation variable: its determinant is
+nonzero, equals one at deformation one, and specializes to the original
+candidate at zero. The first bounded encoding combines perturbation and
+projection exponents while preserving deformation. `TubeDeformationBudget`
+proves FP degree and integer magnitude-bit allowances for every resulting
+three-parameter coefficient.
+
+`PolynomialAffineEntrySpace` reads a deformed entry through one original
+polynomial entry query. Quotient zero selects the original coefficient;
+quotient one selects the corresponding identity coefficient minus that
+coefficient; every other quotient returns zero. `BerkowitzAffinePolynomialSpace`
+uses a second bounded encoding to evaluate a selected determinant coefficient,
+including the original entry child's complete workspace and clock bounds.
+
+`TubeDeformationModular`, `TubeDeformationCoefficientMap`, and
+`TubeDeformationSpace` instantiate this backend with the actual full tube
+matrix. Coefficient reduction commutes with encoding and deformation. The
+inner-exponent guards prevent aliasing in both encodings. No deformed row,
+matrix-entry, determinant, or sign callback is assumed.
+
+`TubeDeformationResidue` varies the modulus without changing the original
+integer coefficient or any of its three selected exponents.
+`TubeDeformationSign` combines that complete evaluator with the proved budget
+and streamed CRT routines. Selected coefficient zero, negativity, and positivity
+are in Complexitylib's PSPACE under the original reader contracts.
+
+These results do not yet identify an eliminant coefficient or factor. That
+identification, concrete sampler coordinate readers, quantitative bounds, and
+effective parameter selection remain necessary for the ETR decision algorithm.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

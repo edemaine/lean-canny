@@ -53,6 +53,14 @@ theorem encode_natDegree_le (B E T : ℕ) (p : Polynomial (Polynomial R))
     ((Nat.add_le_add (hp j) (Polynomial.natDegree_X_pow_le _)).trans
       (Nat.add_le_add_left (Nat.mul_le_mul_left B hj') E))
 
+theorem encode_map {S : Type*} [CommRing S] (φ : R →+* S) (B : ℕ) (p : Polynomial (Polynomial R)) :
+    encode B (p.map (Polynomial.mapRingHom φ)) = (encode B p).map φ := by
+  induction p using Polynomial.induction_on' with
+  | add p q hp hq => simp only [Polynomial.map_add, map_add, hp, hq]
+  | monomial j a =>
+    rw [Polynomial.map_monomial, encode_monomial, encode_monomial]
+    simp only [Polynomial.coe_mapRingHom, Polynomial.map_mul, Polynomial.map_pow, Polynomial.map_X]
+
 theorem coefficient (B : ℕ) (p : Polynomial (Polynomial R))
     (hp : ∀ j, (p.coeff j).natDegree < B) (i j : ℕ) (hi : i < B) :
     (encode B p).coeff (i + B * j) = (p.coeff j).coeff i := by

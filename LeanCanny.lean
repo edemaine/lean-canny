@@ -133,6 +133,7 @@ import LeanCanny.ETR.TubeBivariateBudget
 import LeanCanny.ETR.TubeBivariateSign
 import LeanCanny.ETR.TubeDeformationSystem
 import LeanCanny.ETR.TubeDeformationBudget
+import LeanCanny.ETR.TubeDeformationSign
 import LeanCanny.Algebra.FiniteDenominatorClearing
 import LeanCanny.Algebra.RationalPolynomialClearing
 import LeanCanny.Algebra.BoundedIntegerCoordinates
