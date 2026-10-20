@@ -1164,6 +1164,32 @@ for every encoded input. The restriction of the forward direction to a finite
 set of critical samples remains open, together with generic direction selection,
 coefficient-access machines, and effective parameter choices.
 
+## Finite critical sets imply strict maxima
+
+`IsolatedCriticalMaximum` proves a topological isolation argument: a nearby point
+tied with a local maximum is itself a local maximum. Finiteness of a set containing
+all local maxima therefore makes each local maximum strict. On a regular smooth
+fiber, normalized Lagrange multipliers put every local maximum in the normalized
+critical set. Finiteness of that set suffices; a Hessian or nondegeneracy theorem
+is unnecessary for this step.
+
+`TubeCriticalMaximum` transports this result to the actual active constraints
+and radius equation. A projection maximum on the compact perturbed inequality
+set is locally maximal on its active fiber. If that fiber is regular and has
+finitely many normalized critical points, the maximum is strict on its active
+zero locus. Its positive-inactive tube critical approximations follow from the
+existing recovery and compact convergence theorems.
+
+`TubeCriticalSampling` consequently supplies projection-system roots with
+positive inactive constraints on every sufficiently small positive tube level.
+One direction and one active set work throughout the interval. For a normalized
+direction with finite active critical sets, this criterion is equivalent to
+perturbed feasibility. `ETR.TubeCriticalSamplingSource` gives the corresponding
+ETR equivalence assuming suitable finite-critical directions exist throughout
+a small-radius interval. The converse needs no such assumption. Existence and
+effective selection of those directions, and finiteness of tube root sets,
+remain unproved.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

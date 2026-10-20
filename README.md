@@ -515,7 +515,17 @@ extracts the tube equation from the integer projection system, proving soundness
 of arbitrarily small projection-root samples.
 [`TubeFeasibilitySource`](LeanCanny/ETR/TubeFeasibilitySource.lean) gives both
 semantic ETR characterizations and projection-sampling soundness on all inputs.
-Generic directions ensuring finite critical sets and strict maxima, effective
+[`IsolatedCriticalMaximum`](LeanCanny/Geometry/IsolatedCriticalMaximum.lean)
+proves that finite normalized critical sets make local maxima strict on regular
+smooth fibers. [`TubeCriticalMaximum`](LeanCanny/Geometry/TubeCriticalMaximum.lean)
+applies this to the active constraints.
+[`TubeCriticalSampling`](LeanCanny/Geometry/TubeCriticalSampling.lean) then gives
+positive-inactive integer projection roots at every sufficiently small tube
+level, with one fixed direction and active set.
+[`TubeCriticalSamplingSource`](LeanCanny/ETR/TubeCriticalSamplingSource.lean)
+gives the corresponding ETR equivalence under an explicit finite-critical-direction
+hypothesis; it requires no additional nondegeneracy assumption.
+Generic directions ensuring finite critical sets, finite tube root sets, effective
 parameter bounds, coefficient access, and the full sampling decision procedure
 remain open.
 
