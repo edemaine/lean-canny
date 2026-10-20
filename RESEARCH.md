@@ -1091,8 +1091,9 @@ encoded input. For normalized source size N it supplies FP equation-count
 allowance `2+3*N`, point/direction-variable allowance `4+6*N`, expanded-variable
 allowance `7+6*N`, and full degree allowance `8*N²+4`. Its common regular α
 interval is qualitative and depends on fixed ε and δ. FP writers currently
-certify these size bounds; coefficient-access machines, finite generic
-direction selection, and effective parameter selection remain open.
+certify these size bounds. Complete tube/projection coefficient residues are
+supplied below; finite generic direction selection and effective parameter
+selection remain open.
 
 ## Tube approximation at strict maxima
 
@@ -1161,8 +1162,8 @@ nonnegative inactive constraints imply feasibility, even if active sets and
 directions vary. `ETR.TubeFeasibilitySource` translates the two equivalences into
 ETR correctness statements and proves soundness of the projection-root criterion
 for every encoded input. The qualitative forward direction with finite critical
-root sets is supplied below. Effective direction selection, coefficient-access
-machines, and parameter choices remain open.
+root sets and coefficient residue machines are supplied below. Effective
+direction selection and parameter choices remain open.
 
 ## Finite critical sets imply strict maxima
 
@@ -1218,8 +1219,8 @@ unconditionally equivalent to ETR satisfiability on all encoded inputs. It also
 proves equivalence to arbitrarily small projection samples, where directions
 and active sets may vary. These are existence statements over the reals.
 Finite root sets containing suitable samples are supplied below; effective
-selection and enumeration, parameter bounds, coefficient-access machines, and
-the full PSPACE decision procedure remain open.
+selection and enumeration, parameter bounds, and the full PSPACE decision
+procedure remain open. Coefficient residue machines are supplied below.
 
 ## Algebraic generic coordinates
 
@@ -1490,9 +1491,9 @@ arity and degree bounds. Both integer tube and projection polynomials have
 mass at most `2^(20*N²+6*N+21)`; each coefficient has at most
 `20*N²+6*N+22` magnitude bits. The budget has an FP writer from the normalized
 compiled source size, on all binary inputs. It bounds actual integer
-coefficients; it does not yet compute them. Uniform coefficient-access
-machines, exceptional-polynomial bounds, effective direction and parameter
-selection, and the full decision procedure remain open.
+coefficients. Complete coefficient residue machines are supplied below.
+Exceptional-polynomial bounds, effective direction and parameter selection,
+and the full decision procedure remain open.
 
 ## Collected source coefficients in polynomial space
 
@@ -1558,8 +1559,8 @@ of original variables. `SourceDegreeSpace.value_original_variable` therefore
 returns exactly the degree used for denominator clearing in the compactified
 compiled ETR source. This supplies actual-degree access without an oracle.
 `CubeCoefficientFormula` now combines it with binomial factors, as described
-below. Tube coefficient access, quantitative sampling bounds, and the complete
-ETR PSPACE algorithm remain open.
+below. Tube/projection coefficient residues are also supplied below.
+Quantitative sampling bounds and the complete ETR PSPACE algorithm remain open.
 
 ## Streamed compactification coefficients
 
@@ -1689,7 +1690,36 @@ malformed source defaults, arbitrary target words, and modulus one.
 Its unshifted square and shifted first powers agree exactly with the three
 dense terms in the existing tube coefficient formula.
 
-Assembly of the complete tube and projection coefficient machines remains open.
+`SpaceFunction.pairOutputs` retains one child response while running the next,
+with space and clock bounds for the saved context. `TubeCoefficientSpace`
+combines the source square, two source shifts, and sparse remainder using FP
+modular arithmetic. `TubeSourceCoefficient` instantiates this complete tube
+residue evaluator on compiled ETR inputs.
+
+`TubeProjectionEncoding` adds a direction block between tube point and parameter
+coordinates. `TubeProjectionGuard` certifies the zero/unit direction patterns in
+FP. `TubeProjectionRepack` removes that block and optionally increments a tube
+exponent. Its W+1 output width preserves even the largest W-bit exponent plus
+one. `TubeProjectionRestriction` proves native correctness and composes the
+complete tube child.
+
+`TubeProjectionFactor` reads and increments derivative factors in binary, then
+multiplies residues in FP. `TubeProjectionTermFormula` and `TubeProjectionTermSpace`
+connect the guarded evaluator to embedded native polynomials and derivatives.
+`TubeProjectionRows` proves the actual level/partial row identities and assembles
+their evaluators, including modular subtraction of the two partial-row terms.
+`TubeProjectionRowEncoding` has a total decoder: zero or invalid codes select
+the level row; valid positive codes enumerate nonbase partial rows. Every native
+row has a round trip. `TubeProjectionSpace` therefore certifies coefficient
+residues of the actual integer projection system on every binary input.
+
+`TubeProjectionNative` proves native exponent-query round trips.
+`TubeSourceProjectionCoefficient` supplies the compiled ETR packet format and
+FP field readers. The proved degree bound makes every nonzero coefficient
+representable with at most `(6*N+7)*(8*N²+5)` exponent bits. All positive moduli,
+including one, are covered. Full tube/projection coefficient sign and zero
+recovery, quantitative parameter selection, and the complete ETR PSPACE
+decision procedure remain open.
 
 ## TM2 versus Complexitylib's machines
 

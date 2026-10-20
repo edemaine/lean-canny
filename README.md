@@ -538,8 +538,8 @@ a finite-critical-set hypothesis.
 therefore gives unconditional semantic ETR equivalences for both arbitrarily
 small projection roots and eventual roots with one fixed normalized direction
 and active set. These are real existence statements.
-Effective direction selection, parameter bounds, coefficient access, and the
-full sampling decision procedure remain open.
+Effective direction selection, parameter bounds, and the full sampling decision
+procedure remain open. Tube/projection coefficient residues are supplied below.
 
 [`MvCoefficientDerivation`](LeanCanny/Algebra/MvCoefficientDerivation.lean) and
 [`FieldDerivationExtension`](LeanCanny/Algebra/FieldDerivationExtension.lean)
@@ -785,8 +785,21 @@ zero and unit direction patterns in FP, with their native polynomial equivalence
 restriction and optional derivative increments using an extra exponent bit.
 [`TubeProjectionRestriction`](LeanCanny/ETR/TubeProjectionRestriction.lean) proves
 that these queries access exactly the required native tube coefficients and
-supplies their complete space evaluators. Modular derivative factors and
-assembly of projection rows remain open.
+supplies their complete space evaluators.
+[`TubeProjectionFactor`](LeanCanny/ETR/TubeProjectionFactor.lean) supplies FP
+binary derivative factors and modular multiplication.
+[`TubeProjectionTermSpace`](LeanCanny/ETR/TubeProjectionTermSpace.lean) combines
+the guards, tube children, and factors into certified projection terms.
+[`TubeProjectionRows`](LeanCanny/ETR/TubeProjectionRows.lean) assembles the actual
+level and partial rows, and
+[`TubeProjectionSpace`](LeanCanny/ETR/TubeProjectionSpace.lean) selects them using
+a total FP row decoder. Invalid row codes select the level row; every native
+row has a proved encoding round trip.
+[`TubeSourceProjectionCoefficient`](LeanCanny/ETR/TubeSourceProjectionCoefficient.lean)
+instantiates the full residue evaluator on compiled ETR inputs. Native-coordinate
+correctness and polynomial-length exponent queries cover every nonzero coefficient
+of every actual integer projection row, including modulus one. Sign/zero recovery
+for the full tube/projection systems and effective sampling remain open.
 
 ## Next obligations
 
