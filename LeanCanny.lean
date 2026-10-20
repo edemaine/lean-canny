@@ -23,6 +23,8 @@ import LeanCanny.ETR.IndexedRationalSubstitution
 import LeanCanny.ETR.MonomialCountFP
 import LeanCanny.ETR.MonomialExponentFP
 import LeanCanny.ETR.CompiledRationalSource
+import LeanCanny.ETR.SourceCoefficientSpace
+import LeanCanny.ETR.CollectedCoefficientZero
 import LeanCanny.ETR.CompactSource
 import LeanCanny.ETR.PerturbedSource
 import LeanCanny.ETR.RadiusSource

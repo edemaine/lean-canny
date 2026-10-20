@@ -1494,6 +1494,42 @@ coefficients; it does not yet compute them. Uniform coefficient-access
 machines, exceptional-polynomial bounds, effective direction and parameter
 selection, and the full decision procedure remain open.
 
+## Collected source coefficients in polynomial space
+
+The earlier indexed coefficient reader returns one expansion term. Repeated
+monomials must still be combined to obtain an actual polynomial coefficient.
+`ETR.CollectedCoefficients` proves the required sum identity for the finite
+source polynomial, with all cancellations retained.
+
+`FixedWidthNatVector` gives exact block-encoding round trips.
+`CollectedCoefficientQuery` uses validated source length N as its dimension
+and N+1 bits per exponent. It reads exponent blocks from arbitrary words and
+checks every coordinate against an indexed monomial in FP. Short words supply
+zero high bits; extra blocks are ignored. Source validation continues to use
+the existing zero-term default for malformed encodings.
+
+`CollectedCoefficientSpace` streams all indexed monomials, contributes zero
+for a mismatch, and otherwise reads the indexed coefficient residue. Its
+modular accumulator collects the actual coefficient, with parent and child
+states included in the `SpaceFunction` certificate. Modulus one and repeated
+or cancelling monomials are covered.
+
+`CollectedCoefficientSign` uses the proved N+1 magnitude-bit budget to recover
+coefficient negativity through the existing CRT sign algorithm. The negative
+language belongs to Complexitylib's PSPACE. `CollectedCoefficientZero` scans
+the small moduli justified by the same budget, using the full residue routine
+as a child; the coefficient-zero language also belongs to PSPACE. This supplies
+the zero test needed for detecting actual degrees after cancellation.
+
+`SourceCoefficientSpace` supplies the compiled ETR source fields and proves
+query correctness for every binary source input. Its finite polynomial uses N
+variables; the unused variables contribute no nonconstant monomials. Every
+nonzero coefficient has coordinate exponents at most the source degree and
+therefore an exponent query of exactly `N*(N+1)` bits. This is collected access
+to the source before compactification. Access through denominator clearing,
+active tubes, and projection equations remains open, along with quantitative
+sampling bounds and the complete ETR PSPACE decision procedure.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

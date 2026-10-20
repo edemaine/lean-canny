@@ -684,6 +684,23 @@ uses this to construct a nonzero joint exceptional polynomial in the level and
 direction coordinates. Every specialization avoiding it has a finite extended
 projection fiber. No degree or coefficient bound is supplied.
 
+[`CollectedCoefficients`](LeanCanny/ETR/CollectedCoefficients.lean) identifies an
+actual source coefficient with the sum of all indexed monomials having its
+exponent vector, including repetitions and cancellations.
+[`CollectedCoefficientQuery`](LeanCanny/ETR/CollectedCoefficientQuery.lean)
+checks this match in FP using fixed-width exponent blocks.
+[`CollectedCoefficientSpace`](LeanCanny/ETR/CollectedCoefficientSpace.lean)
+streams the matching coefficient residues in polynomial space.
+[`CollectedCoefficientSign`](LeanCanny/ETR/CollectedCoefficientSign.lean) and
+[`CollectedCoefficientZero`](LeanCanny/ETR/CollectedCoefficientZero.lean)
+prove negativity and zero testing in PSPACE using the source's `N+1` bit budget.
+[`SourceCoefficientSpace`](LeanCanny/ETR/SourceCoefficientSpace.lean) instantiates
+residue access for the compiled ETR source on every binary input. Its polynomial
+has N coordinates, with unused coordinates padded by zeros. Every nonzero
+coefficient has an exponent query of length `N*(N+1)`.
+This access is for the source before compactification; compactified and tube
+coefficient-access machines remain open.
+
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.
