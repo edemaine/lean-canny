@@ -896,6 +896,40 @@ stronger polylogarithmic dependence on an implicitly large polynomial family,
 its full algebraic-parameter specialization, or the critical-point correctness
 argument. Those obligations and `ETR ∈ PSPACE` remain open.
 
+## Compactification before critical points
+
+The report's §3.1 starts by substituting `x_i = y_i/(1-y_i²)` and bounding the
+new coordinates inside the unit cube. The local route uses the existing
+all-input equation compiler first. The remaining strict constraints are then
+the cube bounds, while the compiled polynomial equation defines a closed set.
+
+`Geometry.CubeCoordinates` supplies the explicit inverse
+`2*x/(1+sqrt(1+4*x²))`, proves it lies strictly between -1 and 1, and proves the
+coordinatewise map is onto. Every finite open-cube point has a common positive
+margin; the resulting closed inner cubes are compact and nested as the margin
+decreases.
+
+`Geometry.CubePolynomial.cleared` is an integer multivariate polynomial, formed
+by clearing each coordinate denominator to exponent `2*degreeOf_i(p)`.
+Its real evaluation is a positive factor times the original polynomial evaluated
+at the rational coordinates. Thus zeros and signs agree on the open cube. Its
+total degree is at most `4*sum_i degreeOf_i(p)`, hence at most
+`4*n*totalDegree(p)`. Intersecting its zero set with an inner cube is compact.
+Existence of an original real zero is equivalent to nonemptiness for some positive
+margin, and smaller margins preserve nonemptiness. Linear projections attain
+maxima on these compact nonempty sets.
+
+`ETR.FinitePolynomial` translates a term to a polynomial on its actual finite
+variable block, preserving evaluation under extension by zero. Its compactified
+degree is at most `4*arity*degreeBound`, hence at most `4*dataSize²`.
+`ETR.CompactSource.correct` composes this with the existing FP compiler for all
+binary inputs. `correct_all_small_margins` gives nonempty compact zero sets for
+every sufficiently small positive margin exactly on ETR yes-instances.
+The normalized source length provides certified FP dimension and degree upper
+bounds. This establishes the semantic compactness stage. Streamed coefficient
+access for the new polynomial, perturbation/regularity, and construction of the
+critical-point equations remain to be proved.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

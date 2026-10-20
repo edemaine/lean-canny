@@ -381,6 +381,26 @@ language includes symbolic nonvanishing and belongs to PSPACE on all inputs;
 the unguarded theorem assumes nonvanishing on every input. Canny's stronger
 implicit family bounds and critical-point argument remain open.
 
+The compactness stage now starts from the compiled equation for every encoded
+ETR input.
+[`CubeCoordinates`](LeanCanny/Geometry/CubeCoordinates.lean) proves that
+`y/(1-y²)` maps the open unit cube onto the full real domain, with an explicit
+coordinate inverse and a common positive boundary margin for every finite tuple.
+[`CubePolynomial`](LeanCanny/Geometry/CubePolynomial.lean) gives the actual
+denominator-cleared integer multivariate polynomial, preserves its zeros and
+signs on the open cube, and bounds its degree by `4*n*degree(p)`.
+Its inner-cube zero sets are compact, and every linear functional attains a
+maximum on each nonempty such set.
+
+[`FinitePolynomial`](LeanCanny/ETR/FinitePolynomial.lean) and
+[`CompactSource`](LeanCanny/ETR/CompactSource.lean) connect this construction to
+the verified ETR compiler. An input is a yes-instance exactly when some positive
+margin gives a nonempty compact zero set; every smaller positive margin also
+works. This includes malformed-input rejection and zero-variable equations.
+Dimension and degree upper bounds have FP binary writers, using the normalized
+source length. Coefficient access for the compactified polynomial, perturbation,
+and the critical-point construction remain open.
+
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.
