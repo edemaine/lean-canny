@@ -642,6 +642,14 @@ proves this criterion equivalent to ETR satisfiability on all encoded inputs.
 The rational tuple may vary with the level. A uniform choice, bit-size bounds,
 effective parameter selection, and the full PSPACE algorithm remain open.
 
+[`MvCoefficientChainRule`](LeanCanny/Algebra/MvCoefficientChainRule.lean)
+extends the polynomial chain rule to varying coefficients.
+[`ProjectionParameterAlgebraic`](LeanCanny/Algebra/ProjectionParameterAlgebraic.lean)
+and [`ProjectionParameterCoordinates`](LeanCanny/Algebra/ProjectionParameterCoordinates.lean)
+prove critical-coordinate algebraicity when direction derivations fix the
+constraint polynomials. This allows symbolic level parameters to remain fixed,
+including in the extended system with its reciprocal variable.
+
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.
