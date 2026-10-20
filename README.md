@@ -440,9 +440,18 @@ partial derivatives; every singular active point yields a common zero.
 system for every encoded ETR input, with FP upper bounds on equation count and
 degree. [`PartialDerivativeDegree`](LeanCanny/Algebra/PartialDerivativeDegree.lean)
 proves that partial derivatives have degree at most the original degree minus one.
-Finiteness and effective bounds for these critical values, generic fixed-radius regularity, streamed
-coefficient access for the new polynomials, and critical-point sampling remain
-open.
+[`CriticalValueAnnihilator`](LeanCanny/Algebra/CriticalValueAnnihilator.lean)
+proves existence of a nonzero polynomial annihilating all critical values, using
+derivations and finitely many minimal primes of the gradient ideal. This proves
+finiteness of polynomial critical values in characteristic zero.
+[`PolynomialCriticalValues`](LeanCanny/Geometry/PolynomialCriticalValues.lean)
+applies this to each specialized active energy.
+[`RegularRadius`](LeanCanny/Geometry/RegularRadius.lean) gives a common positive
+interval where every active augmented derivative is surjective.
+[`RegularRadiusSource`](LeanCanny/ETR/RegularRadiusSource.lean) proves that ETR
+satisfiability is equivalent to nonemptiness throughout such a regular interval.
+Effective radius bounds, streamed coefficient access for the new polynomials,
+and critical-point sampling remain open.
 
 ## Next obligations
 
@@ -453,8 +462,8 @@ open.
    requires more than polynomial time.
 3. Prove the full coordinate computation's space bound, including algebraic parameter values;
    formalize the remaining parallel/streamed algebra used by the report.
-4. Formalize critical points, perturbations, sign tests, and the correctness of Canny's
-   ETR decision procedure; prove `ETR ∈ PSPACE`.
+4. Complete critical-point sampling and effective parameter selection, and combine
+   the algebraic sign tests into Canny's ETR decision procedure; prove `ETR ∈ PSPACE`.
 5. Apply the proved PSPACE reduction closure once ETR membership is established;
    the conditional equivalence `∃ℝ ⊆ PSPACE ↔ ETR ∈ PSPACE` is already proved.
 6. Extend to roadmap connectivity and the geometric consequences in the report.

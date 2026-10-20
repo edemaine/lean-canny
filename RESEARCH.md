@@ -1010,10 +1010,30 @@ encoded input, with FP count allowance `sourceSize+1` and degree allowance
 `8*sourceSize²+4`. These are size-bound writers, not yet coefficient-access
 certificates for the system.
 
-Finiteness and effective bounds for these critical values remain to be proved;
-they are not hypotheses discharged by the current construction. Generic
-fixed-radius regularity, streamed coefficient access, and the critical-point
-sampling construction therefore remain open.
+`EtaleDerivation` extends a derivation through a formally etale algebra using
+Mathlib's base-change isomorphism for Kahler differentials.
+`TranscendentalDerivation` extends a coordinate derivation on a transcendence
+basis through its fraction field and the remaining separable algebraic extension.
+Thus every transcendental element in a characteristic-zero field extension is
+sent to one by some derivation. `CriticalValueAlgebraic` proves the polynomial
+chain rule for these derivations: vanishing of all formal partials forces the
+value to be algebraic over the coefficient field.
+
+`CriticalValueAnnihilator` applies that result in the fraction field of each
+prime quotient containing the gradient ideal. The finitely many minimal primes
+supply nonzero annihilating polynomials; their product evaluated at the original
+polynomial belongs to the radical gradient ideal. Evaluating at any critical
+point gives zero, so the critical values form a finite set. This is a qualitative
+annihilator construction, without degree or coefficient estimates.
+
+`PolynomialCriticalValues` specializes the integer energy polynomial to a real
+polynomial in the spatial variables. Its analytic critical values are finite.
+`RegularRadius` takes a common positive margin below positive critical values
+over all active sets. Restricting also to radii below one ensures that δ² lies
+below this margin. Every active augmented derivative is then surjective for all
+`0<δ<d`. `ETR.RegularRadiusSource.correct` combines this interval with the compact
+perturbation correctness theorem on every encoded input. Effective radius
+selection, streamed coefficient access, and critical-point sampling remain open.
 
 ## TM2 versus Complexitylib's machines
 
