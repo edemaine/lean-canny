@@ -2066,6 +2066,50 @@ These results do not yet identify an eliminant coefficient or factor. That
 identification, concrete sampler coordinate readers, quantitative bounds, and
 effective parameter selection remain necessary for the ETR decision algorithm.
 
+## Lowest deformation coefficient and effective nonvanishing
+
+The [GCP report](https://www2.eecs.berkeley.edu/Pubs/TechRpts/1988/Archive/CSD-88-440.pdf),
+pages 4 and 6, distinguishes the padded determinant from the resultant quotient
+and proves persistence on proper components for the lowest resultant coefficient.
+This distinction remains a formalization obligation: the current padded
+determinant candidate is not yet identified with that quotient or its factors.
+
+`DeformationLowestCoefficient` proves the limit step independently of root
+persistence. Factor out the lowest deformation power. At nonzero deformation
+values the remaining factor still vanishes; continuity then forces its constant
+coefficient to vanish at the limiting coefficient parameters. The theorem works
+for Hausdorff topological fields and continuous coefficient evaluations.
+
+`TubeDeformationLowest` applies that theorem to the actual full tube system.
+Its lowest deformation coefficient is nonzero and obeys the uniform inner-degree
+bound. If coefficient parameters converge, deformation tends to zero through
+nonzero values, and the deformed homogeneous rows have nonzero common roots,
+then the limiting parameters annihilate the candidate. No convergence assumption
+on the spatial coordinates is required. Existence of the necessary root families
+for original isolated solutions is not assumed to follow from this theorem.
+
+A coefficient specialization always leaves the deformation determinant nonzero,
+since evaluation at deformation one remains one. Vanishing of the lowest
+coefficient is therefore equivalent to a strict increase in deformation order.
+If its image is nonzero, both the lowest order and coefficient commute with the
+specialization, without requiring the coefficient map to be injective.
+
+`TubeDeformationSpecialization` makes nonvanishing effective for the original
+perturbation variable. Write `M` for the padded dimension, `E` for the cleared
+row coefficient degree allowance, and `K` for the proved full deformation
+integer coefficient-bit budget. Every projection coefficient of the lowest
+candidate has degree at most `M*E` and mass at most
+`2^(K+(M*E+1).size)`. In particular its nonzero leading projection coefficient
+cannot vanish for `0<θ≤2^(-s)`, where `s=K+(M*E+1).size+1`.
+The exponent has an FP binary writer using the existing source, direction,
+and coordinate-bound writers. Throughout this interval the projection polynomial
+is nonzero, and extraction of the lowest deformation coefficient commutes with
+perturbation specialization.
+
+This does not yet compute the lowest deformation index or its coefficient
+reader. Geometric root persistence, resultant-factor extraction, and the
+quantitative conditions needed for tube sampling remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
