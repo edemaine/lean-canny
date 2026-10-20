@@ -1463,6 +1463,37 @@ to encoded ETR satisfiability. Quantitative exceptional-polynomial bounds,
 rational height bounds, effective parameter choices, root enumeration, and
 the full PSPACE decision procedure remain open.
 
+## Coefficient bit budgets for the actual tube systems
+
+`MvCoefficientMass` defines the sum of absolute integer coefficients for
+multivariate polynomials. It is subadditive and submultiplicative, cannot
+increase under variable renaming, and grows by at most the total degree under
+one partial derivative. These statements permit variable collisions and zero
+polynomials, and require no expansion algorithm.
+
+`ETR.PolynomialMass` relates constant magnitudes to their binary payload sizes.
+Expression-tree induction bounds the finite-variable source polynomial's mass
+by `2^N`, for encoded term size N. `CubePolynomialMass` bounds each denominator
+factor `1-X_i²` by two in coefficient mass. The total exponent in denominator
+clearing is at most twice the sum of the source's coordinate degrees. The
+compactified source consequently has mass at most `2^(N+2*N²)`.
+
+`TubeCoefficientMass` bounds the flattened radius mass by `c+1` and every
+flattened constraint mass by `H+4`, for c constraints and source mass H. The
+integer tube mass is at most `(c+1)²+c*(H+4)²+1`, uniformly over active sets.
+Formal partial derivatives and the additional direction variable bound each
+flattened projection row by `(4*max(degree(p),2)+1)` times this allowance.
+All parameter and direction variables are included.
+
+`ETR.TubeCoefficientBounds` combines these estimates with the existing source
+arity and degree bounds. Both integer tube and projection polynomials have
+mass at most `2^(20*N²+6*N+21)`; each coefficient has at most
+`20*N²+6*N+22` magnitude bits. The budget has an FP writer from the normalized
+compiled source size, on all binary inputs. It bounds actual integer
+coefficients; it does not yet compute them. Uniform coefficient-access
+machines, exceptional-polynomial bounds, effective direction and parameter
+selection, and the full decision procedure remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

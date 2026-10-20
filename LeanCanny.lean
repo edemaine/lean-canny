@@ -37,6 +37,7 @@ import LeanCanny.ETR.TubeSupportingSamplingSource
 import LeanCanny.ETR.TubeFiniteSamplingSource
 import LeanCanny.ETR.TubeRationalSamplingSource
 import LeanCanny.ETR.TubeUniformRationalSamplingSource
+import LeanCanny.ETR.TubeCoefficientBounds
 import LeanCanny.Geometry.ProjectionCritical
 import LeanCanny.Geometry.TubeFiniteRoots
 import LeanCanny.Geometry.TubeGenericDirections

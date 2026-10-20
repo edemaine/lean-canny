@@ -657,6 +657,21 @@ proves the stronger criterion equivalent to encoded ETR satisfiability.
 The direction may depend on epsilon and delta. Bit-size bounds, effective
 parameter selection, and the full PSPACE algorithm remain open.
 
+[`MvCoefficientMass`](LeanCanny/Algebra/MvCoefficientMass.lean) bounds the sum of
+absolute coefficients under integer multivariate arithmetic, renaming, and
+partial differentiation.
+[`PolynomialMass`](LeanCanny/ETR/PolynomialMass.lean) bounds the finite source
+polynomial's mass by `2^N`, for encoded term size N.
+[`CubePolynomialMass`](LeanCanny/Geometry/CubePolynomialMass.lean) controls
+denominator clearing, giving compactified mass at most `2^(N+2*N²)`.
+[`TubeCoefficientMass`](LeanCanny/Geometry/TubeCoefficientMass.lean) propagates
+these estimates through all active tubes and flattened projection equations.
+[`TubeCoefficientBounds`](LeanCanny/ETR/TubeCoefficientBounds.lean) supplies an
+FP writer for their common coefficient magnitude-bit budget `20*N²+6*N+22`.
+Here N is the normalized compiled term size, itself polynomially bounded in
+the input length. Coefficient-access machines and quantitative bounds for the
+exceptional polynomials and chosen parameters remain open.
+
 [`MvCoefficientChainRule`](LeanCanny/Algebra/MvCoefficientChainRule.lean)
 extends the polynomial chain rule to varying coefficients.
 [`ProjectionParameterAlgebraic`](LeanCanny/Algebra/ProjectionParameterAlgebraic.lean)
