@@ -2322,6 +2322,35 @@ Polynomiality and multivariate resultant identification remain open. The degree
 calculation supplies the expected matrix-size difference without assuming
 either assertion.
 
+## Independence of the last polynomial and partial polynomiality
+
+`MacaulayExtraneousLast` proves that an unreduced monomial's pivot cannot be
+the last coordinate: it has at least two eligible coordinates and the pivot
+is the least eligible one. Replacing the last input polynomial therefore
+preserves both the true extraneous principal matrix and its identity-padded
+representation. The same independence holds for the shifted characteristic
+system. Coefficient maps commute with the true full and extraneous principal
+determinants.
+
+`MacaulayLastParameter` treats input polynomials with coefficients in `K[u]`,
+where `K` is any field. Swapping `u` with the characteristic parameter `s`, then
+embedding `K[s]` in `K(s)`, gives an injective coefficient map and an injective
+map on rational functions. The mapped full and extraneous determinants agree
+with those for the actual shifted input system.
+
+If every input except the last is constant in `u`, the mapped extraneous
+determinant is the constant polynomial whose value is the characteristic
+determinant of the base extraneous matrix in `K(s)`. This value is nonzero,
+with no supplied denominator-nonvanishing hypothesis. Multiplying the mapped
+full determinant by its inverse explicitly constructs a nonzero polynomial
+in `K(s)[u]`. The image of the original characteristic determinant quotient is
+exactly this polynomial.
+
+This proves polynomiality in a coefficient parameter confined to the last
+input. Polynomiality in the characteristic parameter `s`, the full
+multivariate resultant identity, and the subsequent sampling argument remain
+open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
