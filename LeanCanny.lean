@@ -81,6 +81,8 @@ import LeanCanny.Algebra.VectorGaloisDescent
 import LeanCanny.Algebra.AsymmetricBaseCoordinates
 import LeanCanny.Algebra.FiniteSystemCoordinates
 import LeanCanny.Algebra.ProjectionSystemCoordinates
+import LeanCanny.Algebra.RationalRepresentationTransfer
+import LeanCanny.Algebra.ProjectionCoordinateTransfer
 import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates
 import LeanCanny.Algebra.ShiftCoefficients
