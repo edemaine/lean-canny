@@ -737,7 +737,16 @@ instantiates the evaluator for compiled ETR inputs and proves exact access to
 the `N+2*N²+1` magnitude-bit budget and proves coefficient negativity in PSPACE.
 [`CompactCoefficientZero`](LeanCanny/ETR/CompactCoefficientZero.lean) proves
 coefficient zero testing in PSPACE using the complete residue evaluator.
-Tube coefficient access remains open.
+[`CubePolynomialMultiplication`](LeanCanny/Geometry/CubePolynomialMultiplication.lean)
+proves that integer compactification commutes with multiplication and powers,
+including zero polynomials.
+[`TermPowerFP`](LeanCanny/ETR/TermPowerFP.lean) writes bounded source powers in FP,
+and [`CompactPowerCoefficient`](LeanCanny/ETR/CompactPowerCoefficient.lean)
+uses this to access coefficients of powers of the original compact polynomial.
+[`TubeCoefficientDecomposition`](LeanCanny/Geometry/TubeCoefficientDecomposition.lean)
+expresses the integer tube as its source square with multiplicity at most two,
+the source times a linear shift supported at two coordinates, and the
+zero-source tube. Combining these with encoded sparse/shift access remains open.
 
 ## Next obligations
 

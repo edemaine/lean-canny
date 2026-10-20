@@ -26,6 +26,8 @@ import LeanCanny.ETR.CompiledRationalSource
 import LeanCanny.ETR.SourceCoefficientSpace
 import LeanCanny.ETR.CompactCoefficientSpace
 import LeanCanny.ETR.CompactSourceCoefficient
+import LeanCanny.ETR.CompactPowerCoefficient
+import LeanCanny.Geometry.TubeCoefficientDecomposition
 import LeanCanny.ETR.CompactCoefficientSign
 import LeanCanny.ETR.CompactCoefficientZero
 import LeanCanny.ETR.SourceDegreeSpace

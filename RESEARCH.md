@@ -1601,7 +1601,28 @@ sign recovery, proving coefficient negativity in Complexitylib's PSPACE.
 `CompactCoefficientZero` scans the small moduli justified by the same budget
 and proves coefficient zero testing in PSPACE. Both routines include the
 actual-degree and binomial children; they assume no coefficient oracle.
-Propagating access through tube and projection equations remains open.
+`CubePolynomialMultiplication` proves that clearing fixed coordinate
+allowances respects products whose exponents fit those allowances. Actual
+coordinate degrees of nonzero integer products add; handling zero factors
+separately therefore proves `cleared (p*q) = cleared p * cleared q` and
+`cleared (p^k) = (cleared p)^k`.
+
+`TermPowerFP` retains the validated source once while writing one multiplication
+per unary-counted round. The encoded expression grows linearly in the exponent
+and source length, giving an FP writer for every unary FP exponent. No monomial
+expansion is constructed. `CompactPowerCoefficient` composes it with the full
+compactification evaluator. For positive powers, zero-padded queries provably
+access coefficients of the original-arity compact polynomial raised to that
+power; power zero is also handled in the evaluator's own padded dimension.
+
+`TubeCoefficientDecomposition` proves an exact identity for the existing
+expanded integer tube: a multiple of the embedded source square, the embedded
+source times a linear shift, and the same tube with source zero. The square's
+multiplicity is the number of active source-equation constraints, at most two.
+The linear shift has at most their two shift coordinates. Thus the only dense
+product needed for tube access is already supplied by the power routine.
+Encoded access to the zero-source tube and the shifted source coefficients,
+then composition with projection derivatives, remains open.
 
 ## TM2 versus Complexitylib's machines
 
