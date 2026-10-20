@@ -42,6 +42,17 @@ theorem encode_sum (B : ℕ) (p : Polynomial (Polynomial R)) :
   conv_lhs => rw [p.as_sum_range]
   simp only [map_sum, encode_monomial]
 
+theorem encode_natDegree_le (B E T : ℕ) (p : Polynomial (Polynomial R))
+    (hp : ∀ j, (p.coeff j).natDegree ≤ E) (hT : p.natDegree ≤ T) :
+    (encode B p).natDegree ≤ E + B * T := by
+  rw [encode_sum]
+  apply Polynomial.natDegree_sum_le_of_forall_le
+  intro j hj
+  have hj' : j ≤ T := by have := Finset.mem_range.mp hj; omega
+  exact Polynomial.natDegree_mul_le.trans
+    ((Nat.add_le_add (hp j) (Polynomial.natDegree_X_pow_le _)).trans
+      (Nat.add_le_add_left (Nat.mul_le_mul_left B hj') E))
+
 theorem coefficient (B : ℕ) (p : Polynomial (Polynomial R))
     (hp : ∀ j, (p.coeff j).natDegree < B) (i j : ℕ) (hi : i < B) :
     (encode B p).coeff (i + B * j) = (p.coeff j).coeff i := by

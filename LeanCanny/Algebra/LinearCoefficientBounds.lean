@@ -40,4 +40,15 @@ theorem LinearCoefficientBits.coefficient_mass_le (A : List Bool → ℕ) (a : L
       · simp
     _ = _ := by simp
 
+theorem LinearCoefficientBits.coefficient_natDegree_le (A : List Bool → ℕ) (a : List Bool → ℕ → Polynomial ℤ)
+    (c : List Bool) (D : ℕ) (h : ∀ i, i < A c → (a c i).natDegree ≤ D) (e : Fin (A c) →₀ ℕ) :
+    ((LinearCoefficientBits.polynomial A a c).coeff e).natDegree ≤ D := by
+  rw [LinearCoefficientBits.polynomial_eq_sum, MvPolynomial.coeff_sum]
+  apply Polynomial.natDegree_sum_le_of_forall_le
+  intro i _
+  rw [MvPolynomial.C_mul_X_eq_monomial, MvPolynomial.coeff_monomial]
+  split_ifs
+  · exact h i.val i.isLt
+  · simp
+
 end LeanCanny.Algebra
