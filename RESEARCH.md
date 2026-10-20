@@ -2548,6 +2548,49 @@ determinant identities: polynomiality of the required quotient
 `det(A-sI)/det(extraneous-sI)` and its resultant identification remain open,
 as do the remaining higher exactness and algorithmic space bounds.
 
+## The exterior Koszul complex and coordinate-chart exactness
+
+`KoszulExterior` uses Mathlib's `CliffordAlgebra.contractLeft` on the exterior
+algebra of the free module `I → R`. For the linear form
+`v ↦ Σᵢ vᵢ*pᵢ`, contraction gives a square-zero differential, and different
+coefficient families give anticommuting differentials. The differential
+sends exterior degree `k+1` into degree `k`; the proof uses the spanning
+exterior products and the contraction rule for one more generator.
+`KoszulComplex` packages these maps as a Mathlib `ChainComplex`.
+
+If `Σᵢ vᵢ*pᵢ=1`, exterior multiplication by `ι(v)` gives
+`d(ι(v)*x)+ι(v)*d(x)=x`. It raises exterior degree by one. Consequently the
+kernel in every positive exterior degree is exactly the image from the
+next degree, and the degree-one map surjects onto degree zero.
+
+`MacaulayKoszulExteriorBridge` connects this construction to the existing
+polynomial matrices. On exterior degree one the differential is the
+polynomial combination `Σᵢ qᵢ*pᵢ`, embedded as a scalar in the exterior
+algebra; scalar injectivity gives the zero equivalence. For compatible
+homogeneous multiplier families, the finite Macaulay kernel condition is
+equivalent to this exterior kernel condition. Each previously constructed
+`koszulMultipliers` vector is the boundary of a monomial multiple of the
+exterior pair in the corresponding orientation.
+
+`MacaulayLocalizedKoszul` takes the generic coefficient field `K=RatFunc R`
+and the spatial polynomial ring `P=K[x₀,…,xₙ₋₁]`. The existing Macaulay
+certificate puts `xᵢ^L` in the shifted ideal. For any ring map from `P` that
+makes `xᵢ` a unit, mapping the finite ideal combination and multiplying by
+the inverse of `xᵢ^L` gives a combination of the mapped inputs equal to one.
+The canonical instance is `Localization.Away (X i)`. Thus the shifted
+Koszul complex on every coordinate chart has a contracting homotopy,
+exact maps in all positive exterior degrees, and a surjective degree-zero
+map. `TubeMacaulayLocalizedKoszul` specializes these results to the actual
+tube rows using their proved homogeneity and width bound, with no extra
+coordinate-reader or algebraic certificate.
+
+The grading here is exterior degree over the localized spatial polynomial
+ring. The homotopy coefficients may contain inverted spatial coordinates.
+Exactness on these charts does not by itself prove higher exactness in the
+finite weighted polynomial grade used by the Macaulay determinant. That
+bridge, the resultant quotient identity, and the full ETR algorithm remain
+open; no algorithmic space bound for these homotopies is asserted.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
