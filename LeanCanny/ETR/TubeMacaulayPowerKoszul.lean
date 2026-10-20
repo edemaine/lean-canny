@@ -11,8 +11,8 @@ public import LeanCanny.Algebra.KoszulWeightedContractionMatrix
 
 The coordinate-power system with the tube's degrees has a polynomial
 contracting homotopy on the same finite weighted pieces as the shifted tube.
-This proves exactness of that pure-power complex. Transferring exactness to
-the actual generic shifted tube remains a separate step.
+This proves exactness of that pure-power complex. The transfer to the actual
+generic shifted tube is proved in `TubeMacaulayGenericKoszul`.
 -/
 
 @[expose] public section

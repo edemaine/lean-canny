@@ -12,8 +12,8 @@ public import LeanCanny.Algebra.MacaulayWeightedBridge
 
 Every term is a finite coefficient-field vector space. The complex is zero
 above the spatial arity, and its row-vector matrices have zero consecutive
-products. This constructs the finite complex; higher exactness and entry
-reader bounds for its chosen bases remain separate obligations.
+products. This constructs the finite complex; higher exactness is supplied
+in `TubeMacaulayGenericKoszul`. Entry-reader bounds remain open.
 -/
 
 @[expose] public section

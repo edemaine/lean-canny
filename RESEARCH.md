@@ -2546,7 +2546,8 @@ system using the existing width bound. No coordinate-reader hypothesis or
 new algebraic assumption is supplied. These are relation and contraction
 determinant identities: polynomiality of the required quotient
 `det(A-sI)/det(extraneous-sI)` and its resultant identification remain open,
-as do the remaining higher exactness and algorithmic space bounds.
+as do the algorithmic space bounds. Higher weighted exactness is now proved
+below using the pure-power contraction and characteristic invertibility.
 
 ## The exterior Koszul complex and coordinate-chart exactness
 
@@ -2587,10 +2588,11 @@ coordinate-reader or algebraic certificate.
 The grading here is exterior degree over the localized spatial polynomial
 ring. The homotopy coefficients may contain inverted spatial coordinates.
 Exactness on these charts does not by itself prove higher exactness in the
-finite weighted polynomial grade used by the Macaulay determinant. Passing
-from chart exactness to higher exactness of the finite complex remains open,
-as do the resultant quotient identity and the full ETR algorithm. No
-algorithmic space bound for these homotopies is asserted.
+finite weighted polynomial grade used by the Macaulay determinant.
+Higher exactness of that finite complex is now proved below using a
+polynomial pure-power contraction and generic characteristic invertibility.
+The resultant quotient identity and the full ETR algorithm remain open.
+No algorithmic space bound for these homotopies is asserted.
 
 ## The finite weighted Koszul complex
 
@@ -2654,11 +2656,10 @@ degrees and exponent width. It includes finite pieces, vanishing above the
 spatial arity, the dimension bound, and zero consecutive matrix products.
 `TubeMacaulayCanonicalKoszul` additionally supplies the canonical bases,
 their matrices, and the full first-matrix reindexing identity for this system.
-Higher exactness for the generic shifted system in this finite weighted
-complex is still unproved. The pure-power case now has a polynomial
-contraction, described below. Transferring it to the generic shifted system,
-determinant cancellation/resultant identification, and the ETR space bound
-remain open.
+The pure-power case has a polynomial contraction, described below, and
+generic characteristic invertibility transfers exactness to the shifted
+system. Determinant cancellation/resultant identification and the ETR space
+bound remain open.
 
 ## Polynomial contraction of the finite pure-power complex
 
@@ -2694,13 +2695,44 @@ finite bases. All results hold over any commutative coefficient ring.
 with the tube's degrees, on the same finite pieces as the actual shifted
 tube complex.
 
-The next algebraic step is the generic-shift transfer. Writing `D_0` for
-the pure-power differential, its contraction `H` gives
-`(D-s D_0)H + H(D-s D_0) = DH+HD-s I` on each finite piece. A characteristic
-polynomial argument should make this operator invertible over the rational
-function field, giving higher exactness for the generic shifted system.
-The required coefficient-extension identities and this invertibility
-argument have not yet been proved for the weighted complex.
+## Higher exactness for the finite generic shifted complex
+
+`KoszulCoefficientMap` applies any coefficient ring homomorphism to the
+ordered exterior coordinates. This semilinear map preserves monomial
+exterior words and commutes with coordinate insertion and the differential.
+`KoszulLinearInput` proves linear dependence of contraction on its input
+system. `KoszulCanonicalMatrixMap` consequently proves coefficient-extension
+identities for both the canonical differential and pure-power homotopy
+matrices, and the scalar-pencil identity for the differential matrices.
+
+`KoszulGenericContraction` writes the finite operator `H D + D H` in these
+canonical bases. For the subtractive system, the pure-power homotopy identity
+identifies it with `A-s I`, where `A` is the unshifted operator over the
+original coefficient ring. Its determinant is a signed characteristic
+polynomial, hence nonzero. Mapping to the rational function field proves
+invertibility of the actual shifted operator in every positive exterior
+degree.
+
+`MatrixHomotopyExact` supplies the finite-dimensional exactness argument.
+For consecutive row-vector matrices `B D=0`, the operator `H B+D J`
+preserves the kernel of `D`. If its determinant is a unit, its restriction
+to that finite-dimensional kernel is injective and therefore surjective.
+For a kernel vector `v`, choose a kernel vector `w` mapped to `v`; then
+`v=w H B`, so `v` is a boundary.
+
+`KoszulGenericExact` applies this criterion to every positive exterior
+degree of the canonical shifted matrices and transfers the result through
+the canonical coordinate bases to the actual weighted differential maps.
+`KoszulGenericZero` transfers full Macaulay matrix surjectivity through the
+proved index equivalences and bases, proving surjectivity in degree zero.
+`TubeMacaulayGenericKoszul` instantiates both results for the actual shifted
+tube complex, together with nonzero determinants for its finite homotopy
+operators. No extra algebraic certificates or entry readers are assumed.
+
+Higher exactness at the finite Macaulay grade is thus proved. Determinant
+cancellation and identification of the quotient with the multivariate
+resultant, resource bounds for this construction, and the complete ETR
+polynomial-space theorem remain open.
 
 ## TM2 versus Complexitylib's machines
 

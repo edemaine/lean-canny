@@ -12,8 +12,8 @@ public import LeanCanny.Algebra.MacaulayCanonicalMatrix
 The finite tube pieces have monomial–subset bases. These give canonical
 row-vector matrices with zero consecutive products. The first matrix,
 reindexed by the proved Macaulay index equivalences, is the actual full
-Macaulay multiplication matrix. Higher exactness and resource-bounded
-entry readers remain open.
+Macaulay multiplication matrix. Higher exactness is supplied in
+`TubeMacaulayGenericKoszul`; resource-bounded entry readers remain open.
 -/
 
 @[expose] public section
