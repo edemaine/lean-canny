@@ -66,6 +66,9 @@ dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 | [`ETR.EquationCompilerMachine`](LeanCanny/ETR/EquationCompilerMachine.lean), [`EquationCompilerBounds`](LeanCanny/ETR/EquationCompilerBounds.lean), [`EquationCompilerStateEncoding`](LeanCanny/ETR/EquationCompilerStateEncoding.lean) | A sequential stack compiler agrees exactly with `SignedFormula.equations`, terminates within twice the formula's bit length, and keeps its entire encoded state below `10000*(n+1)^3` bits throughout the run, starting fresh indices at `n`. |
 | [`ETR.EquationCompilerAtomEncoding`](LeanCanny/ETR/EquationCompilerAtomEncoding.lean), [`EquationCompilerStepEncoding`](LeanCanny/ETR/EquationCompilerStepEncoding.lean), [`EquationCompilerFP`](LeanCanny/ETR/EquationCompilerFP.lean) | The encoded step implements the typed stack machine and belongs to `FP`. The bounded loop gives polynomial-time reductions from ETR to equation systems and single equations, proving both target languages ∃ℝ-complete. Correctness covers all binary strings. |
 | [`Algebra.Separation`](LeanCanny/Algebra/Separation.lean) | For `m` points in a characteristic-zero field, an integer `0 ≤ c ≤ m²` makes `(a,b) ↦ a+c*b` injective. Lagrange interpolation recovers both coordinates with degree below `m`. |
+| [`Algebra.SymmetricRecoveryDegeneracy`](LeanCanny/Algebra/SymmetricRecoveryDegeneracy.lean) | The finite system `x^3-x=0, y=0` has no projective roots at infinity, yet the report's symmetric recovery pair at the middle root has a cubic GCD, even with distinct original projected roots. |
+| [`Algebra.VectorSeparation`](LeanCanny/Algebra/VectorSeparation.lean), [`AffineGridAvoidance`](LeanCanny/Algebra/AffineGridAvoidance.lean), [`AsymmetricProjection`](LeanCanny/Algebra/AsymmetricProjection.lean) | For N vectors in n coordinates, a positive weight `k ≤ N^4+1` and integer direction coefficients `≤ (n+1)*N^4` separate every coordinate's asymmetric root pairs simultaneously. |
+| [`Algebra.AsymmetricCoordinateRecovery`](LeanCanny/Algebra/AsymmetricCoordinateRecovery.lean) | Nodal projection polynomials give rational coordinates in the original projection parameter, with nonzero denominators on every point. Denominator degree is at most `max 1 ((N-1)*N)` and numerator degree at most one more. Constructing these polynomials from encoded multivariate equations remains open. |
 | [`Algebra.GaloisDescent`](LeanCanny/Algebra/GaloisDescent.lean) | For finite point sets stable under a finite Galois group, the nodal polynomial and coordinate interpolants descend to the input field. The nodal polynomial is monic and separable, with exactly the projected points as roots. |
 | [`Algebra.PrimitiveCoordinates`](LeanCanny/Algebra/PrimitiveCoordinates.lean) | The algebraic existence part of Lemma 2.1: two square-free polynomials of degrees `d₁,d₂` over a characteristic-zero field have a monic separable degree-`d₁*d₂` representation, with coordinate polynomials over that same field. A common finite Galois splitting field is supplied; `c ≤ (d₁*d₂)^2`. |
 | [`Algebra.GCDRecovery`](LeanCanny/Algebra/GCDRecovery.lean) | At `θ = a+c*b`, the GCD of `p₁(θ-c*x)` and `p₂(x)` is linear. Its coefficients recover `b = -g₀/g₁` and `a = θ+c*g₀/g₁`, with `g₁ ≠ 0`. The hypotheses include separability, splitting, and a separating direction. |
@@ -608,6 +611,14 @@ total degree, including finite families of conditions. A normalized direction
 with natural-number coordinates and a finite extended projection fiber therefore
 exists. Input-size bounds for the exceptional polynomial and for suitable
 encoded direction choices remain open.
+
+A separate finite-set result now bounds the choices needed for coordinate recovery.
+The report's fixed symmetric shifts (equations (13)--(15)) can have spurious common
+roots for every projection direction; the three points `(-1,0),(0,0),(1,0)` give a
+verified example. Replacing the positive shift by a bounded positive weight gives
+simultaneously separating root pairs and rational coordinate formulas. This repairs
+that finite-set recovery step; it does not supply the multivariate eliminants, their
+coefficient algorithms, or the remaining input-size bounds for critical sampling.
 
 [`IntegerProjectionDirections`](LeanCanny/Geometry/IntegerProjectionDirections.lean)
 gives one normalized natural-number direction with finite projection root sets

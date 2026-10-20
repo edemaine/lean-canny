@@ -896,6 +896,55 @@ stronger polylogarithmic dependence on an implicitly large polynomial family,
 its full algebraic-parameter specialization, or the effective critical-point
 argument. Those obligations and `ETR ∈ PSPACE` remain open.
 
+## Symmetric recovery degeneracy and bounded asymmetric coordinates
+
+The report's equations (13)--(15) do not always give the asserted linear GCD.
+`SymmetricRecoveryDegeneracy` verifies the finite affine system `x^3-x=0, y=0`:
+its solutions are `(-1,0),(0,0),(1,0)`, and homogenization has no nonzero solution
+at infinity. For direction `(c₀,c₁)`, its nodal eliminant is
+`q(X)=X*(X-c₀)*(X+c₀)`, separable when `c₀≠0`. Shifting `c₁` by either sign of
+one leaves q unchanged. At the middle projected root zero, reflection gives
+`q(-X)=-q(X)`, so the recovery GCD has degree three. The corresponding midpoint
+triple makes condition (14) an identity in the direction coefficients. Thus the
+claim on page 7 that these bad conditions become nonzero polynomials under
+`cᵢ=βⁱ` needs an additional argument or a different construction. This identifies
+a gap in the fixed symmetric construction, not a counterexample to the PSPACE
+upper bound or the existence statement of Lemma 2.2. Previously proved
+univariate recovery theorems retain their explicit separating-pair hypotheses.
+
+`VectorSeparation.exists_bounded_pair_encoding` chooses a positive integer
+`k ≤ N^4+1` for which `(a,b) ↦ a+k*b` is injective on all ordered pairs of a
+finite N-point set S. Each collision of distinct pairs with unequal second
+components excludes at most one scalar; equal second components cannot collide.
+There are at most N⁴ excluded slopes, and excluding zero makes k positive.
+
+`AffineGridAvoidance` bounds a common integer nonzero evaluation of m nonzero
+affine forms by `0,...,m`. Its family separation theorem allows different affine
+offsets on each vector. `AsymmetricProjection.exists_bounded_direction` applies
+this to the encoded vector pairs: for every coordinate j, the affine scalar
+`L(a+k*b)+k*(aⱼ-bⱼ)` must distinguish all pairs. One further family with zero
+offsets ensures that L itself is injective on S. One common integer direction
+works, with every coefficient at most `(n+1)*N^4`. No condition is assumed to
+remain nonzero when it is identically zero; the vector-pair encoding proves
+nonzeroness before the grid theorem is applied.
+
+`AsymmetricCoordinateRecovery` forms nodal polynomials with roots
+`L(a)+k*aⱼ` and `L(b)-bⱼ`. They are separable, and their Cartesian root pairs
+are separated by `(A,B) ↦ A+k*B`. At a point x, the distinguished pair maps to
+`(k+1)*L(x)`. The existing `coordinate_recovery_spec`, including its linear-input
+branches, therefore gives a nonzero D and `xⱼ=L(x)+N/D`. Composing N and D with
+`(k+1)*X` yields `rationalNumerator/rationalDenominator` in the original parameter
+L(x), with denominator degree at most `max 1 ((N-1)*N)` and numerator degree at
+most one more. `exists_bounded_rational_coordinates` assembles the bounded choices,
+a separable projection eliminant, and simultaneous exact coordinate recovery.
+
+These are finite-set algebraic theorems over a characteristic-zero field.
+The nodal products use the supplied point set; they are not yet constructed from
+encoded multivariate equations, and no descent to integer coefficients or
+multivariate eliminant coefficient routine is supplied by these modules.
+The remaining effective multivariate construction, its complexity bounds, and
+`ETR ∈ PSPACE` remain open.
+
 ## Compactification before critical points
 
 The report's §3.1 starts by substituting `x_i = y_i/(1-y_i²)` and bounding the

@@ -71,6 +71,11 @@ import LeanCanny.Algebra.LevelProjectionSpecialization
 import LeanCanny.Algebra.ProjectionFiniteSpecialization
 import LeanCanny.Algebra.FiniteAlgebraicZeros
 import LeanCanny.Algebra.Separation
+import LeanCanny.Algebra.SymmetricRecoveryDegeneracy
+import LeanCanny.Algebra.VectorSeparation
+import LeanCanny.Algebra.AffineGridAvoidance
+import LeanCanny.Algebra.AsymmetricProjection
+import LeanCanny.Algebra.AsymmetricCoordinateRecovery
 import LeanCanny.Algebra.GCDRecovery
 import LeanCanny.Algebra.ResultantCoordinates
 import LeanCanny.Algebra.ShiftCoefficients
