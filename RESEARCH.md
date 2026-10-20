@@ -2248,6 +2248,51 @@ and ETR membership in PSPACE remain open. Both the full numerator and extraneous
 denominator now have complete lowest-index and integer-sign computations under
 the same original coordinate-reader contracts.
 
+## True characteristic quotient and inactive padding
+
+`PrincipalCharacteristic` proves the exact subtractive determinant identity
+for a principal matrix padded by identity rows: each omitted index contributes
+one factor of `1-s`. `MacaulayActiveCharacteristic` selects exactly the
+fixed-width indices at the Macaulay level and removes all inactive rows and
+columns. The padded numerator is `(1-s)^padding` times this true degree-level
+characteristic determinant. Their natural trailing degrees and trailing
+coefficients coincide, without a domain hypothesis. Thus removing computational
+padding preserves the lowest data used by the existing evaluator.
+
+`MacaulaySubtractiveSystem` replaces every homogeneous input by
+`fᵢ-s*xᵢ^dᵢ`. Every active principal matrix of the shifted system is exactly
+the subtractive characteristic matrix of the corresponding original principal
+matrix. This applies to both the full degree-level and extraneous matrices.
+
+`PolynomialQuotientLowest` constructs rational functions from polynomial
+numerator and denominator over an integral domain. For nonzero inputs, the
+integer difference of trailing degrees and the ratio of trailing coefficients
+in the coefficient fraction field depend only on the rational function.
+Factoring the lowest powers of `s` gives a power with this signed exponent
+times a quotient whose numerator and denominator have nonzero constant
+coefficients. If `numerator = polynomial * denominator` is proved, the signed
+order and coefficient ratio equal that polynomial's ordinary lowest order and
+coefficient.
+
+`TubeCharacteristicQuotient` applies this to the true degree-level numerator
+and actual extraneous denominator over `ℤ[θ][T]`. Both determinants and their
+rational quotient are nonzero. The quotient equals the ratio of the two
+principal determinants for the same shifted tube system. Its lowest data are
+representation independent. Its order is the difference of the two computed
+deformation indices, and its lowest coefficient ratio uses the already
+certified characteristic trailing coefficients.
+
+`TubeCharacteristicQuotientSpace` combines both complete lowest-index routines
+and FP signed subtraction to evaluate the quotient order. Its negative-order
+language is in PSPACE. The complete numerator sign routine also applies to
+selected scalar coefficients of the true unpadded numerator's lowest term.
+All original search and reader costs are included.
+
+This quotient is currently a rational function. Proving that it is a polynomial
+and equals the multivariate resultant of the shifted system remains open.
+Computing polynomial-quotient coefficients, proving geometric root persistence,
+and completing the sampling algorithm remain further obligations.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
