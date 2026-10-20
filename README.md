@@ -776,8 +776,17 @@ tube, using sequential output pairing and FP modular addition.
 [`TubeSourceCoefficient`](LeanCanny/ETR/TubeSourceCoefficient.lean) instantiates
 this evaluator on compiled ETR inputs and proves native-coordinate query
 correctness, including modulus one. Every nonzero tube coefficient has a query
-of polynomial length. Assembly of the projection coefficient machines remains
-open.
+of polynomial length.
+[`TubeProjectionEncoding`](LeanCanny/ETR/TubeProjectionEncoding.lean) orders
+projection variables as point, direction, and parameter blocks.
+[`TubeProjectionGuard`](LeanCanny/ETR/TubeProjectionGuard.lean) certifies the
+zero and unit direction patterns in FP, with their native polynomial equivalence.
+[`TubeProjectionRepack`](LeanCanny/ETR/TubeProjectionRepack.lean) certifies FP
+restriction and optional derivative increments using an extra exponent bit.
+[`TubeProjectionRestriction`](LeanCanny/ETR/TubeProjectionRestriction.lean) proves
+that these queries access exactly the required native tube coefficients and
+supplies their complete space evaluators. Modular derivative factors and
+assembly of projection rows remain open.
 
 ## Next obligations
 
