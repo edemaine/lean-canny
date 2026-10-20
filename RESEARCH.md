@@ -1640,8 +1640,25 @@ arity reader as well as binary output. `TubeEncoding` gives explicit finite
 equivalences for the point/shift/parameter coordinate layout and the constraint
 order. Its active-set bitmask has exactly `2+2*n` bits and a proved round trip.
 
-Encoded access to the zero-source tube and shifted source coefficients, and
-composition of the full tube/projection coefficient machines, remain open.
+`TubeZeroSyntax` gives the zero-source tube as a short ETR term: the squared
+radius expression, squares of the active affine constraints, and minus alpha.
+Its finite polynomial equals the existing integer tube after the explicit
+coordinate renaming. `TubeZeroBounds` proves exact syntax arity, including empty
+active sets and zero-dimensional sources; the delta coordinate forces the full
+layout. `TubeZeroFP` certifies serialization through polynomial range loops and
+the sum-of-squares writer, without distributing products.
+
+`FinitePolynomialCoefficientPadding` proves coefficient preservation under
+zero-padding beyond the syntax arity. `TubeZeroSpace` composes the FP writer
+with the full collected-coefficient routine. Native-coordinate queries have
+proved padding and renaming round trips, and every nonzero coefficient is
+representable by the fixed-width query. Coefficient residue access, negativity,
+and zero testing have complete polynomial-space certificates. Arity and active
+mask fields are arbitrary unary FP/FP functions, so the exact compiled-source
+arity reader supplies the required dimension without an oracle.
+
+Uniform FP query repacking/shifting and composition of the full tube/projection
+coefficient machines remain open.
 
 ## TM2 versus Complexitylib's machines
 

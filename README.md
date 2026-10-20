@@ -753,7 +753,13 @@ tube coefficient. It also connects the projection coefficient formulas to the
 actual integer projection system: each partial row uses two shifted tube queries.
 [`TermArityFP`](LeanCanny/ETR/TermArityFP.lean) computes exact source syntax arity
 in FP. [`TubeEncoding`](LeanCanny/ETR/TubeEncoding.lean) supplies the coordinate
-layout and active-set bitmask round trip. Encoded zero-source/shift access and
+layout and active-set bitmask round trip.
+[`TubeZeroSyntax`](LeanCanny/ETR/TubeZeroSyntax.lean) represents the zero-source
+tube by a short expression and proves equality with the existing integer
+polynomial. [`TubeZeroFP`](LeanCanny/ETR/TubeZeroFP.lean) certifies its writer in FP.
+[`TubeZeroSpace`](LeanCanny/ETR/TubeZeroSpace.lean) supplies coefficient residues,
+negativity and zero testing in PSPACE, with native-coordinate query correctness
+and coverage of every nonzero coefficient. Encoded shifted/repacked queries and
 composition of the full tube/projection coefficient machines remain open.
 
 ## Next obligations

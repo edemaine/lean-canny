@@ -37,6 +37,19 @@ def coordinateEquiv (n : ℕ) : Coordinate n ≃ Fin (dimension n) :=
   (Equiv.sumCongr ((Equiv.sumCongr (Equiv.refl (Fin n)) (constraintEquiv n)).trans finSumFinEquiv)
     parameterEquiv).trans finSumFinEquiv
 
+@[simp] theorem constraintIndex_source_false (n : ℕ) : (constraintEquiv n (.inl false)).val = 0 := rfl
+@[simp] theorem constraintIndex_source_true (n : ℕ) : (constraintEquiv n (.inl true)).val = 1 := rfl
+@[simp] theorem constraintIndex_box (n : ℕ) (i : Fin n) (b : Bool) :
+    (constraintEquiv n (.inr (i, b))).val = 2 + 2 * i.val + (if b then 1 else 0) := by
+  cases b
+  · change 2 + (0 + 2 * i.val) = 2 + 2 * i.val + 0
+    omega
+  · change 2 + (1 + 2 * i.val) = 2 + 2 * i.val + 1
+    omega
+
+@[simp] theorem index_shift (n : ℕ) (i : Constraint n) :
+    (coordinateEquiv n (.inl (.inr i))).val = n + (constraintEquiv n i).val := rfl
+
 @[simp] theorem index_point (n : ℕ) (i : Fin n) :
     (coordinateEquiv n (.inl (.inl i))).val = i.val := rfl
 
