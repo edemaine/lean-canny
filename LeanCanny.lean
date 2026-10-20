@@ -102,6 +102,12 @@ import LeanCanny.Algebra.MacaulayAffineDeformation
 import LeanCanny.Algebra.MacaulayDeformationSpace
 import LeanCanny.Algebra.MacaulayDeformationResidue
 import LeanCanny.Algebra.MacaulayDeformationSign
+import LeanCanny.Algebra.WeightedHomogenization
+import LeanCanny.Algebra.HomogenizationLayout
+import LeanCanny.Algebra.HomogenizationSpace
+import LeanCanny.Algebra.HomogeneousSubstitution
+import LeanCanny.ETR.TubeHomogenization
+import LeanCanny.ETR.TubeMacaulaySystem
 import LeanCanny.Algebra.FiniteDenominatorClearing
 import LeanCanny.Algebra.RationalPolynomialClearing
 import LeanCanny.Algebra.BoundedIntegerCoordinates
