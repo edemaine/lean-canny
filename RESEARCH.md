@@ -1727,8 +1727,26 @@ the generic small-modulus zero scan for a certified residue child and FP binary
 bit-budget writer; it also supports exponential budgets without unary expansion.
 This proves zero testing for both full polynomial families in PSPACE. Native
 coefficient-query equalities connect the predicates to representable exponents
-of the actual compiled-input polynomials. Quantitative parameter selection and
-the complete ETR PSPACE decision procedure remain open.
+of the actual compiled-input polynomials.
+
+`FixedWidthPolynomial` uses the finite base-2^W function equivalence to enumerate
+exponent vectors by binary rank. Injectivity and support coverage prove exact
+reconstruction from actual coefficients, rather than expansion terms.
+`FixedWidthPolynomialFP` writes the exponential term count with A*W+1 bits and
+certifies binary coordinate readers, including invalid-index handling.
+`FixedWidthPolynomialLayout` transports these statements through native variable
+equivalences using a total-degree allowance.
+
+`TubeIndexedSource` supplies the actual tube/projection source identities, with
+W equal to the binary size of `8*N²+4`. All source metadata has FP writers.
+`TubeIndexedSpace` connects arbitrary binary ranks to the complete native residue
+machines, with FP source, active-mask, row, and modulus fields. The mathematical
+term family is never materialized. `TubeIndexedBounds` retains the actual source
+coefficient mass bound for every rank and supplies an FP even denominator-power
+allowance `2^W`, bounded by twice the full degree allowance. These establish the
+source-side contracts for streamed rational substitution. Composing substitution
+with coordinate readers, quantitative parameter selection, and the complete ETR
+PSPACE decision procedure remain open.
 
 ## TM2 versus Complexitylib's machines
 

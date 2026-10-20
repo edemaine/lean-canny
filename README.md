@@ -804,7 +804,21 @@ both full residue evaluators to the actual `20*N²+6*N+22` coefficient-bit budge
 It supplies complete three-way sign evaluators and proves coefficient negativity,
 positivity, and zero testing in PSPACE on every binary input. Zero testing uses
 [`IntegerZeroSpace`](LeanCanny/Algebra/IntegerZeroSpace.lean), which scans small
-moduli with a binary size bound. Effective sampling remains open.
+moduli with a binary size bound.
+[`FixedWidthPolynomial`](LeanCanny/Algebra/FixedWidthPolynomial.lean) proves that
+binary ranks enumerate bounded exponent vectors uniquely and reconstruct a
+polynomial from its actual coefficients.
+[`TubeIndexedSource`](LeanCanny/ETR/TubeIndexedSource.lean) instantiates this
+representation for the native tube and projection layouts, with FP exponent
+readers and binary term-count writers. Blocks use the binary length of the full
+degree allowance.
+[`TubeIndexedSpace`](LeanCanny/ETR/TubeIndexedSpace.lean) supplies complete residue
+readers for these indexed coefficients, parameterized by FP source, active-set,
+row, and modulus fields.
+[`TubeIndexedBounds`](LeanCanny/ETR/TubeIndexedBounds.lean) supplies uniform
+coefficient bounds and an FP even denominator-clearing allowance at most twice
+the full degree bound. These are the source-side contracts for streamed rational
+substitution. The substitution composition and effective sampling remain open.
 
 ## Next obligations
 

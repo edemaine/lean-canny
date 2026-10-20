@@ -38,6 +38,8 @@ import LeanCanny.ETR.TubeSourceCoefficient
 import LeanCanny.ETR.TubeProjectionRestriction
 import LeanCanny.ETR.TubeSourceProjectionCoefficient
 import LeanCanny.ETR.TubeCoefficientDecisions
+import LeanCanny.ETR.TubeIndexedSpace
+import LeanCanny.ETR.TubeIndexedBounds
 import LeanCanny.ETR.CompactCoefficientSign
 import LeanCanny.ETR.CompactCoefficientZero
 import LeanCanny.ETR.SourceDegreeSpace
