@@ -111,6 +111,20 @@ noncomputable def coefficient (source target : List Bool → List Bool) (c : Lis
     (Term.finitePolynomial (CollectedCoefficient.dimension source c) (TermView.term (source c)))).coeff
       (Algebra.RationalSubstitution.Indexed.exponentVector (CollectedCoefficient.dimension source c) (exponent source target c))
 
+theorem coefficient_eq_of_encoded_target (source target : List Bool → List Bool) (c : List Bool) (e : ℕ → ℕ)
+    (ht : target c = FixedWidthNatVector.encode (CollectedCoefficient.dimension source c) (width source c) e)
+    (he : ∀ i < CollectedCoefficient.dimension source c, e i < 2 ^ width source c) :
+    coefficient source target c =
+      (Geometry.CubePolynomial.cleared
+        (Term.finitePolynomial (CollectedCoefficient.dimension source c) (TermView.term (source c)))).coeff
+          (Algebra.RationalSubstitution.Indexed.exponentVector (CollectedCoefficient.dimension source c) e) := by
+  unfold coefficient
+  congr 1
+  apply (Term.exponentVector_eq_iff _ _ _).mpr
+  intro i hi
+  rw [exponent, ht]
+  exact FixedWidthNatVector.decode_block _ _ e i hi (he i hi)
+
 theorem coefficient_eq_sum (source target : List Bool → List Bool) (c : List Bool) :
     coefficient source target c = ∑ r ∈ Finset.range (TermView.term (source c)).monomialCount,
       (TermView.term (source c)).monomialCoefficient r *

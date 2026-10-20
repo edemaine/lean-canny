@@ -726,7 +726,13 @@ space-bounded factors, and
 [`CompactCoefficientSpace`](LeanCanny/ETR/CompactCoefficientSpace.lean) combines
 the coordinate product and source-term sum into compactified coefficient
 residue access. Its polynomial has the validated source length as its padded
-dimension. The original-arity bridge and tube coefficient access remain open.
+dimension.
+[`CompactCoefficientPadding`](LeanCanny/ETR/CompactCoefficientPadding.lean)
+proves that zero-padding preserves original compactified coefficients.
+[`CompactSourceCoefficient`](LeanCanny/ETR/CompactSourceCoefficient.lean)
+instantiates the evaluator for compiled ETR inputs and proves exact access to
+`CompactSource.polynomial`. Every nonzero coefficient has a query of length
+`N*(4*N²+1)`. Tube coefficient access remains open.
 
 ## Next obligations
 

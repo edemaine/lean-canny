@@ -15,7 +15,7 @@ polynomial uses N variables, where N is the normalized compiled term length;
 unused coordinates are zero-padded. Each exponent takes N+1 bits, so every
 potentially nonzero coefficient has a representable query. The certified
 evaluator computes its residue in polynomial space on every binary input.
-Compactification and tube coefficient access require additional routines.
+Compactification coefficient access is supplied by `CompactSourceCoefficient`.
 -/
 
 @[expose] public section

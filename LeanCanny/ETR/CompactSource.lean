@@ -11,8 +11,8 @@ public import LeanCanny.ETR.CompiledRationalSource
 
 The existing verified equation compiler supplies the source term. Correctness
 includes malformed-input defaults. These are semantic and degree results;
-encoded coefficient access for the compactified polynomial and the subsequent
-perturbation/critical-point construction are separate obligations.
+`CompactSourceCoefficient` supplies encoded coefficient residue access. The
+subsequent perturbation/critical-point computation requires additional routines.
 -/
 
 @[expose] public section

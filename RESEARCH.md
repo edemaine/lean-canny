@@ -1584,11 +1584,16 @@ factor using the actual-degree child and target exponent blocks of width
 the indexed source-term sum. Its certificate includes the saved inputs,
 accumulators, child states, and clocks at both loop levels.
 
-The result currently accesses `cleared (Term.finitePolynomial N t)` with
-`N` the validated source length. Connecting this padded polynomial to the
-original-arity `CompactSource.polynomial`, supplying a compiled-input query
-wrapper, and propagating access through tube/projection equations remain
-separate obligations.
+The generic routine accesses `cleared (Term.finitePolynomial N t)` with
+`N` the validated source length. `CompactCoefficientPadding` proves that
+zero-padding the exponent query preserves coefficients in the original arity:
+extra variables have source degree zero and contribute a factor of one.
+`CompactSourceCoefficient` supplies the compiled ETR input fields and proves
+exact query correctness for `CompactSource.polynomial`. The exponent query
+has length `N*(4*N²+1)`; the proved compactification degree bound ensures every
+nonzero coefficient is representable. Malformed source strings retain the
+compiler's existing default semantics. Propagating access through tube and
+projection equations remains open.
 
 ## TM2 versus Complexitylib's machines
 
