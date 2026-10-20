@@ -1526,8 +1526,7 @@ query correctness for every binary source input. Its finite polynomial uses N
 variables; the unused variables contribute no nonconstant monomials. Every
 nonzero coefficient has coordinate exponents at most the source degree and
 therefore an exponent query of exactly `N*(N+1)` bits. This is collected access
-to the source before compactification. Access through denominator clearing,
-active tubes, and projection equations remains open, along with quantitative
+to the source before compactification. Access through active tubes and projection equations remains open, along with quantitative
 sampling bounds and the complete ETR PSPACE decision procedure.
 
 ## Actual source degrees after cancellation
@@ -1558,9 +1557,38 @@ the syntax arity only renames the source polynomial, preserving actual degrees
 of original variables. `SourceDegreeSpace.value_original_variable` therefore
 returns exactly the degree used for denominator clearing in the compactified
 compiled ETR source. This supplies actual-degree access without an oracle.
-Combining it with binomial-factor residues for compactified coefficient access
-remains open, as do tube coefficient access, quantitative sampling bounds,
-and the complete ETR PSPACE algorithm.
+`CubeCoefficientFormula` now combines it with binomial factors, as described
+below. Tube coefficient access, quantitative sampling bounds, and the complete
+ETR PSPACE algorithm remain open.
+
+## Streamed compactification coefficients
+
+`SeparateVariableCoefficients` proves that a coefficient of a product of
+univariate polynomials in distinct variables is the product of the requested
+univariate coefficients. `CubeFactorCoefficients` gives the coefficient of
+`X^e*(1-X²)^s`: it is zero unless `e ≤ k` and `k-e` is even, and otherwise is
+`choose s ((k-e)/2) * (-1)^((k-e)/2)`.
+
+`CubeCoefficientFormula` packages clearing fixed denominator degrees as an
+additive map. Applying it to the indexed syntax expansion gives exactly the
+existing geometry polynomial, even when indexed source monomials cancel.
+The denominator exponents use the collected integer polynomial's actual
+coordinate degrees; no degree after modular reduction is substituted.
+
+`CubeFactorResidue` combines the existing polynomial-space binomial routine
+with FP modular powering and multiplication. `ModularProductSpace` retains
+one reduced residue while suspending a certified factor child, including for
+the empty product and modulus one. `CompactCoefficientQuery` prepares each
+factor using the actual-degree child and target exponent blocks of width
+`4*N²+1`. `CompactCoefficientSpace` streams the coordinate product and then
+the indexed source-term sum. Its certificate includes the saved inputs,
+accumulators, child states, and clocks at both loop levels.
+
+The result currently accesses `cleared (Term.finitePolynomial N t)` with
+`N` the validated source length. Connecting this padded polynomial to the
+original-arity `CompactSource.polynomial`, supplying a compiled-input query
+wrapper, and propagating access through tube/projection equations remain
+separate obligations.
 
 ## TM2 versus Complexitylib's machines
 

@@ -698,8 +698,7 @@ prove negativity and zero testing in PSPACE using the source's `N+1` bit budget.
 residue access for the compiled ETR source on every binary input. Its polynomial
 has N coordinates, with unused coordinates padded by zeros. Every nonzero
 coefficient has an exponent query of length `N*(N+1)`.
-This access is for the source before compactification; compactified and tube
-coefficient-access machines remain open.
+This evaluator accesses the source before compactification.
 
 [`FixedWidthNatVectorFP`](LeanCanny/Encoding/FixedWidthNatVectorFP.lean) writes
 polynomial-length vectors from FP coordinate readers.
@@ -716,7 +715,18 @@ with coefficient zero testing to compute actual degrees in polynomial space.
 that padding preserves the degrees of original variables.
 [`SourceDegreeSpace`](LeanCanny/ETR/SourceDegreeSpace.lean) therefore computes
 the exact source degrees used in compactification for compiled ETR inputs.
-Compactified coefficient access remains to be constructed.
+[`CubeCoefficientFormula`](LeanCanny/Geometry/CubeCoefficientFormula.lean)
+expresses compactified coefficients as sums of source coefficients times
+products of univariate binomial coefficients. It uses actual source degrees,
+including after cancellation.
+[`CubeFactorResidue`](LeanCanny/Algebra/CubeFactorResidue.lean) computes each
+factor in polynomial space.
+[`ModularProductSpace`](LeanCanny/Algebra/ModularProductSpace.lean) streams
+space-bounded factors, and
+[`CompactCoefficientSpace`](LeanCanny/ETR/CompactCoefficientSpace.lean) combines
+the coordinate product and source-term sum into compactified coefficient
+residue access. Its polynomial has the validated source length as its padded
+dimension. The original-arity bridge and tube coefficient access remain open.
 
 ## Next obligations
 
