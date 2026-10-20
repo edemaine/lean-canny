@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.TubeMacaulayCanonicalKoszul
-public import LeanCanny.Algebra.KoszulWeightedContractionMatrix
+public import LeanCanny.Algebra.KoszulHomotopySplit
 
 /-! # Pure-power contraction on the tube's finite weighted pieces
 
@@ -43,6 +43,22 @@ theorem homotopy_identity (source : List Bool → List Bool) (c : List Bool) (k 
 theorem homotopy_zero_identity (source : List Bool → List Bool) (c : List Bool) :
     (differential source c 0).comp (homotopy source c 0) = LinearMap.id :=
   KoszulWeighted.weightedHomotopy_zero_identity _ _ (TubeMacaulayKernelBasis.width_bound source c)
+
+theorem homotopy_comp (source : List Bool → List Bool) (c : List Bool) (k : ℕ) :
+    (homotopy source c (k + 1)).comp (homotopy source c k) = 0 :=
+  KoszulWeighted.weightedHomotopy_comp _ _ (TubeMacaulayKernelBasis.width_bound source c) k
+
+theorem homotopy_exact (source : List Bool → List Bool) (c : List Bool) (k : ℕ) :
+    LinearMap.ker (homotopy source c (k + 1)) = LinearMap.range (homotopy source c k) :=
+  KoszulWeighted.weightedHomotopy_exact _ _ (TubeMacaulayKernelBasis.width_bound source c) k
+
+theorem homotopy_zero_injective (source : List Bool → List Bool) (c : List Bool) :
+    Function.Injective (homotopy source c 0) :=
+  KoszulWeighted.weightedHomotopy_zero_injective _ _ (TubeMacaulayKernelBasis.width_bound source c)
+
+theorem homotopy_power_isCompl (source : List Bool → List Bool) (c : List Bool) (k : ℕ) :
+    IsCompl (LinearMap.range (homotopy source c k)) (LinearMap.range (differential source c (k + 1))) :=
+  KoszulWeighted.homotopy_power_isCompl _ _ (TubeMacaulayKernelBasis.width_bound source c) k
 
 theorem exact (source : List Bool → List Bool) (c : List Bool) (k : ℕ) :
     LinearMap.ker (differential source c k) = LinearMap.range (differential source c (k + 1)) :=

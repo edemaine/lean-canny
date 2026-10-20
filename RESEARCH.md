@@ -2734,6 +2734,54 @@ cancellation and identification of the quotient with the multivariate
 resultant, resource bounds for this construction, and the complete ETR
 polynomial-space theorem remain open.
 
+## Normalized splitting and the concrete determinant factors
+
+`KoszulHomotopyNormalization` proves that the polynomial homotopy preserves
+multidegree and squares to zero. Its finite maps and matrices consequently
+have zero consecutive compositions. The pure-power contraction identity
+then proves exactness of these raising maps themselves, with an injective
+degree-zero map.
+
+`KoszulHomotopySplit` constructs complementary projections `H D_0` and
+`D_0 H` on every positive weighted piece. Their images are exactly the
+incoming homotopy image and incoming pure-power differential image. This
+gives a module product decomposition over any commutative coefficient ring,
+independent of the homogeneous input system. `KoszulHomotopyOperator` proves
+that `D H+H D` commutes with `H`, preserves the incoming homotopy image, and
+has canonical matrix `contractionMatrix`.
+
+`MacaulayHomotopyBridge` identifies the first two concrete homotopy
+operations. On degree-zero basis terms, `H` selects precisely the existing
+Macaulay multiplier row. In degree one, `D H` gives precisely the existing
+`divisionRelations` matrix. Reindexing the finite degree-one operator
+therefore gives `fullMatrix*rowSelection+divisionRelations`.
+
+`MacaulayHomotopyDeterminant` transfers the existing determinant identities
+to this same operator: its determinant is `det(activeMinor)*det(relationMinor)`,
+and hence `det(activeMinor)*det(extraneousMinor)*higherRelationFactor`.
+The characteristic identity holds over the original polynomial coefficient
+ring. `TubeMacaulayPowerKoszul` supplies the normalized splitting for the
+tube's pieces; `TubeMacaulayHomotopyDeterminant` supplies invariance and both
+the characteristic and generic determinant factorizations for the tube.
+
+These results connect the exact finite complex to the concrete factors in
+the proposed resultant quotient. They do not prove that the extraneous
+determinant divides the active numerator: the proved factorization is of
+the larger degree-one homotopy determinant. Cancellation still requires
+control of the remaining higher determinant factors over the polynomial
+parameter ring; exactness over its rational function field alone does not
+provide that divisibility.
+
+Two sources for the remaining step were checked on 2026-10-20.
+[Quitté–Tête's combinatorial treatment](https://arxiv.org/abs/2308.12232)
+uses the multiplicative structure of graded Koszul resolutions together
+with Macaulay decompositions to obtain denominator formulas; its detailed
+argument still needs inspection. [D'Andrea–Dickenstein, §3](https://arxiv.org/html/math/0007036v1)
+gives generalized quotient formulas, but the proof of Lemma 3.3 invokes
+the classical Macaulay formula when the degree exceeds the critical degree.
+That lemma therefore cannot supply an independent proof of the classical
+case needed here.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

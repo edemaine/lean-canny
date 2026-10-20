@@ -151,6 +151,7 @@ import LeanCanny.ETR.TubeMacaulayWeightedKoszul
 import LeanCanny.ETR.TubeMacaulayCanonicalKoszul
 import LeanCanny.ETR.TubeMacaulayPowerKoszul
 import LeanCanny.ETR.TubeMacaulayGenericKoszul
+import LeanCanny.ETR.TubeMacaulayHomotopyDeterminant
 import LeanCanny.Algebra.MacaulayKoszulExteriorBridge
 import LeanCanny.Algebra.MacaulayLastParameterDegree
 import LeanCanny.Algebra.FiniteDenominatorClearing
