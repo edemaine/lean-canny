@@ -98,6 +98,7 @@ import LeanCanny.Algebra.MacaulayEntryCorrect
 import LeanCanny.Algebra.MacaulayPSPACE
 import LeanCanny.Algebra.MacaulayEntryEncoding
 import LeanCanny.Algebra.MacaulayPolynomialSpace
+import LeanCanny.Algebra.MacaulayBivariateSpace
 import LeanCanny.Algebra.MacaulayAffineDeformation
 import LeanCanny.Algebra.MacaulayDeformationSpace
 import LeanCanny.Algebra.MacaulayDeformationResidue
