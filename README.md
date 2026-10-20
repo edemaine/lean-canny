@@ -798,8 +798,13 @@ row has a proved encoding round trip.
 [`TubeSourceProjectionCoefficient`](LeanCanny/ETR/TubeSourceProjectionCoefficient.lean)
 instantiates the full residue evaluator on compiled ETR inputs. Native-coordinate
 correctness and polynomial-length exponent queries cover every nonzero coefficient
-of every actual integer projection row, including modulus one. Sign/zero recovery
-for the full tube/projection systems and effective sampling remain open.
+of every actual integer projection row, including modulus one.
+[`TubeCoefficientDecisions`](LeanCanny/ETR/TubeCoefficientDecisions.lean) connects
+both full residue evaluators to the actual `20*N²+6*N+22` coefficient-bit budget.
+It supplies complete three-way sign evaluators and proves coefficient negativity,
+positivity, and zero testing in PSPACE on every binary input. Zero testing uses
+[`IntegerZeroSpace`](LeanCanny/Algebra/IntegerZeroSpace.lean), which scans small
+moduli with a binary size bound. Effective sampling remains open.
 
 ## Next obligations
 

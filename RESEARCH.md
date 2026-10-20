@@ -1527,7 +1527,7 @@ query correctness for every binary source input. Its finite polynomial uses N
 variables; the unused variables contribute no nonconstant monomials. Every
 nonzero coefficient has coordinate exponents at most the source degree and
 therefore an exponent query of exactly `N*(N+1)` bits. This is collected access
-to the source before compactification. Access through active tubes and projection equations remains open, along with quantitative
+to the source before compactification. Access through active tubes and projection equations is supplied below. Quantitative
 sampling bounds and the complete ETR PSPACE decision procedure.
 
 ## Actual source degrees after cancellation
@@ -1717,9 +1717,18 @@ residues of the actual integer projection system on every binary input.
 `TubeSourceProjectionCoefficient` supplies the compiled ETR packet format and
 FP field readers. The proved degree bound makes every nonzero coefficient
 representable with at most `(6*N+7)*(8*N²+5)` exponent bits. All positive moduli,
-including one, are covered. Full tube/projection coefficient sign and zero
-recovery, quantitative parameter selection, and the complete ETR PSPACE
-decision procedure remain open.
+including one, are covered.
+
+`TubeCoefficientDecisions` derives magnitude-bit budgets directly from the actual
+tube and projection coefficient mass bounds. Its lifted packet readers compose
+the complete residue evaluators with CRT negativity and three-way sign recovery.
+Coefficient negativity and positivity are in PSPACE. `IntegerZeroSpace` packages
+the generic small-modulus zero scan for a certified residue child and FP binary
+bit-budget writer; it also supports exponential budgets without unary expansion.
+This proves zero testing for both full polynomial families in PSPACE. Native
+coefficient-query equalities connect the predicates to representable exponents
+of the actual compiled-input polynomials. Quantitative parameter selection and
+the complete ETR PSPACE decision procedure remain open.
 
 ## TM2 versus Complexitylib's machines
 
