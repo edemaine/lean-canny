@@ -2625,12 +2625,35 @@ is exactly the scalar embedding of that polynomial row. Applying the
 exterior algebra's scalar retraction and a target-monomial coefficient query
 recovers each entry of the original full rectangular Macaulay matrix.
 This identifies the first linear operation on its canonical generators;
-the general higher matrices use the separately chosen finite bases.
+the original higher matrices use the separately chosen finite bases.
+
+`KoszulMonomialBasis` combines the polynomial monomial basis with Mathlib's
+ordered exterior basis. Restricting to pairs `(monomial, subset)` with the
+specified subset size and total weight gives a finite independent family.
+`KoszulWeightedBasis` proves that this family spans the existing weighted
+space: repeated exterior coordinates vanish, and sorting an injective word
+changes it by a unit sign. Consequently each weighted piece is free over
+any commutative coefficient ring, with no field or exponent-width assumption
+needed for this basis theorem. Its coordinates are exactly the polynomial
+coefficients of the ambient exterior coordinates.
+
+`KoszulCanonicalMatrix` uses these bases for the differential matrices and
+proves both the coefficient formula and zero consecutive products.
+`MacaulayCanonicalMatrix` identifies all degree-one subset indices with
+the existing multiplier indices and all degree-zero indices with the active
+monomial indices. Both identifications are bijective. Reindexing the first
+canonical matrix therefore gives the entire full Macaulay matrix.
+These bases are defined over the original
+coefficient ring, with index sets depending only on degrees and width;
+they avoid a field-dependent basis choice when studying a parameterized
+complex. Polynomial-space entry readers remain to be constructed.
 
 `TubeMacaulayWeightedKoszul` instantiates the complex and its matrices for
 the actual generic shifted tube system, using its proved homogeneous
 degrees and exponent width. It includes finite pieces, vanishing above the
 spatial arity, the dimension bound, and zero consecutive matrix products.
+`TubeMacaulayCanonicalKoszul` additionally supplies the canonical bases,
+their matrices, and the full first-matrix reindexing identity for this system.
 Higher exactness in this finite weighted complex is still unproved. The
 coordinate-chart homotopies may use inverse coordinates and do not yet
 restrict to these finite pieces. That exactness bridge, determinant
