@@ -701,6 +701,23 @@ coefficient has an exponent query of length `N*(N+1)`.
 This access is for the source before compactification; compactified and tube
 coefficient-access machines remain open.
 
+[`FixedWidthNatVectorFP`](LeanCanny/Encoding/FixedWidthNatVectorFP.lean) writes
+polynomial-length vectors from FP coordinate readers.
+[`MonomialExponentVector`](LeanCanny/ETR/MonomialExponentVector.lean) uses it to
+write exact collected-coefficient queries for selected indexed monomials.
+[`CollectedDegree`](LeanCanny/ETR/CollectedDegree.lean) proves that the maximum
+indexed exponent whose collected coefficient survives is the actual variable
+degree, including complete cancellation.
+[`BoundedMaximum`](LeanCanny/Computation/BoundedMaximum.lean) certifies a streamed
+maximum over exponentially many space-bounded calls.
+[`CollectedDegreeSpace`](LeanCanny/ETR/CollectedDegreeSpace.lean) combines these
+with coefficient zero testing to compute actual degrees in polynomial space.
+[`FinitePolynomialPadding`](LeanCanny/ETR/FinitePolynomialPadding.lean) proves
+that padding preserves the degrees of original variables.
+[`SourceDegreeSpace`](LeanCanny/ETR/SourceDegreeSpace.lean) therefore computes
+the exact source degrees used in compactification for compiled ETR inputs.
+Compactified coefficient access remains to be constructed.
+
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.

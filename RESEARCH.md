@@ -1530,6 +1530,38 @@ to the source before compactification. Access through denominator clearing,
 active tubes, and projection equations remains open, along with quantitative
 sampling bounds and the complete ETR PSPACE decision procedure.
 
+## Actual source degrees after cancellation
+
+The compactification uses the original integer polynomial's coordinate degrees.
+Syntax degree bounds and degrees after modular reduction do not in general
+equal these values. `CollectedDegree` proves a cancellation-aware formula:
+scan the indexed source monomials, discard those whose collected coefficient
+is zero, and maximize their selected-variable exponents. Every nonzero
+coefficient occurs in the indexed expansion, so this gives exactly `degreeOf`.
+The zero polynomial gives zero.
+
+`FixedWidthNatVectorFP` writes vectors from FP coordinate readers, and
+`MonomialExponentVector` builds each selected indexed monomial's exact exponent
+query. The source's degree bound ensures every exponent fits. This avoids
+enumerating a larger grid of all possible monomials.
+
+`BoundedMaximum` retains one binary maximum while calling a certified child
+over a binary-sized range. Its workspace includes the saved parent and child
+states. `CollectedDegreeSpace` uses the full coefficient zero decider as the
+predicate child, then streams the surviving exponents through this maximum.
+Its `SpaceFunction` returns the actual coordinate degree; binary variable
+indices outside the padded dimension return zero. All malformed-source
+defaults are retained.
+
+`FinitePolynomialPadding` proves that enlarging the variable dimension above
+the syntax arity only renames the source polynomial, preserving actual degrees
+of original variables. `SourceDegreeSpace.value_original_variable` therefore
+returns exactly the degree used for denominator clearing in the compactified
+compiled ETR source. This supplies actual-degree access without an oracle.
+Combining it with binomial-factor residues for compactified coefficient access
+remains open, as do tube coefficient access, quantitative sampling bounds,
+and the complete ETR PSPACE algorithm.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
