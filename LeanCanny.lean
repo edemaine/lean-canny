@@ -144,6 +144,7 @@ import LeanCanny.ETR.TubeCharacteristicQuotientDegree
 import LeanCanny.ETR.TubeMacaulayKoszul
 import LeanCanny.ETR.TubeMacaulayGenericShift
 import LeanCanny.ETR.TubeMacaulayKoszulExact
+import LeanCanny.ETR.TubeMacaulayKernelBasis
 import LeanCanny.Algebra.MacaulayLastParameterDegree
 import LeanCanny.Algebra.FiniteDenominatorClearing
 import LeanCanny.Algebra.RationalPolynomialClearing

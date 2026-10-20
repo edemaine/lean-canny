@@ -2473,6 +2473,42 @@ piece over the generic coefficient field. Higher Koszul exactness,
 determinant cancellation/resultant identification, and the space bounds for
 using these noncomputable inverses remain open.
 
+## A kernel basis and the source-contraction determinant
+
+`MacaulayRelationMinor` removes the selected multiplier rows, whose division
+relations are identically zero. The remaining row indices define
+`RelationIndex`; restricting the division relation matrix to the matching
+columns gives the square `relationMinor`. For coordinate powers this minor
+is the identity, because each relation is `e_a-e_selected(product(a))` and
+the second coordinate lies outside the complementary columns. Its
+characteristic shift is exactly `B-sI`, with `B` the original relation minor.
+The generic relation minor is therefore invertible over `RatFunc R`.
+
+Restricting a linear relation among these remaining rows to the complementary
+columns proves their linear independence. The earlier kernel-spanning
+theorem still applies after discarding the zero selected rows, so every
+generic kernel vector has a unique expansion in the remaining Koszul rows.
+The module constructs a Mathlib `Basis` of this kernel and proves that its
+vectors are exactly those rows. `TubeMacaulayKernelBasis` supplies the basis
+and unique-coordinate theorem for the actual tube system.
+
+`MatrixSelectedBlock` proves the associated determinant comparison over any
+commutative coefficient ring. For an injective row selector `f`, write `H`
+for its selection matrix. If `E` vanishes on the selected rows, then
+`D*H+E` is block triangular along selected and complementary indices. Its
+selected diagonal block is `D.submatrix f id`, and its complementary block
+is the principal restriction of `E`. Hence the source-contraction determinant
+is the product of these two determinants. Applied to Macaulay division
+relations, this gives both the original and characteristic identities
+`det(D*H+E-sI)=det(A-sI)*det(B-sI)`, where `A` is the selected Macaulay
+matrix and `B` is the complementary relation minor.
+
+This factorization concerns the source contraction and its kernel basis.
+It does not identify `B` with the extraneous principal minor of `A`, or prove
+that the extraneous characteristic determinant divides `det(A-sI)`. That
+resultant cancellation, higher Koszul exactness, and bounds for computing
+the noncomputable kernel coordinates remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
