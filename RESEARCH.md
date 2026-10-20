@@ -2654,10 +2654,53 @@ degrees and exponent width. It includes finite pieces, vanishing above the
 spatial arity, the dimension bound, and zero consecutive matrix products.
 `TubeMacaulayCanonicalKoszul` additionally supplies the canonical bases,
 their matrices, and the full first-matrix reindexing identity for this system.
-Higher exactness in this finite weighted complex is still unproved. The
-coordinate-chart homotopies may use inverse coordinates and do not yet
-restrict to these finite pieces. That exactness bridge, determinant
-cancellation/resultant identification, and the ETR space bound remain open.
+Higher exactness for the generic shifted system in this finite weighted
+complex is still unproved. The pure-power case now has a polynomial
+contraction, described below. Transferring it to the generic shifted system,
+determinant cancellation/resultant identification, and the ETR space bound
+remain open.
+
+## Polynomial contraction of the finite pure-power complex
+
+`KoszulCoefficientDivision` defines a coefficient-ring linear division
+operator on the ambient monomial–subset basis. Terms not divisible by
+the divisor are discarded. Division commutes with insertion of a coordinate
+exterior generator; multiplying by the divisor and then dividing is the
+identity. If the coefficient monomial is divisible, division also commutes
+with the pure-power differential on that exterior word.
+
+`KoszulPowerHomotopy` inserts coordinate `i` after dividing coefficients by
+`X_i^(d_i)`. The identity `D H_i + H_i D = 1` holds on a monomial exterior
+word whenever its coefficient is divisible by this power or the word already
+contains `i`. In the latter case insertion vanishes, and applying division
+to the ordinary exterior homotopy identity proves the result.
+
+`KoszulMultidegree` assigns a word the exponent vector
+`m + Σ_j single(v_j, d_(v_j))`. Its total degree is the previously defined
+weight. The pure-power differential preserves this vector; exterior
+insertion adds the corresponding single-coordinate exponent.
+`KoszulLevelHomotopy` chooses the Macaulay pivot separately in each vector
+of total degree `Macaulay.level d`. The pivot is eligible, so the local
+homotopy identity applies. Preservation of multidegree keeps the same pivot
+throughout each differential image, proving the assembled identity.
+
+`KoszulWeightedContraction` proves that this polynomial homotopy maps the
+finite weighted piece of exterior degree `k` into degree `k+1`, for the
+usual exponent-width bound. It supplies the restricted homotopy identities,
+exactness in every positive degree, and surjectivity in degree zero.
+`KoszulWeightedContractionMatrix` expresses both identities in the canonical
+finite bases. All results hold over any commutative coefficient ring.
+`TubeMacaulayPowerKoszul` instantiates them for the coordinate-power system
+with the tube's degrees, on the same finite pieces as the actual shifted
+tube complex.
+
+The next algebraic step is the generic-shift transfer. Writing `D_0` for
+the pure-power differential, its contraction `H` gives
+`(D-s D_0)H + H(D-s D_0) = DH+HD-s I` on each finite piece. A characteristic
+polynomial argument should make this operator invertible over the rational
+function field, giving higher exactness for the generic shifted system.
+The required coefficient-extension identities and this invertibility
+argument have not yet been proved for the weighted complex.
 
 ## TM2 versus Complexitylib's machines
 
