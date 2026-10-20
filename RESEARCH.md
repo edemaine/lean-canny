@@ -1367,8 +1367,7 @@ families, using a bound on the sum of their degrees. Consequently a normalized
 direction with natural-number coordinates and a finite extended projection
 fiber exists. The current grid bound is the degree of an existential exceptional
 polynomial; an input-size bound, a certified construction of that polynomial,
-and preservation of the required positive sample under encoded direction
-selection remain open.
+and size bounds for suitable encoded direction choices remain open.
 
 `IntegerProjectionDirections` transfers the finite extended-fiber theorem to
 the actual projection equations on regular real hypersurfaces. Regularity
@@ -1408,6 +1407,34 @@ predicate yields samples whose directions retain it. The original unrestricted
 sampling theorems use the always-true predicate. This interface preserves the
 single active set and all positive inactive signs while supporting restricted
 direction witnesses. Effective rational height bounds remain open.
+
+## Rational finite sampling correctness
+
+`TubeRationalSampling` instantiates the direction-predicate sampling theorem
+with rational directions. Nearby rational finite-root choices keep the local
+tube maximum inside the positive-inactive neighborhood. The resulting
+`EventualRationalFiniteProjectionSamples` statement retains an explicit tuple
+of rational non-base direction coordinates at each level, with the base
+coordinate normalized to one.
+
+One active set works throughout each small-level interval. The rational tuple
+may vary with alpha; for every chosen tuple, all active projection root sets
+are finite and the selected active set has a root with positive inactive
+constraints. This criterion is equivalent to perturbed feasibility for
+nonnegative epsilon and positive delta. `ETR.TubeRationalSamplingSource.correct`
+proves the corresponding equivalence for every encoded ETR input.
+
+This establishes compatibility of rational finite-root direction choices with
+the required positive sample. It does not provide one direction throughout
+the interval, a numerator/denominator bit bound, effective parameter choices,
+root enumeration, or the full PSPACE decision procedure.
+
+A possible route to a direction fixed across levels is to retain alpha as a
+symbolic parameter in the exceptional polynomial, choose a rational direction
+preserving a nonzero alpha coefficient, and shrink the interval below its
+positive roots. This requires extending the derivation argument to moving
+polynomial coefficients and clearing denominators in the combined parameter
+ring. Those steps and their quantitative bounds remain unformalized.
 
 ## TM2 versus Complexitylib's machines
 

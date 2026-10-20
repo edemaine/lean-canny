@@ -606,8 +606,8 @@ fibers.
 nonzero exceptional polynomials on the integer grid `0,…,B` when B bounds their
 total degree, including finite families of conditions. A normalized direction
 with natural-number coordinates and a finite extended projection fiber therefore
-exists. Bounding the exceptional polynomial in terms of the input and preserving
-the required positive sample under an encoded direction choice remain open.
+exists. Input-size bounds for the exceptional polynomial and for suitable
+encoded direction choices remain open.
 
 [`IntegerProjectionDirections`](LeanCanny/Geometry/IntegerProjectionDirections.lean)
 gives one normalized natural-number direction with finite projection root sets
@@ -632,6 +632,16 @@ it in its witnesses, allowing these rational choices to be used without
 duplicating the objective-stability proof. Effective numerator and denominator
 bounds remain open.
 
+[`TubeRationalSampling`](LeanCanny/Geometry/TubeRationalSampling.lean) retains
+explicit rational direction tuples while preserving positive inactive signs.
+One active set works throughout the small-level interval; each chosen rational
+direction gives finite projection root sets for every active set, with a
+suitable sample in one of them.
+[`TubeRationalSamplingSource`](LeanCanny/ETR/TubeRationalSamplingSource.lean)
+proves this criterion equivalent to ETR satisfiability on all encoded inputs.
+The rational tuple may vary with the level. A uniform choice, bit-size bounds,
+effective parameter selection, and the full PSPACE algorithm remain open.
+
 ## Next obligations
 
 1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.
@@ -641,8 +651,9 @@ bounds remain open.
    requires more than polynomial time.
 3. Prove the full coordinate computation's space bound, including algebraic parameter values;
    formalize the remaining parallel/streamed algebra used by the report.
-4. Complete critical-point sampling and effective parameter selection, and combine
-   the algebraic sign tests into Canny's ETR decision procedure; prove `ETR ∈ PSPACE`.
+4. Prove quantitative sampling bounds and effective parameter selection, implement
+   critical-point sampling, and combine the algebraic sign tests into Canny's ETR
+   decision procedure; prove `ETR ∈ PSPACE`.
 5. Apply the proved PSPACE reduction closure once ETR membership is established;
    the conditional equivalence `∃ℝ ⊆ PSPACE ↔ ETR ∈ PSPACE` is already proved.
 6. Extend to roadmap connectivity and the geometric consequences in the report.
