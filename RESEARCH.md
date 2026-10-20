@@ -2399,10 +2399,11 @@ and two other coordinate degrees have the uniform bound at least two. These
 facts provide a multiplier at the Macaulay level, and the existing width and
 homogeneity theorems give a nonzero finite relation over `ℤ[θ][T][s]`.
 
-These relations concern the full rectangular multiplication matrix. Kernel
-spanning and higher graded exactness for the generic shifted system, and the
-determinant cancellation/resultant identity, remain open. No kernel statement
-for the selected square matrix is inferred from these rectangular relations.
+These relations concern the full rectangular multiplication matrix. Generic
+kernel spanning at the Macaulay level is proved below; higher graded
+exactness and the determinant cancellation/resultant identity remain open.
+No kernel statement for the selected square matrix is inferred from these
+rectangular relations.
 
 ## Generic shifted multiplication is surjective
 
@@ -2430,12 +2431,47 @@ The coefficient field here is `RatFunc (Polynomial (Polynomial ℤ))`, with
 independent characteristic, projection, and perturbation parameters.
 
 This establishes exactness at the final target of the graded multiplication
-map. It does not show that the previously constructed Koszul relations span
-its kernel, or prove exactness at earlier terms. The inverse is noncomputable
+map. Kernel spanning is established next. The inverse is noncomputable
 and has no space bound here. These statements concern the generic shifted
 system; specializing the characteristic parameter to zero is not an available
 map on its entire rational-function coefficient field. The polynomial
 resultant quotient and Canny's ETR upper bound remain unproved.
+
+## Koszul relations span the generic shifted kernel
+
+`MacaulayMonomialDivision` sends each multiplier row `a=(i,m)` to its
+coordinate-power product `m*xᵢ^dᵢ`, a monomial at the Macaulay level. Let `j`
+be its selected pivot. If `i=j`, this row is already selected. Otherwise
+`m` is divisible by `xⱼ^dⱼ`; dividing it gives a degree-compatible Koszul
+relation. For coordinate powers, its finite coefficient vector is exactly
+`e_a-e_selected(product(a))`. With `D₀` the full multiplication matrix,
+`H` the selected-row embedding, and `E₀` the matrix of these relation rows,
+the proved identity is `D₀*H+E₀=I`. Every coordinate-power kernel vector `v`
+therefore satisfies `v*E₀=v`, over any commutative ring.
+
+`MatrixKernelContraction` proves a general finite exactness criterion. For
+matrices `D,E,H` with `E*D=0`, suppose both `A=D*H+E` and `H*D` have unit
+determinant. For `v*D=0`, set `w=v*A⁻¹`. The identity `A*D=D*(H*D)` shows
+`w*D=0`, and then `v=w*A=w*E`. Thus every kernel vector is a row combination
+of `E`; the converse follows from `E*D=0`.
+
+`MacaulayKoszulContraction` applies this criterion to `fᵢ-s*xᵢ^dᵢ`. The
+division relation matrix depends linearly on the inputs and commutes with
+coefficient maps. Consequently the shifted source contraction is
+`D_s*H+E_s=(D*H+E)-s*I`. Its determinant is nonzero, as is the target
+contraction's selected Macaulay characteristic determinant. Both become
+units over `RatFunc R`, for any integral-domain input coefficient ring `R`.
+The resulting kernel theorem supplies a finite generating family and proves
+that the kernel equals the span of all degree-compatible Koszul relations.
+`TubeMacaulayKoszulExact` specializes both statements to the actual tube
+system using its existing homogeneity and width bounds, without extra
+algebraic or coordinate-reader assumptions.
+
+This proves exactness at the multiplier space, in addition to the previously
+proved surjectivity at the final target. It concerns this single graded
+piece over the generic coefficient field. Higher Koszul exactness,
+determinant cancellation/resultant identification, and the space bounds for
+using these noncomputable inverses remain open.
 
 ## TM2 versus Complexitylib's machines
 
