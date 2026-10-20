@@ -2504,10 +2504,49 @@ relations, this gives both the original and characteristic identities
 matrix and `B` is the complementary relation minor.
 
 This factorization concerns the source contraction and its kernel basis.
-It does not identify `B` with the extraneous principal minor of `A`, or prove
-that the extraneous characteristic determinant divides `det(A-sI)`. That
-resultant cancellation, higher Koszul exactness, and bounds for computing
-the noncomputable kernel coordinates remain open.
+The next comparison factors `det(B)` by the extraneous determinant. It does
+not prove that the extraneous characteristic determinant divides
+`det(A-sI)`. That resultant cancellation, higher Koszul exactness, and bounds
+for computing the noncomputable kernel coordinates remain open.
+
+## The extraneous determinant is a relation-determinant factor
+
+`MacaulayRelationBlocks` orders the complementary relation rows by their
+input coordinate `i`. The selected pivot `j` is strictly smaller than `i`.
+The relation has components only at `i` and `j`, so its square relation
+matrix is lower block triangular by `i`. Within a fixed component, adding
+the same coordinate power to both monomial exponents identifies each entry
+with the corresponding extraneous Macaulay entry. The extraneous matrix is
+upper block triangular by the greatest eligible coordinate: a nonzero entry
+must preserve every eligible coordinate other than the least pivot, and
+therefore cannot decrease the greatest one.
+
+`MacaulayRelationBlockEquiv` divides each unreduced target monomial by its
+greatest eligible coordinate power. The resulting multiplier is not selected
+and has that greatest coordinate as its input coordinate. This gives a
+bijection between the extraneous block with greatest coordinate `i` and the
+relation block with both input coordinate and greatest coordinate equal to
+`i`. Simultaneous reindexing preserves the diagonal-block determinants.
+
+`MacaulayRelationExtraneous` takes the determinant products over these finite
+blocks, including empty blocks. The first relation decomposition is by input
+coordinate `i`, and its second decomposition is by greatest coordinate `k`.
+The diagonal factors `i=k` multiply to the extraneous determinant. The
+remaining `i≠k` factors define an explicit `higherRelationFactor`, proving
+`det(B)=det(extraneous)*higherRelationFactor` over any commutative ring.
+Applying this identity to the shifted polynomial system proves
+`det(B-sI)=det(extraneous-sI)*higherRelationFactor_s`. Over an integral
+domain the remaining polynomial is nonzero. Combining this with the source
+contraction factorization gives the exact three-factor identity
+`det(D*H+E-sI)=det(A-sI)*det(extraneous-sI)*higherRelationFactor_s`.
+
+`TubeMacaulayRelationFactor` instantiates the characteristic factorization,
+divisibility, and nonzero remaining factor for the actual bivariate tube
+system using the existing width bound. No coordinate-reader hypothesis or
+new algebraic assumption is supplied. These are relation and contraction
+determinant identities: polynomiality of the required quotient
+`det(A-sI)/det(extraneous-sI)` and its resultant identification remain open,
+as do the remaining higher exactness and algorithmic space bounds.
 
 ## TM2 versus Complexitylib's machines
 
