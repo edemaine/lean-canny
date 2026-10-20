@@ -2833,13 +2833,42 @@ explicit obligation is to prove the universal numerator/denominator
 cross-comparisons from the Koszul determinant structure; it is not an
 assumed algebraic certificate in a completed Canny theorem.
 
-A concrete next step is to use the power specialization and coefficient-map
-identities to prove that each universal finite homotopy determinant is
-nonzero, then obtain exactness over the universal coefficient fraction
-field. A determinant-of-complex comparison must still identify the concrete
-numerator/extraneous ratios across orderings, including the higher factors.
-These steps are planned; they are not consequences already supplied by the
-denominator criterion.
+`KoszulSpecializationExact` now proves that next exactness step. For a
+homogeneous system admitting a coefficient homomorphism to the coordinate
+powers over a nontrivial ring, each positive-degree finite homotopy operator
+specializes to the identity. The degree-zero operator `H_0 D_0` does too.
+Their determinants specialize to one and are therefore nonzero. Passing
+from a domain to its fraction field makes these operators invertible;
+canonical coordinates give exactness of the actual weighted differential
+maps and degree-zero surjectivity. No characteristic shift is needed.
+
+`MacaulayUniversalExact` applies this result to the universal system for
+every simultaneous input/spatial ordering, over the fraction field of its
+coefficient ring. The hypotheses are explicit input-degree and Macaulay-level
+width bounds. The result concerns that fraction field, not exactness over
+the polynomial coefficient ring or after arbitrary specialization.
+
+`KoszulPivotBasis` supplies a monomial decomposition over any commutative
+coefficient ring. For a canonical basis index `(m,s)`, `HasPivot` tests
+whether the Macaulay pivot of `m + subsetExponent d s` belongs to `s`.
+Such basis vectors are killed by the raising homotopy. Conversely every
+homotopy image lies in their span: division and insertion preserve the
+multidegree, and sorting an exterior word contributes only a unit sign.
+The proved homotopy exactness identifies this span with its incoming image
+in every positive degree. Explicit restricted monomial bases and the
+complementary nonpivot basis give a product decomposition. These explicit
+bases also establish freeness of both summands over the original ring.
+
+`KoszulPivotContraction` uses preservation of the homotopy image to prove
+that the canonical contraction matrix is block triangular for this monomial
+partition. Its determinant is the product of the two concrete principal
+block determinants in every positive degree. For the universal system over
+the coefficient fraction field, both block determinants are nonzero.
+
+A determinant-of-complex comparison must still identify the concrete
+numerator/extraneous ratios across orderings, including the higher Macaulay
+factors and signs. Exactness and the monomial block factorization alone do
+not prove these comparisons or polynomial cancellation.
 
 ## TM2 versus Complexitylib's machines
 
