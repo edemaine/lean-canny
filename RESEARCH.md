@@ -2369,6 +2369,42 @@ input. Polynomiality in the characteristic parameter `s`, the full
 multivariate resultant identity, and the subsequent sampling argument remain
 open.
 
+## Full multiplication matrix and finite Koszul relations
+
+`MacaulayMultiplicationMatrix` indexes all monomial multipliers whose degree
+plus the corresponding input degree is the Macaulay level. The columns are the
+actual degree-level monomials. Homogeneous inputs give homogeneous level rows.
+The original pivot and remainder determine an injective row selector; its
+selected submatrix is exactly the true square Macaulay matrix. Both indices
+use the existing fixed-width representation, with no identity padding in this
+rectangular matrix.
+
+For a family of compatible polynomial multipliers, finite coefficient
+reconstruction proves that assembling the row coefficients gives precisely
+`Σᵢ qᵢ*fᵢ`. Multiplication by the rectangular matrix reads the corresponding
+level coefficients. `MacaulayKoszulRelations` constructs the family with
+components `m*fⱼ` at `i` and `-m*fᵢ` at `j`. If
+`degree(m)+dᵢ+dⱼ=level`, its coefficients form a kernel vector, by polynomial
+commutativity. Over an integral domain it is nonzero whenever `fⱼ` is nonzero.
+
+`MacaulayShiftedKoszul` proves that `fᵢ-s*xᵢ^dᵢ` remains homogeneous and is
+always nonzero over a nontrivial coefficient ring: its designated monomial
+has characteristic coefficient `-1`. Over an integral domain, compatible pairs yield nonzero
+finite Koszul relations for the shifted full multiplication matrix, without
+requiring original inputs to be nonzero.
+
+`TubeMacaulayKoszul` supplies an explicit compatible pair for the actual tube
+system. The spatial count is at least three, the projection degree is one,
+and two other coordinate degrees have the uniform bound at least two. These
+facts provide a multiplier at the Macaulay level, and the existing width and
+homogeneity theorems give a nonzero finite relation over `ℤ[θ][T][s]`.
+
+These relations concern the full rectangular multiplication matrix. Proving
+the needed kernel spanning and graded exactness for the generic shifted
+system, and deriving the determinant cancellation/resultant identity, remain
+open. No kernel statement for the selected square matrix is inferred from
+these rectangular relations.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
