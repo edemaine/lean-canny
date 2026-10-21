@@ -1,0 +1,53 @@
+import LeanCanny
+import Lean.Util.FoldConsts
+
+open Turing.MultiTapeTM
+
+/-! Check the public endpoints against the native class and accept an arbitrary
+native space-bounded child, with no legacy evaluator or execution clock. -/
+
+example : LeanCanny.PSPACE = Cslib.Complexity.PSPACE encBits := rfl
+
+example : LeanCanny.ExistsReal ⊆ Cslib.Complexity.PSPACE encBits ↔
+    LeanCanny.ETR.language ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.existsReal_subset_PSPACE_iff
+
+example {F : LeanCanny.Algebra.MatrixPower.ModularFamily}
+    (a : LeanCanny.Algebra.MatrixPower.ModularAccess F) (ha : a.ControlsPolyTime)
+    (he : ComputableTidilyInPolySpace a.entry encBits encBits) :
+    ComputableTidilyInPolySpace F.value encBits encBits :=
+  (LeanCanny.Algebra.MatrixPower.ModularAccess.evaluatorWithEntry a ha ⟨he⟩).computable
+
+example {F : LeanCanny.Algebra.Berkowitz.ModularFamily}
+    (a : LeanCanny.Algebra.Berkowitz.ModularAccess F) (ha : a.ControlsPolyTime)
+    (he : ComputableTidilyInPolySpace a.access.entry encBits encBits) :
+    F.zeroLanguage ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.Algebra.Berkowitz.ModularAccess.zeroLanguage_mem_PSPACE_of_evaluator a ha ⟨he⟩
+
+#eval "Native PSPACE endpoints and arbitrary native child certificates checked."
+
+/-! Check actual proof dependencies, including opaque theorem bodies, rather
+than just imports: retained FP support must not reintroduce the old space class. -/
+
+open Lean in
+run_cmd do
+  let env ← getEnv
+  let mut pending : Array Name := #[]
+  for (name, _) in env.constants.toList do
+    if (`LeanCanny).isPrefixOf name then pending := pending.push name
+  let mut visited : Std.HashSet Name := {}
+  while !pending.isEmpty do
+    let name := pending.back!
+    pending := pending.pop
+    if visited.contains name then continue
+    visited := visited.insert name
+    for forbidden in #[`Complexity.PSPACE, `Complexity.NPSPACE, `Complexity.DSPACE,
+        `Complexity.NSPACE, `Complexity.SpaceIter,
+        `LeanCanny.Computation.SubroutineIteration, `LeanCanny.Computation.WindowedMachine] do
+      if forbidden.isPrefixOf name then
+        throwError "Project proof depends on obsolete space foundation: {name}"
+    if let some info := env.find? name then
+      pending := pending ++ info.type.getUsedConstants
+      if let some value := info.value? (allowOpaque := true) then
+        pending := pending ++ value.getUsedConstants
+  logInfo m!"Audited {visited.size} transitive constants: no legacy space foundation."

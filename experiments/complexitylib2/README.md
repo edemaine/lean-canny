@@ -35,7 +35,7 @@ result with the finite sum. Its child need only be space computable:
   remainder function itself has faster algorithms; no function lower bound
   or separation from FP is asserted.
 
-`BoundedFoldPrototype.evaluator` is a generic replacement for the current
+`BoundedFoldPrototype.evaluator` is a generic replacement for the original
 `BoundedFold.evaluator` interface. Context and accumulator have arbitrary fixed
 binary encodings. The child receives `(context, binary index, accumulator)`.
 The hypotheses are a polynomial-time binary count, a polynomial-space seed and
@@ -48,27 +48,27 @@ same scan certificate; its hypotheses are thus exercised by an actual example.
 
 ## Comparison and decision
 
-The generic evaluator proof is about 30 lines, versus about 40 lines in the current
+The generic evaluator proof is about 30 lines, versus about 40 lines in the original
 `BoundedFoldSpace.evaluator` proof, plus its separate controller and clock
 infrastructure. The modular update's space proof is 9 lines and the linear-space
 scan's is 8. Line counts alone understate the change: the new child interface
 does not require constructing the explicit transition/halting certificate that
-`SpaceFunction` currently carries.
+the original `SpaceFunction` carried.
 
-The existing `BoundedFold.evaluator` already hides scheduling from its callers;
+The original `BoundedFold.evaluator` already hid scheduling from its callers;
 ordinary clients should not be credited with removing all that code again.
 Correctness proofs, encoding lengths, and accumulator invariants are still
 needed. Typed encodings avoid manually constructing and parsing binary packets,
 and the main development now certifies conversions for our existing raw codecs.
 
-The main project now uses the same Lean/Mathlib pins and includes the new space
-foundation, retaining existing certified routines through compatibility
-interfaces. This changes the certificate type from `SpaceFunction` to
-`ComputableTidilyInPolySpace`. The typed fold and the existing raw-code fold have
-native certificates, as does the streamed modular sum. Existing FP routines,
-`SpaceFunction` routines, and PSPACE deciders transfer to the new foundation.
-The algebraic correctness theorems are preserved. Canny's PSPACE theorem remains
-open, and the older controller proofs have not yet all been replaced.
+The main project now uses the same Lean/Mathlib pins and the native space
+foundation throughout. The typed and raw-code folds, universal scan, sum and
+balanced-product bits, matrix powering, and Berkowitz use compositional space
+proofs. SpaceFunction and SpaceDecider are proof-only native certificates; their
+old execution records, the suspended scheduler, and temporary legacy-space
+adapters are removed. Existing FP primitives remain reusable through TidyFP.
+The main ETR closure theorem targets Complexitylib2 PSPACE directly.
+Canny's ETR membership theorem remains open.
 
 ## Upgrade compatibility check
 

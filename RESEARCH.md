@@ -3595,53 +3595,36 @@ plausible, up to input-size overhead. **No proved bridge between these two libra
 PSPACE predicates has been established in this project.** Existing Mathlib
 computability simulations cannot simply be assumed to preserve the required space.
 
-The useful benchmark is a concrete symbolic-arithmetic routine with encoded inputs,
-encoded intermediate states, and a workspace proof through the intended iteration
-interface. For Canny, streamed access to large symbolic objects matters more than
-the surface machine language alone. The current arithmetic and power-controller
-implementation targets Complexitylib's FP/SpaceIter interface. A separate reusable
-module would be justified by its interfaces or proved interoperability, not merely
-by having fewer files; the TM2 evaluator remains a possible comparison target.
+The benchmark is a symbolic-arithmetic routine with encoded inputs,
+encoded intermediate states, and a workspace proof through the chosen iteration
+interface. The checked Complexitylib2 experiment composes a bounded modular scan
+with an explicitly exponential-time child and also instantiates a generic typed
+fold. Its child certificate requires only polynomial space; the native iteration
+and composition rules hide child execution times.
 
-The project now supplies a concrete benchmark for that comparison: a continuation
-machine for one entry of a matrix power, with balanced recursion and a streamed
-summation. Its result, exact abstract transition count, and logarithmic frame count
-are proved. Its binary representation is injective, and states over `ZMod m` have
-a quadratic bound in the binary lengths of the dimension, exponent, and modulus.
-Exact decoding and a total encoded transition now preserve the typed run and its
-state-size bound. Binary normalization, successor, predecessor, and exponent halves
-have actual Complexitylib FP certificates, as do the initial and child-query writers.
-Binary addition, multiplication, comparison, subtraction, and modular reduction are
-certified too, with exact semantics on all words and bounds on intermediate states.
-A uniform modular multiply-accumulate callback takes the modulus as a binary input
-and agrees with the machine's `ZMod` residue encoding, including modulus one.
-The full context-carrying controller now has an FP certificate from explicit FP
-callbacks, including matrix-entry access. Its correctness theorem simulates every
-typed transition on encoded states; the modular specialization supplies the scalar
-callbacks. Packet initialization is FP from certified binary field writers, and
-the size bound includes the retained original context. The project now proves
-`MatrixPower.ModularAccess.zeroLanguage_mem_PSPACE`: testing whether a selected modular
-matrix-power entry is zero belongs to Complexitylib's PSPACE under canonical FP
-field/entry access on every context. The proof supplies the exact first halting
-time, FP completion and answer tests, and a general halting-loop wrapper for
-SpaceIter. Dimension and exponent can be exponential in the context length.
-A concrete input format still must validate or default malformed inputs to meet
-the access contract, including valid indices and a nonzero modulus.
-The direct callback contract still requires FP entry access. The new suspended
-entry interface requires FP certificates only for the child initializer,
-transition, halting test, and output projection. It saves the parent while the
-child runs. A prefix classification accounts for every intermediate physical
-state; parent/child bounds `S,U` give $2\cdot S+U+3$ bits. Polynomial state bounds and
-exponential parent-step and child-run clocks yield Complexitylib PSPACE through
-`SubroutineIteration.mem_PSPACE`. Its hypotheses concern only reachable parent
-states and requested calls. The direct factor formulas and the uniform scalar-moment
-child now form the complete determinant-factor evaluator, including certified
-binary case selection and trailing-block query writers. Its result correctness,
-exact first halting time, quadratic workspace bound in the dimension/modulus
-binary lengths, and exponential clock bound are proved. Its saved query packet
-is included in that workspace bound. The suspended outer determinant controller
-now meets the combined polynomial-workspace and exponential-time contracts,
-giving the modular determinant PSPACE theorem above.
+The main development now uses this foundation throughout its space proofs.
+SpaceFunction is a proof-only wrapper around Complexitylib2's
+ComputableTidilyInPolySpace, and SpaceDecider carries membership in its native
+PSPACE class. Sequential composition, pairing, branches, binary folds, universal
+scans, sum/product bits, matrix powers, and Berkowitz all compose these native
+certificates. The suspended scheduler and windowed-machine representation are
+removed. Mathematical recursion controllers retain their correctness, abstract
+step bounds, and encoded-state invariants; they no longer describe the physical
+execution of nested children.
+
+The original Complexitylib remains for its certified FP primitives, codecs,
+and polynomial-time reductions. TidyFP proves their compatibility with the new
+time model. This is a polynomial-time bridge, not a conversion of legacy PSPACE
+certificates. All project PSPACE statements, including the conditional ETR and
+ExistsReal upper bounds, target Complexitylib2 directly. No TM2 simulation or
+equivalence with the trominoes predicate is assumed.
+
+The advantage is the compositional interface: child computations may use
+polynomial space and arbitrary time without contributing initialization,
+transition, first-halt, or execution-clock fields to each enclosing proof.
+The existing slow-child prototype tests that distinction. The retained state-size
+and semantic invariants remain necessary; a smaller dependency alone would not
+justify the switch.
 
 Local comparison sources, at `lean-trominoes` commit
 `6fe52dd234bb616fd4fb3c1e7b0a203de1482bc5`:
