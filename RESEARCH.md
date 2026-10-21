@@ -3579,8 +3579,46 @@ These are exact qualitative ETR criteria on every bitstring. Their sample
 conditions retain the compiled equations and positive inactive constraints;
 arbitrary eliminant roots are not claimed to be valid samples. Bounds on
 suitable parameter bit lengths and levels in the original source size,
-effective selection, algebraic coordinate recovery and its space bound, and
+effective selection, effective algebraic coordinate recovery and its space bound, and
 the complete PSPACE decision procedure remain open.
+
+## Complete decoding of rational-level tube samples
+
+`FiniteSystemCoordinates.exists_solution_lift_of_finite`, in
+`FiniteSystemTransfer`, proves that a finite full zero set over an algebraically closed field has no new points after a field
+extension. The evaluation kernel of an extension-field solution is prime above
+the system ideal. The finite-zero-locus theorem makes it maximal, and the
+Nullstellensatz identifies it with a point ideal. Its coordinate equations
+force the solution to be the image of that point. Applying this in a common
+algebraic closure proves `Representation.complete_of_finite` and
+`rootEquivOfFinite` for arbitrary target fields. Unlike the earlier general
+transfer theorem, this needs no separate coordinate-algebraicity hypothesis.
+
+`TubeCharacteristicQuotient.map_finiteSystem`, in `TubeFiniteSystemBaseChange`,
+proves that coefficient extension commutes with the actual compiled affine system. At a rational level, embed
+the algebraic closure of the rationals into the complex numbers. The packet's
+finite complex fiber then implies finiteness of the rational system over that
+algebraic closure. Existing finite-system representations and denominator
+clearing produce a nonzero integer parameter polynomial and integer coordinate
+numerator/denominator pairs. The new completeness theorem makes their real
+parameter roots correspond to every compiled real point; denominator
+nonvanishing at roots is inherited from the representation.
+
+`TubeLevelPacket.exists_compiledSample_iff_integer` transfers the positive
+inactive signs to these decoded parameter roots. The theorem
+`TubeLevelSamplingSource.coordinates_correct` gives an exact ETR equivalence
+using one stored packet and mask, with such samples at every sufficiently small
+positive rational level. Only rational levels are needed in the reverse
+implication: they supply arbitrarily small real levels for the existing
+compactness argument.
+
+The univariate representations may vary with the level and added linear
+projection. They are existential representations of the full compiled system,
+not identified with the computed quotient's lowest coefficient. The degree
+and direction bounds already carried by finite-system representations depend
+on the full solution count. Effective construction from the streamed
+eliminants, coefficient-height and parameter-size bounds in the original
+input, and the full coordinate computation's space bound remain open.
 
 ## TM2 versus Complexitylib's machines
 

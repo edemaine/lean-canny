@@ -77,6 +77,13 @@ variable {r : FiniteSystemCoordinates.Representation (L := AlgebraicClosure ℚ)
 theorem polynomial_natDegree (c : IntegerData r) : c.polynomial.natDegree = r.polynomial.natDegree :=
   degree_eq_of_map_scaling _ _ _ c.polynomial_scale_ne_zero c.map_polynomial
 
+theorem polynomial_ne_zero (c : IntegerData r) : c.polynomial ≠ 0 := by
+  intro hz
+  have hm := c.map_polynomial
+  rw [hz, Polynomial.map_zero] at hm
+  exact (mul_ne_zero (Polynomial.C_ne_zero.mpr (Int.cast_ne_zero.mpr c.polynomial_scale_ne_zero))
+    r.monic.ne_zero) hm.symm
+
 theorem numerator_natDegree (c : IntegerData r) (j : ι) : (c.numerator j).natDegree = (r.numerator j).natDegree :=
   degree_eq_of_map_scaling _ _ _ (c.coordinate_scale_ne_zero j) (c.map_numerator j)
 
