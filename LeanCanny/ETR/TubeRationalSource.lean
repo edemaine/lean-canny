@@ -51,7 +51,7 @@ noncomputable def nativeValue (projection : Bool) (source active row modulus : L
   IntegerBits.coefficientResidue (coefficient projection source active row (pairFst q) (Nat.fromBitsLE (pairSnd q)))
     (Nat.fromBitsLE (modulus (pairFst q)) + 1)
 
-noncomputable def nativeEvaluator (projection : Bool) (source active row modulus : List Bool → List Bool)
+theorem nativeEvaluator (projection : Bool) (source active row modulus : List Bool → List Bool)
     (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (nativeValue projection source active row modulus) := by
   cases projection
@@ -74,7 +74,7 @@ attribute [local irreducible] coefficient
 section Packet
 attribute [local irreducible] IntegerBits.coefficientResidue
 
-noncomputable def coefficientEvaluator (projection : Bool) (source active row : List Bool → List Bool)
+theorem coefficientEvaluator (projection : Bool) (source active row : List Bool → List Bool)
     (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) : SpaceFunction (coefficientValue projection source active row) := by
   let R := nativeEvaluator projection (source ∘ pairFst) (active ∘ pairFst) (row ∘ pairFst) pairSnd
     (mem_FP_comp pairFst_mem_FP hs) (mem_FP_comp pairFst_mem_FP ha) (mem_FP_comp pairFst_mem_FP hr) pairSnd_mem_FP

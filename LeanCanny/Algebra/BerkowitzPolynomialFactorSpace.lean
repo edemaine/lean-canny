@@ -89,7 +89,7 @@ noncomputable def factorValue {F : ModularFamily} (a : ModularAccess F) (p : Lis
     negative a (pair p ((momentFamily F).value p))
   else []
 
-noncomputable def factorEvaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+theorem factorEvaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
     (E : SpaceFunction a.entry) : SpaceFunction (factorValue a) := by
   have hn := negative_mem_FP a ha
   have ED := ((E.precompose (diagonalInput a) (diagonalInput_mem_FP a ha)).withInput).postcompose (negative a) hn

@@ -81,7 +81,7 @@ theorem integer_polyTime {F : Family} (a : Access F) (ha : a.bits.PolyTime) : a.
   · simpa only [integer] using SylvesterBits.budget_mem_FP a.bits ha
   · simpa only [integer] using SylvesterBits.entry_mem_FP a.bits ha
 
-noncomputable def decider {F : Family} (a : Access F) (ha : a.bits.PolyTime) :
+theorem decider {F : Family} (a : Access F) (ha : a.bits.PolyTime) :
     SpaceDecider F.zeroLanguage :=
   Berkowitz.IntegerAccess.decider a.integer (integer_polyTime a ha)
 

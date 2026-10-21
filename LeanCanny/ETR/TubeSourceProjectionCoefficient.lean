@@ -46,7 +46,7 @@ theorem width_unary : UnaryFn width :=
 noncomputable def coefficient : List Bool → ℤ := TubeProjection.coefficient base width active row target
 noncomputable def value : List Bool → List Bool := TubeProjection.value base width active row target pairSnd
 
-noncomputable def evaluator : SpaceFunction value :=
+theorem evaluator : SpaceFunction value :=
   TubeProjection.evaluator base width active row target pairSnd base_mem_FP width_unary active_mem_FP row_mem_FP target_mem_FP pairSnd_mem_FP
 
 noncomputable def exponentCode (bits : List Bool) (e : TubeSource.IntegerProjectionVariable bits →₀ ℕ) : List Bool :=

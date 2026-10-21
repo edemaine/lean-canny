@@ -12,7 +12,7 @@ public import LeanCanny.ETR.TubeCharacteristicQuotientSpace
 The existing signed-order evaluator now returns the actual polynomial
 trailing degree. Its nonnegative component gives a natural index evaluator,
 and a positive index decides whether the polynomial's constant coefficient
-vanishes. All original source-reader and suspended-child costs are retained.
+vanishes. All original source-reader and space-bounded-child costs are retained.
 -/
 
 @[expose] public section
@@ -26,7 +26,7 @@ noncomputable def polynomialLowestIndexCode (source active : List Bool → List 
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) : List Bool :=
   BinaryNatCode.encode (polynomial source active n d ell c).natTrailingDegree
 
-noncomputable def polynomialLowestIndexEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem polynomialLowestIndexEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceFunction (polynomialLowestIndexCode source active n d ell) := by

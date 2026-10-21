@@ -101,7 +101,7 @@ structure Represents (a : Access) (F : Family) : Prop where
   coefficient : ∀ q k, a.coefficient (pair q (BinaryNatCode.encode k)) =
     residueBits (((F.polynomial (pairFst q)).coeff k : ℤ) : ZMod (Nat.fromBitsLE (pairSnd q) + 1))
 
-noncomputable def certified (a : Access) (ha : a.PolyTime) (F : Family) (h : Represents a F) :
+theorem certified (a : Access) (ha : a.PolyTime) (F : Family) (h : Represents a F) :
     SpaceFunction F.value := by
   have heq : computed a = F.value := by
     funext p

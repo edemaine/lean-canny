@@ -40,7 +40,7 @@ theorem Family.value_packet (F : Family) (c : List Bool) (m : ℕ) (hm : 0 < m) 
 
 namespace IntegerAccess
 
-noncomputable def signEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
+theorem signEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
     SpaceFunction (fun c => if F.family.integerCoefficient c < 0 then [true] else []) := by
   refine IntegerSignBits.evaluator (Access.evaluator a.residue (residue_polyTime a ha)) a.source.budget
     (a.source.budget_mem_FP ha.source) F.family.integerCoefficient ?_ F.family.value_packet
@@ -49,7 +49,7 @@ noncomputable def signEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : 
     from Nat.fromBitsLE_bits _]
   exact F.coefficient_bits c
 
-noncomputable def signDecider {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
+theorem signDecider {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
     SpaceDecider F.negativeLanguage := by
   have hflag : (fun w : List Bool => [w[0]?.getD false]) ∈ FP :=
     (FPPred.getBit id_mem_FP (UnaryFn.const 0)).flag_mem_FP
@@ -60,7 +60,7 @@ noncomputable def signDecider {F : BoundedFamily} (a : IntegerAccess F) (ha : a.
 theorem negativeLanguage_mem_PSPACE {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
     F.negativeLanguage ∈ PSPACE := (signDecider a ha).mem_PSPACE
 
-noncomputable def signumEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
+theorem signumEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
     SpaceFunction F.signValue := by
   classical
   let N := (signEvaluator a ha).withInput

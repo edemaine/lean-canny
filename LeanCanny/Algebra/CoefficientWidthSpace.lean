@@ -88,7 +88,7 @@ theorem exists_native_rank {σ : Type*} [Fintype σ] (A W : ℕ) (f : σ ≃ Fin
 def value (A W V D : List Bool → ℕ) (reader : List Bool → List Bool) (q : List Bool) : List Bool :=
   if Fits A W D q then reader (sourceQuery A W V q) else []
 
-noncomputable def evaluator {A W V D : List Bool → ℕ} (hA : UnaryFn A) (hW : UnaryFn W) (hV : UnaryFn V) (hD : UnaryFn D)
+theorem evaluator {A W V D : List Bool → ℕ} (hA : UnaryFn A) (hW : UnaryFn W) (hV : UnaryFn V) (hD : UnaryFn D)
     {reader : List Bool → List Bool} (E : SpaceFunction reader) : SpaceFunction (value A W V D reader) := by
   have EC := E.precompose (sourceQuery A W V) (sourceQuery_mem_FP hA hW hV)
   have ES := SpaceFunction.branch (fun q => decide (Fits A W D q)) (fits_fppred hA hW hD).flag_mem_FP

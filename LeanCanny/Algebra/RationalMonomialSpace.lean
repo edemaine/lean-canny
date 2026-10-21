@@ -30,7 +30,7 @@ noncomputable def monomialValue (arity width modulus degree : List Bool → List
   residueBits ((∏ i ∈ Finset.range (Nat.fromBitsLE (arity c)),
     np c i ^ e c i * dp c i ^ (Nat.fromBitsLE (width c) - e c i)).coeff (Nat.fromBitsLE (degree c)))
 
-noncomputable def monomialEvaluator {n d : List Bool → List Bool} (N : SpaceFunction n) (D : SpaceFunction d)
+theorem monomialEvaluator {n d : List Bool → List Bool} (N : SpaceFunction n) (D : SpaceFunction d)
     (arity width exponent modulus degree : List Bool → List Bool)
     (ha : arity ∈ FP) (hw : width ∈ FP) (he : exponent ∈ FP) (hm : modulus ∈ FP) (hk : degree ∈ FP)
     (e : List Bool → ℕ → ℕ)

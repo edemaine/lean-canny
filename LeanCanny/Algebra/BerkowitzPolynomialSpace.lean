@@ -87,7 +87,7 @@ theorem power_controls {F : ModularFamily} (a : ModularAccess F) (ha : a.Control
   · simpa only [powerAccess, Function.comp_def] using hc
   · simpa only [powerAccess] using ha.degree
 
-noncomputable def powerEvaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+theorem powerEvaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
     (E : SpaceFunction a.entry) : SpaceFunction (powerFamily F).value := by
   have C := (factorEvaluator a ha E).precompose splitDegree splitDegree_mem_FP
   have EC : SpaceFunction a.powerAccess.bits.coefficient := by
@@ -119,7 +119,7 @@ theorem finish_pair {F : ModularFamily} (a : ModularAccess F) (c : List Bool) (x
   · have ho : F.dimension c % 2 = 1 := by have h := Nat.mod_lt (F.dimension c) (by decide : 0 < 2); omega
     simp [ho, ArithmeticBits.negate_residueBits]
 
-noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
     (E : SpaceFunction a.entry) : SpaceFunction F.value := by
   have P := ((powerEvaluator a ha E).withInput).postcompose (finish a) (finish_mem_FP a ha)
   refine P.congr ?_
@@ -133,7 +133,7 @@ noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.Co
   have hs : (-1 : (ZMod (F.modulus c))[X]) ^ F.dimension c = C ((-1 : ZMod (F.modulus c)) ^ F.dimension c) := by simp
   simp only [ModularFamily.value, h, hs, Polynomial.coeff_C_mul]
 
-noncomputable def decider {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+theorem decider {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
     (E : SpaceFunction a.entry) : SpaceDecider F.zeroLanguage := by
   let accept := fun bits : List Bool => decide (bits = [])
   have haccept : (fun bits => [accept bits]) ∈ FP :=

@@ -23,7 +23,7 @@ open Complexity
 open Polynomial
 open LeanCanny.Computation
 
-noncomputable def evaluatorOfResidues {rho : List Bool → List Bool} (R : SpaceFunction rho)
+theorem evaluatorOfResidues {rho : List Bool → List Bool} (R : SpaceFunction rho)
     (degree budget : List Bool → List Bool) (hd : degree ∈ FP) (hb : budget ∈ FP)
     (p : List Bool → ℤ[X]) (hdegree : ∀ c, (p c).natDegree ≤ Nat.fromBitsLE (degree c))
     (hbudget : ∀ q, ((p (pairFst q)).coeff (Nat.fromBitsLE (pairSnd q))).natAbs.size ≤

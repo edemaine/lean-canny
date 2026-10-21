@@ -104,7 +104,7 @@ noncomputable def value (base : List Bool → List Bool) (k : ℕ) (W : List Boo
     (target modulus : List Bool → List Bool) (s : Option Bool) (c : List Bool) : List Bool :=
   residueBits ((coefficient base k W target s c : ℤ) : ZMod (Nat.fromBitsLE (modulus c) + 1))
 
-noncomputable def evaluator (base : List Bool → List Bool) (k : ℕ) (hk : 0 < k) (W : List Bool → ℕ)
+theorem evaluator (base : List Bool → List Bool) (k : ℕ) (hk : 0 < k) (W : List Bool → ℕ)
     (target modulus : List Bool → List Bool) (s : Option Bool)
     (hb : base ∈ FP) (hW : UnaryFn W) (ht : target ∈ FP) (hm : modulus ∈ FP) : SpaceFunction (value base k W target modulus s) := by
   let R := CompactPowerCoefficient.evaluator base (repacked base k W target) modulus (fun _ => k) hb

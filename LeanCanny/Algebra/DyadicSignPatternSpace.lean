@@ -71,7 +71,7 @@ theorem family_rootCount (F : Family) (c : List Bool) : SignPatternBits.rootCoun
 /-- All specialized coefficient readers are constructed from original bivariate
 coefficient routines. The family size has the same unary FP bound as the integer
 sign-pattern evaluator. -/
-noncomputable def rootCountEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem rootCountEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
     SpaceFunction (fun c => BinaryNatCode.encode (rootCount F c)) := by
   let E := SignPatternBits.rootCountEvaluator (access a) (controls F hF) hs
@@ -80,7 +80,7 @@ noncomputable def rootCountEvaluator {F : Family} (a : Access F) (hF : ControlsP
 
 def positiveLanguage (F : Family) : Language := {c | 0 < rootCount F c}
 
-noncomputable def positiveDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem positiveDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
     SpaceDecider (positiveLanguage F) := by
   have hflag := (stringEq_fppred id_mem_FP (constFn_mem_FP [])).not.flag_mem_FP

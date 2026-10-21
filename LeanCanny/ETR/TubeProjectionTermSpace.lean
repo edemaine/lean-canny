@@ -31,7 +31,7 @@ noncomputable def termValue (base : List Bool → List Bool) (W : List Bool → 
     (TubePolynomial.integerPolynomial (TubeDense.polynomial base c) (activeSet (TubeDense.arity base c) (active c)))
       (j c) (s c) derivative).coeff (exponent (TubeDense.arity base) W target c) : ℤ) : ZMod (Nat.fromBitsLE (modulus c) + 1))
 
-noncomputable def termEvaluator (base : List Bool → List Bool) (W r shift : List Bool → ℕ)
+theorem termEvaluator (base : List Bool → List Bool) (W r shift : List Bool → ℕ)
     (active target modulus : List Bool → List Bool) (derivative shifted : Bool)
     (j : ∀ c, Coordinate (TubeDense.arity base c)) (s : ∀ c, Option (Point (TubeDense.arity base c)))
     (hb : base ∈ FP) (hW : UnaryFn W) (hr : UnaryFn r) (hshift : UnaryFn shift)

@@ -5,18 +5,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.MatrixPowerPSPACE
-public import LeanCanny.Algebra.MatrixPowerSubroutine
-public import LeanCanny.Computation.SubroutineFunction
+public import LeanCanny.Algebra.MatrixPowerStepSpace
 public import LeanCanny.Computation.SpaceFunctionComposition
 
-/-!
-# Modular powering with space-bounded matrix entry evaluation
+/-! # Modular powering with native space-bounded entries
 
-Only field writers and scalar control arithmetic require FP certificates.
-Entry calls run through a certified output routine while the parent controller
-is retained. The complete physical state and expanded clock satisfy the output
-certificate, so the whole entry computation need not be FP.
--/
+FP field writers and a tidy polynomial-space entry certificate give a composed
+power-controller transition. Correctness and state-size invariants combine with
+native iteration; no child execution clock or saved configuration is needed. -/
 
 @[expose] public section
 
@@ -46,19 +42,14 @@ theorem callbacks_controls_polyTime {F : ModularFamily} (a : ModularAccess F) (h
   · simpa only [modularCallbacks] using h.one
   · simpa only [modularCallbacks] using h.combine
 
-noncomputable def evaluatorWithEntry {F : ModularFamily} (a : ModularAccess F)
+theorem evaluatorWithEntry {F : ModularFamily} (a : ModularAccess F)
     (ha : a.ControlsPolyTime) (E : SpaceFunction a.entry) : SpaceFunction F.value := by
   let ops := modularCallbacks a.dimension a.modulus a.entry
-  let P := entryProgram ops E.init E.advance E.halt E.output
-  let T := fun p => E.time (entryInput p)
   let N := fun c => work (F.dimension c) (F.exponent c).size (F.exponent c) + 1
   let init := initialPacket a.exponent a.row a.col
-  let f := SubroutineIteration.abstractStep P T
-  have hP : P.PolyTime := entryProgram_polyTime ops (callbacks_controls_polyTime a ha)
-    E.initFP E.advanceFP E.haltFP E.outputFP
-  have hiter (c : List Bool) (j : ℕ) : f^[j] (init c) = (Controller.step ops)^[j] (init c) :=
-    entryProgram_iterate ops E.init E.advance E.halt E.output T (init c) j
-      (fun k _ _ => E.correct (entryInput ((Controller.step ops)^[k] (init c))))
+  let f := Controller.step ops
+  have hiter (c : List Bool) (j : ℕ) :
+      f^[j] (init c) = (Controller.step ops)^[j] (init c) := rfl
   have hc (c : List Bool) : CorrectAt ops c (F.matrix c) residueBits := by
     let : NeZero (F.modulus c) := ⟨F.modulus_ne_zero c⟩
     exact modularCallbacks_correctAt a.dimension a.modulus a.entry c (F.modulus c) (F.matrix c)
@@ -76,12 +67,8 @@ noncomputable def evaluatorWithEntry {F : ModularFamily} (a : ModularAccess F)
   let pe := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.exponent)
   have he : ∀ c, (a.exponent c).length ≤ pe.eval c.length :=
     Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.exponent)
-  let pq := Classical.choose (Cobham.output_length_poly_of_mem_FP entryInput_mem_FP)
-  have hq : ∀ p, (entryInput p).length ≤ pq.eval p.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP entryInput_mem_FP)
   let p := pd + pe + pm
   let r := 2 * Polynomial.X + 2 + 64 * (p + 1) ^ 2
-  let q := pq.comp r
   have hbits (c : List Bool) :
       (F.dimension c).size + (F.exponent c).size + (F.modulus c).size ≤ p.eval c.length := by
     have hdc := hd c
@@ -101,19 +88,10 @@ noncomputable def evaluatorWithEntry {F : ModularFamily} (a : ModularAccess F)
     simp only [r, Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat,
       Polynomial.eval_X, Polynomial.eval_pow, Polynomial.eval_one]
     exact hl.trans (Nat.add_le_add_left (Nat.mul_le_mul_left 64 hpow) _)
-  have hquery (c : List Bool) (j : ℕ) : (entryInput (f^[j] (init c))).length ≤ q.eval c.length := by
-    simpa only [q, Polynomial.eval_comp] using
-      (hq (f^[j] (init c))).trans (polynomial_eval_mono_nat pq (hp c j))
-  have R := SubroutineIteration.evaluator P hP init
+  have R := SpaceFunction.orbit
+    (stepEvaluator ops (callbacks_controls_polyTime a ha) E) init
     (initialPacket_mem_FP ha.exponent ha.row ha.col) halted valueBits halted_mem_FP valueBits_mem_FP
-    T N r (E.space.comp q) ((p + 2) * p + 1) (E.clock.comp q)
-    (by intro c j _ _; exact ⟨E.before (entryInput (f^[j] (init c))), E.after (entryInput (f^[j] (init c)))⟩)
-    (by intro c j _; exact hp c j)
-    (by
-      intro c j _ _ t ht
-      have hl := E.length_le (entryInput (f^[j] (init c))) t ht
-      have hb := polynomial_eval_mono_nat E.space (hquery c j)
-      simpa only [P, entryProgram, f, Polynomial.eval_comp] using hl.trans hb)
+    N r ((p + 2) * p + 1) (by intro c j _; exact hp c j)
     (by
       intro c
       have hb := hbits c
@@ -122,11 +100,6 @@ noncomputable def evaluatorWithEntry {F : ModularFamily} (a : ModularAccess F)
           (p.eval c.length + 2) * p.eval c.length := Nat.mul_le_mul (by omega) (by omega)
       simp only [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat, Polynomial.eval_one]
       exact hw.trans (Nat.pow_le_pow_right (by decide) (Nat.add_le_add_right hm 1)))
-    (by
-      intro c j _ _
-      have ht := E.time_le (entryInput (f^[j] (init c)))
-      have hb := polynomial_eval_mono_nat E.clock (hquery c j)
-      simpa only [T, f, Polynomial.eval_comp] using ht.trans (Nat.pow_le_pow_right (by decide) hb))
     (by
       intro c j hj
       rw [hiter, hinit]

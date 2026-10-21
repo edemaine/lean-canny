@@ -36,7 +36,7 @@ theorem negateOutput_mem_FP : negateOutput ∈ FP := by
 
 def negatedResidue (rho : List Bool → List Bool) (q : List Bool) : List Bool := negateOutput (pair q (rho q))
 
-noncomputable def negatedResidueEvaluator {rho : List Bool → List Bool} (R : SpaceFunction rho) :
+theorem negatedResidueEvaluator {rho : List Bool → List Bool} (R : SpaceFunction rho) :
     SpaceFunction (negatedResidue rho) := by
   let E := R.withInput.postcompose negateOutput negateOutput_mem_FP
   refine E.congr (funext fun q => ?_)
@@ -65,7 +65,7 @@ theorem finish_mem_FP : finish ∈ FP := by
     ((FPPred.getBit pairSnd_mem_FP (UnaryFn.const 0)).ite_mem_FP (constFn_mem_FP [false, true]) (constFn_mem_FP []))
   exact mem_FP_of_eq h (fun _ => rfl)
 
-noncomputable def evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
+theorem evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
     (budget : List Bool → List Bool) (hb : budget ∈ FP) (z : List Bool → ℤ)
     (hbudget : ∀ c, (z c).natAbs.size ≤ Nat.fromBitsLE (budget c))
     (hres : ∀ c (m : ℕ), 0 < m →

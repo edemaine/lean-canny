@@ -52,7 +52,7 @@ noncomputable def rowValue (base : List Bool → List Bool) (W : List Bool → �
     (activeSet (TubeDense.arity base c) (active c)) (row c)).coeff (exponent (TubeDense.arity base) W target c) : ℤ) :
       ZMod (Nat.fromBitsLE (modulus c) + 1))
 
-noncomputable def levelEvaluator (base : List Bool → List Bool) (W : List Bool → ℕ)
+theorem levelEvaluator (base : List Bool → List Bool) (W : List Bool → ℕ)
     (active target modulus : List Bool → List Bool) (hb : base ∈ FP) (hW : UnaryFn W)
     (ha : active ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (rowValue base W active target modulus (fun _ => none)) := by
@@ -89,7 +89,7 @@ theorem subtractResponses_residueBits (modulus : List Bool → List Bool) (c : L
 
 attribute [local irreducible] subtractResponses
 
-noncomputable def partialEvaluator (base : List Bool → List Bool) (W r : List Bool → ℕ)
+theorem partialEvaluator (base : List Bool → List Bool) (W r : List Bool → ℕ)
     (active target modulus : List Bool → List Bool)
     (i : ∀ c, {i : Point (TubeDense.arity base c) // i ≠ TubePolynomial.base (Fin (TubeDense.arity base c))})
     (hb : base ∈ FP) (hW : UnaryFn W) (hr : UnaryFn r) (ha : active ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP)

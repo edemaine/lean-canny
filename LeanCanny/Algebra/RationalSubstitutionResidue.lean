@@ -11,7 +11,7 @@ public import LeanCanny.Algebra.RationalSubstitutionSpace
 
 The input is `pair (pair context selectedDegree) (m-1)`. Source and coordinate
 coefficient routines receive the same modulus through canonical binary words.
-FP metadata and exponent readers, together with certified suspended coefficient
+FP metadata and exponent readers, together with certified space-bounded coefficient
 routines, suffice to evaluate the cleared integer polynomial modulo every
 positive modulus. Reduction preserves the specified denominator width even
 when leading coefficients vanish modulo the modulus.
@@ -102,7 +102,7 @@ structure Access.ControlsPolyTime {F : Family} (a : Access F) : Prop where
   exponent : a.exponent ∈ FP
 
 set_option backward.isDefEq.respectTransparency false in
-noncomputable def Access.evaluator {F : Family} (a : Access F) (ha : a.ControlsPolyTime)
+theorem Access.evaluator {F : Family} (a : Access F) (ha : a.ControlsPolyTime)
     (C : SpaceFunction a.coefficient) (N : SpaceFunction a.numerator) (D : SpaceFunction a.denominator) :
     SpaceFunction F.value := by
   have hA := mem_FP_comp context_mem_FP ha.arity

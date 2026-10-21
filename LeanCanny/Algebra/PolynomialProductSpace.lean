@@ -11,7 +11,7 @@ public import LeanCanny.Algebra.PolynomialPowerSpace
 # Space-bounded coefficients of an indexed polynomial product
 
 FP binary fields supply the factor count, positive modulus, and selected degree.
-A suspended routine supplies factor coefficients. A polynomial shift-matrix
+A space-bounded routine supplies factor coefficients. A polynomial shift-matrix
 power computes the selected product coefficient without storing any factor,
 coefficient vector, or partial product. Factor counts and degrees may be
 exponential in input length. Empty products use the same evaluator.
@@ -84,7 +84,7 @@ theorem query_mem_FP : query ∈ FP := mem_FP_pair pairFst_mem_FP (mem_FP_pair r
 theorem adjacent_mem_FP : (fun p => [adjacent p]) ∈ FP :=
   (stringEq_fppred col_mem_FP (mem_FP_comp row_mem_FP BinaryNat.succ_mem_FP)).flag_mem_FP
 
-noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f) : SpaceFunction (value f) := by
+theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f) : SpaceFunction (value f) := by
   let Q := SpaceFunction.branch adjacent adjacent_mem_FP (E.precompose query query_mem_FP)
     (SpaceFunction.ofFP (fun _ => []) (constFn_mem_FP []))
   refine Q.congr (funext fun p => ?_)
@@ -140,7 +140,7 @@ theorem power_controls {F : ModularFamily} (a : ModularAccess F) (ha : a.Control
   · exact ha.count
   · exact ha.degree
 
-noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
     (E : SpaceFunction a.coefficient) : SpaceFunction F.value := by
   let Q := PolynomialPower.ModularAccess.evaluator a.power (power_controls a ha) (EntryBits.evaluator E)
   refine Q.congr (funext fun c => ?_)
@@ -149,7 +149,7 @@ noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.Co
   rw [shift_pow_product]
   rfl
 
-noncomputable def decider {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+theorem decider {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
     (E : SpaceFunction a.coefficient) : SpaceDecider F.zeroLanguage := by
   let accept := fun bits : List Bool => decide (bits = [])
   have haccept : (fun bits => [accept bits]) ∈ FP :=

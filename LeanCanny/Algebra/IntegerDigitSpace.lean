@@ -26,7 +26,7 @@ open LeanCanny.Encoding
 open LeanCanny.Computation
 open LeanCanny.Algebra.ChineseRemainder
 
-noncomputable def rankOracle {rho : List Bool → List Bool} (R : SpaceFunction rho)
+theorem rankOracle {rho : List Bool → List Bool} (R : SpaceFunction rho)
     (budget : List Bool → List Bool) (hb : budget ∈ FP) (z : List Bool → ℤ)
     (hres : ∀ c (m : ℕ), 0 < m →
       rho (pair c (BinaryNatCode.encode (m - 1))) = BinaryNatCode.encode ((z c : ZMod m).val)) :
@@ -42,7 +42,7 @@ noncomputable def rankOracle {rho : List Bool → List Bool} (R : SpaceFunction 
     Function.comp_apply]
   rfl
 
-noncomputable def evaluatorOfProducts {rho fm fs : List Bool → List Bool} (R : SpaceFunction rho)
+theorem evaluatorOfProducts {rho fm fs : List Bool → List Bool} (R : SpaceFunction rho)
     (budget : List Bool → List Bool) (hb : budget ∈ FP) (z : List Bool → ℤ)
     (hbudget : ∀ c, (z c).natAbs.size ≤ Nat.fromBitsLE (budget c))
     (hres : ∀ c (m : ℕ), 0 < m →
@@ -73,7 +73,7 @@ noncomputable def evaluatorOfProducts {rho fm fs : List Bool → List Bool} (R :
   · intro c
     by_cases hn : z c < 0 <;> simp [hn]
 
-noncomputable def evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
+theorem evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
     (budget : List Bool → List Bool) (hb : budget ∈ FP) (z : List Bool → ℤ)
     (hbudget : ∀ c, (z c).natAbs.size ≤ Nat.fromBitsLE (budget c))
     (hres : ∀ c (m : ℕ), 0 < m →

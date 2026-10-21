@@ -9,7 +9,7 @@ public import LeanCanny.Algebra.MatrixMomentSpaceEntries
 
 /-! # A complete streamed pseudo-remainder coefficient evaluator
 
-FP binary fields and suspended coefficient access to the original head and
+FP binary fields and space-bounded coefficient access to the original head and
 input suffice. The matrix entries, coordinate row, powering, and scalar moment
 are supplied internally. The coefficient ring may have zero divisors, and the
 formal head bound is retained when reduction modulo the modulus lowers degrees.
@@ -147,7 +147,7 @@ noncomputable def moment {F : Family} (a : DataAccess F) : MatrixMoment.ModularA
     exact entry_correct a.source c _ _ _ (F.head c) (F.head_degree c)
       (a.degree_eq c) (a.modulus_eq c) (a.head_eq c) i j
 
-noncomputable def evaluator {F : Family} (a : DataAccess F) (ha : a.ControlsPolyTime)
+theorem evaluator {F : Family} (a : DataAccess F) (ha : a.ControlsPolyTime)
     (P : SpaceFunction a.source.coefficient) (G : SpaceFunction a.inputCoefficient) :
     SpaceFunction F.value := by
   have hc : a.moment.ControlsPolyTime :=

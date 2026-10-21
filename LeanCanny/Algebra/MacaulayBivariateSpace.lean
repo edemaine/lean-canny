@@ -187,7 +187,7 @@ theorem Access.valid_fppred {F : Family} (a : Access F) (h : F.layout.PolyTime)
   (BinaryNat.lt_fppred hi (a.radixCode_mem_FP h hb)).of_iff (fun c => by
     simp only [a.inner_eq, a.radixCode_eq, MacaulayBits.fromBits_encode])
 
-noncomputable def Access.evaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
+theorem Access.evaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
     (hm : a.modulus ∈ FP) (hb : a.bound ∈ FP) (hi : a.inner ∈ FP) (ho : a.outer ∈ FP)
     (E : SpaceFunction a.coefficient) : SpaceFunction F.value := by
   have EC := E.precompose a.coefficientInput (a.coefficientInput_mem_FP h hb)

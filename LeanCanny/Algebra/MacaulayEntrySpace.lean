@@ -93,7 +93,7 @@ def entry (L : Layout) (coefficient : List Bool → List Bool) (p : List Bool) :
     if admissible L p then coefficient (sourceQuery L p) else []
   else identityEntry p
 
-noncomputable def entryEvaluator {L : Layout} (h : L.PolyTime)
+theorem entryEvaluator {L : Layout} (h : L.PolyTime)
     {coefficient : List Bool → List Bool} (E : SpaceFunction coefficient) : SpaceFunction (entry L coefficient) := by
   have EC := E.precompose (sourceQuery L) (sourceQuery_mem_FP h)
   have EA := SpaceFunction.branch (fun p => decide (admissible L p)) (admissible_fppred h).flag_mem_FP

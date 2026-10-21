@@ -33,7 +33,7 @@ noncomputable def value (base : List Bool → List Bool) (W : List Bool → ℕ)
     (active word target modulus : List Bool → List Bool) : List Bool → List Bool :=
   TubeProjectionQuery.rowValue base W active target modulus (decodedRow base word)
 
-noncomputable def evaluator (base : List Bool → List Bool) (W : List Bool → ℕ)
+theorem evaluator (base : List Bool → List Bool) (W : List Bool → ℕ)
     (active word target modulus : List Bool → List Bool) (hb : base ∈ FP) (hW : UnaryFn W)
     (ha : active ∈ FP) (hw : word ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (value base W active word target modulus) := by

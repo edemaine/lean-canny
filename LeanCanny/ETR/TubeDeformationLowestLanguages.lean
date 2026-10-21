@@ -33,7 +33,7 @@ def lowestPositiveLanguage (source active inner middle : List Bool → List Bool
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) : Language :=
   {c | 0 < lowestScalar source active inner middle n d ell c}
 
-noncomputable def lowestZeroDecider {source active modulus inner middle : List Bool → List Bool}
+theorem lowestZeroDecider {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceDecider (lowestZeroLanguage source active inner middle n d ell) := by

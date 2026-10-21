@@ -42,7 +42,7 @@ theorem zero_tag_iff (z : ℤ) :
 
 namespace Access
 
-noncomputable def headSignEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem headSignEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) :
     SpaceFunction (fun r => if F.originalCoefficient r = 0 then [] else
       if F.originalCoefficient r < 0 then [true] else [false, true]) := by
@@ -67,19 +67,19 @@ theorem head_tag_zero (F : Family) (c : List Bool) (i : ℕ) :
   rw [zero_tag_iff]
   simp only [Family.originalCoefficient, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
 
-noncomputable def headOffsetEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem headOffsetEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) :
     SpaceFunction (fun c => BinaryNatCode.encode (if F.head c = 0 then 0 else (F.head c).natDegree + 1)) :=
   PolynomialDegreeBits.offsetEvaluator (headSignEvaluator a hF P) F.degree hF.degree F.head F.head_degree
     (head_tag_zero F)
 
-noncomputable def headDegreeEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem headDegreeEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) :
     SpaceFunction (fun c => BinaryNatCode.encode (F.head c).natDegree) :=
   PolynomialDegreeBits.degreeEvaluator (headSignEvaluator a hF P) F.degree hF.degree F.head F.head_degree
     (head_tag_zero F)
 
-noncomputable def seedDegreeEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem seedDegreeEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceFunction (fun c => BinaryNatCode.encode (F.reduced c).natDegree) := by
   apply PolynomialDegreeBits.degreeEvaluator (signEvaluator a hF P Q) F.degree hF.degree F.reduced

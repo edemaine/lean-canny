@@ -125,7 +125,7 @@ theorem matrixWidth_pos (bits : List Bool) : 0 < TubeCleared.matrixWidth bits :=
   simp only [pow_zero] at h
   omega
 
-noncomputable def evaluator (source : List Bool → List Bool) (ell : List Bool → ℕ → ℤ)
+theorem evaluator (source : List Bool → List Bool) (ell : List Bool → ℕ → ℤ)
     (read degree modulus : List Bool → List Bool) (hs : source ∈ FP) (he : read ∈ FP) (hk : degree ∈ FP) (hm : modulus ∈ FP)
     (hr : ∀ c i, i < TubeParameter.spatialCount (source c) →
       read (pair c (BinaryNatCode.encode i)) = (Codec.integer (ell c i)).toBits) :

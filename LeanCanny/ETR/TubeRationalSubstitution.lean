@@ -60,7 +60,7 @@ theorem access_controls (projection : Bool) (source active row : List Bool → L
 
 attribute [local irreducible] family
 
-noncomputable def evaluator (projection : Bool) (source active row : List Bool → List Bool)
+theorem evaluator (projection : Bool) (source active row : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (C : CoordinateReaders projection source n d)
     (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) :
     SpaceFunction (family projection source active row n d).value :=

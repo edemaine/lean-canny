@@ -12,7 +12,7 @@ public import LeanCanny.ETR.TubeCombine
 The source-square and two shifted-source children supply the dense terms.
 The zero-source child supplies the sparse remainder. Sequential pairing and
 FP modular arithmetic combine them according to the actual tube coefficient
-identity. Source validation and all suspended work are included.
+identity. Source validation and all space-bounded work are included.
 -/
 
 @[expose] public section
@@ -42,7 +42,7 @@ noncomputable def responses (base : List Bool → List Bool) (W : List Bool → 
   pair (pair (TubeDense.value base 2 W target modulus none c) (TubeDense.value base 1 W target modulus (some false) c))
     (pair (TubeDense.value base 1 W target modulus (some true) c) (TubeZeroQuery.value (TubeDense.arity base) W active target modulus c))
 
-noncomputable def responseEvaluator (base : List Bool → List Bool) (W : List Bool → ℕ)
+theorem responseEvaluator (base : List Bool → List Bool) (W : List Bool → ℕ)
     (active target modulus : List Bool → List Bool) (hb : base ∈ FP) (hW : UnaryFn W)
     (ha : active ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) : SpaceFunction (responses base W active target modulus) := by
   let A := TubeDense.evaluator base 2 (by decide) W target modulus none hb hW ht hm
@@ -90,7 +90,7 @@ theorem coefficient_eq_native (base : List Bool → List Bool) (W : List Bool �
   unfold coefficient
   rw [exponent_eq_of_encoded base W target c m ht hm]
 
-noncomputable def evaluator (base : List Bool → List Bool) (W : List Bool → ℕ)
+theorem evaluator (base : List Bool → List Bool) (W : List Bool → ℕ)
     (active target modulus : List Bool → List Bool) (hb : base ∈ FP) (hW : UnaryFn W)
     (ha : active ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) : SpaceFunction (value base W active target modulus) := by
   let R := responseEvaluator base W active target modulus hb hW ha ht hm

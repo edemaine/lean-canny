@@ -212,7 +212,7 @@ noncomputable def modular {F : Family} (a : Access F) : TarskiSeedBits.Access F.
     simp only [selectedCode, boundCode, BinaryNat.mod_pair, BinaryNat.succ_eq_bits,
       BinaryNat.add_pair, Nat.fromBitsLE_bits, Family.modular, BinaryNatCode.encode]
 
-noncomputable def residueEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem residueEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceFunction F.residue := by
   have hd := mem_FP_comp (mem_FP_comp origin_mem_FP hF.degree) BinaryNat.normalize_mem_FP
@@ -237,7 +237,7 @@ theorem budget_mem_FP {F : Family} (hF : ControlsPolyTime F) : F.budget ∈ FP :
   intro r
   simp only [Family.budget, Function.comp_apply]
 
-noncomputable def signEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem signEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceFunction (fun r => if F.coefficient r = 0 then [] else
       if F.coefficient r < 0 then [true] else [false, true]) := by

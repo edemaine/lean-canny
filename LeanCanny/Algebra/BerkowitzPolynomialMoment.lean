@@ -229,7 +229,7 @@ theorem moment_controls {F : ModularFamily} (a : ModularAccess F) (ha : a.Contro
   · simpa only [momentAccess] using he
   · simpa only [momentAccess] using hk
 
-noncomputable def momentEvaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+theorem momentEvaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
     (E : SpaceFunction a.entry) : SpaceFunction (momentFamily F).value := by
   have R := E.precompose (rowInput a.dimension) (rowInput_mem_FP ha.dimension)
   have C := E.precompose (columnInput a.dimension) (columnInput_mem_FP ha.dimension)

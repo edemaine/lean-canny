@@ -10,7 +10,7 @@ public import Mathlib.Algebra.Polynomial.Derivative
 
 /-! # Streamed derivative coefficients from original coefficient residues
 
-The index remains binary. A single suspended source call reads coefficient
+The index remains binary. A single space-bounded source call reads coefficient
 k+1, and FP modular multiplication supplies the derivative's factor k+1.
 No derivative polynomial or unreduced coefficient is stored.
 -/
@@ -45,7 +45,7 @@ theorem finish_mem_FP {modulus : List Bool → List Bool} (hm : modulus ∈ FP) 
   intro z
   simp only [finish, Function.comp_apply]
 
-noncomputable def evaluator {coefficient : List Bool → List Bool} (P : SpaceFunction coefficient)
+theorem evaluator {coefficient : List Bool → List Bool} (P : SpaceFunction coefficient)
     (modulus : List Bool → List Bool) (hm : modulus ∈ FP) :
     SpaceFunction (value modulus coefficient) := by
   let E := ((P.precompose query query_mem_FP).withInput).postcompose (finish modulus) (finish_mem_FP hm)

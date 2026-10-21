@@ -24,7 +24,7 @@ def entryWithIdentity (L : Layout) (coefficient identity : List Bool → List Bo
     if admissible L p then coefficient (sourceQuery L p) else []
   else identity p
 
-noncomputable def entryWithIdentityEvaluator {L : Layout} (h : L.PolyTime)
+theorem entryWithIdentityEvaluator {L : Layout} (h : L.PolyTime)
     {coefficient identity : List Bool → List Bool} (E : SpaceFunction coefficient) (hI : identity ∈ FP) :
     SpaceFunction (entryWithIdentity L coefficient identity) := by
   have EC := E.precompose (sourceQuery L) (sourceQuery_mem_FP h)

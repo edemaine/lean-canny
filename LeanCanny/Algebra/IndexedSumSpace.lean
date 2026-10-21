@@ -42,7 +42,7 @@ def term (bound rho : List Bool → List Bool) (q : List Bool) : ℕ :=
 def termValue (bound rho : List Bool → List Bool) (p : List Bool) : List Bool :=
   ArithmeticBits.bitValue (term bound rho) (IndexedProductBits.factorQuery p)
 
-noncomputable def termEvaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
+theorem termEvaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
     (bound : List Bool → List Bool) (hb : bound ∈ FP) : SpaceFunction (termValue bound rho) := by
   let L := WordBits.evaluator ((PreparationBits.evaluator R bound hb).postcompose pairFst pairFst_mem_FP)
   let C := (IndexedProductBits.cofactorEvaluator bound hb).precompose cofactorQuery cofactorQuery_mem_FP
@@ -71,7 +71,7 @@ def value (bound rho : List Bool → List Bool) (p : List Bool) : List Bool :=
       term bound rho (pair (pairFst p) (BinaryNatCode.encode i))).testBit (Nat.fromBitsLE (pairSnd p))
     then [true] else []
 
-noncomputable def evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
+theorem evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
     (bound : List Bool → List Bool) (hb : bound ∈ FP) : SpaceFunction (value bound rho) := by
   let E := (termEvaluator R bound hb).precompose sourceQuery sourceQuery_mem_FP
   have hcount := mem_FP_comp (mem_FP_comp pairFst_mem_FP hb) BinaryNat.succ_mem_FP

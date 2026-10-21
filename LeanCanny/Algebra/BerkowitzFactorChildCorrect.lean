@@ -174,4 +174,11 @@ theorem run_packet (a : Access) (c : List Bool) (m n : ℕ) [NeZero m]
   exact run_correct a _ m n i.divNat.val j.divNat.val i.modNat.val j.modNat.val A
     (by simpa only [pairFst_pair] using hb) (decoded_packet a c n i.val j.val hb.dimension)
 
+theorem moment_conditions (a : Access) (p : List Bool) (n s t d k : ℕ)
+    (hd : a.dimension (pairFst p) = BinaryNatCode.encode n) (hq : DecodedAt a p s t d k)
+    (hmode : QueryBits.selector a.dimension p = [true, true]) :
+    s + 1 = t ∧ s < n ∧ d < k ∧ k ≤ n - s - 1 := by
+  apply (QueryBits.select_moment_iff n s t d k).mp
+  exact (selector_code a p n s t d k hd hq).symm.trans hmode
+
 end LeanCanny.Algebra.Berkowitz.FactorChild

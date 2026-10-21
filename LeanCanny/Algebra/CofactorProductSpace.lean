@@ -74,7 +74,7 @@ theorem seed_mem_FP : seed ∈ FP := by
   intro c
   simp only [Function.comp_apply, seed]
 
-noncomputable def updateEvaluator : SpaceFunction update := by
+theorem updateEvaluator : SpaceFunction update := by
   let E := ((ModulusBits.evaluator.precompose query query_mem_FP).withInput).postcompose finish finish_mem_FP
   refine E.congr (funext fun p => ?_)
   simp only [Function.comp_apply, query, pairFst_pair, pairSnd_pair, update]
@@ -101,7 +101,7 @@ theorem fold_eq (c : List Bool) (k : ℕ) : BoundedFold.fold update seed c k =
     rw [BoundedFold.fold, ih, update_packet]
     simp only [product, Finset.prod_range_succ, Nat.mul_mod, Nat.mod_mod]
 
-noncomputable def productEvaluator : SpaceFunction (fun c =>
+theorem productEvaluator : SpaceFunction (fun c =>
     (product (Nat.fromBitsLE (source c)) (Nat.fromBitsLE (target c)) (Nat.fromBitsLE (source c) + 1) %
       (Nat.fromBitsLE (pairSnd c) + 1)).bits) := by
   have hb := mem_FP_comp source_mem_FP BinaryNat.succ_mem_FP

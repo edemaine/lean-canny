@@ -34,7 +34,7 @@ noncomputable def narrowValue (source active index degree modulus : List Bool �
     (n d : List Bool → ℕ → Polynomial ℤ) : List Bool → List Bool :=
   (TubeParameter.family source active index (fun c => n (pairFst c)) (fun c => d (pairFst c))).value ∘ narrowInput degree modulus
 
-noncomputable def narrowEvaluator (source active index degree modulus : List Bool → List Bool)
+theorem narrowEvaluator (source active index degree modulus : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ)
     (C : TubeParameter.CoordinateReaders source (fun c => n (pairFst c)) (fun c => d (pairFst c)))
     (hs : source ∈ FP) (ha : active ∈ FP) (hi : index ∈ FP) (hk : degree ∈ FP) (hm : modulus ∈ FP) :
@@ -62,7 +62,7 @@ noncomputable def wideValue (source active index degree modulus : List Bool → 
     (TubeIndexed.blockWidth ∘ source) (TubeIndexed.degreeBound ∘ source)
     (narrowValue source active index degree modulus n d)
 
-noncomputable def wideEvaluator (source active index degree modulus : List Bool → List Bool)
+theorem wideEvaluator (source active index degree modulus : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ)
     (C : TubeParameter.CoordinateReaders source (fun c => n (pairFst c)) (fun c => d (pairFst c)))
     (hs : source ∈ FP) (ha : active ∈ FP) (hi : index ∈ FP) (hk : degree ∈ FP) (hm : modulus ∈ FP) :

@@ -55,7 +55,7 @@ noncomputable def child (base : List Bool → List Bool) (W r : List Bool → �
     (active target modulus : List Bool → List Bool) (bumped : Bool) : List Bool → List Bool :=
   TubeCoefficient.value base (fun c => W c + 1) active (repacked (TubeDense.arity base) W r target bumped) modulus
 
-noncomputable def childEvaluator (base : List Bool → List Bool) (W r : List Bool → ℕ)
+theorem childEvaluator (base : List Bool → List Bool) (W r : List Bool → ℕ)
     (active target modulus : List Bool → List Bool) (bumped : Bool)
     (hb : base ∈ FP) (hW : UnaryFn W) (hr : UnaryFn r) (ha : active ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (child base W r active target modulus bumped) :=

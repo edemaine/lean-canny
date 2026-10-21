@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.Algebra.BerkowitzSpaceEntries
 
-/-! # Scalar determinant residues from suspended entry access
+/-! # Scalar determinant residues from space-bounded entry access
 
 The existing power evaluator returns the constant characteristic coefficient.
 An FP parity correction gives the determinant itself, including dimension zero.
@@ -56,7 +56,7 @@ theorem determinantOutput_pair {F : ModularFamily} (a : ModularAccess F) (c : Li
       omega
     simp [ho, ArithmeticBits.negate_residueBits]
 
-noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
     (E : SpaceFunction a.access.entry) : SpaceFunction F.value := by
   let Q := (powerEvaluator a ha E).withInput.postcompose (determinantOutput a)
     (determinantOutput_mem_FP a ha)

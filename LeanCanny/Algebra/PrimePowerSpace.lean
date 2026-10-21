@@ -104,7 +104,7 @@ theorem fold_eq (c : List Bool) (i : ℕ) :
       BinaryNat.mul_pair, Nat.fromBitsLE_bits, BinaryNat.normalize_eq_bits, growth]
     split_ifs <;> rfl
 
-noncomputable def evaluator : SpaceFunction (fun c =>
+theorem evaluator : SpaceFunction (fun c =>
     (Nat.fromBitsLE (pairSnd c) ^ (Nat.fromBitsLE (pairSnd c)).log (Nat.fromBitsLE (pairFst c))).bits) := by
   have hb := mem_FP_comp pairFst_mem_FP BinaryNat.succ_mem_FP
   have hs : ∀ c i, i ≤ Nat.fromBitsLE ((BinaryNat.succ ∘ pairFst) c) →

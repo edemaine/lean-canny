@@ -110,7 +110,7 @@ theorem queryExponent_mem_FP {F : Family} (a : Access F) (hF : ControlsPolyTime 
   intro p
   simp only [queryAccess, Function.comp_apply]
 
-noncomputable def queryEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem queryEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (H : SpaceFunction a.rootCoefficient) (P : SpaceFunction a.polynomialCoefficient) :
     SpaceFunction (fun q => SignStatisticBits.integerCode ((queryFamily F).value q)) :=
   SignQueryBits.evaluator (queryAccess a) (query_controls F hF) (queryExponent_mem_FP a hF)

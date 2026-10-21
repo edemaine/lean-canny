@@ -47,7 +47,7 @@ def scalarZeroLanguage (source active degree : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) : Language :=
   {q | encodedScalar source active degree n d ell q = 0}
 
-noncomputable def scalarZeroDecider {source active modulus inner middle : List Bool → List Bool}
+theorem scalarZeroDecider {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceDecider (scalarZeroLanguage source active D.bounds.degree n d ell) := by
@@ -91,7 +91,7 @@ theorem coefficientZeroLanguage_eq_scan (source active : List Bool → List Bool
         (encoded_coefficient_degree source active n d ell B (pairFst q) (Nat.fromBitsLE (pairSnd q))) (Nat.le_of_not_gt hi)),
         Polynomial.coeff_zero]
 
-noncomputable def coefficientZeroDecider {source active modulus inner middle : List Bool → List Bool}
+theorem coefficientZeroDecider {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceDecider (coefficientZeroLanguage source active n d ell) := by

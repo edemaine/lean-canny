@@ -60,7 +60,7 @@ noncomputable def queryProductValue (count modulus degree : List Bool → List B
     (Q : (c : List Bool) → ℕ → Polynomial (ZMod (Nat.fromBitsLE (modulus c) + 1))) (c : List Bool) : List Bool :=
   residueBits ((∏ i ∈ Finset.range (Nat.fromBitsLE (count c)), Q c i ^ (e c i).val).coeff (Nat.fromBitsLE (degree c)))
 
-noncomputable def queryProductEvaluator {f : List Bool → List Bool} (F : SpaceFunction f)
+theorem queryProductEvaluator {f : List Bool → List Bool} (F : SpaceFunction f)
     (count exponent modulus degree : List Bool → List Bool)
     (hc : count ∈ FP) (he : exponent ∈ FP) (hm : modulus ∈ FP) (hd : degree ∈ FP)
     (e : List Bool → ℕ → Fin 3)

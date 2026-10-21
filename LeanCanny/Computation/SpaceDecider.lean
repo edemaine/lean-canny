@@ -4,42 +4,61 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Computation.HaltingIteration
+public import LeanCanny.Computation.TidyFP
+public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolySpace
+public import Complexity.Computability.Complexity.Classes.Space
 
-/-!
-# Reusable certified polynomial-space decision procedures
+/-! # Polynomial-space decision certificates
 
-Keeping the executable primitives, first halting time, and resource certificates
-together allows another controller to run this procedure as a subroutine. A
-PSPACE membership proposition alone does not expose those particular primitives.
-The mathematical clock is a proof parameter and is not computed by a transition.
+The class and machine semantics are Complexitylib2's. A certificate carries only
+membership, with no separate transition system or execution clock.
 -/
 
 @[expose] public section
 
-namespace LeanCanny.Computation
-open Complexity
+namespace LeanCanny
+open Turing.MultiTapeTM
 
-structure SpaceDecider (L : Language) where
-  init : List Bool → List Bool
-  advance : List Bool → List Bool
-  halt : List Bool → Bool
-  answer : List Bool → Bool
-  initFP : init ∈ FP
-  advanceFP : advance ∈ FP
-  haltFP : (fun p => [halt p]) ∈ FP
-  answerFP : (fun p => [answer p]) ∈ FP
-  space : Polynomial ℕ
-  clock : Polynomial ℕ
-  time : List Bool → ℕ
-  length_le : ∀ x t, t ≤ time x → (advance^[t] (init x)).length ≤ space.eval x.length
-  time_le : ∀ x, time x ≤ 2 ^ clock.eval x.length
-  before : ∀ x t, t < time x → halt (advance^[t] (init x)) = false
-  after : ∀ x, halt (advance^[time x] (init x)) = true
-  correct : ∀ x, x ∈ L ↔ answer (advance^[time x] (init x)) = true
+abbrev PSPACE : Set Complexity.Language := Cslib.Complexity.PSPACE encBits
 
-theorem SpaceDecider.mem_PSPACE {L : Language} (D : SpaceDecider L) : L ∈ PSPACE :=
-  HaltingIteration.mem_PSPACE D.initFP D.advanceFP D.haltFP D.answerFP D.space D.clock D.time
-    D.length_le D.time_le D.before D.after D.correct
+namespace Computation
 
-end LeanCanny.Computation
+structure SpaceDecider (L : Complexity.Language) : Prop where
+  mem_PSPACE : L ∈ PSPACE
+
+namespace SpaceDecider
+
+theorem of_computable {L : Complexity.Language} {f : List Bool → Bool}
+    (hf : ComputableTidilyInPolySpace f encBits encBool)
+    (hL : ∀ x, x ∈ L ↔ f x = true) : SpaceDecider L := by
+  obtain ⟨T, S, hS, c, h, -⟩ := hf
+  exact ⟨f, ⟨_, _, (PolyBounded.const c).mul (hS.add (.const 1)),
+    h.computableInTimeAndSpace⟩, hL⟩
+
+theorem computable {L : Complexity.Language} (D : SpaceDecider L) :
+    ComputableTidilyInPolySpace (fun x => @decide (x ∈ L) (Classical.propDecidable _))
+      encBits encBool := by
+  classical
+  obtain ⟨g, ⟨t, s, hs, hg⟩, hL⟩ := D.mem_PSPACE
+  obtain ⟨c, hg⟩ := hg.exists_computableTidilyInTimeAndSpace
+  have hspace : ComputableTidilyInPolySpace g encBits encBool := by
+    refine ⟨(fun x => 2 * t x + 3 * s x + c), (fun x => c * (s x + 1) + 1),
+      ((PolyBounded.const c).mul (hs.add (.const 1))).add (.const 1),
+      ComputableTidilyInO.of_bounds hg 1 ?_ ?_ ?_⟩
+    · intro x; omega
+    · intro x; omega
+    · intro x
+      simp only [encBool_apply, List.length_singleton, one_mul]
+      omega
+  exact hspace.congr fun x => Bool.eq_iff_iff.mpr (by
+    rw [decide_eq_true_eq]
+    exact (hL x).symm)
+
+theorem congr {L M : Complexity.Language} (D : SpaceDecider L) (h : L = M) : SpaceDecider M :=
+  h ▸ D
+
+theorem ofPSPACE {L : Complexity.Language} (hL : L ∈ PSPACE) : SpaceDecider L := ⟨hL⟩
+
+end SpaceDecider
+end Computation
+end LeanCanny

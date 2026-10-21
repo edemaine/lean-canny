@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.InfinitesimalResidueSpace
 # Certified infinitesimal signs after streamed rational substitution
 
 FP source metadata, exponents, coordinate degree bounds, and coefficient-bit
-bounds combine with suspended source/coordinate residue routines. The resulting
+bounds combine with space-bounded source/coordinate residue routines. The resulting
 certificate computes the sign of the cleared numerator for a sufficiently small
 positive parameter. Even denominator widths preserve the sign of the original
 rational substitution wherever its coordinate denominators are nonzero.
@@ -26,7 +26,7 @@ open LeanCanny.Encoding
 open LeanCanny.Computation
 open Polynomial
 
-noncomputable def Access.signEvaluator {F : Family} (a : Access F) (ha : a.ControlsPolyTime)
+theorem Access.signEvaluator {F : Family} (a : Access F) (ha : a.ControlsPolyTime)
     (C : SpaceFunction a.coefficient) (N : SpaceFunction a.numerator) (D : SpaceFunction a.denominator)
     (coordinateDegree coordinateBits sourceBits : List Bool → List Bool)
     (hE : coordinateDegree ∈ FP) (hb : coordinateBits ∈ FP) (hs : sourceBits ∈ FP)

@@ -31,7 +31,7 @@ theorem integerCode_snd_zero_iff (z : ℤ) :
   simp only [SignStatisticBits.integerCode, pairSnd_pair, BinaryNatCode.encode, BinaryNat.bits_eq_nil_iff]
   omega
 
-noncomputable def zeroDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem zeroDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceDecider (zeroLanguage F) := by
   have hflag := ((stringEq_fppred pairFst_mem_FP (constFn_mem_FP [])).and
@@ -41,7 +41,7 @@ noncomputable def zeroDecider {F : Family} (a : Access F) (hF : ControlsPolyTime
   simp only [zeroLanguage, Set.mem_ofPred_eq, decide_eq_true_eq, integerCode_fst_zero_iff, integerCode_snd_zero_iff]
   omega
 
-noncomputable def positiveDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem positiveDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceDecider (positiveLanguage F) := by
   have hflag := (stringEq_fppred pairFst_mem_FP (constFn_mem_FP [])).not.flag_mem_FP
@@ -50,7 +50,7 @@ noncomputable def positiveDecider {F : Family} (a : Access F) (hF : ControlsPoly
   simp only [positiveLanguage, Set.mem_ofPred_eq, decide_eq_true_eq, ne_eq, integerCode_fst_zero_iff]
   omega
 
-noncomputable def negativeDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem negativeDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceDecider (negativeLanguage F) := by
   have hflag := (stringEq_fppred pairSnd_mem_FP (constFn_mem_FP [])).not.flag_mem_FP

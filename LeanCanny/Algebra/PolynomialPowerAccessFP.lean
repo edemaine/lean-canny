@@ -98,7 +98,7 @@ theorem lower_mem_FP (a : Access) (ha : a.ControlsPolyTime) : (fun p => [lower a
   (BinaryNat.le_fppred (QueryBits.targetDegree_mem_FP ha.degree)
     (QueryBits.sourceDegree_mem_FP ha.degree)).flag_mem_FP
 
-noncomputable def entryEvaluator (a : Access) (ha : a.ControlsPolyTime) (E : SpaceFunction a.coefficient) :
+theorem entryEvaluator (a : Access) (ha : a.ControlsPolyTime) (E : SpaceFunction a.coefficient) :
     SpaceFunction (liftedEntry a) := by
   have R := SpaceFunction.branch (lower a) (lower_mem_FP a ha)
     (E.precompose (coefficientInput a) (coefficientInput_mem_FP a ha))

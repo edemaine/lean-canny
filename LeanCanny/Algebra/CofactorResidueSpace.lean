@@ -72,7 +72,7 @@ theorem collect_mem_FP : collect ∈ FP := by
   intro z
   simp only [Function.comp_apply, collect]
 
-noncomputable def evaluator : SpaceFunction value := by
+theorem evaluator : SpaceFunction value := by
   let M := ModulusBits.evaluator.withInput.postcompose install install_mem_FP
   let P := productEvaluator.withInput.postcompose collect collect_mem_FP
   let E := M.chain P

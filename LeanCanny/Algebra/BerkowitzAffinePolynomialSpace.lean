@@ -134,7 +134,7 @@ noncomputable def Access.encoded {F : Family} (a : Access F) : BerkowitzPolynomi
 
 attribute [local irreducible] PolynomialAffineEntryBits.value
 
-noncomputable def Access.entryEvaluator {F : Family} (a : Access F) (hN : a.original.dimension ∈ FP)
+theorem Access.entryEvaluator {F : Family} (a : Access F) (hN : a.original.dimension ∈ FP)
     (hm : a.original.modulus ∈ FP) (hb : a.bound ∈ FP) (E : SpaceFunction a.original.entry) : SpaceFunction a.encoded.entry := by
   have ES := PolynomialAffineEntryBits.evaluator E hm (a.radixCode_mem_FP hN hb)
   change SpaceFunction (PolynomialAffineEntryBits.value a.original.modulus a.radixCode a.original.entry)
@@ -149,7 +149,7 @@ theorem Access.valid_fppred {F : Family} (a : Access F) (hN : a.original.dimensi
   (BinaryNat.lt_fppred hi (a.radixCode_mem_FP hN hb)).of_iff (fun c => by
     simp only [a.inner_eq, a.radixCode_eq, MacaulayBits.fromBits_encode])
 
-noncomputable def Access.evaluator {F : Family} (a : Access F) (hN : a.original.dimension ∈ FP)
+theorem Access.evaluator {F : Family} (a : Access F) (hN : a.original.dimension ∈ FP)
     (hm : a.original.modulus ∈ FP) (hb : a.bound ∈ FP) (hi : a.inner ∈ FP) (ho : a.outer ∈ FP)
     (E : SpaceFunction a.original.entry) : SpaceFunction F.value := by
   have ES := BerkowitzPolynomial.ModularAccess.evaluator a.encoded (a.encoded_controls hN hm hb hi ho) (a.entryEvaluator hN hm hb E)

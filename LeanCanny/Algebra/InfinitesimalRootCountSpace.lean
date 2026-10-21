@@ -92,15 +92,15 @@ theorem effective_rootCount (F : Family) (c : List Bool) :
   rw [effective, withExponent_rootCount]
   exact he
 
-noncomputable def withExponentEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem withExponentEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (s : List Bool → List Bool) (hs : s ∈ FP) (ht : a.pattern ∈ FP)
     (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
     SpaceFunction (fun c => BinaryNatCode.encode (DyadicSignPatternBits.rootCount (withExponent F s) c)) :=
   DyadicSignPatternBits.rootCountEvaluator (withExponentAccess a s) (withExponent_controls F s hF hs) ht H P
 
-/-- The original uniform bivariate coefficient routines are the only suspended
+/-- The original uniform bivariate coefficient routines are the only space-bounded
 arithmetic sources. The exponent is derived internally from their FP bounds. -/
-noncomputable def rootCountEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem rootCountEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
     SpaceFunction (fun c => BinaryNatCode.encode (eventualRootCount F c)) := by
   let E := withExponentEvaluator a hF (parameterCode F) (parameterCode_FP F hF) hs H P
@@ -108,7 +108,7 @@ noncomputable def rootCountEvaluator {F : Family} (a : Access F) (hF : ControlsP
 
 def positiveLanguage (F : Family) : Language := {c | 0 < eventualRootCount F c}
 
-noncomputable def positiveDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem positiveDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
     SpaceDecider (positiveLanguage F) := by
   have hflag := (stringEq_fppred id_mem_FP (constFn_mem_FP [])).not.flag_mem_FP

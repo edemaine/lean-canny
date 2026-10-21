@@ -129,7 +129,7 @@ theorem access_controls (source active row : List Bool → List Bool) (n d : Lis
 
 attribute [local irreducible] family
 
-noncomputable def evaluator (source active row : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ)
+theorem evaluator (source active row : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ)
     (C : CoordinateReaders source n d) (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) :
     SpaceFunction (family source active row n d).value :=
   (access source active row n d C).evaluator

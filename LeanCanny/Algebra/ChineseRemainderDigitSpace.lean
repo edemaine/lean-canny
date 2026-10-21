@@ -44,7 +44,7 @@ open Complexity
 open LeanCanny.Encoding
 open LeanCanny.Computation
 
-noncomputable def magnitudeBitEvaluatorOfOperands
+theorem magnitudeBitEvaluatorOfOperands
     (N : List Bool → ℕ) (F : (c : List Bool) → System (Fin (N c)))
     (r : (c : List Bool) → Fin (N c) → ℕ) (z : List Bool → ℤ)
     (hres : ∀ c i, (r c i : ZMod ((F c).modulus i)) = z c)

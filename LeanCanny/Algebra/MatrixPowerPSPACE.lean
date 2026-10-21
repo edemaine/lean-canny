@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.MatrixPowerHalting
-public import LeanCanny.Computation.SpaceFunction
+public import LeanCanny.Computation.SpaceIteration
 
 /-!
 # Polynomial-space modular matrix powering
@@ -19,7 +19,7 @@ only their binary descriptions are. No dense matrix is constructed.
 
 The access contract covers every input string. A concrete input format must
 supply validation/defaults satisfying it. This direct interface requires an FP
-entry certificate. `MatrixPowerSpaceEntries` supplies the suspended simulation
+entry certificate. `MatrixPowerSpaceEntries` supplies the space-bounded simulation
 for a certified space-bounded entry evaluator.
 -/
 
@@ -81,7 +81,7 @@ theorem valueBits_done {R : Type*} {n : ℕ} (c : List Bool) (enc : R → List B
     valueBits (pair c (stateBits (n := n) enc (.done x))) = enc x := by
   simp [valueBits, stateBits]
 
-noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.PolyTime) :
+theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.PolyTime) :
     Computation.SpaceFunction F.value := by
   let ops := modularCallbacks a.dimension a.modulus a.entry
   let T := fun c => work (F.dimension c) (F.exponent c).size (F.exponent c) + 1
@@ -114,22 +114,13 @@ noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.Po
     rw [a.exponent_eq, BinaryNatCode.length_encode] at hec
     simp only [p, Polynomial.eval_add]
     omega
-  refine { init := initialPacket a.exponent a.row a.col
-           advance := Controller.step ops
-           halt := halted
-           output := valueBits
-           initFP := initialPacket_mem_FP ha.exponent ha.row ha.col
-           advanceFP := step_mem_FP ops (modularCallbacks_polyTime ha.dimension ha.modulus ha.entry)
-           haltFP := halted_mem_FP
-           outputFP := valueBits_mem_FP
-           space := 2 * Polynomial.X + 2 + 64 * (p + 1) ^ 2
-           clock := (p + 2) * p + 1
-           time := T
-           length_le := ?_
-           time_le := ?_
-           before := ?_
-           after := ?_
-           correct := ?_ }
+  refine (Computation.SpaceFunction.orbit
+    (Computation.SpaceFunction.ofFP (Controller.step ops)
+      (step_mem_FP ops (modularCallbacks_polyTime ha.dimension ha.modulus ha.entry)))
+    (initialPacket a.exponent a.row a.col) (initialPacket_mem_FP ha.exponent ha.row ha.col)
+    halted valueBits halted_mem_FP valueBits_mem_FP T
+    (2 * Polynomial.X + 2 + 64 * (p + 1) ^ 2) ((p + 2) * p + 1)
+    ?_ ?_ ?_ ?_).congr ?_
   · intro c t _
     let : NeZero (F.modulus c) := ⟨F.modulus_ne_zero c⟩
     rw [hinit c]
@@ -155,7 +146,7 @@ noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.Po
   · intro c
     rw [hinit c]
     exact halted_after ops c (F.matrix c) residueBits (hc c) (F.exponent c) (F.row c) (F.col c)
-  · intro c
+  · funext c
     let : NeZero (F.modulus c) := ⟨F.modulus_ne_zero c⟩
     rw [hinit c, show T c = work (F.dimension c) (F.exponent c).size (F.exponent c) + 1 from rfl,
       Controller.run_pow ops c (F.matrix c) residueBits (hc c)]

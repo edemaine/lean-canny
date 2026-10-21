@@ -27,7 +27,7 @@ theorem integer_controls {F : Family} (a : Access F) (ha : a.bits.ControlsPolyTi
   · simpa only [integer] using SylvesterBits.dimension_mem_FP_of_controls a.bits ha
   · simpa only [integer] using SylvesterBits.budget_mem_FP_of_controls a.bits ha
 
-noncomputable def deciderWithCoefficients {F : Family} (a : Access F) (ha : a.bits.ControlsPolyTime)
+theorem deciderWithCoefficients {F : Family} (a : Access F) (ha : a.bits.ControlsPolyTime)
     (L : SpaceFunction a.bits.leftCoefficient) (R : SpaceFunction a.bits.rightCoefficient) :
     SpaceDecider F.zeroLanguage :=
   Berkowitz.IntegerAccess.deciderWithEntry a.integer (integer_controls a ha) (integer_entryEvaluator a ha L R)

@@ -77,7 +77,7 @@ theorem allowed_fppred : FPPred allowed := by
 def headReader (f : List Bool → List Bool) (q : List Bool) : List Bool :=
   if allowed q then f (sourceQuery q) else []
 
-noncomputable def headEvaluator {f : List Bool → List Bool} (P : SpaceFunction f) :
+theorem headEvaluator {f : List Bool → List Bool} (P : SpaceFunction f) :
     SpaceFunction (headReader f) := by
   let E := SpaceFunction.branch (fun q => decide (allowed q)) allowed_fppred.flag_mem_FP
     (P.precompose sourceQuery sourceQuery_mem_FP) (SpaceFunction.ofFP (fun _ => []) (constFn_mem_FP []))

@@ -138,7 +138,7 @@ def scalarBits {F : ModularFamily} (a : ModularAccess F) : MatrixMoment.EntryBit
 def augmentedCoefficient {F : ModularFamily} (a : ModularAccess F) : List Bool → List Bool :=
   MatrixMoment.EntryBits.entry a.scalarBits ∘ augmentedInput
 
-noncomputable def coefficientEvaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+theorem coefficientEvaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
     (R : SpaceFunction a.bits.row) (C : SpaceFunction a.bits.column) (A : SpaceFunction a.bits.entry) :
     SpaceFunction a.augmentedCoefficient := by
   have hd := mem_FP_comp pairFst_mem_FP ha.dimension
@@ -193,7 +193,7 @@ theorem power_controls {F : ModularFamily} (a : ModularAccess F) (ha : a.Control
   have hc := MatrixMoment.EntryBits.sinkIndex_mem_FP_of_dimension a.bits ha.dimension
   exact ⟨hd, ha.modulus, he, constFn_mem_FP [], hc, ha.degree⟩
 
-noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
     (R : SpaceFunction a.bits.row) (C : SpaceFunction a.bits.column) (A : SpaceFunction a.bits.entry) :
     SpaceFunction F.value := by
   have E := PolynomialPower.ModularAccess.evaluator a.power (power_controls a ha) (coefficientEvaluator a ha R C A)

@@ -13,7 +13,7 @@ public import LeanCanny.Computation.SpaceFunctionComposition
 
 Queries are `pair context (pair row (pair column degree))`. Division by the
 supplied radix separates the original parameter degree from the deformation
-degree. One suspended original coefficient call and FP modular postprocessing
+degree. One space-bounded original coefficient call and FP modular postprocessing
 give the encoded affine entry, including the degree-zero diagonal contribution.
 -/
 
@@ -103,7 +103,7 @@ theorem finish_mem_FP {modulus radix : List Bool → List Bool} (hm : modulus �
 def value (modulus radix reader : List Bool → List Bool) (q : List Bool) : List Bool :=
   finish modulus radix (pair q (reader (originalInput radix q)))
 
-noncomputable def evaluator {reader modulus radix : List Bool → List Bool} (E : SpaceFunction reader)
+theorem evaluator {reader modulus radix : List Bool → List Bool} (E : SpaceFunction reader)
     (hm : modulus ∈ FP) (hB : radix ∈ FP) : SpaceFunction (value modulus radix reader) := by
   have ES := ((E.precompose (originalInput radix) (originalInput_mem_FP hB)).withInput).postcompose
     (finish modulus radix) (finish_mem_FP hm hB)

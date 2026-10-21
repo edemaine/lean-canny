@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.ETR.TubeCharacteristicQuotient
 public import LeanCanny.Algebra.IntegerSumSpace
-public import LeanCanny.Computation.SpaceFunctionPair
+public import LeanCanny.Computation.SpaceFunctionComposition
 
 /-! # Polynomial-space access to the true characteristic quotient's lowest data
 
@@ -27,7 +27,7 @@ noncomputable def orderCode (source active : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) : List Bool :=
   SignStatisticBits.integerCode (order source active n d ell c)
 
-noncomputable def orderEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem orderEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceFunction (orderCode source active n d ell) := by
@@ -56,7 +56,7 @@ noncomputable def numeratorSign (source active inner middle : List Bool → List
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) : List Bool :=
   InfinitesimalSign.tag (numeratorScalar source active inner middle n d ell c)
 
-noncomputable def numeratorSignEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem numeratorSignEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceFunction (numeratorSign source active inner middle n d ell) := by

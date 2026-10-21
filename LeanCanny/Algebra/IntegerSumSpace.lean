@@ -8,7 +8,7 @@ public import LeanCanny.Algebra.SignStatisticSpace
 public import LeanCanny.Computation.SpaceFunctionChain
 import Mathlib.Tactic.Ring
 
-/-! # Streaming signed sums with suspended integer evaluators
+/-! # Streaming signed sums with space-bounded integer evaluators
 
 Two unsigned accumulators retain positive and negative parts. They need only
 the summands' bit length plus the binary length of the number of summands.
@@ -43,7 +43,7 @@ theorem finish_mem_FP : finish ∈ FP := by
   intro z
   simp only [finish, Function.comp_apply]
 
-noncomputable def updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
+theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
     SpaceFunction (update f) := by
   let Q := (E.precompose query query_mem_FP).withInput.postcompose finish finish_mem_FP
   refine Q.congr (funext fun p => ?_)
@@ -155,7 +155,7 @@ theorem parts_length_le (a : ℕ → ℤ) (k N M : ℕ) (hk : k ≤ N)
 
 /-- A binary FP count permits exponentially many summands. The child evaluator's
 polynomial output bound supplies the accumulator bound; all child work is charged. -/
-noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count : List Bool → List Bool) (hc : count ∈ FP) (a : List Bool → ℕ → ℤ)
     (hf : ∀ c i, f (pair c (BinaryNatCode.encode i)) = SignStatisticBits.integerCode (a c i)) :
     SpaceFunction (fun c => SignStatisticBits.integerCode (∑ i ∈ Finset.range (Nat.fromBitsLE (count c)), a c i)) := by

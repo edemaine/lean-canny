@@ -33,7 +33,7 @@ theorem source_mem_FP : source ∈ FP :=
 
 noncomputable def value (q : List Bool) : List Bool := BinaryNatCode.encode (CollectedDegree.degree source pairSnd q)
 
-noncomputable def evaluator : SpaceFunction value := by
+theorem evaluator : SpaceFunction value := by
   have E := CollectedDegree.evaluator source pairSnd source_mem_FP pairSnd_mem_FP
   exact E
 

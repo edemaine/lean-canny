@@ -25,7 +25,7 @@ open LeanCanny.Computation
 def entry (a : SubresultantBits.Access) (p : List Bool) : List Bool :=
   if a.enabled (pairFst p) then a.base.entry (a.query p) else []
 
-noncomputable def entryEvaluator (a : SubresultantBits.Access) (ha : a.ControlsPolyTime)
+theorem entryEvaluator (a : SubresultantBits.Access) (ha : a.ControlsPolyTime)
     (L : SpaceFunction a.base.leftCoefficient) (R : SpaceFunction a.base.rightCoefficient) : SpaceFunction a.entry := by
   have hflag := ((a.enabled_fppred ha).comp pairFst_mem_FP).flag_mem_FP
   let E := (a.base.entryEvaluator ha.base L R).precompose a.query (a.query_mem_FP ha)

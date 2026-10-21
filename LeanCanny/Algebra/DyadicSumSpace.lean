@@ -49,7 +49,7 @@ theorem bitQuery_mem_FP {precision : List Bool → List Bool} (hp : precision �
 theorem finish_mem_FP {precision : List Bool → List Bool} (hp : precision ∈ FP) : finish precision ∈ FP :=
   mem_FP_comp (bitQuery_mem_FP hp) DyadicQuotientBits.value_mem_FP
 
-noncomputable def bitEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem bitEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (precision : List Bool → List Bool) (hp : precision ∈ FP) :
     SpaceFunction (fun q => finish precision (pair q (f (prepareQuery q)))) :=
   ((E.precompose prepareQuery prepareQuery_mem_FP).withInput).postcompose (finish precision) (finish_mem_FP hp)
@@ -65,7 +65,7 @@ theorem bit_correct (f precision : List Bool → List Bool) (c : List Bool) (i k
   · simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.sub_add_cancel (by omega : 1 ≤ m)]
   · simpa only [BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.sub_add_cancel (by omega : 1 ≤ m)] using ha
 
-noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count precision index : List Bool → List Bool) (hc : count ∈ FP) (hp : precision ∈ FP) (hi : index ∈ FP)
     (a m : List Bool → ℕ → ℕ)
     (hprep : ∀ c i, i < Nat.fromBitsLE (count c) →

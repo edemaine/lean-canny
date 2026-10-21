@@ -83,7 +83,7 @@ theorem scan_language_eq (F : BoundedFamily) :
   · intro h k hk
     exact (modular_packet F c k).mpr (h (k + 1) (by omega) (by omega))
 
-noncomputable def decider {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) : SpaceDecider F.zeroLanguage := by
+theorem decider {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) : SpaceDecider F.zeroLanguage := by
   rw [← scan_language_eq F]
   exact BoundedScan.decider (Access.decider a.residue (residue_polyTime a ha)) a.source.bound
     (a.source.bound_mem_FP ha.source) (fun c => 2 * F.budget c + 4) a.source.bound_code

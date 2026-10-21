@@ -104,14 +104,14 @@ theorem modular_controls {F : Family} (a : Access F) (ha : a.PolyTime) : a.modul
   · exact constFn_mem_FP _
   · simpa only [modular] using hc
 
-noncomputable def evaluator {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceFunction F.value := by
+theorem evaluator {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceFunction F.value := by
   have L := ShiftCoefficientBits.certified a.source.shiftAccess (a.source.shift_polyTime ha.source)
     F.source.shiftSource a.source.shift_represents
   have R := SpaceFunction.ofFP a.source.constantCoefficient (a.source.constantCoefficient_mem_FP ha.source)
   have E := SubresultantPolynomial.ModularAccess.evaluator a.modular (modular_controls a ha) L R
   exact E.congr (funext F.modular_value)
 
-noncomputable def decider {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceDecider F.zeroLanguage := by
+theorem decider {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceDecider F.zeroLanguage := by
   have hflag : (fun w : List Bool => [decide (w = [])]) ∈ FP :=
     (stringEq_fppred id_mem_FP (constFn_mem_FP [])).flag_mem_FP
   apply (evaluator a ha).decider (fun w => decide (w = [])) hflag

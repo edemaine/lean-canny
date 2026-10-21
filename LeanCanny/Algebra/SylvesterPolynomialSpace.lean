@@ -52,7 +52,7 @@ theorem scalar_controls (a : Access) (ha : a.ControlsPolyTime) : a.scalarBits.Co
 def entry (a : Access) : List Bool → List Bool :=
   SylvesterBits.entry a.scalarBits ∘ PolynomialMoment.augmentedInput
 
-noncomputable def entryEvaluator (a : Access) (ha : a.ControlsPolyTime)
+theorem entryEvaluator (a : Access) (ha : a.ControlsPolyTime)
     (L : SpaceFunction a.leftCoefficient) (R : SpaceFunction a.rightCoefficient) : SpaceFunction a.entry := by
   have EL := L.precompose PolynomialMoment.vectorInput PolynomialMoment.vectorInput_mem_FP
   have ER := R.precompose PolynomialMoment.vectorInput PolynomialMoment.vectorInput_mem_FP

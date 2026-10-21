@@ -150,7 +150,7 @@ theorem modular_controls {F : Family} (a : Access F) (ha : a.PolyTime) : a.modul
   · simpa only [modular] using hm
   · simpa only [modular] using hd
 
-noncomputable def evaluator {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceFunction F.value := by
+theorem evaluator {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceFunction F.value := by
   have L := ShiftCoefficientBits.certified a.shiftAccess (shift_polyTime a ha) F.shiftSource (shift_represents a)
   have R := SpaceFunction.ofFP a.constantCoefficient (constantCoefficient_mem_FP a ha)
   have E := ResultantPolynomial.ModularAccess.evaluator a.modular (modular_controls a ha) L R
@@ -158,7 +158,7 @@ noncomputable def evaluator {F : Family} (a : Access F) (ha : a.PolyTime) : Spac
   funext q
   exact F.modular_value q
 
-noncomputable def decider {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceDecider F.zeroLanguage := by
+theorem decider {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceDecider F.zeroLanguage := by
   let accept := fun bits : List Bool => decide (bits = [])
   have haccept : (fun bits => [accept bits]) ∈ FP :=
     (stringEq_fppred id_mem_FP (constFn_mem_FP [])).flag_mem_FP

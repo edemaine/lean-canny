@@ -118,7 +118,7 @@ theorem fold_eq (c : List Bool) (k : ℕ) : BoundedFold.fold update (fun _ => []
   | zero => rfl
   | succ k ih => rw [BoundedFold.fold, ih, update_packet, search]
 
-noncomputable def evaluator : SpaceFunction value := by
+theorem evaluator : SpaceFunction value := by
   have hs : ∀ c k, k ≤ Nat.fromBitsLE (modulus c) →
       (BoundedFold.fold update (fun _ => []) c k).length ≤ (Polynomial.X + 1 : Polynomial ℕ).eval c.length := by
     intro c k hk

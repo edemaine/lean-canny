@@ -97,7 +97,7 @@ theorem fold_eq (c : List Bool) (d : ℕ) :
       BoundedFold.accumulator_packet, BinaryNatCode.encode, Nat.fromBitsLE_bits,
       List.getElem?_cons_zero, Option.getD_some, survives]
 
-noncomputable def evaluator : SpaceFunction (fun c => [decide (Nat.fromBitsLE c).Prime]) := by
+theorem evaluator : SpaceFunction (fun c => [decide (Nat.fromBitsLE c).Prime]) := by
   let E := BoundedFold.evaluator (SpaceFunction.ofFP update update_mem_FP) id seed id_mem_FP seed_mem_FP 1
     (by intro c i _; rw [fold_eq]; simp only [List.length_singleton, Polynomial.eval_one, le_refl])
   refine E.congr (funext fun c => ?_)

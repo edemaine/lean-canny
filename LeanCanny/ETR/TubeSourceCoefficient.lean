@@ -44,7 +44,7 @@ theorem width_unary : UnaryFn width :=
 
 noncomputable def value : List Bool → List Bool := TubeCoefficient.value base width active target pairSnd
 
-noncomputable def evaluator : SpaceFunction value :=
+theorem evaluator : SpaceFunction value :=
   TubeCoefficient.evaluator base width active target pairSnd base_mem_FP width_unary active_mem_FP target_mem_FP pairSnd_mem_FP
 
 noncomputable def exponentCode (bits : List Bool) (m : Coordinate (CompactSource.term bits).arity →₀ ℕ) : List Bool :=

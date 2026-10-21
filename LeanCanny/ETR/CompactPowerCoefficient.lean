@@ -13,7 +13,7 @@ public import LeanCanny.Geometry.CubePolynomialMultiplication
 
 Writing a polynomially bounded power of the source and then compactifying it
 computes the corresponding power of the compactified polynomial. Actual
-source degrees, coefficient cancellation, and suspended child work are all
+source degrees, coefficient cancellation, and space-bounded child work are all
 included. Positive powers retain the original arity, so zero-padded queries
 access coefficients of the original compact polynomial directly.
 -/
@@ -34,7 +34,7 @@ noncomputable def coefficient (base target : List Bool → List Bool) (power : L
 noncomputable def value (base target modulus : List Bool → List Bool) (power : List Bool → ℕ) : List Bool → List Bool :=
   CompactCoefficient.value (source base power) target modulus
 
-noncomputable def evaluator (base target modulus : List Bool → List Bool) (power : List Bool → ℕ)
+theorem evaluator (base target modulus : List Bool → List Bool) (power : List Bool → ℕ)
     (hb : base ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) (hp : UnaryFn power) :
     SpaceFunction (value base target modulus power) :=
   CompactCoefficient.evaluator (source base power) target modulus (TermPower.write_mem_FP hb hp) ht hm

@@ -71,7 +71,7 @@ noncomputable def productValue (base : List Bool → List Bool) (W r : List Bool
     (active target modulus : List Bool → List Bool) (derivative : Bool) (c : List Bool) : List Bool :=
   finish (TubeDense.arity base) W r target modulus derivative (pair c (child base W r active target modulus derivative c))
 
-noncomputable def productEvaluator (base : List Bool → List Bool) (W r : List Bool → ℕ)
+theorem productEvaluator (base : List Bool → List Bool) (W r : List Bool → ℕ)
     (active target modulus : List Bool → List Bool) (derivative : Bool)
     (hb : base ∈ FP) (hW : UnaryFn W) (hr : UnaryFn r) (ha : active ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (productValue base W r active target modulus derivative) := by

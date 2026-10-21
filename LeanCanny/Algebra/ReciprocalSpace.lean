@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.HomogenizationSpace
 Fixed-width block zero is the reciprocal coordinate. Original rows require
 exponent zero; the reciprocal row requires exponent one for its derivative
 term, or the zero monomial for its constant -1. Original coefficient routines
-are suspended children and are queried after removing the first block.
+are space-bounded children and are queried after removing the first block.
 -/
 
 @[expose] public section
@@ -69,7 +69,7 @@ theorem zero_packet_iff {σ : Type*} [Fintype σ] (N W : List Bool → ℕ) (c :
 def embeddedValue (W : List Bool → ℕ) (reader : List Bool → List Bool) (q : List Bool) : List Bool :=
   if first W q = [] then reader (HomogenizationBits.oldQuery W q) else []
 
-noncomputable def embeddedEvaluator {W : List Bool → ℕ} (hW : UnaryFn W)
+theorem embeddedEvaluator {W : List Bool → ℕ} (hW : UnaryFn W)
     {reader : List Bool → List Bool} (E : SpaceFunction reader) : SpaceFunction (embeddedValue W reader) := by
   have EP := E.precompose (HomogenizationBits.oldQuery W) (HomogenizationBits.oldQuery_mem_FP hW)
   have ES := SpaceFunction.branch (fun q => decide (first W q = []))
@@ -80,7 +80,7 @@ def inverseValue (N W : List Bool → ℕ) (reader negativeOne : List Bool → L
   if first W q = [true] then reader (HomogenizationBits.oldQuery W q)
   else if zero N W q then negativeOne (pairFst q) else []
 
-noncomputable def inverseEvaluator {N W : List Bool → ℕ} (hN : UnaryFn N) (hW : UnaryFn W)
+theorem inverseEvaluator {N W : List Bool → ℕ} (hN : UnaryFn N) (hW : UnaryFn W)
     {reader negativeOne : List Bool → List Bool} (E : SpaceFunction reader) (hn : negativeOne ∈ FP) :
     SpaceFunction (inverseValue N W reader negativeOne) := by
   have EP := E.precompose (HomogenizationBits.oldQuery W) (HomogenizationBits.oldQuery_mem_FP hW)

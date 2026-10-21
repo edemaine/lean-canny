@@ -81,7 +81,7 @@ theorem family_value (F G : Family) (h : SameParameter F G) (c : List Bool) :
   rfl
 
 /-- Only the original bivariate coefficient routines are external subroutines. -/
-noncomputable def evaluator {F G : Family} (a : Access F) (b : Access G)
+theorem evaluator {F G : Family} (a : Access F) (b : Access G)
     (hF : ControlsPolyTime F) (hG : ControlsPolyTime G) (h : SameParameter F G)
     (P : SpaceFunction a.coefficient) (Q : SpaceFunction b.coefficient) :
     SpaceFunction (fun c => SignStatisticBits.integerCode (value F G c)) := by

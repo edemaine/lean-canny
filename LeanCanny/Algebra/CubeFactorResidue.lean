@@ -88,7 +88,7 @@ theorem finish_mem_FP : finish ∈ FP := by
   have h := (admissible_fppred.comp pairFst_mem_FP).ite_mem_FP hv (constFn_mem_FP [])
   exact mem_FP_of_eq h (fun _ => rfl)
 
-noncomputable def evaluator : SpaceFunction computed := by
+theorem evaluator : SpaceFunction computed := by
   let E := (BinomialResidue.evaluator.precompose binomialQuery binomialQuery_mem_FP).withInput.postcompose finish finish_mem_FP
   exact E.congr (funext fun _ => rfl)
 

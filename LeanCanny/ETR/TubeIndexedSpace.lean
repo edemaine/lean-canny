@@ -11,7 +11,7 @@ public import LeanCanny.ETR.TubeIndexedSource
 The source bits, active mask, row, and modulus are FP fields of the caller's
 context. A binary rank is the second field of each coefficient query. The
 complete native coefficient machines supply exactly the indexed coefficients,
-with their source validation and all suspended work included in space.
+with their source validation and all space-bounded work included in space.
 -/
 
 @[expose] public section
@@ -37,7 +37,7 @@ noncomputable def tubeAt (source active modulus : List Bool → List Bool) (c : 
 noncomputable def tubeResidue (source active modulus : List Bool → List Bool) (q : List Bool) : List Bool :=
   tubeAt source active modulus (pairFst q) (Nat.fromBitsLE (pairSnd q))
 
-noncomputable def tubeResidueEvaluator (source active modulus : List Bool → List Bool)
+theorem tubeResidueEvaluator (source active modulus : List Bool → List Bool)
     (hs : source ∈ FP) (ha : active ∈ FP) (hm : modulus ∈ FP) : SpaceFunction (tubeResidue source active modulus) := by
   let src := compiled source ∘ pairFst
   let W := fun q => blockWidth (source (pairFst q))
@@ -63,7 +63,7 @@ noncomputable def projectionAt (source active row modulus : List Bool → List B
 noncomputable def projectionResidue (source active row modulus : List Bool → List Bool) (q : List Bool) : List Bool :=
   projectionAt source active row modulus (pairFst q) (Nat.fromBitsLE (pairSnd q))
 
-noncomputable def projectionResidueEvaluator (source active row modulus : List Bool → List Bool)
+theorem projectionResidueEvaluator (source active row modulus : List Bool → List Bool)
     (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (projectionResidue source active row modulus) := by
   let src := compiled source ∘ pairFst

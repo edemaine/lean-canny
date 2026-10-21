@@ -11,7 +11,7 @@ public import LeanCanny.ETR.TubeParameterBounds
 An FP context projection can discard the matrix row and selected coefficient
 fields before calling the original parameter-coordinate routines. Coordinates
 are uniform over spatial ranks, so those child requests use rank zero. The
-resulting certificates include the original readers' suspended workspace.
+resulting certificates include the original readers' space-bounded workspace.
 -/
 
 @[expose] public section

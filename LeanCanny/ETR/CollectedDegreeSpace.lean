@@ -31,7 +31,7 @@ noncomputable def survivingValue (source varIndex : List Bool → List Bool) (q 
     (MonomialReader.exponentVectorWord (source ∘ pairFst) pairSnd) q = 0 then [] else
       MonomialReader.exponentRead (source ∘ pairFst) pairSnd (varIndex ∘ pairFst) q
 
-noncomputable def survivingEvaluator (source varIndex : List Bool → List Bool)
+theorem survivingEvaluator (source varIndex : List Bool → List Bool)
     (hs : source ∈ FP) (hv : varIndex ∈ FP) : SpaceFunction (survivingValue source varIndex) := by
   classical
   have hsrc := mem_FP_comp pairFst_mem_FP hs
@@ -76,7 +76,7 @@ theorem indexedDegree_eq_degree (source varIndex : List Bool → List Bool) (c :
   · exact Term.indexedDegree_eq_zero_of_arity_le _ _ _
       ((CollectedCoefficient.arity_le_dimension source c).trans (by omega))
 
-noncomputable def evaluator (source varIndex : List Bool → List Bool) (hs : source ∈ FP) (hv : varIndex ∈ FP) :
+theorem evaluator (source varIndex : List Bool → List Bool) (hs : source ∈ FP) (hv : varIndex ∈ FP) :
     SpaceFunction (fun c => BinaryNatCode.encode (degree source varIndex c)) := by
   let bound := fun c => BinaryNatCode.encode (CollectedCoefficient.dimension source c)
   have hb : bound ∈ FP := bits_mem_FP (CollectedCoefficient.dimension_unary hs)

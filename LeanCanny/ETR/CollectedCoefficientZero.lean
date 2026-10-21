@@ -29,7 +29,7 @@ def residueZeroLanguage (source target : List Bool → List Bool) : Language :=
 theorem coefficient_lift (source target : List Bool → List Bool) (q : List Bool) :
     coefficient (source ∘ pairFst) (target ∘ pairFst) q = coefficient source target (pairFst q) := rfl
 
-noncomputable def residueZeroDecider (source target : List Bool → List Bool)
+theorem residueZeroDecider (source target : List Bool → List Bool)
     (hs : source ∈ FP) (ht : target ∈ FP) : SpaceDecider (residueZeroLanguage source target) := by
   let R := evaluator (source ∘ pairFst) (target ∘ pairFst) pairSnd
     (mem_FP_comp pairFst_mem_FP hs) (mem_FP_comp pairFst_mem_FP ht) pairSnd_mem_FP
@@ -74,7 +74,7 @@ theorem zeroLanguage_eq_scan (source target : List Bool → List Bool) :
     have he := h (m - 1) (by omega)
     exact (Nat.sub_add_cancel hm) ▸ he
 
-noncomputable def zeroDecider (source target : List Bool → List Bool)
+theorem zeroDecider (source target : List Bool → List Bool)
     (hs : source ∈ FP) (ht : target ∈ FP) : SpaceDecider {c | coefficient source target c = 0} := by
   let D := BoundedScan.decider (residueZeroDecider source target hs ht) (zeroScanCount source)
     (zeroScanCount_mem_FP hs) (fun c => 2 * (dimension source c + 1) + 4) (fun _ => rfl)

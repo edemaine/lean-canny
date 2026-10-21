@@ -10,7 +10,7 @@ public import LeanCanny.Algebra.HomogenizationSpace
 /-! # Complete readers for spatially filtered coefficient sources
 
 Queries are `pair (pair context spatialRank) fullRank`. A bounded comparison of
-spatial exponent blocks guards one suspended original coefficient call. The
+spatial exponent blocks guards one space-bounded original coefficient call. The
 selected rank and all source ranks stay binary throughout the computation.
 -/
 
@@ -103,7 +103,7 @@ theorem matches_context {σ τ : Type*} [Fintype σ] [Fintype τ] (A W : List Bo
 def value (A W : List Bool → ℕ) (reader : List Bool → List Bool) (q : List Bool) : List Bool :=
   if Matches A W q then reader (sourceQuery q) else []
 
-noncomputable def evaluator {A W : List Bool → ℕ} (hA : UnaryFn A) (hW : UnaryFn W)
+theorem evaluator {A W : List Bool → ℕ} (hA : UnaryFn A) (hW : UnaryFn W)
     {reader : List Bool → List Bool} (E : SpaceFunction reader) : SpaceFunction (value A W reader) := by
   have EC := E.precompose sourceQuery sourceQuery_mem_FP
   have ES := SpaceFunction.branch (fun q => decide (Matches A W q)) (matches_fppred hA hW).flag_mem_FP

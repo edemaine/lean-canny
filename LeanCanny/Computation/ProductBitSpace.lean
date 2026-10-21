@@ -61,7 +61,7 @@ theorem finish_mem_FP : finish ∈ FP := by
   intro p
   simp only [Function.comp_apply, finish]
 
-noncomputable def termEvaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g) :
+theorem termEvaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g) :
     SpaceFunction (termValue f g) := by
   let EL := (L.precompose leftQuery leftQuery_mem_FP).withInput
   let ER := (R.precompose (rightQuery ∘ pairFst) (mem_FP_comp pairFst_mem_FP rightQuery_mem_FP)).withInput
@@ -89,7 +89,7 @@ theorem termValue_packet (f g : List Bool → List Bool) (a b : List Bool → �
     BinaryProduct.term_bit]
   cases (a c).testBit i <;> cases (b c).testBit (k - i) <;> by_cases hik : i ≤ k <;> simp [hik]
 
-noncomputable def evaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g)
+theorem evaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g)
     (index : List Bool → List Bool) (hi : index ∈ FP) (a b : List Bool → ℕ)
     (hleft : ∀ c k, (f (pair c (BinaryNatCode.encode k)))[0]?.getD false = (a c).testBit k)
     (hright : ∀ c k, (g (pair c (BinaryNatCode.encode k)))[0]?.getD false = (b c).testBit k) :

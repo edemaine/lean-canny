@@ -209,11 +209,10 @@ import LeanCanny.Algebra.PolynomialProductSpace
 import LeanCanny.Algebra.ModularSumSpace
 import LeanCanny.Algebra.PolynomialMomentSpace
 import LeanCanny.Algebra.BerkowitzPolynomialSpace
-import LeanCanny.Algebra.MatrixPowerSubroutine
+import LeanCanny.Algebra.MatrixPowerStepSpace
 import LeanCanny.Algebra.BerkowitzFactorAccess
 import LeanCanny.Algebra.MatrixMomentFP
 import LeanCanny.Algebra.BerkowitzMomentAccessFP
-import LeanCanny.Algebra.BerkowitzFactorChildBounds
 import LeanCanny.Algebra.BerkowitzPSPACE
 import LeanCanny.Algebra.IntegerDeterminantPSPACE
 import LeanCanny.Algebra.ResultantPSPACE
@@ -257,10 +256,6 @@ import LeanCanny.Algebra.IndexedModulusSpace
 import LeanCanny.Algebra.ChineseRemainderSignSpace
 import LeanCanny.Algebra.BinomialResidue
 import LeanCanny.Algebra.ShiftCoefficientResidue
-import LeanCanny.Computation.BoundedFoldTidy
-import LeanCanny.Computation.SpaceFunctionTidy
-import LeanCanny.Algebra.ModularSumTidy
-import LeanCanny.ETR.TidyPSPACEClosure
 
 /-!
 # Canny's algebraic and geometric computations in polynomial space

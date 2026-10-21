@@ -13,7 +13,7 @@ public import LeanCanny.Algebra.InfinitesimalSignSpace
 
 FP binary metadata gives the parameter degree, dyadic exponent, and mass bound.
 Original coefficient residues may use polynomial space. Modular powers clear
-the denominator while a suspended sum avoids materializing the resulting integer.
+the denominator while a space-bounded sum avoids materializing the resulting integer.
 -/
 
 @[expose] public section
@@ -104,7 +104,7 @@ structure Access (F : Family) where
 def term {F : Family} (a : Access F) (p : List Bool) : List Bool :=
   finish F (pair p (a.coefficient (sourceQuery p)))
 
-noncomputable def termEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem termEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.coefficient) : SpaceFunction (term a) := by
   let E := (P.precompose sourceQuery sourceQuery_mem_FP).withInput.postcompose (finish F) (finish_mem_FP F hF)
   refine E.congr (funext fun p => ?_)
@@ -132,7 +132,7 @@ theorem term_packet {F : Family} (a : Access F) (q : List Bool) (i : ℕ) :
 noncomputable def Family.residue (F : Family) (q : List Bool) : List Bool :=
   integerResidue (F.value (pairFst q)) (mValue q)
 
-noncomputable def residueEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem residueEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.coefficient) : SpaceFunction F.residue := by
   have hm : (fun q => Nat.fromBitsLE (modulusCode q)) = mValue := by
     funext q
@@ -165,7 +165,7 @@ theorem value_size (F : Family) (c : List Bool) : (F.value c).natAbs.size ≤ Na
   rw [budgetCode_value]
   exact DyadicSpecialization.numerator_size_le _ _ _ _ (F.polynomial_degree c) (F.polynomial_mass c)
 
-noncomputable def signEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem signEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.coefficient) : SpaceFunction (fun c => InfinitesimalSign.tag (F.value c)) := by
   apply IntegerSignumBits.evaluator (residueEvaluator a hF P) (budgetCode F) (budgetCode_mem_FP F hF)
     F.value (value_size F)
@@ -175,7 +175,7 @@ noncomputable def signEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTi
     Nat.sub_add_cancel (by omega : 1 ≤ m)]
   rfl
 
-noncomputable def smallParameterSignEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem smallParameterSignEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.coefficient) (hs : ∀ c, Nat.fromBitsLE (F.mass c) < Nat.fromBitsLE (F.exponent c)) :
     SpaceFunction (fun c => InfinitesimalSign.encode (SignType.sign (F.polynomial c).trailingCoeff)) := by
   refine (signEvaluator a hF P).congr (funext fun c => ?_)

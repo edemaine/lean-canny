@@ -36,7 +36,7 @@ structure Data (source active modulus inner outer : List Bool → List Bool)
   direction_eq : ∀ c i, i < TubeParameter.spatialCount (source c) →
     direction (pair c (BinaryNatCode.encode i)) = (Codec.integer (ell c i)).toBits
 
-noncomputable def Data.evaluator {source active modulus inner outer : List Bool → List Bool}
+theorem Data.evaluator {source active modulus inner outer : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : Data source active modulus inner outer n d ell) :
     SpaceFunction (family source active modulus inner outer n d ell D.bounds).value := by

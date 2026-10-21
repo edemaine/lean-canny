@@ -66,7 +66,7 @@ noncomputable def regularValue (source active modulus : List Bool → List Bool)
   TubeCleared.wideValue (source ∘ base) (active ∘ base) regularIndex innerCode (modulus ∘ base)
     (fun q => n (base q)) (fun q => d (base q)) ∘ rowInput
 
-noncomputable def regularEvaluator (source active modulus : List Bool → List Bool)
+theorem regularEvaluator (source active modulus : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ)
     (C : TubeParameter.CoordinateReaders source (fun q => n (pairFst q)) (fun q => d (pairFst q)))
     (hs : source ∈ FP) (ha : active ∈ FP) (hm : modulus ∈ FP) : SpaceFunction (regularValue source active modulus n d) :=
@@ -89,7 +89,7 @@ noncomputable def linearValue (source modulus : List Bool → List Bool) (ell : 
   LinearCoefficientBits.value (TubeParameter.spatialCount ∘ source ∘ base) (TubeCleared.matrixWidth ∘ source ∘ base)
     (TubeLinear.scalar (fun q => ell (base q))) outerCode (modulus ∘ base) ∘ rowInput
 
-noncomputable def linearEvaluator (source modulus read : List Bool → List Bool) (ell : List Bool → ℕ → ℤ)
+theorem linearEvaluator (source modulus read : List Bool → List Bool) (ell : List Bool → ℕ → ℤ)
     (hs : source ∈ FP) (hm : modulus ∈ FP) (he : read ∈ FP)
     (hr : ∀ c i, i < TubeParameter.spatialCount (source c) → read (pair c (BinaryNatCode.encode i)) = (Codec.integer (ell c i)).toBits) :
     SpaceFunction (linearValue source modulus ell) := by

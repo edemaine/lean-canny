@@ -10,7 +10,7 @@ public import LeanCanny.Algebra.SignQuerySource
 
 Uniform positive-modulus coefficient access to the root and the original
 polynomial family suffices. The product coefficient reader is constructed
-internally, and all its suspended calls are included in the Tarski certificate.
+internally, and all its space-bounded calls are included in the Tarski certificate.
 -/
 
 @[expose] public section
@@ -54,7 +54,7 @@ theorem sourceQuery_packet (q : List Bool) (i k : ℕ) :
 noncomputable def Family.residue (F : Family) (q : List Bool) : List Bool :=
   IntegerTarskiSeedBits.integerResidue ((F.product (origin q)).coeff (Nat.fromBitsLE (index q))) (modulus q)
 
-noncomputable def residueEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem residueEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (he : a.exponent ∈ FP) (P : SpaceFunction a.polynomialCoefficient) : SpaceFunction F.residue := by
   let e := fun q i => F.exponent (origin q) i
   let Q := fun q i => (F.polynomial (origin q) i).map (Int.castRingHom (ZMod (modulus q)))
@@ -99,7 +99,7 @@ noncomputable def tarskiAccess {F : Family} (a : Access F) : IntegerTarskiSeedBi
 noncomputable def Family.value (F : Family) (c : List Bool) : ℤ := RootSignQueries.tarskiQuery
   ((F.root c).map (algebraMap ℤ ℝ)) ((F.product c).map (algebraMap ℤ ℝ))
 
-noncomputable def evaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem evaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (he : a.exponent ∈ FP) (H : SpaceFunction a.rootCoefficient)
     (P : SpaceFunction a.polynomialCoefficient) :
     SpaceFunction (fun c => SignStatisticBits.integerCode (F.value c)) := by

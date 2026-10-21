@@ -11,8 +11,8 @@ public import LeanCanny.Algebra.DyadicSumSpace
 # Certified bit access to the CRT correction rank
 
 The rank is the high part of the truncated quotient sum. Reading its bit `k`
-therefore reads sum bit `precision+k`; the existing suspended sum-bit machine
-accounts for all local preparation calls and its full physical clock.
+therefore reads sum bit `precision+k`; the existing space-bounded sum-bit machine
+composes all local preparation calls through the native space interface.
 -/
 
 @[expose] public section
@@ -37,7 +37,7 @@ theorem rankIndex_value (precision index : List Bool → List Bool) (c : List Bo
     Nat.fromBitsLE (rankIndex precision index c) = Nat.fromBitsLE (precision c) + Nat.fromBitsLE (index c) := by
   simp only [rankIndex, BinaryNat.add_pair, Nat.fromBitsLE_bits]
 
-noncomputable def rankBitEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem rankBitEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count precision index : List Bool → List Bool) (hc : count ∈ FP) (hp : precision ∈ FP) (hi : index ∈ FP)
     (F : (c : List Bool) → System (Fin (Nat.fromBitsLE (count c))))
     (r : (c : List Bool) → Fin (Nat.fromBitsLE (count c)) → ℕ)
@@ -74,7 +74,7 @@ noncomputable def rankBitEvaluator {f : List Bool → List Bool} (E : SpaceFunct
     (by positivity) (by simpa only [Fintype.card_fin] using hprecision c)
   rw [hsum, rankIndex_value, Nat.add_comm (Nat.fromBitsLE (precision c)), ← Nat.testBit_div_two_pow, hrank]
 
-noncomputable def rankBitEvaluatorOfCount {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem rankBitEvaluatorOfCount {f : List Bool → List Bool} (E : SpaceFunction f)
     (count precision index : List Bool → List Bool) (hc : count ∈ FP) (hp : precision ∈ FP) (hi : index ∈ FP)
     (N : List Bool → ℕ) (hcount : ∀ c, Nat.fromBitsLE (count c) = N c)
     (F : (c : List Bool) → System (Fin (N c))) (r : (c : List Bool) → Fin (N c) → ℕ)

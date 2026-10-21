@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Computation.SubroutineFunction
+public import LeanCanny.Computation.SpaceIteration
 public import LeanCanny.Encoding.BinaryDivFP
 public import LeanCanny.Algebra.BinarySumCarry
 
@@ -41,24 +41,15 @@ def halted (count index : List Bool → List Bool) (p : List Bool) : Bool :=
   decide (Nat.fromBitsLE (limit count index (pairFst p)) ≤ Nat.fromBitsLE (counter p))
 def ordinary (p : List Bool) : List Bool :=
   pair (pairFst p) (pair (BinaryNat.succ (counter p)) (BinaryNat.div (pair (accumulator p) [false, true])))
-def response {f : List Bool → List Bool} (E : SpaceFunction f) (z : List Bool) : List Bool :=
-  if (E.output (pairSnd z))[0]?.getD false then [true] else []
-def resume {f : List Bool → List Bool} (E : SpaceFunction f) (z : List Bool) : List Bool :=
+def response (z : List Bool) : List Bool :=
+  if (pairSnd z)[0]?.getD false then [true] else []
+def resume (z : List Bool) : List Bool :=
   pair (pairFst (pairFst z)) (pair (BinaryNat.succ (counter (pairFst z)))
-    (BinaryNat.add (pair (accumulator (pairFst z)) (response E z))))
+    (BinaryNat.add (pair (accumulator (pairFst z)) (response z))))
 def output (p : List Bool) : List Bool := BinaryNat.mod (pair (accumulator p) [false, true])
 
-def program {f : List Bool → List Bool} (E : SpaceFunction f) (count : List Bool → List Bool) :
-    SubroutineIteration.Program where
-  ordinary := ordinary
-  request := request count
-  start := E.init ∘ query count
-  advance := E.advance
-  halt := E.halt
-  resume := resume E
-
-def childTime {f : List Bool → List Bool} (E : SpaceFunction f) (count : List Bool → List Bool)
-    (p : List Bool) : ℕ := E.time (query count p)
+def step (f : List Bool → List Bool) (count : List Bool → List Bool) (p : List Bool) : List Bool :=
+  if request count p then resume (pair p (f (query count p))) else ordinary p
 
 def packet (c : List Bool) (t v : ℕ) : List Bool :=
   pair c (pair (BinaryNatCode.encode t) (BinaryNatCode.encode v))
@@ -112,17 +103,17 @@ theorem ordinary_mem_FP : ordinary ∈ FP := by
   intro p
   simp only [Function.comp_apply, ordinary]
 
-theorem response_mem_FP {f : List Bool → List Bool} (E : SpaceFunction f) : response E ∈ FP :=
-  (FPPred.getBit (mem_FP_comp pairSnd_mem_FP E.outputFP) (UnaryFn.const 0)).ite_mem_FP
+theorem response_mem_FP : response ∈ FP :=
+  (FPPred.getBit pairSnd_mem_FP (UnaryFn.const 0)).ite_mem_FP
     (constFn_mem_FP [true]) (constFn_mem_FP [])
 
-theorem resume_mem_FP {f : List Bool → List Bool} (E : SpaceFunction f) : resume E ∈ FP := by
+theorem resume_mem_FP : resume ∈ FP := by
   have hc := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
   have ht := mem_FP_comp (mem_FP_comp pairFst_mem_FP counter_mem_FP) BinaryNat.succ_mem_FP
-  have hv := mem_FP_comp (mem_FP_pair (mem_FP_comp pairFst_mem_FP accumulator_mem_FP) (response_mem_FP E))
+  have hv := mem_FP_comp (mem_FP_pair (mem_FP_comp pairFst_mem_FP accumulator_mem_FP) response_mem_FP)
     BinaryNat.add_mem_FP
   have h := mem_FP_pair hc (mem_FP_pair ht hv)
-  refine mem_FP_of_eq (g := resume E) h ?_
+  refine mem_FP_of_eq (g := resume) h ?_
   intro z
   simp only [Function.comp_apply, resume]
 
@@ -132,10 +123,11 @@ theorem output_mem_FP : output ∈ FP := by
   intro p
   simp only [Function.comp_apply, output]
 
-theorem program_polyTime {f : List Bool → List Bool} (E : SpaceFunction f)
-    {count : List Bool → List Bool} (hc : count ∈ FP) : (program E count).PolyTime := by
-  have hs := mem_FP_comp (query_mem_FP hc) E.initFP
-  exact ⟨ordinary_mem_FP, request_mem_FP hc, hs, E.advanceFP, E.haltFP, resume_mem_FP E⟩
+theorem stepEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+    {count : List Bool → List Bool} (hc : count ∈ FP) : SpaceFunction (step f count) := by
+  let R := (E.precompose (query count) (query_mem_FP hc)).withInput.postcompose resume resume_mem_FP
+  exact SpaceFunction.branch (request count) (request_mem_FP hc) R
+    (SpaceFunction.ofFP ordinary ordinary_mem_FP)
 
 theorem init_mem_FP : init ∈ FP := by
   have h := mem_FP_pair id_mem_FP (constFn_mem_FP (pair [] []))

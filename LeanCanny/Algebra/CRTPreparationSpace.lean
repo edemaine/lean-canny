@@ -13,7 +13,7 @@ Compute the selected modulus and inverse cofactor, retain the original query,
 and call the supplied integer-residue routine. FP modular multiplication returns
 the locally reduced numerator together with the modulus-minus-one code consumed
 by the streamed sign evaluator. All three space computations are composed with
-their explicit state and clock certificates.
+native space certificates.
 -/
 
 @[expose] public section
@@ -65,7 +65,7 @@ theorem finish_mem_FP : finish ∈ FP := by
   intro z
   simp only [Function.comp_apply, finish]
 
-noncomputable def evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
+theorem evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
     (bound : List Bool → List Bool) (hb : bound ∈ FP) : SpaceFunction (value bound rho) := by
   let W := (WeightBits.evaluator.precompose (weightQuery bound) (weightQuery_mem_FP hb)).withInput
   let P := ((R.precompose residueQuery residueQuery_mem_FP).withInput).postcompose finish finish_mem_FP

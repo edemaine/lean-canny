@@ -13,7 +13,7 @@ public import LeanCanny.Encoding.BinarySubFP
 
 An entry reads one coefficient of the original head, then selects that residue,
 its modular negation, or zero. The original context and query stay available
-throughout the suspended coefficient call.
+throughout the space-bounded coefficient call.
 -/
 
 @[expose] public section
@@ -100,7 +100,7 @@ theorem finish_mem_FP (a : Access) (hd : a.headDegree ∈ FP) (hm : a.modulus �
   intro q
   simp only [finish, Function.comp_apply]
 
-noncomputable def entryEvaluator (a : Access) (hd : a.headDegree ∈ FP) (hm : a.modulus ∈ FP)
+theorem entryEvaluator (a : Access) (hd : a.headDegree ∈ FP) (hm : a.modulus ∈ FP)
     (P : SpaceFunction a.coefficient) : SpaceFunction (entry a) := by
   let E := ((P.precompose (query a) (query_mem_FP a hd)).withInput).postcompose
     (finish a) (finish_mem_FP a hd hm)

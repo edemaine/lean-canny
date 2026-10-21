@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.Algebra.ModularSumSpace
 
-/-! # Streamed modular products with suspended factor evaluation
+/-! # Streamed modular products with space-bounded factor evaluation
 
 Reduce the accumulator after every multiplication. Binary count and modulus
 fields allow exponentially many factors while keeping the parent short.
@@ -38,7 +38,7 @@ theorem finish_mem_FP {modulus : List Bool → List Bool} (hm : modulus ∈ FP) 
   have h := mem_FP_comp (mem_FP_pair hv (mem_FP_comp hc hm)) BinaryNat.mod_mem_FP
   exact mem_FP_of_eq h (fun _ => rfl)
 
-noncomputable def updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (modulus : List Bool → List Bool) (hm : modulus ∈ FP) : SpaceFunction (update modulus f) := by
   let Q := (E.precompose ModularSum.query ModularSum.query_mem_FP).withInput.postcompose (finish modulus) (finish_mem_FP hm)
   exact Q.congr (funext fun _ => rfl)
@@ -59,7 +59,7 @@ theorem fold_eq_product (modulus f : List Bool → List Bool) (c : List Bool) (N
     simp only [finish, pairFst_pair, pairSnd_pair, BoundedFold.accumulator_packet, BoundedFold.context_packet, BinaryNat.mod_pair,
       BinaryNat.mul_pair, residueBits, BinaryNatCode.encode, Nat.fromBitsLE_bits, ZMod.val_mul]
 
-noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count modulus : List Bool → List Bool) (hc : count ∈ FP) (hm : modulus ∈ FP)
     (a : (c : List Bool) → ℕ → ZMod (Nat.fromBitsLE (modulus c)))
     (hpos : ∀ c, 0 < Nat.fromBitsLE (modulus c))
@@ -76,7 +76,7 @@ noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
   let Q := BoundedFold.evaluator (updateEvaluator E modulus hm) count (seed modulus) hc (seed_mem_FP hm) p hs
   exact Q.congr (funext fun c => fold_eq_product modulus f c _ (a c) (hpos c) (hf c) _ le_rfl)
 
-noncomputable def evaluatorWithModulus {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluatorWithModulus {f : List Bool → List Bool} (E : SpaceFunction f)
     (count modulus : List Bool → List Bool) (hc : count ∈ FP) (hm : modulus ∈ FP)
     (m : List Bool → ℕ) (hvalue : (fun c => Nat.fromBitsLE (modulus c)) = m)
     (a : (c : List Bool) → ℕ → ZMod (m c)) (hpos : ∀ c, 0 < m c)

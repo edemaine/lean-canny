@@ -72,7 +72,7 @@ noncomputable def factorComputed (source target modulus : List Bool → List Boo
   Algebra.CubeFactorResidue.computed (prepareFactor source target modulus
     (pair q (BinaryNatCode.encode (CollectedDegree.degree (source ∘ pairFst) coordinate q))))
 
-noncomputable def factorEvaluator (source target modulus : List Bool → List Bool)
+theorem factorEvaluator (source target modulus : List Bool → List Bool)
     (hs : source ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) : SpaceFunction (factorComputed source target modulus) := by
   let D := CollectedDegree.evaluator (source ∘ pairFst) coordinate (mem_FP_comp pairFst_mem_FP hs) coordinate_mem_FP
   let E := (D.withInput.postcompose (prepareFactor source target modulus) (prepareFactor_mem_FP hs ht hm)).chain

@@ -109,7 +109,7 @@ theorem finish_mem_FP (a : Access) (ha : a.PolyTime) : finish a ∈ FP := by
   intro p
   simp only [Function.comp_apply, finish]
 
-noncomputable def evaluator (a : Access) (ha : a.PolyTime) : SpaceFunction (computed a) := by
+theorem evaluator (a : Access) (ha : a.PolyTime) : SpaceFunction (computed a) := by
   have E := ((BinomialResidue.evaluator.precompose binomialInput binomialInput_mem_FP).withInput).postcompose
     (finish a) (finish_mem_FP a ha)
   refine E.congr (g := computed a) ?_

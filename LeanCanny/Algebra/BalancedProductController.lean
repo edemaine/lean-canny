@@ -12,7 +12,7 @@ public import LeanCanny.Encoding.BinaryMulFP
 
 Packets pair an unchanged context with the binary continuation state. The
 controller reads only the active query and top frame. Leaf queries contain the
-context, factor address, and bit index. A suspended evaluator can intercept
+context, factor address, and bit index. A space-bounded evaluator can intercept
 these requests; the ordinary controller also accepts an FP leaf callback.
 
 All functions are total on bitstrings. Simulation is asserted separately on

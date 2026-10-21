@@ -33,7 +33,7 @@ noncomputable def sourceValue (source active modulus : List Bool → List Bool) 
     if Nat.fromBitsLE (Query.innerCode q) = 0 then Query.linearValue source modulus ell q else []
   else if Nat.fromBitsLE (Query.outerCode q) = 0 then Query.regularValue source active modulus n d q else []
 
-noncomputable def sourceEvaluator (source active modulus read : List Bool → List Bool)
+theorem sourceEvaluator (source active modulus read : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ)
     (C : TubeParameter.CoordinateReaders source (fun q => n (pairFst q)) (fun q => d (pairFst q)))
     (hs : source ∈ FP) (ha : active ∈ FP) (hm : modulus ∈ FP) (he : read ∈ FP)

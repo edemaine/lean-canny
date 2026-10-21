@@ -61,7 +61,7 @@ theorem unscale_pair (F : Family) (c : List Bool) :
     BinaryNatCode.encode, Nat.fromBitsLE_bits, Int.toNat_natCast, scaleCode, zeros_value]
   rw [Nat.mul_div_cancel_left _ (pow_pos (by decide) _)]
 
-noncomputable def rootCountEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem rootCountEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (hs : a.pattern ∈ FP) (H : SpaceFunction a.rootCoefficient) (P : SpaceFunction a.polynomialCoefficient) :
     SpaceFunction (fun c => BinaryNatCode.encode (rootCount F c)) := by
   let E := (evaluator a hF hs H P).withInput.postcompose (unscale F) (unscale_mem_FP F hF)

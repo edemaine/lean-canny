@@ -30,7 +30,7 @@ def system (budget : List Bool → List Bool) (c : List Bool) :=
 noncomputable def rank (budget : List Bool → List Bool) (z : List Bool → ℤ) (c : List Bool) : ℕ :=
   (system budget c).integerSum (fun i => (z c : ZMod ((system budget c).modulus i)).val) / (system budget c).product
 
-noncomputable def evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
+theorem evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
     (budget index : List Bool → List Bool) (hb : budget ∈ FP) (hi : index ∈ FP) (z : List Bool → ℤ)
     (hres : ∀ c (m : ℕ), 0 < m →
       rho (pair c (BinaryNatCode.encode (m - 1))) = BinaryNatCode.encode ((z c : ZMod m).val)) :

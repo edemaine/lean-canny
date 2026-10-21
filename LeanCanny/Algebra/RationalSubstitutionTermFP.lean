@@ -61,7 +61,7 @@ theorem safeExponent_mem_FP {terms exponent : List Bool → List Bool} (ht : ter
   have h := hp.ite_mem_FP (mem_FP_comp exponentQuery_mem_FP he) (constFn_mem_FP [])
   exact mem_FP_of_eq h (fun _ => rfl)
 
-noncomputable def coefficientEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem coefficientEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (terms : List Bool → List Bool) (ht : terms ∈ FP) : SpaceFunction (coefficientValue terms f) := by
   let Q := SpaceFunction.branch (valid terms) (valid_mem_FP ht)
     (E.precompose coefficientQuery coefficientQuery_mem_FP) (SpaceFunction.ofFP (fun _ => []) (constFn_mem_FP []))

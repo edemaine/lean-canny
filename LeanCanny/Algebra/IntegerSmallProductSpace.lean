@@ -55,7 +55,7 @@ theorem finish_mem_FP : finish ∈ FP := by
   intro z
   simp only [finish, Function.comp_apply]
 
-noncomputable def updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
+theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
     SpaceFunction (update f) := by
   let Q := (E.precompose IntegerSumBits.query IntegerSumBits.query_mem_FP).withInput.postcompose finish finish_mem_FP
   refine Q.congr (funext fun p => ?_)
@@ -73,7 +73,7 @@ theorem fold_eq_product (f : List Bool → List Bool) (c : List Bool) (a : ℕ �
       BoundedFold.context_packet, BoundedFold.counter_packet, BoundedFold.accumulator_packet, hf,
       IntegerSumBits.multiply_codes, product, Finset.prod_range_succ]
 
-noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count : List Bool → List Bool) (hc : count ∈ FP)
     (hu : UnaryFn (fun c => Nat.fromBitsLE (count c))) (a : List Bool → ℕ → ℤ)
     (hf : ∀ c i, f (pair c (BinaryNatCode.encode i)) = SignStatisticBits.integerCode (a c i))

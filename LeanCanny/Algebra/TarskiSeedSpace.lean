@@ -99,7 +99,7 @@ noncomputable def reduction {F : Family} (a : Access F) : PseudoRemainderBits.Da
   head_eq := a.source.head_eq
   input_eq c k := F.source.value_packet c k
 
-noncomputable def evaluator {F : Family} (a : Access F) (ha : a.ControlsPolyTime)
+theorem evaluator {F : Family} (a : Access F) (ha : a.ControlsPolyTime)
     (P : SpaceFunction a.source.headCoefficient) (Q : SpaceFunction a.source.queryCoefficient) :
     SpaceFunction F.value := by
   have hc : a.reduction.ControlsPolyTime := by

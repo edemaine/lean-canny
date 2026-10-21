@@ -110,12 +110,12 @@ theorem Access.integer_controls {F : Family} (a : Access F) (h : F.layout.PolyTi
   · simpa only [Access.integer] using dimensionCode_mem_FP h
   · simpa only [Access.integer] using budgetCode_mem_FP h hb
 
-noncomputable def Access.integer_entryEvaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
+theorem Access.integer_entryEvaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
     (E : SpaceFunction a.coefficient) : SpaceFunction a.integer.entry := by
   have EC := entryEvaluator h E
   simpa only [Access.integer] using EC
 
-noncomputable def Access.decider {F : Family} (a : Access F) (h : F.layout.PolyTime)
+theorem Access.decider {F : Family} (a : Access F) (h : F.layout.PolyTime)
     (hb : a.bits ∈ FP) (E : SpaceFunction a.coefficient) : SpaceDecider F.zeroLanguage :=
   Berkowitz.IntegerAccess.deciderWithEntry a.integer (a.integer_controls h hb) (a.integer_entryEvaluator h E)
 

@@ -62,7 +62,7 @@ theorem summand_packet (source target modulus : List Bool → List Bool) (c : Li
 noncomputable def value (source target modulus : List Bool → List Bool) (c : List Bool) : List Bool :=
   residueBits ((coefficient source target c : ℤ) : ZMod (Nat.fromBitsLE (modulus c) + 1))
 
-noncomputable def evaluator (source target modulus : List Bool → List Bool)
+theorem evaluator (source target modulus : List Bool → List Bool)
     (hs : source ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) : SpaceFunction (value source target modulus) := by
   classical
   let a := fun (c : List Bool) (r : ℕ) =>

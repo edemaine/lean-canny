@@ -11,7 +11,7 @@ public import LeanCanny.Algebra.SignPatternWeights
 
 For a polynomially bounded number of indexed polynomials, enumerate all ternary
 queries, compute their signed weights and Tarski values, and sum them with full
-workspace/clock accounting. Original coefficient readers may use polynomial space.
+workspace accounting. Original coefficient readers may use polynomial space.
 -/
 
 @[expose] public section
@@ -32,7 +32,7 @@ theorem termOutput_mem_FP : termOutput ∈ FP := by
   intro z
   simp only [termOutput, Function.comp_apply]
 
-noncomputable def summandEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem summandEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (hs : a.pattern ∈ FP) (H : SpaceFunction a.rootCoefficient) (P : SpaceFunction a.polynomialCoefficient) :
     SpaceFunction (fun q => SignStatisticBits.integerCode (summand F q)) := by
   let W := (weightEvaluator a hF hs).withInput
@@ -41,7 +41,7 @@ noncomputable def summandEvaluator {F : Family} (a : Access F) (hF : ControlsPol
   refine E.congr (funext fun q => ?_)
   simp only [Function.comp_apply, termOutput, pairFst_pair, pairSnd_pair, IntegerSumBits.multiply_codes, summand]
 
-noncomputable def evaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem evaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (hs : a.pattern ∈ FP) (H : SpaceFunction a.rootCoefficient) (P : SpaceFunction a.polynomialCoefficient) :
     SpaceFunction (fun c => SignStatisticBits.integerCode (scaledCount F c)) := by
   let E := IntegerSumBits.evaluator (summandEvaluator a hF hs H P)
@@ -85,7 +85,7 @@ theorem positiveLanguage_eq_guarded (F : Family) : positiveLanguage F = guardedR
     · intro h
       exact (positive_iff_realizable F c hp).mpr h.2
 
-noncomputable def positiveDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem positiveDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (hs : a.pattern ∈ FP) (H : SpaceFunction a.rootCoefficient) (P : SpaceFunction a.polynomialCoefficient) :
     SpaceDecider (positiveLanguage F) := by
   have hflag := (stringEq_fppred pairFst_mem_FP (constFn_mem_FP [])).not.flag_mem_FP

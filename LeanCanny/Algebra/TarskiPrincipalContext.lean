@@ -99,11 +99,11 @@ theorem controls {F : Family} (a : Access F) (hF : ControlsPolyTime F) :
     intro y
     simp only [access, Function.comp_apply]
 
-noncomputable def leftEvaluator {F : Family} (a : Access F) (P : SpaceFunction a.headCoefficient) :
+theorem leftEvaluator {F : Family} (a : Access F) (P : SpaceFunction a.headCoefficient) :
     SpaceFunction (access a).bits.leftCoefficient := by
   simpa only [access] using P.precompose sourceQuery sourceQuery_mem_FP
 
-noncomputable def rightEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem rightEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceFunction (access a).bits.rightCoefficient := by
   simpa only [access] using (a.residueEvaluator hF P Q).precompose sourceQuery sourceQuery_mem_FP
@@ -112,7 +112,7 @@ noncomputable def value (F : Family) (y : List Bool) : ℤ :=
   permanencesMinusVariations ((List.range ((family F).leftDegree y + 1)).reverse.map
     (signedPsc ((family F).left y) ((family F).right y) ((family F).leftDegree y) ((family F).rightDegree y)))
 
-noncomputable def evaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem evaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceFunction (fun y => SignStatisticBits.integerCode (value F y)) :=
   PrincipalCoefficientBits.queryEvaluator (access a) (controls a hF)
@@ -127,7 +127,7 @@ theorem value_prepared (F : Family) (c : List Bool) :
 
 /-- Compute and retain the actual seed degree before evaluating its principal
 query. Only the original two uniform coefficient routines are external. -/
-noncomputable def principalEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem principalEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceFunction (fun c => SignStatisticBits.integerCode
       (PseudoRemainder.principalQuery (F.head c) (F.query c) (Nat.fromBitsLE (F.degree c))

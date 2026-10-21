@@ -25,7 +25,7 @@ open LeanCanny.Computation
 
 namespace CannyResultantBits.IntegerAccess
 
-noncomputable def rankBitEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime)
+theorem rankBitEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime)
     (index : List Bool → List Bool) (hi : index ∈ FP) :
     SpaceFunction (fun c => if (IntegerRankBits.rank a.budget F.source.coefficient c).testBit
       (Nat.fromBitsLE (index c)) then [true] else []) :=
@@ -37,7 +37,7 @@ end CannyResultantBits.IntegerAccess
 namespace CannyCoordinateBits
 open CannySubresultantBits (BoundedFamily IntegerAccess)
 
-noncomputable def rankBitEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime)
+theorem rankBitEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime)
     (index : List Bool → List Bool) (hi : index ∈ FP) :
     SpaceFunction (fun c => if (IntegerRankBits.rank (budgetWord a) (integerCoefficient F.family) c).testBit
       (Nat.fromBitsLE (index c)) then [true] else []) :=

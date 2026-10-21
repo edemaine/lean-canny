@@ -93,7 +93,7 @@ theorem shiftValue_correct {F : Family} (a : Access F) (q : List Bool) :
   rw [shiftQuery, a.coefficient_eq, a.source.degree_eq, ShiftCoefficientBits.Family.value_packet]
   rfl
 
-noncomputable def evaluator {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceFunction (value F) := by
+theorem evaluator {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceFunction (value F) := by
   have L := ShiftCoefficientBits.certified a.source.shiftAccess (a.source.shift_polyTime ha.source)
     F.source.shiftSource a.source.shift_represents
   have hright := stringEq_fppred (mem_FP_comp pairFst_mem_FP ha.source.rightDegree)
@@ -127,7 +127,7 @@ noncomputable def evaluator {F : Family} (a : Access F) (ha : a.PolyTime) : Spac
         coordinateCoefficient, hn, hm, CannySubresultantBits.Family.value,
         CannySubresultantBits.Family.integerCoefficient]
 
-noncomputable def decider {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceDecider (zeroLanguage F) := by
+theorem decider {F : Family} (a : Access F) (ha : a.PolyTime) : SpaceDecider (zeroLanguage F) := by
   have hflag : (fun w : List Bool => [decide (w = [])]) ∈ FP :=
     (stringEq_fppred id_mem_FP (constFn_mem_FP [])).flag_mem_FP
   apply (evaluator a ha).decider (fun w => decide (w = [])) hflag

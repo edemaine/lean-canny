@@ -51,7 +51,7 @@ theorem lowestIndex_first (source active : List Bool → List Bool) (n d : List 
   exact ⟨Polynomial.coeff_natTrailingDegree_ne_zero.mpr (determinant_ne_zero source active n d ell c),
     fun _ hi => Polynomial.coeff_eq_zero_of_lt_natTrailingDegree hi⟩
 
-noncomputable def lowestIndexEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem lowestIndexEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) : SpaceFunction (lowestIndex source active n d ell) := by
   have E := (coefficientZeroDecider D).flagEvaluator
@@ -82,7 +82,7 @@ noncomputable def lowestModularValue (source active modulus inner middle : List 
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) : List Bool :=
   IntegerBits.coefficientResidue (lowestScalar source active inner middle n d ell c) (Nat.fromBitsLE (modulus c) + 1)
 
-noncomputable def lowestModularEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem lowestModularEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceFunction (lowestModularValue source active modulus inner middle n d ell) := by
@@ -103,7 +103,7 @@ noncomputable def lowestSign (source active inner middle : List Bool → List Bo
   if lowestScalar source active inner middle n d ell c = 0 then []
   else if lowestScalar source active inner middle n d ell c < 0 then [true] else [false, true]
 
-noncomputable def lowestSignEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem lowestSignEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceFunction (lowestSign source active inner middle n d ell) := by

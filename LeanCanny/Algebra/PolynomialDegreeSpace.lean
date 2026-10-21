@@ -8,7 +8,7 @@ public import LeanCanny.Computation.BoundedFoldSpace
 public import LeanCanny.Encoding.BinaryNatFP
 public import Mathlib.Algebra.Polynomial.Degree.Lemmas
 
-/-! # Actual polynomial degrees from suspended coefficient-zero tests
+/-! # Actual polynomial degrees from space-bounded coefficient-zero tests
 
 The accumulator is zero for the zero prefix, otherwise one plus the largest
 nonzero coefficient index seen. One binary word records both the degree and
@@ -81,7 +81,7 @@ theorem finish_mem_FP : finish ∈ FP := by
   intro z
   simp only [finish, Function.comp_apply]
 
-noncomputable def updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
+theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
     SpaceFunction (update f) := by
   let Q := ((E.precompose query query_mem_FP).withInput).postcompose finish finish_mem_FP
   refine Q.congr (funext fun p => ?_)
@@ -101,7 +101,7 @@ theorem fold_eq_scan (f : List Bool → List Bool) (c : List Bool) (a : ℕ → 
     · rw [ite_eq_right (fun hz => ha ((hf k).mp hz)), scan, ite_eq_right ha]
       simp only [BinaryNat.succ_eq_bits, BinaryNatCode.encode, Nat.fromBitsLE_bits]
 
-noncomputable def offsetEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem offsetEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (degree : List Bool → List Bool) (hd : degree ∈ FP) (p : List Bool → ℤ[X])
     (hdegree : ∀ c, (p c).natDegree ≤ Nat.fromBitsLE (degree c))
     (hzero : ∀ c i, f (pair c (BinaryNatCode.encode i)) = [] ↔ (p c).coeff i = 0) :
@@ -125,7 +125,7 @@ noncomputable def offsetEvaluator {f : List Bool → List Bool} (E : SpaceFuncti
   rw [scan_eq_degree _ _ hk]
 
 /-- The natural degree, with Mathlib's value zero for the zero polynomial. -/
-noncomputable def degreeEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem degreeEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (degree : List Bool → List Bool) (hd : degree ∈ FP) (p : List Bool → ℤ[X])
     (hdegree : ∀ c, (p c).natDegree ≤ Nat.fromBitsLE (degree c))
     (hzero : ∀ c i, f (pair c (BinaryNatCode.encode i)) = [] ↔ (p c).coeff i = 0) :

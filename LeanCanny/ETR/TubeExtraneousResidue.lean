@@ -48,7 +48,7 @@ theorem residue_packet (source active inner middle outer : List Bool → List Bo
   simp only [pairFst_pair, pairSnd_pair, MacaulayBits.fromBits_encode, Nat.sub_add_cancel hm]
   rfl
 
-noncomputable def residueEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem residueEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
     SpaceFunction (residueValue source active inner middle outer n d ell) :=

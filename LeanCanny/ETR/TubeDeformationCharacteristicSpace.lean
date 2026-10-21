@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.ETR.TubeDeformationCharacteristic
 public import LeanCanny.Algebra.SignedTagSpace
-public import LeanCanny.Computation.SpaceFunctionPair
+public import LeanCanny.Computation.SpaceFunctionComposition
 
 /-! # PSPACE signs for the lowest characteristic-numerator coefficient
 
@@ -27,7 +27,7 @@ noncomputable def characteristicSign (source active inner middle : List Bool →
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) : List Bool :=
   InfinitesimalSign.tag (characteristicScalar source active inner middle n d ell c)
 
-noncomputable def characteristicSignEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem characteristicSignEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceFunction (characteristicSign source active inner middle n d ell) := by
@@ -39,7 +39,7 @@ noncomputable def characteristicSignEvaluator {source active modulus inner middl
       InfinitesimalSign.tag (characteristicScalar source active inner middle n d ell c)
   rw [lowestIndex, SignedTagBits.correct_pair, characteristicScalar_eq, lowestIndex_value]
 
-noncomputable def characteristicZeroDecider {source active modulus inner middle : List Bool → List Bool}
+theorem characteristicZeroDecider {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceDecider {c | characteristicScalar source active inner middle n d ell c = 0} := by

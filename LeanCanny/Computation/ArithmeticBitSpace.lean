@@ -37,7 +37,7 @@ theorem sourceQuery_packet (c : List Bool) (i j : ℕ) :
     sourceQuery (pair (pair c (BinaryNatCode.encode i)) (BinaryNatCode.encode j)) = pair c (BinaryNatCode.encode j) := by
   simp only [sourceQuery, pairFst_pair, pairSnd_pair]
 
-noncomputable def productEvaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g)
+theorem productEvaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g)
     (a b : List Bool → ℕ)
     (hleft : ∀ c j, (f (pair c (BinaryNatCode.encode j)))[0]?.getD false = (a c).testBit j)
     (hright : ∀ c j, (g (pair c (BinaryNatCode.encode j)))[0]?.getD false = (b c).testBit j) :
@@ -48,7 +48,7 @@ noncomputable def productEvaluator {f g : List Bool → List Bool} (L : SpaceFun
     (by intro p j; simp only [Function.comp_apply, sourceQuery, pairFst_pair, pairSnd_pair, hleft])
     (by intro p j; simp only [Function.comp_apply, sourceQuery, pairFst_pair, pairSnd_pair, hright])
 
-noncomputable def subtractEvaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g)
+theorem subtractEvaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g)
     (a b : List Bool → ℕ)
     (hleft : ∀ c j, (f (pair c (BinaryNatCode.encode j)))[0]?.getD false = (a c).testBit j)
     (hright : ∀ c j, (g (pair c (BinaryNatCode.encode j)))[0]?.getD false = (b c).testBit j)

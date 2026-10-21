@@ -49,7 +49,7 @@ theorem selectedCoefficient_packet (projection : Bool) (source active row : List
       residueBits ((selectedCoefficient projection source active row n d q : ℤ) : ZMod m) :=
   IntegerBits.Family.value_packet _ q m hm
 
-noncomputable def coefficientNegativeEvaluator (projection : Bool) (source active row : List Bool → List Bool)
+theorem coefficientNegativeEvaluator (projection : Bool) (source active row : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (C : CoordinateReaders projection source n d) (B : CoordinateBounds projection source n d)
     (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) :
     SpaceFunction (fun q => if selectedCoefficient projection source active row n d q < 0 then [true] else []) :=
@@ -67,7 +67,7 @@ theorem coefficientNegativeLanguage_mem_PSPACE (projection : Bool) (source activ
     (selectedCoefficient projection source active row n d) (selectedCoefficient_bits projection source active row n d B)
     (selectedCoefficient_packet projection source active row n d)
 
-noncomputable def coefficientZeroDecider (projection : Bool) (source active row : List Bool → List Bool)
+theorem coefficientZeroDecider (projection : Bool) (source active row : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (C : CoordinateReaders projection source n d) (B : CoordinateBounds projection source n d)
     (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) :
     SpaceDecider {q | selectedCoefficient projection source active row n d q = 0} :=
@@ -82,7 +82,7 @@ theorem coefficientZeroLanguage_mem_PSPACE (projection : Bool) (source active ro
     {q | selectedCoefficient projection source active row n d q = 0} ∈ PSPACE :=
   (coefficientZeroDecider projection source active row n d C B hs ha hr).mem_PSPACE
 
-noncomputable def signEvaluator (projection : Bool) (source active row : List Bool → List Bool)
+theorem signEvaluator (projection : Bool) (source active row : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (C : CoordinateReaders projection source n d) (B : CoordinateBounds projection source n d)
     (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) :
     SpaceFunction (fun c => Algebra.InfinitesimalSign.tag ((family projection source active row n d).polynomial c).trailingCoeff) :=

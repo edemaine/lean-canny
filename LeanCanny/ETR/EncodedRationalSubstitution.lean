@@ -43,7 +43,7 @@ noncomputable def Coordinates.family {S : Source} (C : Coordinates S) : Rational
 noncomputable def Coordinates.access {S : Source} (C : Coordinates S) : RationalSubstitution.IntegerBits.Access C.family :=
   S.access C.numerator C.denominator C.numeratorCode C.denominatorCode C.numerator_eq C.denominator_eq
 
-noncomputable def Coordinates.evaluator {S : Source} (C : Coordinates S) (hS : S.PolyTime)
+theorem Coordinates.evaluator {S : Source} (C : Coordinates S) (hS : S.PolyTime)
     (N : SpaceFunction C.numeratorCode) (D : SpaceFunction C.denominatorCode) : SpaceFunction C.family.value :=
   C.access.evaluator (S.access_controls hS _ _ _ _ _ _)
     (SpaceFunction.ofFP _ (MonomialReader.sourceCoefficient_mem_FP hS.term)) N D
@@ -60,7 +60,7 @@ structure CoordinateBounds {S : Source} (C : Coordinates S) where
   denominator_coeff : ∀ c i, i < Nat.fromBitsLE (S.arity c) → ∀ k,
     ((C.denominator c i).coeff k).natAbs ≤ 2 ^ Nat.fromBitsLE (coefficientBits c)
 
-noncomputable def Coordinates.signEvaluator {S : Source} (C : Coordinates S) (hS : S.PolyTime)
+theorem Coordinates.signEvaluator {S : Source} (C : Coordinates S) (hS : S.PolyTime)
     (B : CoordinateBounds C) (N : SpaceFunction C.numeratorCode) (D : SpaceFunction C.denominatorCode) :
     SpaceFunction (fun c => InfinitesimalSign.tag (C.family.polynomial c).trailingCoeff) := by
   apply C.access.signEvaluator (S.access_controls hS _ _ _ _ _ _)

@@ -37,7 +37,7 @@ theorem inverseQuery_mem_FP : inverseQuery ∈ FP := by
 
 theorem finish_mem_FP : finish ∈ FP := mem_FP_pair (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairSnd_mem_FP
 
-noncomputable def evaluator : SpaceFunction value := by
+theorem evaluator : SpaceFunction value := by
   let I := ((ModularInverseBits.evaluator.precompose inverseQuery inverseQuery_mem_FP).withInput).postcompose finish finish_mem_FP
   let E := CofactorBits.evaluator.chain I
   refine E.congr (funext fun q => ?_)

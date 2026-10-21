@@ -36,7 +36,7 @@ theorem factorQuery_mem_FP : factorQuery ∈ FP :=
   mem_FP_pair (mem_FP_pair pairFst_mem_FP (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP))
     (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP)
 
-noncomputable def factorEvaluator : SpaceFunction factorValue := by
+theorem factorEvaluator : SpaceFunction factorValue := by
   let E := (WordBits.evaluator ModulusBits.evaluator).precompose factorQuery factorQuery_mem_FP
   refine E.congr (funext fun p => ?_)
   simp only [Function.comp_apply, WordBits.value, factorQuery, pairFst_pair, pairSnd_pair,
@@ -75,7 +75,7 @@ theorem cofactor_eq_system (N i : ℕ) (hi : i < N + 1) :
   have hs := (indexedSystem N).cofactor_mul ⟨i, hi⟩
   exact Nat.eq_of_mul_eq_mul_right hm (hp.trans hs.symm)
 
-noncomputable def productEvaluator (bound : List Bool → List Bool) (hb : bound ∈ FP) :
+theorem productEvaluator (bound : List Bool → List Bool) (hb : bound ∈ FP) :
     SpaceFunction (productValue bound) := by
   have hbound := mem_FP_comp pairFst_mem_FP hb
   have hcount := mem_FP_comp hbound BinaryNat.succ_mem_FP
@@ -90,7 +90,7 @@ noncomputable def productEvaluator (bound : List Bool → List Bool) (hb : bound
   simp only [BalancedProduct.value, Function.comp_apply, BinaryNat.succ_eq_bits, Nat.fromBitsLE_bits,
     productValue]
 
-noncomputable def cofactorEvaluator (bound : List Bool → List Bool) (hb : bound ∈ FP) :
+theorem cofactorEvaluator (bound : List Bool → List Bool) (hb : bound ∈ FP) :
     SpaceFunction (cofactorValue bound) := by
   have hbound := mem_FP_comp pairFst_mem_FP hb
   have hcount := mem_FP_comp hbound BinaryNat.succ_mem_FP

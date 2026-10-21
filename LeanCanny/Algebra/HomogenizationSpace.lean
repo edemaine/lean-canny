@@ -11,7 +11,7 @@ public import LeanCanny.Algebra.MacaulayEntryCorrect
 
 The first block is the new coordinate. A clipped sum checks the selected point
 prefix's degree; deleting the first block prepares one original coefficient
-query. Unary metadata bounds all controls, and a suspended source evaluator
+query. Unary metadata bounds all controls, and a space-bounded source evaluator
 accounts for the only coefficient call.
 -/
 
@@ -78,7 +78,7 @@ theorem oldQuery_packet (W : List Bool → ℕ) (c : List Bool) (r : ℕ) :
 def value (N A W D : List Bool → ℕ) (reader : List Bool → List Bool) (q : List Bool) : List Bool :=
   if total N A W D q = D (pairFst q) then reader (oldQuery W q) else []
 
-noncomputable def evaluator {N A W D : List Bool → ℕ} (hN : UnaryFn N) (hA : UnaryFn A)
+theorem evaluator {N A W D : List Bool → ℕ} (hN : UnaryFn N) (hA : UnaryFn A)
     (hW : UnaryFn W) (hD : UnaryFn D) {reader : List Bool → List Bool} (E : SpaceFunction reader) :
     SpaceFunction (value N A W D reader) := by
   have hg := FPPred.eq (total_unary hN hA hW hD) (hD.comp pairFst_mem_FP)

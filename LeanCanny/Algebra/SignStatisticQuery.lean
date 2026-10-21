@@ -40,7 +40,7 @@ theorem reverseQuery_mem_FP {degree : List Bool → List Bool} (hd : degree ∈ 
   simp only [reverseQuery, Function.comp_apply]
 
 /-- Read indices in descending order without retaining a list of signs. -/
-noncomputable def descendingEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem descendingEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (degree : List Bool → List Bool) (hd : degree ∈ FP) (a : List Bool → ℕ → ℤ)
     (hsign : ∀ c i, f (pair c (BinaryNatCode.encode i)) = InfinitesimalSign.tag (a c i)) :
     SpaceFunction (fun c => integerCode (permanencesMinusVariations
@@ -64,7 +64,7 @@ noncomputable def descendingEvaluator {f : List Bool → List Bool} (E : SpaceFu
 
 /-- Given the principal-sign reader, the scan returns the actual real-root
 query. The head-degree writer here must encode the actual positive degree. -/
-noncomputable def tarskiEvaluator {r : List Bool → List Bool} (E : SpaceFunction r)
+theorem tarskiEvaluator {r : List Bool → List Bool} (E : SpaceFunction r)
     (degree : List Bool → List Bool) (hd : degree ∈ FP)
     (p f : List Bool → ℤ[X]) (D : List Bool → ℕ)
     (hdegree : ∀ c, (p c).natDegree = Nat.fromBitsLE (degree c))

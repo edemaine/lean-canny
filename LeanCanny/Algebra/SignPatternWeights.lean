@@ -74,7 +74,7 @@ theorem factor_packet {F : Family} (a : Access F) (q : List Bool) (i : ℕ) :
   simpa only [BinaryNatCode.encode, Nat.fromBitsLE_bits] using weightWord_codes (F.pattern (pairFst q) i)
     (Ternary.exponent (Nat.fromBitsLE (F.count (pairFst q))) (Nat.fromBitsLE (pairSnd q)) i)
 
-noncomputable def weightEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F) (hs : a.pattern ∈ FP) :
+theorem weightEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F) (hs : a.pattern ∈ FP) :
     SpaceFunction (fun q => SignStatisticBits.integerCode (weight F q)) := by
   have hc := mem_FP_comp pairFst_mem_FP hF.count
   have hu := hF.countUnary.comp pairFst_mem_FP

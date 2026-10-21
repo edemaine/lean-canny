@@ -50,7 +50,7 @@ noncomputable def coordinateProduct (source target modulus : List Bool → List 
     ((factor source target (pairFst q) (Nat.fromBitsLE (pairSnd q)) i : ℤ) :
       ZMod (Nat.fromBitsLE (modulus (pairFst q)) + 1)))
 
-noncomputable def productEvaluator (source target modulus : List Bool → List Bool)
+theorem productEvaluator (source target modulus : List Bool → List Bool)
     (hs : source ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) : SpaceFunction (coordinateProduct source target modulus) := by
   let count := fun q => BinaryNatCode.encode (CollectedCoefficient.dimension source (pairFst q))
   have hc : count ∈ FP := bits_mem_FP ((CollectedCoefficient.dimension_unary hs).lift)
@@ -85,7 +85,7 @@ theorem finishSummand_mem_FP {source modulus : List Bool → List Bool}
 noncomputable def summand (source target modulus : List Bool → List Bool) (q : List Bool) : List Bool :=
   finishSummand source modulus (pair q (coordinateProduct source target modulus q))
 
-noncomputable def summandEvaluator (source target modulus : List Bool → List Bool)
+theorem summandEvaluator (source target modulus : List Bool → List Bool)
     (hs : source ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) : SpaceFunction (summand source target modulus) := by
   let E := (productEvaluator source target modulus hs ht hm).withInput.postcompose
     (finishSummand source modulus) (finishSummand_mem_FP hs hm)
@@ -143,7 +143,7 @@ theorem coefficient_eq_sum (source target : List Bool → List Bool) (c : List B
 noncomputable def value (source target modulus : List Bool → List Bool) (c : List Bool) : List Bool :=
   residueBits ((coefficient source target c : ℤ) : ZMod (Nat.fromBitsLE (modulus c) + 1))
 
-noncomputable def evaluator (source target modulus : List Bool → List Bool)
+theorem evaluator (source target modulus : List Bool → List Bool)
     (hs : source ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) : SpaceFunction (value source target modulus) := by
   let a := fun (c : List Bool) (r : ℕ) =>
     (((TermView.term (source c)).monomialCoefficient r *

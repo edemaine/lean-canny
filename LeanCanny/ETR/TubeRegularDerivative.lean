@@ -67,7 +67,7 @@ theorem termValue_eq (source active modulus : List Bool → List Bool) (q : List
   unfold TubeDense.polynomial
   simp +instances only [Function.comp_apply]
 
-noncomputable def termEvaluator (b : List Bool → List Bool) (W : List Bool → ℕ)
+theorem termEvaluator (b : List Bool → List Bool) (W : List Bool → ℕ)
     (active target modulus : List Bool → List Bool) (hb : b ∈ FP) (hW : UnaryFn W)
     (ha : active ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (TubeProjectionQuery.termValue b W active target modulus true
@@ -78,7 +78,7 @@ noncomputable def termEvaluator (b : List Bool → List Bool) (W : List Bool →
     hb hW (TubeDense.arity_unary hb) (TubeDense.arity_unary hb) ha ht hm
     (fun q => (index_shift_source_false (n q)).symm) (fun _ => rfl)
 
-noncomputable def evaluator (source active modulus : List Bool → List Bool)
+theorem evaluator (source active modulus : List Bool → List Bool)
     (hs : source ∈ FP) (ha : active ∈ FP) (hm : modulus ∈ FP) : SpaceFunction (derivativeResidue source active modulus) := by
   have hb := mem_FP_comp pairFst_mem_FP (TubeIndexed.compiled_mem_FP hs)
   have hW := (TubeIndexed.blockWidth_unary.comp hs).comp pairFst_mem_FP

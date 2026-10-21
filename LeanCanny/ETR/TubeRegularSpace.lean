@@ -86,7 +86,7 @@ noncomputable def value (source active row modulus : List Bool → List Bool) (q
   else ReciprocalBits.embeddedValue (TubeHomogenization.width source)
     (TubeIndexed.projectionResidue source active (oldRow row) modulus) q
 
-noncomputable def evaluator (source active row modulus : List Bool → List Bool)
+theorem evaluator (source active row modulus : List Bool → List Bool)
     (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (value source active row modulus) := by
   have hN : UnaryFn (TubeHomogenization.dimension source) := TubeIndexed.projectionDimension_unary.comp hs

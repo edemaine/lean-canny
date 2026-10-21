@@ -115,7 +115,7 @@ theorem power_controls {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.Co
   · simpa only [power] using hr
   · simpa only [power] using hc
 
-noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
+theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
     (E : SpaceFunction a.bits.coefficient) : SpaceFunction F.value := by
   have P := MatrixPower.ModularAccess.evaluatorWithEntry a.power (power_controls a ha)
     (Access.entryEvaluator a.bits ha E)
@@ -126,7 +126,7 @@ noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.bi
   rw [PolynomialCoefficientMatrix.finHom_pow_last_zero]
   rfl
 
-noncomputable def decider {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
+theorem decider {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
     (E : SpaceFunction a.bits.coefficient) : SpaceDecider F.zeroLanguage := by
   let accept := fun bits : List Bool => decide (bits = [])
   have haccept : (fun bits => [accept bits]) ∈ FP :=

@@ -46,7 +46,7 @@ structure Access (F : Family) where
 def Access.entry {F : Family} (a : Access F) (p : List Bool) : List Bool :=
   finish (pair p (MacaulayBits.entry F.source.layout a.original.coefficient (originalQuery p)))
 
-noncomputable def Access.entryEvaluator {F : Family} (a : Access F) (h : F.source.layout.PolyTime)
+theorem Access.entryEvaluator {F : Family} (a : Access F) (h : F.source.layout.PolyTime)
     (E : SpaceFunction a.original.coefficient) : SpaceFunction a.entry := by
   have EO := (a.original.integer_entryEvaluator h E).precompose originalQuery originalQuery_mem_FP
   have ES := EO.withInput.postcompose finish finish_mem_FP
@@ -87,12 +87,12 @@ theorem Access.modular_controls {F : Family} (a : Access F) (h : F.source.layout
   · simpa only [Access.modular] using hm
   · simpa only [Access.modular] using ht
 
-noncomputable def Access.modularEntryEvaluator {F : Family} (a : Access F) (h : F.source.layout.PolyTime)
+theorem Access.modularEntryEvaluator {F : Family} (a : Access F) (h : F.source.layout.PolyTime)
     (E : SpaceFunction a.original.coefficient) : SpaceFunction a.modular.entry := by
   have ES := a.entryEvaluator h E
   simpa only [Access.modular] using ES
 
-noncomputable def Access.evaluator {F : Family} (a : Access F) (h : F.source.layout.PolyTime)
+theorem Access.evaluator {F : Family} (a : Access F) (h : F.source.layout.PolyTime)
     (hd : a.degree ∈ FP) (E : SpaceFunction a.original.coefficient) : SpaceFunction F.value :=
   BerkowitzPolynomial.ModularAccess.evaluator a.modular (a.modular_controls h hd) (a.modularEntryEvaluator h E)
 

@@ -88,7 +88,7 @@ theorem finish_mem_FP : finish ∈ FP := by
   have h := (stringEq_fppred ha (constFn_mem_FP [])).ite_mem_FP hi ha
   exact mem_FP_of_eq (g := finish) h (fun _ => by simp only [finish, Function.comp_apply])
 
-noncomputable def updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) : SpaceFunction (update f) := by
+theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) : SpaceFunction (update f) := by
   have Q := ((E.precompose query query_mem_FP).withInput).postcompose finish finish_mem_FP
   exact Q.congr (funext fun _ => by simp only [update, Function.comp_apply])
 
@@ -103,7 +103,7 @@ theorem fold_eq_scan (f : List Bool → List Bool) (c : List Bool) (zero : ℕ �
       BoundedFold.counter_packet, BoundedFold.accumulator_packet, hf, scan, List.cons.injEq, and_true]
     split_ifs <;> simp only [BinaryNat.succ_eq_bits, BinaryNatCode.encode, Nat.fromBitsLE_bits]
 
-noncomputable def evaluator {R : Type*} [Semiring R] {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluator {R : Type*} [Semiring R] {f : List Bool → List Bool} (E : SpaceFunction f)
     (degree : List Bool → List Bool) (hd : degree ∈ FP) (p : List Bool → Polynomial R)
     (hdegree : ∀ c, (p c).natDegree ≤ Nat.fromBitsLE (degree c))
     (hcoeff : ∀ c i, f (pair c (BinaryNatCode.encode i)) = [decide ((p c).coeff i = 0)]) :

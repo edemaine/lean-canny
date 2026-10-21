@@ -30,7 +30,7 @@ attribute [local irreducible] RationalSubstitutionBits.compiledTerm
 noncomputable def value : List Bool → List Bool :=
   CompactCoefficient.value SourceCoefficient.source SourceCoefficient.target pairSnd
 
-noncomputable def evaluator : SpaceFunction value :=
+theorem evaluator : SpaceFunction value :=
   CompactCoefficient.evaluator SourceCoefficient.source SourceCoefficient.target pairSnd
     SourceCoefficient.source_mem_FP SourceCoefficient.target_mem_FP pairSnd_mem_FP
 

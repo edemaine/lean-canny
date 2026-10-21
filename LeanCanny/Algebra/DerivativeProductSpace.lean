@@ -77,7 +77,7 @@ theorem factorIndex_mem_FP : factorIndex ∈ FP := mem_FP_comp pairSnd_mem_FP pa
 theorem sourceQuery_mem_FP : sourceQuery ∈ FP :=
   mem_FP_pair (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP)
 
-noncomputable def factorEvaluator {F : Family} (a : Access F) (hm : a.modulus ∈ FP)
+theorem factorEvaluator {F : Family} (a : Access F) (hm : a.modulus ∈ FP)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceFunction (factorValue a) := by
   let D := DerivativeBits.evaluator P a.modulus hm
@@ -107,7 +107,7 @@ noncomputable def Access.product {F : Family} (a : Access F) : PolynomialProduct
       exact DerivativeBits.packet a.modulus a.headCoefficient (pairFst q) (F.modulus (pairFst q))
         (F.head (pairFst q)) (a.modulus_eq _) (a.head_eq _) k
 
-noncomputable def Access.evaluator {F : Family} (a : Access F) (hm : a.modulus ∈ FP)
+theorem Access.evaluator {F : Family} (a : Access F) (hm : a.modulus ∈ FP)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceFunction F.value := by
   have hm' := mem_FP_comp pairFst_mem_FP hm

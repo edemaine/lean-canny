@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.ModularAddFP
-public import LeanCanny.Computation.SpaceFunctionPair
+public import LeanCanny.Computation.SpaceFunctionComposition
 
 /-! # FP combination of the four tube coefficient responses
 

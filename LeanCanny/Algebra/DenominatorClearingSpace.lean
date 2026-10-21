@@ -6,7 +6,8 @@ module
 
 public import LeanCanny.Algebra.FiniteDenominatorClearing
 public import LeanCanny.Algebra.ModularProductSpace
-public import LeanCanny.Computation.SpaceFunctionPair
+public import LeanCanny.Computation.SpaceFunctionComposition
+public import LeanCanny.Computation.SpaceFunctionBranch
 public import LeanCanny.Encoding.BracketsFP
 
 /-! # Streamed modular coefficients of explicit denominator clearing
@@ -78,7 +79,7 @@ theorem skip_mem_FP {selected : List Bool → List Bool} (hs : selected ∈ FP) 
     (q := fun p => Nat.fromBitsLE (pairSnd p) = Nat.fromBitsLE (selected (pairFst p))) (fun p => by dsimp only [Function.comp_apply]; omega)
   exact hp.flag_mem_FP
 
-noncomputable def maskedFactorEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem maskedFactorEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (selected modulus : List Bool → List Bool) (hs : selected ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (maskedFactor selected modulus f) := by
   have hsrc := mem_FP_comp pairFst_mem_FP hm
@@ -110,7 +111,7 @@ theorem Access.maskedFactor_packet {F : Family} (a : Access F) (c : List Bool) (
         simpa only [BinaryNatCode.encode] using a.denominator_eq c ⟨j, hj⟩
       _ = residueBits (F.factor c j) := by simp only [Family.factor, dite_eq_left hj, ite_eq_right he]
 
-noncomputable def Access.productEvaluator {F : Family} (a : Access F)
+theorem Access.productEvaluator {F : Family} (a : Access F)
     (hc : a.count ∈ FP) (hm : a.modulus ∈ FP) (hs : a.selected ∈ FP) (D : SpaceFunction a.denominator) :
     SpaceFunction (fun c => residueBits (∏ j ∈ Finset.range (F.count c), F.factor c j)) := by
   let E := maskedFactorEvaluator D a.selected a.modulus hs hm
@@ -133,7 +134,7 @@ theorem finish_residues (modulus : List Bool → List Bool) (c : List Bool) (m :
   simp only [finish, pairFst_pair, pairSnd_pair, hm]
   rw [← hz, ArithmeticBits.combine_residueBits, zero_add]
 
-noncomputable def Access.evaluator {F : Family} (a : Access F)
+theorem Access.evaluator {F : Family} (a : Access F)
     (hc : a.count ∈ FP) (hm : a.modulus ∈ FP) (hs : a.selected ∈ FP)
     (N : SpaceFunction a.numerator) (D : SpaceFunction a.denominator) : SpaceFunction F.value := by
   let P := a.productEvaluator hc hm hs D

@@ -137,7 +137,7 @@ theorem family_value (c : List Bool) : family.value c = value c := by
   rw [ZMod.val_natCast]
   rfl
 
-noncomputable def evaluator : SpaceFunction value := by
+theorem evaluator : SpaceFunction value := by
   rw [← show family.value = value from funext family_value]
   exact ModularAccess.evaluator access access_polyTime
 

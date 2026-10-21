@@ -71,7 +71,7 @@ theorem residue_packet (source target : List Bool → List Bool) (c : List Bool)
   unfold value
   rw [hc, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.sub_add_cancel hm]
 
-noncomputable def negativeEvaluator (source target : List Bool → List Bool)
+theorem negativeEvaluator (source target : List Bool → List Bool)
     (hs : source ∈ FP) (ht : target ∈ FP) :
     SpaceFunction (fun c => if coefficient source target c < 0 then [true] else []) := by
   let R := evaluator (source ∘ pairFst) (target ∘ pairFst) pairSnd

@@ -13,7 +13,7 @@ import Mathlib.Algebra.Ring.Parity
 /-! # Polynomial-space streaming of signed principal-coefficient statistics
 
 Binary counters retain zero gaps and positive/negative contributions. Sign
-evaluation is a suspended child of the bounded scan; its space and clock are
+evaluation is a space-bounded child of the bounded scan; its workspace is
 included in the resulting machine certificate.
 -/
 
@@ -165,7 +165,7 @@ theorem finish_mem_FP : finish ∈ FP := by
     (mem_FP_comp pairFst_mem_FP BoundedFold.accumulator_mem_FP) pairSnd_mem_FP) move_mem_FP
   exact mem_FP_of_eq (g := finish) h (fun _ => rfl)
 
-noncomputable def updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
+theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
     SpaceFunction (update f) := by
   let Q := ((E.precompose query query_mem_FP).withInput).postcompose finish finish_mem_FP
   refine Q.congr (funext fun p => ?_)
@@ -218,7 +218,7 @@ theorem answer_encode (s : State) : answer (encode s) = integerCode s.value := b
 
 /-- The sign source may itself use polynomial space. The binary count is FP;
 neither the sign list nor its exponentially many coefficients is stored. -/
-noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count : List Bool → List Bool) (hc : count ∈ FP) (a : List Bool → ℕ → SignType)
     (hsign : ∀ c i, f (pair c (BinaryNatCode.encode i)) = InfinitesimalSign.encode (a c i)) :
     SpaceFunction (fun c => integerCode (permanencesMinusVariations

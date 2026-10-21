@@ -170,7 +170,7 @@ theorem residueValue_eq {F : Resultant.Family} (a : Resultant.Access F) (q : Lis
     · simp only [integerResidue, Int.cast_zero, residueBits, ZMod.val_zero, BinaryNatCode.encode,
         show Nat.bits 0 = [] from rfl]
 
-noncomputable def residueEvaluator {F : Resultant.Family} (a : Resultant.Access F)
+theorem residueEvaluator {F : Resultant.Family} (a : Resultant.Access F)
     (ha : a.bits.ControlsPolyTime) (P : SpaceFunction a.bits.leftCoefficient)
     (Q : SpaceFunction a.bits.rightCoefficient) : SpaceFunction (residueValue a) := by
   let M := (minorResidueEvaluator a ha P Q).withInput.postcompose (normalizeSign a) (normalizeSign_mem_FP a ha)
@@ -213,7 +213,7 @@ theorem budgetCode_eq {F : Resultant.Family} (a : Resultant.Access F) (r : List 
     Nat.fromBitsLE_bits, budget, Resultant.Family.integer]
   congr 1
 
-noncomputable def signEvaluator {F : Resultant.Family} (a : Resultant.Access F)
+theorem signEvaluator {F : Resultant.Family} (a : Resultant.Access F)
     (ha : a.bits.ControlsPolyTime) (P : SpaceFunction a.bits.leftCoefficient)
     (Q : SpaceFunction a.bits.rightCoefficient) :
     SpaceFunction (fun r => InfinitesimalSign.tag (coefficient F r)) := by

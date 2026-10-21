@@ -26,7 +26,7 @@ attribute [local irreducible] PolynomialAffineEntryBits.value BerkowitzAffinePol
 attribute [local irreducible] Macaulay.matrix Matrix.det
 attribute [local irreducible] TubeIndexed.degreeBound TubeParameter.spatialCount TubeCleared.matrixWidth
 
-noncomputable def originalEntryEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem originalEntryEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceFunction (PolynomialPrincipalBits.entry (MacaulayBits.extraneousEntry (TubeCleared.layout source))
@@ -38,9 +38,7 @@ noncomputable def originalEntryEvaluator {source active modulus inner middle : L
   exact PolynomialPrincipalBits.evaluator (MacaulayBits.extraneousEntry_fppred (TubeCleared.layout_polyTime D.sourceFP))
     hM' (TubeDeformation.originalEntryEvaluator D)
 
-attribute [local irreducible] originalEntryEvaluator
-
-noncomputable def familyEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem familyEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
     SpaceFunction (family source active modulus inner middle outer n d ell D.bounds).value := by
@@ -66,9 +64,9 @@ noncomputable def modularValue (source active modulus inner middle outer : List 
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) : List Bool :=
   IntegerBits.coefficientResidue (coefficient source active inner middle outer n d ell c) (Nat.fromBitsLE (modulus c) + 1)
 
-attribute [local irreducible] coefficient familyEvaluator
+attribute [local irreducible] coefficient
 
-noncomputable def evaluator {source active modulus inner middle : List Bool → List Bool}
+theorem evaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
     SpaceFunction (modularValue source active modulus inner middle outer n d ell) := by

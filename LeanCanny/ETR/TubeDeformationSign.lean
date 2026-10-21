@@ -38,7 +38,7 @@ def integerPositiveLanguage (source active inner middle outer : List Bool → Li
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) : Language :=
   {c | 0 < coefficient source active inner middle outer n d ell c}
 
-noncomputable def signumEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem signumEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
     SpaceFunction (integerSign source active inner middle outer n d ell) := by
@@ -48,7 +48,7 @@ noncomputable def signumEvaluator {source active modulus inner middle : List Boo
     (coefficient_bits source active D.direction inner middle outer n d ell D.bounds D.direction_eq)
     (residue_packet source active inner middle outer n d ell)
 
-noncomputable def integerZeroDecider {source active modulus inner middle : List Bool → List Bool}
+theorem integerZeroDecider {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
     SpaceDecider (integerZeroLanguage source active inner middle outer n d ell) := by

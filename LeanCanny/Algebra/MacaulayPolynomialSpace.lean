@@ -101,7 +101,7 @@ structure Access (F : Family) where
 def Access.entry {F : Family} (a : Access F) : List Bool → List Bool :=
   entryWithIdentity F.layout (a.coefficient ∘ sourceInput) (constantEntry a.modulus) ∘ PolynomialMoment.augmentedInput
 
-noncomputable def Access.entryEvaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
+theorem Access.entryEvaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
     (hm : a.modulus ∈ FP) (E : SpaceFunction a.coefficient) : SpaceFunction a.entry := by
   have EC := E.precompose sourceInput sourceInput_mem_FP
   have ES := entryWithIdentityEvaluator h EC (constantEntry_mem_FP hm)
@@ -141,12 +141,12 @@ theorem Access.determinant_controls {F : Family} (a : Access F) (h : F.layout.Po
     (hm : a.modulus ∈ FP) (hd : a.degree ∈ FP) : a.determinant.ControlsPolyTime :=
   ⟨dimensionCode_mem_FP h, hm, hd⟩
 
-noncomputable def Access.determinantEntryEvaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
+theorem Access.determinantEntryEvaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
     (hm : a.modulus ∈ FP) (E : SpaceFunction a.coefficient) : SpaceFunction a.determinant.entry := by
   have ES := a.entryEvaluator h hm E
   simpa only [Access.determinant] using ES
 
-noncomputable def Access.evaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
+theorem Access.evaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
     (hm : a.modulus ∈ FP) (hd : a.degree ∈ FP) (E : SpaceFunction a.coefficient) : SpaceFunction F.value :=
   BerkowitzPolynomial.ModularAccess.evaluator a.determinant (a.determinant_controls h hm hd)
     (a.determinantEntryEvaluator h hm E)

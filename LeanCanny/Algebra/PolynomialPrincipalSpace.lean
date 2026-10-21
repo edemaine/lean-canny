@@ -11,7 +11,7 @@ public import LeanCanny.Algebra.PrincipalPadding
 /-! # Costed polynomial principal minors on the original index space
 
 An FP row selector keeps an original entry or supplies the appropriate identity
-coefficient. The original entry child is suspended only on selected rows.
+coefficient. The original entry child is space-bounded only on selected rows.
 The affine determinant backend therefore evaluates a selected coefficient of
 the padded principal deformation with the original child workspace included.
 -/
@@ -39,7 +39,7 @@ theorem identityInput_packet (c : List Bool) (r s d : ℕ) :
 noncomputable def entry (pred : List Bool → Prop) (modulus reader : List Bool → List Bool) (q : List Bool) : List Bool :=
   if pred q then reader q else MacaulayPolynomial.constantEntry modulus (identityInput q)
 
-noncomputable def evaluator {pred : List Bool → Prop} {modulus reader : List Bool → List Bool}
+theorem evaluator {pred : List Bool → Prop} {modulus reader : List Bool → List Bool}
     (hp : FPPred pred) (hm : modulus ∈ FP) (E : SpaceFunction reader) : SpaceFunction (entry pred modulus reader) := by
   have EC := SpaceFunction.ofFP _ (mem_FP_comp identityInput_mem_FP (MacaulayPolynomial.constantEntry_mem_FP hm))
   have ES := SpaceFunction.branch (fun q => decide (pred q)) hp.flag_mem_FP E EC
@@ -87,7 +87,7 @@ noncomputable def ModularAccess.principal {F : ModularFamily} (a : ModularAccess
 
 attribute [local irreducible] PolynomialPrincipalBits.entry
 
-noncomputable def ModularAccess.principalEntryEvaluator {F : ModularFamily} (a : ModularAccess F)
+theorem ModularAccess.principalEntryEvaluator {F : ModularFamily} (a : ModularAccess F)
     (s : (c : List Bool) → Finset (Fin (F.dimension c))) (pred : List Bool → Prop)
     (hpred : ∀ c (r t : Fin (F.dimension c)) d, pred (PolynomialAffineEntryBits.packet c r.val t.val d) ↔ r ∈ s c)
     (hp : FPPred pred) (hm : a.modulus ∈ FP) (E : SpaceFunction a.entry) :
@@ -141,7 +141,7 @@ theorem Family.principal_matrix (F : Family) (s : (c : List Bool) → Finset (Fi
     PrincipalPadding.matrix (AffineCharacteristic.affineMatrix (F.source.matrix c)) (s c)
   exact (PrincipalPadding.matrix_affine _ _).symm
 
-noncomputable def Access.principalEvaluator {F : Family} (a : Access F)
+theorem Access.principalEvaluator {F : Family} (a : Access F)
     (s : (c : List Bool) → Finset (Fin (F.source.dimension c))) (pred : List Bool → Prop)
     (hpred : ∀ c (r t : Fin (F.source.dimension c)) d, pred (PolynomialAffineEntryBits.packet c r.val t.val d) ↔ r ∈ s c)
     (hp : FPPred pred) (hN : a.original.dimension ∈ FP) (hm : a.original.modulus ∈ FP)

@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.IntegerModular
-public import LeanCanny.Algebra.BerkowitzPSPACE
+public import LeanCanny.Algebra.BerkowitzSpaceEntries
 public import LeanCanny.Computation.BoundedScanPSPACE
 
 /-!
@@ -114,7 +114,7 @@ theorem scan_language_eq (F : IntegerFamily) :
     apply (modular_packet (F := F) c k).mpr
     exact h (k + 1) (by omega) (by omega)
 
-noncomputable def decider {F : IntegerFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
+theorem decider {F : IntegerFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
     SpaceDecider F.zeroLanguage := by
   rw [← scan_language_eq F]
   exact BoundedScan.decider (ModularAccess.decider a.modular (modular_polyTime a ha))

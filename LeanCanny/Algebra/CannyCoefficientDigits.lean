@@ -25,7 +25,7 @@ open LeanCanny.Computation
 
 namespace CannyResultantBits.IntegerAccess
 
-noncomputable def magnitudeBitEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
+theorem magnitudeBitEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
     SpaceFunction (ArithmeticBits.bitValue (fun c => (F.source.coefficient c).natAbs)) := by
   refine IntegerDigitBits.evaluator (Access.evaluator a.residue ha.residue) a.budget (budget_mem_FP a ha)
     F.source.coefficient ?_ F.source.value_packet
@@ -38,7 +38,7 @@ end CannyResultantBits.IntegerAccess
 namespace CannyCoordinateBits
 open CannySubresultantBits (BoundedFamily IntegerAccess)
 
-noncomputable def magnitudeBitEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
+theorem magnitudeBitEvaluator {F : BoundedFamily} (a : IntegerAccess F) (ha : a.PolyTime) :
     SpaceFunction (ArithmeticBits.bitValue (fun c => (integerCoefficient F.family c).natAbs)) := by
   refine IntegerDigitBits.evaluator (evaluator a.residue (a.residue_polyTime ha)) (budgetWord a)
     (budgetWord_mem_FP a ha) (integerCoefficient F.family) ?_ (value_packet F.family)

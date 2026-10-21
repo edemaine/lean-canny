@@ -119,7 +119,7 @@ theorem determinant_controls {F : ModularFamily} (a : ModularAccess F) (ha : a.b
   · simpa only [determinant] using ha.base.degree
 
 set_option backward.isDefEq.respectTransparency false in
-noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
+theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
     (L : SpaceFunction a.bits.base.leftCoefficient) (R : SpaceFunction a.bits.base.rightCoefficient) :
     SpaceFunction F.value := by
   have Eentry := a.bits.entryEvaluator ha L R
@@ -134,7 +134,7 @@ noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.bi
   · have hen : ¬ a.bits.enabled c := fun h => hv ((a.enabled_valid c).mp h)
     simp only [hen, decide_false, Bool.false_eq_true, ↓reduceIte, ite_eq_right hv]
 
-noncomputable def decider {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
+theorem decider {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
     (L : SpaceFunction a.bits.base.leftCoefficient) (R : SpaceFunction a.bits.base.rightCoefficient) :
     SpaceDecider F.zeroLanguage := by
   have hflag : (fun w : List Bool => [decide (w = [])]) ∈ FP :=

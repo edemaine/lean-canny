@@ -102,7 +102,7 @@ noncomputable def Data.withModulus {source active modulus inner outer : List Boo
     simp only [Function.comp_apply, Query.directionQuery, Query.base, pairFst_pair, pairSnd_pair]
     exact D.direction_eq (pairFst q) i hi
 
-noncomputable def Data.residueEvaluator {source active modulus inner outer : List Bool → List Bool}
+theorem Data.residueEvaluator {source active modulus inner outer : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : Data source active modulus inner outer n d ell) : SpaceFunction (residueValue source active inner outer n d ell D.bounds) :=
   D.withModulus.evaluator

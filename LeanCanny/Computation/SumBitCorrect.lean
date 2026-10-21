@@ -64,12 +64,12 @@ theorem ordinary_packet (c : List Bool) (t v : ℕ) : ordinary (packet c t v) = 
   simp only [BinaryNat.succ_eq_bits, BinaryNat.div_eq_bits, pairFst_pair, pairSnd_pair,
     BinaryNatCode.encode, Nat.fromBitsLE_bits, show Nat.fromBitsLE [false, true] = 2 from rfl, packet]
 
-theorem resume_packet {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem resume_packet
     (c : List Bool) (t v : ℕ) (u : List Bool) :
-    resume E (pair (packet c t v) u) =
-      packet c (t + 1) (v + if (E.output u)[0]?.getD false then 1 else 0) := by
+    resume (pair (packet c t v) u) =
+      packet c (t + 1) (v + if u[0]?.getD false then 1 else 0) := by
   simp only [resume, response, pairFst_pair, pairSnd_pair, context_packet, counter_packet, accumulator_packet]
-  cases (E.output u)[0]?.getD false <;>
+  cases u[0]?.getD false <;>
     simp only [Bool.false_eq_true, ↓reduceIte, BinaryNat.succ_eq_bits, BinaryNat.add_eq_bits,
       pairFst_pair, pairSnd_pair, packet, BinaryNatCode.encode, Nat.fromBitsLE_bits,
       show Nat.fromBitsLE [] = 0 from rfl, show Nat.fromBitsLE [true] = 1 from rfl, Nat.add_zero]
@@ -78,38 +78,38 @@ theorem output_packet (c : List Bool) (t v : ℕ) : output (packet c t v) = (v %
   simp only [output, accumulator_packet, BinaryNat.mod_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits,
     show Nat.fromBitsLE [false, true] = 2 from rfl]
 
-theorem step_packet {f : List Bool → List Bool} (E : SpaceFunction f) (count : List Bool → List Bool)
+theorem step_packet (f : List Bool → List Bool) (count : List Bool → List Bool)
     (c : List Bool) (N : ℕ) (a : ℕ → ℕ) (hc : Nat.fromBitsLE (count c) = N)
     (hbits : ∀ i k, i < N → (f (pair c (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k))))[0]?.getD false =
       (a i).testBit k) (t : ℕ) :
-    SubroutineIteration.abstractStep (program E count) (childTime E count)
+    step f count
       (packet c t (BinarySum.carryValue N a t)) = packet c (t + 1) (BinarySum.carryValue N a (t + 1)) := by
   by_cases hi : t % (N + 1) < N
-  · simp only [SubroutineIteration.abstractStep, program, request_packet count c N t _ hc,
-      hi, decide_true, ↓reduceIte, childTime, Function.comp_apply]
-    rw [resume_packet, E.correct, query_packet count c N t _ hc, hbits _ _ hi,
+  · simp only [step, request_packet count c N t _ hc,
+      hi, decide_true, ↓reduceIte]
+    rw [resume_packet, query_packet count c N t _ hc, hbits _ _ hi,
       ← BinarySum.bit_eq, ← BinarySum.carryValue_succ_bit N a t hi]
-  · simp only [SubroutineIteration.abstractStep, program, request_packet count c N t _ hc,
+  · simp only [step, request_packet count c N t _ hc,
       hi, decide_false, Bool.false_eq_true, ↓reduceIte]
     rw [ordinary_packet, ← BinarySum.carryValue_succ_carry N a t hi]
 
-theorem iterate_packet {f : List Bool → List Bool} (E : SpaceFunction f) (count : List Bool → List Bool)
+theorem iterate_packet (f : List Bool → List Bool) (count : List Bool → List Bool)
     (c : List Bool) (N : ℕ) (a : ℕ → ℕ) (hc : Nat.fromBitsLE (count c) = N)
     (hbits : ∀ i k, i < N → (f (pair c (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k))))[0]?.getD false =
       (a i).testBit k) (t : ℕ) :
-    (SubroutineIteration.abstractStep (program E count) (childTime E count))^[t] (init c) =
+    (step f count)^[t] (init c) =
       packet c t (BinarySum.carryValue N a t) := by
   induction t with
   | zero => simp only [Function.iterate_zero_apply, BinarySum.carryValue_zero]; rfl
-  | succ t ih => rw [Function.iterate_succ_apply', ih, step_packet E count c N a hc hbits]
+  | succ t ih => rw [Function.iterate_succ_apply', ih, step_packet f count c N a hc hbits]
 
-theorem output_end {f : List Bool → List Bool} (E : SpaceFunction f) (count : List Bool → List Bool)
+theorem output_end (f : List Bool → List Bool) (count : List Bool → List Bool)
     (c : List Bool) (N K : ℕ) (a : ℕ → ℕ) (hc : Nat.fromBitsLE (count c) = N)
     (hbits : ∀ i k, i < N → (f (pair c (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k))))[0]?.getD false =
       (a i).testBit k) :
-    output ((SubroutineIteration.abstractStep (program E count) (childTime E count))^[K * (N + 1) + N] (init c)) =
+    output ((step f count)^[K * (N + 1) + N] (init c)) =
       if (∑ i ∈ Finset.range N, a i).testBit K then [true] else [] := by
-  rw [iterate_packet E count c N a hc hbits, output_packet, BinarySum.carryValue_end,
+  rw [iterate_packet f count c N a hc hbits, output_packet, BinarySum.carryValue_end,
     BinarySum.sum_testBit, BinarySum.partialColumn]
   have hl := Nat.mod_lt (BinarySum.carry N a K + BinarySum.column N a K) (by decide : 0 < 2)
   have hd : (BinarySum.carry N a K + BinarySum.column N a K) % 2 = 0 ∨

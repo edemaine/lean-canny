@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.RationalSubstitutionResidue
 
 Each summand tests whether the requested exponent is its coordinate monomial,
 then calls a certified scalar coefficient reader. The modular sum retains one
-residue and accounts for the suspended scalar-reader workspace.
+residue and accounts for the space-bounded scalar-reader workspace.
 -/
 
 @[expose] public section
@@ -127,7 +127,7 @@ theorem sourceQuery_mem_FP : sourceQuery ∈ FP := mem_FP_pair original_mem_FP p
 noncomputable def summand (A W : List Bool → ℕ) (reader : List Bool → List Bool) (p : List Bool) : List Bool :=
   if Matches A W p then reader (sourceQuery p) else []
 
-noncomputable def summandEvaluator {A W : List Bool → ℕ} (hA : UnaryFn A) (hW : UnaryFn W)
+theorem summandEvaluator {A W : List Bool → ℕ} (hA : UnaryFn A) (hW : UnaryFn W)
     {reader : List Bool → List Bool} (E : SpaceFunction reader) : SpaceFunction (summand A W reader) := by
   have EC := E.precompose sourceQuery sourceQuery_mem_FP
   have ES := SpaceFunction.branch (fun p => decide (Matches A W p)) (matches_fppred hA hW).flag_mem_FP
@@ -171,7 +171,7 @@ theorem value_packet (A W : List Bool → ℕ) (a : List Bool → ℕ → Polyno
         (coefficient A W a degree c r) (Nat.fromBitsLE (modulus c) + 1) := by
   simp only [value, pairFst_pair, pairSnd_pair, MacaulayBits.fromBits_encode]
 
-noncomputable def evaluator {A W : List Bool → ℕ} (hA : UnaryFn A) (hW : UnaryFn W)
+theorem evaluator {A W : List Bool → ℕ} (hA : UnaryFn A) (hW : UnaryFn W)
     (hpos : ∀ c, 0 < W c) (a : List Bool → ℕ → Polynomial ℤ)
     (degree modulus reader : List Bool → List Bool) (hm : modulus ∈ FP) (E : SpaceFunction reader)
     (hr : ∀ c i, i < A c → reader (pair c (BinaryNatCode.encode i)) =

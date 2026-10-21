@@ -28,7 +28,7 @@ def value (f : List Bool → List Bool) (p : List Bool) : List Bool :=
 theorem lookupQuery_mem_FP : lookupQuery ∈ FP :=
   mem_FP_pair pairSnd_mem_FP (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP)
 
-noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f) : SpaceFunction (value f) := by
+theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f) : SpaceFunction (value f) := by
   have hlookup := mem_FP_comp lookupQuery_mem_FP BinaryNat.bitAt_mem_FP
   let Q := ((E.precompose pairFst pairFst_mem_FP).withInput).postcompose
     (BinaryNat.bitAt ∘ lookupQuery) hlookup

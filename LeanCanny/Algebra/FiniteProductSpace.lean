@@ -43,12 +43,12 @@ theorem oneBit_packet (c : List Bool) (i k : ℕ) :
   simp only [oneBit, pairSnd_pair, Controller.code_eq_nil, Nat.testBit_one_eq_true_iff_self_eq_zero]
   by_cases hk : k = 0 <;> simp [hk]
 
-noncomputable def maskedLeafEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem maskedLeafEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (keep : List Bool → Bool) (hk : (fun z => [keep z]) ∈ FP) : SpaceFunction (maskedLeaf keep f) :=
   SpaceFunction.branch (keep ∘ factorQuery) (mem_FP_comp factorQuery_mem_FP hk) E
     (SpaceFunction.ofFP oneBit oneBit_mem_FP)
 
-noncomputable def maskedTreeEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem maskedTreeEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count index : List Bool → List Bool) (hc : count ∈ FP) (hi : index ∈ FP)
     (keep : List Bool → Bool) (hk : (fun z => [keep z]) ∈ FP)
     (g : List Bool → ℕ → Bool) (a : List Bool → ℕ → ℕ)
@@ -93,7 +93,7 @@ def cofactorValue (count skip index : List Bool → List Bool) (a : List Bool �
   if (∏ i ∈ (Finset.range (Nat.fromBitsLE (count c))).erase (Nat.fromBitsLE (skip c)), a c i).testBit
     (Nat.fromBitsLE (index c)) then [true] else []
 
-noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count index : List Bool → List Bool) (hc : count ∈ FP) (hi : index ∈ FP)
     (a : List Bool → ℕ → ℕ)
     (hbits : ∀ c i k, i < Nat.fromBitsLE (count c) →
@@ -109,7 +109,7 @@ noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
   rw [tree_padded_of_bits]
   rfl
 
-noncomputable def cofactorEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem cofactorEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count skip index : List Bool → List Bool) (hc : count ∈ FP) (hs : skip ∈ FP) (hi : index ∈ FP)
     (a : List Bool → ℕ → ℕ)
     (hbits : ∀ c i k, i < Nat.fromBitsLE (count c) → i ≠ Nat.fromBitsLE (skip c) →

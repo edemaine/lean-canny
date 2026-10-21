@@ -23,7 +23,7 @@ open LeanCanny.Encoding
 open LeanCanny.Computation
 open PrincipalSubresultant
 
-noncomputable def queryEvaluator {F : Resultant.Family} (a : Resultant.Access F)
+theorem queryEvaluator {F : Resultant.Family} (a : Resultant.Access F)
     (ha : a.bits.ControlsPolyTime) (P : SpaceFunction a.bits.leftCoefficient)
     (Q : SpaceFunction a.bits.rightCoefficient) : SpaceFunction (fun c => SignStatisticBits.integerCode
       (permanencesMinusVariations ((List.range (F.leftDegree c + 1)).reverse.map
@@ -39,7 +39,7 @@ noncomputable def queryEvaluator {F : Resultant.Family} (a : Resultant.Access F)
 
 /-- With actual degree metadata, the principal pipeline evaluates a Tarski
 query from coefficient readers for the head and its integer pseudo-seed. -/
-noncomputable def tarskiEvaluator {F : Resultant.Family} (a : Resultant.Access F)
+theorem tarskiEvaluator {F : Resultant.Family} (a : Resultant.Access F)
     (ha : a.bits.ControlsPolyTime) (P : SpaceFunction a.bits.leftCoefficient)
     (Q : SpaceFunction a.bits.rightCoefficient) (f : List Bool → ℤ[X]) (D : List Bool → ℕ)
     (hm : ∀ c, (F.left c).natDegree = F.leftDegree c) (hp : ∀ c, 0 < F.leftDegree c)

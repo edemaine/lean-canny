@@ -58,7 +58,7 @@ theorem dimension_mem_FP_of_dimension (a : Access) (hd : a.dimension ∈ FP) : d
   have h := mem_FP_comp (sinkIndex_mem_FP_of_dimension a hd) BinaryNat.succ_mem_FP
   exact h
 
-noncomputable def entryEvaluator (a : Access) (hd : a.dimension ∈ FP)
+theorem entryEvaluator (a : Access) (hd : a.dimension ∈ FP)
     (R : SpaceFunction a.row) (C : SpaceFunction a.column) (A : SpaceFunction a.entry) :
     SpaceFunction (entry a) := by
   have ER := R.precompose rowInput rowInput_mem_FP
@@ -155,7 +155,7 @@ theorem power_controls {F : ModularFamily} (a : ModularAccess F) (ha : a.Control
   have hc := EntryBits.sinkIndex_mem_FP_of_dimension a.bits ha.dimension
   exact ⟨hd, ha.modulus, he, constFn_mem_FP [], hc⟩
 
-noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
     (R : SpaceFunction a.bits.row) (C : SpaceFunction a.bits.column) (A : SpaceFunction a.bits.entry) :
     SpaceFunction F.value := by
   have E := EntryBits.entryEvaluator a.bits ha.dimension R C A

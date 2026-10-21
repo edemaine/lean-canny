@@ -25,7 +25,7 @@ open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators
 
-noncomputable def signEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem signEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count precision : List Bool → List Bool) (hc : count ∈ FP) (hp : precision ∈ FP)
     (F : (c : List Bool) → System (Fin (Nat.fromBitsLE (count c))))
     (r : (c : List Bool) → Fin (Nat.fromBitsLE (count c)) → ℕ) (z : List Bool → ℤ)
@@ -74,7 +74,7 @@ noncomputable def signEvaluator {f : List Bool → List Bool} (E : SpaceFunction
 
 /-- A count writer can describe a separately named index cardinality. This
 avoids transporting the dependent modulus family by hand at each application. -/
-noncomputable def signEvaluatorOfCount {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem signEvaluatorOfCount {f : List Bool → List Bool} (E : SpaceFunction f)
     (count precision : List Bool → List Bool) (hc : count ∈ FP) (hp : precision ∈ FP)
     (N : List Bool → ℕ) (hcount : ∀ c, Nat.fromBitsLE (count c) = N c)
     (F : (c : List Bool) → System (Fin (N c))) (r : (c : List Bool) → Fin (N c) → ℕ) (z : List Bool → ℤ)

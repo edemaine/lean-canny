@@ -95,21 +95,21 @@ theorem integer_size_le (a : SourceAccess S) (c : List Bool) :
   simpa only [Source.integer, BinaryNatCode.encode, Nat.fromBitsLE_bits, Fintype.card_fin] using
     FiniteDenominatorClearing.cleared_size_le (S.coefficient c) _ (a.parts_bound c) (S.index c)
 
-noncomputable def residueEvaluator (a : SourceAccess S) (hc : a.count ∈ FP) (hs : a.selected ∈ FP)
+theorem residueEvaluator (a : SourceAccess S) (hc : a.count ∈ FP) (hs : a.selected ∈ FP)
     (N : SpaceFunction a.numerator) (D : SpaceFunction a.denominator) : SpaceFunction S.modularFamily.value := by
   have hcount := mem_FP_comp pairFst_mem_FP hc
   have hmod := mem_FP_comp pairSnd_mem_FP BinaryNat.succ_mem_FP
   have hselected := mem_FP_comp pairFst_mem_FP hs
   exact a.modularAccess.evaluator hcount hmod hselected N D
 
-noncomputable def signumEvaluator (a : SourceAccess S)
+theorem signumEvaluator (a : SourceAccess S)
     (hc : a.count ∈ FP) (hs : a.selected ∈ FP) (hb : a.bound ∈ FP)
     (N : SpaceFunction a.numerator) (D : SpaceFunction a.denominator) :
     SpaceFunction (fun c => if S.integer c = 0 then [] else if S.integer c < 0 then [true] else [false, true]) :=
   IntegerSignumBits.evaluator (a.residueEvaluator hc hs N D) a.budget (a.budget_mem_FP hb hc)
     S.integer a.integer_size_le S.residue_packet
 
-noncomputable def zeroDecider (a : SourceAccess S)
+theorem zeroDecider (a : SourceAccess S)
     (hc : a.count ∈ FP) (hs : a.selected ∈ FP) (hb : a.bound ∈ FP)
     (N : SpaceFunction a.numerator) (D : SpaceFunction a.denominator) : SpaceDecider {c | S.integer c = 0} :=
   IntegerZeroBits.zeroDecider (a.residueEvaluator hc hs N D) a.budget (a.budget_mem_FP hb hc)

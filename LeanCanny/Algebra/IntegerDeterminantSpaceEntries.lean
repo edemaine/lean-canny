@@ -42,13 +42,13 @@ theorem bound_mem_FP_of_controls {F : IntegerFamily} (a : IntegerAccess F) (ha :
   intro c
   simp only [Function.comp_apply, bound]
 
-noncomputable def modularEntry {F : IntegerFamily} (a : IntegerAccess F) (E : SpaceFunction a.entry) :
+theorem modularEntry {F : IntegerFamily} (a : IntegerAccess F) (E : SpaceFunction a.entry) :
     SpaceFunction a.modular.access.entry := by
   refine E.congr ?_
   funext p
   simp only [modular]
 
-noncomputable def deciderWithEntry {F : IntegerFamily} (a : IntegerAccess F) (ha : a.ControlsPolyTime)
+theorem deciderWithEntry {F : IntegerFamily} (a : IntegerAccess F) (ha : a.ControlsPolyTime)
     (E : SpaceFunction a.entry) : SpaceDecider F.zeroLanguage := by
   rw [← scan_language_eq F]
   exact BoundedScan.decider

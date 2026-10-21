@@ -82,7 +82,7 @@ theorem col_mem_FP (a : Bits) (ha : a.ControlsPolyTime) : a.col ∈ FP := by
 theorem query_mem_FP (a : Bits) (ha : a.ControlsPolyTime) : a.query ∈ FP :=
   mem_FP_pair pairFst_mem_FP (mem_FP_pair (a.row_mem_FP ha) (a.col_mem_FP ha))
 
-noncomputable def entryEvaluator (a : Bits) (ha : a.ControlsPolyTime)
+theorem entryEvaluator (a : Bits) (ha : a.ControlsPolyTime)
     (P : SpaceFunction a.base.leftCoefficient) (Q : SpaceFunction a.base.rightCoefficient) :
     SpaceFunction a.entry :=
   (SylvesterBits.entryEvaluator a.base ha.base P Q).precompose a.query (a.query_mem_FP ha)
@@ -170,7 +170,7 @@ theorem integer_controls {F : Family} (a : Access F) (ha : a.bits.ControlsPolyTi
   · simpa only [integer] using a.bits.dimension_mem_FP ha
   · simpa only [integer] using SylvesterBits.budget_mem_FP_of_controls a.bits.base ha.base
 
-noncomputable def residueEvaluator {F : Family} (a : Access F) (ha : a.bits.ControlsPolyTime)
+theorem residueEvaluator {F : Family} (a : Access F) (ha : a.bits.ControlsPolyTime)
     (P : SpaceFunction a.bits.base.leftCoefficient) (Q : SpaceFunction a.bits.base.rightCoefficient) :
     SpaceFunction F.integer.modular.value := by
   have E : SpaceFunction a.integer.entry := by

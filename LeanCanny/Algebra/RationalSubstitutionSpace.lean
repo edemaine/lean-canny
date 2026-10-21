@@ -12,7 +12,7 @@ public import LeanCanny.Computation.SpaceFunctionChain
 /-!
 # Modular coefficient evaluation for indexed rational substitution
 
-Source coefficients and coordinate coefficients run through certified suspended
+Source coefficients and coordinate coefficients run through certified space-bounded
 routines. Binary term/variable counts, exponent access, width, selected degree,
 and a positive-modulus predecessor are FP. The evaluator multiplies selected
 monomial coefficients by source coefficients and sums the residues. No expanded
@@ -52,7 +52,7 @@ noncomputable def termValue (arity width terms modulus degree : List Bool → Li
     (np dp : (c : List Bool) → ℕ → Polynomial (ZMod (Nat.fromBitsLE (modulus c) + 1))) (q : List Bool) : List Bool :=
   termAt arity width terms modulus degree e a np dp (pairFst q) (Nat.fromBitsLE (pairSnd q))
 
-noncomputable def termEvaluator {f n d : List Bool → List Bool}
+theorem termEvaluator {f n d : List Bool → List Bool}
     (C : SpaceFunction f) (N : SpaceFunction n) (D : SpaceFunction d)
     (arity width terms exponent modulus degree : List Bool → List Bool)
     (ha : arity ∈ FP) (hw : width ∈ FP) (ht : terms ∈ FP) (he : exponent ∈ FP) (hm : modulus ∈ FP) (hk : degree ∈ FP)
@@ -116,7 +116,7 @@ noncomputable def value (arity width terms modulus degree : List Bool → List B
   residueBits ((Indexed.cleared (Nat.fromBitsLE (arity c)) (Nat.fromBitsLE (terms c))
     (Nat.fromBitsLE (width c)) (a c) (e c) (np c) (dp c)).coeff (Nat.fromBitsLE (degree c)))
 
-noncomputable def evaluator {f n d : List Bool → List Bool}
+theorem evaluator {f n d : List Bool → List Bool}
     (C : SpaceFunction f) (N : SpaceFunction n) (D : SpaceFunction d)
     (arity width terms exponent modulus degree : List Bool → List Bool)
     (ha : arity ∈ FP) (hw : width ∈ FP) (ht : terms ∈ FP) (he : exponent ∈ FP) (hm : modulus ∈ FP) (hk : degree ∈ FP)

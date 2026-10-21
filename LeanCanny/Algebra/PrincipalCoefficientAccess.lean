@@ -137,7 +137,7 @@ theorem minor_controls {F : Resultant.Family} (a : Resultant.Access F) (ha : a.b
   have hb := mem_FP_comp pairFst_mem_FP ha.coefficientBits
   exact ⟨⟨hm, hn, hb⟩, minimum_mem_FP pairSnd_mem_FP (minimum_mem_FP hm hn)⟩
 
-noncomputable def minorResidueEvaluator {F : Resultant.Family} (a : Resultant.Access F)
+theorem minorResidueEvaluator {F : Resultant.Family} (a : Resultant.Access F)
     (ha : a.bits.ControlsPolyTime) (P : SpaceFunction a.bits.leftCoefficient)
     (Q : SpaceFunction a.bits.rightCoefficient) : SpaceFunction (minorFamily F).integer.modular.value :=
   (minorAccess a).residueEvaluator (minor_controls a ha)

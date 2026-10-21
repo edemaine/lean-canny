@@ -35,7 +35,7 @@ noncomputable def coefficient (n : List Bool → ℕ) (active target : List Bool
 noncomputable def value (n : List Bool → ℕ) (active target modulus : List Bool → List Bool) : List Bool → List Bool :=
   CollectedCoefficient.value (write n active) target modulus
 
-noncomputable def evaluator (n : List Bool → ℕ) (active target modulus : List Bool → List Bool)
+theorem evaluator (n : List Bool → ℕ) (active target modulus : List Bool → List Bool)
     (hn : UnaryFn n) (ha : active ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (value n active target modulus) :=
   CollectedCoefficient.evaluator (write n active) target modulus (write_mem_FP hn ha) ht hm
@@ -107,7 +107,7 @@ theorem native_exponent_fits (n : List Bool → ℕ) (active : List Bool → Lis
   have hdim : 5 ≤ dimension (n c) := by unfold dimension constraintCount; omega
   exact he.trans_lt ((show 4 < size n active c + 1 by omega).trans (Nat.lt_two_pow_self))
 
-noncomputable def negativeEvaluator (n : List Bool → ℕ) (active target : List Bool → List Bool)
+theorem negativeEvaluator (n : List Bool → ℕ) (active target : List Bool → List Bool)
     (hn : UnaryFn n) (ha : active ∈ FP) (ht : target ∈ FP) :
     SpaceFunction (fun c => if coefficient n active target c < 0 then [true] else []) :=
   CollectedCoefficient.negativeEvaluator (write n active) target (write_mem_FP hn ha) ht
@@ -116,7 +116,7 @@ theorem negativeLanguage_mem_PSPACE (n : List Bool → ℕ) (active target : Lis
     (hn : UnaryFn n) (ha : active ∈ FP) (ht : target ∈ FP) : {c | coefficient n active target c < 0} ∈ PSPACE :=
   CollectedCoefficient.negativeLanguage_mem_PSPACE (write n active) target (write_mem_FP hn ha) ht
 
-noncomputable def zeroDecider (n : List Bool → ℕ) (active target : List Bool → List Bool)
+theorem zeroDecider (n : List Bool → ℕ) (active target : List Bool → List Bool)
     (hn : UnaryFn n) (ha : active ∈ FP) (ht : target ∈ FP) : SpaceDecider {c | coefficient n active target c = 0} :=
   CollectedCoefficient.zeroDecider (write n active) target (write_mem_FP hn ha) ht
 

@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.BerkowitzPolynomialSpace
 
 An entry has coefficients A at degree zero, I-A at degree one, and zero above.
 The original integer source residue routine therefore suffices, including its
-suspended states. No oracle for deformed source coefficients is assumed.
+space-bounded states. No oracle for deformed source coefficients is assumed.
 -/
 
 @[expose] public section

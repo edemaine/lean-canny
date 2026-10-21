@@ -69,13 +69,13 @@ theorem Access.coefficient_bit_bound {F : Family} (a : Access F) (c : List Bool)
   rw [a.budget_code, MacaulayBits.fromBits_encode]
   exact F.coefficient_bits c
 
-noncomputable def Access.signumEvaluator {F : Family} (a : Access F) (h : F.source.layout.PolyTime)
+theorem Access.signumEvaluator {F : Family} (a : Access F) (h : F.source.layout.PolyTime)
     (hd : a.degree ∈ FP) (hb : a.original.bits ∈ FP) (E : SpaceFunction a.original.coefficient) :
     SpaceFunction F.signValue :=
   IntegerSignumBits.evaluator (a.evaluator h hd E) a.budget (a.budget_mem_FP h hb)
     F.coefficient a.coefficient_bit_bound F.value_packet
 
-noncomputable def Access.zeroDecider {F : Family} (a : Access F) (h : F.source.layout.PolyTime)
+theorem Access.zeroDecider {F : Family} (a : Access F) (h : F.source.layout.PolyTime)
     (hd : a.degree ∈ FP) (hb : a.original.bits ∈ FP) (E : SpaceFunction a.original.coefficient) :
     SpaceDecider F.zeroLanguage :=
   IntegerZeroBits.zeroDecider (a.evaluator h hd E) a.budget (a.budget_mem_FP h hb)

@@ -70,7 +70,7 @@ noncomputable def coefficientValue (source active row : List Bool → List Bool)
   if PartialCoefficientBits.Matches (spatialSize source) (blockWidth source) (pairFst q)
   then originalValue source active row q else []
 
-noncomputable def coefficientEvaluator (source active row : List Bool → List Bool)
+theorem coefficientEvaluator (source active row : List Bool → List Bool)
     (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) : SpaceFunction (coefficientValue source active row) := by
   have ER := TubeRegularHomogenization.evaluator (source ∘ pairFst) (active ∘ pairFst) (row ∘ pairFst) pairSnd
     (mem_FP_comp pairFst_mem_FP hs) (mem_FP_comp pairFst_mem_FP ha) (mem_FP_comp pairFst_mem_FP hr) pairSnd_mem_FP

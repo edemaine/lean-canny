@@ -38,7 +38,7 @@ theorem count_code (budget : List Bool → List Bool) (c : List Bool) :
   congr 1
   omega
 
-noncomputable def residueZeroDecider {rho : List Bool → List Bool} (R : SpaceFunction rho) :
+theorem residueZeroDecider {rho : List Bool → List Bool} (R : SpaceFunction rho) :
     SpaceDecider {q | rho q = []} := by
   have ha : (fun w : List Bool => [decide (w = [])]) ∈ FP :=
     (stringEq_fppred id_mem_FP (constFn_mem_FP [])).flag_mem_FP
@@ -71,7 +71,7 @@ theorem zeroLanguage_eq_scan (rho budget : List Bool → List Bool) (z : List Bo
     have he := h (m - 1) (by omega)
     exact (Nat.sub_add_cancel hm) ▸ he
 
-noncomputable def zeroDecider {rho : List Bool → List Bool} (R : SpaceFunction rho)
+theorem zeroDecider {rho : List Bool → List Bool} (R : SpaceFunction rho)
     (budget : List Bool → List Bool) (hb : budget ∈ FP) (z : List Bool → ℤ)
     (hbudget : ∀ c, (z c).natAbs.size ≤ Nat.fromBitsLE (budget c))
     (hres : ∀ c (m : ℕ), 0 < m →

@@ -54,7 +54,7 @@ theorem prepared_principal_eq (F : Family) (c : List Bool) (hp : 0 < (F.head c).
 
 /-- The only arithmetic subroutines supplied externally read original head and
 query coefficients modulo arbitrary positive moduli. Metadata fields are bounds. -/
-noncomputable def evaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem evaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.headCoefficient) (Q : SpaceFunction a.queryCoefficient) :
     SpaceFunction (fun c => SignStatisticBits.integerCode (value F c)) := by
   let b := TarskiDegreeContext.access a

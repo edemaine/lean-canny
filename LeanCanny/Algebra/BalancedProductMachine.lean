@@ -13,7 +13,7 @@ public import Mathlib.Logic.Function.Iterate
 Each positive-height query scans the columns of its two-child product.
 The active frame retains a binary scan counter, a small column accumulator,
 and at most one returned bit. Leaf bit access is abstract at this stage;
-encoded FP control and suspended leaf costs are supplied separately.
+encoded FP control and space-bounded leaf costs are supplied separately.
 -/
 
 @[expose] public section

@@ -106,7 +106,7 @@ noncomputable def value (source active row modulus : List Bool → List Bool) : 
   HomogenizationBits.value (dimension source) (pointDimension source) (width source) (degree source)
     (TubeIndexed.projectionResidue source active row modulus)
 
-noncomputable def evaluator (source active row modulus : List Bool → List Bool)
+theorem evaluator (source active row modulus : List Bool → List Bool)
     (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (value source active row modulus) := by
   have hN : UnaryFn (dimension source) := TubeIndexed.projectionDimension_unary.comp hs

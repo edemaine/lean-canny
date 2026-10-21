@@ -64,7 +64,7 @@ theorem precision_code (budget : List Bool → List Bool) (c : List Bool) :
   simp only [precision, bound_code, BinaryNat.add_pair, BinaryNat.mul_pair,
     BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.size_eq_bits_len, precisionBits]
 
-noncomputable def evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
+theorem evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
     (budget : List Bool → List Bool) (hb : budget ∈ FP) (z : List Bool → ℤ)
     (hbudget : ∀ c, (z c).natAbs.size ≤ Nat.fromBitsLE (budget c))
     (hres : ∀ c (m : ℕ), 0 < m →

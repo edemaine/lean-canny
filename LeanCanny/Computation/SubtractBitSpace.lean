@@ -12,7 +12,7 @@ public import LeanCanny.Computation.ProductBitSpace
 
 For ordered implicit operands, a three-term complemented sum computes a selected
 subtraction bit. Its term routines use one source bit at a time, a width guard,
-and a constant carry-in. The sum-bit certificate counts every suspended child.
+and a constant carry-in. The sum-bit certificate counts every space-bounded child.
 -/
 
 @[expose] public section
@@ -53,7 +53,7 @@ theorem complementFinish_mem_FP {index : List Bool → List Bool} (hi : index �
   intro p
   simp only [Function.comp_apply, complementFinish]
 
-noncomputable def termEvaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g)
+theorem termEvaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g)
     (index : List Bool → List Bool) (hi : index ∈ FP) : SpaceFunction (termValue f g index) := by
   have hs0 := stringEq_fppred ProductBits.leftIndex_mem_FP (constFn_mem_FP (BinaryNatCode.encode 0))
   have hs1 := stringEq_fppred ProductBits.leftIndex_mem_FP (constFn_mem_FP (BinaryNatCode.encode 1))
@@ -115,7 +115,7 @@ theorem termValue_packet (f g index : List Bool → List Bool) (a b : List Bool 
     rw [oneValue_packet]
     rfl
 
-noncomputable def evaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g)
+theorem evaluator {f g : List Bool → List Bool} (L : SpaceFunction f) (R : SpaceFunction g)
     (index : List Bool → List Bool) (hi : index ∈ FP) (a b : List Bool → ℕ)
     (hleft : ∀ c j, (f (pair c (BinaryNatCode.encode j)))[0]?.getD false = (a c).testBit j)
     (hright : ∀ c j, (g (pair c (BinaryNatCode.encode j)))[0]?.getD false = (b c).testBit j)

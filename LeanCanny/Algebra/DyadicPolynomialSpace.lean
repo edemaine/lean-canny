@@ -9,7 +9,7 @@ public import LeanCanny.Algebra.DyadicSpecializationSpace
 
 /-! # Uniform coefficient access after specializing a polynomial parameter
 
-Outer coefficients are polynomials in beta. Each is passed to the suspended
+Outer coefficients are polynomials in beta. Each is passed to the space-bounded
 dyadic numerator evaluator with the same exponent and clearing degree.
 -/
 
@@ -83,7 +83,7 @@ noncomputable def Family.residue (F : Family) (q : List Bool) : List Bool :=
   DyadicBits.integerResidue ((F.specialized (pairFst (pairFst q))).coeff (Nat.fromBitsLE (pairSnd (pairFst q))))
     (DyadicBits.mValue q)
 
-noncomputable def residueEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem residueEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.coefficient) : SpaceFunction F.residue := by
   let E := DyadicBits.residueEvaluator (scalarAccess a) (scalar_controls F hF)
     (P.precompose sourceQuery sourceQuery_mem_FP)

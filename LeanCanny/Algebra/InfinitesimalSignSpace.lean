@@ -12,7 +12,7 @@ public import LeanCanny.Computation.BoundedFoldSpace
 
 The scan keeps the first nonzero coefficient sign. An FP binary degree bound
 allows exponentially many coefficients, while the accumulator has at most two
-bits. Coefficient evaluation runs as a suspended child, with its state and clock
+bits. Coefficient evaluation runs as a space-bounded child, with its workspace
 included. The output is the sign on a sufficiently small positive interval.
 -/
 
@@ -98,7 +98,7 @@ theorem finish_mem_FP : finish ∈ FP := by
   have h := (stringEq_fppred ha (constFn_mem_FP [])).ite_mem_FP pairSnd_mem_FP ha
   exact mem_FP_of_eq h (fun _ => rfl)
 
-noncomputable def updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) : SpaceFunction (update f) := by
+theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) : SpaceFunction (update f) := by
   let Q := ((E.precompose query query_mem_FP).withInput).postcompose finish finish_mem_FP
   refine Q.congr (funext fun p => ?_)
   simp only [Function.comp_apply, update]
@@ -113,7 +113,7 @@ theorem fold_eq_scan (f : List Bool → List Bool) (c : List Bool) (a : ℕ → 
     simp only [update, finish, query, pairFst_pair, pairSnd_pair, BoundedFold.context_packet,
       BoundedFold.counter_packet, BoundedFold.accumulator_packet, hf, scan]
 
-noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (degree : List Bool → List Bool) (hd : degree ∈ FP) (p : List Bool → ℤ[X])
     (hdegree : ∀ c, (p c).natDegree ≤ Nat.fromBitsLE (degree c))
     (hcoeff : ∀ c i, f (pair c (BinaryNatCode.encode i)) = tag ((p c).coeff i)) :

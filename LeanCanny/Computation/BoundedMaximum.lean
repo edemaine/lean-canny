@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Computation.SpaceFunctionChain
+public import LeanCanny.Computation.BoundedFoldSpace
 
 /-! # Streaming a bounded maximum in polynomial space
 
@@ -41,7 +42,7 @@ theorem finish_mem_FP : finish ∈ FP := by
   have h := mem_FP_comp (mem_FP_pair (mem_FP_comp pairFst_mem_FP BoundedFold.accumulator_mem_FP) pairSnd_mem_FP) maximum_mem_FP
   exact mem_FP_of_eq h (fun _ => rfl)
 
-noncomputable def updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) : SpaceFunction (update f) := by
+theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) : SpaceFunction (update f) := by
   let Q := (E.precompose query query_mem_FP).withInput.postcompose finish finish_mem_FP
   exact Q.congr (funext fun _ => rfl)
 
@@ -58,7 +59,7 @@ theorem fold_eq_maximum (f : List Bool → List Bool) (c : List Bool) (N : ℕ) 
     rw [Finset.range_add_one, Finset.sup_insert]
     exact congrArg BinaryNatCode.encode (max_comm _ _)
 
-noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count bound : List Bool → List Bool) (hc : count ∈ FP) (hb : bound ∈ FP)
     (a : List Bool → ℕ → ℕ)
     (hf : ∀ c i, i < Nat.fromBitsLE (count c) → f (pair c (BinaryNatCode.encode i)) = BinaryNatCode.encode (a c i))

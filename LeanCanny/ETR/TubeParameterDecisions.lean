@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.IntegerZeroSpace
 
 Certified parameter-coordinate readers and binary bounds suffice. Both original
 source coefficients and the complete substitution computation are charged as
-suspended children. Effective parameter selection remains a separate task.
+space-bounded children. Effective parameter selection remains a separate task.
 -/
 
 @[expose] public section
@@ -49,7 +49,7 @@ noncomputable def signValue (source active row : List Bool → List Bool) (n d :
   if selectedCoefficient source active row n d q = 0 then []
   else if selectedCoefficient source active row n d q < 0 then [true] else [false, true]
 
-noncomputable def signumEvaluator (source active row : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ)
+theorem signumEvaluator (source active row : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ)
     (C : CoordinateReaders source n d) (B : CoordinateBounds source n d) (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) :
     SpaceFunction (signValue source active row n d) :=
   IntegerSignumBits.evaluator (evaluator source active row n d C hs ha hr)
@@ -66,7 +66,7 @@ theorem zeroLanguage_mem_PSPACE (source active row : List Bool → List Bool) (n
     (selectedCoefficient_packet source active row n d)
 
 
-noncomputable def trailingSignEvaluator (source active row : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ)
+theorem trailingSignEvaluator (source active row : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ)
     (C : CoordinateReaders source n d) (B : CoordinateBounds source n d) (hs : source ∈ FP) (ha : active ∈ FP) (hr : row ∈ FP) :
     SpaceFunction (fun c => InfinitesimalSign.tag ((family source active row n d).polynomial c).trailingCoeff) :=
   (access source active row n d C).signEvaluator (access_controls source active row n d C hs)

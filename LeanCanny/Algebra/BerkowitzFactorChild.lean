@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.BerkowitzMomentAccessFP
-public import LeanCanny.Algebra.MatrixPowerSubroutine
+public import LeanCanny.Algebra.MatrixPowerStepSpace
 
 /-!
 # The complete factor-entry child evaluator

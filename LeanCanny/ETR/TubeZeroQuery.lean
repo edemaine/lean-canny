@@ -93,7 +93,7 @@ theorem coefficient_eq_zero_of_not_allowed (n W : List Bool → ℕ) (active tar
 noncomputable def value (n W : List Bool → ℕ) (active target modulus : List Bool → List Bool) (c : List Bool) : List Bool :=
   residueBits ((coefficient n W active target c : ℤ) : ZMod (Nat.fromBitsLE (modulus c) + 1))
 
-noncomputable def evaluator (n W : List Bool → ℕ) (active target modulus : List Bool → List Bool)
+theorem evaluator (n W : List Bool → ℕ) (active target modulus : List Bool → List Bool)
     (hn : UnaryFn n) (hW : UnaryFn W) (ha : active ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (value n W active target modulus) := by
   classical

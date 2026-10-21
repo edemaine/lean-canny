@@ -154,7 +154,7 @@ noncomputable def access {F : Family} (a : Access F) : SignPatternBits.Access (f
     exact DyadicPolynomialBits.residue_packet (queryFamily F) (pair c (BinaryNatCode.encode i)) j m hm
   pattern_eq := a.pattern_eq
 
-noncomputable def queryEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
+theorem queryEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.coefficient) : SpaceFunction (access a).polynomialCoefficient :=
   (DyadicPolynomialBits.residueEvaluator (queryAccess a) (query_controls F hF)
     (P.precompose sourceQuery sourceQuery_mem_FP)).precompose specializedQuery specializedQuery_mem_FP

@@ -84,13 +84,13 @@ theorem determinant_controls {F : ModularFamily} (a : ModularAccess F) (ha : a.b
   · simpa only [determinant] using ha.modulus
   · simpa only [determinant] using ha.degree
 
-noncomputable def entryEvaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
+theorem entryEvaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
     (L : SpaceFunction a.bits.leftCoefficient) (R : SpaceFunction a.bits.rightCoefficient) :
     SpaceFunction a.determinant.entry := by
   have E := SylvesterPolynomialBits.Access.entryEvaluator a.bits ha L R
   simpa only [determinant] using E
 
-noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
+theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
     (L : SpaceFunction a.bits.leftCoefficient) (R : SpaceFunction a.bits.rightCoefficient) :
     SpaceFunction F.value := by
   have E := BerkowitzPolynomial.ModularAccess.evaluator a.determinant (determinant_controls a ha)
@@ -99,7 +99,7 @@ noncomputable def evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.bi
   funext c
   rfl
 
-noncomputable def decider {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
+theorem decider {F : ModularFamily} (a : ModularAccess F) (ha : a.bits.ControlsPolyTime)
     (L : SpaceFunction a.bits.leftCoefficient) (R : SpaceFunction a.bits.rightCoefficient) :
     SpaceDecider F.zeroLanguage :=
   BerkowitzPolynomial.ModularAccess.decider a.determinant (determinant_controls a ha) (entryEvaluator a ha L R)

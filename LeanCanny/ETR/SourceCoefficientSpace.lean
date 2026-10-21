@@ -37,7 +37,7 @@ theorem source_mem_FP : source ∈ FP := by
 theorem target_mem_FP : target ∈ FP := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
 
 noncomputable def value : List Bool → List Bool := CollectedCoefficient.value source target pairSnd
-noncomputable def evaluator : SpaceFunction value := by
+theorem evaluator : SpaceFunction value := by
   have E := CollectedCoefficient.evaluator source target pairSnd source_mem_FP target_mem_FP pairSnd_mem_FP
   exact E
 

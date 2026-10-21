@@ -9,7 +9,7 @@ public import LeanCanny.ETR.TubeDeformationCoefficientMap
 /-! # Costed affine determinant evaluation from the actual tube source
 
 The original entry evaluator is assembled from the compiled tube row reader
-and the two-parameter coefficient encoding. Its suspended source costs then
+and the two-parameter coefficient encoding. Its space-bounded source costs then
 feed the affine deformation controller and the complete determinant backend.
 -/
 
@@ -25,7 +25,7 @@ attribute [local irreducible] PolynomialAffineEntryBits.value BerkowitzAffinePol
 attribute [local irreducible] Macaulay.matrix Matrix.det
 attribute [local irreducible] TubeIndexed.degreeBound TubeParameter.spatialCount TubeCleared.matrixWidth
 
-noncomputable def originalEntryEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem originalEntryEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceFunction (originalAccess source active modulus inner middle n d ell D.bounds).entry := by
@@ -41,9 +41,7 @@ noncomputable def originalEntryEvaluator {source active modulus inner middle : L
   change SpaceFunction a.encoded.determinant.entry
   exact EE
 
-attribute [local irreducible] originalEntryEvaluator
-
-noncomputable def familyEvaluator {source active modulus inner middle : List Bool → List Bool}
+theorem familyEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
     SpaceFunction (modularFamily source active modulus inner middle outer n d ell D.bounds).value := by
@@ -69,9 +67,9 @@ noncomputable def modularValue (source active modulus inner middle outer : List 
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) : List Bool :=
   IntegerBits.coefficientResidue (coefficient source active inner middle outer n d ell c) (Nat.fromBitsLE (modulus c) + 1)
 
-attribute [local irreducible] coefficient familyEvaluator
+attribute [local irreducible] coefficient
 
-noncomputable def evaluator {source active modulus inner middle : List Bool → List Bool}
+theorem evaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
     SpaceFunction (modularValue source active modulus inner middle outer n d ell) := by

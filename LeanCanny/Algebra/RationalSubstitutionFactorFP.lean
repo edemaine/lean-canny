@@ -59,7 +59,7 @@ theorem numeratorSelected_mem_FP {width exponent : List Bool → List Bool} (hw 
   have hx := mem_FP_comp (exponentQuery_mem_FP hw) he
   exact (BinaryNat.lt_fppred (position_mem_FP hw) hx).flag_mem_FP
 
-noncomputable def evaluator {n d : List Bool → List Bool} (N : SpaceFunction n) (D : SpaceFunction d)
+theorem evaluator {n d : List Bool → List Bool} (N : SpaceFunction n) (D : SpaceFunction d)
     (width exponent : List Bool → List Bool) (hw : width ∈ FP) (he : exponent ∈ FP) :
     SpaceFunction (value width exponent n d) := by
   let Q := SpaceFunction.branch (numeratorSelected width exponent) (numeratorSelected_mem_FP hw he)

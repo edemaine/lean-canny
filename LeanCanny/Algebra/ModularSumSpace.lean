@@ -8,12 +8,12 @@ public import LeanCanny.Computation.BoundedFoldSpace
 public import LeanCanny.Algebra.MatrixPowerArithmeticFP
 
 /-!
-# A streamed modular sum with suspended summand evaluation
+# A streamed modular sum with space-bounded summand evaluation
 
 FP binary fields specify a count and positive modulus. A certified child returns
 one canonical summand residue at a time. The accumulator is reduced after every
 addition and fits in the modulus word, including for an empty sum and modulus
-one. The full evaluator counts saved parent and child states and the call clock.
+one. Native space iteration composes each child directly.
 -/
 
 @[expose] public section
@@ -42,7 +42,7 @@ theorem finish_mem_FP {modulus : List Bool → List Bool} (hm : modulus ∈ FP) 
   intro z
   simp only [Function.comp_apply, finish]
 
-noncomputable def updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (modulus : List Bool → List Bool) (hm : modulus ∈ FP) : SpaceFunction (update modulus f) := by
   let Q := ((E.precompose query query_mem_FP).withInput).postcompose (finish modulus) (finish_mem_FP hm)
   refine Q.congr (funext fun p => ?_)
@@ -66,7 +66,7 @@ theorem fold_eq_sum (modulus f : List Bool → List Bool) (c : List Bool) (N : �
   | succ k ih =>
     rw [BoundedFold.fold, ih (by omega), update_packet modulus f c k hm _ _ (hf k (by omega)), Finset.sum_range_succ]
 
-noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count modulus : List Bool → List Bool) (hc : count ∈ FP) (hm : modulus ∈ FP)
     (a : (c : List Bool) → ℕ → ZMod (Nat.fromBitsLE (modulus c)))
     (hpos : ∀ c, 0 < Nat.fromBitsLE (modulus c))
@@ -86,7 +86,7 @@ noncomputable def evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
   let Q := BoundedFold.evaluator (updateEvaluator E modulus hm) count (fun _ => []) hc (constFn_mem_FP []) p hstate
   exact Q.congr (funext fun c => fold_eq_sum modulus f c _ (a c) (hpos c) (hf c) _ le_rfl)
 
-noncomputable def evaluatorWithModulus {f : List Bool → List Bool} (E : SpaceFunction f)
+theorem evaluatorWithModulus {f : List Bool → List Bool} (E : SpaceFunction f)
     (count modulus : List Bool → List Bool) (hc : count ∈ FP) (hm : modulus ∈ FP)
     (m : List Bool → ℕ) (hvalue : (fun c => Nat.fromBitsLE (modulus c)) = m)
     (a : (c : List Bool) → ℕ → ZMod (m c)) (hpos : ∀ c, 0 < m c)
