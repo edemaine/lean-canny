@@ -237,7 +237,8 @@ import LeanCanny.Algebra.PrimitivePairBounds
 import LeanCanny.Algebra.PrimitivePairSelected
 import LeanCanny.Algebra.SquarefreePartDegreeSpace
 import LeanCanny.Algebra.ScaledSquarefreeBounds
-import LeanCanny.Algebra.PreprocessedPair
+import LeanCanny.Algebra.PreprocessedPairReusable
+import LeanCanny.Algebra.PreprocessedPairCoordinateBounds
 import LeanCanny.Algebra.CannyCoefficientRank
 import LeanCanny.Algebra.CannyCoefficientDigits
 import LeanCanny.Algebra.InfinitesimalResidueSpace

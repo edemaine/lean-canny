@@ -3913,6 +3913,33 @@ roots of the original input polynomials with a nonzero denominator. This covers
 two arbitrary nonzero integer inputs with FP degree/height controls and native
 space coefficient readers; it does not establish a uniform variable-depth fold.
 
+`PreprocessedPairProperties` proves that the selected parameter is nonzero and
+separable over every characteristic-zero field. Its exact degree is the product
+of the two square-free degrees and has a native polynomial-space writer. The
+original degree product bounds this degree, and its square bounds the direction.
+`CannyResultantBudget` proves a monotone coefficient-bit bound in degree,
+direction, and input-height upper bounds. `PreprocessedPairBounds` therefore
+obtains an FP parameter height from the original input controls, independently
+of the space-computed choices. `PolyTimeBinaryNat` exposes native binary-output
+arithmetic for these formulas, including binary size; no unary magnitude is
+constructed.
+
+`PreprocessedPairCoordinateBounds` similarly bounds all coordinate masses by a
+power of two with an FP exponent derived from the original controls. It bounds
+all three coordinate degrees by the original degree product plus two. The mass
+proof uses the full determinant budget to dominate the interior subresultant
+budget and both linear branches, then adds the degree and direction allowances
+for the explicit coordinate numerators.
+
+`ValidatedPolynomialReaders` packages any polynomial family with native space
+coefficient/degree readers and an FP height into the exact FP metadata interface
+on checked contexts. `PreprocessedPairReusable` applies this to the computed
+parameter. Correctly prepared contexts retain that exact parameter, and the
+preparation itself has a native space certificate. Nonzero and separability
+contracts hold even on invalid contexts. The computed pair is consequently a
+valid input for subsequent fixed algebraic stages. Uniform evaluation with an
+input-dependent nesting depth still needs a separate space proof.
+
 Uniform iteration over the actual tube annihilants remains open. The current exact
 finite-system representations still have a qualitative construction; their
 source-size heights, native readers, effective parameter selection, and the

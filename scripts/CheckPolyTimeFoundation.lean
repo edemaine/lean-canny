@@ -2,6 +2,7 @@ import LeanCanny.Computation.PolyTimeIteration
 import LeanCanny.Computation.PolyTimeQuantifiers
 import LeanCanny.Computation.PolyTimeRange
 import LeanCanny.Computation.PolyTimeBinary
+import LeanCanny.Computation.PolyTimeBinaryNat
 import LeanCanny.Computation.PolyTimeArithmetic
 import LeanCanny.Tactic.PolyTime
 import LeanCanny.Encoding.Data
@@ -16,6 +17,9 @@ open LeanCanny
 
 example {f : List Bool → List Bool} : f ∈ LeanCanny.FP ↔
     ComputableTidilyInPolyTime f encBits encBits := Iff.rfl
+
+example {f : List Bool → ℕ} : LeanCanny.BinaryFn f ↔
+    ComputableTidilyInPolyTime f encBits encNat := Iff.rfl
 
 example {f : List Bool → List Bool}
     (hf : ComputableTidilyInPolyTime f encBits encBits) :

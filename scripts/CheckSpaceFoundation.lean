@@ -105,6 +105,26 @@ example (F G : LeanCanny.Algebra.SeparableBits.Family)
       (LeanCanny.Algebra.PreprocessedPair.denominator F G A B hF hG)) encBits encBits :=
   (LeanCanny.Algebra.PreprocessedPair.coordinateEvaluators F G A B hF hG).2.2.computable
 
+example (F G : LeanCanny.Algebra.SeparableBits.Family)
+    (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (B : LeanCanny.Algebra.SeparableBits.Readers G) :
+    ComputableTidilyInPolyTime (LeanCanny.Algebra.PreprocessedPair.outputHeight F G) encBits encNat :=
+  LeanCanny.Algebra.PreprocessedPair.outputHeight_binary F G A B
+
+example (F G : LeanCanny.Algebra.SeparableBits.Family)
+    (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (B : LeanCanny.Algebra.SeparableBits.Readers G) :
+    ComputableTidilyInPolyTime (LeanCanny.Algebra.PreprocessedPair.coordinateHeight F G) encBits encNat :=
+  LeanCanny.Algebra.PreprocessedPair.coordinateHeight_binary F G A B
+
+example (F G : LeanCanny.Algebra.SeparableBits.Family)
+    (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (B : LeanCanny.Algebra.SeparableBits.Readers G)
+    (hF : ∀ c, F.polynomial c ≠ 0) (hG : ∀ c, G.polynomial c ≠ 0) :
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PreprocessedPair.reusableReaders F G A B hF hG).coefficient encBits encBits :=
+  (LeanCanny.Algebra.PreprocessedPair.reusableReaders F G A B hF hG).evaluator.computable
+
 example (S : LeanCanny.Algebra.PrimitivePairBits.Source)
     (A : LeanCanny.Algebra.PrimitivePairBits.Readers S)
     (hdegree : ∀ c, (LeanCanny.Algebra.cannyResultant (S.left c) (S.right c) (S.direction c)).natDegree =
