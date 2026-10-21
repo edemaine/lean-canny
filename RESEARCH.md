@@ -4041,11 +4041,32 @@ readers evaluate the actual common-exponent coordinate composition from four
 native space children. Only upper degree/mass controls for the outer coordinate
 must be FP; no exact FP degree or polynomial-time child assumption is added.
 
+`RecursiveStack.evaluator` now supplies the uniform native recursion machinery.
+One local instruction routine either finishes, continues locally, or saves its
+caller and starts a child. One reply installer resumes the saved caller. Both
+routines may use arbitrary time in polynomial space. A semantic stack invariant
+proves that transitions preserve the requested result. Calls strictly decrease
+rank, while local continuations and installed replies decrease a logical fuel
+measure. With fuel bounded by N, the active frame has weight
+`(fuel+1)*(N+2)^rank`; saved callers have weight `fuel*(N+2)^rank`.
+Every running transition strictly decreases their sum. Starting rank at most R
+therefore gives the binary FP iteration budget `(N+2)^(R+1)` when N is binary FP
+and R is unary FP. This fuel counts logical instructions, independently of the
+execution times of the instruction routine and reply installer.
+
+The strictly decreasing ranks also bound stack depth by R. If every valid frame
+and semantic answer has encoded length at most B, the complete framed state is
+at most `5+4*B+R*(2*B+1)` bits. Polynomial B and unary FP R suffice for the native
+iterator's storage contract. The resulting certificate uses one fixed machine
+at input-dependent recursion depth, rather than a separate certificate at each
+fixed height. Validity may depend on the original input and need not be decidable.
+
 The algebraic filtering theorem still needs specialization to the actual tube
 annihilants and constraints. Uniform native coefficient evaluation at
-input-dependent depth remains open. The native iterator
-requires one step certificate and uniform state/workspace bounds; per-node
-composition leaves those obligations open at variable depth. The current exact
+input-dependent depth remains open. The recursion theorem still needs concrete
+coefficient frames, instruction/reply routines, and proofs of semantic, progress,
+and size contracts for the actual Canny stages. Per-node composition alone does
+not supply these contracts. The current exact
 finite-system representations still have a qualitative construction; their
 source-size heights, native readers, effective parameter selection, and the
 full ETR PSPACE theorem are not established.

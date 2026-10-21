@@ -23,6 +23,27 @@ example : LeanCanny.ExistsReal ⊆ Cslib.Complexity.PSPACE encBits ↔
     LeanCanny.ETR.language ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.existsReal_subset_PSPACE_iff
 
+/-! A single native machine handles input-dependent recursion depth. Neither
+the local instruction computation nor the reply installer needs an FP clock. -/
+example {localStep : List Bool → LeanCanny.Computation.RecursiveStack.Action (List Bool)}
+    {receive : List Bool × List Bool → List Bool} {value : List Bool → List Bool}
+    {rank fuel : List Bool → ℕ} {valid : List Bool → List Bool → Prop}
+    {N R B : List Bool → ℕ}
+    (hl : ComputableTidilyInPolySpace localStep encBits
+      (LeanCanny.Computation.RecursiveStack.encAction encBits))
+    (hr : ComputableTidilyInPolySpace receive (encPair encBits encBits) encBits)
+    (hN : ComputableTidilyInPolyTime N encBits encNat)
+    (hR : ComputableTidilyInPolyTime R encBits encUnary)
+    (hB : PolyBounded List.length B)
+    (rules : ∀ x, LeanCanny.Computation.RecursiveStack.Rules localStep receive value rank fuel (valid x) (N x))
+    (hstart : ∀ x, valid x x)
+    (hrank : ∀ x p, valid x p → rank p ≤ R x)
+    (hframe : ∀ x p, valid x p → p.length ≤ B x)
+    (hvalue : ∀ x p, valid x p → (value p).length ≤ B x) :
+    ComputableTidilyInPolySpace value encBits encBits :=
+  LeanCanny.Computation.RecursiveStack.evaluator hl hr ComputableTidilyInPolySpace.id'
+    hN hR hB rules hstart hrank hframe hvalue
+
 example {F : LeanCanny.Algebra.MatrixPower.ModularFamily}
     (a : LeanCanny.Algebra.MatrixPower.ModularAccess F) (ha : a.ControlsPolyTime)
     (he : ComputableTidilyInPolySpace a.entry encBits encBits) :
