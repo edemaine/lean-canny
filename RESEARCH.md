@@ -3254,12 +3254,54 @@ nonzero common roots, and over an algebraically closed field supplies an
 ideal-power certificate and homogeneous Bezout expressions at every
 sufficiently large degree.
 
-Two algebraic obligations remain for the converse. Absence of nonzero
-common roots must imply ideal membership already at the specific degree
-`1+Σᵢ(dᵢ-1)`, rather than at an unspecified eventual degree. Full rectangular
-matrix surjectivity must also imply nonvanishing of the normalized polynomial
-quotient, including when the selected extraneous determinant is zero.
-The new equivalences do not assume or assert either missing statement.
+The remaining degree obligation for the converse is to prove that absence
+of nonzero common roots implies ideal membership already at the specific
+degree `1+Σᵢ(dᵢ-1)`, rather than at an unspecified eventual degree.
+The matrix-to-quotient implication is now proved as follows.
+
+`MatrixSelectedMinorCross` replaces selected rows to factor an arbitrary
+contraction determinant by the selected multiplication determinant. The
+matrix determinant lemma identifies the same determinant with an arbitrary
+selector determinant times the complementary relation determinant. The
+domain version passes through the coefficient fraction field and injects
+the equality back. `MacaulayMinorCross` applies this identity to the actual
+division relations. Factoring their determinant as the extraneous factor
+times the higher relation factor gives a polynomial cross identity for
+every full Macaulay maximal minor.
+
+`MacaulayHigherDenominators` proves that each higher relation factor omits
+the last input polynomial: its diagonal relation blocks agree with
+extraneous submatrices. The factor specializes to one at coordinate powers.
+`MacaulayFullPermutation` transports arbitrary full-matrix row selectors
+across simultaneous input and spatial orderings and preserves their maximal
+minors. The higher factors therefore form a normalized denominator family
+omitting every coefficient group in turn.
+
+`MacaulayMaximalMinors` proves `MacaulayUniversal.integerQuotient_dvd_fullMinor`
+using the existing UFD denominator-cancellation theorem on the fraction of a maximal minor by the
+normalized integer quotient. The cross identities give each representation,
+and the omitted groups force this fraction to be a polynomial. Specializing
+the integer coefficient identity proves `polynomialValue_dvd_fullMinor`
+over every commutative ring. No specialized extraneous or higher relation
+factor is assumed nonzero.
+
+`MatrixMaximalMinorSpan` expands the determinant of a rectangular product
+over all full row selectors by multilinearity. Every common divisor of
+the maximal minors divides this determinant. A surjective row map has a
+matrix right section, whose product determinant is one, so that common
+divisor is a unit. `MacaulayQuotientSurjectivity` consequently proves that
+full Macaulay row surjectivity makes the polynomial quotient a unit over
+any commutative ring, and nonzero over every nontrivial ring. Membership
+of every form at the Macaulay level gives the same conclusion through the
+proved ideal-image criterion.
+
+`TubeCharacteristicSurjectivity` supplies the concrete tube specialization:
+surjectivity of the specialized full row map makes the specialized constant
+coefficient of the tube characteristic quotient a unit, without assuming
+that the extraneous determinant survives specialization. The common-root
+converse still needs the sharp degree bound above. Resultant identification,
+geometric persistence, the remaining algorithmic bounds, and full ETR
+polynomial-space membership remain open.
 
 ## TM2 versus Complexitylib's machines
 
