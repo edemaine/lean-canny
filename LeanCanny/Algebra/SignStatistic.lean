@@ -49,12 +49,14 @@ def step (s : State) (a : SignType) : State :=
 
 theorem step_value (s : State) (a : SignType) :
     (step s a).value = s.value + contribution s a := by
+  by_cases ha : a = 0
+  · subst a
+    simp [step, contribution, State.value]
   rcases contribution_values s a with h | h | h
+  · simp [step, ha, h, State.value]
   all_goals
-    by_cases ha : a = 0
-    · subst a
-      simp [step, contribution, State.value]
-    · simp [step, ha, h, State.value] <;> omega
+    simp [step, ha, h, State.value]
+    omega
 
 def run (s : State) (l : List SignType) : State := l.foldl step s
 

@@ -1,0 +1,559 @@
+diff --git a/Complexitylib/Asymptotics.lean b/Complexitylib/Asymptotics.lean
+index a3a00c8..6125ba8 100644
+--- a/Complexitylib/Asymptotics.lean
++++ b/Complexitylib/Asymptotics.lean
+@@ -105,7 +105,7 @@ theorem BigO.add {f₁ f₂ g : ℕ → ℕ} (h₁ : f₁ =O g) (h₂ : f₂ =O
+   show (fun n => ((f₁ n + f₂ n : ℕ) : ℝ)) =O[atTop] _
+   have key := IsBigO.add h₁ h₂
+   convert key using 1
+-  all_goals first | rfl | (ext n; push_cast; ring)
++  all_goals (ext n; push_cast; ring)
+
+ /-- Product of two big-O bounds: `f₁ = O(g₁) → f₂ = O(g₂) → (f₁·f₂) = O(g₁·g₂)`. -/
+ theorem BigO.mul {f₁ f₂ g₁ g₂ : ℕ → ℕ} (h₁ : f₁ =O g₁) (h₂ : f₂ =O g₂) :
+@@ -113,7 +113,7 @@ theorem BigO.mul {f₁ f₂ g₁ g₂ : ℕ → ℕ} (h₁ : f₁ =O g₁) (h₂
+   show (fun n => ((f₁ n * f₂ n : ℕ) : ℝ)) =O[atTop] (fun n => ((g₁ n * g₂ n : ℕ) : ℝ))
+   have key := IsBigO.mul h₁ h₂
+   convert key using 1
+-  all_goals first | rfl | (ext n; push_cast; ring)
++  all_goals (ext n; push_cast; ring)
+
+ /-- Raising both sides of a big-O bound to a fixed natural power preserves
+ big-O. -/
+@@ -160,7 +160,7 @@ theorem LittleO.add {f₁ f₂ g : ℕ → ℕ} (h₁ : f₁ =o g) (h₂ : f₂
+   show (fun n => ((f₁ n + f₂ n : ℕ) : ℝ)) =o[atTop] _
+   have key := IsLittleO.add h₁ h₂
+   convert key using 1
+-  all_goals first | rfl | (ext n; push_cast; ring)
++  all_goals (ext n; push_cast; ring)
+
+ /-- Constant multiple preserves little-o. -/
+ theorem LittleO.const_mul_left (c : ℕ) {f g : ℕ → ℕ} (h : f =o g) :
+@@ -215,7 +215,7 @@ theorem BigO.const_mul_add (c : ℕ) {f₁ f₂ T₁ T₂ : ℕ → ℕ}
+       (fun n => ((T₁ n + T₂ n : ℕ) : ℝ)) := IsBigO.trans ho₂ (le_add_right T₁ T₂)
+   have := IsBigO.add hcf₁ hf₂
+   convert this using 1
+-  all_goals first | rfl | (ext n; push_cast; ring)
++  all_goals (ext n; push_cast; ring)
+
+ -- ════════════════════════════════════════════════════════════════════════
+ -- BigO max and power bounds
+diff --git a/Complexitylib/Classes/P/Cobham/Internal/Cat.lean b/Complexitylib/Classes/P/Cobham/Internal/Cat.lean
+index a402398..07d546e 100644
+--- a/Complexitylib/Classes/P/Cobham/Internal/Cat.lean
++++ b/Complexitylib/Classes/P/Cobham/Internal/Cat.lean
+@@ -110,7 +110,7 @@ def catTM : TM 0 where
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .scanBfalse =>
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+diff --git a/Complexitylib/Classes/P/Cobham/Internal/FstBlock.lean b/Complexitylib/Classes/P/Cobham/Internal/FstBlock.lean
+index 303078e..c37c1ee 100644
+--- a/Complexitylib/Classes/P/Cobham/Internal/FstBlock.lean
++++ b/Complexitylib/Classes/P/Cobham/Internal/FstBlock.lean
+@@ -79,7 +79,7 @@ def fstBlockTM : TM 0 where
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .scanBfalse =>
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+diff --git a/Complexitylib/Classes/P/Cobham/Internal/MulLen.lean b/Complexitylib/Classes/P/Cobham/Internal/MulLen.lean
+index 4bcd4ca..ceea039 100644
+--- a/Complexitylib/Classes/P/Cobham/Internal/MulLen.lean
++++ b/Complexitylib/Classes/P/Cobham/Internal/MulLen.lean
+@@ -191,17 +191,17 @@ def mulLenTM : TM 1 where
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .scanB0 =>
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             by first | exact fun _ _ => rfl | exact fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .scanB1 =>
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             by first | exact fun _ _ => rfl | exact fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .outer =>
+         dsimp only []
+         split
+diff --git a/Complexitylib/Classes/P/Cobham/Internal/Reorder.lean b/Complexitylib/Classes/P/Cobham/Internal/Reorder.lean
+index 2d1f95e..991dc3f 100644
+--- a/Complexitylib/Classes/P/Cobham/Internal/Reorder.lean
++++ b/Complexitylib/Classes/P/Cobham/Internal/Reorder.lean
+@@ -162,7 +162,7 @@ def reorderTM : TM 0 where
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .rdecBf =>
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+diff --git a/Complexitylib/Classes/P/Cobham/Internal/Reverse.lean b/Complexitylib/Classes/P/Cobham/Internal/Reverse.lean
+index 2a309fd..6db9ae2 100644
+--- a/Complexitylib/Classes/P/Cobham/Internal/Reverse.lean
++++ b/Complexitylib/Classes/P/Cobham/Internal/Reverse.lean
+@@ -91,7 +91,7 @@ def reverseTM : TM 1 where
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             by first | exact fun _ _ => rfl | exact fun _ => moveLeftDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .emit =>
+         dsimp only []
+         split
+diff --git a/Complexitylib/Classes/P/Cobham/Internal/Simulate.lean b/Complexitylib/Classes/P/Cobham/Internal/Simulate.lean
+index e0c816e..8b10857 100644
+--- a/Complexitylib/Classes/P/Cobham/Internal/Simulate.lean
++++ b/Complexitylib/Classes/P/Cobham/Internal/Simulate.lean
+@@ -487,7 +487,7 @@ theorem simFn_eq (tm : TM k) {T : ℕ → ℕ} {f : List Bool → List Bool}
+ /-- **The completeness direction, for one machine.** -/
+ theorem computes_mem_CobhamFP (tm : TM k) {T : ℕ → ℕ} {S D : ℕ}
+     (hSD : ∀ n, T n ≤ S * (n + 1) ^ D) {f : List Bool → List Bool}
+-    (hcomp : tm.ComputesInTime f T) : CobhamFP f := by
++    (hcomp : tm.ComputesInTime f T) : f ∈ CobhamFP := by
+   obtain ⟨C, E, hCE⟩ := exists_clock_bound tm hSD
+   obtain ⟨clk, hclk, hclklen⟩ := exists_pow_clock C E
+   have hclk1 : Cobham fun w : Fin 1 → List Bool => clk (fun _ => w 0) :=
+diff --git a/Complexitylib/Classes/P/Cobham/Internal/SndBlock.lean b/Complexitylib/Classes/P/Cobham/Internal/SndBlock.lean
+index f0fcdf2..313fec9 100644
+--- a/Complexitylib/Classes/P/Cobham/Internal/SndBlock.lean
++++ b/Complexitylib/Classes/P/Cobham/Internal/SndBlock.lean
+@@ -88,17 +88,17 @@ def sndBlockTM : TM 0 where
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .scanBfalse =>
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .scanBtrue =>
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .emit =>
+         dsimp only []
+         split
+diff --git a/Complexitylib/Classes/P/Cobham/Internal/TakeLen.lean b/Complexitylib/Classes/P/Cobham/Internal/TakeLen.lean
+index 3dc211c..fdecaff 100644
+--- a/Complexitylib/Classes/P/Cobham/Internal/TakeLen.lean
++++ b/Complexitylib/Classes/P/Cobham/Internal/TakeLen.lean
+@@ -178,17 +178,17 @@ def takeLenTM : TM 1 where
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .scanB0 =>
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             by first | exact fun _ _ => rfl | exact fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .scanB1 =>
+         cases iHead <;>
+           exact ⟨by first | exact fun _ => rfl | exact idleDir_right_of_start,
+             by first | exact fun _ _ => rfl | exact fun _ => idleDir_right_of_start,
+-            by first | exact fun _ => rfl | exact idleDir_right_of_start⟩
++            idleDir_right_of_start⟩
+     | .rew =>
+         dsimp only []
+         split
+diff --git a/Complexitylib/Interop/Cslib/MultiTape/Defs.lean b/Complexitylib/Interop/Cslib/MultiTape/Defs.lean
+index 5744740..3d461b0 100644
+--- a/Complexitylib/Interop/Cslib/MultiTape/Defs.lean
++++ b/Complexitylib/Interop/Cslib/MultiTape/Defs.lean
+@@ -5,9 +5,11 @@ Authors: Samuel Schlesinger
+ -/
+
+ module
+-public import Cslib.Computability.Machines.Turing.MultiTape.Deterministic
++public import Complexity.Computability.Machines.Turing.MultiTape.TapeLemmas
+ public import Complexitylib.Models.TuringMachine
+ public import Mathlib.Data.Fin.VecNotation
++public import Mathlib.Data.Fintype.Sigma
++public import Mathlib.Data.Fintype.Sum
+ public import Mathlib.Tactic.DeriveFintype
+
+ /-!
+@@ -204,9 +206,8 @@ def toMultiTapeTr (tm : TM n) (q : MultiTapeState tm.Q) (i : Option Bool)
+ output tape (`i = n`) each use a data tape and a marker tape, and the last tape
+ counts input-head overshoot. It emits the single bit `true` to accept and
+ `false` to reject. -/
+-def toMultiTape (tm : TM n) : MultiTapeTM (simTapes n) Bool (MultiTapeState tm.Q) where
+-  q₀ := .init
+-  tr := tm.toMultiTapeTr
++def toMultiTape (tm : TM n) : MultiTapeTM (simTapes n) Bool (MultiTapeState tm.Q) :=
++  MultiTapeTM.ofTr .init tm.toMultiTapeTr
+
+ /-- The transition function of the function-computing simulator: the decision
+ simulator's, except that the final state copies the simulated output cell under
+@@ -225,9 +226,8 @@ def toMultiTapeFunTr (tm : TM n) (q : MultiTapeState tm.Q) (i : Option Bool)
+ /-- The CSLib multi-tape machine computing the function `tm` computes: it
+ simulates `tm`, rewinds the simulated output tape, and copies the output string
+ to CSLib's output. -/
+-def toMultiTapeFun (tm : TM n) : MultiTapeTM (simTapes n) Bool (MultiTapeState tm.Q) where
+-  q₀ := .init
+-  tr := tm.toMultiTapeFunTr
++def toMultiTapeFun (tm : TM n) : MultiTapeTM (simTapes n) Bool (MultiTapeState tm.Q) :=
++  MultiTapeTM.ofTr .init tm.toMultiTapeFunTr
+
+ end TM
+
+diff --git a/Complexitylib/Interop/Cslib/MultiTape/Fun.lean b/Complexitylib/Interop/Cslib/MultiTape/Fun.lean
+index 43647b7..a6557d3 100644
+--- a/Complexitylib/Interop/Cslib/MultiTape/Fun.lean
++++ b/Complexitylib/Interop/Cslib/MultiTape/Fun.lean
+@@ -41,13 +41,13 @@ variable {n : ℕ} {tm : TM n}
+ /-- Away from the final state, the two simulators take the same step. -/
+ theorem toMultiTapeFun_step_eq {x : List Bool} {d : tm.SimCfg x}
+     (h : d.state ≠ some .verdict) : tm.toMultiTapeFun.step d = tm.toMultiTape.step d := by
+-  unfold MultiTapeTM.step
+-  split
+-  · rfl
+-  · rename_i q hq
++  cases hq : d.state with
++  | none => rw [MultiTapeTM.step_of_halt hq, MultiTapeTM.step_of_halt hq]
++  | some q =>
++    rw [MultiTapeTM.step_of_state hq, MultiTapeTM.step_of_state hq]
+     cases q with
+     | verdict => exact absurd hq h
+-    | _ => rfl
++    | _ => simp only [toMultiTapeFun, toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeFunTr]
+
+ /-- Runs that avoid the final state agree on the two simulators. -/
+ theorem runFrom_toMultiTapeFun {x : List Bool} (d : tm.SimCfg x) (m : ℕ)
+@@ -114,11 +114,11 @@ theorem Dumping.step_some {x : List Bool} {t : Tape} {pre : List Bool} {d : tm.S
+     | some c => cases b <;> cases c <;> simp [Γ.ofCell, Γ.ofBool]
+   rw [step_of_state_eq_some _ h.state]
+   refine ⟨?_, ?_, ?_, ?_⟩
+-  · simp [toMultiTapeFun, toMultiTapeFunTr, hsym]
+-  · simpa [toMultiTapeFun, toMultiTapeFunTr, applyWrite, Dir3.toSign] using
++  · simp [toMultiTapeFun, MultiTapeTM.tr_ofTr, toMultiTapeFunTr, hsym]
++  · simpa [toMultiTapeFun, MultiTapeTM.tr_ofTr, toMultiTapeFunTr, applyWrite, Dir3.toSign] using
+       h.out.move .right (by simp)
+   · simp [Tape.move]
+-  · simp [toMultiTapeFun, toMultiTapeFunTr, hsym, h.output]
++  · simp [toMultiTapeFun, MultiTapeTM.tr_ofTr, toMultiTapeFunTr, hsym, h.output]
+
+ /-- Halting at the first blank output cell. -/
+ theorem Dumping.step_none {x : List Bool} {t : Tape} {pre : List Bool} {d : tm.SimCfg x}
+@@ -132,8 +132,8 @@ theorem Dumping.step_none {x : List Bool} {t : Tape} {pre : List Bool} {d : tm.S
+     | none => simp
+     | some c => cases c <;> simp [Γ.ofCell, Γ.ofBool]
+   rw [step_of_state_eq_some _ h.state]
+-  exact ⟨by simp [toMultiTapeFun, toMultiTapeFunTr, hsym],
+-    by simp [toMultiTapeFun, toMultiTapeFunTr, hsym, h.output]⟩
++  exact ⟨by simp [toMultiTapeFun, MultiTapeTM.tr_ofTr, toMultiTapeFunTr, hsym],
++    by simp [toMultiTapeFun, MultiTapeTM.tr_ofTr, toMultiTapeFunTr, hsym, h.output]⟩
+
+ /-- The copy phase emits the output string `y` found from the head onward and
+ halts after `|y| + 1` steps. -/
+@@ -194,7 +194,7 @@ theorem toMultiTapeFun_computesFun {f : List Bool → List Bool} {T : ℕ →
+     apply runFrom_toMultiTapeFun
+     intro j hj
+     rcases j with _ | j
+-    · simp [MultiTapeTM.runFrom, MultiTapeTM.initCfg, Turing.Cfg.init, toMultiTape]
++    · simp [MultiTapeTM.runFrom, MultiTapeNTM.initCfg, Turing.Cfg.init, toMultiTape]
+     by_cases hjt : j ≤ t
+     · obtain ⟨cj, z', -, hs⟩ := (multiTapeSim_init tm x).reachesIn_prefix hreach j hjt
+       rw [MultiTapeTM.runFrom, Function.iterate_succ_apply, ← MultiTapeTM.runFrom, hs.state]
+@@ -216,12 +216,17 @@ theorem toMultiTapeFun_computesFun {f : List Bool → List Bool} {T : ℕ →
+     simp only [MultiTapeTM.runFrom]
+     rw [add_comm, Function.iterate_add_apply]
+     rfl
+-  refine ⟨1 + t + 1 + (c'.output.head + 1) + ((f x).length + 1), by dsimp only; omega,
+-    tm.toMultiTapeFun.spaceUsed (tm.toMultiTapeFun.initCfg x)
+-      (1 + t + 1 + (c'.output.head + 1) + ((f x).length + 1)),
+-    (MultiTape.spaceUsed_le _ _ _).trans (Nat.mul_le_mul_left (simTapes n) (by omega)), ?_⟩
+-  change tm.toMultiTapeFun.ComputesInTimeAndSpace x (f x) _ _
+-  exact ⟨by rw [htot]; exact hdump.1, by rw [htot, hdump.2]; rfl, rfl⟩
++  exact MultiTape.computesInTimeAndSpace_of_run _
++    (u := 1 + t + 1 + (c'.output.head + 1) + ((f x).length + 1))
++    (by dsimp only; omega)
++    ((MultiTape.spaceUsed_le _ _ _).trans (Nat.mul_le_mul_left (simTapes n) (by omega)))
++    (by
++      change (tm.toMultiTapeFun.runFrom (tm.toMultiTapeFun.initCfg x) _).Halted
++      rw [htot]
++      exact hdump.1) (by
++      change (tm.toMultiTapeFun.runFrom (tm.toMultiTapeFun.initCfg x) _).output = f x
++      rw [htot, hdump.2]
++      rfl)
+
+ end TM
+
+diff --git a/Complexitylib/Interop/Cslib/MultiTape/Internal.lean b/Complexitylib/Interop/Cslib/MultiTape/Internal.lean
+index c160050..8e673b1 100644
+--- a/Complexitylib/Interop/Cslib/MultiTape/Internal.lean
++++ b/Complexitylib/Interop/Cslib/MultiTape/Internal.lean
+@@ -56,8 +56,7 @@ theorem step_of_state_eq_some (M : MultiTapeTM k S Q) {d : Turing.Cfg k S Q inpu
+         workTapePos := fun i =>
+           d.workTapePos i + ((M.tr q d.inputSymbol d.workTapeSymbols).workTapes i).2
+         output := d.output ++ (M.tr q d.inputSymbol d.workTapeSymbols).output.toList } := by
+-  obtain ⟨state, inputPos, workTapes, workTapePos, output⟩ := d
+-  cases h
++  rw [MultiTapeTM.step_of_state h]
+   rfl
+
+ /-- The position reached by an input-head move. -/
+@@ -86,14 +85,24 @@ theorem inputSymbol_of_lt (d : Turing.Cfg k S Q input) {p : ℕ}
+ /-- Each work head visits at most `t + 1` cells in `t` steps, so a machine with
+ `k` work tapes uses at most `k * (t + 1)` cells. -/
+ theorem spaceUsed_le (M : MultiTapeTM k S Q) (d : Turing.Cfg k S Q input) (t : ℕ) :
+-    M.spaceUsed d t ≤ k * (t + 1) := by
+-  unfold MultiTapeTM.spaceUsed
++    M.space d t ≤ k * (t + 1) := by
++  unfold MultiTapeTM.space
+   calc ∑ i, M.spaceUsedByTape d t i ≤ ∑ _i : Fin k, (t + 1) :=
+         Finset.sum_le_sum fun i _ => by
+           unfold MultiTapeTM.spaceUsedByTape MultiTapeTM.visitedByTapeHead
+           exact Finset.card_image_le.trans (by simp)
+     _ = k * (t + 1) := by simp
+
++/-- A halted deterministic run supplies the shared time and space certificate. -/
++theorem computesInTimeAndSpace_of_run (M : MultiTapeTM k S Q) {x y : List S} {u t s : ℕ}
++    (ht : u ≤ t) (hs : M.space (M.initCfg x) u ≤ s)
++    (hh : (M.runFrom (M.initCfg x) u).Halted)
++    (hy : (M.runFrom (M.initCfg x) u).output = y) :
++    M.ComputesInTimeAndSpace x y t s :=
++  ⟨⟨u, hh, hy⟩,
++    MultiTapeTM.runsInTime_of_halted (MultiTapeTM.runFrom_eq_of_halt M _ ht hh ▸ hh),
++    MultiTapeTM.runsInSpace_of_halted hh hs⟩
++
+ end MultiTape
+
+ namespace TM
+@@ -325,7 +334,7 @@ theorem MultiTapeSim.step {x : List Bool} {c c' : Cfg n tm.Q} {z : InputZone}
+   have hr := h.simRead
+   have hat := h.atStart
+   rw [step_of_state_eq_some _ h.state]
+-  simp only [toMultiTape, toMultiTapeTr, hq, ite_false, hin, hr, hat, simTape_castSucc,
++  simp only [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hq, ite_false, hin, hr, hat, simTape_castSucc,
+     simTape_last]
+   simp only [TM.step, hq, ite_false, Option.some.injEq] at hstep
+   subst hstep
+@@ -354,16 +363,17 @@ variable (tm) in
+ theorem multiTapeSim_init (x : List Bool) :
+     MultiTapeSim tm x (tm.initCfg x) .left (tm.toMultiTape.step (tm.toMultiTape.initCfg x)) := by
+   rw [step_of_state_eq_some _ (q := .init) rfl]
++  simp only [toMultiTape, MultiTapeTM.tr_ofTr]
+   refine ⟨rfl, rfl, rfl, ?_, ?_, ?_, fun i => ?_, rfl⟩
+-  · simp [toMultiTape, toMultiTapeTr, moveInputPos_val]
+-  · simp [toMultiTape, toMultiTapeTr]
+-  · simpa [toMultiTape, toMultiTapeTr] using applyWrite_markTape
++  · simp [toMultiTapeTr, moveInputPos_val]
++  · simp [toMultiTapeTr]
++  · simpa [toMultiTapeTr] using applyWrite_markTape
+   · induction i using Fin.lastCases <;>
+-      refine ⟨by simp [toMultiTape, toMultiTapeTr], by simp [toMultiTape, toMultiTapeTr],
+-        fun p hp => ?_, by simpa [toMultiTape, toMultiTapeTr] using applyWrite_markTape,
++      refine ⟨by simp [toMultiTapeTr], by simp [toMultiTapeTr],
++        fun p hp => ?_, by simpa [toMultiTapeTr] using applyWrite_markTape,
+         by simpa using Tape.StartInvariant.init_nil⟩ <;>
+       obtain ⟨q, rfl⟩ : ∃ q, p = q + 1 := ⟨p - 1, by omega⟩ <;>
+-      simp [toMultiTape, toMultiTapeTr, Γ.ofCell]
++      simp [toMultiTapeTr, Γ.ofCell]
+
+ /-- A run of our machine is a run of the simulator of the same length. -/
+ theorem MultiTapeSim.reachesIn {x : List Bool} {t : ℕ} {c c' : Cfg n tm.Q}
+@@ -403,9 +413,9 @@ theorem MultiTapeSim.halt {x : List Bool} {c : Cfg n tm.Q} {z : InputZone}
+     Rewinding tm x c.output (tm.toMultiTape.step d) := by
+   rw [step_of_state_eq_some _ h.state]
+   refine ⟨?_, ?_, ?_⟩
+-  · simp [toMultiTape, toMultiTapeTr, hc]
+-  · simpa [toMultiTape, toMultiTapeTr, hc, applyWrite] using h.tapes (Fin.last n)
+-  · simp [toMultiTape, toMultiTapeTr, hc, h.output]
++  · simp [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hc]
++  · simpa [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hc, applyWrite] using h.tapes (Fin.last n)
++  · simp [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hc, h.output]
+
+ theorem Rewinding.step_of_ne_zero {x : List Bool} {t : Tape} {d : tm.SimCfg x}
+     (h : Rewinding tm x t d) (h0 : t.head ≠ 0) :
+@@ -414,10 +424,10 @@ theorem Rewinding.step_of_ne_zero {x : List Bool} {t : Tape} {d : tm.SimCfg x}
+     h0 ((decide_eq_decide.mp h.out.atStart).1 h')
+   rw [step_of_state_eq_some _ h.state]
+   refine ⟨?_, ?_, ?_⟩
+-  · simp [toMultiTape, toMultiTapeTr, hat]
+-  · simpa [toMultiTape, toMultiTapeTr, hat, applyWrite, Dir3.toSign] using
++  · simp [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat]
++  · simpa [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat, applyWrite, Dir3.toSign] using
+       h.out.move .left (fun _ => h0)
+-  · simp [toMultiTape, toMultiTapeTr, h.output]
++  · simp [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, h.output]
+
+ theorem Rewinding.step_of_eq_zero {x : List Bool} {t : Tape} {d : tm.SimCfg x}
+     (h : Rewinding tm x t d) (h0 : t.head = 0) :
+@@ -426,10 +436,10 @@ theorem Rewinding.step_of_eq_zero {x : List Bool} {t : Tape} {d : tm.SimCfg x}
+     (decide_eq_decide.mp h.out.atStart).2 h0
+   rw [step_of_state_eq_some _ h.state]
+   refine ⟨?_, ?_, by simp [Tape.move, h0], ?_⟩
+-  · simp [toMultiTape, toMultiTapeTr, hat]
+-  · simpa [toMultiTape, toMultiTapeTr, hat, applyWrite, Dir3.toSign] using
++  · simp [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat]
++  · simpa [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat, applyWrite, Dir3.toSign] using
+       h.out.move .right (by simp)
+-  · simp [toMultiTape, toMultiTapeTr, h.output]
++  · simp [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, h.output]
+
+ theorem AtVerdict.step {x : List Bool} {t : Tape} {d : tm.SimCfg x}
+     (h : AtVerdict tm x t d) :
+@@ -438,8 +448,9 @@ theorem AtVerdict.step {x : List Bool} {t : Tape} {d : tm.SimCfg x}
+   have hr : simRead d.workTapeSymbols (Fin.last n) = t.cells 1 :=
+     h.out.read.trans (by rw [Tape.read, h.head])
+   rw [step_of_state_eq_some _ h.state]
++  simp only [toMultiTape, MultiTapeTM.tr_ofTr]
+   refine ⟨rfl, ?_⟩
+-  simp only [toMultiTape, toMultiTapeTr, hr, h.output, List.nil_append]
++  simp only [toMultiTapeTr, hr, h.output, List.nil_append]
+   rfl
+
+ /-- The rewind phase from output-head position `m` halts after `m + 2` more
+@@ -500,12 +511,15 @@ theorem toMultiTape_computesFun {L : Language} {f : ℕ → ℕ} (hdec : tm.Deci
+       ← Function.iterate_add_apply]
+     congr 1
+     omega
+-  refine ⟨1 + t + 1 + (c'.output.head + 2), by dsimp only; omega,
+-    tm.toMultiTape.spaceUsed (tm.toMultiTape.initCfg x) (1 + t + 1 + (c'.output.head + 2)),
+-    (MultiTape.spaceUsed_le _ _ _).trans (Nat.mul_le_mul_left (simTapes n)
+-      (show 1 + t + 1 + (c'.output.head + 2) + 1 ≤ 2 * f x.length + 5 by omega)), ?_⟩
+-  change tm.toMultiTape.ComputesInTimeAndSpace x (verdictEmb (MultiTapeTM.indicator L x)) _ _
+-  refine ⟨by rw [hsplit]; exact hrun.1, ?_, rfl⟩
++  refine MultiTape.computesInTimeAndSpace_of_run _ (u := 1 + t + 1 + (c'.output.head + 2))
++    (by dsimp only; omega)
++    ((MultiTape.spaceUsed_le _ _ _).trans (Nat.mul_le_mul_left (simTapes n)
++      (show 1 + t + 1 + (c'.output.head + 2) + 1 ≤ 2 * f x.length + 5 by omega)))
++    (by
++      change (tm.toMultiTape.runFrom (tm.toMultiTape.initCfg x) _).Halted
++      rw [hsplit]
++      exact hrun.1) ?_
++  change (tm.toMultiTape.runFrom (tm.toMultiTape.initCfg x) _).output = _
+   rw [hsplit, hrun.2]
+   simp only [verdictEmb, MultiTapeTM.indicator]
+   by_cases hx : x ∈ L
+diff --git a/Complexitylib/Interop/Cslib/MultiTape/Space.lean b/Complexitylib/Interop/Cslib/MultiTape/Space.lean
+index 4121e3c..50fb493 100644
+--- a/Complexitylib/Interop/Cslib/MultiTape/Space.lean
++++ b/Complexitylib/Interop/Cslib/MultiTape/Space.lean
+@@ -40,8 +40,8 @@ variable {k : ℕ} {S Q : Type*} {input : List S}
+ /-- If every work head stays in `[0, B]` for the first `t` steps, the run uses
+ at most `k (B + 1)` cells. -/
+ theorem spaceUsed_le_of_posBound (M : MultiTapeTM k S Q) (d : Turing.Cfg k S Q input)
+-    (t B : ℕ) (h : ∀ m ≤ t, PosBound B (M.runFrom d m)) : M.spaceUsed d t ≤ k * (B + 1) := by
+-  unfold MultiTapeTM.spaceUsed
++    (t B : ℕ) (h : ∀ m ≤ t, PosBound B (M.runFrom d m)) : M.space d t ≤ k * (B + 1) := by
++  unfold MultiTapeTM.space
+   calc ∑ i, M.spaceUsedByTape d t i ≤ ∑ _i : Fin k, (B + 1) :=
+         Finset.sum_le_sum fun i _ => by
+           unfold MultiTapeTM.spaceUsedByTape MultiTapeTM.visitedByTapeHead
+@@ -124,14 +124,14 @@ theorem MultiTapeSim.halt_workTapePos {x : List Bool} {c : Cfg n tm.Q} {z : Inpu
+     (tm.toMultiTape.step d).workTapePos = d.workTapePos := by
+   rw [step_of_state_eq_some _ h.state]
+   funext i
+-  simp [toMultiTape, toMultiTapeTr, hc]
++  simp [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hc]
+
+ /-- The verdict step moves no head. -/
+ theorem AtVerdict.workTapePos_step {x : List Bool} {t : Tape} {d : tm.SimCfg x}
+     (h : AtVerdict tm x t d) : (tm.toMultiTape.step d).workTapePos = d.workTapePos := by
+   rw [step_of_state_eq_some _ h.state]
+   funext i
+-  simp [toMultiTape, toMultiTapeTr]
++  simp [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr]
+
+ /-- A rewind step keeps every CSLib head in `[0, B]` when `1 ≤ B`. -/
+ theorem Rewinding.posBound_step {x : List Bool} {t : Tape} {d : tm.SimCfg x} {B : ℕ}
+@@ -149,37 +149,37 @@ theorem Rewinding.posBound_step {x : List Bool} {t : Tape} {d : tm.SimCfg x} {B
+     rcases simIdx_cases i with ⟨j, rfl⟩ | ⟨j, rfl⟩ | rfl
+     · by_cases hj : j = Fin.last n
+       · subst hj
+-        simp only [toMultiTape, toMultiTapeTr, hat, tapeLayout_dataIdx, ite_true]
++        simp only [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat, tapeLayout_dataIdx, ite_true]
+         rw [h.out.pos, h0]
+         simp only [SignType.coe_one]
+         omega
+-      · simpa [toMultiTape, toMultiTapeTr, hat, hj] using hb (dataIdx j)
++      · simpa [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat, hj] using hb (dataIdx j)
+     · by_cases hj : j = Fin.last n
+       · subst hj
+-        simp only [toMultiTape, toMultiTapeTr, hat, tapeLayout_markIdx, ite_true]
++        simp only [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat, tapeLayout_markIdx, ite_true]
+         rw [h.out.mpos, h0]
+         simp only [SignType.coe_one]
+         omega
+-      · simpa [toMultiTape, toMultiTapeTr, hat, hj] using hb (markIdx j)
+-    · simpa [toMultiTape, toMultiTapeTr] using hb overIdx
++      · simpa [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat, hj] using hb (markIdx j)
++    · simpa [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr] using hb overIdx
+   · have hat : d.workTapeSymbols (markIdx (Fin.last n)) ≠ some true := fun h' =>
+       h0 ((decide_eq_decide.mp h.out.atStart).1 h')
+     rcases simIdx_cases i with ⟨j, rfl⟩ | ⟨j, rfl⟩ | rfl
+     · by_cases hj : j = Fin.last n
+       · subst hj
+-        simp only [toMultiTape, toMultiTapeTr, hat, tapeLayout_dataIdx, ite_true, ite_false]
++        simp only [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat, tapeLayout_dataIdx, ite_true, ite_false]
+         rw [h.out.pos]
+         simp only [SignType.coe_neg_one]
+         omega
+-      · simpa [toMultiTape, toMultiTapeTr, hat, hj] using hb (dataIdx j)
++      · simpa [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat, hj] using hb (dataIdx j)
+     · by_cases hj : j = Fin.last n
+       · subst hj
+-        simp only [toMultiTape, toMultiTapeTr, hat, tapeLayout_markIdx, ite_true, ite_false]
++        simp only [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat, tapeLayout_markIdx, ite_true, ite_false]
+         rw [h.out.mpos]
+         simp only [SignType.coe_neg_one]
+         omega
+-      · simpa [toMultiTape, toMultiTapeTr, hat, hj] using hb (markIdx j)
+-    · simpa [toMultiTape, toMultiTapeTr] using hb overIdx
++      · simpa [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr, hat, hj] using hb (markIdx j)
++    · simpa [toMultiTape, MultiTapeTM.tr_ofTr, toMultiTapeTr] using hb overIdx
+
+ /-- The whole rewind phase from output-head position `m` keeps every CSLib head
+ in `[0, B]` when `1 ≤ B`. -/
+@@ -236,7 +236,7 @@ theorem toMultiTape_computesFun_space {L : Language} {T S : ℕ → ℕ}
+     intro m hm
+     rcases m with _ | m
+     · intro i
+-      simp [MultiTapeTM.runFrom, MultiTapeTM.initCfg, Turing.Cfg.init]
++      simp [MultiTapeTM.runFrom, MultiTapeNTM.initCfg, Turing.Cfg.init]
+       omega
+     rw [MultiTapeTM.runFrom, Function.iterate_succ_apply, ← MultiTapeTM.runFrom]
+     by_cases hmt : m ≤ t
+@@ -254,11 +254,13 @@ theorem toMultiTape_computesFun_space {L : Language} {T S : ℕ → ℕ}
+         (fun i => ?_) s (by omega)
+       rw [hsim.halt_workTapePos hhalt]
+       exact hb i
+-  refine ⟨1 + t + 1 + (c'.output.head + 2), by dsimp only; omega,
+-    tm.toMultiTape.spaceUsed (tm.toMultiTape.initCfg x) (1 + t + 1 + (c'.output.head + 2)),
+-    spaceUsed_le_of_posBound _ _ _ _ hspace, ?_⟩
+-  change tm.toMultiTape.ComputesInTimeAndSpace x (verdictEmb (MultiTapeTM.indicator L x)) _ _
+-  refine ⟨by rw [hsplit]; exact hrun.1, ?_, rfl⟩
++  refine MultiTape.computesInTimeAndSpace_of_run _ (u := 1 + t + 1 + (c'.output.head + 2))
++    (by dsimp only; omega) (spaceUsed_le_of_posBound _ _ _ _ hspace)
++    (by
++      change (tm.toMultiTape.runFrom (tm.toMultiTape.initCfg x) _).Halted
++      rw [hsplit]
++      exact hrun.1) ?_
++  change (tm.toMultiTape.runFrom (tm.toMultiTape.initCfg x) _).output = _
+   rw [hsplit, hrun.2]
+   simp only [verdictEmb, MultiTapeTM.indicator]
+   by_cases hx : x ∈ L

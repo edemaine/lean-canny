@@ -46,8 +46,8 @@ theorem splitProjection_apply (v : Coordinate ι → ℝ)
 def activeCriticalSet (p : MvPolynomial ι ℤ) (s : Finset (PolynomialPerturbation.Constraint ι))
     (epsilon delta : ℝ) (v : Coordinate ι → ℝ) :
     Set ((ι → ℝ) × (PolynomialPerturbation.Constraint ι → ℝ)) :=
-  IsolatedCriticalMaximum.criticalFiber
-    (ActiveRadius.fixedMap (PolynomialPerturbation.constraintMap p epsilon) s delta) (splitProjection v) 0
+  {z | z ∈ IsolatedCriticalMaximum.criticalFiber
+    (ActiveRadius.fixedMap (PolynomialPerturbation.constraintMap p epsilon) s delta) (splitProjection v) 0}
 
 def FiniteActiveCriticalSets (p : MvPolynomial ι ℤ) (epsilon delta : ℝ) (v : Coordinate ι → ℝ) : Prop :=
   ∀ s : Finset (PolynomialPerturbation.Constraint ι), (activeCriticalSet p s epsilon delta v).Finite

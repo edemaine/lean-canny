@@ -85,9 +85,7 @@ theorem run_spec (bits : List Bool) : PartialBody bits (run bits) := by
           rw [run_cons, hs]
           cases phase <;> cases b <;>
             simp only [PartialBody, advance, pending] at hi ⊢
-          all_goals first
-            | trivial
-            | rw [hi]; simp [Codec.bit, Data.toBits_l]
+          all_goals rw [hi]; simp [Codec.bit, Data.toBits_l]
 
 theorem body_of_ready (bits : List Bool) (h : (run bits).phase = .ready) :
     bits = body (run bits).output := by

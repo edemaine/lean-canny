@@ -51,14 +51,14 @@ theorem contDiff_eval (p : MvPolynomial ι ℤ) :
   induction p using MvPolynomial.induction_on with
   | C c => simpa only [MvPolynomial.eval₂_C, Int.coe_castRingHom] using (contDiff_const (c := (c : ℝ)))
   | add p q hp hq => simpa only [MvPolynomial.eval₂_add] using hp.add hq
-  | mul_X p i hp => simpa only [MvPolynomial.eval₂_mul, MvPolynomial.eval₂_X] using hp.mul (contDiff_apply ℝ ℝ i)
+  | mul_X p i hp => simpa only [MvPolynomial.eval₂_mul, MvPolynomial.eval₂_X] using hp.mul (contDiff_apply ℝ (fun _ : ι => ℝ) i)
 
 theorem contDiff_value (p : MvPolynomial ι ℤ) (epsilon : ℝ) (i : Constraint ι) : ContDiff ℝ ⊤ (value p epsilon i) := by
   rcases i with b | ⟨j, b⟩ <;> cases b
   · exact contDiff_eval p
   · exact (contDiff_eval p).neg
-  · exact ((contDiff_apply ℝ ℝ j).add contDiff_const).sub contDiff_const
-  · exact (contDiff_const.sub contDiff_const).sub (contDiff_apply ℝ ℝ j)
+  · exact ((contDiff_apply ℝ (fun _ : ι => ℝ) j).add contDiff_const).sub contDiff_const
+  · exact (contDiff_const.sub contDiff_const).sub (contDiff_apply ℝ (fun _ : ι => ℝ) j)
 
 noncomputable def constraintMap (p : MvPolynomial ι ℤ) (epsilon : ℝ) (y : ι → ℝ) : Constraint ι → ℝ :=
   fun i => value p epsilon i y

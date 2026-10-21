@@ -47,7 +47,7 @@ theorem regularChart_contDiff (bits : List Bool) (i : Fin (TubeParameter.spatial
     ContDiff K 1 (fun a : RegularChart bits K => regularChart bits a i) := by
   refine Fin.cases ?_ (fun j => ?_) i
   · exact contDiff_const
-  · exact (contDiff_apply K K j).comp contDiff_snd
+  · exact (contDiff_apply K (fun _ => K) j).comp contDiff_snd
 
 theorem regularChart_nonzero (bits : List Bool) (a : RegularChart bits K) : ∃ j, regularChart bits a j ≠ 0 := by
   refine ⟨⟨0, by unfold TubeParameter.spatialCount; omega⟩, ?_⟩

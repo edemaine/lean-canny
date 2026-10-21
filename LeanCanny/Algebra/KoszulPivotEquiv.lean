@@ -86,27 +86,27 @@ theorem pivotBasis_apply (d : Fin n → ℕ) (W k : ℕ)
     (a : {a : CanonicalIndex d (Macaulay.level d) W k // HasPivot d W k a}) :
     (pivotBasis (R := R) d W k a : space (R := R) d (Macaulay.level d) W k) =
       canonicalBasis (R := R) d (Macaulay.level d) W k a.val :=
-  monomialSubsetBasis_apply d W k _ a
+  monomialSubsetBasis_apply (R := R) d W k {a | HasPivot d W k a} a
 
 theorem nonpivotBasis_apply (d : Fin n → ℕ) (W k : ℕ)
     (a : {a : CanonicalIndex d (Macaulay.level d) W k // ¬HasPivot d W k a}) :
     (nonpivotBasis (R := R) d W k a : space (R := R) d (Macaulay.level d) W k) =
       canonicalBasis (R := R) d (Macaulay.level d) W k a.val :=
-  monomialSubsetBasis_apply d W k _ a
+  monomialSubsetBasis_apply (R := R) d W k {a | ¬HasPivot d W k a} a
 
 theorem pivotBasis_repr (d : Fin n → ℕ) (W k : ℕ)
     (x : pivotSpan (R := R) d W k)
     (a : {a : CanonicalIndex d (Macaulay.level d) W k // HasPivot d W k a}) :
     (pivotBasis (R := R) d W k).repr x a =
       (canonicalBasis (R := R) d (Macaulay.level d) W k).repr x.val a.val :=
-  monomialSubsetBasis_repr d W k _ x a
+  monomialSubsetBasis_repr (R := R) d W k {a | HasPivot d W k a} x a
 
 theorem nonpivotBasis_repr (d : Fin n → ℕ) (W k : ℕ)
     (x : nonpivotSpan (R := R) d W k)
     (a : {a : CanonicalIndex d (Macaulay.level d) W k // ¬HasPivot d W k a}) :
     (nonpivotBasis (R := R) d W k).repr x a =
       (canonicalBasis (R := R) d (Macaulay.level d) W k).repr x.val a.val :=
-  monomialSubsetBasis_repr d W k _ x a
+  monomialSubsetBasis_repr (R := R) d W k {a | ¬HasPivot d W k a} x a
 
 theorem nonpivotProjection_repr (d : Fin n → ℕ) (W k : ℕ)
     (x : space (R := R) d (Macaulay.level d) W k)

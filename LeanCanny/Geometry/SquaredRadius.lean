@@ -36,7 +36,7 @@ theorem hasFDerivAt (a : I → ℝ) : HasFDerivAt value (derivative a) a := by
     (hasFDerivAt_apply (𝕜 := ℝ) i a).pow 2
 
 theorem contDiff : ContDiff ℝ ⊤ (value (I := I)) :=
-  ContDiff.sum (fun i _ => (contDiff_apply ℝ ℝ i).pow 2)
+  ContDiff.sum (fun i _ => (contDiff_apply ℝ (fun _ => ℝ) i).pow 2)
 
 theorem differentiable : Differentiable ℝ (value (I := I)) := contDiff.differentiable (by simp)
 

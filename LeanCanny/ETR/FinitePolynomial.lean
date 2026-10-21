@@ -54,7 +54,7 @@ noncomputable def compactPolynomial (t : Term) : MvPolynomial (Fin t.arity) ℤ 
   Geometry.CubePolynomial.cleared (finitePolynomial t.arity t)
 
 def compactZeroSet (t : Term) (epsilon : ℝ) : Set (Fin t.arity → ℝ) :=
-  Geometry.CubePolynomial.zeroSet (finitePolynomial t.arity t) epsilon
+  {y | y ∈ Geometry.CubePolynomial.zeroSet (finitePolynomial t.arity t) epsilon}
 
 theorem isCompact_compactZeroSet (t : Term) (epsilon : ℝ) : IsCompact (compactZeroSet t epsilon) :=
   Geometry.CubePolynomial.isCompact_zeroSet _ _

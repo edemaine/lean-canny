@@ -56,7 +56,8 @@ theorem degree_le_code (bits : List Bool) : (polynomial bits).totalDegree ≤ Na
   simp only [degreeCode, BinaryNatCode.encode, Nat.fromBitsLE_bits, size_eq]
   exact (term bits).compactPolynomial_degree_size
 
-def feasible (bits : List Bool) (epsilon : ℝ) : Set (Fin (term bits).arity → ℝ) := (term bits).compactZeroSet epsilon
+def feasible (bits : List Bool) (epsilon : ℝ) : Set (Fin (term bits).arity → ℝ) :=
+  {y | y ∈ (term bits).compactZeroSet epsilon}
 
 theorem isCompact_feasible (bits : List Bool) (epsilon : ℝ) : IsCompact (feasible bits epsilon) :=
   (term bits).isCompact_compactZeroSet epsilon

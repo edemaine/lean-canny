@@ -246,7 +246,9 @@ theorem homotopyRangeBasis_apply (d : Fin n → ℕ) (W : ℕ)
     (a : {a : CanonicalIndex d (Macaulay.level d) W (k + 1) // HasPivot d W (k + 1) a}) :
     (homotopyRangeBasis (R := R) d W hW k a : space (R := R) d (Macaulay.level d) W (k + 1)) =
       canonicalBasis (R := R) d (Macaulay.level d) W (k + 1) a.val := by
-  change (pivotBasis (R := R) d W (k + 1) a : space (R := R) d (Macaulay.level d) W (k + 1)) = _
-  exact monomialSubsetBasis_apply d W (k + 1) _ a
+  have h := monomialSubsetBasis_apply (R := R) d W (k + 1)
+    {a | HasPivot d W (k + 1) a} a
+  rw [homotopyRangeBasis, Module.Basis.map_apply, LinearEquiv.coe_ofEq_apply]
+  exact h
 
 end LeanCanny.Algebra.KoszulWeighted

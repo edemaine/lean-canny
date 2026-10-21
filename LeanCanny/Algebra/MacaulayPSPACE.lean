@@ -84,7 +84,7 @@ noncomputable def Family.integer (F : Family) : Berkowitz.IntegerFamily where
     FixedWidthPolynomial.count (F.layout.arity c) (F.layout.width c) * F.coefficientBits c + 1
   determinant_bits := fun c => IntegerModular.det_natAbs_size_le_uniform _ _ (matrix_entry_bound F c)
 
-def Family.zeroLanguage (F : Family) : Language := F.integer.zeroLanguage
+def Family.zeroLanguage (F : Family) : Language := {c | c ∈ F.integer.zeroLanguage}
 
 structure Access (F : Family) where
   bits : List Bool → List Bool

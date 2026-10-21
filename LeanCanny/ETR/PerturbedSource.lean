@@ -29,7 +29,7 @@ abbrev Variable (bits : List Bool) := PolynomialPerturbation.Variable (Fin (Comp
 abbrev Point (bits : List Bool) := (Fin (CompactSource.term bits).arity → ℝ) × (Index bits → ℝ)
 
 def feasible (bits : List Bool) (epsilon delta : ℝ) : Set (Point bits) :=
-  PolynomialPerturbation.perturbed (CompactSource.polynomial bits) epsilon delta
+  {z | z ∈ PolynomialPerturbation.perturbed (CompactSource.polynomial bits) epsilon delta}
 
 theorem unperturbed_eq (bits : List Bool) (epsilon : ℝ) :
     PolynomialPerturbation.feasible (CompactSource.polynomial bits) epsilon = CompactSource.feasible bits epsilon := by
