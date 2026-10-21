@@ -12,8 +12,10 @@ public import LeanCanny.Algebra.DeformationLowestCoefficient
 The candidate is nonzero, with the proved inner-degree allowance. A converging
 family of nonzero homogeneous roots of the actual deformed tube system forces
 the candidate to vanish at the limiting coefficient parameters. The existence
-of such families for isolated original solutions, and the relation to the
-resultant quotient, remain separate obligations.
+of such families at invertible-Jacobian points is proved for the corresponding
+characteristic-shifted system in `TubeCharacteristicRegularPersistence`.
+`TubeCharacteristicLowestSpecialization` transfers effective nonvanishing to
+the polynomial quotient. General singular persistence remains open.
 -/
 
 @[expose] public section

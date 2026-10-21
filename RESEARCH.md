@@ -3387,8 +3387,65 @@ field. Its value at `s` vanishes exactly when the specialized tube equations
 have a nonzero common solution of `pᵢ(x)=s*xᵢ^dᵢ`. Its constant coefficient
 vanishes exactly when the unshifted equations have a nonzero common root.
 No specialized extraneous determinant is assumed nonzero. Identification
-with a separately specified multivariate resultant, the geometric persistence
-arguments, and the remaining full Canny algorithm and space bounds stay open.
+with a separately specified multivariate resultant, general geometric
+persistence, and the remaining full Canny algorithm and space bounds stay open.
+
+## Regular-point persistence for the actual quotient
+
+The GCP report's Theorem 3.2 (printed page 6) uses algebraic component
+dimensions to produce converging deformed solutions on proper components,
+including singular points. The current analytic result covers points with
+invertible square-system Jacobian. Extending it to the report's general
+proper-component statement remains an obligation.
+
+`ImplicitRootPersistence` constructs a continuous local root curve for a
+`C¹` equation `f(s,z)=0` over the reals or complexes when the derivative in
+`z` is invertible at `(0,z₀)`. Applying the existing lowest-coefficient limit
+theorem along punctured neighborhoods of zero forces a polynomial's lowest
+coefficient to vanish whenever that polynomial vanishes on the constructed
+roots. No root curve is supplied as an assumption.
+
+`ParametricPolynomialCalculus` proves smoothness of polynomial evaluation
+when both coefficients and variables depend smoothly on the parameter.
+`MacaulayRegularPersistence` applies the implicit function theorem to the
+explicit equations `pᵢ(x(z))-s*xᵢ(z)^dᵢ`. At `s=0`, their derivative in `z`
+equals the derivative of the unshifted family. The proved common-root
+vanishing theorem applies along the resulting curve, so the normalized
+quotient's lowest characteristic coefficient vanishes at the original
+parameter. A projective chart keeps the roots nonzero throughout.
+
+`TubeCharacteristicRegularPersistence` supplies the concrete tube instance.
+Fix the perturbation value `ε`; the unknowns are the projection parameter
+`u` and the spatial coordinates in the chart `x₀=1`. All coefficient maps
+and coordinate functions are explicit and proved smooth. Invertibility of
+the full square-system Jacobian gives a curve `(u(s),y(s))` through each
+such root. Thus the polynomial obtained from the actual quotient's lowest
+coefficient by specializing `ε` vanishes at `u(0)`. The Jacobian hypothesis
+concerns the entire square system; proving the needed coverage for all
+critical points remains open.
+
+`TubeCharacteristicLowestSpecialization` transfers the existing effective
+nonvanishing interval from the padded affine deformation to this quotient
+coefficient. The lowest full characteristic coefficient equals the lowest
+quotient coefficient times the lowest extraneous coefficient. Nonvanishing
+of its specialization therefore implies nonvanishing of the quotient
+coefficient, without a separate extraneous-value hypothesis. Under the
+existing coordinate-bound and direction-reader contracts, the same FP
+dyadic exponent supplies an explicit positive real perturbation interval.
+Throughout it the projection polynomial is nonzero, and taking the
+quotient's lowest coefficient and order commutes with specialization.
+
+`CharacteristicCoefficientDegree` bounds every characteristic coefficient's
+parameter degree by matrix size times the entry-degree allowance.
+`TubeCharacteristicLowestBounds` applies the projection-entry bound of one.
+The lowest quotient coefficient divides the lowest full characteristic
+coefficient, so its projection degree, before and after specialization,
+is at most the padded Macaulay dimension. In the effective interval, the
+set of projection values of affine roots with invertible full-system
+Jacobian is finite and has cardinality at most that dimension. This
+establishes a bounded nonzero eliminant for those regular roots. Singular
+proper-component persistence, a complete sampling argument, and the full
+ETR polynomial-space theorem remain open.
 
 ## TM2 versus Complexitylib's machines
 

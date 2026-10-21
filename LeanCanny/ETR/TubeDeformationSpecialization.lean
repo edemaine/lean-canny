@@ -14,7 +14,9 @@ Every projection coefficient has a uniform perturbation degree and integer
 coefficient budget. The resulting mass bound gives an FP binary dyadic exponent
 below which the nonzero lowest deformation coefficient stays nonzero after
 perturbation specialization. This controls nonvanishing only; the geometric
-sampling and root-persistence requirements remain separate.
+sampling and root-persistence requirements are addressed separately.
+`TubeCharacteristicLowestSpecialization` transfers this interval to the actual
+quotient coefficient; general singular persistence remains open.
 -/
 
 @[expose] public section
