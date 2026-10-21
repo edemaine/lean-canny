@@ -1626,7 +1626,7 @@ with alpha; all active root sets are finite for each chosen direction, and
 one of them contains a sample with positive inactive constraints. Perturbed
 feasibility is equivalent to this criterion when epsilon is nonnegative and
 delta is positive. `ETR.TubeFiniteSamplingSource.correct` lifts that equivalence
-to every encoded ETR input. Effective finite direction search, root enumeration,
+to every encoded ETR input. Effective tube projection direction search, root enumeration,
 quantitative parameter and annihilator bounds, and the complete PSPACE decision
 procedure are not yet established.
 
@@ -3821,9 +3821,27 @@ magnitudes bounded by H1,H2. The numerator degree allowances are G+1 and G,
 and the common denominator allowance is G. These arithmetic bounds need no
 root or separability hypotheses.
 
-This completes an explicit binary combination step. Certified square-free
-preprocessing, testing/search for bounded separating directions, and uniform
-iteration over the actual tube annihilants remain open. The current exact
+`SeparableResultant` characterizes separability over a characteristic-zero field
+by nonvanishing of the integer derivative resultant, for nonzero inputs including
+constants. `ResultantSpace` and `SeparableSpace` instantiate the native integer
+determinant tester with space-bounded coefficients. Derivative coefficient heights
+and the determinant budget are derived from the source degree and height exponent.
+`CannyResultantHeightSpace` removes the FP-coefficient restriction from the existing
+resultant height writers. `PrimitivePairSeparableSpace` consequently tests the
+actual resultant using only the original two coefficient readers and their bounds.
+
+`PrimitivePairSeparation` proves that the unnormalized resultant is nonzero in
+every direction for split separable inputs, and that its separability is equivalent
+to shear injectivity on the root-pair set. `BoundedChoice` finds a witness with a
+binary counter and a binary accumulator, even when the predicate child has no
+polynomial time bound. `PrimitivePairSearch` applies it to directions from zero
+through `(d1*d2)^2`, proving both native polynomial-space evaluation of the selected
+direction and its separating property. `PrimitivePairSelected` prepares the chosen
+direction as part of the coefficient query context, so downstream metadata stays
+FP without assuming that direction selection is FP.
+
+Certified square-free preprocessing and uniform iteration over the actual tube
+annihilants remain open. The current exact
 finite-system representations still have a qualitative construction; their
 source-size heights, native readers, effective parameter selection, and the
 full ETR PSPACE theorem are not established.

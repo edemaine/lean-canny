@@ -48,6 +48,25 @@ example (S : LeanCanny.Algebra.PrimitivePairBits.Source)
       (fun c => LeanCanny.Algebra.PrimitivePair.leftNumerator (S.left c) (S.right c) (S.direction c))) encBits encBits :=
   (LeanCanny.Algebra.PrimitivePairBits.leftNumeratorEvaluator S A).computable
 
+example (F : LeanCanny.Algebra.SeparableBits.Family)
+    (A : LeanCanny.Algebra.SeparableBits.Readers F) (hne : ∀ c, F.polynomial c ≠ 0) :
+    LeanCanny.Algebra.SeparableBits.language F ∈ Cslib.Complexity.PSPACE encBits :=
+  (LeanCanny.Algebra.SeparableBits.decider F A hne).mem_PSPACE
+
+example {L : Type*} [Field L] [CharZero L]
+    (S : LeanCanny.Algebra.PrimitivePairBits.Source)
+    (A : LeanCanny.Algebra.PrimitivePairBits.Readers S)
+    (H : LeanCanny.Algebra.PrimitivePairBits.Heights S)
+    (hp : ∀ c, ((S.left c).map (Int.castRingHom L)).Separable)
+    (hq : ∀ c, ((S.right c).map (Int.castRingHom L)).Separable)
+    (hsp : ∀ c, ((S.left c).map (Int.castRingHom L)).Splits)
+    (hsq : ∀ c, ((S.right c).map (Int.castRingHom L)).Splits) :
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c =>
+        LeanCanny.Algebra.cannyResultant (S.left c) (S.right c)
+          (LeanCanny.Algebra.PrimitivePairBits.selectedDirection S A c))) encBits encBits :=
+  (LeanCanny.Algebra.PrimitivePairBits.selectedResultantEvaluator S A H hp hq hsp hsq).computable
+
 example (S : LeanCanny.Algebra.PrimitivePairBits.Source)
     (A : LeanCanny.Algebra.PrimitivePairBits.Readers S)
     (hdegree : ∀ c, (LeanCanny.Algebra.cannyResultant (S.left c) (S.right c) (S.direction c)).natDegree =
