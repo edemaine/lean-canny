@@ -53,6 +53,18 @@ example (F : LeanCanny.Algebra.SeparableBits.Family)
     LeanCanny.Algebra.SeparableBits.language F ∈ Cslib.Complexity.PSPACE encBits :=
   (LeanCanny.Algebra.SeparableBits.decider F A hne).mem_PSPACE
 
+example (F : LeanCanny.Algebra.SeparableBits.Family)
+    (A : LeanCanny.Algebra.SeparableBits.Readers F) :
+    ComputableTidilyInPolySpace (fun c => LeanCanny.BinaryNatCode.encode
+      (LeanCanny.Algebra.SquarefreePart.common ((F.polynomial c).map (Int.castRingHom ℚ))).natDegree) encBits encBits :=
+  (LeanCanny.Algebra.SeparableBits.gcdDegreeEvaluator F A).computable
+
+example (F : LeanCanny.Algebra.SeparableBits.Family)
+    (A : LeanCanny.Algebra.SeparableBits.Readers F) (hne : ∀ c, F.polynomial c ≠ 0) :
+    ComputableTidilyInPolySpace (fun c => LeanCanny.BinaryNatCode.encode
+      (LeanCanny.Algebra.SquarefreePart.part ((F.polynomial c).map (Int.castRingHom ℚ))).natDegree) encBits encBits :=
+  (LeanCanny.Algebra.SeparableBits.squarefreeDegreeEvaluator F A hne).computable
+
 example {L : Type*} [Field L] [CharZero L]
     (S : LeanCanny.Algebra.PrimitivePairBits.Source)
     (A : LeanCanny.Algebra.PrimitivePairBits.Readers S)

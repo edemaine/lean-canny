@@ -3840,8 +3840,29 @@ direction and its separating property. `PrimitivePairSelected` prepares the chos
 direction as part of the coefficient query context, so downstream metadata stays
 FP without assuming that direction selection is FP.
 
-Certified square-free preprocessing and uniform iteration over the actual tube
-annihilants remain open. The current exact
+`SubresultantGCDGeneral` extends GCD recovery to every degree: for a nonzero
+right input of smaller degree, principal coefficients below the GCD degree
+vanish, the coefficient at that degree is nonzero, and its full coefficient
+form is associated to the GCD. The coefficient form includes the terminal order,
+where the smaller input divides the larger one; the ordinary strict-index
+subresultant definition alone would return zero there. The proof uses the
+existing Euclidean subresultant identities. `PolynomialGCDData` descends this
+formula to an integer representative of the rational GCD, with exact degree and
+the full Sylvester coefficient-height bound.
+
+`PolynomialGCDDegreeSpace` tests principal coefficients for zero by the native
+modulus scan and visits the orders in reverse. The last successful order gives
+the GCD degree. Its source coefficient readers may take arbitrary time in
+polynomial space. `SquarefreePart` proves that `p/gcd(p,p')` is nonzero and
+separable for nonzero field polynomials and commutes with field embeddings. In
+characteristic zero it preserves the original roots, including roots in
+extension fields. `SquarefreePartDegreeSpace` derives native derivative-GCD and
+quotient degree writers from the original integer coefficient reader; constant
+and zero source inputs are included in the GCD-degree computation.
+
+Native coefficient readers for the GCD representative and the denominator-cleared
+square-free quotient, quotient height bounds, and uniform iteration over the
+actual tube annihilants remain open. The current exact
 finite-system representations still have a qualitative construction; their
 source-size heights, native readers, effective parameter selection, and the
 full ETR PSPACE theorem are not established.

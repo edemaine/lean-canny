@@ -31,6 +31,19 @@ theorem search_le (L : Language) (c : List Bool) (n : ℕ) : search L c n ≤ n 
   | zero => exact le_rfl
   | succ n ih => simp only [search]; split_ifs <;> omega
 
+/-- If `k` is the last successful index below `n`, the scan returns `k+1`. -/
+theorem search_of_last (L : Language) (c : List Bool) (n k : ℕ) (hk : k < n)
+    (hm : pair c (BinaryNatCode.encode k) ∈ L)
+    (hz : ∀ i, k < i → i < n → pair c (BinaryNatCode.encode i) ∉ L) : search L c n = k + 1 := by
+  induction n with
+  | zero => omega
+  | succ n ih =>
+    by_cases he : k = n
+    · subst n
+      rw [search, ite_eq_left hm]
+    · rw [search, ite_eq_right (hz n (by omega) (by omega))]
+      exact ih (by omega) (fun i hi hin => hz i hi (by omega))
+
 theorem search_spec (L : Language) (c : List Bool) (n : ℕ) :
     (search L c n = 0 ∧ ∀ k < n, pair c (BinaryNatCode.encode k) ∉ L) ∨
       (0 < search L c n ∧ search L c n ≤ n ∧
