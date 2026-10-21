@@ -179,6 +179,7 @@ exponential-time-child experiment that motivated this choice.
 | [`ETR.TubeRegularSpatialLift`](LeanCanny/ETR/TubeRegularSpatialLift.lean), [`TubeCompiledAffineLift`](LeanCanny/ETR/TubeCompiledAffineLift.lean), [`TubeLevelRootLift`](LeanCanny/ETR/TubeLevelRootLift.lean) | A nonzero base derivative supplies the reciprocal coordinate; regular real hypersurface projection roots have that nonvanishing. Adding the prescribed linear projection gives actual compiled affine roots, and decoding preserves the original sample coordinates. One common small-level interval works for every active set and added linear projection. No full critical-system Jacobian hypothesis is imposed. |
 | [`ETR.TubeLevelCompiledSampling`](LeanCanny/ETR/TubeLevelCompiledSampling.lean), [`TubeLevelEliminantSampling`](LeanCanny/ETR/TubeLevelEliminantSampling.lean) | ETR is equivalent to stored rational packets with actual compiled samples and positive inactive signs, finite fibers over all real extensions, and nonzero lowest-coefficient eliminants annihilating their projection values. The packet and active mask are fixed; the nonvanishing interval may depend on the added integer linear projection. An explicit dyadic threshold and padded-matrix degree bound also bound all distinct compiled projection values, including singular roots. Source-size parameter bounds, effective selection, and effective coordinate recovery remain open. The qualitative rational-level decoding is supplied below. |
 | [`ETR.TubeFiniteSystemBaseChange`](LeanCanny/ETR/TubeFiniteSystemBaseChange.lean), [`TubeLevelCoordinates`](LeanCanny/ETR/TubeLevelCoordinates.lean) | At every rational level with finite compiled fibers, the actual rational system has an integer univariate representation complete over the reals. Nonzero integer parameter polynomials and rational coordinate formulas, with denominators nonzero at parameter roots, recover every compiled point. ETR is equivalent to these decoded samples with positive inactive signs at sufficiently small rational levels. The representation is existential and may vary with the level and linear projection; its coefficient heights, effective construction, source-size bounds, and relation to the computed lowest-coefficient eliminant remain open. |
+| [`ETR.TubeLevelSignQueries`](LeanCanny/ETR/TubeLevelSignQueries.lean), [`TubeLevelSignSpace`](LeanCanny/ETR/TubeLevelSignSpace.lean) | Positive rational-margin clearing and even coordinate-denominator powers give integer univariate queries for the actual inactive constraints. Active queries are one. A positive finite root-sign count is equivalent to a compiled sample. ETR is equivalent to these positive counts throughout small rational-level intervals. The existing native counter computes this count and decides sample existence under explicit coefficient-reader, degree/mass-budget, and control certificates. Constructing suitably bounded coordinate representations and their coefficient readers from the original input remains open. |
 | [`Algebra.MacaulayExtraneousLast`](LeanCanny/Algebra/MacaulayExtraneousLast.lean), [`MacaulayLastParameter`](LeanCanny/Algebra/MacaulayLastParameter.lean) | No extraneous row uses the last polynomial. If only that input varies with a coefficient parameter `u`, the characteristic quotient is a nonzero polynomial in `u` over `K(s)`. A faithful variable-swap map connects this polynomial to the original determinant quotient. Polynomiality in the characteristic parameter `s` is proved below; resultant identification remains open. |
 | [`Algebra.MacaulayPivotCount`](LeanCanny/Algebra/MacaulayPivotCount.lean), [`MacaulayLastParameterDegree`](LeanCanny/Algebra/MacaulayLastParameterDegree.lean) | Exactly `∏ⱼ≠last dⱼ` active rows use the last input. If its coefficients have parameter degree at most `E` and all other inputs are constant, the quotient polynomial over `K(s)` has degree at most `E*∏ⱼ≠last dⱼ`. The affine family `f_last+u*h` realizes `E=1` and preserves homogeneity when the variation has the specified degree. |
 | [`Algebra.MacaulayMultiplicationMatrix`](LeanCanny/Algebra/MacaulayMultiplicationMatrix.lean) | The full graded rectangular matrix indexes all degree-compatible monomial multiples of every input. An injective row selector recovers the true square Macaulay matrix. Finite coefficient reconstruction identifies row combinations with polynomial multiplication; homogeneous inputs give homogeneous level rows. |
@@ -871,6 +872,22 @@ They are separate existential univariate representations, with no identification
 with the computed lowest-coefficient eliminant. Effective construction,
 coefficient-height bounds in the input size, and the computation's space bound
 remain open.
+[`TubeLevelSignQueries`](LeanCanny/ETR/TubeLevelSignQueries.lean) turns the decoded
+inactive signs into integer univariate queries. It first multiplies the
+constraints by the positive denominator of the stored rational epsilon, then
+clears coordinate denominators using even powers. Active constraints contribute
+one. The count of parameter roots realizing the all-positive pattern is
+positive exactly when a compiled sample exists.
+The theorem `TubeLevelSamplingSource.signCounts_correct` expresses ETR
+correctness using these positive counts at small rational tube levels.
+[`TubeLevelSignSpace`](LeanCanny/ETR/TubeLevelSignSpace.lean) applies the native
+root-sign counter to these actual polynomials: certified coefficient readers
+and binary degree/mass budgets give a count evaluator and a PSPACE sample
+language. Query-count control follows from FP packet access and the source
+arity. The requested pattern is constant. This certifies the final sign stage
+under those contracts; it does not construct the coordinate representations or
+their bounded coefficient readers from an ETR input.
+
 
 [`MvCoefficientMass`](LeanCanny/Algebra/MvCoefficientMass.lean) bounds the sum of
 absolute coefficients under integer multivariate arithmetic, renaming, and
@@ -1081,6 +1098,8 @@ quantitative parameter selection, and the full ETR algorithm remain open.
    streamed eliminants and bound their coefficients. Prove the full coordinate
    computation's space bound, including algebraic parameter values,
    and formalize the remaining parallel/streamed algebra used by the report.
+   The final decoded-sample sign stage has native count and decision certificates
+   under the explicit coefficient-reader and budget contracts.
 4. Prove quantitative sampling bounds and effective parameter selection, implement
    critical-point sampling, and combine the algebraic sign tests into Canny's ETR
    decision procedure; prove `ETR ∈ PSPACE`.

@@ -3620,6 +3620,37 @@ on the full solution count. Effective construction from the streamed
 eliminants, coefficient-height and parameter-size bounds in the original
 input, and the full coordinate computation's space bound remain open.
 
+## Integer sign queries for the decoded tube coordinates
+
+`TubeLevelSignQueries` constructs the actual inactive-constraint polynomials
+in compiled coordinates. The source equation and its negative, the box
+constraints, and their shifts are all multiplied by the positive denominator
+of the packet's rational epsilon. Subtracting its numerator in each box
+constraint accounts exactly for that margin. The resulting integer polynomial
+evaluates to a positive multiple of the original constraint.
+
+Substituting the integer coordinate numerator/denominator pairs and clearing
+with even powers preserves strict positivity at every parameter root. The
+representation guarantees that none of those denominators vanish. Active
+constraints are replaced by the constant polynomial one, leaving a fixed-size
+all-positive pattern over the original finite constraint index. The theorem
+`TubeLevelPacket.sampleRootCount_pos_iff` identifies positive root-sign count
+with actual compiled sample existence.
+`TubeLevelSamplingSource.signCounts_correct` replaces the decoded-root
+conditions in the exact ETR criterion with positivity of these finite counts
+throughout small positive rational-level intervals.
+
+`TubeLevelSignSpace` instantiates the existing native sign-pattern counter with
+these polynomials. Its `Source` records actual packets, rational levels, finite
+fibers, and complete coordinate representations. Its `Budget` requires binary
+degree and coefficient-mass allowances; the generic access interface requires
+native space certificates for parameter/query coefficient residues. FP packet
+access derives the polynomially bounded query count from the source arity.
+The desired pattern has a constant reader. These contracts give the exact
+count evaluator, a sample-existence decider, and PSPACE membership for that
+sample language. They do not provide a construction of the representations,
+original-input bounds, or the required coefficient readers.
+
 ## TM2 versus Complexitylib's machines
 
 The current project uses Complexitylib2's tidy multitape calculus.
