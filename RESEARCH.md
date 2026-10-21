@@ -3162,6 +3162,32 @@ are still unproved. The construction above makes the polynomial and its
 degree/lowest-data interfaces concrete; it does not assert that its roots
 are exactly the parameters of common projective roots.
 
+`MacaulayUniversalQuotient` chooses the unique normalized universal integer
+polynomial and defines its value by coefficient substitution. This value
+commutes with every coefficient homomorphism, factors the actual active
+determinant, and equals one on coordinate powers. The specialized ring
+need not be a domain, and its extraneous determinant may vanish.
+
+`MacaulayQuotientSpecialization` identifies this value on `pᵢ-s*xᵢ^dᵢ`
+with `characteristicQuotient p d W`. Evaluating at any scalar gives the
+universal polynomial value on the corresponding specialized inputs.
+In particular, evaluating the characteristic quotient at zero gives the
+universal value of the original system. Uniqueness of factorization by a
+subtractive characteristic determinant now holds over every commutative
+ring, using its monic characteristic polynomial.
+
+`MacaulayQuotientRoots` proves a first case without a nonzero-extraneous
+hypothesis. Over any domain, a nonzero common root on the last coordinate
+axis annihilates the universal polynomial value. Shift all inputs except
+the last by their coordinate powers: this preserves that root, while the
+extraneous matrix becomes the full subtractive characteristic matrix,
+whose determinant is nonzero. The active determinant vanishes, so the
+deformed quotient is zero; coefficient naturality specializes it back at
+zero. The characteristic quotient consequently vanishes at every parameter
+whose shifted system has such an axis root. A separate helper handles
+arbitrary common roots when the extraneous determinant is nonzero.
+The general projective-root implication and its converse remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned

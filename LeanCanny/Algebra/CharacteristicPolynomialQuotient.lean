@@ -32,18 +32,20 @@ noncomputable def quotientPolynomial (A : Matrix I I R) (E : Matrix J J R) : Pol
 theorem neg_one_pow_square (m : ℕ) : (-1 : R) ^ m * (-1 : R) ^ m = 1 := by
   rw [← pow_add, ← two_mul, pow_mul, neg_one_sq, one_pow]
 
-theorem quotientPolynomial_factorization (A : Matrix I I R) (E : Matrix J J R)
-    (hdiv : (subtractiveMatrix E).det ∣ (subtractiveMatrix A).det) :
-    (subtractiveMatrix A).det = (subtractiveMatrix E).det * quotientPolynomial A E := by
-  obtain ⟨q, hq⟩ := hdiv
+theorem quotientPolynomial_eq_of_factorization (A : Matrix I I R) (E : Matrix J J R) (q : Polynomial R)
+    (hq : (subtractiveMatrix A).det = (subtractiveMatrix E).det * q) : quotientPolynomial A E = q := by
   have hd : (subtractiveMatrix A).det /ₘ E.charpoly = Polynomial.C ((-1 : R) ^ Fintype.card J) * q := by
     rw [hq, subtractive_det_eq_sign_mul_charpoly]
     have hm : (Polynomial.C ((-1 : R) ^ Fintype.card J) * E.charpoly) * q =
         E.charpoly * (Polynomial.C ((-1 : R) ^ Fintype.card J) * q) := by ring
     rw [hm, Polynomial.mul_divByMonic_cancel_left _ E.charpoly_monic]
-  have he : quotientPolynomial A E = q := by
-    rw [quotientPolynomial, hd, ← mul_assoc, ← map_mul, neg_one_pow_square, map_one, one_mul]
-  rw [he]
+  rw [quotientPolynomial, hd, ← mul_assoc, ← map_mul, neg_one_pow_square, map_one, one_mul]
+
+theorem quotientPolynomial_factorization (A : Matrix I I R) (E : Matrix J J R)
+    (hdiv : (subtractiveMatrix E).det ∣ (subtractiveMatrix A).det) :
+    (subtractiveMatrix A).det = (subtractiveMatrix E).det * quotientPolynomial A E := by
+  obtain ⟨q, hq⟩ := hdiv
+  rw [quotientPolynomial_eq_of_factorization A E q hq]
   exact hq
 
 theorem subtractive_det_map (φ : R →+* S) (A : Matrix I I R) :

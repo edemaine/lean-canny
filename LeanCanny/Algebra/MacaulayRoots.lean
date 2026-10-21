@@ -21,7 +21,7 @@ namespace LeanCanny.Algebra.Macaulay
 open MvPolynomial
 open scoped BigOperators Matrix
 
-variable {n : ℕ} {K : Type*} [Field K]
+variable {n : ℕ} {K : Type*} [CommRing K]
 
 theorem eval_fixedWidth (p : MvPolynomial (Fin n) K) (T W : ℕ) (hp : p.totalDegree ≤ T)
     (hW : T < 2 ^ W) (x : Fin n → K) :
@@ -63,6 +63,8 @@ theorem mulVec_evaluation_eq_zero (p : Fin n → MvPolynomial (Fin n) K) (d : Fi
     change ((1 : Matrix (Index n W) (Index n W) K) *ᵥ evaluationVector d W x) r = 0
     rw [Matrix.one_mulVec]
     exact ite_eq_right hr
+
+variable [IsDomain K]
 
 theorem evaluationVector_ne_zero (d : Fin n → ℕ) (W : ℕ) (hW : level d < 2 ^ W)
     (x : Fin n → K) (j : Fin n) (hj : x j ≠ 0) : ∃ r : Index n W, evaluationVector d W x r ≠ 0 := by
