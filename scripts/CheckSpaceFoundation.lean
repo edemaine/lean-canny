@@ -51,6 +51,17 @@ example {S : LeanCanny.ETR.TubeLevelSign.Source}
     LeanCanny.ETR.TubeLevelSign.sampleLanguage S ∈ Cslib.Complexity.PSPACE encBits :=
   B.sampleLanguage_mem_PSPACE hp a ⟨hroot⟩ ⟨hquery⟩
 
+example (packet row target modulus : List Bool → List Bool) (W : List Bool → ℕ)
+    (hp : packet ∈ LeanCanny.FP) (hr : row ∈ LeanCanny.FP) (ht : target ∈ LeanCanny.FP)
+    (hm : modulus ∈ LeanCanny.FP) (hW : LeanCanny.UnaryFn W) :
+    ComputableTidilyInPolySpace
+      (fun c => LeanCanny.Algebra.MatrixPower.residueBits
+        (((LeanCanny.ETR.TubeLevelPacket.integerConstraint (packet c)
+          (LeanCanny.ETR.TubeConstraintCoefficient.decodedRow packet row c)).coeff
+          (LeanCanny.ETR.TubeSampleCoefficient.exponent packet W target c) : ℤ) :
+            ZMod (Nat.fromBitsLE (modulus c) + 1))) encBits encBits :=
+  (LeanCanny.ETR.TubeConstraintCoefficient.encodedEvaluator packet row modulus W target hp hr hm hW ht).computable
+
 #eval "Native PSPACE endpoints and arbitrary native child certificates checked."
 
 /-! The structural class theorems must use native time certificates too. -/

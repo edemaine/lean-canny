@@ -57,6 +57,22 @@ noncomputable def integerConstraint (c : List Bool) (i : PerturbedSource.Index (
     | .inl _ => 0
     | .inr _ => C (marginNumerator c)
 
+theorem integerConstraint_coeff (c : List Bool) (i : PerturbedSource.Index (pairFst c))
+    (e : Fin (TubeParameter.spatialCount (pairFst c)) →₀ ℕ) :
+    (integerConstraint c i).coeff e = (marginDenominator c : ℤ) * (zeroMarginConstraint c i).coeff e -
+      match i with
+      | .inl _ => 0
+      | .inr _ => marginNumerator c * (1 : MvPolynomial (Fin (TubeParameter.spatialCount (pairFst c))) ℤ).coeff e := by
+  unfold integerConstraint
+  rw [AddMonoidAlgebra.coeff_sub, Finsupp.sub_apply, MvPolynomial.coeff_C_mul]
+  cases i with
+  | inl b => simp only [AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
+  | inr j =>
+    have hc := MvPolynomial.coeff_C_mul e (marginNumerator c)
+      (1 : MvPolynomial (Fin (TubeParameter.spatialCount (pairFst c))) ℤ)
+    rw [mul_one] at hc
+    exact congrArg (fun z => (marginDenominator c : ℤ) * (zeroMarginConstraint c (.inr j)).coeff e - z) hc
+
 theorem eval_zeroMarginConstraint (c : List Bool)
     (z : Fin (TubeParameter.spatialCount (pairFst c)) → ℝ) (i : PerturbedSource.Index (pairFst c)) :
     (zeroMarginConstraint c i).eval₂ (Int.castRingHom ℝ) z =

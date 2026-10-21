@@ -216,7 +216,7 @@ block and border vectors, with a certified moment-child callback contract.
 The complete factor child now combines the immediate and moment cases, with
 correct results, exact first halting time, and concrete workspace/clock bounds.
 `Berkowitz.ModularAccess.zeroLanguage_mem_PSPACE` instantiates the suspended
-controller and proves modular determinant zero testing in Complexitylib's PSPACE.
+controller and proves modular determinant zero testing in Complexitylib2's PSPACE.
 It assumes FP canonical dimension/modulus fields and FP original-matrix entries
 on every input, with a nonzero modulus. Dimension can be exponential in the input
 length. The proof includes the retained parent and child packets and the expanded
@@ -531,7 +531,7 @@ sign directly from the original uniform residue routine and FP bit budget.
 using the indexed product and weighted-sum implementations below. It computes any
 selected magnitude bit from residue access and the FP budget alone;
 `magnitudeBitLanguage_mem_PSPACE` places the corresponding query language in
-Complexitylib's PSPACE.
+Complexitylib2's PSPACE.
 
 `BalancedProduct` now defines the complete product tree, with height-`h` node
 `i` covering the factor interval starting at $2^h\cdot i$. Its typed continuation
@@ -1174,7 +1174,7 @@ index and component-bit-bound writers. Its FP budget writer computes $B\cdot N+1
 The uniform positive-modulus packet protocol connects the complete modular
 product evaluator to indexed CRT sign recovery and the small-modulus zero scan.
 The cleared coefficient's three-way sign has a space-function evaluator;
-zero, negative and positive languages belong to Complexitylib's PSPACE.
+zero, negative and positive languages belong to Complexitylib2's PSPACE.
 The count, bit bound and normalized integer may be exponentially large; the
 routines do not store the full scale, normalized integer or coefficient array.
 
@@ -1805,7 +1805,7 @@ or cancelling monomials are covered.
 
 `CollectedCoefficientSign` uses the proved N+1 magnitude-bit budget to recover
 coefficient negativity through the existing CRT sign algorithm. The negative
-language belongs to Complexitylib's PSPACE. `CollectedCoefficientZero` scans
+language belongs to Complexitylib2's PSPACE. `CollectedCoefficientZero` scans
 the small moduli justified by the same budget, using the full residue routine
 as a child; the coefficient-zero language also belongs to PSPACE. This supplies
 the zero test needed for detecting actual degrees after cancellation.
@@ -1886,7 +1886,7 @@ compiler's existing default semantics.
 `CompactCoefficientSign` proves a coefficient mass bound of $2^{N+2\cdot N^{2}}$
 for the padded compactification, hence a magnitude-bit budget of
 $N+2\cdot N^{2}+1$ with an FP writer. The full residue evaluator instantiates CRT
-sign recovery, proving coefficient negativity in Complexitylib's PSPACE.
+sign recovery, proving coefficient negativity in Complexitylib2's PSPACE.
 `CompactCoefficientZero` scans the small moduli justified by the same budget
 and proves coefficient zero testing in PSPACE. Both routines include the
 actual-degree and binomial children; they assume no coefficient oracle.
@@ -2093,7 +2093,7 @@ matrix-entry, determinant, or sign callback is assumed.
 integer coefficient or any of its three selected exponents.
 `TubeDeformationSign` combines that complete evaluator with the proved budget
 and streamed CRT routines. Selected coefficient zero, negativity, and positivity
-are in Complexitylib's PSPACE under the original reader contracts.
+are in Complexitylib2's PSPACE under the original reader contracts.
 
 These results do not yet identify an eliminant coefficient or factor. That
 identification, concrete sampler coordinate readers, quantitative bounds, and
@@ -3676,6 +3676,39 @@ no separately supplied query degree or mass proof. The final-stage coefficient
 readers still require construction from the source and coordinate data.
 Finding suitable coordinate representations with original-input degree,
 height, and workspace bounds remains open.
+
+## Native coefficient readers for the actual integer constraints
+
+`TubeSampleCoefficient` computes coefficients of the compact source embedded
+in compiled sample coordinates. The first two coordinates are the projection
+and reciprocal; original point coordinates start at index two. An FP guard
+checks that every exponent outside the point block vanishes. Remaining queries
+restrict to that block and invoke the existing native compact-polynomial
+reader, including its degree guard and all child workspace. The nonzero
+outside-exponent guard prevents restriction from aliasing a zero coefficient
+to a nonzero one.
+
+`FixedWidthMonomial` computes constant and variable coefficients by checking
+all exponent blocks in FP, including short, redundant, and zero-width words.
+`TubeSparseConstraintCoefficient` combines the dense source, its negative,
+the two affine box forms, and the shift variables. `ModularResidueSpace`
+supplies native space composition of residue addition, negation, multiplication,
+and branches. Retained inputs and all original child computations are included.
+
+`TubeConstraintCoefficient` reads the packet's raw margin parts with the proved
+FP accessors and computes coefficients of the actual `integerConstraint`.
+The public `integerConstraint_coeff` identity expands coefficients at the
+polynomial's defining module, avoiding imported multiplication implementation
+transparency in the residue proof. `TubeConstraintCoefficientSource` caps
+binary row indices before finite decoding. Valid indices preserve their exact
+constraint; out-of-range indices select the final row. The complete native
+reader needs only FP packet/row/exponent/modulus fields and a unary exponent
+block width. It assumes no constraint-coefficient oracle.
+
+The reader has not yet been composed with the integer coordinate polynomials'
+coefficient routines to discharge the final sign-query access contract.
+Effective construction of suitable coordinate representations, their bounds
+in the original input, and the complete ETR PSPACE theorem remain open.
 
 ## TM2 versus Complexitylib's machines
 

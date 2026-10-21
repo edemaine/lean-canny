@@ -181,6 +181,7 @@ exponential-time-child experiment that motivated this choice.
 | [`ETR.TubeFiniteSystemBaseChange`](LeanCanny/ETR/TubeFiniteSystemBaseChange.lean), [`TubeLevelCoordinates`](LeanCanny/ETR/TubeLevelCoordinates.lean) | At every rational level with finite compiled fibers, the actual rational system has an integer univariate representation complete over the reals. Nonzero integer parameter polynomials and rational coordinate formulas, with denominators nonzero at parameter roots, recover every compiled point. ETR is equivalent to these decoded samples with positive inactive signs at sufficiently small rational levels. The representation is existential and may vary with the level and linear projection; its coefficient heights, effective construction, source-size bounds, and relation to the computed lowest-coefficient eliminant remain open. |
 | [`ETR.TubeLevelSignQueries`](LeanCanny/ETR/TubeLevelSignQueries.lean), [`TubeLevelSignSpace`](LeanCanny/ETR/TubeLevelSignSpace.lean) | Positive rational-margin clearing and even coordinate-denominator powers give integer univariate queries for the actual inactive constraints. Active queries are one. A positive finite root-sign count is equivalent to a compiled sample. ETR is equivalent to these positive counts throughout small rational-level intervals. The existing native counter computes this count and decides sample existence under explicit coefficient-reader, degree/mass-budget, and control certificates. Constructing suitably bounded coordinate representations and their coefficient readers from the original input remains open. |
 | [`Algebra.RationalSubstitutionWith`](LeanCanny/Algebra/RationalSubstitutionWith.lean), [`ETR.TubeLevelSignBounds`](LeanCanny/ETR/TubeLevelSignBounds.lean) | Fixed denominator-clearing allowances preserve evaluations and give uniform output budgets. Actual tube sign queries use raw stored margin integers and the source-size allowance `D=8*N^2+4`. With `Q=2*A*D`, coordinate degree E and coordinate mass at most `2^b` give query degree at most `Q*E` and mass at most `2^(W+N+2*N^2+4+Q*b)`. FP binary writers derive the native sign-stage budgets from coordinate bounds; separate query-bound assumptions are unnecessary. Effective coordinate construction and coefficient readers remain open. |
+| [`Algebra.FixedWidthMonomial`](LeanCanny/Algebra/FixedWidthMonomial.lean), [`ModularResidueSpace`](LeanCanny/Algebra/ModularResidueSpace.lean), [`ETR.TubeSampleCoefficient`](LeanCanny/ETR/TubeSampleCoefficient.lean), [`TubeSparseConstraintCoefficient`](LeanCanny/ETR/TubeSparseConstraintCoefficient.lean), [`TubeConstraintCoefficientSource`](LeanCanny/ETR/TubeConstraintCoefficientSource.lean) | Native coefficient residues of the actual integer inactive-constraint polynomials. The dense compact source uses a guarded coordinate restriction; point, shift, and constant coefficients are FP checks. Native modular composition includes all dense-child workspace and the raw margin residues. Binary row selection is total and exact on valid indices. No constraint-coefficient oracle is assumed. Composing this reader with rational coordinate substitution and constructing bounded coordinate representations remain open. |
 | [`Algebra.MacaulayExtraneousLast`](LeanCanny/Algebra/MacaulayExtraneousLast.lean), [`MacaulayLastParameter`](LeanCanny/Algebra/MacaulayLastParameter.lean) | No extraneous row uses the last polynomial. If only that input varies with a coefficient parameter `u`, the characteristic quotient is a nonzero polynomial in `u` over `K(s)`. A faithful variable-swap map connects this polynomial to the original determinant quotient. Polynomiality in the characteristic parameter `s` is proved below; resultant identification remains open. |
 | [`Algebra.MacaulayPivotCount`](LeanCanny/Algebra/MacaulayPivotCount.lean), [`MacaulayLastParameterDegree`](LeanCanny/Algebra/MacaulayLastParameterDegree.lean) | Exactly `∏ⱼ≠last dⱼ` active rows use the last input. If its coefficients have parameter degree at most `E` and all other inputs are constant, the quotient polynomial over `K(s)` has degree at most `E*∏ⱼ≠last dⱼ`. The affine family `f_last+u*h` realizes `E=1` and preserves homogeneity when the variation has the specified degree. |
 | [`Algebra.MacaulayMultiplicationMatrix`](LeanCanny/Algebra/MacaulayMultiplicationMatrix.lean) | The full graded rectangular matrix indexes all degree-compatible monomial multiples of every input. An injective row selector recovers the true square Macaulay matrix. Finite coefficient reconstruction identifies row combinations with polynomial multiplication; homogeneous inputs give homogeneous level rows. |
@@ -316,7 +317,7 @@ The full equation compiler is now certified in polynomial time. It pushes negati
 to atoms, concatenates conjunctions, and masks disjunction branches using fresh Boolean
 selectors. It introduces sums of squares once at the end, avoiding exponential tree
 copying. Both equation-system satisfiability and single-equation satisfiability are
-∃ℝ-complete under Complexitylib's polynomial-time many-one reductions.
+∃ℝ-complete under Complexitylib2's polynomial-time many-one reductions.
 
 The certified entry points are `EquationCompiler.compileTerms` and
 `EquationCompiler.toSingleEquation`. Their fresh-variable counter begins at the
@@ -901,6 +902,22 @@ counter and PSPACE theorem therefore need only coordinate/root bounds and
 coefficient readers; callers no longer supply separate bounds for the expanded
 sign queries. Constructing the coordinate representations and their readers
 with suitable original-input bounds remains open.
+
+[`TubeSampleCoefficient`](LeanCanny/ETR/TubeSampleCoefficient.lean) reuses the
+compact source reader in compiled sample coordinates. A guard rejects nonzero
+exponents outside the original point block; dropping the two leading blocks
+then prepares the source query. [`FixedWidthMonomial`](LeanCanny/Algebra/FixedWidthMonomial.lean)
+supplies FP residues for the constant, point, and shift terms.
+[`TubeSparseConstraintCoefficient`](LeanCanny/ETR/TubeSparseConstraintCoefficient.lean)
+combines all four unscaled constraint cases.
+[`TubeConstraintCoefficient`](LeanCanny/ETR/TubeConstraintCoefficient.lean) applies
+the raw stored margin numerator and denominator with native modular arithmetic.
+[`TubeConstraintCoefficientSource`](LeanCanny/ETR/TubeConstraintCoefficientSource.lean)
+accepts FP binary row selectors and preserves every valid row exactly; larger
+indices select the final constraint. Its complete coefficient evaluator handles
+arbitrary exponent words and positive moduli with no source-coefficient oracle.
+The subsequent rational-coordinate substitution and its integration with the
+univariate sign counter remain open.
 
 [`MvCoefficientMass`](LeanCanny/Algebra/MvCoefficientMass.lean) bounds the sum of
 absolute coefficients under integer multivariate arithmetic, renaming, and
