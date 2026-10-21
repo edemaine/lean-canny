@@ -143,6 +143,7 @@ import LeanCanny.ETR.TubeCharacteristicQuotientSpace
 import LeanCanny.ETR.TubeCharacteristicQuotientDegree
 import LeanCanny.ETR.TubeCharacteristicPolynomialSpace
 import LeanCanny.Algebra.MacaulayQuotientRoots
+import LeanCanny.ETR.TubeCharacteristicRoots
 import LeanCanny.ETR.TubeMacaulayKoszul
 import LeanCanny.ETR.TubeMacaulayGenericShift
 import LeanCanny.ETR.TubeMacaulayKoszulExact

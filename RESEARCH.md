@@ -3157,10 +3157,10 @@ existing `TubeBivariate.Data` contracts. All original source-reader and
 suspended-child costs are retained. No full polynomial coefficient vector
 is constructed by the evaluator.
 
-The multivariate-resultant common-root characterization and identification
-are still unproved. The construction above makes the polynomial and its
-degree/lowest-data interfaces concrete; it does not assert that its roots
-are exactly the parameters of common projective roots.
+The full multivariate-resultant common-root characterization and identification
+are still unproved. The forward common-root implication is established below;
+the converse, that every quotient root comes from a common projective root,
+remains open.
 
 `MacaulayUniversalQuotient` chooses the unique normalized universal integer
 polynomial and defines its value by coefficient substitution. This value
@@ -3186,7 +3186,45 @@ deformed quotient is zero; coefficient naturality specializes it back at
 zero. The characteristic quotient consequently vanishes at every parameter
 whose shifted system has such an axis root. A separate helper handles
 arbitrary common roots when the extraneous determinant is nonzero.
-The general projective-root implication and its converse remain open.
+The following general projective-root theorem subsumes this axis case.
+
+`MacaulayRootModel` constructs a homogeneous system vanishing at a specified
+point `x`. For each input degree `dᵢ`, its form is
+
+```
+qᵢ = x_last^dᵢ * Xᵢ^dᵢ - xᵢ^dᵢ * X_last^dᵢ.
+```
+
+Group extraneous indices by their last exponent. Each correction term
+strictly increases that exponent, while the diagonal entry is
+`x_last^d_pivot`. Hence `x_last ≠ 0` makes the extraneous determinant
+nonzero over any domain. No division by a root coordinate is used.
+
+`MacaulayRootDeformation` adds a parameter times this model to the original
+system. The common root persists over the polynomial coefficient ring.
+The highest matrix-pencil coefficient is the model's nonzero extraneous
+determinant, so the deformed extraneous determinant is a nonzero polynomial.
+The active determinant vanishes; exact polynomial factorization makes the
+deformed quotient zero. Coefficient naturality specializes it back at zero.
+
+`MacaulayQuotientPermutation` proves that simultaneous input and spatial
+permutations preserve the universal polynomial value. It transports the
+integer quotient through coefficient-variable renaming and cancels only
+in the universal integer coefficient domain, before any specialization.
+`MacaulayProjectiveRoots.polynomialValue_eq_zero_of_common_root` therefore
+handles every nonzero common homogeneous root over any domain, with positive
+declared degrees and a fitting Macaulay width. Neither the original nor
+specialized extraneous determinant is assumed nonzero. A coefficient-map
+corollary handles roots in extension domains. Applied to shifted inputs,
+the theorem proves vanishing of the characteristic quotient at the
+corresponding parameter.
+
+`TubeCharacteristicRoots` applies this theorem to the actual full tube rows
+and the concrete tube quotient polynomial. Every specialized shifted common
+root annihilates that polynomial; every common root of the original rows
+annihilates its specialized constant coefficient. The converse and
+identification with the multivariate resultant remain unproved, as do the
+remaining geometric persistence, algorithmic, and full ETR space obligations.
 
 ## TM2 versus Complexitylib's machines
 

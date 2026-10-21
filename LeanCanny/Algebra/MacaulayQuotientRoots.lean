@@ -13,7 +13,8 @@ The active determinant vanishes at every nonzero common homogeneous root
 over a domain. If the extraneous determinant is nonzero, so does the
 polynomial quotient. For roots on the last coordinate axis, a deformation
 of all preceding inputs proves quotient vanishing even when the original
-extraneous determinant is zero. General projective roots remain open.
+extraneous determinant is zero. `MacaulayProjectiveRoots` proves the general
+projective-root implication by a further deformation and permutation argument.
 -/
 
 @[expose] public section
