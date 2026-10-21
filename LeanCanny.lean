@@ -149,6 +149,7 @@ import LeanCanny.ETR.TubeCharacteristicSurjectivity
 import LeanCanny.ETR.TubeCharacteristicCriterion
 import LeanCanny.ETR.TubeCharacteristicLowestBounds
 import LeanCanny.ETR.TubeCharacteristicFiniteBounds
+import LeanCanny.ETR.TubeCharacteristicGeometricPersistence
 import LeanCanny.Algebra.ProjectiveDepth
 import LeanCanny.Algebra.KoszulExactSurjectivity
 import LeanCanny.Algebra.KoszulIdealAnnihilator

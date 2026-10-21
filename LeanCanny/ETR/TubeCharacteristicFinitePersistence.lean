@@ -15,8 +15,8 @@ at every root. The proof needs no Jacobian invertibility, and permits
 positive-dimensional components in the projective hyperplane at infinity.
 A coefficient-extension argument supplies the same conclusion for real
 roots when the affine zero set is finite over an algebraically closed
-extension of the reals. Establishing that finiteness for the chosen sampler
-parameters remains a separate input obligation.
+extension of the reals. `TubeCharacteristicGeometricPersistence` supplies a
+geometric finiteness bridge under explicit substitution-parameter identities.
 -/
 
 @[expose] public section
