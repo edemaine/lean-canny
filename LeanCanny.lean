@@ -158,6 +158,7 @@ import LeanCanny.Algebra.MacaulayPivotBoundary
 import LeanCanny.Algebra.KoszulSubsetDeterminant
 import LeanCanny.Algebra.MacaulayEligibleMonotonic
 import LeanCanny.Algebra.MacaulayBinomialFactors
+import LeanCanny.Algebra.MacaulayUniversalComparison
 import LeanCanny.Algebra.MacaulayKoszulExteriorBridge
 import LeanCanny.Algebra.MacaulayLastParameterDegree
 import LeanCanny.Algebra.FiniteDenominatorClearing

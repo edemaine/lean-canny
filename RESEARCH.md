@@ -2999,6 +2999,52 @@ the product of all `det(W_(j+2))`. Ordering comparisons, cancellation of the
 extraneous polynomial from the numerator, and resultant identification remain
 open.
 
+Write `D_k : V_(k+1) → V_k` and `H_k : V_k → V_(k+1)`.
+`KoszulPowerComparison` constructs `F_k = D_k H_k + H_(k-1) D^power_(k-1)`,
+with the second term omitted in degree zero. The identity
+`D_k F_(k+1) = F_k D^power_k` is proved as an equality of linear maps
+and in canonical row-vector matrices. At coordinate powers `F_k` is the
+identity. On the incoming homotopy summand it is also the identity for
+arbitrary homogeneous inputs. Its other diagonal block is the existing
+nonpivot contraction block, so `det(F_0)=det(activeMinor)` and
+`det(F_(k+1))=det(Q_k)` over any commutative ring.
+
+`KoszulPowerComparisonSpecialization` proves that these matrices commute
+with coefficient maps and specialize to the identity. Their determinants
+are nonzero for systems admitting a coordinate-power specialization. Over
+the coefficient fraction field, each actual comparison map is consequently
+a linear equivalence. `MacaulayUniversalComparison` instantiates these
+equivalences and their chain identity for every universal ordering.
+
+`BinomialParityProducts` balances even and odd binomial sums and products,
+including empty products, in any commutative monoid. Applied to the proved
+higher determinant factors, `MacaulayAlternatingFactors` gives the polynomial
+identity
+
+```
+product_(k even) det(Q_k) = det(extraneousMinor) * product_(k odd) det(Q_k).
+```
+
+The range is `k : Fin n`. No determinant is divided out in this identity.
+`KoszulComparisonRatio` combines it with the comparison determinants:
+over a field where these determinants are nonzero, the alternating quotient
+of `det(F_k)` is exactly `det(activeMinor)/det(extraneousMinor)`.
+`MacaulayUniversalComparison` proves this identification over the universal
+coefficient fraction field and proves that equality of the constructed
+ratios for two orderings is equivalent to the required polynomial
+cross-comparison. Equality of those ratios across orderings is still open;
+neither this equivalence nor the alternating factor identity alone proves
+polynomial numerator/extraneous cancellation.
+
+The intended next comparison uses these chain equivalences: after transporting
+two orderings to common exterior coordinates, their quotient is a chain
+automorphism of the coordinate-power complex. Its alternating determinant
+product should be one. Mathlib's `LinearMap.det_eq_det_mul_det` factors a
+preserved-subspace determinant through that subspace and its quotient;
+`LinearMap.quotKerEquivRange` can identify adjacent quotient/range factors.
+The finite telescoping theorem and the simultaneous input/spatial transport
+still need proofs.
+
 ## TM2 versus Complexitylib's machines
 
 The project now fills one class-level composition gap in Complexitylib's pinned
