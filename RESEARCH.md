@@ -51,29 +51,29 @@ Tarski evaluator below.
 
 `PseudoRemainder` now replaces rational polynomial division by a fixed linear
 operator. Splitting `g` into its coefficients below degree `d` and shifted high
-part gives `T(g) = a*low(g) - low(p)*high(g)`, for `a = p[d]`.
-When `degree(p) ≤ d`, this equals `a*g - p*high(g)`. With input degree bound `D`,
-`2*(D+1)` iterations lower the result below `d` and give a positive scaling when
-`p` has actual degree `d > 0`. The integer Tarski-query theorem therefore uses
+part gives $T(g) = a\cdot \operatorname{low}(g) - \operatorname{low}(p)\cdot \operatorname{high}(g)$, for $a = p[d]$.
+When $\operatorname{degree}(p) \le d$, this equals $a\cdot g - p\cdot \operatorname{high}(g)$. With input degree bound `D`,
+$2\cdot (D+1)$ iterations lower the result below `d` and give a positive scaling when
+`p` has actual degree $d > 0$. The integer Tarski-query theorem therefore uses
 an integral seed and integral principal determinants.
 
-The operator is represented by a `(D+1)`-dimensional scalar matrix. Each entry
+The operator is represented by a $(D+1)$-dimensional scalar matrix. Each entry
 is zero, an original head coefficient, or its negation. The certified entry
 controller derives all source queries and modular negations internally.
 `PseudoRemainderBits.DataAccess.evaluator` combines suspended original-head and
 input coefficient routines with the existing scalar-moment evaluator, proving
 complete modular coefficient access without storing any intermediate remainder.
 Fixed bounds commute with coefficient maps even if the modular head degree drops.
-If head and input coefficient masses are bounded by `2^bp` and `2^bg`, a coefficient
-after `n` steps has at most `n*(bp+1)+bg+1` magnitude bits. FP binary writers supply
+If head and input coefficient masses are bounded by $2^{\mathrm{bp}}$ and $2^{\mathrm{bg}}$, a coefficient
+after `n` steps has at most $n\cdot (\mathrm{bp}+1)+\mathrm{bg}+1$ magnitude bits. FP binary writers supply
 this budget from original degree/coefficient bounds. The derivative-product
 source instantiation, integer coefficient signs, and actual-degree routines are
 now composed with the constant-head branch and principal-determinant pipeline
-below. The full `ETR ∈ PSPACE` theorem is not yet established.
+below. The full $\mathrm{ETR} \in \mathrm{PSPACE}$ theorem is not yet established.
 
-`DerivativeBits.evaluator` reads an original coefficient at binary index `k+1`
+`DerivativeBits.evaluator` reads an original coefficient at binary index $k+1$
 and multiplies it modulo the supplied modulus. `DerivativeProductBits.Access.evaluator`
-then computes a selected coefficient of the actual product `f*p'` from the two
+then computes a selected coefficient of the actual product $f\cdot p'$ from the two
 original coefficient routines. `TarskiSeedBits.Access.evaluator` supplies this
 product internally to the division-free reduction; its degree bound is the sum
 of the original degree bounds. Differentiation increases integer coefficient
@@ -102,7 +102,7 @@ through the total contexts below.
 scan from a suspended sign reader and an FP binary count. Its state keeps the
 previous nonzero sign, the length of the pending zero gap, and positive and
 negative contribution counts. After `k` entries, the encoded state has at most
-`5*k.size + 10` bits. The certificate includes all sign-reader state and clock
+$5\cdot k.\operatorname{size} + 10$ bits. The certificate includes all sign-reader state and clock
 costs, and returns the integer answer as canonical positive and negative parts.
 `descendingEvaluator` derives descending coefficient indices in FP.
 `tarskiEvaluator` connects this implementation to the integer pseudo-seed
@@ -145,9 +145,9 @@ positive and negative parts. `TarskiQueryBits.zeroLanguage_mem_PSPACE`,
 consequences under the same original-source contracts. The remaining root-sign
 work now has a complete enumeration, pattern-weight, and exact-count composition
 for polynomially bounded family size, as described below. Canny's stronger query
-selection, the effective critical-point algorithm, and `ETR ∈ PSPACE` remain open.
+selection, the effective critical-point algorithm, and $\mathrm{ETR} \in \mathrm{PSPACE}$ remain open.
 
-No existing encoded ∃ℝ complexity-class definition or formal proof of `ETR ∈ PSPACE`
+No existing encoded ∃ℝ complexity-class definition or formal proof of $\mathrm{ETR} \in \mathrm{PSPACE}$
 was found in the inspected Mathlib, Complexitylib, CSLib, TauCeti, or adjacent projects.
 The ∃ℝ definition in this project uses the standard reduction-class formulation;
 equivalence with other finite presentations requires explicit efficient translations.
@@ -157,7 +157,7 @@ Mathlib already proves the ordinary
 including a linear-GCD argument for two separable elements. Its Galois fixed-field and
 Lagrange interpolation theorems also supply the algebraic tools used here. The current
 project strengthens the representation interface to all pairs of roots of two input
-polynomials, with one bounded integer selector, a monic separable degree-`d₁*d₂`
+polynomials, with one bounded integer selector, a monic separable degree-$d_{1}\cdot d_{2}$
 polynomial, and coordinate polynomials over the input field. The GCD coefficient-ratio
 recovery specification is proved. The parameter polynomial now uses Mathlib's
 [Sylvester resultant](https://github.com/leanprover-community/mathlib4/blob/728a93eeff833da3173895bb0575752fdc24edb0/Mathlib/RingTheory/Polynomial/Resultant/Basic.lean),
@@ -165,7 +165,7 @@ with verified specialization, roots, scalar normalization, and degree. Taylor an
 derivatives supply a direct shifted-coefficient formula and integer bit-length bounds.
 The project now bounds coefficients of polynomial determinants by column coefficient
 masses, and specializes this estimate to the integer resultant. Its degree is at most
-`d₁*d₂` without nonzero or separability hypotheses, and its coefficient bit lengths
+$d_{1}\cdot d_{2}$ without nonzero or separability hypotheses, and its coefficient bit lengths
 are bounded explicitly in the input degrees, coefficient lengths, and direction length.
 Interior subresultants now have explicit determinant definitions, coefficient bit bounds,
 and certified modular evaluation. The nonzero linear-GCD bridge now proves symbolic
@@ -180,7 +180,7 @@ The modules below give certified modular determinant/resultant coefficient
 evaluation and integer zero testing, including Canny's concrete resultant family.
 
 The project also proves the division-free bordered characteristic-polynomial
-recurrence behind Berkowitz's algorithm. Coefficients of `adj(XI-A)` are expressed
+recurrence behind Berkowitz's algorithm. Coefficients of $\operatorname{adj}(XI-A)$ are expressed
 through powers of `A`; cancellation of the monic characteristic polynomial proves
 the bordered identity even over rings with zero divisors. A recursive reference
 on `Fin n` matrices returns exactly Mathlib's characteristic coefficients and
@@ -192,10 +192,10 @@ recursion preserves factor order, and `Berkowitz.balancedDeterminant` uses heigh
 `n.size` to recover the determinant. The factor accessor avoids building the full
 list. The layered matrix
 construction now converts this ordered product to a single power, with dimension
-`(n+1)^2` and exponent `n`. It therefore reuses the existing continuation machine
+$(n+1)^{2}$ and exponent `n`. It therefore reuses the existing continuation machine
 and bitstring controller under their explicit entry-access contract. Stored residue
-states have at most `64*(3*n.size+m.size+2)^2` bits; retaining context `c` adds
-`2*c.length+2`. The abstract clock is at most `2^((2*n.size+3)*n.size+1)`, counting
+states have at most $64\cdot (3\cdot n.\operatorname{size}+m.\operatorname{size}+2)^{2}$ bits; retaining context `c` adds
+$2\cdot c.\operatorname{length}+2$. The abstract clock is at most $2^{(2\cdot n.\operatorname{size}+3)\cdot n.\operatorname{size}+1}$, counting
 entry access as one operation. A generic suspension wrapper and PSPACE composition
 theorem now account for a saved parent alongside a running child. The power
 controller intercepts exponent-one entry queries, runs the child through FP steps,
@@ -203,7 +203,7 @@ and resumes the original stack with its output. Correct and terminating calls
 simulate the full abstract power run. Direct factor access is now proved through
 the trailing principal block, with no lookup of preceding factors. The factor
 cases are one, a negative diagonal entry, a negative scalar moment, or zero.
-Adding a source and sink reduces `r A^k c` to a power entry in dimension `n+2`.
+Adding a source and sink reduces $r A^k c$ to a power entry in dimension $n+2$.
 Given FP binary fields, row, column, and original-entry access, a uniform controller
 computes this moment. Its first halting time, result, and packet bounds are proved;
 FP modular negation supplies the negative output, including modulus one.
@@ -224,7 +224,7 @@ physical clock; it assumes no FP computation of whole factor entries.
 Integer determinant zero testing now also belongs to PSPACE under FP dimension
 and binary determinant-bit-budget access and uniform FP original-entry residue
 access. Mathlib's LCM growth bound implies that an integer of at most `B`
-magnitude bits is zero exactly when its residues modulo `1,...,2*B+4` vanish.
+magnitude bits is zero exactly when its residues modulo $1,\ldots ,2\cdot B+4$ vanish.
 The project proves this criterion and the determinant specialization. A generic
 bounded universal scan retains a binary counter and one answer bit while each
 space-certified child runs. Modular determinant evaluation now exposes a reusable
@@ -241,7 +241,7 @@ The integer determinant theorem now also has a resultant instantiation. Binary
 guards and offset writers implement exactly Mathlib's two Sylvester column
 blocks through coefficient queries. They preserve the specified degree parameters,
 including after a specialization lowers an actual degree. A common coefficient
-bound `2^b` gives the computed resultant bit budget `N.size*N+N*b+1`, with `N=m+n`.
+bound $2^b$ gives the computed resultant bit budget $N.\operatorname{size}\cdot N+N\cdot b+1$, with $N=m+n$.
 `Resultant.Access.zeroLanguage_mem_PSPACE` proves resultant zero testing under
 FP degree and coefficient-budget fields and uniform FP coefficient-residue access
 on all contexts and indices. A corollary uses the ordinary resultant when the
@@ -251,20 +251,20 @@ for all polynomial constructions used in the report remain open.
 
 The project now supplies an explicit binomial-residue routine for the shifted
 coefficient formula. The lower bidiagonal matrix with diagonal and subdiagonal
-one has `choose n k` at row `k`, column zero of its nth power in dimension `k+1`.
+one has `choose n k` at row `k`, column zero of its nth power in dimension $k+1$.
 This identity holds over any semiring. Concrete FP binary writers and entry
 access instantiate the modular power controller, including arbitrary positive
 composite moduli and modulus one. `BinomialResidue.evaluator` returns the complete
 residue through a `SpaceFunction` certificate with first halting time, polynomial
 state bounds, and an exponential clock. All binary input words are covered;
-`k>n` returns zero. Modular power evaluation now exposes the same output interface,
+$k>n$ returns zero. Modular power evaluation now exposes the same output interface,
 and FP final predicates derive PSPACE decision procedures from it.
 The shifted-coefficient residue evaluator now combines the binomial child with
 the original coefficient and the power of the negative direction. Binary modular
 exponentiation has an FP certificate by repeated squaring, with every fold result
 bounded by the modulus word. FP input preparation and an explicit input-retention
 wrapper preserve the complete resource certificates. `ShiftCoefficientBits.certified`
-returns exactly the coefficient of `x^i θ^j` in `p(θ-c*x)` modulo the supplied
+returns exactly the coefficient of $x^i \theta ^j$ in $p(\theta -c\cdot x)$ modulo the supplied
 positive modulus, assuming FP original-coefficient residue access and a canonical
 FP direction writer. Its modular zero-test language is in PSPACE. All binary
 queries, zero coefficients/direction, and modulus one are covered.
@@ -289,18 +289,18 @@ as are its integer signs and magnitude bits.
 
 The symbolic coefficient reduction now has a scalar matrix representation.
 `PolynomialCoefficientMatrix.scalarHom` maps a polynomial to its lower
-triangular coefficient matrix of width `d+1`, preserving addition and
+triangular coefficient matrix of width $d+1$, preserving addition and
 multiplication. Entrywise application and block flattening preserve powers.
 `Berkowitz.det_coeff_eq_coefficientPower` consequently expresses degree `d`
 of a determinant over `R[X]` as a signed power entry over `R`, in dimension
-`(n+1)^2*(d+1)`. `PolynomialPower.ModularAccess.evaluator` now implements the
+$(n+1)^{2}\cdot (d+1)$. `PolynomialPower.ModularAccess.evaluator` now implements the
 generic polynomial matrix-power coefficient operation. FP binary controls
 and a `SpaceFunction` routine for original entry coefficients suffice. The
 flattened accessor decodes each coordinate by division/remainder and returns
 one input coefficient or zero, with its own space certificate. This covers
 all binary contexts and gives modular coefficient zero testing in PSPACE.
 `PolynomialMoment.ModularAccess.evaluator` specializes it to coefficients of
-`r A^k c`: taking an entry coefficient commutes with source/sink augmentation,
+$r A^k c$: taking an entry coefficient commutes with source/sink augmentation,
 so FP guards and degree-carrying query writers select a vector or matrix
 coefficient routine. These routines may each use polynomial space.
 The determinant instantiation now supplies the layered factor coefficients.
@@ -320,8 +320,8 @@ space-bounded bivariate coefficient routines suffice; modular resultant
 coefficient zero testing is in PSPACE.
 
 `CannyResultantBits.Access.evaluator` now supplies the concrete Canny
-instantiation. The shifted-coefficient child accesses `p₁(θ-c*x)` and an FP
-degree-zero guard accesses `p₂(x)`. The result is proved equal to a coefficient
+instantiation. The shifted-coefficient child accesses $p_{1}(\theta -c\cdot x)$ and an FP
+degree-zero guard accesses $p_{2}(x)$. The result is proved equal to a coefficient
 of the existing integer `cannyResultant`, reduced modulo any positive modulus.
 The fixed integer source degrees are preserved through modular reduction.
 The contract requires FP source degrees, direction, and selected output degree,
@@ -330,12 +330,12 @@ Its modular coefficient zero test is in PSPACE.
 
 `CannyResultantBits.IntegerAccess.decider` extends this to zero testing of the
 integer coefficient. For source degrees `m,n`, direction `c`, and coefficient
-bounds `2^b₁,2^b₂`, its computed budget is
-`B = (m+n).size*(m+n) + n*S + m*(b₂+1) + 1`, where
-`S = (m+1).size + m + (b₁+1) + (c+1).size*m`.
+bounds $2^{b_{1}},2^{b_{2}}$, its computed budget is
+$B = (m+n).\operatorname{size}\cdot (m+n) + n\cdot S + m\cdot (b_{2}+1) + 1$, where
+$S = (m+1).\operatorname{size} + m + (b_{1}+1) + (c+1).\operatorname{size}\cdot m$.
 The previous coefficient-size theorem proves this budget; binary arithmetic
 and encoded word lengths give FP budget writers. The bounded modulus scan
-then composes the concrete residue decider and tests moduli `1,...,2*B+4`, with
+then composes the concrete residue decider and tests moduli $1,\ldots ,2\cdot B+4$, with
 all child states included. FP source-bit-budget fields and the residue-access
 contracts suffice, even when `B` is exponential. The sign evaluator below uses
 the same budget and residue-access contracts; the magnitude-bit evaluator below
@@ -343,27 +343,27 @@ also consumes these contracts.
 
 The reconstruction specification now has a proved CRT route. A coprime modulus
 system uses locally reduced inverse-weighted numerators `aᵢ`; the fractional part
-of `Σ aᵢ/mᵢ` equals the combined residue divided by the product `M`. For a nonzero
-integer with `2*|z| < M`, comparison with `1/2` determines its sign. Replacing
-each fraction by `floor(D*aᵢ/mᵢ)/D` has total downward error at most `card/D`;
-`D > 2*card*M` preserves the comparison. The maximal prime powers up to
-`N=2*B+6` instantiate this specification for a magnitude-bit budget `B`, with
+of $\sum a_{i}/m_{i}$ equals the combined residue divided by the product `M`. For a nonzero
+integer with $2\cdot |z| < M$, comparison with $1/2$ determines its sign. Replacing
+each fraction by $\operatorname{floor}(D\cdot a_{i}/m_{i})/D$ has total downward error at most $\operatorname{card}/D$;
+$D > 2\cdot \operatorname{card}\cdot M$ preserves the comparison. The maximal prime powers up to
+$N=2\cdot B+6$ instantiate this specification for a magnitude-bit budget `B`, with
 every individual modulus at most `N` and sufficient precision
-`D=2^((N+2)*N.size+2)`. The proof uses large products and sums only as mathematical
+$D=2^{(N+2)\cdot N.\operatorname{size}+2}$. The proof uses large products and sums only as mathematical
 specifications. The local preparation and streamed arithmetic below now certify
 integer sign recovery from residue access and a binary bit budget.
 
 Individual bits of the dyadic quotients now have a uniform FP accessor.
-`DyadicQuotientBits.value` takes binary `a,m-1,p,k`, assuming `a<m`, and returns
-bit `k` of `floor(2^p*a/m)`. For `k≤p`, the bit is
-`((2^(p-k)*a) mod (2*m))/m`; modular exponentiation keeps each word short.
+`DyadicQuotientBits.value` takes binary `a,m-1,p,k`, assuming $a<m$, and returns
+bit `k` of $\operatorname{floor}(2^p\cdot a/m)$. For $k\le p$, the bit is
+$((2^{p-k}\cdot a) \mathrm{mod} (2\cdot m))/m$; modular exponentiation keeps each word short.
 Indices above `p` return zero. The proof covers arbitrary input words and
 modulus one, and the implementation's FP theorem holds on every raw string.
 `SumBits.evaluator` now certifies accumulation of these bit streams. The carry
 is at most the summand count `N`, and every partial column accumulator is at
 most `2N`. A single binary counter locates the column and summand, with one
 division-by-two step between columns. The exact abstract run returns bit `K`
-after `K*(N+1)+N` steps, including `N=0`. The physical suspended evaluator
+after $K\cdot (N+1)+N$ steps, including $N=0$. The physical suspended evaluator
 accounts for child runs and returns a `SpaceFunction` certificate from FP
 count/index writers and certified space-bounded summand-bit access.
 
@@ -377,16 +377,16 @@ therefore include zero without a separate oracle, under the explicit local
 preparation, FP count/precision, and magnitude/precision contracts. The preparation
 routine is now constructed from residue access below.
 
-`indexedSystem N` uses all indices `0,...,N`, assigning modulus one to nonprime
-indices. Its count is exactly `N+1`, while its product is still `lcmUpto N` and
+`indexedSystem N` uses all indices $0,\ldots,N$, assigning modulus one to nonprime
+indices. Its count is exactly $N+1$, while its product is still `lcmUpto N` and
 the previous precision bound still suffices. This avoids requiring an FP prime
 count or a compressed prime enumeration in the eventual implementation.
 
 Indexed moduli now have an actual certified evaluator. `PrimalityBits.evaluator`
 scans trial divisors with FP modular reduction and retains one Boolean flag;
 its answer agrees with `Nat.Prime`, including zero and one. A separate bounded
-multiplication routine returns `i^(log i N)`, with each stored magnitude at most
-`N+1`, for all binary `N,i`. `ModulusBits.evaluator` composes the routines and
+multiplication routine returns $i^{\operatorname{log} i N}$, with each stored magnitude at most
+$N+1$, for all binary `N,i`. `ModulusBits.evaluator` composes the routines and
 uses FP selection to return the prime power or one. `BoundedFold.evaluator`
 accounts for sequential space-bounded updates, and `SpaceFunction.chain` proves
 sequential composition using polynomial output bounds.
@@ -401,7 +401,7 @@ routine and performs FP modular multiplication to return exactly the local CRT
 numerator and modulus-minus-one code.
 
 `IntegerSignBits.evaluator` closes the sign-recovery pipeline. FP writers compute
-`N=2*B+6`, count `N+1`, and precision exponent `(N+2)*N.size+2` from the binary
+$N=2\cdot B+6$, count $N+1$, and precision exponent $(N+2)\cdot N.\operatorname{size}+2$ from the binary
 magnitude-bit budget. Indexed-system product, magnitude, and precision theorems
 discharge the sign wrapper's remaining hypotheses. A uniform space-bounded
 integer-residue routine and FP bit-budget writer therefore give a certified
@@ -417,8 +417,8 @@ The full coordinate computation's space bound and the
 effective critical-point/ETR decision argument remain open.
 
 The subresultant determinant specification is now explicit. For interior order
-`k<m,n`, coefficient `r≤k` is the minor with `m-k` shifted `g` columns and `n-k`
-shifted `f` columns, selecting coefficient row `r` followed by rows `k+1,k+2,...`.
+$k<m,n$, coefficient $r\le k$ is the minor with `m-k` shifted `g` columns and `n-k`
+shifted `f` columns, selecting coefficient row `r` followed by rows $k+1,k+2,\ldots$.
 This follows the ascending-coefficient determinantal construction in
 [Definition 1 of the Inria report](https://who.rocq.inria.fr/Alban.Quadrat/PubsTemporaire/RR-9044.pdf),
 with Mathlib's block order; its zeroth member is proved equal to Mathlib's
@@ -435,10 +435,10 @@ supply the entries to the existing polynomial determinant evaluator. The outer
 validity branch returns zero even when the invalid minor is empty, whose determinant
 would otherwise be one. The corresponding zero language is in PSPACE.
 
-`Subresultant.first_eq_mul_X_sub_C` proves that for degree bounds `m,n>1`, the first
-subresultant equals `D*(X-b)` at any common root `b`: the root equations express
+`Subresultant.first_eq_mul_X_sub_C` proves that for degree bounds $m,n>1$, the first
+subresultant equals $D\cdot (X-b)$ at any common root `b`: the root equations express
 the constant row as a linear combination of the positive-degree rows. Hence the
-determinant ratio recovers `b` whenever `D≠0`.
+determinant ratio recovers `b` whenever $D\ne 0$.
 
 `Subresultant.minor_first_one_det_linear_factor` identifies `D` with the resultant
 of the quotients after removing `X-b`: the high-coefficient minor is the quotient
@@ -449,10 +449,10 @@ first subresultant is linear with a nonzero linear coefficient at the actual
 input degrees, when both exceed one.
 
 `subresultant_recovery_spec` specializes symbolic parameter polynomials `N,D` to
-`p₁(θ-c*x),p₂(x)` and applies the existing separating-pair GCD theorem. For input
-degrees greater than one and nonzero direction it proves `D(θ)≠0`,
-`b=-N(θ)/D(θ)`, and `a=θ+c*N(θ)/D(θ)`. Both parameter degrees are bounded by
-`(d₂-1)*d₁`; their integer coefficients satisfy the reduced-column bit budget.
+$p_{1}(\theta -c\cdot x),p_{2}(x)$ and applies the existing separating-pair GCD theorem. For input
+degrees greater than one and nonzero direction it proves $D(\theta )\ne 0$,
+$b=-N(\theta )/D(\theta )$, and $a=\theta +c\cdot N(\theta )/D(\theta )$. Both parameter degrees are bounded by
+$(d_{2}-1)\cdot d_{1}$; their integer coefficients satisfy the reduced-column bit budget.
 `CannySubresultantBits.Access.evaluator` now specializes the modular evaluator to
 these concrete integer numerator/denominator coefficients, reusing the shifted-input
 and constant-input routines. Selection zero is explicitly identified with `N`, and
@@ -463,12 +463,12 @@ integer zero testing. Streamed integer sign recovery supplies negativity and the
 full three-way sign; zero and both strict-sign languages are in PSPACE under the
 same FP metadata, selection, source-residue, and source-bit-budget contracts.
 `coordinate_recovery_spec` now removes the interior-degree and nonzero-direction
-restrictions from the algebraic recovery statement. If `p₂` is linear, its constant
-coefficients recover `b`; otherwise a linear `p₁` uses the shifted input's coefficients;
+restrictions from the algebraic recovery statement. If $p_{2}$ is linear, its constant
+coefficients recover `b`; otherwise a linear $p_{1}$ uses the shifted input's coefficients;
 the remaining case uses the first subresultant. For a separating pair with zero
-direction, all roots of `p₂` coincide; separability and splitting therefore force
-`p₂` to be linear. Both coordinate polynomials have parameter degree at most
-`max 1 ((d₂-1)*d₁)` and a uniform integer coefficient bit budget across the branches.
+direction, all roots of $p_{2}$ coincide; separability and splitting therefore force
+$p_{2}$ to be linear. Both coordinate polynomials have parameter degree at most
+$\max\{1,(d_{2}-1)d_{1}\}$ and a uniform integer coefficient bit budget across the branches.
 `CannyCoordinateBits.evaluator` includes these direct branches in the certified
 modular coefficient evaluator. FP degree comparisons select the constant right
 coefficient, shifted left coefficient, or first-subresultant routine. The explicit
@@ -486,15 +486,15 @@ coordinate computation's space bound remain open.
 `ChineseRemainderDigits` supplies the exact reconstruction arithmetic behind
 integer digit access. Writing `I` for the inverse-weighted integer sum, `M` for
 the modulus product, and `T` for the truncated quotient sum at scale `D`, it proves
-`D*I=M*T+E`, where `E` is the sum of each local division remainder times its
-cofactor and `E≤card*M`. Thus `D>card*M` gives
-`I=(M*T+D-1)/D`. It also proves the exact correction rank `T/D=I/M`, including
-zero residues, and hence the combined residue is `I-(T/D)*M`. Centered reconstruction
-recovers a signed integer under `2*natAbs<M`, with an explicit identity for each
+$D\cdot I=M\cdot T+E$, where `E` is the sum of each local division remainder times its
+cofactor and $E\le \operatorname{card}\cdot M$. Thus $D>\operatorname{card}\cdot M$ gives
+$I=(M\cdot T+D-1)/D$. It also proves the exact correction rank $T/D=I/M$, including
+zero residues, and hence the combined residue is $I-(T/D)\cdot M$. Centered reconstruction
+recovers a signed integer under $2\cdot \operatorname{natAbs}<M$, with an explicit identity for each
 magnitude digit.
 
 `ChineseRemainder.rankBitEvaluator` reads rank bit `k` by reading truncated-sum
-bit `precision+k`. `IntegerRankBits.evaluator` combines this with the existing
+bit $\mathrm{precision}+k$. `IntegerRankBits.evaluator` combines this with the existing
 indexed modulus, inverse-weight, and local preparation certificates. Its rank
 is bounded by the modulus count and its binary width by the FP count word length.
 The indexed precision and magnitude theorems also specialize the exact centered
@@ -505,8 +505,8 @@ inverse-weighted sum, and rank-product subtraction; none is claimed to fit as a
 complete binary word in polynomial space.
 
 `ProductBits.evaluator` now supplies the two-operand multiplication primitive.
-For selected index `k`, truncating the left factor to its first `k+1` bits preserves
-the product modulo `2^(k+1)`. Each shifted summand's bit is the conjunction of
+For selected index `k`, truncating the left factor to its first $k+1$ bits preserves
+the product modulo $2^{k+1}$. Each shifted summand's bit is the conjunction of
 one left-selector bit, an index guard, and a shifted right bit. Sequentially
 composed operand routines supply these bits to `SumBits.evaluator`, whose carry,
 workspace, and physical-clock proofs give the product certificate. Both operands
@@ -514,8 +514,8 @@ may be implicit and exponentially long. The balanced-product and complete CRT
 digit evaluators below use this primitive.
 
 `SubtractBits.evaluator` now certifies ordered natural-number subtraction. At
-selected bit `k`, the complemented low `k+1` bits of the second operand plus
-one turn subtraction into a three-term sum modulo `2^(k+1)`. The complement
+selected bit `k`, the complemented low $k+1$ bits of the second operand plus
+one turn subtraction into a three-term sum modulo $2^{k+1}$. The complement
 routine uses a source bit and a width guard, and the existing sum machine handles
 the carry. `ArithmeticBits` supplies uniform `pair context binaryIndex` product
 and subtraction interfaces so their outputs can feed further arithmetic.
@@ -524,8 +524,8 @@ then runs one selected child, with all workspace and clocks counted.
 
 `ChineseRemainder.magnitudeBitEvaluatorOfOperands` now composes the product,
 ordered subtraction, and computed selection certificates into the final CRT
-magnitude-digit computation. The centered residue is `I-Q*M`; negativity selects
-`M-(I-Q*M)` when needed. `IntegerDigitBits.evaluatorOfProducts` supplies rank and
+magnitude-digit computation. The centered residue is $I-Q\cdot M$; negativity selects
+$M-(I-Q\cdot M)$ when needed. `IntegerDigitBits.evaluatorOfProducts` supplies rank and
 sign directly from the original uniform residue routine and FP bit budget.
 `IntegerDigitBits.evaluator` also supplies both large operand sources internally,
 using the indexed product and weighted-sum implementations below. It computes any
@@ -534,7 +534,7 @@ selected magnitude bit from residue access and the FP budget alone;
 Complexitylib's PSPACE.
 
 `BalancedProduct` now defines the complete product tree, with height-`h` node
-`i` covering the factor interval starting at `2^h*i`. Its typed continuation
+`i` covering the factor interval starting at $2^h\cdot i$. Its typed continuation
 controller computes one product bit by recursively requesting the two child bits
 for each term of a streamed column sum. Frames retain the parent query, scan
 counter, carry, and at most one returned selector bit. A carry/continuation
@@ -542,8 +542,8 @@ invariant proves the answer. The live-query invariant keeps heights decreasing,
 node addresses inside the root tree, and bit indices below the root index `K`;
 the stack contains at most `H` frames. A strictly decreasing work allowance proves
 termination, the first halting time, and abstract clock bound
-`2^(H*(2*K.size+5)+1)`. Every reachable binary state has at most
-`128*(H+K.size+1)^2` bits; pairing keeps the continuation tail undoubled.
+$2^{H\cdot (2\cdot K.\operatorname{size}+5)+1}$. Every reachable binary state has at most
+$128\cdot (H+K.\operatorname{size}+1)^{2}$ bits; pairing keeps the continuation tail undoubled.
 Initial and child query writers are FP, including binary division for scan
 coordinates. Padding with ones identifies complete trees with finite products
 and omitted-factor cofactors, including empty families. The binary controller is
@@ -570,12 +570,12 @@ Signs at algebraic parameter values and the remaining critical-point/ETR argumen
 are still open.
 
 The explicit sign transformations in Lemma 2.4 now have two further components.
-`RationalSubstitution.cleared` expands the substitution `xᵢ=nᵢ(θ)/dᵢ(θ)` after
-multiplication by `∏ dᵢ(θ)^(2*degreeOfᵢ p)`. Its exact evaluation identity proves
+`RationalSubstitution.cleared` expands the substitution $x_{i}=n_{i}(\theta )/d_{i}(\theta )$ after
+multiplication by $\prod d_{i}(\theta )^{2\cdot \operatorname{degreeOf}_{i} p}$. Its exact evaluation identity proves
 sign preservation wherever the coordinate denominators are nonzero. The even
 powers make this denominator positive, including negative coordinate denominators.
 The numerator degree is at most
-`∑ᵢ 2*degreeOfᵢ p*max(deg nᵢ,deg dᵢ)`. These algebraic statements include zero
+$\sum _{i} 2\cdot \operatorname{degreeOf}_{i} p\cdot \operatorname{max}(\operatorname{deg} n_{i},\operatorname{deg} d_{i})$. These algebraic statements include zero
 and constant polynomials and empty coordinate families.
 `RationalSubstitutionMap.clearedWith` retains explicit degree allowances, proving
 that coefficient-ring maps commute with the construction even when modular
@@ -584,13 +584,13 @@ reduction kills coefficients and lowers actual degrees.
 `CoefficientMass` proves subadditivity, submultiplicativity, and finite
 sum/product/power bounds for the sum of absolute integer coefficients.
 `RationalSubstitutionBounds` bounds the cleared numerator's coefficient mass by
-the source coefficient mass times `∏ Mᵢ^(2*degreeOfᵢ p)` when `Mᵢ` bounds both
+the source coefficient mass times $\prod M_{i}^{2\cdot \operatorname{degreeOf}_{i} p}$ when `Mᵢ` bounds both
 coordinate masses. For `A` variables and source variable degrees bounded by `D`,
-there are at most `(D+1)^A` supported monomials. Source coefficient magnitudes
-at most `2^b₀`, coordinate degrees at most `E`, and coordinate coefficient
-magnitudes at most `2^b` therefore give the explicit coefficient bit budget
-`b₀+A*(D+1).size+2*A*D*(b+(E+1).size)+1`. The uniform degree allowance is
-`2*A*D*E`. `RationalSubstitutionBudget` supplies FP binary writers and semantic
+there are at most $(D+1)^A$ supported monomials. Source coefficient magnitudes
+at most $2^{b_{0}}$, coordinate degrees at most `E`, and coordinate coefficient
+magnitudes at most $2^b$ therefore give the explicit coefficient bit budget
+$b_{0}+A\cdot (D+1).\operatorname{size}+2\cdot A\cdot D\cdot (b+(E+1).\operatorname{size})+1$. The uniform degree allowance is
+$2\cdot A\cdot D\cdot E$. `RationalSubstitutionBudget` supplies FP binary writers and semantic
 budget theorems for these quantities from arbitrary binary metadata words;
 neither a whole source coefficient mass nor the expanded polynomial is computed.
 The streamed indexed-source evaluator below supplies modular evaluation with
@@ -611,7 +611,7 @@ supply the product and outer-sum computations needed by rational substitution.
 `IndexedRationalSubstitution` represents the source as `M` indexed monomials in
 `A` variables, allowing repeated exponent vectors, zero coefficients, and
 cancellation. A fixed width `W` bounds every exponent; clearing produces
-`∑ᵣ aᵣ ∏ᵢ nᵢ^eᵣᵢ dᵢ^(W-eᵣᵢ)`. Coefficient-ring maps commute with this expression.
+$\sum _{r} a_{r} \prod _{i} n_{i}^{e_{ri}} d_{i}^{W-e_{ri}}$. Coefficient-ring maps commute with this expression.
 For even `W`, exact evaluation preserves the source expression's sign wherever
 the coordinate denominators are nonzero.
 
@@ -625,10 +625,10 @@ the actual cleared integer polynomial at packets
 `pair (pair context selectedDegree) (m-1)`. It normalizes the modulus field for
 source calls and preserves the original width under modular degree drops.
 
-`IndexedRationalSubstitutionBounds` proves degree at most `A*W*E` and coefficient
-magnitude-bit length at most `M.size+s+A*W*b+1`, where source coefficients have
-magnitude at most `2^s` and coordinate coefficient masses at most `2^b`.
-Coordinate degree and coefficient bounds give `b=b₁+(E+1).size`.
+`IndexedRationalSubstitutionBounds` proves degree at most $A\cdot W\cdot E$ and coefficient
+magnitude-bit length at most $M.\operatorname{size}+s+A\cdot W\cdot b+1$, where source coefficients have
+magnitude at most $2^s$ and coordinate coefficient masses at most $2^b$.
+Coordinate degree and coefficient bounds give $b=b_{1}+(E+1).\operatorname{size}$.
 `IndexedRationalSubstitutionBudget` writes these bounds in FP, using normalized
 word length for `M.size`. `RationalSubstitutionSign` combines the actual residue
 evaluator and these budgets with integer sign recovery and the infinitesimal
@@ -644,15 +644,15 @@ multiplication uses quotient/remainder to flatten their Cartesian product.
 The sum is exactly `Term.toPolynomial`, with no collection of equal monomials.
 `IndexedExpansionBounds` proves finite-variable evaluation agrees with the term,
 each exponent is at most `Term.degreeBound`, and unused variables have exponent
-zero. The count is at most `2^leafCount`. For literal term bit length `N`,
-`IndexedExpansionSize` gives count bit length at most `N+1` and indexed coefficient
-magnitude at most `2^N`, including negative constants with the original codec.
+zero. The count is at most $2^{\mathrm{leafCount}}$. For literal term bit length `N`,
+`IndexedExpansionSize` gives count bit length at most $N+1$ and indexed coefficient
+magnitude at most $2^N$, including negative constants with the original codec.
 
 `ETR.IndexedRationalSubstitution` applies the even-width construction directly
 to these syntax-derived monomials. Its evaluation and sign theorems refer to
 `Term.eval` of the actual rational coordinate functions. Its degree is at most
-`A*(2*degreeBound)*E`, and coefficient magnitude-bit length is at most
-`2*N+A*(2*degreeBound)*b+2` when coordinate coefficient masses are at most `2^b`.
+$A\cdot (2\cdot \mathrm{degreeBound})\cdot E$, and coefficient magnitude-bit length is at most
+$2\cdot N+A\cdot (2\cdot \mathrm{degreeBound})\cdot b+2$ when coordinate coefficient masses are at most $2^b$.
 The compiled single-equation semantics proves ETR satisfiability equivalent to
 the corresponding finite-variable indexed equation.
 
@@ -675,7 +675,7 @@ and every child index is at most the initial index.
 `MonomialReaderEncoding` supplies FP binary transitions using the actual count
 reader and binary arithmetic. `MonomialReaderCorrect` proves exact simulation;
 `MonomialReaderBounds` bounds the context, complete task stack, and accumulator
-by `2*context.length+4+(4*index.size+20)*termSize+accumulator.length` throughout.
+by $2\cdot \mathrm{context}.\operatorname{length}+4+(4\cdot \mathrm{index}.\operatorname{size}+20)\cdot \mathrm{termSize}+\mathrm{accumulator}.\operatorname{length}$ throughout.
 `MonomialReaderFP.reader_mem_FP` combines these results with FP input fields and
 a polynomial accumulator bound, accounting for all intermediate states and the
 polynomial traversal clock.
@@ -689,7 +689,7 @@ accumulator is at most the number of steps. Consequently
 for the syntax-derived source family. No variable index is expanded to unary.
 
 `IntegerResidueFP` reads the original integer payloads and computes residues in
-FP, incrementing the stored magnitude before negation for `-(n+1)`. It handles
+FP, incrementing the stored magnitude before negation for $-(n+1)$. It handles
 modulus one. `MonomialCoefficientAtom` multiplies the accumulator by a constant
 residue or by one for a variable. Every partial accumulator fits in the positive
 modulus word. `MonomialReader.sourceCoefficient` therefore has a uniform FP
@@ -698,7 +698,7 @@ semantics for every positive modulus. No complete indexed coefficient is stored.
 
 `EncodedRationalSource` supplies a complete source adapter from an FP term field
 and FP arity allowance. The default allowance is the validated term's literal
-length `N`; the clearing width is `2*N`. Counts, exponent access, coefficient
+length `N`; the clearing width is $2\cdot N$. Counts, exponent access, coefficient
 residues, and source magnitude-bit budgets all have concrete FP implementations.
 `RationalSubstitutionBits.Coordinates.evaluator` (in `EncodedRationalSubstitution`) needs only the coordinate
 coefficient routines and their residue contracts. Its sign evaluator additionally
@@ -717,7 +717,7 @@ the decision procedure's coordinates, determining signs at algebraic parameter
 roots, and the effective critical-point decision argument remain open.
 
 `InfinitesimalSign` proves that a real polynomial's sign on some interval
-`0<β<δ` equals its trailing coefficient's sign, with a common interval for any
+$0<\beta <\delta$ equals its trailing coefficient's sign, with a common interval for any
 finite family. Injective coefficient maps preserve trailing degree and
 coefficient, giving the same theorem for integer polynomials evaluated in the
 reals. `InfinitesimalSign.evaluator` scans coefficients in increasing degree and
@@ -734,12 +734,12 @@ Lemma 2.3's full implicit-family and algebraic-parameter specialization remains
 open.
 
 `EffectiveInfinitesimalSign` makes the integer small-parameter bound explicit:
-coefficient mass at most `2^b` and `b < s` suffice throughout
-`0 < β ≤ 2^(-s)`. The proof factors the lowest power of β and bounds the remaining
+coefficient mass at most $2^b$ and $b < s$ suffice throughout
+$0 < \beta \le 2^{-s}$. The proof factors the lowest power of β and bounds the remaining
 tail by the coefficient mass. It includes the zero polynomial and provides the
 same threshold for any family with a uniform mass bound.
-`DyadicSpecialization` represents `2^(s*D) * p(2^(-s))` as an integer sum and
-bounds its binary magnitude by `b+s*D+1` for degree at most `D`.
+`DyadicSpecialization` represents $2^{s\cdot D} \cdot p(2^{-s})$ as an integer sum and
+bounds its binary magnitude by $b+s\cdot D+1$ for degree at most `D`.
 `DyadicBits.residueEvaluator` streams that sum using modular powers and suspended
 original coefficient calls; `signEvaluator` adds the certified CRT sign routine.
 No denominator or full specialized integer is stored.
@@ -762,8 +762,8 @@ and the integer evaluator's unary FP family-size certificate. It computes the
 exact number of distinct roots realizing the requested signs at the selected
 parameter. The coefficient adapters normalize nested indices and supply all
 specialized readers from the original bivariate sources. The positivity and
-guarded-realizability languages are in PSPACE. A root mass bound `2^b` with
-`b < s` preserves nonvanishing of a nonzero original root polynomial, giving
+guarded-realizability languages are in PSPACE. A root mass bound $2^b$ with
+$b < s$ preserves nonvanishing of a nonzero original root polynomial, giving
 unguarded realizability under that effective hypothesis. These results cover
 empty query families and the zero-polynomial finite-root convention.
 
@@ -776,7 +776,7 @@ on a sufficiently small interval. Fixed-bound signed principal coefficients
 commute with parameter evaluation. Their trailing-coefficient signs therefore
 give the same Tarski query throughout the interval, including constant and zero
 heads. `budget` is the binary size of the sum of these finitely many test masses;
-`query_eq_value_on_interval` uses β at most `2^(-(budget+1))`.
+`query_eq_value_on_interval` uses β at most $2^{-(\mathrm{budget}+1)}$.
 
 `patternBudget` takes the maximum test budget over all ternary product queries.
 It is independent of the requested sign pattern. `rootCount_stable` proves that
@@ -792,12 +792,12 @@ coefficients. `PrincipalParameterMass` bounds an entire determinant's coefficien
 mass by a factorial times its column allowances. This bounds the signed principal
 tests directly, including terminal and zero branches, without parameter degrees.
 `ParameterSourceBounds` combines these estimates. With outer bounds `dp,df` and
-total mass bounds `2^bp,2^bf`, the seed mass exponent is
-`2*(dp+df+1)*(bp+1)+bf+dp.size+bp`. The principal-test exponent is bounded using
-matrix size at most `2*dp`. Original coefficient-mass allowances are converted to
-total-mass exponents by adding `(degree+1).size`. For ternary products the uniform
-total-mass exponent is `2*k*(bf+(D+1).size)` and the outer degree is at most
-`2*k*D`. Hence one source-derived bound works for every ternary query, without
+total mass bounds $2^{\mathrm{bp}},2^{\mathrm{bf}}$, the seed mass exponent is
+$2\cdot (\mathrm{dp}+\mathrm{df}+1)\cdot (\mathrm{bp}+1)+\mathrm{bf}+\mathrm{dp}.\operatorname{size}+\mathrm{bp}$. The principal-test exponent is bounded using
+matrix size at most $2\cdot \mathrm{dp}$. Original coefficient-mass allowances are converted to
+total-mass exponents by adding $(\operatorname{degree}+1).\operatorname{size}$. For ternary products the uniform
+total-mass exponent is $2\cdot k\cdot (\mathrm{bf}+(D+1).\operatorname{size})$ and the outer degree is at most
+$2\cdot k\cdot D$. Hence one source-derived bound works for every ternary query, without
 constructing or enumerating the symbolic test polynomials.
 
 `ParameterSourceBudget` provides FP binary writers for these expressions, including
@@ -816,7 +816,7 @@ repeated roots, and the zero-polynomial finite-root convention are covered.
 
 `InfinitesimalRootPSPACE` gives the eventual count its quantified semantics.
 For a nonzero symbolic root polynomial, positivity is equivalent to
-`∃ δ>0, ∀ β, 0<β<δ → ∃ a`, with `a` a real root realizing all requested signs.
+$\exists \delta >0, \forall \beta , 0<\beta <\delta \to \exists a$, with `a` a real root realizing all requested signs.
 The guarded language also requires that symbolic nonvanishing, and belongs to
 PSPACE on every input. The unguarded language belongs to PSPACE when all symbolic
 root inputs are nonzero. Thus the polynomially bounded finite-family
@@ -824,17 +824,17 @@ small-parameter root-sign stage has a complete space certificate. Canny's strong
 implicit family bounds and critical-point construction remain separate obligations.
 
 `ScaledSignQueries` starts the algebraic-root counting stage. At each sign value
-`t∈{-1,0,1}`, the integer quadratics `2-2*t²`, `t²-t`, and `t²+t` are twice the
+$t\in \{-1,0,1\}$, the integer quadratics $2-2\cdot t^{2}$, `t²-t`, and $t^{2}+t$ are twice the
 indicators of zero, negative, and positive respectively. Expanding a product of
 these indicators proves that an integer combination of ternary product Tarski
-queries equals `2^k` times the number of distinct real roots realizing the
+queries equals $2^k$ times the number of distinct real roots realizing the
 requested sign pattern. For a nonzero root polynomial, strict positivity is
 equivalent to an actual realizing real root. Repeated roots are counted once;
 zero query values and an empty query family are included. The zero root polynomial
 uses Mathlib's empty root multiset and is excluded from the realization theorem.
 
 `SignQueryProductSpace.queryProductEvaluator` computes a selected modular
-coefficient of `∏ Qᵢ^eᵢ`, `eᵢ∈{0,1,2}`, through the existing suspended product
+coefficient of $\prod Q_{i}^{e_{i}}$, $e_{i}\in \{0,1,2\}$, through the existing suspended product
 machine. Two factor slots per polynomial suffice, with unit padding. Binary
 count/exponent/modulus/degree fields are FP, and source coefficient routines may
 use polynomial space. Empty products and modulus one are covered. Coefficient
@@ -845,7 +845,7 @@ degree drops.
 original-source Tarski evaluator. Its only arithmetic children read coefficients
 of the root and indexed original polynomials. FP readers give the number of
 polynomials, ternary exponents, and original degree/mass allowances. Product
-query degree and mass budgets are derived internally as `2*k*D` and `2*k*B`.
+query degree and mass budgets are derived internally as $2\cdot k\cdot D$ and $2\cdot k\cdot B$.
 Uniform residues normalize the modulus protocol and preserve the selected
 coefficient. Empty products and modulus one are covered, and the query's zero,
 positive, and negative languages belong to PSPACE under these source contracts.
@@ -860,10 +860,10 @@ multiplication is also proved for the pattern-weight products. The complete
 scaled-count evaluator below now composes these routines with explicit ternary
 enumeration and a certified pattern-weight reader.
 
-`SignQueryBounds` proves query degree at most `2*k*D` and integer coefficient
-magnitude-bit length at most `2*k*(b+(D+1).size)+1` for input degree allowance `D`
-and coefficient magnitude allowance `2^b`. A Tarski query lies between minus and
-plus the root degree. The scaled count has at most `k+rootDegree.size+1` magnitude
+`SignQueryBounds` proves query degree at most $2\cdot k\cdot D$ and integer coefficient
+magnitude-bit length at most $2\cdot k\cdot (b+(D+1).\operatorname{size})+1$ for input degree allowance `D`
+and coefficient magnitude allowance $2^b$. A Tarski query lies between minus and
+plus the root degree. The scaled count has at most $k+\mathrm{rootDegree}.\operatorname{size}+1$ magnitude
 bits. `SignQueryBudget` gives FP binary writers and semantic budget theorems from
 count and degree words, without unary expansion of their values.
 
@@ -871,9 +871,9 @@ The ternary moment formulation also appears in TauCeti's
 [polynomial sign-sum identities](https://github.com/TauCetiProject/TauCeti/blob/main/TauCeti/Geometry/RealAlgebraic/SignDetermination/Polynomial.lean)
 and [adapted matrices](https://github.com/TauCetiProject/TauCeti/blob/main/TauCeti/Geometry/RealAlgebraic/SignDetermination/Adapted.lean).
 The complete direct expansion now has a space certificate. `Ternary.count` and
-`Ternary.digit` compute binary `3^k` and its query digits with FP modular
-exponentiation using a modulus of `2*k+1` bits. The proof matches the enumeration
-to Mathlib's equivalence between `Fin k → Fin 3` and `Fin (3^k)`, including `k=0`.
+`Ternary.digit` compute binary $3^k$ and its query digits with FP modular
+exponentiation using a modulus of $2\cdot k+1$ bits. The proof matches the enumeration
+to Mathlib's equivalence between `Fin k → Fin 3` and `Fin (3^k)`, including $k=0$.
 A unary FP certificate for `k` ensures polynomial output length; the binary
 count writer alone would not provide this bound.
 
@@ -881,8 +881,8 @@ count writer alone would not provide this bound.
 expansion and multiplies them with a complete suspended-call certificate. Each
 factor has magnitude at most two, so every prefix product has at most order `k`
 bits. `summandEvaluator` multiplies this weight by the original-source product
-Tarski query. `evaluator` sums all `3^k` terms and proves exact agreement with
-`scaledRootCount`. `rootCountEvaluator` then uses FP division by `2^k` to return
+Tarski query. `evaluator` sums all $3^k$ terms and proves exact agreement with
+`scaledRootCount`. `rootCountEvaluator` then uses FP division by $2^k$ to return
 the binary number of distinct realizing roots. The only arithmetic children
 read original root and indexed-polynomial coefficients; the pattern reader and
 metadata writers are FP.
@@ -894,64 +894,90 @@ polynomial's empty-root convention are covered. This proves direct sign-pattern
 counting for polynomially bounded family size. It does not establish Canny's
 stronger polylogarithmic dependence on an implicitly large polynomial family,
 its full algebraic-parameter specialization, or the effective critical-point
-argument. Those obligations and `ETR ∈ PSPACE` remain open.
+argument. Those obligations and $\mathrm{ETR} \in \mathrm{PSPACE}$ remain open.
 
 ## Symmetric recovery degeneracy and bounded asymmetric coordinates
 
 The report's equations (13)--(15) do not always give the asserted linear GCD.
-`SymmetricRecoveryDegeneracy` verifies the finite affine system `x^3-x=0, y=0`:
-its solutions are `(-1,0),(0,0),(1,0)`, and homogenization has no nonzero solution
-at infinity. For direction `(c₀,c₁)`, its nodal eliminant is
-`q(X)=X*(X-c₀)*(X+c₀)`, separable when `c₀≠0`. Shifting `c₁` by either sign of
-one leaves q unchanged. At the middle projected root zero, reflection gives
-`q(-X)=-q(X)`, so the recovery GCD has degree three. The corresponding midpoint
+`SymmetricRecoveryDegeneracy` verifies the finite affine system $x^{3}-x=0, y=0$:
+its solutions are $(-1,0),(0,0),(1,0)$, and homogenization has no nonzero solution
+at infinity. For direction $(c_0,c_1)$, its nodal eliminant is
+$q(X)=X(X-c_0)(X+c_0)$, separable when $c_0\ne0$. Shifting $c_1$ by either sign of
+one leaves $q$ unchanged. At the middle projected root zero, reflection gives
+$q(-X)=-q(X)$, so the recovery GCD has degree three. The corresponding midpoint
 triple makes condition (14) an identity in the direction coefficients. Thus the
 claim on page 7 that these bad conditions become nonzero polynomials under
-`cᵢ=βⁱ` needs an additional argument or a different construction. This identifies
+$c_i=\beta^i$ needs an additional argument or a different construction. This identifies
 a gap in the fixed symmetric construction, not a counterexample to the PSPACE
 upper bound or the existence statement of Lemma 2.2. Previously proved
 univariate recovery theorems retain their explicit separating-pair hypotheses.
 
-`VectorSeparation.exists_bounded_pair_encoding` chooses a positive integer
-`k ≤ N^4+1` for which `(a,b) ↦ a+k*b` is injective on all ordered pairs of a
-finite N-point set S. Each collision of distinct pairs with unequal second
-components excludes at most one scalar; equal second components cannot collide.
-There are at most N⁴ excluded slopes, and excluding zero makes k positive.
+The obstruction is preserved by every linear projection: if the three points
+are $A,B,C$ with $A+C=2B$, then $L(A)+L(C)=2L(B)$. Since their second coordinates
+are equal, the symmetric coordinate shifts do not break this midpoint relation.
+Thus even a separating projection, or an infinitesimal choice of its coefficients,
+cannot make the required GCD linear in this example. Canny already identifies
+spurious roots; the gap is the assertion that suitable coefficient choices always
+avoid them. See the [report](https://www2.eecs.berkeley.edu/Pubs/TechRpts/1988/Archive/CSD-88-439.pdf),
+printed pages 6--7, equations (13)--(16).
 
-`AffineGridAvoidance` bounds a common integer nonzero evaluation of m nonzero
-affine forms by `0,...,m`. Its family separation theorem allows different affine
+A relevant later source is Angelos Mantzaflaris, Éric Schost, and Elias Tsigaridas,
+[*Sparse Rational Univariate Representation*, ISSAC 2017, pp. 301--308](https://doi.org/10.1145/3087604.3087653)
+([author-hosted manuscript](https://cs.uwaterloo.ca/~eschost/publications/srur.pdf)).
+Section 2.2, equation (16), explicitly assumes
+$2\zeta_\ell=(\zeta_m+\alpha_{m,k})+(\zeta_\nu-\alpha_{\nu,k})$
+only when $\ell=m=\nu$. The three-point example violates precisely this
+no-spurious-pairs condition for every linear separating projection. The paper
+also allows nonlinear separating polynomials and discusses coefficient choices
+in Section 2.3. Its equations (7)--(8) give an alternative derivative-based
+coordinate formula, using a parameterized square-free eliminant and the derivative
+of the univariate eliminant as denominator. That derivative-based alternative is
+not formalized here. These passages do not explicitly correct Canny's argument.
+A targeted literature search on 2026-10-21 found neither this exact
+counterexample nor an explicit correction of the linear-choice justification;
+this negative search result does not establish novelty.
+
+`VectorSeparation.exists_bounded_pair_encoding` chooses a positive integer
+$k\le N^4+1$ for which $(a,b)\mapsto a+kb$ is injective on all ordered pairs of a
+finite $N$-point set $S$. Each collision of distinct pairs with unequal second
+components excludes at most one scalar; equal second components cannot collide.
+There are at most $N^4$ excluded slopes, and excluding zero makes $k$ positive.
+
+`AffineGridAvoidance` bounds a common integer nonzero evaluation of $m$ nonzero
+affine forms by $0,\ldots,m$. Its family separation theorem allows different affine
 offsets on each vector. `AsymmetricProjection.exists_bounded_direction` applies
-this to the encoded vector pairs: for every coordinate j, the affine scalar
-`L(a+k*b)+k*(aⱼ-bⱼ)` must distinguish all pairs. One further family with zero
-offsets ensures that L itself is injective on S. One common integer direction
-works, with every coefficient at most `(n+1)*N^4`. No condition is assumed to
+this to the encoded vector pairs: for every coordinate $j$, the affine scalar
+$L(a+kb)+k(a_j-b_j)$ must distinguish all pairs. One further family with zero
+offsets ensures that $L$ itself is injective on $S$. One common integer direction
+works, with every coefficient at most $(n+1)N^4$. No condition is assumed to
 remain nonzero when it is identically zero; the vector-pair encoding proves
 nonzeroness before the grid theorem is applied.
 
 `AsymmetricCoordinateRecovery` forms nodal polynomials with roots
-`L(a)+k*aⱼ` and `L(b)-bⱼ`. They are separable, and their Cartesian root pairs
-are separated by `(A,B) ↦ A+k*B`. At a point x, the distinguished pair maps to
-`(k+1)*L(x)`. The existing `coordinate_recovery_spec`, including its linear-input
-branches, therefore gives a nonzero D and `xⱼ=L(x)+N/D`. Composing N and D with
-`(k+1)*X` yields `rationalNumerator/rationalDenominator` in the original parameter
-L(x), with denominator degree at most `max 1 ((N-1)*N)` and numerator degree at
+$L(a)+ka_j$ and $L(b)-b_j$. They are separable, and their Cartesian root pairs
+are separated by $(A,B)\mapsto A+kB$. At a point $x$, the distinguished pair maps to
+$(k+1)L(x)$. The existing `coordinate_recovery_spec`, including its linear-input
+branches, therefore gives a nonzero $D$ and $x_j=L(x)+N/D$. Composing $N$ and $D$
+with $(k+1)X$ gives `rationalNumerator` and `rationalDenominator` in the original
+parameter $L(x)$, with denominator degree at most $\max\{1,(N-1)N\}$ and numerator degree at
 most one more. `exists_bounded_rational_coordinates` assembles the bounded choices,
 a separable projection eliminant, and simultaneous exact coordinate recovery.
 
 `GaloisFixedPolynomial` applies the infinite Galois fixed-field theorem, removing
 the finite-dimensional hypothesis from coefficient descent. `VectorGaloisDescent`
-supplies the base-field coefficient step for vectors in any Galois extension L/K. An automorphism permuting S fixes every nodal
+supplies the base-field coefficient step for vectors in any Galois extension $L/K$.
+An automorphism permuting $S$ fixes every nodal
 polynomial whose node map commutes with the automorphism. This product argument
 retains multiplicities and does not require injective nodes. Original and
-asymmetrically shifted integer projections commute with every K-automorphism,
-so their nodal polynomials descend to K. `stable_of_zero_set` proves the stability
-hypothesis for a full finite zero set of multivariate equations over K.
+asymmetrically shifted integer projections commute with every $K$-automorphism,
+so their nodal polynomials descend to $K$. `stable_of_zero_set` proves the stability
+hypothesis for a full finite zero set of multivariate equations over $K$.
 
 `AsymmetricBaseCoordinates.exists_bounded_coordinates` combines this descent with
-the bounded asymmetric choice and the existing recovery theorem over K with
-roots in L. It returns a monic separable degree-N polynomial over K with exactly
-the projected points as roots in L, plus numerator and denominator polynomials
-over K for every coordinate. The same degree bounds and nonzero-denominator
+the bounded asymmetric choice and the existing recovery theorem over $K$ with
+roots in $L$. It returns a monic separable degree-$N$ polynomial over $K$ with exactly
+the projected points as roots in $L$, plus numerator and denominator polynomials
+over $K$ for every coordinate. The same degree bounds and nonzero-denominator
 specifications hold simultaneously, including empty sets and linear inputs.
 The ambient Galois extension and stable finite point set are hypotheses of this
 finite-set theorem; the full-zero-set application below supplies them directly
@@ -962,7 +988,14 @@ The nodal products use the supplied point set; they are not yet constructed from
 encoded multivariate equations, and no descent to integer coefficients or
 multivariate eliminant coefficient routine is supplied by these modules.
 The remaining effective multivariate construction, its complexity bounds, and
-`ETR ∈ PSPACE` remain open.
+$\mathrm{ETR} \in \mathrm{PSPACE}$ remain open.
+
+The asymmetric construction therefore repairs the finite-set recovery step,
+including denominator nonvanishing and bounded choices of weight and direction.
+The existence results below extend it to full finite polynomial zero sets and
+integer representations. Constructing the representation from encoded equations
+with the required coefficient readers and polynomial-space bound remains a
+separate obligation.
 
 ## Rational representations of full finite zero sets
 
@@ -970,8 +1003,8 @@ The remaining effective multivariate construction, its complexity bounds, and
 over K in an extension L. Its `Representation` records an integer direction,
 a monic separable eliminant of degree equal to the full solution count N, and
 numerator/denominator polynomials over K for every coordinate. Direction
-coefficients are at most `(n+1)*N^4`; denominator degrees are at most
-`max 1 ((N-1)*N)` and numerator degrees at most one more. Denominators do not
+coefficients are at most $(n+1)\cdot N^{4}$; denominator degrees are at most
+$\max\{1,(N-1)N\}$ and numerator degrees at most one more. Denominators do not
 vanish on solutions, and the eliminant has exactly the projected solutions as
 roots in L. `Representation.rootEquiv` is an actual bijection between eliminant
 roots and system solutions, obtained by the rational decoding formulas.
@@ -1000,7 +1033,7 @@ This connects the qualitative critical-fiber and rational-coordinate results.
 The direction grid still depends on the degree of an existential exceptional
 polynomial; an input-size bound on that degree, a bound on the number of critical
 points, multivariate eliminant coefficient algorithms, and their space bounds
-remain open. `ETR ∈ PSPACE` is not proved.
+remain open. $\mathrm{ETR} \in \mathrm{PSPACE}$ is not proved.
 
 ## Sound rational decoding across extension fields
 
@@ -1043,9 +1076,9 @@ open; the algebraic-closure bijection alone does not establish them.
 
 `CoordinateAnnihilatorSpecialization.Certificate` retains the cleared coordinate
 polynomials Qᵢ, nonzero parameter factors sᵢ, and identities
-`C(sᵢ)*Qᵢ(Xᵢ) ∈ radical(I)` from the existing finite-fiber proof. Their product
-`d=∏ᵢ sᵢ*leadingCoeff(Qᵢ)` is nonzero. At any specialization φ into a field K
-with `φ(d)≠0`, each `Qᵢ.map φ` is a nonzero polynomial over K. Every solution in
+$C(s_{i})\cdot Q_{i}(X_{i}) \in \operatorname{radical}(I)$ from the existing finite-fiber proof. Their product
+$d=\prod _{i} s_{i}\cdot \operatorname{leadingCoeff}(Q_{i})$ is nonzero. At any specialization φ into a field K
+with $\varphi (d)\ne 0$, each `Qᵢ.map φ` is a nonzero polynomial over K. Every solution in
 every extension E/K is annihilated coordinatewise by those same K-polynomials.
 Thus all coordinates are algebraic over K, even when E itself is not algebraic.
 The certificate also supplies finiteness in every such target field.
@@ -1075,7 +1108,7 @@ One common integer direction admits these complete representations for every
 surface in a finite family. This proves the semantic coordinate step, not an
 encoded coefficient algorithm. Bounds on the exceptional polynomial, critical
 point count and coefficient sizes, the multivariate eliminant computation,
-and the full `ETR ∈ PSPACE` proof remain open.
+and the full $\mathrm{ETR} \in \mathrm{PSPACE}$ proof remain open.
 
 ## Integer coefficient data for critical representations
 
@@ -1105,16 +1138,16 @@ and substitution interfaces. The localization normalization is an existence
 construction. The explicit alternative below now supplies bounds and coefficient
 access from rational source contracts. Effective multivariate construction and
 derivation of those source contracts from the original input remain open, as
-does `ETR ∈ PSPACE`.
+does $\mathrm{ETR} \in \mathrm{PSPACE}$.
 
 ## Constructive normalization bounds and streamed coefficient signs
 
 `FiniteDenominatorClearing` replaces a chosen localization multiple with the
 product M of the canonical positive denominators of a finite rational family.
 Its cleared value at i is the integer numerator at i times the product of all
-other denominators. The value is exactly `M*qᵢ` over the rationals. If every
+other denominators. The value is exactly $M\cdot q_{i}$ over the rationals. If every
 numerator magnitude and denominator has at most B bits and the family has N
-entries, M and every cleared value have at most `B*N+1` bits.
+entries, M and every cleared value have at most $B\cdot N+1$ bits.
 
 `RationalPolynomialClearing` enumerates all coefficients through a common degree
 cap D in a finite polynomial family, including high zero coefficients. Their
@@ -1122,8 +1155,8 @@ denominators are one. `Polynomial.ofFn` builds the explicit integer polynomials;
 the common scalar identity proves equality after mapping to the rational field,
 and injectivity preserves the original degrees. `BoundedIntegerCoordinates`
 applies this to the eliminant and all coordinate pairs at once. For n coordinates
-there are `(2*n+1)*(D+1)` entries, yielding the coefficient and scale budget
-`B*((2*n+1)*(D+1))+1`. The resulting `IntegerData` uses this specified positive
+there are $(2\cdot n+1)\cdot (D+1)$ entries, yielding the coefficient and scale budget
+$B\cdot ((2\cdot n+1)\cdot (D+1))+1$. The resulting `IntegerData` uses this specified positive
 scale and retains the existing root, decoding, and nonvanishing theorems.
 
 `DenominatorClearingSpace.Access.evaluator` computes one normalized integer value
@@ -1137,7 +1170,7 @@ the existing modular-product and space-function composition interfaces.
 
 `DenominatorClearingSign.SourceAccess` supplies an original query context,
 canonical numerator/denominator residue routines, and FP binary count, selected
-index and component-bit-bound writers. Its FP budget writer computes `B*N+1`.
+index and component-bit-bound writers. Its FP budget writer computes $B\cdot N+1$.
 The uniform positive-modulus packet protocol connects the complete modular
 product evaluator to indexed CRT sign recovery and the small-modulus zero scan.
 The cleared coefficient's three-way sign has a space-function evaluator;
@@ -1153,30 +1186,30 @@ remain open.
 
 ## Compactification before critical points
 
-The report's §3.1 starts by substituting `x_i = y_i/(1-y_i²)` and bounding the
+The report's §3.1 starts by substituting $x_i = y_i/(1-y_i^{2})$ and bounding the
 new coordinates inside the unit cube. The local route uses the existing
 all-input equation compiler first. The remaining strict constraints are then
 the cube bounds, while the compiled polynomial equation defines a closed set.
 
 `Geometry.CubeCoordinates` supplies the explicit inverse
-`2*x/(1+sqrt(1+4*x²))`, proves it lies strictly between -1 and 1, and proves the
+$2\cdot x/(1+\mathrm{sqrt}(1+4\cdot x^{2}))$, proves it lies strictly between -1 and 1, and proves the
 coordinatewise map is onto. Every finite open-cube point has a common positive
 margin; the resulting closed inner cubes are compact and nested as the margin
 decreases.
 
 `Geometry.CubePolynomial.cleared` is an integer multivariate polynomial, formed
-by clearing each coordinate denominator to exponent `2*degreeOf_i(p)`.
+by clearing each coordinate denominator to exponent $2\cdot \operatorname{degreeOf}_i(p)$.
 Its real evaluation is a positive factor times the original polynomial evaluated
 at the rational coordinates. Thus zeros and signs agree on the open cube. Its
-total degree is at most `4*sum_i degreeOf_i(p)`, hence at most
-`4*n*totalDegree(p)`. Intersecting its zero set with an inner cube is compact.
+total degree is at most $4\cdot \sum_i \operatorname{degreeOf}_i(p)$, hence at most
+$4\cdot n\cdot \mathrm{totalDegree}(p)$. Intersecting its zero set with an inner cube is compact.
 Existence of an original real zero is equivalent to nonemptiness for some positive
 margin, and smaller margins preserve nonemptiness. Linear projections attain
 maxima on these compact nonempty sets.
 
 `ETR.FinitePolynomial` translates a term to a polynomial on its actual finite
 variable block, preserving evaluation under extension by zero. Its compactified
-degree is at most `4*arity*degreeBound`, hence at most `4*dataSize²`.
+degree is at most $4\cdot \mathrm{arity}\cdot \mathrm{degreeBound}$, hence at most $4\cdot \mathrm{dataSize}^{2}$.
 `ETR.CompactSource.correct` composes this with the existing FP compiler for all
 binary inputs. `correct_all_small_margins` gives nonempty compact zero sets for
 every sufficiently small positive margin exactly on ETR yes-instances.
@@ -1190,12 +1223,12 @@ system on a compact set from uniform arbitrarily small violations. The proof
 minimizes the sum of negative parts. Approximate feasibility forces this minimum
 to be zero, giving an actual point satisfying all constraints.
 
-`PolynomialPerturbation` represents the compactified equation `q=0` by `q≥0`
-and `-q≥0`, together with two inner-cube inequalities per coordinate. Each
+`PolynomialPerturbation` represents the compactified equation $q=0$ by $q\ge 0$
+and $-q\ge 0$, together with two inner-cube inequalities per coordinate. Each
 constraint has an independent additive shift `a_i`, with
-`sum_i a_i² = δ²`. A feasible original point gives a perturbed point at every
+$\sum_i a_i^{2} = \delta ^{2}$. A feasible original point gives a perturbed point at every
 nonnegative radius by placing a nonnegative shift in one inequality. Conversely,
-arbitrarily small feasible perturbations bound the spatial points in `[-2,2]^n`
+arbitrarily small feasible perturbations bound the spatial points in $[-2,2]^n$
 and give uniform small violations; compact approximation recovers an unperturbed
 point. This proves the nonemptiness equivalence used in Lemma 3.2 for the compiled
 equation route, including zero-variable inputs. Fixed-radius perturbed sets are
@@ -1203,49 +1236,49 @@ closed and lie in an explicitly bounded product of cubes, hence are compact.
 
 `PerturbationPolynomials` realizes the constraints as integer multivariate
 polynomials with separate ε, δ, spatial, and shift variables. For `n` spatial
-variables there are `2+2*n` inequalities and `4+3*n` total variables including
-the two parameters. Inequality degrees are at most `max(degree(q),1)` and the
+variables there are $2+2\cdot n$ inequalities and $4+3\cdot n$ total variables including
+the two parameters. Inequality degrees are at most $\operatorname{max}(\operatorname{degree}(q),1)$ and the
 radius equation has degree at most two. `ETR.PerturbedSource.correct` instantiates
 the construction for every encoded ETR input:
-`ETR(bits) ↔ ∃ ε>0, ∃ d>0, ∀ δ, 0<δ<d → Nonempty(T(bits,ε,δ))`.
+$\mathrm{ETR}(\mathrm{bits}) \iff \exists \varepsilon >0, \exists d>0, \forall \delta , 0<\delta <d \to \mathrm{Nonempty}(T(\mathrm{bits},\varepsilon ,\delta ))$.
 The equivalent arbitrarily-small-radius statement is also proved. Dimension,
 inequality-count, and degree upper bounds have FP binary writers. Compactness
 gives extrema for every continuous objective on each nonempty perturbed set.
 
-`AdditiveSubmersion` proves that `(x,a) ↦ f(x)+a` has derivative
-`(h,b) ↦ Df(x)h+b`, which is onto via `b ↦ (0,b)`. Polynomial evaluation and
+`AdditiveSubmersion` proves that $(x,a) \mapsto f(x)+a$ has derivative
+$(h,b) \mapsto Df(x)h+b$, which is onto via $b \mapsto (0,b)$. Polynomial evaluation and
 the actual equation/cube constraint maps are smooth, so the result applies to
 the full parameterized ETR family.
 
 ## Radius slices and critical values
 
 `RadiusLinearization` computes the derivative of
-`((x,a),δ) ↦ (f(x)+a, r(a)-δ²)`. Its final coordinate includes `-2*δ*dδ`, so
-an explicit preimage proves surjectivity whenever `δ≠0`. At fixed radius the
-derivative is `(h,b) ↦ (Df(x)h+b, Dr(a)b)`; it is onto exactly when
-`Dr(a) ∘ Df(x)` is nonzero. `SquaredRadius` specializes these formulas to
-`r(a)=sum_i a_i²`, with `Dr(a)b=2*sum_i a_i*b_i`, and applies the joint result
+$((x,a),\delta ) \mapsto (f(x)+a, r(a)-\delta ^{2})$. Its final coordinate includes $-2\cdot \delta \cdot d\delta$, so
+an explicit preimage proves surjectivity whenever $\delta \ne 0$. At fixed radius the
+derivative is $(h,b) \mapsto (Df(x)h+b, Dr(a)b)$; it is onto exactly when
+$Dr(a) \circ Df(x)$ is nonzero. `SquaredRadius` specializes these formulas to
+$r(a)=\sum_i a_i^{2}$, with $Dr(a)b=2\cdot \sum_i a_i\cdot b_i$, and applies the joint result
 to the actual equation/cube family.
 
 `ActiveRadiusLinearization` handles an arbitrary active constraint set S. The
 augmented fixed-radius derivative, retaining only the S coordinates and the
 radius equation, is onto exactly when either some inactive shift `a_j` is
-nonzero or `Dr(a) ∘ Df(x)` is nonzero. The proof supplies explicit derivative
+nonzero or $Dr(a) \circ Df(x)$ is nonzero. The proof supplies explicit derivative
 preimages, including an inactive coordinate direction when available.
 
-`ActiveRadiusCritical` uses this criterion at a point with `f_i(x)+a_i=0` for
+`ActiveRadiusCritical` uses this criterion at a point with $f_i(x)+a_i=0$ for
 every active i. A nonsurjective derivative forces all inactive shifts to vanish.
 Its weighted spatial derivative is then the negative derivative of
-`g_S(x)=sum_{i∈S} f_i(x)²`. The sphere equation gives `g_S(x)=δ²` and the
+$g_S(x)=\sum_{i\in S} f_i(x)^{2}$. The sphere equation gives $g_S(x)=\delta ^{2}$ and the
 derivative of `g_S` is zero. Thus every radius failing this active-set
 submersion test yields a critical value of a concrete sum-of-squares function.
 
 `CriticalEnergyPolynomial` realizes `g_S` using the existing integer constraint
 polynomials after subtracting their shift variables. Its evaluation is independent
 of those shifts and of δ, and its total degree is at most
-`2*max(degree(q),1)` for the compactified equation q. `ETR.RadiusSource` proves
+$2\cdot \operatorname{max}(\operatorname{degree}(q),1)$ for the compactified equation q. `ETR.RadiusSource` proves
 the joint and active-set statements for every encoded source and supplies an FP
-binary degree allowance `8*sourceSize²+4` for the energy polynomial.
+binary degree allowance $8\cdot \mathrm{sourceSize}^{2}+4$ for the energy polynomial.
 
 `PolynomialCalculus` proves the analytic derivative formula for evaluation of a
 multivariate polynomial over any coefficient semiring with a homomorphism to ℝ.
@@ -1256,13 +1289,13 @@ the parameter assignment explicitly, so specializing ε, δ, and shifts retains 
 the spatial partials.
 
 `RadiusCriticalEquations` consequently gives an integer polynomial system
-`g_S-δ²=0`, `∂g_S/∂y_i=0`, whose zeros are exactly the critical points with value
+$g_S-\delta ^{2}=0$, $\partial g_S/\partial y_i=0$, whose zeros are exactly the critical points with value
 δ². Every singular active point supplies a zero with the shift coordinates set
-to zero. `PartialDerivativeDegree` proves the degree bound `degree(p)-1` for
+to zero. `PartialDerivativeDegree` proves the degree bound $\operatorname{degree}(p)-1$ for
 formal partial derivatives. All equations have degree at most
-`2*max(degree(q),1)`. `ETR.RadiusCriticalSource` instantiates the system on every
-encoded input, with FP count allowance `sourceSize+1` and degree allowance
-`8*sourceSize²+4`. These are size-bound writers, not yet coefficient-access
+$2\cdot \operatorname{max}(\operatorname{degree}(q),1)$. `ETR.RadiusCriticalSource` instantiates the system on every
+encoded input, with FP count allowance $\mathrm{sourceSize}+1$ and degree allowance
+$8\cdot \mathrm{sourceSize}^{2}+4$. These are size-bound writers, not yet coefficient-access
 certificates for the system.
 
 `EtaleDerivation` extends a derivation through a formally etale algebra using
@@ -1286,7 +1319,7 @@ polynomial in the spatial variables. Its analytic critical values are finite.
 `RegularRadius` takes a common positive margin below positive critical values
 over all active sets. Restricting also to radii below one ensures that δ² lies
 below this margin. Every active augmented derivative is then surjective for all
-`0<δ<d`. `ETR.RegularRadiusSource.correct` combines this interval with the compact
+$0<\delta <d$. `ETR.RegularRadiusSource.correct` combines this interval with the compact
 perturbation correctness theorem on every encoded input. Effective radius
 selection, streamed coefficient access, and effective critical-point sampling remain open.
 
@@ -1297,7 +1330,7 @@ positive near a feasible maximum. Fixing the active constraint values and the
 radius equation therefore gives a fiber on which the objective is locally
 maximal. Its multiplier theorem uses Mathlib's Lagrange theorem and surjectivity
 of the equality derivative to exclude a zero objective multiplier. Normalization
-gives `L(h)=Λ(DF(h))` for a linear functional Λ on the constraint codomain.
+gives $L(h)=\Lambda (DF(h))$ for a linear functional Λ on the constraint codomain.
 
 `PerturbedCriticalPoint` proves smoothness of the actual active augmented maps,
 selects exactly the constraints vanishing at the maximum, and obtains normalized
@@ -1306,14 +1339,14 @@ compact regular perturbation. `ETR.CriticalPointSource.correct` applies this to
 every encoded input: satisfiability is equivalent to the existence of these
 critical maxima for every projection throughout a small regular-radius interval.
 
-`ProjectionEquations` constructs the hypersurface system `p=0` and
-`partial_i(p)-v_i*partial_base(p)=0` for `i≠base`. Point and direction variables
+`ProjectionEquations` constructs the hypersurface system $p=0$ and
+$\partial_i(p)-v_i\cdot \partial_{\mathrm{base}}(p)=0$ for $i\ne \mathrm{base}$. Point and direction variables
 are separate blocks; the direction is a parameter in the sampling problem.
 There are exactly n equations for n point coordinates. Their total degree,
-including the direction block, is at most `max(degree(p),1)`. The coefficient
+including the direction block, is at most $\operatorname{max}(\operatorname{degree}(p),1)$. The coefficient
 ring is arbitrary, and integer coefficients remain integer coefficients.
 `ProjectionCritical` proves that a local projection maximum on a regular
-hypersurface satisfies this system when `v_base=1`. Its coefficient homomorphism
+hypersurface satisfies this system when $v_{\mathrm{base}}=1$. Its coefficient homomorphism
 can specialize additional polynomial parameters to real values.
 
 ## Active tubes and their integer projection systems
@@ -1338,13 +1371,13 @@ point renaming and formal point partial derivatives. `ProjectionFlatten` bounds
 the expanded projection equations by the expanded hypersurface degree.
 `TubeExpanded` relates the expanded constraints to the earlier integer
 perturbation polynomials and proves the full total-degree bound
-`2*max(degree(q),2)` for both tube and projection systems. This counts parameter
+$2\cdot \operatorname{max}(\operatorname{degree}(q),2)$ for both tube and projection systems. This counts parameter
 and direction variables, not just the outer point variables.
 
 `ETR.TubeSource` instantiates the symbolic and ordinary integer systems on every
 encoded input. For normalized source size N it supplies FP equation-count
-allowance `2+3*N`, point/direction-variable allowance `4+6*N`, expanded-variable
-allowance `7+6*N`, and full degree allowance `8*N²+4`. Its common regular α
+allowance $2+3\cdot N$, point/direction-variable allowance $4+6\cdot N$, expanded-variable
+allowance $7+6\cdot N$, and full degree allowance $8\cdot N^{2}+4$. Its common regular α
 interval is qualitative and depends on fixed ε and δ. FP writers currently
 certify these size bounds. Complete tube/projection coefficient residues are
 supplied below; finite generic direction selection and effective parameter
@@ -1370,7 +1403,7 @@ the full level, inside any prescribed neighborhood of a unique zero-level
 maximum in the interior of the compact set.
 
 `TubeApproximation` supplies the recovery path for the actual tubes at positive
-delta: scale the shift vector by `1+t`. Its squared radius strictly increases
+delta: scale the shift vector by $1+t$. Its squared radius strictly increases
 for positive t, so the sum-of-squares tube energy is positive. `TubeConvergence`
 uses a small compact closed ball to turn a strict local projection maximum
 on the active zero locus into the required unique compact maximum. In every
@@ -1391,10 +1424,10 @@ maximum. Effective finite sampling and parameter selection remain open.
 
 `TubeBounds` controls samples with alpha at most one and nonnegative inactive
 constraints. The tube's radius-residual square is at most alpha, so the squared
-shift norm is at most `delta²+1` and each shift has magnitude at most `delta+1`.
+shift norm is at most $\mathrm{delta}^{2}+1$ and each shift has magnitude at most $\mathrm{delta}+1$.
 Each active constraint has square at most alpha; inactive constraints are
 nonnegative. Thus every constraint is at least -1. The cube constraints give
-spatial coordinate bounds `[-(delta+3),delta+3]` when epsilon and delta are
+spatial coordinate bounds $[-(\mathrm{delta}+3),\mathrm{delta}+3]$ when epsilon and delta are
 nonnegative. All point coordinates lie in [-4,4] if delta is also at most one.
 These bounds are independent of the polynomial and active set.
 
@@ -1455,9 +1488,9 @@ center whose designated coordinate is one below the minimum on the compact
 set, then maximize squared Euclidean distance from that center. If p is a
 maximizer, the identity
 
-`D(a,x)-D(a,p) = 2*(p-a)·(x-p)+D(p,x)`, where `D(a,x)=Σᵢ(xᵢ-aᵢ)²`,
+$D(a,x)-D(a,p) = 2\cdot (p-a)\cdot (x-p)+D(p,x)$, where $D(a,x)=\sum _{i}(x_{i}-a_{i})^{2}$,
 
-shows that `(p-a)·x < (p-a)·p` for every other point x in the set. The designated
+shows that $(p-a)\cdot x < (p-a)\cdot p$ for every other point x in the set. The designated
 coordinate of p-a is positive, so positive rescaling normalizes it to one.
 This argument does not assume finite critical sets or genericity.
 
@@ -1514,7 +1547,7 @@ criterion to the regular projection systems is established below.
 ## Finite generic tube projection roots
 
 `GenericProjectionFinite` adjoins one reciprocal variable t to the normalized
-projection equations and adds `t*partial_base(p)-1=0`. At every solution in a
+projection equations and adds $t\cdot \partial_{\mathrm{base}}(p)-1=0$. At every solution in a
 field extension, stationarity holds with multiplier t. Generic normalized
 coordinate algebraicity makes all point coordinates algebraic over the direction
 field; t is algebraic too because it is the reciprocal of a polynomial value
@@ -1617,7 +1650,7 @@ without requiring the specialized direction itself to be independent.
 
 `PolynomialGridAvoidance` uses Mathlib's combinatorial Nullstellensatz: a nonzero
 polynomial cannot vanish on a product of sets larger than its coordinate
-degrees. In characteristic zero, coordinates in `0,...,B` suffice whenever B
+degrees. In characteristic zero, coordinates in $0,\ldots,B$ suffice whenever B
 bounds its total degree. Products give simultaneous avoidance for finite
 families, using a bound on the sum of their degrees. Consequently a normalized
 direction with natural-number coordinates and a finite extended projection
@@ -1729,22 +1762,22 @@ polynomials, and require no expansion algorithm.
 
 `ETR.PolynomialMass` relates constant magnitudes to their binary payload sizes.
 Expression-tree induction bounds the finite-variable source polynomial's mass
-by `2^N`, for encoded term size N. `CubePolynomialMass` bounds each denominator
+by $2^N$, for encoded term size N. `CubePolynomialMass` bounds each denominator
 factor `1-X_i²` by two in coefficient mass. The total exponent in denominator
 clearing is at most twice the sum of the source's coordinate degrees. The
-compactified source consequently has mass at most `2^(N+2*N²)`.
+compactified source consequently has mass at most $2^{N+2\cdot N^{2}}$.
 
-`TubeCoefficientMass` bounds the flattened radius mass by `c+1` and every
-flattened constraint mass by `H+4`, for c constraints and source mass H. The
-integer tube mass is at most `(c+1)²+c*(H+4)²+1`, uniformly over active sets.
+`TubeCoefficientMass` bounds the flattened radius mass by $c+1$ and every
+flattened constraint mass by $H+4$, for c constraints and source mass H. The
+integer tube mass is at most $(c+1)^{2}+c\cdot (H+4)^{2}+1$, uniformly over active sets.
 Formal partial derivatives and the additional direction variable bound each
-flattened projection row by `(4*max(degree(p),2)+1)` times this allowance.
+flattened projection row by $(4\cdot \operatorname{max}(\operatorname{degree}(p),2)+1)$ times this allowance.
 All parameter and direction variables are included.
 
 `ETR.TubeCoefficientBounds` combines these estimates with the existing source
 arity and degree bounds. Both integer tube and projection polynomials have
-mass at most `2^(20*N²+6*N+21)`; each coefficient has at most
-`20*N²+6*N+22` magnitude bits. The budget has an FP writer from the normalized
+mass at most $2^{20\cdot N^{2}+6\cdot N+21}$; each coefficient has at most
+$20\cdot N^{2}+6\cdot N+22$ magnitude bits. The budget has an FP writer from the normalized
 compiled source size, on all binary inputs. It bounds actual integer
 coefficients. Complete coefficient residue machines are supplied below.
 Exceptional-polynomial bounds, effective direction and parameter selection,
@@ -1781,7 +1814,7 @@ the zero test needed for detecting actual degrees after cancellation.
 query correctness for every binary source input. Its finite polynomial uses N
 variables; the unused variables contribute no nonconstant monomials. Every
 nonzero coefficient has coordinate exponents at most the source degree and
-therefore an exponent query of exactly `N*(N+1)` bits. This is collected access
+therefore an exponent query of exactly $N\cdot (N+1)$ bits. This is collected access
 to the source before compactification. Access through active tubes and projection equations is supplied below. Quantitative
 sampling bounds and the complete ETR PSPACE decision procedure.
 
@@ -1822,8 +1855,8 @@ Quantitative sampling bounds and the complete ETR PSPACE algorithm remain open.
 `SeparateVariableCoefficients` proves that a coefficient of a product of
 univariate polynomials in distinct variables is the product of the requested
 univariate coefficients. `CubeFactorCoefficients` gives the coefficient of
-`X^e*(1-X²)^s`: it is zero unless `e ≤ k` and `k-e` is even, and otherwise is
-`choose s ((k-e)/2) * (-1)^((k-e)/2)`.
+$X^e\cdot (1-X^{2})^s$: it is zero unless $e \le k$ and `k-e` is even, and otherwise is
+$\binom{s}{(k-e)/2} \cdot (-1)^{(k-e)/2}$.
 
 `CubeCoefficientFormula` packages clearing fixed denominator degrees as an
 additive map. Applying it to the indexed syntax expansion gives exactly the
@@ -1836,7 +1869,7 @@ with FP modular powering and multiplication. `ModularProductSpace` retains
 one reduced residue while suspending a certified factor child, including for
 the empty product and modulus one. `CompactCoefficientQuery` prepares each
 factor using the actual-degree child and target exponent blocks of width
-`4*N²+1`. `CompactCoefficientSpace` streams the coordinate product and then
+$4\cdot N^{2}+1$. `CompactCoefficientSpace` streams the coordinate product and then
 the indexed source-term sum. Its certificate includes the saved inputs,
 accumulators, child states, and clocks at both loop levels.
 
@@ -1846,13 +1879,13 @@ zero-padding the exponent query preserves coefficients in the original arity:
 extra variables have source degree zero and contribute a factor of one.
 `CompactSourceCoefficient` supplies the compiled ETR input fields and proves
 exact query correctness for `CompactSource.polynomial`. The exponent query
-has length `N*(4*N²+1)`; the proved compactification degree bound ensures every
+has length $N\cdot (4\cdot N^{2}+1)$; the proved compactification degree bound ensures every
 nonzero coefficient is representable. Malformed source strings retain the
 compiler's existing default semantics.
 
-`CompactCoefficientSign` proves a coefficient mass bound of `2^(N+2*N²)`
+`CompactCoefficientSign` proves a coefficient mass bound of $2^{N+2\cdot N^{2}}$
 for the padded compactification, hence a magnitude-bit budget of
-`N+2*N²+1` with an FP writer. The full residue evaluator instantiates CRT
+$N+2\cdot N^{2}+1$ with an FP writer. The full residue evaluator instantiates CRT
 sign recovery, proving coefficient negativity in Complexitylib's PSPACE.
 `CompactCoefficientZero` scans the small moduli justified by the same budget
 and proves coefficient zero testing in PSPACE. Both routines include the
@@ -1860,8 +1893,8 @@ actual-degree and binomial children; they assume no coefficient oracle.
 `CubePolynomialMultiplication` proves that clearing fixed coordinate
 allowances respects products whose exponents fit those allowances. Actual
 coordinate degrees of nonzero integer products add; handling zero factors
-separately therefore proves `cleared (p*q) = cleared p * cleared q` and
-`cleared (p^k) = (cleared p)^k`.
+separately therefore proves $\mathrm{cleared} (p\cdot q) = \mathrm{cleared} p \cdot \mathrm{cleared} q$ and
+$\mathrm{cleared} (p^k) = (\mathrm{cleared} p)^k$.
 
 `TermPowerFP` retains the validated source once while writing one multiplication
 per unary-counted round. The encoded expression grows linearly in the exponent
@@ -1894,7 +1927,7 @@ indices. Every encoded frame and stack has linear length in its raw tree,
 including malformed inputs. A cap by validated source length yields a unary FP
 arity reader as well as binary output. `TubeEncoding` gives explicit finite
 equivalences for the point/shift/parameter coordinate layout and the constraint
-order. Its active-set bitmask has exactly `2+2*n` bits and a proved round trip.
+order. Its active-set bitmask has exactly $2+2\cdot n$ bits and a proved round trip.
 
 `TubeZeroSyntax` gives the zero-source tube as a short ETR term: the squared
 radius expression, squares of the active affine constraints, and minus alpha.
@@ -1936,7 +1969,7 @@ and `TubeDenseGuard` certifies its bounded binary-coordinate check in FP.
 
 `TubeDenseMetadata` supplies the exact source arity and the written source-power
 size M. The actual integer compact polynomial power has total degree at most
-`4*M²`, with an FP bound and query-width writer. `TubeDenseQuery` checks both
+$4\cdot M^{2}$, with an FP bound and query-width writer. `TubeDenseQuery` checks both
 that degree allowance on point exponents and the required zero/unit pattern
 elsewhere. Rejection provably gives coefficient zero. Accepted queries are
 repacked into the complete compactified-power evaluator. The resulting
@@ -1971,7 +2004,7 @@ residues of the actual integer projection system on every binary input.
 `TubeProjectionNative` proves native exponent-query round trips.
 `TubeSourceProjectionCoefficient` supplies the compiled ETR packet format and
 FP field readers. The proved degree bound makes every nonzero coefficient
-representable with at most `(6*N+7)*(8*N²+5)` exponent bits. All positive moduli,
+representable with at most $(6\cdot N+7)\cdot (8\cdot N^{2}+5)$ exponent bits. All positive moduli,
 including one, are covered.
 
 `TubeCoefficientDecisions` derives magnitude-bit budgets directly from the actual
@@ -1993,12 +2026,12 @@ certifies binary coordinate readers, including invalid-index handling.
 equivalences using a total-degree allowance.
 
 `TubeIndexedSource` supplies the actual tube/projection source identities, with
-W equal to the binary size of `8*N²+4`. All source metadata has FP writers.
+W equal to the binary size of $8\cdot N^{2}+4$. All source metadata has FP writers.
 `TubeIndexedSpace` connects arbitrary binary ranks to the complete native residue
 machines, with FP source, active-mask, row, and modulus fields. The mathematical
 term family is never materialized. `TubeIndexedBounds` retains the actual source
 coefficient mass bound for every rank and supplies an FP even denominator-power
-allowance `2^W`, bounded by twice the full degree allowance. These establish the
+allowance $2^W$, bounded by twice the full degree allowance. These establish the
 source-side contracts for streamed rational substitution.
 
 `TubeRationalSource` instantiates the existing integer substitution family with
@@ -2098,9 +2131,9 @@ specialization, without requiring the coefficient map to be injective.
 perturbation variable. Write `M` for the padded dimension, `E` for the cleared
 row coefficient degree allowance, and `K` for the proved full deformation
 integer coefficient-bit budget. Every projection coefficient of the lowest
-candidate has degree at most `M*E` and mass at most
-`2^(K+(M*E+1).size)`. In particular its nonzero leading projection coefficient
-cannot vanish for `0<θ≤2^(-s)`, where `s=K+(M*E+1).size+1`.
+candidate has degree at most $M\cdot E$ and mass at most
+$2^{K+(M\cdot E+1).\operatorname{size}}$. In particular its nonzero leading projection coefficient
+cannot vanish for $0<\theta \le 2^{-s}$, where $s=K+(M\cdot E+1).\operatorname{size}+1$.
 The exponent has an FP binary writer using the existing source, direction,
 and coordinate-bound writers. Throughout this interval the projection polynomial
 is nonzero, and extraction of the lowest deformation coefficient commutes with
@@ -2122,9 +2155,9 @@ therefore suffices for the full suspended fold certificate.
 `TubeBivariateReindex` transports all original parameter-coordinate and direction
 readers through FP context preparation and replaces selected degree fields.
 `TubeDeformationCoefficientPolynomial` bounds each encoded coefficient
-polynomial's degree by `M*Eencoded` and proves exact zero preservation and scalar
+polynomial's degree by $M\cdot \mathrm{Eencoded}$ and proves exact zero preservation and scalar
 quotient/remainder access. `TubeDeformationCoefficientZero` scans the corresponding
-`M*Eencoded+1` scalar coefficients, calling the complete integer zero evaluator.
+$M\cdot \mathrm{Eencoded}+1$ scalar coefficients, calling the complete integer zero evaluator.
 Coefficients outside that allowance vanish. This gives whole deformation
 coefficient-polynomial identity testing in PSPACE without materializing either
 the original bivariate coefficient or its encoding.
@@ -2147,8 +2180,8 @@ root persistence remain necessary for the eliminant and sampling algorithm.
 ## Affine deformation and the characteristic numerator
 
 `PolynomialAffineReparametrization` homogenizes a polynomial to a certified
-degree allowance and substitutes `(X,1-X)`. The resulting finite sum has terms
-`p_i*X^i*(1-X)^(M-i)`. Coefficients below the original lowest order vanish;
+degree allowance and substitutes $(X,1-X)$. The resulting finite sum has terms
+$p_i\cdot X^i\cdot (1-X)^{M-i}$. Coefficients below the original lowest order vanish;
 at that order only the original lowest term contributes, with constant factor
 one. Thus both the order and coefficient are preserved over every commutative
 ring. `PolynomialSignedReflection` proves that replacing `X` by `-X` preserves
@@ -2156,10 +2189,10 @@ the order and multiplies its coefficient by the corresponding power of `-1`.
 
 `AffineCharacteristic` proves that homogenization commutes with determinants
 of matrices whose entries have degree at most one. Consequently
-`F(ε)=det(A+ε*(I-A))` is the homogeneous substitution of `P(s)=det(A+sI)`.
-For `Q(s)=det(A-sI)`, the exact identities are
-`Q(s)=(-1)^M*χ_A(s)`, `ord(Q)=ord(F)=k`, and
-`trail(Q)=(-1)^k*trail(F)`. No division or domain hypothesis is needed.
+$F(\varepsilon )=\operatorname{det}(A+\varepsilon \cdot (I-A))$ is the homogeneous substitution of $P(s)=\operatorname{det}(A+sI)$.
+For $Q(s)=\operatorname{det}(A-sI)$, the exact identities are
+$Q(s)=(-1)^M\cdot \chi _A(s)$, $\operatorname{ord}(Q)=\operatorname{ord}(F)=k$, and
+$\operatorname{trail}(Q)=(-1)^k\cdot \operatorname{trail}(F)$. No division or domain hypothesis is needed.
 
 `MacaulayCharacteristic` and `TubeDeformationCharacteristic` apply these
 identities to the actual padded full tube matrix. Its subtractive characteristic
@@ -2208,15 +2241,15 @@ new row, matrix-entry, or determinant readers.
 `TubeExtraneousCharacteristic` uses the actual principal minor, rather than the
 full padded matrix, for the subtractive characteristic denominator. Its lowest
 order equals the extraneous affine deformation's lowest order, and its trailing
-coefficient differs by `(-1)^order`. These lowest coefficients vanish under
+coefficient differs by $(-1)^{\mathrm{order}}$. These lowest coefficients vanish under
 exactly the same coefficient-ring specializations. The characteristic lowest
 coefficient is nonzero.
 
 `PrincipalPolynomialBounds` proves that identity row padding preserves uniform
 entry degree and coefficient-mass allowances. For an affine determinant over
 integer polynomial entries, a second bounded radix encoding gives the scalar
-coefficient bit bound `M.size*M + M*(b+2) + 1`, where `M` is the padded dimension
-and each original entry mass is at most `2^b`. `MacaulayExtraneousBounds` applies
+coefficient bit bound $M.\operatorname{size}\cdot M + M\cdot (b+2) + 1$, where `M` is the padded dimension
+and each original entry mass is at most $2^b$. `MacaulayExtraneousBounds` applies
 this to the extraneous deformation. `TubeExtraneousBudget` reuses the full
 numerator's FP binary budget; `TubeExtraneousResidue` and `TubeExtraneousSign`
 combine the complete varying-modulus evaluator with streamed CRT to give
@@ -2254,13 +2287,13 @@ the same original coordinate-reader contracts.
 for a principal matrix padded by identity rows: each omitted index contributes
 one factor of `1-s`. `MacaulayActiveCharacteristic` selects exactly the
 fixed-width indices at the Macaulay level and removes all inactive rows and
-columns. The padded numerator is `(1-s)^padding` times this true degree-level
+columns. The padded numerator is $(1-s)^{\mathrm{padding}}$ times this true degree-level
 characteristic determinant. Their natural trailing degrees and trailing
 coefficients coincide, without a domain hypothesis. Thus removing computational
 padding preserves the lowest data used by the existing evaluator.
 
 `MacaulaySubtractiveSystem` replaces every homogeneous input by
-`fᵢ-s*xᵢ^dᵢ`. Every active principal matrix of the shifted system is exactly
+$f_{i}-s\cdot x_{i}^{d_{i}}$. Every active principal matrix of the shifted system is exactly
 the subtractive characteristic matrix of the corresponding original principal
 matrix. This applies to both the full degree-level and extraneous matrices.
 
@@ -2270,7 +2303,7 @@ integer difference of trailing degrees and the ratio of trailing coefficients
 in the coefficient fraction field depend only on the rational function.
 Factoring the lowest powers of `s` gives a power with this signed exponent
 times a quotient whose numerator and denominator have nonzero constant
-coefficients. If `numerator = polynomial * denominator` is proved, the signed
+coefficients. If $\mathrm{numerator} = \mathrm{polynomial} \cdot \mathrm{denominator}$ is proved, the signed
 order and coefficient ratio equal that polynomial's ordinary lowest order and
 coefficient.
 
@@ -2297,18 +2330,18 @@ sampling algorithm remain further obligations.
 ## Reduced-monomial count and characteristic quotient degree
 
 `MacaulayReducedCount` gives an explicit bijection for positive homogeneous
-degrees with `level d < 2^W`. A reduced level monomial has exactly one eligible
-coordinate `i`. Its other exponents range independently from zero to `dⱼ-1`;
+degrees with $\mathrm{level} d < 2^W$. A reduced level monomial has exactly one eligible
+coordinate `i`. Its other exponents range independently from zero to $d_j-1$;
 the level fixes its exponent at `i`. The constructed exponent vector has the
 required level, exactly that eligible coordinate, and fits the existing binary
 rank representation. Injectivity and surjectivity give
-`card(active) = card(extraneous) + Σᵢ ∏ⱼ≠ᵢ dⱼ`.
+$\operatorname{card}(\mathrm{active}) = \operatorname{card}(\mathrm{extraneous}) + \sum _{i} \prod_{j\ne i} d_{j}$.
 
 `CharacteristicQuotientDegree` proves that every subtractive characteristic
 determinant over an integral domain is nonzero and has natural degree equal to
 its matrix dimension. After an injective coefficient embedding in a field,
 Mathlib's `RatFunc.intDegree` of the determinant quotient is therefore exactly
-`D = Σᵢ ∏ⱼ≠ᵢ dⱼ`. This calculation does not require the quotient to be a
+$D = \sum _{i} \prod_{j\ne i} d_{j}$. This calculation does not require the quotient to be a
 polynomial. The coefficient extension is an injective rational-function ring
 homomorphism and maps fraction presentations to their coefficientwise images.
 
@@ -2335,21 +2368,21 @@ determinants.
 
 `MacaulayLastParameter` treats input polynomials with coefficients in `K[u]`,
 where `K` is any field. Swapping `u` with the characteristic parameter `s`, then
-embedding `K[s]` in `K(s)`, gives an injective coefficient map and an injective
+embedding `K[s]` in $K(s)$, gives an injective coefficient map and an injective
 map on rational functions. The mapped full and extraneous determinants agree
 with those for the actual shifted input system.
 
 If every input except the last is constant in `u`, the mapped extraneous
 determinant is the constant polynomial whose value is the characteristic
-determinant of the base extraneous matrix in `K(s)`. This value is nonzero,
+determinant of the base extraneous matrix in $K(s)$. This value is nonzero,
 with no supplied denominator-nonvanishing hypothesis. Multiplying the mapped
 full determinant by its inverse explicitly constructs a nonzero polynomial
-in `K(s)[u]`. The image of the original characteristic determinant quotient is
+in $K(s)[u]$. The image of the original characteristic determinant quotient is
 exactly this polynomial.
 
 `MacaulayPivotCount` restricts the reduced-monomial bijection to the last pivot.
 Every active row with that pivot is reduced, since an unreduced row cannot
-choose the last coordinate. There are exactly `∏ⱼ≠last dⱼ` such rows when the
+choose the last coordinate. There are exactly $\prod_{j\ne\mathrm{last}} d_{j}$ such rows when the
 degrees are positive and the fixed-width blocks cover the Macaulay level.
 
 `MacaulayLastParameterDegree` bounds a parameter-dependent row by the source
@@ -2357,13 +2390,13 @@ coefficient degree and all other rows by zero. Transposing the matrix permits
 the existing columnwise determinant degree theorem to sum these row bounds.
 If coefficients of the last input have degree at most `E` in `u`, the full
 mapped determinant and the quotient polynomial have degree at most
-`E*∏ⱼ≠last dⱼ`. Multiplication by the nonzero constant denominator inverse
+$E\cdot \prod_{j\ne\mathrm{last}} d_{j}$. Multiplication by the nonzero constant denominator inverse
 preserves the numerator degree exactly.
 
-The explicit affine family `f_last+u*h` has coefficient degree at most one.
+The explicit affine family $f_{\mathrm{last}}+u\cdot h$ has coefficient degree at most one.
 It preserves the specified spatial homogeneity when the original inputs and
 variation are homogeneous of the corresponding degrees. The resulting
-nonzero quotient polynomial in `K(s)[u]` has degree at most `∏ⱼ≠last dⱼ`.
+nonzero quotient polynomial in $K(s)[u]$ has degree at most $\prod_{j\ne\mathrm{last}} d_{j}$.
 
 This proves polynomiality in a coefficient parameter confined to the last
 input. Polynomiality in the characteristic parameter `s` is proved below.
@@ -2382,13 +2415,13 @@ rectangular matrix.
 
 For a family of compatible polynomial multipliers, finite coefficient
 reconstruction proves that assembling the row coefficients gives precisely
-`Σᵢ qᵢ*fᵢ`. Multiplication by the rectangular matrix reads the corresponding
+$\sum _{i} q_{i}\cdot f_{i}$. Multiplication by the rectangular matrix reads the corresponding
 level coefficients. `MacaulayKoszulRelations` constructs the family with
-components `m*fⱼ` at `i` and `-m*fᵢ` at `j`. If
-`degree(m)+dᵢ+dⱼ=level`, its coefficients form a kernel vector, by polynomial
-commutativity. Over an integral domain it is nonzero whenever `fⱼ` is nonzero.
+components $m\cdot f_{j}$ at `i` and $-m\cdot f_{i}$ at `j`. If
+$\operatorname{degree}(m)+d_{i}+d_{j}=\mathrm{level}$, its coefficients form a kernel vector, by polynomial
+commutativity. Over an integral domain it is nonzero whenever $f_j$ is nonzero.
 
-`MacaulayShiftedKoszul` proves that `fᵢ-s*xᵢ^dᵢ` remains homogeneous and is
+`MacaulayShiftedKoszul` proves that $f_{i}-s\cdot x_{i}^{d_{i}}$ remains homogeneous and is
 always nonzero over a nontrivial coefficient ring: its designated monomial
 has characteristic coefficient `-1`. Over an integral domain, compatible pairs yield nonzero
 finite Koszul relations for the shifted full multiplication matrix, without
@@ -2410,20 +2443,20 @@ rectangular relations.
 
 `MatrixMinorSection` constructs a section for a rectangular row-vector map
 whenever a selected square row minor has unit determinant. If `E` is the row
-selector and `A=E*M`, the section matrix is `A⁻¹*E`, and its product with `M`
+selector and $A=E\cdot M$, the section matrix is $A^{-1}\cdot E$, and its product with `M`
 is the identity. The argument works over any commutative ring with that unit
 condition.
 
 `MacaulayGenericShift` works over an integral-domain coefficient ring `R`.
-The selected square matrix for `fᵢ-s*xᵢ^dᵢ` has nonzero determinant because
+The selected square matrix for $f_{i}-s\cdot x_{i}^{d_{i}}$ has nonzero determinant because
 it is the subtractive characteristic matrix. Mapping to `RatFunc R` makes
 this determinant a unit and supplies the section of the full multiplication
 matrix. Homogeneity and the existing exponent-width bound turn coefficient
 surjectivity into polynomial equality: every homogeneous polynomial at
-`L=1+Σᵢ(dᵢ−1)` is an assembled combination of the shifted inputs.
+$L=1+\sum _{i}(d_{i}-1)$ is an assembled combination of the shifted inputs.
 
 Consequently, the ideal generated by the shifted inputs contains
-`(x₀,…,xₙ₋₁)^L`. Evaluating the coordinate monomial certificates proves that
+$(x_{0},\ldots ,x_{n-1})^L$. Evaluating the coordinate monomial certificates proves that
 any common zero over any integral-domain coefficient extension is the origin.
 `TubeMacaulayGenericShift` instantiates the section, surjectivity, homogeneous
 ideal membership, ideal-power containment, and common-zero theorem for the
@@ -2440,26 +2473,26 @@ resultant quotient and Canny's ETR upper bound remain unproved.
 
 ## Koszul relations span the generic shifted kernel
 
-`MacaulayMonomialDivision` sends each multiplier row `a=(i,m)` to its
-coordinate-power product `m*xᵢ^dᵢ`, a monomial at the Macaulay level. Let `j`
-be its selected pivot. If `i=j`, this row is already selected. Otherwise
-`m` is divisible by `xⱼ^dⱼ`; dividing it gives a degree-compatible Koszul
+`MacaulayMonomialDivision` sends each multiplier row $a=(i,m)$ to its
+coordinate-power product $m\cdot x_{i}^{d_{i}}$, a monomial at the Macaulay level. Let `j`
+be its selected pivot. If $i=j$, this row is already selected. Otherwise
+`m` is divisible by $x_{j}^{d_{j}}$; dividing it gives a degree-compatible Koszul
 relation. For coordinate powers, its finite coefficient vector is exactly
-`e_a-e_selected(product(a))`. With `D₀` the full multiplication matrix,
-`H` the selected-row embedding, and `E₀` the matrix of these relation rows,
-the proved identity is `D₀*H+E₀=I`. Every coordinate-power kernel vector `v`
-therefore satisfies `v*E₀=v`, over any commutative ring.
+$e_a-e_{\operatorname{selected}(\operatorname{product}(a))}$. With $D_{0}$ the full multiplication matrix,
+`H` the selected-row embedding, and $E_{0}$ the matrix of these relation rows,
+the proved identity is $D_{0}\cdot H+E_{0}=I$. Every coordinate-power kernel vector `v`
+therefore satisfies $v\cdot E_{0}=v$, over any commutative ring.
 
 `MatrixKernelContraction` proves a general finite exactness criterion. For
-matrices `D,E,H` with `E*D=0`, suppose both `A=D*H+E` and `H*D` have unit
-determinant. For `v*D=0`, set `w=v*A⁻¹`. The identity `A*D=D*(H*D)` shows
-`w*D=0`, and then `v=w*A=w*E`. Thus every kernel vector is a row combination
-of `E`; the converse follows from `E*D=0`.
+matrices `D,E,H` with $E\cdot D=0$, suppose both $A=D\cdot H+E$ and $H\cdot D$ have unit
+determinant. For $v\cdot D=0$, set $w=v\cdot A^{-1}$. The identity $A\cdot D=D\cdot (H\cdot D)$ shows
+$w\cdot D=0$, and then $v=w\cdot A=w\cdot E$. Thus every kernel vector is a row combination
+of `E`; the converse follows from $E\cdot D=0$.
 
-`MacaulayKoszulContraction` applies this criterion to `fᵢ-s*xᵢ^dᵢ`. The
+`MacaulayKoszulContraction` applies this criterion to $f_{i}-s\cdot x_{i}^{d_{i}}$. The
 division relation matrix depends linearly on the inputs and commutes with
 coefficient maps. Consequently the shifted source contraction is
-`D_s*H+E_s=(D*H+E)-s*I`. Its determinant is nonzero, as is the target
+$D_s\cdot H+E_s=(D\cdot H+E)-s\cdot I$. Its determinant is nonzero, as is the target
 contraction's selected Macaulay characteristic determinant. Both become
 units over `RatFunc R`, for any integral-domain input coefficient ring `R`.
 The resulting kernel theorem supplies a finite generating family and proves
@@ -2480,7 +2513,7 @@ space bounds for using these noncomputable inverses remain open.
 relations are identically zero. The remaining row indices define
 `RelationIndex`; restricting the division relation matrix to the matching
 columns gives the square `relationMinor`. For coordinate powers this minor
-is the identity, because each relation is `e_a-e_selected(product(a))` and
+is the identity, because each relation is $e_a-e_{\operatorname{selected}(\operatorname{product}(a))}$ and
 the second coordinate lies outside the complementary columns. Its
 characteristic shift is exactly `B-sI`, with `B` the original relation minor.
 The generic relation minor is therefore invertible over `RatFunc R`.
@@ -2496,18 +2529,18 @@ and unique-coordinate theorem for the actual tube system.
 `MatrixSelectedBlock` proves the associated determinant comparison over any
 commutative coefficient ring. For an injective row selector `f`, write `H`
 for its selection matrix. If `E` vanishes on the selected rows, then
-`D*H+E` is block triangular along selected and complementary indices. Its
+$D\cdot H+E$ is block triangular along selected and complementary indices. Its
 selected diagonal block is `D.submatrix f id`, and its complementary block
 is the principal restriction of `E`. Hence the source-contraction determinant
 is the product of these two determinants. Applied to Macaulay division
 relations, this gives both the original and characteristic identities
-`det(D*H+E-sI)=det(A-sI)*det(B-sI)`, where `A` is the selected Macaulay
+$\operatorname{det}(D\cdot H+E-sI)=\operatorname{det}(A-sI)\cdot \operatorname{det}(B-sI)$, where `A` is the selected Macaulay
 matrix and `B` is the complementary relation minor.
 
 This factorization concerns the source contraction and its kernel basis.
-The next comparison factors `det(B)` by the extraneous determinant. It does
+The next comparison factors $\operatorname{det}(B)$ by the extraneous determinant. It does
 not prove that the extraneous characteristic determinant divides
-`det(A-sI)`. Polynomial cancellation and higher Koszul exactness are proved
+$\operatorname{det}(A-sI)$. Polynomial cancellation and higher Koszul exactness are proved
 below; resultant identification and bounds for computing the noncomputable
 kernel coordinates remain open.
 
@@ -2533,21 +2566,21 @@ relation block with both input coordinate and greatest coordinate equal to
 `MacaulayRelationExtraneous` takes the determinant products over these finite
 blocks, including empty blocks. The first relation decomposition is by input
 coordinate `i`, and its second decomposition is by greatest coordinate `k`.
-The diagonal factors `i=k` multiply to the extraneous determinant. The
-remaining `i≠k` factors define an explicit `higherRelationFactor`, proving
-`det(B)=det(extraneous)*higherRelationFactor` over any commutative ring.
+The diagonal factors $i=k$ multiply to the extraneous determinant. The
+remaining $i\ne k$ factors define an explicit `higherRelationFactor`, proving
+$\operatorname{det}(B)=\operatorname{det}(\mathrm{extraneous})\cdot \mathrm{higherRelationFactor}$ over any commutative ring.
 Applying this identity to the shifted polynomial system proves
-`det(B-sI)=det(extraneous-sI)*higherRelationFactor_s`. Over an integral
+$\operatorname{det}(B-sI)=\operatorname{det}(\mathrm{extraneous}-sI)\cdot \mathrm{higherRelationFactor}_s$. Over an integral
 domain the remaining polynomial is nonzero. Combining this with the source
 contraction factorization gives the exact three-factor identity
-`det(D*H+E-sI)=det(A-sI)*det(extraneous-sI)*higherRelationFactor_s`.
+$\operatorname{det}(D\cdot H+E-sI)=\operatorname{det}(A-sI)\cdot \operatorname{det}(\mathrm{extraneous}-sI)\cdot \mathrm{higherRelationFactor}_s$.
 
 `TubeMacaulayRelationFactor` instantiates the characteristic factorization,
 divisibility, and nonzero remaining factor for the actual bivariate tube
 system using the existing width bound. No coordinate-reader hypothesis or
 new algebraic assumption is supplied. These are relation and contraction
 determinant identities. Polynomiality of the quotient
-`det(A-sI)/det(extraneous-sI)` is proved below; resultant identification and
+$\operatorname{det}(A-sI)/\operatorname{det}(\mathrm{extraneous}-sI)$ is proved below; resultant identification and
 the remaining algorithmic space bounds remain open. Higher weighted
 exactness is proved below using the pure-power contraction and characteristic
 invertibility.
@@ -2555,32 +2588,32 @@ invertibility.
 ## The exterior Koszul complex and coordinate-chart exactness
 
 `KoszulExterior` uses Mathlib's `CliffordAlgebra.contractLeft` on the exterior
-algebra of the free module `I → R`. For the linear form
-`v ↦ Σᵢ vᵢ*pᵢ`, contraction gives a square-zero differential, and different
+algebra of the free module $I \to R$. For the linear form
+$v \mapsto \sum _{i} v_{i}\cdot p_{i}$, contraction gives a square-zero differential, and different
 coefficient families give anticommuting differentials. The differential
-sends exterior degree `k+1` into degree `k`; the proof uses the spanning
+sends exterior degree $k+1$ into degree `k`; the proof uses the spanning
 exterior products and the contraction rule for one more generator.
 `KoszulComplex` packages these maps as a Mathlib `ChainComplex`.
 
-If `Σᵢ vᵢ*pᵢ=1`, exterior multiplication by `ι(v)` gives
-`d(ι(v)*x)+ι(v)*d(x)=x`. It raises exterior degree by one. Consequently the
+If $\sum _{i} v_{i}\cdot p_{i}=1$, exterior multiplication by $\iota (v)$ gives
+$d(\iota (v)\cdot x)+\iota (v)\cdot d(x)=x$. It raises exterior degree by one. Consequently the
 kernel in every positive exterior degree is exactly the image from the
 next degree, and the degree-one map surjects onto degree zero.
 
 `MacaulayKoszulExteriorBridge` connects this construction to the existing
 polynomial matrices. On exterior degree one the differential is the
-polynomial combination `Σᵢ qᵢ*pᵢ`, embedded as a scalar in the exterior
+polynomial combination $\sum _{i} q_{i}\cdot p_{i}$, embedded as a scalar in the exterior
 algebra; scalar injectivity gives the zero equivalence. For compatible
 homogeneous multiplier families, the finite Macaulay kernel condition is
 equivalent to this exterior kernel condition. Each previously constructed
 `koszulMultipliers` vector is the boundary of a monomial multiple of the
 exterior pair in the corresponding orientation.
 
-`MacaulayLocalizedKoszul` takes the generic coefficient field `K=RatFunc R`
-and the spatial polynomial ring `P=K[x₀,…,xₙ₋₁]`. The existing Macaulay
-certificate puts `xᵢ^L` in the shifted ideal. For any ring map from `P` that
+`MacaulayLocalizedKoszul` takes the generic coefficient field $K=\mathrm{RatFunc} R$
+and the spatial polynomial ring $P=K[x_{0},\ldots ,x_{n-1}]$. The existing Macaulay
+certificate puts $x_{i}^L$ in the shifted ideal. For any ring map from `P` that
 makes `xᵢ` a unit, mapping the finite ideal combination and multiplying by
-the inverse of `xᵢ^L` gives a combination of the mapped inputs equal to one.
+the inverse of $x_{i}^L$ gives a combination of the mapped inputs equal to one.
 The canonical instance is `Localization.Away (X i)`. Thus the shifted
 Koszul complex on every coordinate chart has a contracting homotopy,
 exact maps in all positive exterior degrees, and a surjective degree-zero
@@ -2607,7 +2640,7 @@ At weight `L` and exterior degree `k`, all words `Fin k → Fin n` and all
 compatible fixed-width monomial ranks form a finite spanning family. This
 family may be redundant: the exterior algebra already imposes alternation
 and makes repeated coordinates zero. Its span is a finite coefficient
-module, agrees for any two widths with `L<2^W`, and is zero for `k>n`.
+module, agrees for any two widths with $L<2^W$, and is zero for $k>n$.
 
 `KoszulWeightedComplex` proves that homogeneous inputs preserve this weight.
 On one more exterior generator, contraction is the input polynomial times
@@ -2621,11 +2654,11 @@ This construction is over any commutative coefficient ring.
 `KoszulWeightedMatrix` chooses finite bases over a coefficient field and
 transposes the usual linear-map matrices to use the project's row-vector
 convention. Their consecutive products are zero. The spanning-family count
-gives dimension bound `n^k*(2^W)^n`. These bases are noncomputable and are
+gives dimension bound $n^k\cdot (2^W)^n$. These bases are noncomputable and are
 not supplied with polynomial-space coefficient readers.
 
 `MacaulayWeightedBridge` puts every existing multiplier row into the
-degree-one weighted generating family at `L=1+Σᵢ(dᵢ−1)`. Its differential
+degree-one weighted generating family at $L=1+\sum _{i}(d_{i}-1)$. Its differential
 is exactly the scalar embedding of that polynomial row. Applying the
 exterior algebra's scalar retraction and a target-monomial coefficient query
 recovers each entry of the original full rectangular Macaulay matrix.
@@ -2674,13 +2707,13 @@ identity. If the coefficient monomial is divisible, division also commutes
 with the pure-power differential on that exterior word.
 
 `KoszulPowerHomotopy` inserts coordinate `i` after dividing coefficients by
-`X_i^(d_i)`. The identity `D H_i + H_i D = 1` holds on a monomial exterior
+$X_i^{d_i}$. The identity $D H_i + H_i D = 1$ holds on a monomial exterior
 word whenever its coefficient is divisible by this power or the word already
 contains `i`. In the latter case insertion vanishes, and applying division
 to the ordinary exterior homotopy identity proves the result.
 
 `KoszulMultidegree` assigns a word the exponent vector
-`m + Σ_j single(v_j, d_(v_j))`. Its total degree is the previously defined
+$m + \sum _j \operatorname{single}(v_j, d_{v_j})$. Its total degree is the previously defined
 weight. The pure-power differential preserves this vector; exterior
 insertion adds the corresponding single-coordinate exponent.
 `KoszulLevelHomotopy` chooses the Macaulay pivot separately in each vector
@@ -2689,7 +2722,7 @@ homotopy identity applies. Preservation of multidegree keeps the same pivot
 throughout each differential image, proving the assembled identity.
 
 `KoszulWeightedContraction` proves that this polynomial homotopy maps the
-finite weighted piece of exterior degree `k` into degree `k+1`, for the
+finite weighted piece of exterior degree `k` into degree $k+1$, for the
 usual exponent-width bound. It supplies the restricted homotopy identities,
 exactness in every positive degree, and surjectivity in degree zero.
 `KoszulWeightedContractionMatrix` expresses both identities in the canonical
@@ -2708,7 +2741,7 @@ system. `KoszulCanonicalMatrixMap` consequently proves coefficient-extension
 identities for both the canonical differential and pure-power homotopy
 matrices, and the scalar-pencil identity for the differential matrices.
 
-`KoszulGenericContraction` writes the finite operator `H D + D H` in these
+`KoszulGenericContraction` writes the finite operator $H D + D H$ in these
 canonical bases. For the subtractive system, the pure-power homotopy identity
 identifies it with `A-s I`, where `A` is the unshifted operator over the
 original coefficient ring. Its determinant is a signed characteristic
@@ -2717,11 +2750,11 @@ invertibility of the actual shifted operator in every positive exterior
 degree.
 
 `MatrixHomotopyExact` supplies the finite-dimensional exactness argument.
-For consecutive row-vector matrices `B D=0`, the operator `H B+D J`
+For consecutive row-vector matrices $B D=0$, the operator $H B+D J$
 preserves the kernel of `D`. If its determinant is a unit, its restriction
 to that finite-dimensional kernel is injective and therefore surjective.
 For a kernel vector `v`, choose a kernel vector `w` mapped to `v`; then
-`v=w H B`, so `v` is a boundary.
+$v=w H B$, so `v` is a boundary.
 
 `KoszulGenericExact` applies this criterion to every positive exterior
 degree of the canonical shifted matrices and transfers the result through
@@ -2750,18 +2783,18 @@ degree-zero map.
 incoming homotopy image and incoming pure-power differential image. This
 gives a module product decomposition over any commutative coefficient ring,
 independent of the homogeneous input system. `KoszulHomotopyOperator` proves
-that `D H+H D` commutes with `H`, preserves the incoming homotopy image, and
+that $D H+H D$ commutes with `H`, preserves the incoming homotopy image, and
 has canonical matrix `contractionMatrix`.
 
 `MacaulayHomotopyBridge` identifies the first two concrete homotopy
 operations. On degree-zero basis terms, `H` selects precisely the existing
 Macaulay multiplier row. In degree one, `D H` gives precisely the existing
 `divisionRelations` matrix. Reindexing the finite degree-one operator
-therefore gives `fullMatrix*rowSelection+divisionRelations`.
+therefore gives $\mathrm{fullMatrix}\cdot \mathrm{rowSelection}+\mathrm{divisionRelations}$.
 
 `MacaulayHomotopyDeterminant` transfers the existing determinant identities
-to this same operator: its determinant is `det(activeMinor)*det(relationMinor)`,
-and hence `det(activeMinor)*det(extraneousMinor)*higherRelationFactor`.
+to this same operator: its determinant is $\operatorname{det}(\mathrm{activeMinor})\cdot \operatorname{det}(\mathrm{relationMinor})$,
+and hence $\operatorname{det}(\mathrm{activeMinor})\cdot \operatorname{det}(\mathrm{extraneousMinor})\cdot \mathrm{higherRelationFactor}$.
 The characteristic identity holds over the original polynomial coefficient
 ring. `TubeMacaulayPowerKoszul` supplies the normalized splitting for the
 tube's pieces; `TubeMacaulayHomotopyDeterminant` supplies invariance and both
@@ -2798,8 +2831,8 @@ This holds over any integral domain, including integer coefficients.
 `GroupedDenominatorCancellation` uses reduced fractions over a UFD. The
 reduced denominator divides every polynomial denominator representing the
 same fraction. Thus a family with the property above forces that fraction
-to be a polynomial. In particular, identities `a_i*b_j=a_j*b_i` produce
-one polynomial `q` with `a_i=b_i*q` for every `i`.
+to be a polynomial. In particular, identities $a_i\cdot b_j=a_j\cdot b_i$ produce
+one polynomial `q` with $a_i=b_i\cdot q$ for every `i`.
 
 `MacaulayUniversalSystem` constructs the homogeneous input polynomials
 explicitly from coefficient variables `(input, exponent)` and fixed-width
@@ -2849,8 +2882,8 @@ width bounds. The result concerns that fraction field, not exactness over
 the polynomial coefficient ring or after arbitrary specialization.
 
 `KoszulPivotBasis` supplies a monomial decomposition over any commutative
-coefficient ring. For a canonical basis index `(m,s)`, `HasPivot` tests
-whether the Macaulay pivot of `m + subsetExponent d s` belongs to `s`.
+coefficient ring. For a canonical basis index $(m,s)$, `HasPivot` tests
+whether the Macaulay pivot of $m + \operatorname{subsetExponent} d s$ belongs to `s`.
 Such basis vectors are killed by the raising homotopy. Conversely every
 homotopy image lies in their span: division and insertion preserve the
 multidegree, and sorting an exterior word contributes only a unit sign.
@@ -2875,7 +2908,7 @@ original commutative coefficient ring. The kernel of `H_k` is the pivot
 span in every degree, including degree zero, where both are zero. The
 first isomorphism theorem and the monomial complement therefore give an
 explicit linear equivalence from the nonpivot span in degree `k` to the
-pivot span in degree `k+1`, whose forward map is `H_k`. Projection to the
+pivot span in degree $k+1$, whose forward map is `H_k`. Projection to the
 nonpivot span preserves homotopy images and canonical nonpivot coordinates.
 
 `KoszulAdjacentBlocks` restricts the contraction to the pivot span and
@@ -2887,32 +2920,32 @@ finite bases, even with different index types. This gives an exact equality
 over any commutative ring, without an unspecified sign or field extension.
 
 Write `P_k` and `Q_k` for the pivot and nonpivot blocks of the contraction
-on exterior degree `k+1`. The proved recurrence is
-`det(P_(k+1)) = det(Q_k)`, and hence
-`det(L_(k+1)) = det(Q_k) * det(Q_(k+1))`.
+on exterior degree $k+1$. The proved recurrence is
+$\operatorname{det}(P_{k+1}) = \operatorname{det}(Q_k)$, and hence
+$\operatorname{det}(L_{k+1}) = \operatorname{det}(Q_k) \cdot \operatorname{det}(Q_{k+1})$.
 `MacaulayPivotBoundary` supplies its concrete initial terms. The degree-zero
 contraction reindexes exactly to `activeMinor`, and the degree-zero homotopy
-conjugates it to the first pivot block, so `det(P_0) = det(activeMinor)`.
+conjugates it to the first pivot block, so $\operatorname{det}(P_0) = \operatorname{det}(\mathrm{activeMinor})$.
 The canonical nonpivot indices in degree one are precisely the unselected
 Macaulay multiplier indices. Explicit reindexing identifies `Q_0` with
-`relationMinor` over any commutative ring. Thus `det(P_1)` is the relation
-determinant, already factored as `det(extraneousMinor)*higherRelationFactor`.
+`relationMinor` over any commutative ring. Thus $\operatorname{det}(P_1)$ is the relation
+determinant, already factored as $\operatorname{det}(\mathrm{extraneousMinor})\cdot \mathrm{higherRelationFactor}$.
 The higher factors, their ordering comparisons, and polynomial cancellation
 of the extraneous factor are proved below.
 
 `KoszulExteriorSupport` and `KoszulNonpivotRows` supply the higher-degree
-row formula. For a nonpivot monomial/exterior basis index `(m,s)`, its
+row formula. For a nonpivot monomial/exterior basis index $(m,s)$, its
 multidegree pivot `i` is absent from `s`, is smaller than every element of
-`s`, and satisfies `d_i ≤ m_i`. The homotopy divides by `X_i^d_i` and
+`s`, and satisfies $d_i \le m_i$. The homotopy divides by $X_i^{d_i}$ and
 inserts `i`. After projection to the nonpivot summand, the contraction is
 `D H`; the other term is killed. Applying the exterior Leibniz identity
 gives multiplication by `p_i` after division, plus terms whose exterior
 subset contains `i`. The latter have zero coordinate on every target
 subset omitting `i`. Thus the same-subset entry is precisely the coefficient
-of `X^(m')` in `X^(m-d_i e_i) p_i`.
+of $X^{m'}$ in $X^{m-d_i e_i} p_i$.
 
 `KoszulNonpivotMacaulay` sends each basis index to the active monomial
-`m + subsetExponent d s`, with an explicit fixed-width rank. On a fixed
+$m + \operatorname{subsetExponent} d s$, with an explicit fixed-width rank. On a fixed
 exterior subset, this map is injective. Multiplying by that subset's
 coordinate powers identifies the diagonal entries exactly with the
 corresponding active Macaulay entries. Every fixed-subset block is therefore
@@ -2922,10 +2955,10 @@ or a sign ambiguity.
 `KoszulNonpivotBlocks` proves triangularity by the least exterior coordinate.
 Inside each such diagonal block, entries between different exterior subsets
 vanish. `KoszulSubsetDeterminant` removes the empty intermediate blocks:
-`det(Q_k)` is the product, over all exterior subsets, of these concrete
+$\operatorname{det}(Q_k)$ is the product, over all exterior subsets, of these concrete
 Macaulay principal-submatrix determinants. Subsets of the wrong cardinality
 have empty index types and determinant one. Adjacent conjugacy transfers
-this product to `det(P_(k+1))`. All identities hold over any commutative ring.
+this product to $\operatorname{det}(P_{k+1})$. All identities hold over any commutative ring.
 
 This proves the exterior-subset stage of the higher determinant decomposition.
 The next stage partitions the eligible-coordinate sequence by the positions
@@ -2934,7 +2967,7 @@ indices and counts, prove full-mask triangularity, and identify the factors.
 
 `KoszulEligibleIndices` gives an exact description of each fixed-subset
 factor using active monomials alone. For exterior subset `s` of cardinality
-`k+1`, its index monomial `t` satisfies `s ⊆ eligible(t)` and omits the
+$k+1$, its index monomial `t` satisfies $s \subseteq \operatorname{eligible}(t)$ and omits the
 least eligible coordinate. The inverse subtracts `subsetExponent d s` from
 `t`; exponent bounds, weight, and the inverse identities are proved.
 Reindexing gives an equal determinant of the corresponding eligible
@@ -2946,9 +2979,9 @@ identifies its `k`-element subsets with `k`-element position masks.
 the pivot erased. It gives a global bijection between actual nonpivot
 indices and pairs of an active monomial and a position mask. If `q` is the
 number of eligible coordinates of that monomial, its fiber has cardinality
-`choose(q-1,k+1)`. Every mask of cardinality `k+1` has a unique greatest
+$\binom{q-1}{k+1}$. Every mask of cardinality $k+1$ has a unique greatest
 position `j`, and the actual index stratum at that position has cardinality
-`choose(j,k)`. Writing `h=j+2` gives the expected `choose(h-2,k)` count.
+$\binom{j}{k}$. Writing $h=j+2$ gives the expected $\binom{h-2}{k}$ count.
 The full-mask comparison below turns these counts into determinant powers.
 
 `MacaulayEligibleMonotonic` connects the positions to the matrices. A nonzero
@@ -2967,7 +3000,7 @@ maps and are the identity at coordinate powers. The standard subtractive
 shift gives their characteristic pencils and nonzero determinants over a
 domain. `MacaulayUniversalExact` proves their universal power specialization
 is one and hence their nonvanishing, for every ordering. A greatest-position
-stratum at `j` supplies an index of the actual level-`j+2` minor.
+stratum at `j` supplies an index of the actual level-$j+2$ minor.
 
 `MacaulayFullPositionMasks` proves monotonicity of every selected coordinate's
 decreasing eligible rank along nonzero fixed-subset entries. Equality of the
@@ -2978,12 +3011,12 @@ submatrices.
 
 `FinitePositionSelection` decodes a mask into any sufficiently long decreasing
 coordinate list, with proved inverse identities and omission of the pivot.
-`MacaulayMaskedLevelIndices` applies this to a mask of cardinality `k+1` with
+`MacaulayMaskedLevelIndices` applies this to a mask of cardinality $k+1$ with
 greatest position `j`: its fixed-subset index union is exactly the index set
-of the level-`j+2` eligibility minor. `MacaulayFullMaskComparison` proves the
+of the level-$j+2$ eligibility minor. `MacaulayFullMaskComparison` proves the
 decoded exterior coordinates are nondecreasing along nonzero entries of
 that minor. Decomposing by exterior subsets and reindexing the diagonal
-blocks identifies their determinant product with `det(W_(j+2))`.
+blocks identifies their determinant product with $\operatorname{det}(W_{j+2})$.
 
 `FinitePositionMaskProduct` groups all masks by their unique greatest position.
 `MacaulayBinomialFactors` combines the comparison with the mask counts to prove
@@ -2992,22 +3025,22 @@ blocks identifies their determinant product with `det(W_(j+2))`.
 det(Q_k) = det(P_(k+1)) = product_j det(W_(j+2)) ^ choose(j,k).
 ```
 
-Here `j` ranges over `Fin n`; the level-`n+1` determinant is one. The result
+Here `j` ranges over `Fin n`; the level-$n+1$ determinant is one. The result
 holds over any commutative ring, including empty blocks, without genericity
 or nonvanishing assumptions. The first relation determinant is consequently
-the product of all `det(W_(j+2))`. Ordering comparisons and cancellation of
+the product of all $\operatorname{det}(W_{j+2})$. Ordering comparisons and cancellation of
 the extraneous polynomial from the numerator are proved below; resultant
 identification remains open.
 
-Write `D_k : V_(k+1) → V_k` and `H_k : V_k → V_(k+1)`.
-`KoszulPowerComparison` constructs `F_k = D_k H_k + H_(k-1) D^power_(k-1)`,
+Write $D_k : V_{k+1} \to V_k$ and $H_k : V_k \to V_{k+1}$.
+`KoszulPowerComparison` constructs $F_k = D_k H_k + H_{k-1} D^{\mathrm{power}}_{k-1}$,
 with the second term omitted in degree zero. The identity
-`D_k F_(k+1) = F_k D^power_k` is proved as an equality of linear maps
+$D_k F_{k+1} = F_k D^{\mathrm{power}}_k$ is proved as an equality of linear maps
 and in canonical row-vector matrices. At coordinate powers `F_k` is the
 identity. On the incoming homotopy summand it is also the identity for
 arbitrary homogeneous inputs. Its other diagonal block is the existing
-nonpivot contraction block, so `det(F_0)=det(activeMinor)` and
-`det(F_(k+1))=det(Q_k)` over any commutative ring.
+nonpivot contraction block, so $\operatorname{det}(F_0)=\operatorname{det}(\mathrm{activeMinor})$ and
+$\operatorname{det}(F_{k+1})=\operatorname{det}(Q_k)$ over any commutative ring.
 
 `KoszulPowerComparisonSpecialization` proves that these matrices commute
 with coefficient maps and specialize to the identity. Their determinants
@@ -3028,7 +3061,7 @@ product_(k even) det(Q_k) = det(extraneousMinor) * product_(k odd) det(Q_k).
 The range is `k : Fin n`. No determinant is divided out in this identity.
 `KoszulComparisonRatio` combines it with the comparison determinants:
 over a field where these determinants are nonzero, the alternating quotient
-of `det(F_k)` is exactly `det(activeMinor)/det(extraneousMinor)`.
+of $\operatorname{det}(F_k)$ is exactly $\operatorname{det}(\mathrm{activeMinor})/\operatorname{det}(\mathrm{extraneousMinor})$.
 `MacaulayUniversalComparison` proves this identification over the universal
 coefficient fraction field and proves that equality of the constructed
 ratios for two orderings is equivalent to the required polynomial
@@ -3073,7 +3106,7 @@ intertwines the differential after mapping the inputs.
 `KoszulExteriorPermutation` supplies the exterior-index action. Their
 composition in `KoszulCoordinatePermutation` is an explicit linear
 equivalence over the original coefficient ring, sending a monomial word
-`(m,v)` to `(rho(m),rho(v))` and intertwining the renamed input differential.
+$(m,v)$ to $(\operatorname{rho}(m),\operatorname{rho}(v))$ and intertwining the renamed input differential.
 
 `KoszulWeightedPermutation` proves that this map preserves total weight
 under the corresponding permutation of degree labels. It restricts to
@@ -3127,14 +3160,14 @@ quotientPolynomial(A,E) = (-1)^dim(E) * (det(A-sI) /ₘ charpoly(E)).
 When the subtractive characteristic determinants divide, this polynomial
 factors the numerator exactly. The construction commutes with every
 coefficient homomorphism, including noninjective specializations. Over a
-domain its degree is `dim(A)-dim(E)` and, when `dim(E) ≤ dim(A)`, its leading
+domain its degree is $\operatorname{dim}(A)-\operatorname{dim}(E)$ and, when $\operatorname{dim}(E) \le \operatorname{dim}(A)$, its leading
 coefficient is the corresponding power of `-1`.
 
 `MacaulayCharacteristicQuotient` applies the proved polynomial cancellation.
 The definition needs no homogeneity proofs as data. For homogeneous inputs
 of positive declared degrees and a fitting Macaulay width, its factorization
-is exact. Over a domain its natural degree is `D = Σᵢ ∏ⱼ≠ᵢ dⱼ`, its leading
-coefficient is `(-1)^D`, and multiplying by that sign gives a monic polynomial.
+is exact. Over a domain its natural degree is $D = \sum _{i} \prod_{j\ne i} d_{j}$, its leading
+coefficient is $(-1)^D$, and multiplying by that sign gives a monic polynomial.
 Its degree survives every coefficient specialization to a nontrivial ring.
 Its rational-function image is the prior determinant ratio, and its ordinary
 trailing degree and coefficient realize the prior signed order and fraction
@@ -3168,7 +3201,7 @@ commutes with every coefficient homomorphism, factors the actual active
 determinant, and equals one on coordinate powers. The specialized ring
 need not be a domain, and its extraneous determinant may vanish.
 
-`MacaulayQuotientSpecialization` identifies this value on `pᵢ-s*xᵢ^dᵢ`
+`MacaulayQuotientSpecialization` identifies this value on $p_{i}-s\cdot x_{i}^{d_{i}}$
 with `characteristicQuotient p d W`. Evaluating at any scalar gives the
 universal polynomial value on the corresponding specialized inputs.
 In particular, evaluating the characteristic quotient at zero gives the
@@ -3197,7 +3230,7 @@ qᵢ = x_last^dᵢ * Xᵢ^dᵢ - xᵢ^dᵢ * X_last^dᵢ.
 
 Group extraneous indices by their last exponent. Each correction term
 strictly increases that exponent, while the diagonal entry is
-`x_last^d_pivot`. Hence `x_last ≠ 0` makes the extraneous determinant
+$x_{\mathrm{last}}^{d_{\mathrm{pivot}}}$. Hence $x_{\mathrm{last}} \ne 0$ makes the extraneous determinant
 nonzero over any domain. No division by a root coordinate is used.
 
 `MacaulayRootDeformation` adds a parameter times this model to the original
@@ -3240,8 +3273,8 @@ equivalences, and no bound on the required power is proved.
 `HomogeneousIdealMembership` takes homogeneous components of arbitrary
 ideal expressions. For homogeneous inputs of degrees `dᵢ` and a target of
 degree `t`, it supplies multipliers homogeneous of degree `t-dᵢ`, with zero
-multipliers when `t<dᵢ`. Their support degrees satisfy the exact equation
-`degree(m)+dᵢ=t`, giving the existing finite coefficient-reconstruction
+multipliers when $t<d_{i}$. Their support degrees satisfy the exact equation
+$\operatorname{degree}(m)+d_{i}=t$, giving the existing finite coefficient-reconstruction
 contract without a separate multiplier or support assumption.
 
 `MacaulayIdealImage` proves that, over any commutative ring and a fitting
@@ -3255,7 +3288,7 @@ nonzero common roots, and over an algebraically closed field supplies an
 ideal-power certificate and homogeneous Bezout expressions at every
 sufficiently large degree.
 
-The specific degree `1+Σᵢ(dᵢ-1)` is now proved sufficient by the Koszul
+The specific degree $1+\sum _{i}(d_{i}-1)$ is now proved sufficient by the Koszul
 acyclicity and weighted projection argument below. The matrix-to-quotient
 implication is proved as follows.
 
@@ -3320,10 +3353,10 @@ elements are coordinate powers, not the original input forms.
 
 `ProjectiveDepth` proves that positive homogeneous inputs generate a proper
 ideal, since they all vanish at zero. Rees' theorem then gives
-`Ext^i(N,P)=0` for `i<n`, where `P=K[X₀,...,X_(n-1)]`, the field is
+$\operatorname{Ext}^i(N,P)=0$ for $i<n$, where $P=K[X_{0},\ldots ,X_{n-1}]$, the field is
 algebraically closed, the inputs have no nonzero common root, and `N` is
 any finite `P`-module supported on the input ideal's zero locus. A concrete
-corollary covers `N=P/I`. This is a proved Ext-vanishing certificate, not
+corollary covers $N=P/I$. This is a proved Ext-vanishing certificate, not
 an assumption that the input forms constitute a regular sequence.
 
 `KoszulIdealAnnihilator` extends the exterior multiplication homotopy to
@@ -3348,7 +3381,7 @@ boundaries annihilates homology, hence supports it on the ideal's zero locus.
 
 `FiniteComplexAcyclicity` proves a bounded-complex acyclicity lemma. Descend
 from the zero module above the top degree through the differential cokernels.
-Once degree `k+1` is exact, those cokernels give a short exact sequence with
+Once degree $k+1$ is exact, those cokernels give a short exact sequence with
 the degree-`k` chain module. Dimension shifting loses one Ext degree at each
 step. Positive homology embeds in its cokernel, and vanishing of Hom forces
 it to be zero. This uses the actual long exact Ext sequence, without
@@ -3372,7 +3405,7 @@ ring when polynomial exactness is supplied.
 
 `MacaulayProjectiveCriterion` combines this with the coordinate-power rank
 comparison. Absence of nonzero common roots gives full row surjectivity at
-`δ=1+Σᵢ(dᵢ-1)`, and hence ideal membership of every homogeneous form of degree
+$\delta =1+\sum _{i}(d_{i}-1)$, and hence ideal membership of every homogeneous form of degree
 `δ`. This is the sharp Macaulay degree bound, with no supplied exactness,
 rank, or Hilbert-function assumption. The normalized polynomial quotient is
 nonzero exactly when there is no nonzero common root. Equivalently, it is
@@ -3384,7 +3417,7 @@ vanishing in the forward direction remains valid over every domain.
 `TubeCharacteristicCriterion` proves both implications for the actual tube
 polynomial after any coefficient specialization to an algebraically closed
 field. Its value at `s` vanishes exactly when the specialized tube equations
-have a nonzero common solution of `pᵢ(x)=s*xᵢ^dᵢ`. Its constant coefficient
+have a nonzero common solution of $p_{i}(x)=s\cdot x_{i}^{d_{i}}$. Its constant coefficient
 vanishes exactly when the unshifted equations have a nonzero common root.
 No specialized extraneous determinant is assumed nonzero. Identification
 with a separately specified multivariate resultant, general geometric
@@ -3399,8 +3432,8 @@ invertible square-system Jacobian. Extending it to the report's general
 proper-component statement remains an obligation.
 
 `ImplicitRootPersistence` constructs a continuous local root curve for a
-`C¹` equation `f(s,z)=0` over the reals or complexes when the derivative in
-`z` is invertible at `(0,z₀)`. Applying the existing lowest-coefficient limit
+`C¹` equation $f(s,z)=0$ over the reals or complexes when the derivative in
+`z` is invertible at $(0,z_{0})$. Applying the existing lowest-coefficient limit
 theorem along punctured neighborhoods of zero forces a polynomial's lowest
 coefficient to vanish whenever that polynomial vanishes on the constructed
 roots. No root curve is supplied as an assumption.
@@ -3408,7 +3441,7 @@ roots. No root curve is supplied as an assumption.
 `ParametricPolynomialCalculus` proves smoothness of polynomial evaluation
 when both coefficients and variables depend smoothly on the parameter.
 `MacaulayRegularPersistence` applies the implicit function theorem to the
-explicit equations `pᵢ(x(z))-s*xᵢ(z)^dᵢ`. At `s=0`, their derivative in `z`
+explicit equations $p_{i}(x(z))-s\cdot x_{i}(z)^{d_{i}}$. At $s=0$, their derivative in `z`
 equals the derivative of the unshifted family. The proved common-root
 vanishing theorem applies along the resulting curve, so the normalized
 quotient's lowest characteristic coefficient vanishes at the original
@@ -3416,11 +3449,11 @@ parameter. A projective chart keeps the roots nonzero throughout.
 
 `TubeCharacteristicRegularPersistence` supplies the concrete tube instance.
 Fix the perturbation value `ε`; the unknowns are the projection parameter
-`u` and the spatial coordinates in the chart `x₀=1`. All coefficient maps
+`u` and the spatial coordinates in the chart $x_{0}=1$. All coefficient maps
 and coordinate functions are explicit and proved smooth. Invertibility of
-the full square-system Jacobian gives a curve `(u(s),y(s))` through each
+the full square-system Jacobian gives a curve $(u(s),y(s))$ through each
 such root. Thus the polynomial obtained from the actual quotient's lowest
-coefficient by specializing `ε` vanishes at `u(0)`. The Jacobian hypothesis
+coefficient by specializing `ε` vanishes at $u(0)$. The Jacobian hypothesis
 concerns the entire square system; proving the needed coverage for all
 critical points remains open.
 
@@ -3460,10 +3493,10 @@ that a point ideal in `n` variables has height `n`, by splitting off one
 polynomial variable at a time. The weak Nullstellensatz gives the same
 height for every maximal ideal over an algebraically closed field.
 
-`FiniteFiberSaturation` considers `n` equations in `n+1` affine variables,
+`FiniteFiberSaturation` considers `n` equations in $n+1$ affine variables,
 with a polynomial parameter whose zero fiber is finite. If that parameter
 belonged to a minimal prime of the input ideal, the prime would lie above
-the finite fiber and thus be maximal, of height `n+1`. Krull's height theorem
+the finite fiber and thus be maximal, of height $n+1$. Krull's height theorem
 bounds its height by the `n` generators, a contradiction. The parameter
 therefore avoids every minimal prime. Its powers can be cancelled in the
 radical ideal. This concerns the radical and does not assert flatness of
@@ -3487,7 +3520,7 @@ specialization, so no preservation-of-order hypothesis is needed for the
 vanishing theorem. Infinite projective components at infinity are allowed.
 
 `TubeCharacteristicFinitePersistence` instantiates this with the compiled
-tube rows, fixed perturbation `ε`, projection variable `u`, and chart `x₀=1`.
+tube rows, fixed perturbation `ε`, projection variable `u`, and chart $x_{0}=1$.
 It also embeds real roots in an arbitrary algebraically closed extension of
 the reals. Finiteness of the affine system over that extension therefore
 gives lowest-coefficient vanishing for every real affine tube root, including
@@ -3518,7 +3551,7 @@ configuration-count theorem supply a complete `SpaceDecider` certificate.
 length polynomial of an FP preprocessing function. Consequently PSPACE is
 proved closed under FP preimages and polynomial-time many-one reductions.
 `existsReal_subset_PSPACE_iff` discharges the class-theoretic consequence:
-`∃ℝ ⊆ PSPACE ↔ ETR ∈ PSPACE`. This leaves the ETR algorithm proof open.
+$\exists \mathbb{R} \subseteq \mathrm{PSPACE} \iff \mathrm{ETR} \in \mathrm{PSPACE}$. This leaves the ETR algorithm proof open.
 
 The distinction affects implementation and resource-accounting effort, even though
 the intended polynomial-space classes agree mathematically.
@@ -3541,7 +3574,7 @@ as individual tape transitions:
 
 * [`SpaceIter.mem_PSPACE_of_iterate`](https://github.com/SamuelSchlesinger/complexitylib/blob/add0aca8ee0d71e68969f2cb45cf91554a50f787/Complexitylib/Classes/Space/Iterate.lean)
   supplies a machine from a polynomial-time bitstring step function, polynomially
-  bounded states, and a bounded terminating run (at most `2^poly` steps). There are
+  bounded states, and a bounded terminating run (at most $2^{\mathrm{poly}}$ steps). There are
   also FP composition/iteration tools and polynomial-space folds.
 * `lean-trominoes` has evaluator workspace certificates and a prepared-evaluator
   bridge to its TM2 PSPACE predicate. These can avoid rebuilding stack accounting
@@ -3598,7 +3631,7 @@ The direct callback contract still requires FP entry access. The new suspended
 entry interface requires FP certificates only for the child initializer,
 transition, halting test, and output projection. It saves the parent while the
 child runs. A prefix classification accounts for every intermediate physical
-state; parent/child bounds `S,U` give `2*S+U+3` bits. Polynomial state bounds and
+state; parent/child bounds `S,U` give $2\cdot S+U+3$ bits. Polynomial state bounds and
 exponential parent-step and child-run clocks yield Complexitylib PSPACE through
 `SubroutineIteration.mem_PSPACE`. Its hypotheses concern only reachable parent
 states and requested calls. The direct factor formulas and the uniform scalar-moment
@@ -3635,9 +3668,9 @@ and need not be a dependency of that particular proof.
 Savitch support is available in **both** candidate libraries:
 
 * [Complexitylib](https://github.com/SamuelSchlesinger/complexitylib/blob/add0aca8ee0d71e68969f2cb45cf91554a50f787/Complexitylib/Classes/Containments/NPSPACESubsetPSPACE.lean)
-  proves `NPSPACE ⊆ PSPACE` and equality of the two polynomial-space classes. Its
+  proves $\mathrm{NPSPACE} \subseteq \mathrm{PSPACE}$ and equality of the two polynomial-space classes. Its
   public statement explicitly does not provide the general quantitative theorem
-  `NSPACE(S) ⊆ DSPACE(S²)`.
+  $\mathrm{NSPACE}(S) \subseteq \mathrm{DSPACE}(S^{2})$.
 * `lean-trominoes` has a generic Savitch evaluator, reachability correctness, encoded
   search-state bounds, and workspace certificates. Its generic leaf interface accepts
   an evaluator-space certificate for adjacency, not only a polynomial-time test.
