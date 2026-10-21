@@ -15,8 +15,9 @@ common small positive tube-level interval. Any rational substitution with
 nonzero denominators that realizes those perturbation parameters and that
 direction has a finite compiled affine fiber. Over an algebraically closed
 field, the lowest quotient coefficient consequently vanishes at every root.
-The parameter identities are explicit; constructing bounded encoded readers
-that satisfy them remains an algorithmic obligation.
+The parameter identities are explicit; `TubeLevelFiniteFiber` discharges them
+for stored rational constants and a variable level. Selecting suitable tuples
+with bounds in the source size remains an algorithmic obligation.
 -/
 
 @[expose] public section
