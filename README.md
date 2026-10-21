@@ -6,7 +6,8 @@ The report is saved as [`canny-tr.pdf`](canny-tr.pdf).
 
 **Canny's PSPACE upper bound is not proved here yet.** The current development defines
 an encoded existential theory of the reals (ETR), its reduction class ∃ℝ, and several
-algebraic ingredients. It uses Lean 4 and pinned Mathlib/Complexitylib dependencies.
+algebraic ingredients. It uses Lean 4.36.0-rc1 and pinned Mathlib, Complexitylib2,
+and legacy Complexitylib dependencies.
 
 ## Build
 
@@ -21,6 +22,10 @@ lake build
 `lean-toolchain` and `lake-manifest.json` record the versions used. The public entry
 point is [`LeanCanny.lean`](LeanCanny.lean).
 
+`lake update` applies a checked [compatibility patch](scripts/complexitylib-lean436.patch)
+to the pinned legacy Complexitylib dependency. The hook checks the revision and is
+idempotent; Lake's resulting notice that this dependency has local changes is expected.
+
 For stricter verification:
 
 ```sh
@@ -33,10 +38,25 @@ The audit checks all declarations in the `LeanCanny` namespace and their transit
 dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 `Quot.sound` axioms.
 
-An isolated [Complexitylib2 prototype](experiments/complexitylib2/README.md)
-checks space composition with an exponential-time child and a simpler generic
-bounded-fold certificate on Lean 4.36.0-rc1. It favors adopting that space
-interface; the main development currently retains its original foundation.
+Space proofs now have Complexitylib2's compositional tidy interfaces available.
+The [prototype](experiments/complexitylib2/README.md) checks a bounded fold with an
+explicit exponential-time child. In the main development,
+[`TidyBoundedFold.evaluator`](LeanCanny/Computation/TidyBoundedFold.lean) certifies
+typed folds from polynomial-space children and bounded accumulator prefixes;
+[`BoundedFold.computable`](LeanCanny/Computation/BoundedFoldTidy.lean) certifies the
+existing raw-code fold with the same mathematical semantics. Neither interface
+requires child execution clocks or a suspended controller.
+
+[`TidyFP`](LeanCanny/Computation/TidyFP.lean) and
+[`SpaceFunction.computable`](LeanCanny/Computation/SpaceFunctionTidy.lean) transfer
+existing certified routines to the new interfaces. The
+[`modular-sum certificate`](LeanCanny/Algebra/ModularSumTidy.lean) uses the new fold
+directly. Existing controller proofs remain available during migration.
+[`TidyPSPACE`](LeanCanny/Computation/TidyPSPACE.lean) transfers legacy PSPACE
+membership to Complexitylib2 and proves closure under our polynomial-time
+reductions; only this transfer direction is proved. The
+[`new target theorem`](LeanCanny/ETR/TidyPSPACEClosure.lean) states
+`∃ℝ ⊆ PSPACE ↔ ETR ∈ PSPACE` for Complexitylib2's machine-based class.
 
 ## Proved so far
 

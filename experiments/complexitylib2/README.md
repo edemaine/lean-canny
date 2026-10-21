@@ -1,6 +1,6 @@
 # Complexitylib2 space-composition experiment
 
-The checked prototype favors adopting Complexitylib2 for space proofs. This
+The checked prototype motivated adopting Complexitylib2 for space proofs. This
 subproject pins Lean **4.36.0-rc1**, Complexitylib2 **cb1b7ce8**, CSLib **b5f3b77d**,
 and Mathlib **625d8914** independently of the main development.
 
@@ -59,15 +59,16 @@ The existing `BoundedFold.evaluator` already hides scheduling from its callers;
 ordinary clients should not be credited with removing all that code again.
 Correctness proofs, encoding lengths, and accumulator invariants are still
 needed. Typed encodings avoid manually constructing and parsing binary packets,
-but the prototype does not yet certify conversions for our existing raw codecs.
+and the main development now certifies conversions for our existing raw codecs.
 
-Adopt the new space foundation, retaining existing certified routines through
-compatibility interfaces during migration. This is a change in the certificate
-type, rather than a drop-in implementation with the old `SpaceFunction` return
-type. First check the Lean/Mathlib upgrade and the FP-to-CSLib bridge; preserve
-the existing algebraic correctness theorems and prove the required connections
-between complexity interfaces. The prototype alone does not migrate the main
-project or prove Canny's PSPACE theorem.
+The main project now uses the same Lean/Mathlib pins and includes the new space
+foundation, retaining existing certified routines through compatibility
+interfaces. This changes the certificate type from `SpaceFunction` to
+`ComputableTidilyInPolySpace`. The typed fold and the existing raw-code fold have
+native certificates, as does the streamed modular sum. Existing FP routines,
+`SpaceFunction` routines, and PSPACE deciders transfer to the new foundation.
+The algebraic correctness theorems are preserved. Canny's PSPACE theorem remains
+open, and the older controller proofs have not yet all been replaced.
 
 ## Upgrade compatibility check
 
@@ -85,8 +86,9 @@ The unmodified old dependency fails on Lean 4.36.0-rc1:
 * Several old proofs trigger the new unused-tactic linter.
 
 These are concrete migration prerequisites, not evidence against the new space
-interface. Simply adding the new dependency and changing the toolchain is
-insufficient. The main development was kept intact during this diagnostic.
+interface. The main project's revision-checked, idempotent post-update hook now
+applies a compatibility patch for these API changes. The patch also updates the
+legacy CSLib time/space bridge to the new shared halted-run bounds.
 
 The library rules used here are in
 [`InSpace`](https://github.com/SamuelSchlesinger/complexitylib2/blob/cb1b7ce8ca0757db30ec29c8365b88d86b78c80a/Complexity/Computability/Machines/Turing/MultiTape/Complexity/InSpace.lean),

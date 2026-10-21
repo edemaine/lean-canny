@@ -257,6 +257,10 @@ import LeanCanny.Algebra.IndexedModulusSpace
 import LeanCanny.Algebra.ChineseRemainderSignSpace
 import LeanCanny.Algebra.BinomialResidue
 import LeanCanny.Algebra.ShiftCoefficientResidue
+import LeanCanny.Computation.BoundedFoldTidy
+import LeanCanny.Computation.SpaceFunctionTidy
+import LeanCanny.Algebra.ModularSumTidy
+import LeanCanny.ETR.TidyPSPACEClosure
 
 /-!
 # Canny's algebraic and geometric computations in polynomial space
