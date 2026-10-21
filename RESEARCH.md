@@ -3672,8 +3672,8 @@ exponentially large and only their binary descriptions are available.
 
 `TubeLevelSign.CoordinateBudget` therefore constructs the former sign-stage
 budget from root/coordinate data. Its native counter and PSPACE theorem need
-no separately supplied query degree or mass proof. The final-stage coefficient
-readers still require construction from the source and coordinate data.
+no separately supplied query degree or mass proof. The coefficient reader
+construction below removes the separate expanded sign-query access hypothesis.
 Finding suitable coordinate representations with original-input degree,
 height, and workspace bounds remains open.
 
@@ -3705,10 +3705,38 @@ constraint; out-of-range indices select the final row. The complete native
 reader needs only FP packet/row/exponent/modulus fields and a unary exponent
 block width. It assumes no constraint-coefficient oracle.
 
-The reader has not yet been composed with the integer coordinate polynomials'
-coefficient routines to discharge the final sign-query access contract.
-Effective construction of suitable coordinate representations, their bounds
-in the original input, and the complete ETR PSPACE theorem remain open.
+## Native substitution and the derived sign-query reader
+
+`TubeConstraintIndexed` streams the complete integer constraint by binary rank.
+The exponent block width is `D.size` for `D=8*N^2+4`. The proved degree bound
+shows that these blocks cover every supported monomial. Each rank exponent is
+less than `2^D.size`, and that power is at most `2*D`, so all terms fit the exact
+even clearing allowance used by the actual sign queries.
+
+`TubeConstraintSubstitution` instantiates the generic native rational-substitution
+engine with these actual coefficients and FP metadata. Only numerator and
+denominator coefficient readers are supplied. Context reindexing preserves
+coordinate/degree/modulus fields and includes each original child certificate.
+Its polynomial is proved equal to `clearedWith` of the actual integer constraint,
+with no change of clearing allowance.
+
+`TubeLevelSignReaders` extends the decoded finite coordinate polynomials by zero
+outside their spatial range and supplies substitution contexts containing a binary
+constraint row. `TubeLevelSignCoefficient` selects the constant query one on
+active rows using FP mask lookup. Other rows run the complete constraint and
+substitution children. Binary row decoding is capped on arbitrary inputs; every
+valid sign-query row has its exact mathematical coefficient modulo every positive
+modulus. Short and redundant binary fields remain total machine inputs.
+
+`TubeLevelSignNative` builds the final sign-pattern access contract internally.
+Native root/coordinate coefficient readers, FP packet/mask fields, and
+`CoordinateBudget` suffice for sample counting and sample-existence PSPACE
+membership. An independent foundation example checks this endpoint directly
+against Complexitylib2's PSPACE class. No expanded sign-query coefficient oracle
+or separately assumed query degree/mass bounds remain.
+
+Effective construction of suitable coordinate representations and their readers,
+with bounds in the original input, and the complete ETR PSPACE theorem remain open.
 
 ## TM2 versus Complexitylib's machines
 

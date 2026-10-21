@@ -51,6 +51,13 @@ example {S : LeanCanny.ETR.TubeLevelSign.Source}
     LeanCanny.ETR.TubeLevelSign.sampleLanguage S ∈ Cslib.Complexity.PSPACE encBits :=
   B.sampleLanguage_mem_PSPACE hp a ⟨hroot⟩ ⟨hquery⟩
 
+example {S : LeanCanny.ETR.TubeLevelSign.Source}
+    (C : LeanCanny.ETR.TubeLevelSign.CoefficientReaders S)
+    (B : LeanCanny.ETR.TubeLevelSign.CoordinateBudget S)
+    (hp : S.packet ∈ LeanCanny.FP) (hm : S.mask ∈ LeanCanny.FP) :
+    LeanCanny.ETR.TubeLevelSign.sampleLanguage S ∈ Cslib.Complexity.PSPACE encBits :=
+  C.sampleLanguage_mem_PSPACE B hp hm
+
 example (packet row target modulus : List Bool → List Bool) (W : List Bool → ℕ)
     (hp : packet ∈ LeanCanny.FP) (hr : row ∈ LeanCanny.FP) (ht : target ∈ LeanCanny.FP)
     (hm : modulus ∈ LeanCanny.FP) (hW : LeanCanny.UnaryFn W) :
