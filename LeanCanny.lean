@@ -153,6 +153,7 @@ import LeanCanny.ETR.TubeCharacteristicGeometricPersistence
 import LeanCanny.ETR.TubeLevelReaders
 import LeanCanny.ETR.TubeLevelPacking
 import LeanCanny.ETR.TubeLevelFiniteFiber
+import LeanCanny.ETR.TubeLevelSamplingSource
 import LeanCanny.Algebra.ProjectiveDepth
 import LeanCanny.Algebra.KoszulExactSurjectivity
 import LeanCanny.Algebra.KoszulIdealAnnihilator

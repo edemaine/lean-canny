@@ -5,13 +5,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.TubeLevelParameters
+import Mathlib.Tactic.Ring
 
 /-! # Packing rational parameter tuples without losing their values
 
 The three fixed-width blocks recover signed numerators and positive
 denominators exactly when they fit. A width derived from the component bit
-lengths represents every rational tuple. This proves representability;
-bounding the size of a suitable geometric tuple in the source size is separate.
+lengths represents every rational tuple. This proves representability.
+The exact packet-length formula gives a linear bound in source length and
+coordinate count times the bit allowance. Bounding a suitable geometric
+tuple in the source size remains separate.
 -/
 
 @[expose] public section
@@ -65,9 +68,13 @@ theorem rationalValue_rationalPack (bits : List Bool) (W : ℕ) (q : ℕ → ℚ
     Nat.sub_add_cancel (q i).den_pos]
   exact (q i).num_div_den
 
+/-- Bits in the two signed-numerator parts and the positive denominator. -/
+def rationalBits (q : ℚ) : ℕ := q.num.toNat.size + (-q.num).toNat.size + q.den.size
+
+@[simp] theorem rationalBits_zero : rationalBits 0 = 1 := rfl
+
 noncomputable def rationalWidth (bits : List Bool) (q : ℕ → ℚ) : ℕ :=
-  Finset.univ.sup (fun i : Fin (TubeParameter.parameterCount bits) =>
-    (q i.val).num.toNat.size + (-(q i.val).num).toNat.size + (q i.val).den.size)
+  Finset.univ.sup (fun i : Fin (TubeParameter.parameterCount bits) => rationalBits (q i.val))
 
 theorem rationalValue_pack_width (bits : List Bool) (q : ℕ → ℚ) (i : ℕ)
     (hi : i < TubeParameter.parameterCount bits) :
@@ -85,5 +92,32 @@ theorem exists_packet (bits : List Bool) (q : ℕ → ℚ) :
     ∃ c : List Bool, pairFst c = bits ∧ ∀ i, i < TubeParameter.parameterCount bits → rationalValue c i = q i := by
   refine ⟨rationalPack bits (rationalWidth bits q) q, ?_, rationalValue_pack_width bits q⟩
   simp only [rationalPack, source_pack]
+
+theorem length_pack (bits : List Bool) (W : ℕ) (p n d : ℕ → ℕ) :
+    (pack bits W p n d).length =
+      2 * bits.length + 2 * W + 5 * (TubeParameter.parameterCount bits * W) + 8 := by
+  simp only [pack, pair_length, List.length_replicate, FixedWidthNatVector.length_encode]
+  omega
+
+theorem length_rationalPack (bits : List Bool) (W : ℕ) (q : ℕ → ℚ) :
+    (rationalPack bits W q).length =
+      2 * bits.length + (5 * TubeParameter.parameterCount bits + 2) * W + 8 := by
+  rw [rationalPack, length_pack]
+  ring
+
+theorem rationalWidth_le (bits : List Bool) (q : ℕ → ℚ) (B : ℕ)
+    (hB : ∀ i, i < TubeParameter.parameterCount bits →
+      rationalBits (q i) ≤ B) :
+    rationalWidth bits q ≤ B :=
+  Finset.sup_le (fun i _ => hB i.val i.isLt)
+
+theorem length_rationalPack_le (bits : List Bool) (q : ℕ → ℚ) (B : ℕ)
+    (hB : ∀ i, i < TubeParameter.parameterCount bits →
+      rationalBits (q i) ≤ B) :
+    (rationalPack bits (rationalWidth bits q) q).length ≤
+      2 * bits.length + (5 * TubeParameter.parameterCount bits + 2) * B + 8 := by
+  rw [length_rationalPack]
+  exact Nat.add_le_add_right (Nat.add_le_add_left
+    (Nat.mul_le_mul_left _ (rationalWidth_le bits q B hB)) _) _
 
 end LeanCanny.ETR.TubeLevelPacket
