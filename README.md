@@ -68,6 +68,13 @@ binary/tree codecs. [TidyFP](LeanCanny/Computation/TidyFP.lean) currently conver
 their certificates to the new machine model. Removing this remaining dependency
 is in progress. No PSPACE result relies on
 the original library's space class or on a conversion from that class.
+The replacement [FP calculus](LeanCanny/Computation/PolyTimeFunctions.lean)
+now has native arithmetic, pairing, right-fold, range, and bounded-quantifier
+certificates. Local codecs preserve the existing formats. Its independent
+[audit](scripts/CheckPolyTimeFoundation.lean) checks that no Complexitylib module
+is imported and that all project proofs use only standard axioms; client
+migration is still underway.
+
 The [isolated prototype](experiments/complexitylib2/README.md) records the
 exponential-time-child experiment that motivated this choice.
 
