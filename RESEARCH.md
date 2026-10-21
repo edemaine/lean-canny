@@ -2897,8 +2897,8 @@ The canonical nonpivot indices in degree one are precisely the unselected
 Macaulay multiplier indices. Explicit reindexing identifies `Q_0` with
 `relationMinor` over any commutative ring. Thus `det(P_1)` is the relation
 determinant, already factored as `det(extraneousMinor)*higherRelationFactor`.
-The remaining task is to identify and compare the higher factors across
-orderings; the recurrence does not by itself cancel the extraneous factor.
+The higher factors are identified below. Comparing them across orderings
+and cancelling the extraneous factor remain open.
 
 `KoszulExteriorSupport` and `KoszulNonpivotRows` supply the higher-degree
 row formula. For a nonpivot monomial/exterior basis index `(m,s)`, its
@@ -2930,7 +2930,7 @@ this product to `det(P_(k+1))`. All identities hold over any commutative ring.
 This proves the exterior-subset stage of the higher determinant decomposition.
 The next stage partitions the eligible-coordinate sequence by the positions
 of the selected exterior coordinates. The following modules construct those
-indices and counts and prove triangularity by the greatest position.
+indices and counts, prove full-mask triangularity, and identify the factors.
 
 `KoszulEligibleIndices` gives an exact description of each fixed-subset
 factor using active monomials alone. For exterior subset `s` of cardinality
@@ -2949,7 +2949,7 @@ number of eligible coordinates of that monomial, its fiber has cardinality
 `choose(q-1,k+1)`. Every mask of cardinality `k+1` has a unique greatest
 position `j`, and the actual index stratum at that position has cardinality
 `choose(j,k)`. Writing `h=j+2` gives the expected `choose(h-2,k)` count.
-These are proved counts of index strata, not yet determinant powers.
+The full-mask comparison below turns these counts into determinant powers.
 
 `MacaulayEligibleMonotonic` connects the positions to the matrices. A nonzero
 entry forces the source remainder to divide the target monomial, preserving
@@ -2969,10 +2969,35 @@ domain. `MacaulayUniversalExact` proves their universal power specialization
 is one and hence their nonvanishing, for every ordering. A greatest-position
 stratum at `j` supplies an index of the actual level-`j+2` minor.
 
-Full position-mask triangularity and identification of its diagonal factors
-with these higher minors are still needed to turn the binomial counts into
-the determinant-power formula. Ordering comparisons, cancellation of the
-extraneous polynomial, and resultant identification remain open.
+`MacaulayFullPositionMasks` proves monotonicity of every selected coordinate's
+decreasing eligible rank along nonzero fixed-subset entries. Equality of the
+rank sums forces equality of the full masks. `MatrixWeightBlockProduct`
+turns these facts into a determinant product, using a finite tie-breaking
+order on labels. All full-mask diagonal factors are concrete principal
+submatrices.
+
+`FinitePositionSelection` decodes a mask into any sufficiently long decreasing
+coordinate list, with proved inverse identities and omission of the pivot.
+`MacaulayMaskedLevelIndices` applies this to a mask of cardinality `k+1` with
+greatest position `j`: its fixed-subset index union is exactly the index set
+of the level-`j+2` eligibility minor. `MacaulayFullMaskComparison` proves the
+decoded exterior coordinates are nondecreasing along nonzero entries of
+that minor. Decomposing by exterior subsets and reindexing the diagonal
+blocks identifies their determinant product with `det(W_(j+2))`.
+
+`FinitePositionMaskProduct` groups all masks by their unique greatest position.
+`MacaulayBinomialFactors` combines the comparison with the mask counts to prove
+
+```
+det(Q_k) = det(P_(k+1)) = product_j det(W_(j+2)) ^ choose(j,k).
+```
+
+Here `j` ranges over `Fin n`; the level-`n+1` determinant is one. The result
+holds over any commutative ring, including empty blocks, without genericity
+or nonvanishing assumptions. The first relation determinant is consequently
+the product of all `det(W_(j+2))`. Ordering comparisons, cancellation of the
+extraneous polynomial from the numerator, and resultant identification remain
+open.
 
 ## TM2 versus Complexitylib's machines
 
