@@ -14,7 +14,8 @@ root of the characteristic-shifted tube rows is a root of the concrete
 characteristic quotient polynomial. At parameter zero this annihilates
 the constant coefficient for every common root of the original tube rows.
 No nonvanishing hypothesis on the extraneous determinant is needed.
-The converse remains separate.
+The converse over algebraically closed fields is proved in
+`TubeCharacteristicCriterion`.
 -/
 
 @[expose] public section

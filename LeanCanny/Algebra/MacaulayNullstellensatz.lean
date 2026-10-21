@@ -13,8 +13,8 @@ The proved common-root implication excludes nonzero common roots when
 the quotient is nonzero. Over an algebraically closed field the projective
 Nullstellensatz then supplies a power of the variable ideal in the input
 ideal, and homogeneous Bezout expressions at every sufficiently large
-degree. No explicit degree bound or converse quotient implication is
-asserted.
+degree. The sharp degree bound and converse quotient implication are
+proved in `MacaulayProjectiveCriterion`.
 -/
 
 @[expose] public section

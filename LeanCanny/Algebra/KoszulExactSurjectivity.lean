@@ -15,7 +15,7 @@ The coordinate-power complex is an exact reference on the same finite
 weighted pieces. Rank comparison shows that positive-degree exactness for
 the input complex forces degree-zero surjectivity. Canonical coordinates
 then give full Macaulay row surjectivity and a unit polynomial quotient.
-Exactness from absence of projective roots is not assumed proved here.
+Exactness from absence of projective roots is proved in `KoszulWeightedExact`.
 -/
 
 @[expose] public section

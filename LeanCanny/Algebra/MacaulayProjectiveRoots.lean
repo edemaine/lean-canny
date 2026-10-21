@@ -15,7 +15,8 @@ extraneous determinant. Move a nonzero coordinate to the last position,
 apply the root-preserving deformation there, and transport the universal
 polynomial value back. Coefficient specialization gives the same result
 for roots in an extension domain and for characteristic-quotient roots.
-The converse and multivariate-resultant identification remain open.
+The converse over algebraically closed fields is proved in
+`MacaulayProjectiveCriterion`; multivariate-resultant identification remains open.
 -/
 
 @[expose] public section

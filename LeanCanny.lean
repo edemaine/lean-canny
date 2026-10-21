@@ -146,6 +146,7 @@ import LeanCanny.Algebra.MacaulayQuotientRoots
 import LeanCanny.ETR.TubeCharacteristicRoots
 import LeanCanny.Algebra.MacaulayNullstellensatz
 import LeanCanny.ETR.TubeCharacteristicSurjectivity
+import LeanCanny.ETR.TubeCharacteristicCriterion
 import LeanCanny.Algebra.ProjectiveDepth
 import LeanCanny.Algebra.KoszulExactSurjectivity
 import LeanCanny.Algebra.KoszulIdealAnnihilator

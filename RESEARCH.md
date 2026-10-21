@@ -3222,9 +3222,10 @@ corresponding parameter.
 `TubeCharacteristicRoots` applies this theorem to the actual full tube rows
 and the concrete tube quotient polynomial. Every specialized shifted common
 root annihilates that polynomial; every common root of the original rows
-annihilates its specialized constant coefficient. The converse and
-identification with the multivariate resultant remain unproved, as do the
-remaining geometric persistence, algorithmic, and full ETR space obligations.
+annihilates its specialized constant coefficient. The converse over
+algebraically closed fields is now proved in `TubeCharacteristicCriterion`,
+as described below. Identification with the multivariate resultant,
+geometric persistence, and the remaining full ETR space obligations remain open.
 
 `ProjectiveNullstellensatz` now gives the qualitative ideal criterion needed
 for the converse. Over an algebraically closed field with finitely many
@@ -3254,10 +3255,9 @@ nonzero common roots, and over an algebraically closed field supplies an
 ideal-power certificate and homogeneous Bezout expressions at every
 sufficiently large degree.
 
-The remaining degree obligation for the converse is to prove that absence
-of nonzero common roots implies ideal membership already at the specific
-degree `1+Σᵢ(dᵢ-1)`, rather than at an unspecified eventual degree.
-The matrix-to-quotient implication is now proved as follows.
+The specific degree `1+Σᵢ(dᵢ-1)` is now proved sufficient by the Koszul
+acyclicity and weighted projection argument below. The matrix-to-quotient
+implication is proved as follows.
 
 `MatrixSelectedMinorCross` replaces selected rows to factor an arbitrary
 contraction determinant by the selected multiplication determinant. The
@@ -3298,10 +3298,10 @@ proved ideal-image criterion.
 `TubeCharacteristicSurjectivity` supplies the concrete tube specialization:
 surjectivity of the specialized full row map makes the specialized constant
 coefficient of the tube characteristic quotient a unit, without assuming
-that the extraneous determinant survives specialization. The common-root
-converse still needs the sharp degree bound above. Resultant identification,
-geometric persistence, the remaining algorithmic bounds, and full ETR
-polynomial-space membership remain open.
+that the extraneous determinant survives specialization. The sharp bound
+and common-root converse over algebraically closed fields are proved below.
+Resultant identification, geometric persistence, the remaining algorithmic
+bounds, and full ETR polynomial-space membership remain open.
 
 `CoordinatePowerRegularity` supplies the ambient regularity needed for a
 homological proof of the sharp degree bound. Multiplication by a power of
@@ -3339,10 +3339,56 @@ the Macaulay level implies degree-zero surjectivity, full rectangular
 Macaulay surjectivity, and a unit quotient. No Hilbert-series identity or
 new degree-count hypothesis is needed for that step.
 
-The remaining sharp-bound work is to prove acyclicity of the unshifted
-input Koszul complex from the regularity and annihilation data and transfer
-that exactness to its weighted pieces. These new results do not yet prove
-the no-common-root converse or the full Canny algorithm.
+`ExtVanishing` extends vanishing into the base ring to every finite free
+target: a basis expresses the identity as a finite sum of coordinate
+projections and inclusions. It also records the cokernel step of the
+covariant long exact Ext sequence. `HomologySupport` proves that Noetherian
+chain modules have finite homology and that an ideal sending cycles to
+boundaries annihilates homology, hence supports it on the ideal's zero locus.
+
+`FiniteComplexAcyclicity` proves a bounded-complex acyclicity lemma. Descend
+from the zero module above the top degree through the differential cokernels.
+Once degree `k+1` is exact, those cokernels give a short exact sequence with
+the degree-`k` chain module. Dimension shifting loses one Ext degree at each
+step. Positive homology embeds in its cokernel, and vanishing of Hom forces
+it to be zero. This uses the actual long exact Ext sequence, without
+assuming Koszul regularity of the input forms.
+
+`KoszulProjectiveExact` applies this argument to the polynomial Koszul complex.
+There are equally many positive homogeneous inputs and variables over an
+algebraically closed field, and their only common root is zero. Exterior
+powers are finite free and vanish above the number of variables. Their
+finite positive homology is annihilated by the input ideal. The proved
+projective depth bound thus supplies all required Ext vanishings, proving
+positive exactness in every exterior degree.
+
+`KoszulWeightProjection` retains ambient monomial exterior coordinates with
+polynomial degree plus input-degree subset weight equal to a selected value.
+It fixes that weighted space, commutes with the homogeneous differential,
+and maps each exterior degree into its finite weighted piece.
+`KoszulWeightedExact` projects arbitrary polynomial preimages to transfer
+positive exactness into every finite weighted complex, over any commutative
+ring when polynomial exactness is supplied.
+
+`MacaulayProjectiveCriterion` combines this with the coordinate-power rank
+comparison. Absence of nonzero common roots gives full row surjectivity at
+`δ=1+Σᵢ(dᵢ-1)`, and hence ideal membership of every homogeneous form of degree
+`δ`. This is the sharp Macaulay degree bound, with no supplied exactness,
+rank, or Hilbert-function assumption. The normalized polynomial quotient is
+nonzero exactly when there is no nonzero common root. Equivalently, it is
+zero exactly when a nonzero common root exists. The characteristic quotient
+at a parameter has the analogous equivalence for the shifted equations.
+All converse statements here require an algebraically closed field; root
+vanishing in the forward direction remains valid over every domain.
+
+`TubeCharacteristicCriterion` proves both implications for the actual tube
+polynomial after any coefficient specialization to an algebraically closed
+field. Its value at `s` vanishes exactly when the specialized tube equations
+have a nonzero common solution of `pᵢ(x)=s*xᵢ^dᵢ`. Its constant coefficient
+vanishes exactly when the unshifted equations have a nonzero common root.
+No specialized extraneous determinant is assumed nonzero. Identification
+with a separately specified multivariate resultant, the geometric persistence
+arguments, and the remaining full Canny algorithm and space bounds stay open.
 
 ## TM2 versus Complexitylib's machines
 
