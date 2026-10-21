@@ -69,8 +69,8 @@ theorem toETR_correct (bits : List Bool) : bits ∈ language ↔ toETR bits ∈ 
       exact hn ((isNNFEncoding_encode_iff p).mpr hp)
     simp [toETR, hn, hnot]
 
-theorem reduces_to_etr : language ≤ₚ ETR.language :=
-  ⟨toETR, toETR_mem_FP, toETR_correct⟩
+theorem reduces_to_etr : PolyTimeReduces language ETR.language :=
+  ⟨toETR, Computation.TidyFP.of_mem_FP toETR_mem_FP, toETR_correct⟩
 
 theorem mem_existsReal : language ∈ LeanCanny.ExistsReal := reduces_to_etr
 

@@ -54,10 +54,10 @@ theorem toSingleEquation_correct (bits : List Bool) :
     · rw [toSingleEquation, ite_eq_right hr, SingleEquation.encode_mem_language] at h
       exact False.elim (Formula.not_satisfiable_eqZero_one h)
 
-theorem reduces_to_singleEquation : language ≤ₚ SingleEquation.language :=
-  ⟨toSingleEquation, toSingleEquation_mem_FP, toSingleEquation_correct⟩
+theorem reduces_to_singleEquation : PolyTimeReduces language SingleEquation.language :=
+  ⟨toSingleEquation, Computation.TidyFP.of_mem_FP toSingleEquation_mem_FP, toSingleEquation_correct⟩
 
-theorem reduces_to_etr : language ≤ₚ ETR.language :=
+theorem reduces_to_etr : PolyTimeReduces language ETR.language :=
   reduces_to_singleEquation.trans SingleEquation.reduces_to_etr
 
 theorem mem_existsReal : language ∈ LeanCanny.ExistsReal := reduces_to_etr

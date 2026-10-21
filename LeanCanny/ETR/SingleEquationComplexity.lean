@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import LeanCanny.Computation.TidyFP
+
 public import LeanCanny.ETR.Complexity
 public import LeanCanny.ETR.EncodingFP
 public import LeanCanny.ETR.SingleEquation
@@ -62,8 +64,8 @@ theorem toETR_mem_language_iff (bits : List Bool) :
       exact ht ((hasEquationTag_encode_iff _).mpr ⟨t, rfl⟩)
     simp [hn]
 
-theorem reduces_to_etr : language ≤ₚ ETR.language :=
-  ⟨toETR, toETR_mem_FP, fun bits => (toETR_mem_language_iff bits).symm⟩
+theorem reduces_to_etr : PolyTimeReduces language ETR.language :=
+  ⟨toETR, Computation.TidyFP.of_mem_FP toETR_mem_FP, fun bits => (toETR_mem_language_iff bits).symm⟩
 
 theorem mem_existsReal : language ∈ LeanCanny.ExistsReal := reduces_to_etr
 

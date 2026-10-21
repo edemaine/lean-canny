@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import LeanCanny.Computation.TidyFP
+
 public import LeanCanny.ETR.NNFEncoding
 public import LeanCanny.ETR.Complexity
 
@@ -154,7 +156,7 @@ theorem normalize_correct (bits : List Bool) :
       simp
     simp [normalize, hr, hn, hf]
 
-theorem etr_reduces_to_nnf : ETR.language ≤ₚ language :=
-  ⟨normalize, normalize_mem_FP, normalize_correct⟩
+theorem etr_reduces_to_nnf : PolyTimeReduces ETR.language language :=
+  ⟨normalize, Computation.TidyFP.of_mem_FP normalize_mem_FP, normalize_correct⟩
 
 end LeanCanny.ETR.NNF

@@ -8,6 +8,17 @@ native space-bounded child, with no legacy evaluator or execution clock. -/
 
 example : LeanCanny.PSPACE = Cslib.Complexity.PSPACE encBits := rfl
 
+example : LeanCanny.P = Cslib.Complexity.P encBits := rfl
+
+example {L K : Set (List Bool)} : LeanCanny.PolyTimeReduces L K ↔
+    Cslib.Complexity.PolyTimeReducible encBits encBits L K := Iff.rfl
+
+example {L K : Set (List Bool)} {f : List Bool → List Bool}
+    (hf : ComputableTidilyInPolyTime f encBits encBits)
+    (hcorrect : ∀ x, x ∈ L ↔ f x ∈ K) (hK : K ∈ LeanCanny.ExistsReal) :
+    L ∈ LeanCanny.ExistsReal :=
+  LeanCanny.existsReal_of_reduction ⟨f, hf, hcorrect⟩ hK
+
 example : LeanCanny.ExistsReal ⊆ Cslib.Complexity.PSPACE encBits ↔
     LeanCanny.ETR.language ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.existsReal_subset_PSPACE_iff
@@ -25,6 +36,31 @@ example {F : LeanCanny.Algebra.Berkowitz.ModularFamily}
   LeanCanny.Algebra.Berkowitz.ModularAccess.zeroLanguage_mem_PSPACE_of_evaluator a ha ⟨he⟩
 
 #eval "Native PSPACE endpoints and arbitrary native child certificates checked."
+
+/-! The structural class theorems must use native time certificates too.
+Compiler implementations still use the legacy FP bridge during migration. -/
+
+open Lean in
+run_cmd do
+  let env ← getEnv
+  let mut pending := #[`LeanCanny.P, `LeanCanny.PolyTimeReduces, `LeanCanny.ExistsReal,
+    `LeanCanny.P_subset_existsReal, `LeanCanny.existsReal_subset_PSPACE_iff,
+    `LeanCanny.Computation.mem_PSPACE_of_reduction]
+  let mut visited : Std.HashSet Name := {}
+  while !pending.isEmpty do
+    let name := pending.back!
+    pending := pending.pop
+    if visited.contains name then continue
+    visited := visited.insert name
+    for forbidden in #[`Complexity.FP, `Complexity.P, `Complexity.MapReducesPoly,
+        `LeanCanny.Computation.TidyFP] do
+      if forbidden.isPrefixOf name then
+        throwError "Structural class theorem depends on legacy time foundation: {name}"
+    if let some info := env.find? name then
+      pending := pending ++ info.type.getUsedConstants
+      if let some value := info.value? (allowOpaque := true) then
+        pending := pending ++ value.getUsedConstants
+  logInfo m!"Audited {visited.size} transitive constants: native P, reductions, and class closure."
 
 /-! Check actual proof dependencies, including opaque theorem bodies, rather
 than just imports: retained FP support must not reintroduce the old space class. -/

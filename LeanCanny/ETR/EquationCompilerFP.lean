@@ -132,8 +132,8 @@ theorem compileTerms_correct (bits : List Bool) : bits ∈ ETR.language ↔ comp
   · rintro ⟨env, h⟩
     exact ⟨env, (p.holds_toSigned true env).mp ((p.toSigned true).equations_sound _ env h)⟩
 
-theorem etr_reduces_to_equationList : ETR.language ≤ₚ EquationList.language :=
-  ⟨compileTerms, compileTerms_mem_FP, compileTerms_correct⟩
+theorem etr_reduces_to_equationList : PolyTimeReduces ETR.language EquationList.language :=
+  ⟨compileTerms, Computation.TidyFP.of_mem_FP compileTerms_mem_FP, compileTerms_correct⟩
 
 def toSingleEquation (bits : List Bool) : List Bool := EquationList.toSingleEquation (compileTerms bits)
 
@@ -146,8 +146,8 @@ theorem toSingleEquation_correct (bits : List Bool) :
     bits ∈ ETR.language ↔ toSingleEquation bits ∈ SingleEquation.language :=
   (compileTerms_correct bits).trans (EquationList.toSingleEquation_correct (compileTerms bits))
 
-theorem etr_reduces_to_singleEquation : ETR.language ≤ₚ SingleEquation.language :=
-  ⟨toSingleEquation, toSingleEquation_mem_FP, toSingleEquation_correct⟩
+theorem etr_reduces_to_singleEquation : PolyTimeReduces ETR.language SingleEquation.language :=
+  ⟨toSingleEquation, Computation.TidyFP.of_mem_FP toSingleEquation_mem_FP, toSingleEquation_correct⟩
 
 end EquationCompiler
 

@@ -38,8 +38,9 @@ lake env lean scripts/CheckSpaceFoundation.lean
 The audit checks all declarations in the `LeanCanny` namespace and their transitive
 dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 `Quot.sound` axioms.
-The space-foundation check also verifies the native public endpoints and rejects
-transitive proof dependencies on the old space classes and scheduler APIs.
+The space-foundation check also verifies native P, reductions, and PSPACE
+endpoints. It rejects legacy time-class dependencies in the structural class
+theorems and legacy space-class or scheduler dependencies throughout the project.
 
 All space certificates and PSPACE theorems now use Complexitylib2.
 [SpaceFunction](LeanCanny/Computation/SpaceFunction.lean) is a proof-only wrapper
@@ -59,10 +60,13 @@ controllers retain their correctness and state-size invariants; the
 [iteration interface](LeanCanny/Computation/SpaceIteration.lean) handles their
 binary iteration bounds without exposing child execution times.
 
-The original Complexitylib dependency remains for its already proved FP
-primitives, binary/tree codecs, and polynomial-time reductions.
-[TidyFP](LeanCanny/Computation/TidyFP.lean) proves that these functions are
-polynomial-time computable in the new machine model. No PSPACE result relies on
+P and all project polynomial-time reductions now use Complexitylib2 directly,
+through [PolyTime](LeanCanny/Computation/PolyTime.lean). This includes the defining
+reduction for ∃ℝ, normalization/compiler reductions, and PSPACE reduction closure.
+The original Complexitylib dependency remains for its FP primitives and
+binary/tree codecs. [TidyFP](LeanCanny/Computation/TidyFP.lean) currently converts
+their certificates to the new machine model. Removing this remaining dependency
+is in progress. No PSPACE result relies on
 the original library's space class or on a conversion from that class.
 The [isolated prototype](experiments/complexitylib2/README.md) records the
 exponential-time-child experiment that motivated this choice.
@@ -83,7 +87,7 @@ exponential-time-child experiment that motivated this choice.
 | [`Encoding.DynamicTreeFold`](LeanCanny/Encoding/DynamicTreeFold.lean) | Input-dependent tree folds can use variable-length frames in a self-delimiting stack. Polynomial-time frame operations and polynomial intermediate stack bounds give `FP`; a polynomial additive frame-growth allowance supplies the stack bound automatically. |
 | [`ETR.SyntaxClassifier`](LeanCanny/ETR/SyntaxClassifier.lean), [`SyntaxClassifierCorrect`](LeanCanny/ETR/SyntaxClassifierCorrect.lean) | A finite summary of children recognizes unary fields, bit nodes, canonical binary magnitudes, integers, terms, and formulas; every flag is proved equivalent to the corresponding typed codec image. |
 | [`ETR.Grammar`](LeanCanny/ETR/Grammar.lean) | Executable, machine-certified polynomial-time recognizers for exactly the canonical term and formula encodings. Both syntax languages belong to `P`; the formula checker agrees with successful parsing by the original decoder. |
-| [`ETR.Complexity`](LeanCanny/ETR/Complexity.lean) | ∃ℝ is the downward closure of ETR under Complexitylib polynomial-time many-one reductions; ETR is complete by definition; reduction closure and `P ⊆ ∃ℝ`. |
+| [`ETR.Complexity`](LeanCanny/ETR/Complexity.lean) | ∃ℝ is the downward closure of ETR under native Complexitylib2 polynomial-time many-one reductions; ETR is complete by definition; reduction closure and `P ⊆ ∃ℝ`. |
 | [`ETR.PSPACEClosure`](LeanCanny/ETR/PSPACEClosure.lean) | `∃ℝ ⊆ PSPACE` is equivalent to `ETR ∈ PSPACE`, using proved PSPACE closure under polynomial-time many-one reductions. The same equivalence holds for any ∃ℝ-complete language. The ETR membership hypothesis remains open. |
 | [`ETR.Normalization`](LeanCanny/ETR/Normalization.lean) | Single inequalities and disequalities become equations using fresh witnesses; pairs of equations combine through sums of squares or products. |
 | [`ETR.NegationNormalForm`](LeanCanny/ETR/NegationNormalForm.lean), [`NNFEncoding`](LeanCanny/ETR/NNFEncoding.lean), [`NNFFP`](LeanCanny/ETR/NNFFP.lean), [`NNFComplexity`](LeanCanny/ETR/NNFComplexity.lean) | A total polynomial-time normalizer pushes negations to atoms, preserves real semantics and arity, and has linear output length. Both polarities and every intermediate stack are bounded, even on raw malformed trees. NNF satisfiability is ∃ℝ-complete under reductions on all binary strings. |

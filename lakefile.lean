@@ -10,7 +10,7 @@ require complexitylib2 from git
   "https://github.com/SamuelSchlesinger/complexitylib2" @
   "cb1b7ce8ca0757db30ec29c8365b88d86b78c80a"
 
--- Retained for certified FP primitives, binary/tree codecs, and reductions.
+-- Retained during migration of the certified FP primitives and binary/tree codecs.
 require complexitylib from git
   "https://github.com/SamuelSchlesinger/complexitylib" @
   "add0aca8ee0d71e68969f2cb45cf91554a50f787"

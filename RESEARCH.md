@@ -3612,8 +3612,10 @@ removed. Mathematical recursion controllers retain their correctness, abstract
 step bounds, and encoded-state invariants; they no longer describe the physical
 execution of nested children.
 
-The original Complexitylib remains for its certified FP primitives, codecs,
-and polynomial-time reductions. TidyFP proves their compatibility with the new
+P, the defining reductions for ExistsReal, all normalization/compiler
+reductions, and PSPACE reduction closure now use Complexitylib2 directly.
+The original Complexitylib remains for its certified FP primitives and codecs,
+whose removal is in progress. TidyFP proves their compatibility with the new
 time model. This is a polynomial-time bridge, not a conversion of legacy PSPACE
 certificates. All project PSPACE statements, including the conditional ETR and
 ExistsReal upper bounds, target Complexitylib2 directly. No TM2 simulation or

@@ -6,7 +6,8 @@ module
 
 public import LeanCanny.ETR.SyntaxClassifierCorrect
 public import LeanCanny.Encoding.FiniteTreeLanguage
-public import Complexitylib.Classes.P.DecisionFn
+public import LeanCanny.Computation.PolyTime
+public import LeanCanny.Computation.TidyFP
 
 /-!
 # Polynomial-time recognition of the complete canonical ETR grammar
@@ -98,9 +99,11 @@ def termLanguage : Language := {bits | ∃ t : Term, bits = t.toData.toBits}
 def formulaLanguage : Language := {bits | ∃ p : Formula, bits = p.encode}
 
 theorem termLanguage_mem_P : termLanguage ∈ P :=
-  mem_P_of_decisionFn_bool recognizeTerm_mem_FP (fun bits => (recognizeTerm_true_iff bits).symm)
+  ⟨recognizeTerm, Computation.TidyFP.of_flag recognizeTerm_mem_FP,
+    fun bits => (recognizeTerm_true_iff bits).symm⟩
 
 theorem formulaLanguage_mem_P : formulaLanguage ∈ P :=
-  mem_P_of_decisionFn_bool recognizeFormula_mem_FP (fun bits => (recognizeFormula_true_iff bits).symm)
+  ⟨recognizeFormula, Computation.TidyFP.of_flag recognizeFormula_mem_FP,
+    fun bits => (recognizeFormula_true_iff bits).symm⟩
 
 end LeanCanny.ETR.Grammar
