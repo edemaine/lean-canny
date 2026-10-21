@@ -3624,13 +3624,13 @@ input, and the full coordinate computation's space bound remain open.
 
 `TubeLevelSignQueries` constructs the actual inactive-constraint polynomials
 in compiled coordinates. The source equation and its negative, the box
-constraints, and their shifts are all multiplied by the positive denominator
-of the packet's rational epsilon. Subtracting its numerator in each box
+constraints, and their shifts are all multiplied by the stored positive denominator
+of the packet's rational epsilon. Subtracting its raw numerator in each box
 constraint accounts exactly for that margin. The resulting integer polynomial
 evaluates to a positive multiple of the original constraint.
 
 Substituting the integer coordinate numerator/denominator pairs and clearing
-with even powers preserves strict positivity at every parameter root. The
+with fixed even powers preserves strict positivity at every parameter root. The
 representation guarantees that none of those denominators vanish. Active
 constraints are replaced by the constant polynomial one, leaving a fixed-size
 all-positive pattern over the original finite constraint index. The theorem
@@ -3650,6 +3650,32 @@ The desired pattern has a constant reader. These contracts give the exact
 count evaluator, a sample-existence decider, and PSPACE membership for that
 sample language. They do not provide a construction of the representations,
 original-input bounds, or the required coefficient readers.
+
+## Derived budgets for the actual sign queries
+
+`RationalSubstitutionWith` proves evaluation, degree, and coefficient-mass
+bounds for explicit denominator allowances. The actual tube queries now use
+the raw stored margin numerator and positive denominator, avoiding rational
+normalization. Their variable degrees are bounded by the existing FP source
+allowance `D=8*N^2+4`, independent of the active mask and query row. Every
+coordinate denominator is raised to an even clearing allowance `2*D`.
+Coefficient extension preserves these chosen allowances even if reduction
+kills leading coefficients.
+
+`TubeLevelSignBounds` bounds the integer constraint's source coefficient mass
+by `2^(W+N+2*N^2+4)`, with W the stored width and N the normalized compiled
+source size. For A compiled coordinates, put `Q=2*A*D`. Coordinate degrees
+at most E and masses at most `2^b` give query degree at most `Q*E` and query
+mass at most `2^(W+N+2*N^2+4+Q*b)`. Active queries equal one and satisfy the
+same bounds. These formulas have FP binary writers, even when E and b are
+exponentially large and only their binary descriptions are available.
+
+`TubeLevelSign.CoordinateBudget` therefore constructs the former sign-stage
+budget from root/coordinate data. Its native counter and PSPACE theorem need
+no separately supplied query degree or mass proof. The final-stage coefficient
+readers still require construction from the source and coordinate data.
+Finding suitable coordinate representations with original-input degree,
+height, and workspace bounds remains open.
 
 ## TM2 versus Complexitylib's machines
 

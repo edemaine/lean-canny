@@ -5,17 +5,18 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.TubeLevelCoordinates
-public import LeanCanny.Algebra.RationalSubstitutionBounds
+public import LeanCanny.Algebra.RationalSubstitutionWith
 public import LeanCanny.Algebra.ScaledSignQueries
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.LinearCombination
 
 /-! # Integer univariate sign queries for decoded tube samples
 
-The rational epsilon denominator is positive. Multiplying each constraint by
-it gives an integer polynomial in compiled coordinates. Even coordinate
-powers then clear the rational decoding denominators without changing signs
-at parameter roots. Active constraints use the constant query one.
+The stored margin denominator is positive. Multiplying each constraint by
+it gives an integer polynomial in compiled coordinates, using the raw packet
+integers without rational normalization. Fixed even powers based on the source
+size clear coordinate denominators and preserve signs at parameter roots.
+Active constraints use the constant query one.
 -/
 
 @[expose] public section
@@ -23,7 +24,7 @@ at parameter roots. Active constraints use the constant query one.
 namespace LeanCanny.ETR.TubeLevelPacket
 open LeanCanny.Encoding LeanCanny.Algebra
 open Geometry TubeEncoding TubeProjectionEncoding MvPolynomial
-open scoped Classical
+open scoped Classical BigOperators
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm CompactSource.term
 attribute [local irreducible] Macaulay.matrix Matrix.det TubeCleared.uniformDegree
 
@@ -42,12 +43,19 @@ noncomputable def zeroMarginConstraint (c : List Bool) :
   | .inr (i, false) => X (sampleIndex c (.inl i)) + 1 + X (sampleIndex c (.inr (.inr (i, false))))
   | .inr (i, true) => 1 - X (sampleIndex c (.inl i)) + X (sampleIndex c (.inr (.inr (i, true))))
 
+noncomputable def marginNumerator (c : List Bool) : ℤ := integer c (alphaIndex c + 1)
+noncomputable def marginDenominator (c : List Bool) : ℕ := denominatorNat c (alphaIndex c + 1)
+
+theorem marginDenominator_pos (c : List Bool) : 0 < marginDenominator c := by
+  unfold marginDenominator denominatorNat
+  omega
+
 noncomputable def integerConstraint (c : List Bool) (i : PerturbedSource.Index (pairFst c)) :
     MvPolynomial (Fin (TubeParameter.spatialCount (pairFst c))) ℤ :=
-  C ((epsilon c).den : ℤ) * zeroMarginConstraint c i -
+  C (marginDenominator c : ℤ) * zeroMarginConstraint c i -
     match i with
     | .inl _ => 0
-    | .inr _ => C (epsilon c).num
+    | .inr _ => C (marginNumerator c)
 
 theorem eval_zeroMarginConstraint (c : List Bool)
     (z : Fin (TubeParameter.spatialCount (pairFst c)) → ℝ) (i : PerturbedSource.Index (pairFst c)) :
@@ -69,12 +77,15 @@ theorem eval_zeroMarginConstraint (c : List Bool)
 theorem eval_integerConstraint (c : List Bool)
     (z : Fin (TubeParameter.spatialCount (pairFst c)) → ℝ) (i : PerturbedSource.Index (pairFst c)) :
     (integerConstraint c i).eval₂ (Int.castRingHom ℝ) z =
-      ((epsilon c).den : ℝ) * PolynomialPerturbation.parameterMap
+      (marginDenominator c : ℝ) * PolynomialPerturbation.parameterMap
         (CompactSource.polynomial (pairFst c)) (epsilon c : ℝ)
         (TubePolynomial.splitPoint (samplePoint c z)) i := by
-  have hden : ((epsilon c).den : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr (Rat.den_ne_zero _)
-  have heps : ((epsilon c).den : ℝ) * (epsilon c : ℝ) = ((epsilon c).num : ℝ) := by
-    rw [Rat.cast_def, mul_comm]
+  have hden : (marginDenominator c : ℝ) ≠ 0 := Nat.cast_ne_zero.mpr (marginDenominator_pos c).ne'
+  have heq : (epsilon c : ℝ) = (marginNumerator c : ℝ) / (marginDenominator c : ℝ) := by
+    simp only [epsilon, rationalValue, marginNumerator, marginDenominator,
+      Rat.cast_div, Rat.cast_intCast, Rat.cast_natCast]
+  have heps : (marginDenominator c : ℝ) * (epsilon c : ℝ) = (marginNumerator c : ℝ) := by
+    rw [heq, mul_comm]
     exact div_mul_cancel₀ _ hden
   unfold integerConstraint
   simp only [eval₂_sub, eval₂_mul, eval₂_C, eval_zeroMarginConstraint]
@@ -83,11 +94,49 @@ theorem eval_integerConstraint (c : List Bool)
       PolynomialPerturbation.parameterMap, PolynomialPerturbation.value, sub_zero]
   all_goals linear_combination heps
 
+theorem zeroMarginConstraint_degree (c : List Bool) (i : PerturbedSource.Index (pairFst c)) :
+    (zeroMarginConstraint c i).totalDegree ≤ max (CompactSource.polynomial (pairFst c)).totalDegree 1 := by
+  have hp : (samplePolynomial c).totalDegree ≤ (CompactSource.polynomial (pairFst c)).totalDegree :=
+    totalDegree_rename_le _ _
+  rcases i with b | ⟨j, b⟩ <;> cases b
+  · exact (totalDegree_add _ _).trans (max_le_max hp (by simp))
+  · exact (totalDegree_add _ _).trans (max_le_max (by simpa only [totalDegree_neg] using hp) (by simp))
+  · apply (totalDegree_add _ _).trans
+    apply max_le
+    · exact (totalDegree_add _ _).trans (by simp)
+    · simp
+  · apply (totalDegree_add _ _).trans
+    apply max_le
+    · exact (totalDegree_sub _ _).trans (by simp)
+    · simp
+
+theorem integerConstraint_degree (c : List Bool) (i : PerturbedSource.Index (pairFst c)) :
+    (integerConstraint c i).totalDegree ≤ TubeIndexed.degreeBound (pairFst c) := by
+  have hp := CompactSource.degree_le_code (pairFst c)
+  simp only [CompactSource.degreeCode, BinaryNatCode.encode, Nat.fromBitsLE_bits] at hp
+  have hz := zeroMarginConstraint_degree c i
+  unfold integerConstraint
+  apply (totalDegree_sub _ _).trans
+  apply max_le
+  · apply (totalDegree_mul _ _).trans
+    simp only [totalDegree_C, zero_add]
+    unfold TubeIndexed.degreeBound
+    omega
+  · cases i with
+    | inl _ => exact (totalDegree_zero.le).trans (Nat.zero_le _)
+    | inr _ => exact (totalDegree_C _).le.trans (Nat.zero_le _)
+
+theorem integerConstraint_degreeOf (c : List Bool) (i : PerturbedSource.Index (pairFst c))
+    (j : Fin (TubeParameter.spatialCount (pairFst c))) :
+    (integerConstraint c i).degreeOf j ≤ TubeIndexed.degreeBound (pairFst c) :=
+  (degreeOf_le_totalDegree _ _).trans (integerConstraint_degree c i)
+
 noncomputable def signQuery (c mask : List Bool) (ell : ℕ → ℤ) (alpha : ℚ)
     {r : FiniteSystemCoordinates.Representation (L := AlgebraicClosure ℚ) (rationalSystem c mask ell alpha)}
     (d : IntegerCoordinatePolynomials.IntegerData r) (i : PerturbedSource.Index (pairFst c)) : Polynomial ℤ :=
   if i ∈ activeSet (TubeIndexed.arity (pairFst c)) mask then 1 else
-    RationalSubstitution.cleared (integerConstraint c i) d.numerator d.denominator
+    RationalSubstitution.clearedWith (fun _ => TubeIndexed.degreeBound (pairFst c))
+      (integerConstraint c i) d.numerator d.denominator
 
 theorem signQuery_pos_iff (c mask : List Bool) (ell : ℕ → ℤ) (alpha : ℚ)
     {r : FiniteSystemCoordinates.Representation (L := AlgebraicClosure ℚ) (rationalSystem c mask ell alpha)}
@@ -102,15 +151,20 @@ theorem signQuery_pos_iff (c mask : List Bool) (ell : ℕ → ℤ) (alpha : ℚ)
   · rw [signQuery, ite_eq_right hi]
     have hd (j : Fin (TubeParameter.spatialCount (pairFst c))) :
         (d.denominator j).eval₂ (Int.castRingHom ℝ) θ ≠ 0 := d.denominator_ne_zero_at_root θ hθ j
-    have he := RationalSubstitution.eval₂_cleared (Int.castRingHom ℝ) θ (integerConstraint c i)
-      d.numerator d.denominator hd
-    have hp := RationalSubstitution.denominator_eval₂_pos (Int.castRingHom ℝ) θ
-      (integerConstraint c i) d.denominator hd
-    change 0 < (RationalSubstitution.cleared _ _ _).eval₂ (Int.castRingHom ℝ) θ ↔ _
+    have he := RationalSubstitution.eval₂_clearedWith (Int.castRingHom ℝ) θ
+      (fun _ => TubeIndexed.degreeBound (pairFst c)) (integerConstraint c i)
+      d.numerator d.denominator (integerConstraint_degreeOf c i) hd
+    have hp : 0 < ∏ j, (d.denominator j).eval₂ (Int.castRingHom ℝ) θ ^
+        (2 * TubeIndexed.degreeBound (pairFst c)) := by
+      apply Finset.prod_pos
+      intro j _
+      rw [pow_mul]
+      exact pow_pos (sq_pos_of_ne_zero (hd j)) _
+    change 0 < (RationalSubstitution.clearedWith _ _ _ _).eval₂ (Int.castRingHom ℝ) θ ↔ _
     rw [he]
     change 0 < _ * (integerConstraint c i).eval₂ (Int.castRingHom ℝ) (d.decode θ) ↔ _
     rw [mul_pos_iff_of_pos_left hp, eval_integerConstraint,
-      mul_pos_iff_of_pos_left (by exact_mod_cast (epsilon c).den_pos)]
+      mul_pos_iff_of_pos_left (by exact_mod_cast marginDenominator_pos c)]
     simp only [hi, not_false_eq_true, true_implies]
 
 noncomputable def indexedSignQuery (c mask : List Bool) (ell : ℕ → ℤ) (alpha : ℚ)

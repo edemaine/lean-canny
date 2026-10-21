@@ -43,6 +43,14 @@ example {S : LeanCanny.ETR.TubeLevelSign.Source} {B : LeanCanny.ETR.TubeLevelSig
     LeanCanny.ETR.TubeLevelSign.sampleLanguage S ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.ETR.TubeLevelSign.sampleLanguage_mem_PSPACE a hF ⟨hroot⟩ ⟨hquery⟩
 
+example {S : LeanCanny.ETR.TubeLevelSign.Source}
+    (B : LeanCanny.ETR.TubeLevelSign.CoordinateBudget S) (hp : S.packet ∈ LeanCanny.FP)
+    (a : LeanCanny.Algebra.SignPatternBits.Access (LeanCanny.ETR.TubeLevelSign.family S B.budget))
+    (hroot : ComputableTidilyInPolySpace a.rootCoefficient encBits encBits)
+    (hquery : ComputableTidilyInPolySpace a.polynomialCoefficient encBits encBits) :
+    LeanCanny.ETR.TubeLevelSign.sampleLanguage S ∈ Cslib.Complexity.PSPACE encBits :=
+  B.sampleLanguage_mem_PSPACE hp a ⟨hroot⟩ ⟨hquery⟩
+
 #eval "Native PSPACE endpoints and arbitrary native child certificates checked."
 
 /-! The structural class theorems must use native time certificates too. -/
