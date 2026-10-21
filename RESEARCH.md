@@ -3036,14 +3036,42 @@ cross-comparison. Equality of those ratios across orderings is still open;
 neither this equivalence nor the alternating factor identity alone proves
 polynomial numerator/extraneous cancellation.
 
-The intended next comparison uses these chain equivalences: after transporting
-two orderings to common exterior coordinates, their quotient is a chain
-automorphism of the coordinate-power complex. Its alternating determinant
-product should be one. Mathlib's `LinearMap.det_eq_det_mul_det` factors a
-preserved-subspace determinant through that subspace and its quotient;
-`LinearMap.quotKerEquivRange` can identify adjacent quotient/range factors.
-The finite telescoping theorem and the simultaneous input/spatial transport
-still need proofs.
+`IntertwiningDeterminant` now proves the kernel/range determinant comparison.
+An intertwining square preserves the connecting map's kernel and range.
+Its first-isomorphism equivalence conjugates the induced quotient map to
+the range restriction. Mathlib's `LinearMap.det_eq_det_mul_det` consequently
+factors the domain determinant into the kernel and range determinants.
+
+`ExactComplexDeterminant` applies this to a chain endomorphism of a finite
+exact complex. Exactness identifies each kernel factor with the next
+boundary factor. `AlternatingProducts` telescopes the resulting adjacent
+products, using only commutative-monoid identities. Surjectivity in degree
+zero and a zero terminal space give equal even and odd determinant products.
+This theorem does not require the chain endomorphism to be invertible.
+
+`ExactComplexComparison` takes the quotient of two chain comparisons that
+are linear equivalences in every degree. It is a chain automorphism of
+the exact source complex, so its alternating determinant is one. Thus the
+two comparisons have equal alternating determinant ratios.
+`ExactComplexTransport` proves that simultaneous conjugation of both
+differentials transports a comparison and preserves that ratio, with no
+basis-orientation sign.
+
+`KoszulComparisonInvariant` instantiates comparison independence for the
+finite weighted coordinate-power complex, including its exactness, initial
+surjectivity, and zero piece above arity. Its natural-range determinant
+ratio agrees with the existing concrete Macaulay ratio.
+`KoszulComparisonTransport` proves equality of the concrete ratios whenever
+a graded equivalence intertwines both the input and coordinate-power
+differentials. `MacaulayUniversalTransport.cross_of_transport` turns such
+a transport into the actual universal polynomial numerator/denominator
+cross-comparison; the needed nonzero determinants are supplied by the
+proved universal specializations.
+
+The remaining ordering obligation is to construct this simultaneous
+transport for the reordered input and spatial coordinates. The determinant
+invariance and finite telescoping arguments are now proved. Polynomial
+numerator/extraneous cancellation and resultant identification remain open.
 
 ## TM2 versus Complexitylib's machines
 
