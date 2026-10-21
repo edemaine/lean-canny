@@ -18,7 +18,7 @@ weight zero and retain their original exponents.
 @[expose] public section
 
 namespace LeanCanny.Algebra.HomogenizationLayout
-open Complexity LeanCanny.Encoding
+open LeanCanny.Encoding
 open FixedWidthPolynomial WeightedHomogenization
 open scoped BigOperators
 

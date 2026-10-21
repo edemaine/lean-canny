@@ -17,7 +17,7 @@ formula. The resulting tube child includes its entire space certificate.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeProjectionQuery
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding TubeProjectionEncoding
 open LeanCanny.Algebra

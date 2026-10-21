@@ -19,7 +19,7 @@ spatial coefficients proved by parameter specialization.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCleared
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Geometry TubeEncoding TubeProjectionEncoding
 open Algebra.RationalSubstitution
 open scoped BigOperators Classical

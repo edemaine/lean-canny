@@ -19,7 +19,7 @@ is not included in this certificate.
 @[expose] public section
 
 namespace LeanCanny.Algebra.IntegerRankBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open LeanCanny.Algebra.ChineseRemainder

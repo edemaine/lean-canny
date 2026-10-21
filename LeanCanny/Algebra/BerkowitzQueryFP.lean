@@ -21,7 +21,7 @@ strings; numeric specifications include malformed and noncanonical words.
 @[expose] public section
 
 namespace LeanCanny.Algebra.Berkowitz.QueryBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 

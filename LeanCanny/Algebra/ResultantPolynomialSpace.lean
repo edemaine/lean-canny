@@ -19,7 +19,7 @@ coefficient routines may use polynomial space.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ResultantPolynomial
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower
@@ -37,7 +37,7 @@ structure ModularFamily where
 noncomputable def ModularFamily.value (F : ModularFamily) (c : List Bool) : List Bool :=
   residueBits (((F.left c).resultant (F.right c) (F.leftDegree c) (F.rightDegree c)).coeff (F.degree c))
 
-def ModularFamily.zeroLanguage (F : ModularFamily) : Complexity.Language :=
+def ModularFamily.zeroLanguage (F : ModularFamily) : LeanCanny.Language :=
   {c | ((F.left c).resultant (F.right c) (F.leftDegree c) (F.rightDegree c)).coeff (F.degree c) = 0}
 
 noncomputable def ModularFamily.determinant (F : ModularFamily) : BerkowitzPolynomial.ModularFamily where

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Complexitylib.Encoding.Data
+public import LeanCanny.Encoding.Data
 public import Mathlib.Combinatorics.Enumerative.DyckWord
 
 /-!
@@ -19,7 +19,6 @@ criterion recognizes precisely the image of the actual dependency codec.
 @[expose] public section
 
 namespace LeanCanny.Encoding.Brackets
-open Complexity
 
 def step (b : Bool) : DyckStep := if b then .D else .U
 

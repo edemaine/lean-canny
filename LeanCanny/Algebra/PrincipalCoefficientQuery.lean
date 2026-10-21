@@ -18,7 +18,7 @@ context is the remaining interface to the integer Tarski-seed evaluator.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PrincipalCoefficientBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open PrincipalSubresultant

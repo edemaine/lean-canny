@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.RationalSubstitutionBudget
 @[expose] public section
 
 namespace LeanCanny.Algebra.PseudoRemainder
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 
 def budgetCode (bound headMassBits inputMassBits : List Bool) : List Bool :=

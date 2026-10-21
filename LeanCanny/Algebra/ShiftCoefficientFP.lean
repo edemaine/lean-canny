@@ -20,7 +20,7 @@ and final arithmetic are FP; the binomial computation uses certified space.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ShiftCoefficientBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

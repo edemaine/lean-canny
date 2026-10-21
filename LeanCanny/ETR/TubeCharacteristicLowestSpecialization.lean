@@ -19,7 +19,7 @@ covering all affine roots with invertible Jacobian.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCharacteristicQuotient
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open scoped Classical
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree

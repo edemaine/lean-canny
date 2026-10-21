@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.RationalSubstitutionBudget
 @[expose] public section
 
 namespace LeanCanny.Algebra.RootSignQueries
-open Complexity
+
 open LeanCanny.Encoding
 open Polynomial
 open scoped Classical

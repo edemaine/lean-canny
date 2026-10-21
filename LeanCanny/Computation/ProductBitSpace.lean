@@ -21,7 +21,7 @@ No operand, shifted summand, or product is stored as a complete binary word.
 @[expose] public section
 
 namespace LeanCanny.Computation.ProductBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Algebra
 open scoped BigOperators

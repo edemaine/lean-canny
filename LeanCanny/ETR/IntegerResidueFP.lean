@@ -19,7 +19,7 @@ modulus, including modulus one, without constructing a unary magnitude.
 @[expose] public section
 
 namespace LeanCanny.ETR.Codec.IntegerResidue
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Algebra.MatrixPower

@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.Algebra.RationalSubstitutionBounds
 public import LeanCanny.Encoding.BinaryMulFP
-public import Complexitylib.Classes.P.NatCodes
+public import LeanCanny.Tactic.PolyTime
 
 /-!
 # FP binary budget writers for rational substitution
@@ -22,7 +22,7 @@ Semantic metadata bounds imply the resulting degree and coefficient budgets.
 
 namespace LeanCanny.Algebra.RationalSubstitution
 open Polynomial
-open Complexity
+
 open LeanCanny.Encoding
 
 def degreeCode (a d e : List Bool) : List Bool :=

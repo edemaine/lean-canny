@@ -18,7 +18,7 @@ coefficient is representable. Negativity and zero testing are in PSPACE.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeZero
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding
 open Algebra.RationalSubstitution.Indexed Algebra.MatrixPower

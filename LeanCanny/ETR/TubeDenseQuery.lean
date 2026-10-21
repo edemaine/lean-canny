@@ -16,7 +16,7 @@ The complete source-power routine handles every remaining coefficient.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeDense
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding
 open Algebra.RationalSubstitution.Indexed Algebra.MatrixPower

@@ -16,7 +16,7 @@ Factor evaluation may itself use polynomial space.
 @[expose] public section
 
 namespace LeanCanny.Algebra.IntegerSmallProductBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators
@@ -79,9 +79,9 @@ theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (hf : ∀ c i, f (pair c (BinaryNatCode.encode i)) = SignStatisticBits.integerCode (a c i))
     (ha : ∀ c i, (a c i).natAbs ≤ 2) :
     SpaceFunction (fun c => SignStatisticBits.integerCode (product (a c) (Nat.fromBitsLE (count c)))) := by
-  let p := Classical.choose (Cobham.output_length_poly_of_mem_FP hu.mem_FP)
+  let p := Classical.choose (output_length_poly_of_mem_FP hu.mem_FP)
   have hp0 : ∀ c, (List.replicate (Nat.fromBitsLE (count c)) true).length ≤ p.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hu.mem_FP)
+    Classical.choose_spec (output_length_poly_of_mem_FP hu.mem_FP)
   have hp : ∀ c, Nat.fromBitsLE (count c) ≤ p.eval c.length := by
     intro c
     simpa only [List.length_replicate] using hp0 c

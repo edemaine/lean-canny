@@ -18,7 +18,7 @@ polynomial degrees when the supplied degree fields agree with them.
 @[expose] public section
 
 namespace LeanCanny.Algebra.Resultant
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

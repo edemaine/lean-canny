@@ -20,7 +20,7 @@ from the supplied residue evaluator and FP modulus-bound writer.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ChineseRemainder.IndexedSumBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators

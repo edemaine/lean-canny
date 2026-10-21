@@ -11,7 +11,7 @@ public import LeanCanny.Encoding.BracketsFP
 @[expose] public section
 
 namespace LeanCanny.Encoding.FiniteLookup
-open Complexity
+
 open Brackets
 
 variable {ι : Type*}
@@ -29,7 +29,7 @@ theorem rewrite_mem_FP (keys : List ι) (pattern output : ι → List Bool)
   | nil => exact constFn_mem_FP fallback
   | cons i keys ih =>
       exact (stringEq_fppred hkey (constFn_mem_FP (pattern i))).ite_mem_FP
-        (Cobham.appendFn_mem_FP (constFn_mem_FP (output i)) htail) ih
+        (appendFn_mem_FP (constFn_mem_FP (output i)) htail) ih
 
 theorem rewrite_match (keys : List ι) (pattern output : ι → List Bool)
     (key tail : List Bool → List Bool) (fallback xs : List Bool)

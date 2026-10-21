@@ -20,7 +20,7 @@ aggregate flags needed to recognize arbitrary-length unary and binary payloads.
 @[expose] public section
 
 namespace LeanCanny.ETR.SyntaxClassifier
-open Complexity
+
 
 def cap (n : ℕ) : Fin 7 := ⟨min 6 n, by omega⟩
 

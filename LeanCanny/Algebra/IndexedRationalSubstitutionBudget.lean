@@ -19,7 +19,7 @@ using their degree allowance.
 @[expose] public section
 
 namespace LeanCanny.Algebra.RationalSubstitution.Indexed
-open Complexity
+
 open LeanCanny.Encoding
 open Polynomial
 

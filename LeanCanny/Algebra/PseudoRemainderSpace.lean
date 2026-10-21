@@ -18,7 +18,7 @@ formal head bound is retained when reduction modulo the modulus lowers degrees.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PseudoRemainderBits
-open Complexity Polynomial Matrix
+open Polynomial Matrix
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

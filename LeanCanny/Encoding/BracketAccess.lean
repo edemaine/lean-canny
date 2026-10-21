@@ -17,7 +17,6 @@ strings, and its exact behavior is proved on a serialized node followed by any s
 @[expose] public section
 
 namespace LeanCanny.Encoding.Brackets
-open Complexity
 
 /-- Position of the first closing bracket that returns to depth zero, or the input
 length if there is no such prefix. This is a bounded search on the literal input. -/
@@ -84,8 +83,8 @@ theorem nodeLength_toBits_append (d : Data) (suffix : List Bool) :
 def wrap (bits : List Bool) : List Bool := false :: (bits ++ [true])
 
 theorem wrap_mem_FP : wrap ∈ FP :=
-  mem_FP_comp (Cobham.appendFn_mem_FP id_mem_FP (constFn_mem_FP [true]))
-    (Cobham.cons_mem_FP false)
+  mem_FP_comp (appendFn_mem_FP id_mem_FP (constFn_mem_FP [true]))
+    (cons_mem_FP false)
 
 /-- Strip the enclosing bracket pair. This operation is total on malformed inputs. -/
 def contents (bits : List Bool) : List Bool := (bits.drop 1).take (bits.length - 2)
@@ -105,8 +104,8 @@ def consNode (head tail : List Bool) : List Bool := false :: (head ++ tail.drop 
 theorem consNode_mem_FP {head tail : List Bool → List Bool}
     (hhead : head ∈ FP) (htail : tail ∈ FP) :
     (fun z => consNode (head z) (tail z)) ∈ FP :=
-  mem_FP_comp (Cobham.appendFn_mem_FP hhead (drop_mem_FP htail (UnaryFn.const 1)))
-    (Cobham.cons_mem_FP false)
+  mem_FP_comp (appendFn_mem_FP hhead (drop_mem_FP htail (UnaryFn.const 1)))
+    (cons_mem_FP false)
 
 @[simp] theorem consNode_toBits (d : Data) (xs : List Data) :
     consNode d.toBits (Data.l xs).toBits = (Data.l (d :: xs)).toBits := by

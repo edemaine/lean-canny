@@ -18,7 +18,7 @@ branches. Signs at algebraic parameter values require further algorithms.
 @[expose] public section
 
 namespace LeanCanny.Algebra.CannyCoordinateBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

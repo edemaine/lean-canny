@@ -19,7 +19,7 @@ polynomials, with original source degrees retained across modular degree drops.
 @[expose] public section
 
 namespace LeanCanny.Algebra.CannyCoordinateBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

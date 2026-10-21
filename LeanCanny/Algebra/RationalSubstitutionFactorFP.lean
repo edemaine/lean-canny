@@ -20,7 +20,7 @@ Only valid variable addresses need a source correctness contract.
 @[expose] public section
 
 namespace LeanCanny.Algebra.RationalSubstitution.FactorBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

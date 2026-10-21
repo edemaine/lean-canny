@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.PseudoRemainderBudget
 
 namespace LeanCanny.Algebra
 open Polynomial
-open Complexity
+
 open LeanCanny.Encoding
 open scoped BigOperators
 

@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.PolynomialPrincipalSpace
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeExtraneous
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Algebra.RationalSubstitution Algebra.MatrixPower
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree

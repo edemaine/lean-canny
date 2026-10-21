@@ -17,7 +17,7 @@ Formal bounds are preserved under modular degree drops.
 @[expose] public section
 
 namespace LeanCanny.Algebra.TarskiSeedBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

@@ -20,7 +20,7 @@ bit budget for every selected integer bivariate determinant coefficient.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeBivariate
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open scoped Classical
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree TubeCleared.massBudget

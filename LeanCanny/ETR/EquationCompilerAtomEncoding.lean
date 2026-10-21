@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.ETR.EquationCompilerStateEncoding
 public import LeanCanny.ETR.NNFEncoding
-public import Complexitylib.Tactic.PolyTime
+public import LeanCanny.Tactic.PolyTime
 
 /-!
 # The encoded atomic instruction of the equation compiler
@@ -18,7 +18,7 @@ is an encoded equation system with the exact witness allocation of `equations`.
 @[expose] public section
 
 namespace LeanCanny.ETR.EquationCompiler
-open Complexity
+
 open LeanCanny.Encoding.Brackets
 
 def HasTag (tag : ℕ) (bits : List Bool) : Prop := firstChild bits = (Codec.unary tag).toBits

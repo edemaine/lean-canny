@@ -19,7 +19,7 @@ laws. It does not assert Canny's polynomial-space upper bound.
 @[expose] public section
 
 namespace LeanCanny
-open Complexity Turing.MultiTapeTM
+open Turing.MultiTapeTM
 
 /-- The class ∃ℝ: languages polynomial-time many-one reducible to existential real arithmetic. -/
 def ExistsReal : Set Language := {L | PolyTimeReduces L ETR.language}

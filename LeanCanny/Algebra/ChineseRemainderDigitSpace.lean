@@ -40,7 +40,7 @@ theorem natAbs_eq_ite_residue {M : ℕ} [NeZero M] (z : ℤ) (hz : 2 * z.natAbs 
 end LeanCanny.Algebra.IntegerModular
 
 namespace LeanCanny.Algebra.ChineseRemainder
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

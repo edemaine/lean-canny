@@ -18,7 +18,7 @@ much larger than the output. The certificate accounts for retaining the query.
 @[expose] public section
 
 namespace LeanCanny.Computation.WordBits
-open Complexity
+
 open LeanCanny.Encoding
 
 def lookupQuery (p : List Bool) : List Bool := pair (pairSnd p) (pairSnd (pairFst p))

@@ -20,7 +20,7 @@ multiplication combines one source coefficient with one monomial coefficient.
 @[expose] public section
 
 namespace LeanCanny.Algebra.RationalSubstitution.TermBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

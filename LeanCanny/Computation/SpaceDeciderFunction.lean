@@ -11,7 +11,7 @@ public import LeanCanny.Computation.SpaceFunction
 @[expose] public section
 
 namespace LeanCanny.Computation
-open Complexity Turing.MultiTapeTM
+open Turing.MultiTapeTM
 open scoped Classical
 
 theorem SpaceDecider.flagEvaluator {L : Language} (D : SpaceDecider L) :

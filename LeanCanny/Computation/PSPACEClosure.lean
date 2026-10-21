@@ -12,7 +12,7 @@ public import LeanCanny.Computation.PolyTime
 @[expose] public section
 
 namespace LeanCanny.Computation
-open Complexity Turing.MultiTapeTM
+open Turing.MultiTapeTM
 open scoped Classical
 
 theorem SpaceDecider.precompose {L : Language} (D : SpaceDecider L)

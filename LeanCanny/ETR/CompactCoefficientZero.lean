@@ -18,7 +18,7 @@ including the actual source-degree computation and both streamed loops.
 @[expose] public section
 
 namespace LeanCanny.ETR.CompactCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets
 open Algebra.MatrixPower

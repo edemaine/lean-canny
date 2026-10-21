@@ -11,7 +11,7 @@ public import LeanCanny.ETR.TubeProjectionSpace
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeProjection
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry TubeEncoding TubeProjectionEncoding
 open Algebra.MatrixPower

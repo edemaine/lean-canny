@@ -5,8 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Encoding.FixedWidthNatVector
-public import Complexitylib.Classes.P.NatCodes
-public import Complexitylib.Classes.P.Range
+public import LeanCanny.Tactic.PolyTime
 
 /-! # FP fixed-width vector writing from coordinate access
 
@@ -18,7 +17,7 @@ truncated to the requested width; the earlier round trip applies when they fit.
 @[expose] public section
 
 namespace LeanCanny.Encoding.FixedWidthNatVector
-open Complexity
+
 
 theorem encode_mem_FP (A W : List Bool → ℕ) (e : List Bool → ℕ → ℕ)
     (hA : UnaryFn A) (hW : UnaryFn W) (read : List Bool → List Bool) (hr : read ∈ FP)

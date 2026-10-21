@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.Algebra.MatrixPowerEncoding
 public import LeanCanny.Encoding.BinaryNatFP
-public import Complexitylib.Classes.P.NatCodes
+public import LeanCanny.Tactic.PolyTime
 
 /-!
 # Polynomial-time binary query operations for matrix powering
@@ -20,7 +20,7 @@ word's length; the exponent's magnitude is never expanded to unary.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower.QueryBits
-open Complexity
+
 open LeanCanny.Encoding
 
 def height (bits : List Bool) : List Bool := pairFst bits

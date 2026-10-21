@@ -29,7 +29,7 @@ theorem polynomial_mass (bits : List Bool) :
 end LeanCanny.ETR.CompactSource
 
 namespace LeanCanny.ETR.TubeSource
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry Algebra.MvMass
 

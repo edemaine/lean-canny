@@ -17,7 +17,7 @@ output length, hence by that sum. No separate direction-size oracle is needed.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeBivariate
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open scoped BigOperators
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm

@@ -18,7 +18,7 @@ vanishes. All original source-reader and space-bounded-child costs are retained.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCharacteristicQuotient
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree
 

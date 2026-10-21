@@ -21,7 +21,7 @@ implementations with the same contracts.
 @[expose] public section
 
 namespace LeanCanny.Algebra.IntegerDigitBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open LeanCanny.Algebra.ChineseRemainder

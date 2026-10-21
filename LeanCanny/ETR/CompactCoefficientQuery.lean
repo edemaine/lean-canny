@@ -18,7 +18,7 @@ within the source dimension recover the exact requested exponent.
 @[expose] public section
 
 namespace LeanCanny.ETR.CompactCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 
 attribute [local irreducible] BinaryNat.mul BinaryNat.sub

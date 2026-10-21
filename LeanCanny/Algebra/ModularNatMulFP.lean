@@ -11,7 +11,7 @@ public import LeanCanny.Algebra.ModularPowFP
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower.ArithmeticBits
-open Complexity
+
 open LeanCanny.Encoding
 
 theorem mulMod_nat_residueBits (m : ℕ) (x : ZMod m) (n : ℕ) :

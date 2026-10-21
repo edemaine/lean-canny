@@ -6,8 +6,8 @@ The report is saved as [`canny-tr.pdf`](canny-tr.pdf).
 
 **Canny's PSPACE upper bound is not proved here yet.** The current development defines
 an encoded existential theory of the reals (ETR), its reduction class ∃ℝ, and several
-algebraic ingredients. It uses Lean 4.36.0-rc1 and pinned Mathlib, Complexitylib2,
-and legacy Complexitylib dependencies.
+algebraic ingredients. It uses Lean 4.36.0-rc1 with pinned Mathlib, CSLib,
+and Complexitylib2 dependencies.
 
 ## Build
 
@@ -22,10 +22,6 @@ lake build
 `lean-toolchain` and `lake-manifest.json` record the versions used. The public entry
 point is [`LeanCanny.lean`](LeanCanny.lean).
 
-`lake update` applies a checked [compatibility patch](scripts/complexitylib-lean436.patch)
-to the pinned legacy Complexitylib dependency. The hook checks the revision and is
-idempotent; Lake's resulting notice that this dependency has local changes is expected.
-
 For stricter verification:
 
 ```sh
@@ -33,10 +29,11 @@ lake build --wfail
 lake env lean scripts/CheckAxioms.lean
 lake env lean scripts/CheckGrammar.lean
 lake env lean scripts/CheckSpaceFoundation.lean
+lake env lean scripts/CheckPolyTimeFoundation.lean
 ```
 
-The audit checks all declarations in the `LeanCanny` namespace and their transitive
-dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
+The audit checks all declarations in the `LeanCanny` namespace, the local Nat
+codec extensions, and their transitive dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 `Quot.sound` axioms.
 The space-foundation check also verifies native P, reductions, and PSPACE
 endpoints. It rejects legacy time-class dependencies in the structural class
@@ -63,17 +60,15 @@ binary iteration bounds without exposing child execution times.
 P and all project polynomial-time reductions now use Complexitylib2 directly,
 through [PolyTime](LeanCanny/Computation/PolyTime.lean). This includes the defining
 reduction for ∃ℝ, normalization/compiler reductions, and PSPACE reduction closure.
-The original Complexitylib dependency remains for its FP primitives and
-binary/tree codecs. [TidyFP](LeanCanny/Computation/TidyFP.lean) currently converts
-their certificates to the new machine model. Removing this remaining dependency
-is in progress. No PSPACE result relies on
-the original library's space class or on a conversion from that class.
-The replacement [FP calculus](LeanCanny/Computation/PolyTimeFunctions.lean)
-now has native arithmetic, pairing, right-fold, range, and bounded-quantifier
-certificates. Local codecs preserve the existing formats. Its independent
-[audit](scripts/CheckPolyTimeFoundation.lean) checks that no Complexitylib module
-is imported and that all project proofs use only standard axioms; client
-migration is still underway.
+[FP](LeanCanny/Computation/PolyTimeFunctions.lean) is now exactly native tidy
+polynomial-time computation on binary strings. Its arithmetic, pairing,
+right-fold, range, and bounded-quantifier rules compose native certificates.
+Local [tree](LeanCanny/Encoding/Data.lean), [pair](LeanCanny/Encoding/Pairing.lean),
+and [binary](LeanCanny/Encoding/BinaryNatCode.lean) codecs preserve the existing
+wire formats. The original Complexitylib package, FP machine bridge, and
+compatibility patch have been removed. The independent
+[polynomial-time audit](scripts/CheckPolyTimeFoundation.lean) checks the
+replacement interfaces without importing the rest of the Canny development.
 
 The [isolated prototype](experiments/complexitylib2/README.md) records the
 exponential-time-child experiment that motivated this choice.
@@ -85,7 +80,7 @@ exponential-time-child experiment that motivated this choice.
 | [`ETR.Syntax`](LeanCanny/ETR/Syntax.lean) | Integer polynomial expressions; Boolean combinations of equality and strict inequality; real semantics; equivalence between an infinite assignment and a finite existential block. |
 | [`ETR.Encoding`](LeanCanny/ETR/Encoding.lean) | A canonical binary codec with both round-trip laws; the ETR language rejects malformed strings. Integer constants use binary magnitudes; variable indices use unary. |
 | [`ETR.EncodingBounds`](LeanCanny/ETR/EncodingBounds.lean) | Formula arity is at most encoded input length; binary integer payloads have linear bit overhead. |
-| [`Encoding.Brackets`](LeanCanny/Encoding/Brackets.lean), [`BracketsFP`](LeanCanny/Encoding/BracketsFP.lean) | A numerical bracket criterion recognizes exactly the image of `Data.toBits`; its one-bit recognizer belongs to Complexitylib's machine-level `FP`. |
+| [`Encoding.Brackets`](LeanCanny/Encoding/Brackets.lean), [`BracketsFP`](LeanCanny/Encoding/BracketsFP.lean) | A numerical bracket criterion recognizes exactly the image of `Data.toBits`; its one-bit recognizer belongs to native machine-level `FP`. |
 | [`Encoding.BracketAccess`](LeanCanny/Encoding/BracketAccess.lean) | Polynomial-time splitting of the first serialized node, child access, enclosing-bracket operations, and cons; exact behavior is proved against the dependency codec. |
 | [`ETR.EncodingFP`](LeanCanny/ETR/EncodingFP.lean) | Polynomial-time unary-field writing and recognition, fresh-variable writing, and tagged-node construction; agreement with the typed term/formula encodings. |
 | [`ETR.NumericPayloadFP`](LeanCanny/ETR/NumericPayloadFP.lean) | Polynomial-time recognition of exactly the canonical natural and signed-integer payload codes. A finite-state bit-node decoder keeps magnitudes as binary digit lists, with a linear output bound. |
@@ -218,7 +213,7 @@ exponential-time-child experiment that motivated this choice.
 | [`Algebra.MatrixPowerEntry`](LeanCanny/Algebra/MatrixPowerEntry.lean), [`MatrixPowerMachine`](LeanCanny/Algebra/MatrixPowerMachine.lean), [`MatrixPowerWork`](LeanCanny/Algebra/MatrixPowerWork.lean) | A continuation machine computes one entry of `A^e` over any semiring by balanced recursion, streaming the summation through a counter and accumulator. Correctness and the exact abstract transition count are proved; no intermediate matrix power is stored. |
 | [`Algebra.MatrixPowerBounds`](LeanCanny/Algebra/MatrixPowerBounds.lean), [`MatrixPowerEncoding`](LeanCanny/Algebra/MatrixPowerEncoding.lean) | Every reachable state has at most `e.size` frames. A binary state representation is injective when its scalar representation is. For residues modulo nonzero `m`, complete states have at most `64*(N.size + e.size + m.size + 1)^2` bits for an `N`-dimensional matrix supplied as an entry function. |
 | [`Encoding.BinaryNatFP`](LeanCanny/Encoding/BinaryNatFP.lean) | Machine-certified polynomial-time normalization, successor, truncated predecessor, floor half, and ceiling half directly on binary words. The arithmetic specifications cover arbitrary little-endian inputs and produce canonical outputs; no magnitude is expanded to unary. Canonical binary words have an `FP` recognizer. |
-| [`Encoding.BinaryAddFP`](LeanCanny/Encoding/BinaryAddFP.lean) | Binary natural-number addition belongs to Complexitylib's machine-level `FP`. A Horner fold doubles the partial sum and adds the two digits by binary increment; every intermediate word is linearly bounded in the input length. Correctness covers arbitrary little-endian words and canonical output has at most `a.length+b.length+1` bits. |
+| [`Encoding.BinaryAddFP`](LeanCanny/Encoding/BinaryAddFP.lean) | Binary natural-number addition belongs to native machine-level `FP`. A Horner fold doubles the partial sum and adds the two digits by binary increment; every intermediate word is linearly bounded in the input length. Correctness covers arbitrary little-endian words and canonical output has at most `a.length+b.length+1` bits. |
 | [`Encoding.BinaryMulFP`](LeanCanny/Encoding/BinaryMulFP.lean) | Binary natural-number multiplication and multiply-accumulate belong to `FP`. Every partial product in the shift-and-add fold is canonical and has at most the sum of the operand bit lengths. Correctness includes zero, empty words, and redundant high zeroes. |
 | [`Encoding.BinarySubFP`](LeanCanny/Encoding/BinarySubFP.lean) | Comparison and truncated subtraction on binary natural words have machine-level polynomial-time certificates. Fixed-width complement addition detects the subtraction carry; the low bits recover the difference. All specifications include noncanonical inputs. |
 | [`Encoding.BinaryModFP`](LeanCanny/Encoding/BinaryModFP.lean) | Uniform `FP` modular reduction and modular multiply-accumulate, with the modulus supplied in binary. Long division uses one comparison and at most one subtraction per digit. Every partial remainder is canonical and no longer than the processed dividend; modulus zero follows `a % 0 = a`. |

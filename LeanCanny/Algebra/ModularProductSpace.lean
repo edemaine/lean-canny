@@ -16,7 +16,7 @@ The complete child computations and the empty product are included.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ModularProduct
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open MatrixPower
 open scoped BigOperators
@@ -65,8 +65,8 @@ theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (hpos : ∀ c, 0 < Nat.fromBitsLE (modulus c))
     (hf : ∀ c i, i < Nat.fromBitsLE (count c) → f (pair c (BinaryNatCode.encode i)) = residueBits (a c i)) :
     SpaceFunction (fun c => residueBits (∏ i ∈ Finset.range (Nat.fromBitsLE (count c)), a c i)) := by
-  let p := Classical.choose (Cobham.output_length_poly_of_mem_FP hm)
-  have hp : ∀ c, (modulus c).length ≤ p.eval c.length := Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hm)
+  let p := Classical.choose (output_length_poly_of_mem_FP hm)
+  have hp : ∀ c, (modulus c).length ≤ p.eval c.length := Classical.choose_spec (output_length_poly_of_mem_FP hm)
   have hs : ∀ c k, k ≤ Nat.fromBitsLE (count c) →
       (BoundedFold.fold (update modulus f) (seed modulus) c k).length ≤ p.eval c.length := by
     intro c k hk

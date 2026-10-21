@@ -18,7 +18,7 @@ list stays linearly bounded; no binary magnitude is expanded into unary.
 @[expose] public section
 
 namespace LeanCanny.ETR.Codec.BitPayload
-open Complexity
+
 open LeanCanny.Encoding.Brackets
 
 inductive Phase where
@@ -150,14 +150,14 @@ theorem encodedAdvance_encode (b : Bool) (s : State) :
 theorem encodedAdvance_mem_FP (b : Bool) : encodedAdvance b ∈ FP := by
   have hdrop := drop_mem_FP id_mem_FP (UnaryFn.const 3)
   have hwrite (p : Phase) {f : List Bool → List Bool} (hf : f ∈ FP) :
-      (fun z => header p ++ f z) ∈ FP := Cobham.appendFn_mem_FP (constFn_mem_FP (header p)) hf
+      (fun z => header p ++ f z) ∈ FP := appendFn_mem_FP (constFn_mem_FP (header p)) hf
   have hbranch (p : Phase) : (fun xs => encode (advance b ⟨p, xs.drop 3⟩)) ∈ FP := by
     cases p <;> cases b <;> simp only [advance, encode]
     all_goals first
       | exact constFn_mem_FP _
       | exact hwrite _ hdrop
-      | exact hwrite _ (mem_FP_comp hdrop (Cobham.cons_mem_FP false))
-      | exact hwrite _ (mem_FP_comp hdrop (Cobham.cons_mem_FP true))
+      | exact hwrite _ (mem_FP_comp hdrop (cons_mem_FP false))
+      | exact hwrite _ (mem_FP_comp hdrop (cons_mem_FP true))
   have htest (p : Phase) : FPPred (fun xs : List Bool => xs.take 3 = header p) :=
     stringEq_fppred (take_mem_FP id_mem_FP (UnaryFn.const 3)) (constFn_mem_FP (header p))
   exact (htest .ready).ite_mem_FP (hbranch .ready)

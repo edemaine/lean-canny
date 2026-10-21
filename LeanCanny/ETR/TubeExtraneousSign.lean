@@ -17,7 +17,7 @@ is included; no deformed coefficient, determinant, or sign oracle is assumed.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeExtraneous
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open LeanCanny.Encoding.Brackets
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm coefficient TubeDeformation.budget

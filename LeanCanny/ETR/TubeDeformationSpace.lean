@@ -16,7 +16,7 @@ feed the affine deformation controller and the complete determinant backend.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeDeformation
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open Algebra.RationalSubstitution
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree TubeBivariate.sourceValue

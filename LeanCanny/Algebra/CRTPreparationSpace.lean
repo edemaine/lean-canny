@@ -19,7 +19,7 @@ native space certificates.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ChineseRemainder.PreparationBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

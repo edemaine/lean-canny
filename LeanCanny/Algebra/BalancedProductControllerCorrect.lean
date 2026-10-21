@@ -17,7 +17,7 @@ completed scans, both frame kinds, and the terminal state.
 @[expose] public section
 
 namespace LeanCanny.Algebra.BalancedProduct.Controller
-open Complexity
+
 open LeanCanny.Encoding
 
 @[simp] theorem height_queryBits (q : Query) :

@@ -18,7 +18,7 @@ a full three-way sign evaluator without materializing a coefficient.
 @[expose] public section
 
 namespace LeanCanny.Algebra.CannySubresultantBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

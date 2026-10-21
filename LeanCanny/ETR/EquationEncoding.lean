@@ -17,7 +17,7 @@ writing a unary variable index cannot hide an exponential expansion.
 @[expose] public section
 
 namespace LeanCanny.ETR.Term
-open Complexity
+
 
 def nonzeroBits (term : List Bool) (i : ℕ) : List Bool :=
   Codec.taggedTwo 2 (Codec.taggedTwo 3 term (variableBits i)) (const (-1)).toData.toBits

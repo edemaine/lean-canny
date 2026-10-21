@@ -12,7 +12,7 @@ public import LeanCanny.ETR.EquationSize
 @[expose] public section
 
 namespace LeanCanny.ETR.TermView
-open Complexity
+
 
 def normalize (bits : List Bool) : List Bool :=
   if Grammar.recognizeTerm bits then bits else (Term.const 0).toData.toBits

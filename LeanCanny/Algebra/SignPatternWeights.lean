@@ -13,7 +13,7 @@ import Mathlib.Tactic.FinCases
 @[expose] public section
 
 namespace LeanCanny.Algebra.SignPatternBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

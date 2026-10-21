@@ -1,7 +1,7 @@
 import LeanCanny
 
 open LeanCanny.ETR
-open Complexity
+open LeanCanny
 
 /-! Executable boundary checks: syntax recognition accepts well-formed unsatisfiable
 instances, and rejects redundant high-zero digits and trailing serialized nodes. -/

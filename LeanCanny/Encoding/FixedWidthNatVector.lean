@@ -17,7 +17,7 @@ Reading its i-th block recovers the original coordinate whenever it fits.
 @[expose] public section
 
 namespace LeanCanny.Encoding.FixedWidthNatVector
-open Complexity
+
 
 def encode (A W : ℕ) (e : ℕ → ℕ) : List Bool :=
   List.ofFn (fun k : Fin (A * W) => (e (k.val / W)).testBit (k.val % W))

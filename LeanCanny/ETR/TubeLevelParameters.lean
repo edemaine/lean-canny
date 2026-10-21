@@ -19,7 +19,7 @@ extensions of the reals. All denominators are automatically nonzero.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeLevelPacket
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Geometry TubeProjectionEncoding
 open scoped Classical
 

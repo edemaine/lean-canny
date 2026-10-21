@@ -18,7 +18,7 @@ modulus, including modulus one, and every child state is included in the bound.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MacaulayBits
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 
 def differenceAt (L : Layout) (p : List Bool) (i : ℕ) : ℕ := colAt L p i - remainderAt L p i

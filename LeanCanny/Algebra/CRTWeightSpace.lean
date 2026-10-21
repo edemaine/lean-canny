@@ -18,7 +18,7 @@ indexed-system query, the result is exactly the inverse used by the CRT sum.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ChineseRemainder.WeightBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

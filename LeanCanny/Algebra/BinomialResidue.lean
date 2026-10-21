@@ -19,7 +19,7 @@ states and an exponential clock in the input length.
 @[expose] public section
 
 namespace LeanCanny.Algebra.BinomialResidue
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

@@ -23,7 +23,7 @@ transition here remains a separate reference implementation.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower
-open Complexity
+
 
 variable {R : Type} {n : ℕ}
 

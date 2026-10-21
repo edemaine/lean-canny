@@ -11,15 +11,15 @@ public import LeanCanny.Computation.SpaceFunctionComposition
 @[expose] public section
 
 namespace LeanCanny.Computation.SpaceFunction
-open Complexity Turing.MultiTapeTM
+open Turing.MultiTapeTM
 
 theorem ofFP (f : List Bool → List Bool) (hf : f ∈ FP) : SpaceFunction f :=
-  ⟨ComputableTidilyInPolySpace.of_polyTime (TidyFP.of_mem_FP hf)⟩
+  ⟨ComputableTidilyInPolySpace.of_polyTime (FP.computable hf)⟩
 
 theorem branch {f g : List Bool → List Bool} (pred : List Bool → Bool)
     (hp : (fun x => [pred x]) ∈ FP) (L : SpaceFunction f) (R : SpaceFunction g) :
     SpaceFunction (fun x => if pred x then f x else g x) :=
-  ⟨(ComputableTidilyInPolySpace.of_polyTime (TidyFP.of_flag hp)).ite
+  ⟨(ComputableTidilyInPolySpace.of_polyTime (flag_computable hp)).ite
     L.computable R.computable⟩
 
 end LeanCanny.Computation.SpaceFunction

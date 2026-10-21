@@ -20,7 +20,7 @@ give the encoded affine entry, including the degree-zero diagonal contribution.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PolynomialAffineEntryBits
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets MatrixPower
 
 def packet (c : List Bool) (r s d : ℕ) : List Bool :=

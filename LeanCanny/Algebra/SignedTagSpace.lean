@@ -12,7 +12,7 @@ public import LeanCanny.Encoding.BinaryDivFP
 @[expose] public section
 
 namespace LeanCanny.Algebra.SignedTagBits
-open Complexity LeanCanny.Encoding
+open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 
 def flip (w : List Bool) : List Bool := if w = [] then [] else if w = [true] then [false, true] else [true]

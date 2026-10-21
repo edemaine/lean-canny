@@ -17,7 +17,7 @@ integer sign-pattern interface after positive denominator clearing.
 @[expose] public section
 
 namespace LeanCanny.Algebra.DyadicSignPatternBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

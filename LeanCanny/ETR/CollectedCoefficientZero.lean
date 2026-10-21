@@ -18,7 +18,7 @@ provides zero testing needed for actual degree detection after cancellation.
 @[expose] public section
 
 namespace LeanCanny.ETR.CollectedCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets
 open Algebra.MatrixPower

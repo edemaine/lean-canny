@@ -12,14 +12,14 @@ public import LeanCanny.Encoding.BinaryAddFP
 A shift-and-add fold reads the first operand from high to low. Every partial
 product is normalized, and its bit length is at most the sum of the processed
 operand length and the second operand length. This bounds all fold states,
-rather than only the final output, and yields Complexitylib's machine-level FP
+rather than only the final output, and yields native machine-level FP
 certificate. No magnitude is converted to a unary representation.
 -/
 
 @[expose] public section
 
 namespace LeanCanny.Encoding.BinaryNat
-open Complexity
+
 
 def mulFold (b : List Bool) : List Bool → List Bool
   | [] => []
@@ -64,7 +64,7 @@ theorem mul_eq_bits (packet : List Bool) : mul packet =
 theorem mul_mem_FP : mul ∈ FP := by
   have hprev := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
   have hb := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have hshift := mem_FP_comp hprev (Cobham.cons_mem_FP false)
+  have hshift := mem_FP_comp hprev (cons_mem_FP false)
   have hfalse := mem_FP_comp hshift normalize_mem_FP
   have htrue := mem_FP_comp (mem_FP_pair hshift hb) add_mem_FP
   refine recFold_mem_FP_of_bound (g := fun z t => mulFold (pairSnd z) t)

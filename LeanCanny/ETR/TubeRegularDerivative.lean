@@ -17,7 +17,7 @@ pattern guards and all child costs are reused without a new derivative oracle.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeRegularDerivative
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding TubeProjectionEncoding
 open LeanCanny.Algebra LeanCanny.Algebra.MatrixPower
 

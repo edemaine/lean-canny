@@ -17,7 +17,7 @@ coefficient reader uses that determinant only inside the principal range.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PrincipalCoefficientBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

@@ -11,7 +11,7 @@ public import LeanCanny.ETR.SyntaxClassifier
 @[expose] public section
 
 namespace LeanCanny.ETR.SyntaxClassifier
-open Complexity
+
 
 theorem classify_count (d : Data) : (classify d).count.val = min 6 d.asList.length := by
   cases d with

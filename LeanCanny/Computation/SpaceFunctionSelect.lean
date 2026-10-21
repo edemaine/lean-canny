@@ -14,8 +14,7 @@ runs the selected space-bounded branch. No saved-state protocol is exposed. -/
 @[expose] public section
 
 namespace LeanCanny.Computation.SpaceFunction
-open Complexity
-open LeanCanny.Encoding
+
 
 theorem select {pred f g : List Bool → List Bool}
     (P : SpaceFunction pred) (L : SpaceFunction f) (R : SpaceFunction g) :
@@ -23,6 +22,6 @@ theorem select {pred f g : List Bool → List Bool}
   have hp : (fun p : List Bool => [p[0]?.getD false]) ∈ FP :=
     (FPPred.getBit id_mem_FP (UnaryFn.const 0)).flag_mem_FP
   exact ⟨((Turing.MultiTapeTM.ComputableTidilyInPolySpace.of_polyTime
-    (TidyFP.of_flag hp)).comp P.computable).ite L.computable R.computable⟩
+    (flag_computable hp)).comp P.computable).ite L.computable R.computable⟩
 
 end LeanCanny.Computation.SpaceFunction

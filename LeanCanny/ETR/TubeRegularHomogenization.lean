@@ -16,7 +16,7 @@ reader supplies the homogenized coefficients with complete space certificates.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeRegularHomogenization
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding TubeProjectionEncoding
 open LeanCanny.Algebra LeanCanny.Algebra.MatrixPower
 

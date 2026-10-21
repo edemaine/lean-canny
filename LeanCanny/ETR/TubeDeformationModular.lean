@@ -17,7 +17,7 @@ The proved encoded degree allowance supplies the affine backend's bound.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeDeformation
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open scoped Classical
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree

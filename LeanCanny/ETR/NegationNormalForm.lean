@@ -99,7 +99,7 @@ theorem nnf_eq_self_of_isNNF (p : Formula) (hp : p.IsNNF = true) : p.nnf true = 
 end Formula
 
 namespace NNF
-open Complexity
+
 
 def one (tag : ℕ) (d : Data) : Data := .l [Codec.unary tag, d]
 

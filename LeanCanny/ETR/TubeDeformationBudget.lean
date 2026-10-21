@@ -18,7 +18,7 @@ therefore has an FP determinant budget, including out-of-range inner requests.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeDeformation
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open scoped Classical
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree TubeBivariate.rowMassCode

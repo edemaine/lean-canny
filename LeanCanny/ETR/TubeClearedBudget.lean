@@ -16,7 +16,7 @@ budget writers do not depend on the selected row or monomial.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCleared
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Algebra.RationalSubstitution
 open scoped Classical
 

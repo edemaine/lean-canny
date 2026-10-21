@@ -19,7 +19,7 @@ included in the same evaluator.
 @[expose] public section
 
 namespace LeanCanny.Algebra.BalancedProduct
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

@@ -19,7 +19,7 @@ integer input degrees, so modular degree drops do not change the resultant.
 @[expose] public section
 
 namespace LeanCanny.Algebra.CannyResultantBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation
@@ -38,7 +38,7 @@ noncomputable def Family.value (F : Family) (q : List Bool) : List Bool :=
   residueBits (((cannyResultant (F.left (pairFst q)) (F.right (pairFst q)) (F.direction (pairFst q))).coeff
     (F.degree (pairFst q)) : ℤ) : ZMod (mValue q))
 
-def Family.zeroLanguage (F : Family) : Complexity.Language :=
+def Family.zeroLanguage (F : Family) : LeanCanny.Language :=
   {q | (((cannyResultant (F.left (pairFst q)) (F.right (pairFst q)) (F.direction (pairFst q))).coeff
     (F.degree (pairFst q)) : ℤ) : ZMod (mValue q)) = 0}
 

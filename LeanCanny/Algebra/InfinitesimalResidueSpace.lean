@@ -19,7 +19,7 @@ parameter. Neither the polynomial nor a complete coefficient is stored.
 @[expose] public section
 
 namespace LeanCanny.Algebra.InfinitesimalSign
-open Complexity
+
 open Polynomial
 open LeanCanny.Computation
 

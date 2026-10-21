@@ -18,7 +18,7 @@ No coefficient-access implementation or elimination claim is made here.
 @[expose] public section
 
 namespace LeanCanny.ETR.RadiusCriticalSource
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry
 

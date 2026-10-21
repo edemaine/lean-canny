@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.Algebra.BalancedProductEncoding
 public import LeanCanny.Encoding.BinaryDivFP
-public import Complexitylib.Classes.P.NatCodes
+public import LeanCanny.Tactic.PolyTime
 
 /-!
 # Certified binary query transformations for balanced product bits
@@ -19,7 +19,7 @@ of the factor-count word, so its magnitude is never expanded to unary.
 @[expose] public section
 
 namespace LeanCanny.Algebra.BalancedProduct.QueryBits
-open Complexity
+
 open LeanCanny.Encoding
 
 def height (q : List Bool) : List Bool := pairFst q

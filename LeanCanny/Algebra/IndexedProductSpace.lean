@@ -20,7 +20,7 @@ assumed product-bit oracle and no stored combined product.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ChineseRemainder.IndexedProductBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators

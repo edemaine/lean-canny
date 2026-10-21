@@ -17,7 +17,17 @@ the summands' bit length plus the binary length of the number of summands.
 @[expose] public section
 
 namespace LeanCanny.Algebra.IntegerSumBits
-open Complexity
+
+private theorem polynomial_eval_mono_nat (p : Polynomial ℕ) : Monotone p.eval := by
+  induction p using Polynomial.induction_on' with
+  | add p q hp hq =>
+    intro a b hab
+    simpa only [Polynomial.eval_add] using Nat.add_le_add (hp hab) (hq hab)
+  | monomial n c =>
+    intro a b hab
+    simpa only [Polynomial.eval_monomial] using
+      Nat.mul_le_mul_left c (Nat.pow_le_pow_left hab n)
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators
@@ -159,8 +169,8 @@ theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (count : List Bool → List Bool) (hc : count ∈ FP) (a : List Bool → ℕ → ℤ)
     (hf : ∀ c i, f (pair c (BinaryNatCode.encode i)) = SignStatisticBits.integerCode (a c i)) :
     SpaceFunction (fun c => SignStatisticBits.integerCode (∑ i ∈ Finset.range (Nat.fromBitsLE (count c)), a c i)) := by
-  let q := Classical.choose (Cobham.output_length_poly_of_mem_FP hc)
-  have hq : ∀ c, (count c).length ≤ q.eval c.length := Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hc)
+  let q := Classical.choose (output_length_poly_of_mem_FP hc)
+  have hq : ∀ c, (count c).length ≤ q.eval c.length := Classical.choose_spec (output_length_poly_of_mem_FP hc)
   let p := Classical.choose E.exists_output_length_poly
   have hp : ∀ x, (f x).length ≤ p.eval x.length := Classical.choose_spec E.exists_output_length_poly
   let u := 2 * Polynomial.X + q + 2

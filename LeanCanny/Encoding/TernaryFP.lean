@@ -18,7 +18,7 @@ every needed power of three, avoiding any unbounded integer exponentiation.
 @[expose] public section
 
 namespace LeanCanny.Encoding.Ternary
-open Complexity
+
 
 theorem ones_value (n : ℕ) : Nat.fromBitsLE (List.replicate n true) + 1 = 2 ^ n := by
   induction n with

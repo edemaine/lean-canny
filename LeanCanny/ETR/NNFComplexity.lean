@@ -17,7 +17,7 @@ guarded identity reduces the NNF satisfiability language back to ETR.
 @[expose] public section
 
 namespace LeanCanny.ETR.NNF
-open Complexity
+
 open LeanCanny.Encoding.Brackets
 
 theorem normalize_shape (bits : List Bool) :
@@ -70,7 +70,7 @@ theorem toETR_correct (bits : List Bool) : bits ∈ language ↔ toETR bits ∈ 
     simp [toETR, hn, hnot]
 
 theorem reduces_to_etr : PolyTimeReduces language ETR.language :=
-  ⟨toETR, Computation.TidyFP.of_mem_FP toETR_mem_FP, toETR_correct⟩
+  ⟨toETR, FP.computable toETR_mem_FP, toETR_correct⟩
 
 theorem mem_existsReal : language ∈ LeanCanny.ExistsReal := reduces_to_etr
 

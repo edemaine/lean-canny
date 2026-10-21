@@ -17,7 +17,7 @@ actual seed degree. Both source routines come from the original head and query.
 @[expose] public section
 
 namespace LeanCanny.Algebra.TarskiPrincipalContext
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open IntegerTarskiSeedBits

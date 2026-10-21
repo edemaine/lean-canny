@@ -18,7 +18,7 @@ query, this is exactly the cofactor from the CRT reconstruction specification.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ChineseRemainder.CofactorBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators

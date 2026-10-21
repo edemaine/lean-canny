@@ -21,7 +21,7 @@ counting, comparison, subtraction, quotient, and remainder routines.
 @[expose] public section
 
 namespace LeanCanny.ETR.MonomialReader
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 

@@ -19,7 +19,7 @@ as well as binary, for the coordinate layout of the tube systems.
 @[expose] public section
 
 namespace LeanCanny.ETR.TermArity
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation
@@ -171,7 +171,7 @@ theorem read_term (t : Term) : read t.toData.toBits = BinaryNatCode.encode t.ari
 end LeanCanny.ETR.TermArity
 
 namespace LeanCanny.ETR.TermArity
-open Complexity
+
 open LeanCanny.Encoding
 
 noncomputable def arity (source : List Bool → List Bool) (c : List Bool) : ℕ := (TermView.term (source c)).arity

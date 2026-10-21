@@ -20,7 +20,7 @@ Regularity and the critical-point equations remain separate obligations.
 @[expose] public section
 
 namespace LeanCanny.ETR.PerturbedSource
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry
 

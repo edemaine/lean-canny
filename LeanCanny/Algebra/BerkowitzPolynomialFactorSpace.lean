@@ -17,7 +17,7 @@ moment coefficient, or zero. Negation retains the query's modulus context.
 @[expose] public section
 
 namespace LeanCanny.Algebra.BerkowitzPolynomial.ModularAccess
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

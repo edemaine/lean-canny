@@ -18,7 +18,7 @@ reader for encoded direction entries is supplied by the caller.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeLinear
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open Algebra.MatrixPower
 open scoped BigOperators Classical
 

@@ -15,7 +15,7 @@ is total on all words and includes modulus one.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower.ArithmeticBits
-open Complexity
+
 open LeanCanny.Encoding
 
 def addMod (p : List Bool) : List Bool :=

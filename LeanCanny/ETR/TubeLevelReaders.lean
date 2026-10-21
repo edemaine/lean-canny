@@ -18,7 +18,7 @@ substitution interface on every packet, including malformed inputs.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeLevelPacket
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Geometry TubeProjectionEncoding
 open scoped Classical
 open MatrixPower

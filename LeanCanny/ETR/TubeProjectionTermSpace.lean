@@ -17,7 +17,7 @@ embedded polynomial. Rejected direction patterns return zero.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeProjectionQuery
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding TubeProjectionEncoding
 open Algebra.MatrixPower

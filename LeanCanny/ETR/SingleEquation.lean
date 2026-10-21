@@ -11,7 +11,7 @@ public import LeanCanny.ETR.EquationSize
 
 `normalize` is a total, executable map on all binary strings. Malformed strings map
 to the unsatisfiable equation `1 = 0`. Correctness and a cubic output-length bound
-are proved here. Membership of this map in Complexitylib's `FP` is a further
+are proved here. Membership of this map in native `FP` is a further
 implementation obligation; a size bound alone does not prove polynomial time.
 -/
 
@@ -77,8 +77,8 @@ theorem normalize_length_le (bits : List Bool) :
   | none =>
       have hlen : (Formula.eqZero (.const 1)).encode.length = 20 := by
         change (Formula.eqZero (.const 1)).inputSize = 20
-        simp [Formula.inputSize_eq_dataSize, Formula.toData, Complexity.Data.cons_size,
-          Codec.unary_size, Complexity.Data.size_empty]
+        simp [Formula.inputSize_eq_dataSize, Formula.toData, LeanCanny.Data.cons_size,
+          Codec.unary_size, LeanCanny.Data.size_empty]
       simp only [normalize, hd, hlen]
       nlinarith [Nat.zero_le bits.length, Nat.zero_le (bits.length ^ 2),
         Nat.zero_le (bits.length ^ 3)]

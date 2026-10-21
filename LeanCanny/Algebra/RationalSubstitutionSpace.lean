@@ -22,7 +22,7 @@ polynomial or exponent vector is stored, and invalid term indices are masked.
 @[expose] public section
 
 namespace LeanCanny.Algebra.RationalSubstitution
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

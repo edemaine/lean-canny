@@ -16,7 +16,7 @@ by the caller, and no additional coefficient or sign oracle is assumed.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeDeformation
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open LeanCanny.Encoding.Brackets
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm lowestScalar

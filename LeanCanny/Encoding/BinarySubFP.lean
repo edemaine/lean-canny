@@ -18,7 +18,7 @@ difference. All loops run over bit positions, without expanding magnitudes.
 @[expose] public section
 
 namespace LeanCanny.Encoding.BinaryNat
-open Complexity
+
 
 def complement (w : ℕ) (bits : List Bool) : List Bool :=
   (List.range w).map fun i => !(bits[i]?.getD false)

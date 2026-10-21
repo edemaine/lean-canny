@@ -11,7 +11,7 @@ public import LeanCanny.ETR.TubeBivariateSpace
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeBivariate
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 
 def directionInput (f : List Bool → List Bool) (q : List Bool) : List Bool := pair (f (pairFst q)) (pairSnd q)
 

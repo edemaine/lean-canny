@@ -18,7 +18,7 @@ index and that degree. No polynomial entry or coefficient list is stored.
 @[expose] public section
 
 namespace LeanCanny.Algebra.SylvesterPolynomialBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open Polynomial

@@ -19,7 +19,7 @@ zero on all input strings, including the empty-minor boundary.
 @[expose] public section
 
 namespace LeanCanny.Algebra.SubresultantPolynomial
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

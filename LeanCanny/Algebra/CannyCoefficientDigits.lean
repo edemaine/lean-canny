@@ -19,7 +19,7 @@ the original source context with a binary bit index.
 @[expose] public section
 
 namespace LeanCanny.Algebra
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

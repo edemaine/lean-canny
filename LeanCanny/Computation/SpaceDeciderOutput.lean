@@ -11,7 +11,7 @@ public import LeanCanny.Computation.SpaceDeciderFunction
 @[expose] public section
 
 namespace LeanCanny.Computation.SpaceDecider
-open Complexity
+
 
 theorem indicator {L : Language} (D : SpaceDecider L) :
     SpaceFunction (fun x => [@decide (x ∈ L) (Classical.propDecidable _)]) :=

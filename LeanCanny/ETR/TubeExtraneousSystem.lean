@@ -18,7 +18,7 @@ the shared parameter radix preserves every selected coefficient.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeExtraneous
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree
 

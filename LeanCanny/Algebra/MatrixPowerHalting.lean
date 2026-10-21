@@ -17,7 +17,7 @@ clock, in addition to the existing exact final-result theorem.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower
-open Complexity
+
 
 variable {R : Type*} [Semiring R] {n : ℕ}
 

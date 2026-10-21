@@ -17,7 +17,7 @@ the determinant from space-bounded original matrix coefficient access.
 @[expose] public section
 
 namespace LeanCanny.Algebra.BerkowitzPolynomial.ModularAccess
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

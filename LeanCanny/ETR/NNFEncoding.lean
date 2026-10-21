@@ -18,7 +18,7 @@ The local constructor tests also check that their operand fields are nonempty.
 @[expose] public section
 
 namespace LeanCanny.ETR.NNF
-open Complexity
+
 open LeanCanny.Encoding.Brackets
 
 def second (bits : List Bool) : List Bool := firstChild (remainingChildren bits)

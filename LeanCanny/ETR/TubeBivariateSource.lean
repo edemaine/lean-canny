@@ -16,7 +16,7 @@ coefficients, exponent-width conversion and linear coefficient sum are internal.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeBivariate
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open Algebra.RationalSubstitution Algebra.MatrixPower
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm rawLinear TubeCleared.rawCoefficient rowCoefficient

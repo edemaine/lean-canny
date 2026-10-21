@@ -18,7 +18,7 @@ in polynomial time. Tagged constructors manipulate already encoded subtrees.
 @[expose] public section
 
 namespace LeanCanny.ETR
-open Complexity
+
 open LeanCanny.Encoding.Brackets
 
 namespace Codec
@@ -74,13 +74,13 @@ def taggedTwo (tag : ℕ) (first second : List Bool) : List Bool :=
 
 theorem taggedOne_mem_FP (tag : ℕ) {field : List Bool → List Bool} (hfield : field ∈ FP) :
     (fun z => taggedOne tag (field z)) ∈ FP :=
-  mem_FP_comp (Cobham.appendFn_mem_FP (constFn_mem_FP (unary tag).toBits) hfield) wrap_mem_FP
+  mem_FP_comp (appendFn_mem_FP (constFn_mem_FP (unary tag).toBits) hfield) wrap_mem_FP
 
 theorem taggedTwo_mem_FP (tag : ℕ) {first second : List Bool → List Bool}
     (hfirst : first ∈ FP) (hsecond : second ∈ FP) :
     (fun z => taggedTwo tag (first z) (second z)) ∈ FP :=
-  mem_FP_comp (Cobham.appendFn_mem_FP
-    (Cobham.appendFn_mem_FP (constFn_mem_FP (unary tag).toBits) hfirst) hsecond) wrap_mem_FP
+  mem_FP_comp (appendFn_mem_FP
+    (appendFn_mem_FP (constFn_mem_FP (unary tag).toBits) hfirst) hsecond) wrap_mem_FP
 
 @[simp] theorem taggedOne_toBits (tag : ℕ) (d : Data) :
     taggedOne tag d.toBits = (Data.l [unary tag, d]).toBits := by

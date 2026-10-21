@@ -19,7 +19,7 @@ The packet length and interval have no source-size bounds here.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeLevelPacket
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Geometry TubeEncoding TubeProjectionEncoding
 open Set MvPolynomial
 open scoped Classical Topology

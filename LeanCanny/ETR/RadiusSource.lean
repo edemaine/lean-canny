@@ -19,7 +19,7 @@ and an effective good-radius interval are still required.
 @[expose] public section
 
 namespace LeanCanny.ETR.RadiusSource
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry
 

@@ -18,7 +18,7 @@ no expansion of either the exponent or the unreduced power.
 @[expose] public section
 
 namespace LeanCanny.Encoding.BinaryNat
-open Complexity
+
 
 /-- Input `pair modulus (pair left right)`. -/
 def mulMod (p : List Bool) : List Bool := mod (pair (mul (pairSnd p)) (pairFst p))

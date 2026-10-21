@@ -19,7 +19,7 @@ of the full graded multiplication matrix without new algebraic hypotheses.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeMacaulayKoszul
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open scoped Classical
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm

@@ -17,7 +17,7 @@ rational substitution, up to the stated common positive even-power scale.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeParameter
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Algebra.RationalSubstitution
 open scoped Classical BigOperators
 

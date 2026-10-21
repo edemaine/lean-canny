@@ -17,7 +17,7 @@ including the zero-polynomial convention for the finite root query.
 @[expose] public section
 
 namespace LeanCanny.Algebra.TarskiQueryBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open IntegerTarskiSeedBits

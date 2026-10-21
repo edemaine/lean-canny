@@ -15,7 +15,7 @@ An FP parity correction gives the determinant itself, including dimension zero.
 @[expose] public section
 
 namespace LeanCanny.Algebra.Berkowitz
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

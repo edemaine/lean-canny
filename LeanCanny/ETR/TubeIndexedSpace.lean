@@ -17,7 +17,7 @@ with their source validation and all space-bounded work included in space.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeIndexed
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding
 open Algebra.MatrixPower

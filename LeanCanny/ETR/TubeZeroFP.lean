@@ -5,8 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.TubeZeroBounds
-public import Complexitylib.Classes.P.Range
-public import Complexitylib.Classes.P.NatCodes
+public import LeanCanny.Tactic.PolyTime
 
 /-! # Polynomial-time writing of the sparse zero-source tube
 
@@ -18,7 +17,7 @@ products. Arity and active-mask fields are total FP inputs.
 @[expose] public section
 
 namespace LeanCanny.ETR.Term
-open Complexity
+
 
 theorem varCode_mem_FP {i : List Bool → ℕ} (hi : UnaryFn i) :
     (fun c => (Term.var (i c)).toData.toBits) ∈ FP :=
@@ -40,7 +39,7 @@ theorem squareCode_mem_FP {a : List Bool → Term} (ha : (fun c => (a c).toData.
 end LeanCanny.ETR.Term
 
 namespace LeanCanny.ETR.SumSquares
-open Complexity
+
 open LeanCanny.Encoding.Brackets
 
 theorem accumulate_range_mem_FP (N : List Bool → ℕ) (E : List Bool → ℕ → Term) (hN : UnaryFn N)
@@ -58,7 +57,7 @@ theorem accumulate_range_mem_FP (N : List Bool → ℕ) (E : List Bool → ℕ �
 end LeanCanny.ETR.SumSquares
 
 namespace LeanCanny.ETR.TubeZero
-open Complexity
+
 open LeanCanny.Encoding
 open TubeEncoding
 

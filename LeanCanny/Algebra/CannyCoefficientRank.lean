@@ -19,7 +19,7 @@ large-product arithmetic.
 @[expose] public section
 
 namespace LeanCanny.Algebra
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

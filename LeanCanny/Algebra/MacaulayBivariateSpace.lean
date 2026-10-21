@@ -18,7 +18,7 @@ Entry access decodes the requested univariate degree by quotient and remainder.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MacaulayBivariate
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open MacaulayBits MatrixPower
 open scoped BigOperators
 
@@ -200,7 +200,7 @@ theorem Access.evaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
   · exact F.encoded_value c hc
   · exact (F.value_zero c hc).symm
 
-def Family.zeroLanguage (F : Family) : Complexity.Language :=
+def Family.zeroLanguage (F : Family) : LeanCanny.Language :=
   {c | ((F.matrix c).det.coeff (F.outer c)).coeff (F.inner c) = 0}
 
 theorem Access.zeroLanguage_mem_PSPACE {F : Family} (a : Access F) (h : F.layout.PolyTime)

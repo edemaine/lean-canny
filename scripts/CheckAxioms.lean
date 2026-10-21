@@ -1,7 +1,8 @@
 import LeanCanny
 import Lean.Util.CollectAxioms
 
-/-! Audit every declaration in the project's namespace, including transitive dependencies.
+/-! Audit every declaration in the project's namespace and the local Nat codec
+extensions, including transitive dependencies.
 Run with `lake env lean scripts/CheckAxioms.lean` after `lake build`.
 -/
 
@@ -10,7 +11,10 @@ run_cmd do
   let env ← getEnv
   let mut checked : Nat := 0
   for (name, _) in env.constants.toList do
-    if (`LeanCanny).isPrefixOf name then
+    let natCodec := match env.getModuleIdxFor? name with
+      | some idx => env.header.moduleNames[idx.toNat]! == `LeanCanny.Encoding.NatBits
+      | none => false
+    if (`LeanCanny).isPrefixOf name || natCodec then
       checked := checked + 1
       for ax in ← collectAxioms name do
         unless #[`propext, `Classical.choice, `Quot.sound].contains ax do

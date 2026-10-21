@@ -18,7 +18,7 @@ coefficient of the denominator-cleared polynomial, including cancellation.
 @[expose] public section
 
 namespace LeanCanny.ETR.CompactCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Algebra.MatrixPower
 open scoped BigOperators

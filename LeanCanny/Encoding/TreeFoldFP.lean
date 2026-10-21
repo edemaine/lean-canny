@@ -20,7 +20,7 @@ tree depth and to malformed inputs.
 @[expose] public section
 
 namespace LeanCanny.Encoding.TreeFold
-open Complexity
+
 open Brackets
 
 variable {σ : Type*}
@@ -140,12 +140,12 @@ theorem encodedStep_mem_FP (empty : σ) (combine : σ → σ → σ) (code : σ 
   have hpop : popEncoded code width keys combine ∈ FP :=
     FiniteLookup.rewrite_mem_FP _ _ _ hkey htail _
   have hpush : (fun xs => true :: (code empty ++ xs.drop 1)) ∈ FP :=
-    Cobham.appendFn_mem_FP (constFn_mem_FP (true :: code empty)) hdrop
+    appendFn_mem_FP (constFn_mem_FP (true :: code empty)) hdrop
   cases b
   · exact (FPPred.getBit id_mem_FP (UnaryFn.const 0)).ite_mem_FP hpop (constFn_mem_FP [false])
   · exact (FPPred.getBit id_mem_FP (UnaryFn.const 0)).ite_mem_FP hpush (constFn_mem_FP [false])
 
-/-- A finite-frame bottom-up tree fold is in Complexitylib's multitape `FP`.
+/-- A finite-frame bottom-up tree fold is in native multitape `FP`.
 The code and exhaustive list of frames are fixed parameters, not input-dependent oracles. -/
 theorem runEncoded_mem_FP (empty : σ) (combine : σ → σ → σ) (code : σ → List Bool)
     (width : ℕ) (hwidth : 0 < width) (hlen : ∀ s, (code s).length = width)

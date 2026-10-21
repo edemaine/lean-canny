@@ -21,7 +21,7 @@ codes, including for empty inputs and words with redundant high zeroes.
 @[expose] public section
 
 namespace LeanCanny.Encoding.BinaryNat
-open Complexity
+
 
 def bump (bit : Bool) (bits : List Bool) : List Bool := if bit then increment bits else bits
 
@@ -107,7 +107,7 @@ theorem addFold_mem_FP :
   have hb := mem_FP_comp hz pairSnd_mem_FP
   have hi := (UnaryFn.length ha).sub ((UnaryFn.length ht).add (UnaryFn.const 1))
   have hbit := FPPred.getBit hb hi
-  have hshift := mem_FP_comp hp (Cobham.cons_mem_FP false)
+  have hshift := mem_FP_comp hp (cons_mem_FP false)
   have stepFP : ∀ bit : Bool, (fun w =>
       bump ((pairSnd (pairFst (pairFst w)))[(pairFst (pairFst (pairFst w))).length -
         ((pairSnd w).length + 1)]?.getD false)

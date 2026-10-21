@@ -18,7 +18,7 @@ one original coefficient call and a degree-zero diagonal test.
 @[expose] public section
 
 namespace LeanCanny.Algebra.BerkowitzAffinePolynomial
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open MatrixPower
 open scoped BigOperators Classical
 

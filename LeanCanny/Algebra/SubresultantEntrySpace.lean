@@ -18,7 +18,7 @@ a total routine on all strings while the valid branch uses the minor embedding.
 @[expose] public section
 
 namespace LeanCanny.Algebra.SubresultantBits.Access
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

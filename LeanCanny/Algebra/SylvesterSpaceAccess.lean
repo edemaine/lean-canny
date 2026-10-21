@@ -20,7 +20,7 @@ proved in `SylvesterAccessCorrect`.
 @[expose] public section
 
 namespace LeanCanny.Algebra.SylvesterBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

@@ -18,7 +18,7 @@ residue and accounts for the space-bounded scalar-reader workspace.
 @[expose] public section
 
 namespace LeanCanny.Algebra.LinearCoefficientBits
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open RationalSubstitution.Indexed MatrixPower
 open LeanCanny.Encoding.Brackets
 open scoped BigOperators Classical

@@ -18,7 +18,7 @@ These tests leave point and parameter exponents unrestricted.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeProjectionQuery
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry TubeEncoding TubeProjectionEncoding
 open LeanCanny.Algebra

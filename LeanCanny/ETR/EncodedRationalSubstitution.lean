@@ -19,7 +19,7 @@ semantics refers to evaluation of the actual input arithmetic term.
 @[expose] public section
 
 namespace LeanCanny.ETR.RationalSubstitutionBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open LeanCanny.Algebra

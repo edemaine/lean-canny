@@ -18,7 +18,7 @@ existing typed compiler, including term order and the next variable index.
 @[expose] public section
 
 namespace LeanCanny.ETR
-open Complexity
+
 open LeanCanny.Encoding.Brackets
 
 namespace SumSquares
@@ -51,7 +51,7 @@ def appendTerms (left right : List Bool) : List Bool := wrap (contents left ++ c
 
 theorem appendTerms_mem_FP {left right : List Bool → List Bool} (hl : left ∈ FP) (hr : right ∈ FP) :
     (fun z => appendTerms (left z) (right z)) ∈ FP := by
-  have h := mem_FP_comp (Cobham.appendFn_mem_FP (mem_FP_comp hl contents_mem_FP)
+  have h := mem_FP_comp (appendFn_mem_FP (mem_FP_comp hl contents_mem_FP)
     (mem_FP_comp hr contents_mem_FP)) wrap_mem_FP
   refine mem_FP_of_eq h (fun z => ?_)
   simp only [appendTerms, Function.comp_apply]

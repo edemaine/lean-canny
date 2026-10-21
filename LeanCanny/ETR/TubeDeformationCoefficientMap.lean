@@ -17,7 +17,7 @@ zero by the proved full determinant degree allowance.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeDeformation
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Algebra.MatrixPower Algebra.RationalSubstitution
 open scoped Classical
 

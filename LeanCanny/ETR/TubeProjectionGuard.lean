@@ -12,7 +12,7 @@ public import LeanCanny.ETR.TubeZeroFP
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeProjectionQuery
-open Complexity
+
 open LeanCanny.Encoding
 open TubeProjectionEncoding
 

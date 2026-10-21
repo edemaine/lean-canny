@@ -17,7 +17,7 @@ computed actual degrees are separate obligations.
 @[expose] public section
 
 namespace LeanCanny.Algebra.SignStatisticBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open PrincipalSubresultant

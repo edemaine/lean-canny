@@ -19,7 +19,7 @@ positive-modulus protocol bounds every accumulator, including on raw inputs.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ChineseRemainder.CofactorBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators

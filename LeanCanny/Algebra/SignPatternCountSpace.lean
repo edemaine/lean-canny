@@ -15,7 +15,7 @@ under the family-size hypothesis, so certified FP division returns the count.
 @[expose] public section
 
 namespace LeanCanny.Algebra.SignPatternBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 
@@ -41,7 +41,7 @@ theorem zeros_value (n : ℕ) : Nat.fromBitsLE (List.replicate n false ++ [true]
 def scaleCode (F : Family) (c : List Bool) : List Bool := List.replicate (Nat.fromBitsLE (F.count c)) false ++ [true]
 
 theorem scaleCode_mem_FP (F : Family) (hF : ControlsPolyTime F) : scaleCode F ∈ FP :=
-  Cobham.appendFn_mem_FP (hF.countUnary.replicate_mem_FP false) (constFn_mem_FP [true])
+  appendFn_mem_FP (hF.countUnary.replicate_mem_FP false) (constFn_mem_FP [true])
 
 def unscale (F : Family) (z : List Bool) : List Bool :=
   BinaryNat.div (pair (pairFst (pairSnd z)) (scaleCode F (pairFst z)))

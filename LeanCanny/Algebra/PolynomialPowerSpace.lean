@@ -21,7 +21,7 @@ in the input length; their binary control fields are required to be FP.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PolynomialPower
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation
@@ -41,7 +41,7 @@ structure ModularFamily where
 noncomputable def ModularFamily.value (F : ModularFamily) (c : List Bool) : List Bool :=
   residueBits (((F.matrix c ^ F.exponent c) (F.row c) (F.col c)).coeff (F.degree c))
 
-def ModularFamily.zeroLanguage (F : ModularFamily) : Complexity.Language :=
+def ModularFamily.zeroLanguage (F : ModularFamily) : LeanCanny.Language :=
   {c | ((F.matrix c ^ F.exponent c) (F.row c) (F.col c)).coeff (F.degree c) = 0}
 
 noncomputable def ModularFamily.power (F : ModularFamily) : MatrixPower.ModularFamily where

@@ -18,7 +18,7 @@ suitable tuple with source-size bounds is a separate obligation.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeLevelPacket
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Geometry TubeEncoding TubeProjectionEncoding
 open scoped Classical
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm CompactSource.term

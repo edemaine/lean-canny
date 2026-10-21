@@ -21,7 +21,7 @@ arithmetic implement the coefficient formula on every binary input.
 @[expose] public section
 
 namespace LeanCanny.Algebra.CubeFactorResidue
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets
 open MatrixPower

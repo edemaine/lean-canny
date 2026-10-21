@@ -16,7 +16,7 @@ No compatibility of the scalar encoding with multiplication is required.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MacaulayBits
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 
 def entryWithIdentity (L : Layout) (coefficient identity : List Bool → List Bool) (p : List Bool) : List Bool :=

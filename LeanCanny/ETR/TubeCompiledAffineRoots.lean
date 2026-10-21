@@ -19,7 +19,7 @@ fiber transfers to the compiled system without a Jacobian hypothesis.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCompiledAffineRoots
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Geometry TubeEncoding TubeProjectionEncoding
 open scoped Classical BigOperators
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree

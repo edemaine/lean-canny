@@ -29,7 +29,7 @@ theorem root_signCount_C_mul {J : Type*} (p : ℝ[X]) (Q : J → ℝ[X]) (σ : J
 end LeanCanny.Algebra.RootSignQueries
 
 namespace LeanCanny.Algebra.DyadicSignPatternBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

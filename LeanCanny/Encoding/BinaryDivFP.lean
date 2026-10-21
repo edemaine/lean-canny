@@ -19,7 +19,7 @@ the processed dividend's bit length. Division by zero follows `a / 0 = 0`.
 @[expose] public section
 
 namespace LeanCanny.Encoding.BinaryNat
-open Complexity
+
 
 theorem quotient_step (m t : ℕ) (hm : 0 < m) (bit : Bool) :
     (if m ≤ (if bit then 1 else 0) + 2 * (t % m) then 1 else 0) + 2 * (t / m) =
@@ -68,9 +68,9 @@ theorem divDigit_mem_FP (bit : Bool) :
   have hm := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
   have hq := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
   have hr := mem_FP_comp (mem_FP_pair pairSnd_mem_FP hm) mod_mem_FP
-  have hu := mem_FP_comp hr (Cobham.cons_mem_FP bit)
-  have hfalse := mem_FP_comp (mem_FP_comp hq (Cobham.cons_mem_FP false)) normalize_mem_FP
-  have htrue := mem_FP_comp (mem_FP_comp hq (Cobham.cons_mem_FP true)) normalize_mem_FP
+  have hu := mem_FP_comp hr (cons_mem_FP bit)
+  have hfalse := mem_FP_comp (mem_FP_comp hq (cons_mem_FP false)) normalize_mem_FP
+  have htrue := mem_FP_comp (mem_FP_comp hq (cons_mem_FP true)) normalize_mem_FP
   have hcarry := (le_fppred hm hu).ite_mem_FP htrue hfalse
   have hzero : FPPred (fun p => Nat.fromBitsLE (pairFst (pairFst p)) = 0) :=
     (le_fppred hm (constFn_mem_FP [])).of_iff

@@ -18,7 +18,7 @@ modulus, including modulus one.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower.ArithmeticBits
-open Complexity
+
 open LeanCanny.Encoding
 
 def negate (p : List Bool) : List Bool :=

@@ -16,7 +16,7 @@ coefficients and all FP metadata are supplied by the tube/projection modules.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeRational
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Algebra.MatrixPower Algebra.RationalSubstitution
 

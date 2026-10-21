@@ -20,7 +20,7 @@ Constructing the local preparation routine from residue access remains separate.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ChineseRemainder
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators

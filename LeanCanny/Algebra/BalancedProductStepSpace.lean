@@ -15,7 +15,7 @@ transition is the mathematical encoded controller, with no child machine state. 
 @[expose] public section
 
 namespace LeanCanny.Algebra.BalancedProduct.SpaceStep
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

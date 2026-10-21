@@ -17,7 +17,7 @@ selected rank and all source ranks stay binary throughout the computation.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PartialCoefficientBits
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open FixedWidthPolynomial LeanCanny.Encoding.Brackets
 open scoped Classical
 

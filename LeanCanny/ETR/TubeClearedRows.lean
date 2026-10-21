@@ -18,7 +18,7 @@ Uniform parameter bounds give one degree allowance for every spatial monomial.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCleared
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Geometry TubeEncoding TubeProjectionEncoding
 open Algebra.RationalSubstitution
 open scoped Classical

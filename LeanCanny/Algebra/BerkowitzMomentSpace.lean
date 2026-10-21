@@ -18,7 +18,7 @@ the semantic family and its access contract cover every binary context.
 @[expose] public section
 
 namespace LeanCanny.Algebra.Berkowitz.ModularAccess
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

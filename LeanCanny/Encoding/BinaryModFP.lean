@@ -20,7 +20,7 @@ convention `a % 0 = a` and is included in the FP certificate.
 @[expose] public section
 
 namespace LeanCanny.Encoding.BinaryNat
-open Complexity
+
 
 def reduceOnce (packet : List Bool) : List Bool :=
   if Nat.fromBitsLE (pairSnd packet) ≤ Nat.fromBitsLE (pairFst packet) then sub packet
@@ -88,9 +88,9 @@ theorem mod_mem_FP : mod ∈ FP := by
   have hprev := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
   have hm := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
   have hfalse := mem_FP_comp
-    (mem_FP_pair (mem_FP_comp hprev (Cobham.cons_mem_FP false)) hm) reduceOnce_mem_FP
+    (mem_FP_pair (mem_FP_comp hprev (cons_mem_FP false)) hm) reduceOnce_mem_FP
   have htrue := mem_FP_comp
-    (mem_FP_pair (mem_FP_comp hprev (Cobham.cons_mem_FP true)) hm) reduceOnce_mem_FP
+    (mem_FP_pair (mem_FP_comp hprev (cons_mem_FP true)) hm) reduceOnce_mem_FP
   refine recFold_mem_FP_of_bound (g := fun z t => modFold (pairSnd z) t)
     hfalse htrue (constFn_mem_FP []) pairSnd_mem_FP pairFst_mem_FP
     (bound := id) ?_ ?_ ?_ PolyBound.id ?_

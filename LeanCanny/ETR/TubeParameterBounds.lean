@@ -17,7 +17,7 @@ spatial exponent, without an expanded coefficient polynomial or degree oracle.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeParameter
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Algebra.RationalSubstitution
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm nativePolynomial

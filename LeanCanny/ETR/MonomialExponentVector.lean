@@ -17,7 +17,7 @@ coefficient queries, so decoding recovers the exact exponent vector.
 @[expose] public section
 
 namespace LeanCanny.ETR.MonomialReader
-open Complexity
+
 open LeanCanny.Encoding
 
 noncomputable def exponentVectorWord (source index : List Bool → List Bool) (c : List Bool) : List Bool :=

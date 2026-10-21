@@ -17,7 +17,7 @@ internally. The coefficient index is binary, including on noncanonical inputs.
 @[expose] public section
 
 namespace LeanCanny.Algebra.DerivativeProductBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

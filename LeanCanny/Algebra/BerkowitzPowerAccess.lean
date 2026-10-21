@@ -11,7 +11,7 @@ public import LeanCanny.Algebra.BerkowitzFactorChildCorrect
 @[expose] public section
 
 namespace LeanCanny.Algebra.Berkowitz.PowerAccessBits
-open Complexity LeanCanny.Encoding MatrixPower
+open LeanCanny.Encoding MatrixPower
 
 def dimension (a : FactorChild.Access) (c : List Bool) : List Bool :=
   let w := BinaryNat.succ (a.dimension c)

@@ -18,7 +18,7 @@ This bounds every iteration on all strings, not only on valid term lists.
 @[expose] public section
 
 namespace LeanCanny.ETR.EquationMask
-open Complexity
+
 open LeanCanny.Encoding.Brackets
 
 def step (state : List Bool) : List Bool :=
@@ -35,7 +35,7 @@ theorem step_mem_FP : step ∈ FP := by
   have hr := mem_FP_comp ht afterNode_mem_FP
   have hh := mem_FP_comp ht firstNode_mem_FP
   have hm := Codec.taggedTwo_mem_FP 3 pairFst_mem_FP hh
-  have hn := mem_FP_pair pairFst_mem_FP (mem_FP_pair hr (Cobham.appendFn_mem_FP ha hm))
+  have hn := mem_FP_pair pairFst_mem_FP (mem_FP_pair hr (appendFn_mem_FP ha hm))
   have he := stringEq_fppred ht (constFn_mem_FP [])
   refine mem_FP_of_eq (he.ite_mem_FP id_mem_FP hn) (fun state => ?_)
   simp only [step, Function.comp_apply, id_eq]
@@ -91,9 +91,9 @@ def mask (input : List Bool) : List Bool :=
 theorem mask_mem_FP : mask ∈ FP := by
   have hr : ruler ∈ FP := mem_FP_comp pairSnd_mem_FP contents_mem_FP
   have hi : init ∈ FP := mem_FP_pair pairFst_mem_FP (mem_FP_pair hr (constFn_mem_FP []))
-  obtain ⟨p, hp⟩ := Cobham.output_length_poly_of_mem_FP hi
-  obtain ⟨q, hq⟩ := Cobham.output_length_poly_of_mem_FP hr
-  obtain ⟨r, hfactor⟩ := Cobham.output_length_poly_of_mem_FP pairFst_mem_FP
+  obtain ⟨p, hp⟩ := output_length_poly_of_mem_FP hi
+  obtain ⟨q, hq⟩ := output_length_poly_of_mem_FP hr
+  obtain ⟨r, hfactor⟩ := output_length_poly_of_mem_FP pairFst_mem_FP
   have hb := (PolyBound.eval p).add ((PolyBound.eval q).mul ((PolyBound.eval r).add (PolyBound.const 10)))
   have hloop := iterate_mem_FP_of_polyBound step_mem_FP hi hr hb (fun z n hn => by
     have hs := iterate_pair_length_le n (pairFst z) (ruler z) []

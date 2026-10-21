@@ -19,7 +19,7 @@ complete quotient. This isolates CRT local preparation from streamed arithmetic.
 @[expose] public section
 
 namespace LeanCanny.Algebra.DyadicSumBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators

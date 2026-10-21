@@ -5,13 +5,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Encoding.BracketsFP
-public import Complexitylib.Encoding.BinaryNat
+public import LeanCanny.Encoding.BinaryNatCode
 
 /-!
 # Polynomial-time control arithmetic on binary natural numbers
 
 Every operation acts on bit lists, without converting a magnitude to a unary
-string. The certificates use Complexitylib's verified bounded folds and therefore
+string. The certificates use the native verified bounded folds and therefore
 establish its machine-level `FP`. Normalization removes redundant high zeroes;
 the arithmetic specifications cover arbitrary little-endian words.
 -/
@@ -19,7 +19,7 @@ the arithmetic specifications cover arbitrary little-endian words.
 @[expose] public section
 
 namespace LeanCanny.Encoding.BinaryNat
-open Complexity
+
 open Brackets
 
 @[simp] theorem bits_eq_nil_iff (n : ℕ) : n.bits = [] ↔ n = 0 := by
@@ -64,8 +64,8 @@ theorem normalize_mem_FP : normalize ∈ FP := by
   have hprev := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
   have hempty := stringEq_fppred hprev (constFn_mem_FP [])
   have hfalse := hempty.ite_mem_FP (constFn_mem_FP [])
-    (mem_FP_comp hprev (Cobham.cons_mem_FP false))
-  have htrue := mem_FP_comp hprev (Cobham.cons_mem_FP true)
+    (mem_FP_comp hprev (cons_mem_FP false))
+  have htrue := mem_FP_comp hprev (cons_mem_FP true)
   refine recFold_mem_FP_of_bound (g := fun _ t => normalize t)
     hfalse htrue (constFn_mem_FP []) (constFn_mem_FP []) id_mem_FP
     (bound := id) ?_ ?_ ?_ PolyBound.id ?_
@@ -94,8 +94,8 @@ theorem increment_value (bits : List Bool) :
 
 theorem increment_mem_FP : increment ∈ FP := by
   have hprev := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  have hfalse := mem_FP_comp pairSnd_mem_FP (Cobham.cons_mem_FP true)
-  have htrue := mem_FP_comp hprev (Cobham.cons_mem_FP false)
+  have hfalse := mem_FP_comp pairSnd_mem_FP (cons_mem_FP true)
+  have htrue := mem_FP_comp hprev (cons_mem_FP false)
   refine recFold_mem_FP_of_bound (g := fun _ t => increment t)
     hfalse htrue (constFn_mem_FP [true]) (constFn_mem_FP []) id_mem_FP
     (bound := fun n => n + 1) ?_ ?_ ?_ (PolyBound.id.add (PolyBound.const 1)) ?_
@@ -145,8 +145,8 @@ theorem decrement_mem_FP : decrement ∈ FP := by
   have hnormalized := mem_FP_comp pairSnd_mem_FP normalize_mem_FP
   have hempty := stringEq_fppred hnormalized (constFn_mem_FP [])
   have hfalse := hempty.ite_mem_FP (constFn_mem_FP [])
-    (mem_FP_comp hprev (Cobham.cons_mem_FP true))
-  have htrue := mem_FP_comp pairSnd_mem_FP (Cobham.cons_mem_FP false)
+    (mem_FP_comp hprev (cons_mem_FP true))
+  have htrue := mem_FP_comp pairSnd_mem_FP (cons_mem_FP false)
   refine recFold_mem_FP_of_bound (g := fun _ t => decrement t)
     hfalse htrue (constFn_mem_FP []) (constFn_mem_FP []) id_mem_FP
     (bound := id) ?_ ?_ ?_ PolyBound.id ?_

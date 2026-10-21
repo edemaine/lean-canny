@@ -17,7 +17,7 @@ a very large variable. Integer constants retain their binary encoding.
 @[expose] public section
 
 namespace LeanCanny.ETR
-open Complexity
+
 
 @[simp] theorem Codec.unary_size (n : ℕ) : (Codec.unary n).size = 2 * n + 2 := by
   induction n with

@@ -16,7 +16,7 @@ binary iteration supplies the final output certificate. -/
 @[expose] public section
 
 namespace LeanCanny.Computation.SumBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Algebra
 open scoped BigOperators
@@ -34,13 +34,13 @@ theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
   let N := fun c => Nat.fromBitsLE (count c)
   let K := fun c => Nat.fromBitsLE (index c)
   let L := fun c => K c * (N c + 1) + N c
-  let p := Classical.choose (Cobham.output_length_poly_of_mem_FP (limit_mem_FP hc hi))
+  let p := Classical.choose (output_length_poly_of_mem_FP (limit_mem_FP hc hi))
   have hp : ∀ c, (limit count index c).length ≤ p.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP (limit_mem_FP hc hi))
+    Classical.choose_spec (output_length_poly_of_mem_FP (limit_mem_FP hc hi))
   have hdFP := mem_FP_comp (mem_FP_pair hc hc) BinaryNat.add_mem_FP
-  let d := Classical.choose (Cobham.output_length_poly_of_mem_FP hdFP)
+  let d := Classical.choose (output_length_poly_of_mem_FP hdFP)
   have hd : ∀ c, ((BinaryNat.add ∘ fun x => pair (count x) (count x)) c).length ≤ d.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hdFP)
+    Classical.choose_spec (output_length_poly_of_mem_FP hdFP)
   let r := 2 * Polynomial.X + 2 * p + d + 4
   let F := step f count
   have hL (c : List Bool) : (L c).size ≤ p.eval c.length := by

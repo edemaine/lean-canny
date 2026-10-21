@@ -17,7 +17,7 @@ source coefficient bounds or an actual output degree oracle.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeRational
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry TubeEncoding
 open Algebra.RationalSubstitution

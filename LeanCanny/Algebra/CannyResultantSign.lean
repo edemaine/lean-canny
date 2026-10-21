@@ -22,7 +22,7 @@ both strict-sign languages belong to PSPACE under the same source contracts.
 @[expose] public section
 
 namespace LeanCanny.Algebra.CannyResultantBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

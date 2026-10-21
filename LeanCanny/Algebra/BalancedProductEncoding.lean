@@ -5,8 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.BalancedProductWork
-public import Complexitylib.Encoding.BinaryNat
-public import Complexitylib.Encoding.Pairing
+public import LeanCanny.Encoding.BinaryNatCode
+public import LeanCanny.Encoding.Pairing
 import Mathlib.Tactic.Linarith
 
 /-!
@@ -21,7 +21,7 @@ height and the selected index's binary length. FP execution is separate.
 @[expose] public section
 
 namespace LeanCanny.Algebra.BalancedProduct
-open Complexity
+
 
 def queryBits (q : Query) : List Bool :=
   pair (BinaryNatCode.encode q.height) (pair (BinaryNatCode.encode q.node) (BinaryNatCode.encode q.index))

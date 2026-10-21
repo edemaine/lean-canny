@@ -18,7 +18,7 @@ accounts for the only coefficient call.
 @[expose] public section
 
 namespace LeanCanny.Algebra.HomogenizationBits
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open FixedWidthPolynomial
 open scoped BigOperators
 

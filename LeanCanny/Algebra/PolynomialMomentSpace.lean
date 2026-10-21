@@ -38,7 +38,7 @@ theorem matrixFin_coeff {R : Type*} [Semiring R] {n : ℕ}
 end LeanCanny.Algebra.MatrixMoment
 
 namespace LeanCanny.Algebra.PolynomialMoment
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

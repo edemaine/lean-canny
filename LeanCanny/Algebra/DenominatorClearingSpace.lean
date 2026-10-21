@@ -22,7 +22,7 @@ No inverse is taken, even at moduli dividing a rational denominator.
 @[expose] public section
 
 namespace LeanCanny.Algebra.DenominatorClearing
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Encoding.Brackets LeanCanny.Computation
 open MatrixPower
 open scoped BigOperators

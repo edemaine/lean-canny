@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Computation.TidyFP
+public import LeanCanny.Tactic.PolyTime
+public import Complexity.Computability.Machines.Turing.MultiTape.Combinators.TidyNormalForm
 public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolySpace
 public import Complexity.Computability.Complexity.Classes.Space
 
@@ -19,23 +20,23 @@ membership, with no separate transition system or execution clock.
 namespace LeanCanny
 open Turing.MultiTapeTM
 
-abbrev PSPACE : Set Complexity.Language := Cslib.Complexity.PSPACE encBits
+abbrev PSPACE : Set LeanCanny.Language := Cslib.Complexity.PSPACE encBits
 
 namespace Computation
 
-structure SpaceDecider (L : Complexity.Language) : Prop where
+structure SpaceDecider (L : LeanCanny.Language) : Prop where
   mem_PSPACE : L ∈ PSPACE
 
 namespace SpaceDecider
 
-theorem of_computable {L : Complexity.Language} {f : List Bool → Bool}
+theorem of_computable {L : LeanCanny.Language} {f : List Bool → Bool}
     (hf : ComputableTidilyInPolySpace f encBits encBool)
     (hL : ∀ x, x ∈ L ↔ f x = true) : SpaceDecider L := by
   obtain ⟨T, S, hS, c, h, -⟩ := hf
   exact ⟨f, ⟨_, _, (PolyBounded.const c).mul (hS.add (.const 1)),
     h.computableInTimeAndSpace⟩, hL⟩
 
-theorem computable {L : Complexity.Language} (D : SpaceDecider L) :
+theorem computable {L : LeanCanny.Language} (D : SpaceDecider L) :
     ComputableTidilyInPolySpace (fun x => @decide (x ∈ L) (Classical.propDecidable _))
       encBits encBool := by
   classical
@@ -54,10 +55,10 @@ theorem computable {L : Complexity.Language} (D : SpaceDecider L) :
     rw [decide_eq_true_eq]
     exact (hL x).symm)
 
-theorem congr {L M : Complexity.Language} (D : SpaceDecider L) (h : L = M) : SpaceDecider M :=
+theorem congr {L M : LeanCanny.Language} (D : SpaceDecider L) (h : L = M) : SpaceDecider M :=
   h ▸ D
 
-theorem ofPSPACE {L : Complexity.Language} (hL : L ∈ PSPACE) : SpaceDecider L := ⟨hL⟩
+theorem ofPSPACE {L : LeanCanny.Language} (hL : L ∈ PSPACE) : SpaceDecider L := ⟨hL⟩
 
 end SpaceDecider
 end Computation

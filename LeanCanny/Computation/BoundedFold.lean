@@ -18,7 +18,7 @@ short. Updates compose directly in the tidy space calculus.
 @[expose] public section
 
 namespace LeanCanny.Computation.BoundedFold
-open Complexity
+
 open LeanCanny.Encoding
 
 def counter (p : List Bool) : List Bool := pairFst (pairSnd p)

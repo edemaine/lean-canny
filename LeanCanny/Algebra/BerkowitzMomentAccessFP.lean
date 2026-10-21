@@ -18,7 +18,7 @@ identify exactly the row, column, and smaller matrix in the factor formula.
 @[expose] public section
 
 namespace LeanCanny.Algebra.Berkowitz.EntryAccess
-open Complexity
+
 open LeanCanny.Encoding
 open QueryBits
 open MatrixPower

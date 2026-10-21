@@ -18,7 +18,7 @@ uniquely. Degree and coefficient budgets are explicit in the compiled input size
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeRegularSource
-open Complexity LeanCanny.Encoding
+open LeanCanny.Encoding
 open Geometry TubeEncoding TubeProjectionEncoding
 open LeanCanny.Algebra
 

@@ -18,7 +18,7 @@ representable query. All input fields and coefficient children are certified.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeSourceCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding
 open Algebra.MatrixPower

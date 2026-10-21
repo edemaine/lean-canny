@@ -21,7 +21,7 @@ access coefficients of the original compact polynomial directly.
 @[expose] public section
 
 namespace LeanCanny.ETR.CompactPowerCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Algebra.RationalSubstitution.Indexed Algebra.MatrixPower
 

@@ -16,7 +16,7 @@ coefficient to the streamed CRT routines.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeExtraneous
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open Algebra.RationalSubstitution
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm

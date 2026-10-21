@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.MacaulayMatrix
 @[expose] public section
 
 namespace LeanCanny.Algebra.MacaulayBits
-open Complexity
+
 open LeanCanny.Encoding
 open scoped BigOperators
 

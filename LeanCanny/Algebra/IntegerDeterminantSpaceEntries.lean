@@ -18,7 +18,7 @@ certificates account for the scan, outer power, moment, and entry states.
 @[expose] public section
 
 namespace LeanCanny.Algebra.Berkowitz.IntegerAccess
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

@@ -21,7 +21,7 @@ Each candidate and the retained result have only the modulus's binary size.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ModularInverseBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

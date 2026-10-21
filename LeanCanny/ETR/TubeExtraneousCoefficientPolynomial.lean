@@ -17,7 +17,7 @@ These facts permit identity testing without materializing either polynomial.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeExtraneous
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree Macaulay.matrix Matrix.det
 

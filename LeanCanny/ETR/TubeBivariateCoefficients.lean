@@ -16,7 +16,7 @@ multivariate polynomials whose coordinate types depend on the input.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeBivariate
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Algebra.RationalSubstitution Algebra.MatrixPower
 open scoped Classical
 

@@ -16,7 +16,7 @@ coefficient, a negative trailing-block moment coefficient, or zero.
 @[expose] public section
 
 namespace LeanCanny.Algebra.BerkowitzPolynomial.ModularAccess
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

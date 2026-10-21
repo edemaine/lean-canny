@@ -19,7 +19,7 @@ encoded stack; polynomial final output length alone is not sufficient.
 @[expose] public section
 
 namespace LeanCanny.Encoding.DynamicTreeFold
-open Complexity
+
 open Brackets
 
 variable {σ : Type*}
@@ -111,9 +111,9 @@ theorem update_mem_FP {emptyBits combineBits : List Bool → List Bool}
   have hparent := mem_FP_comp htail pairFst_mem_FP
   have hinput := mem_FP_pair hz (mem_FP_pair hchild hparent)
   have hmerged := mem_FP_comp hinput hcombine
-  have hpop := mem_FP_comp (mem_FP_pair hmerged hrest) (Cobham.cons_mem_FP true)
+  have hpop := mem_FP_comp (mem_FP_pair hmerged hrest) (cons_mem_FP true)
   have hpush := mem_FP_comp
-    (mem_FP_pair (mem_FP_comp hz hempty) hbody) (Cobham.cons_mem_FP true)
+    (mem_FP_pair (mem_FP_comp hz hempty) hbody) (cons_mem_FP true)
   have hbad :=
     ((FPPred.eq (UnaryFn.length hbody) (UnaryFn.const 0)).or
       (FPPred.eq (UnaryFn.length htail) (UnaryFn.const 0)))
@@ -139,7 +139,7 @@ theorem runEncoded_mem_FP (empty : List Bool → σ) (combine : List Bool → σ
     (fun z => encode code (TreeFold.run (empty z) (combine z) z)) ∈ FP := by
   have hinit : (fun z => encode code (some [empty z])) ∈ FP := by
     refine mem_FP_of_eq
-      (mem_FP_comp (mem_FP_pair hempty (constFn_mem_FP [])) (Cobham.cons_mem_FP true)) ?_
+      (mem_FP_comp (mem_FP_pair hempty (constFn_mem_FP [])) (cons_mem_FP true)) ?_
     intro z
     simp only [hempty_eq, encode, stackBits, Function.comp_apply]
   refine recFold_mem_FP_of_bound
@@ -209,7 +209,7 @@ theorem runEncoded_mem_FP_of_additive (empty : List Bool → σ) (combine : List
     (hgrowth : ∀ z child parent, (code (combine z child parent)).length ≤
       (code child).length + (code parent).length + allowance z.length) :
     (fun z => encode code (TreeFold.run (empty z) (combine z) z)) ∈ FP := by
-  obtain ⟨p, hp⟩ := Cobham.output_length_poly_of_mem_FP hempty
+  obtain ⟨p, hp⟩ := output_length_poly_of_mem_FP hempty
   let bound := fun n => 2 * p.eval n + 3 + n * (2 * p.eval n + 2 * allowance n + 2)
   have hbound : PolyBound bound :=
     (((PolyBound.const 2).mul (PolyBound.eval p)).add (PolyBound.const 3)).add

@@ -11,7 +11,7 @@ public import LeanCanny.ETR.MonomialReaderEncoding
 @[expose] public section
 
 namespace LeanCanny.ETR.MonomialReader
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 

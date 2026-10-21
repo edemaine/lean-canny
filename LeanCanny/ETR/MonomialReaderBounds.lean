@@ -12,7 +12,7 @@ import Mathlib.Tactic.Linarith
 @[expose] public section
 
 namespace LeanCanny.ETR.MonomialReader
-open Complexity
+
 open LeanCanny.Encoding
 
 theorem iterate_pendingSize_le {R : Type*} [Monoid R] (constant : ℤ → R) (variableValue : ℕ → R)

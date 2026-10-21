@@ -18,7 +18,7 @@ are space-bounded children and are queried after removing the first block.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ReciprocalBits
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets
 open FixedWidthPolynomial
 

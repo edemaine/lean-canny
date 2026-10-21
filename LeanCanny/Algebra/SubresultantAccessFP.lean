@@ -19,7 +19,7 @@ space-bounded Sylvester-entry routine.
 @[expose] public section
 
 namespace LeanCanny.Algebra.SubresultantBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

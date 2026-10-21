@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.Encoding.FixedWidthNatVectorFP
 public import LeanCanny.Encoding.BinarySubFP
-public import Complexitylib.Classes.P.BoundedQuant
+public import LeanCanny.Tactic.PolyTime
 
 /-! # Uniform FP access and repacking for exponent queries
 
@@ -19,7 +19,7 @@ materializing numbers in unary. Bounded coordinate guards are in FP.
 @[expose] public section
 
 namespace LeanCanny.Encoding.FixedWidthQuery
-open Complexity
+
 
 def coordinate (W : List Bool → ℕ) (target : List Bool → List Bool) (c : List Bool) (i : ℕ) : ℕ :=
   Nat.fromBitsLE (((target c).drop (i * W c)).take (W c))

@@ -19,7 +19,7 @@ allows any certified binary upper bound. Child execution times never enter.
 @[expose] public section
 
 namespace LeanCanny.Computation.SpaceFunction
-open Complexity Turing.MultiTapeTM
+open Turing.MultiTapeTM
 
 theorem iterate {step : List Bool → List Bool} (E : SpaceFunction step)
     (init count : List Bool → List Bool) (hi : init ∈ FP) (hc : count ∈ FP)
@@ -28,8 +28,8 @@ theorem iterate {step : List Bool → List Bool} (E : SpaceFunction step)
       (step^[k] (init x)).length ≤ s.eval x.length) :
     SpaceFunction (fun x => step^[Nat.fromBitsLE (count x)] (init x)) :=
   ⟨ComputableTidilyInPolySpace.iterate
-    (TidyFP.fromBitsLE.comp (TidyFP.of_mem_FP hc))
-    (ComputableTidilyInPolySpace.of_polyTime (TidyFP.of_mem_FP hi)) E.computable
+    (fromBitsLE_computable.comp (FP.computable hc))
+    (ComputableTidilyInPolySpace.of_polyTime (FP.computable hi)) E.computable
     (PolyBounded.of_polynomiallyBounded _ (.polynomial_eval s)) hstate⟩
 
 private def freeze (step : List Bool → List Bool) (halt : List Bool → Bool) (x : List Bool) :=
@@ -65,15 +65,15 @@ theorem orbit {step : List Bool → List Bool} (E : SpaceFunction step)
   have hcount := ComputableTidilyInPolyTime.binary_two_pow.comp
     ((ComputableTidilyInPolyTime.unary_eval w).comp hlength)
   have hstep : ComputableTidilyInPolySpace (freeze step halt) encBits encBits :=
-    (ComputableTidilyInPolySpace.of_polyTime (TidyFP.of_flag hh)).ite
+    (ComputableTidilyInPolySpace.of_polyTime (flag_computable hh)).ite
       ComputableTidilyInPolySpace.id' E.computable
   have h := ComputableTidilyInPolySpace.iterate hcount
-    (ComputableTidilyInPolySpace.of_polyTime (TidyFP.of_mem_FP hi)) hstep
+    (ComputableTidilyInPolySpace.of_polyTime (FP.computable hi)) hstep
     (B := fun x => s.eval x.length)
     (PolyBounded.of_polynomiallyBounded _ (.polynomial_eval s)) (fun x k _ => by
       rw [freeze_iterate step halt _ _ (hb x) (ha x)]
       exact hstate x _ (Nat.min_le_right _ _))
-  refine ⟨((ComputableTidilyInPolySpace.of_polyTime (TidyFP.of_mem_FP ho)).comp h).congr
+  refine ⟨((ComputableTidilyInPolySpace.of_polyTime (FP.computable ho)).comp h).congr
     fun x => ?_⟩
   simp only [Function.comp_apply]
   rw [freeze_iterate step halt _ _ (hb x) (ha x), Nat.min_eq_right (hN x)]

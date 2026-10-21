@@ -21,7 +21,7 @@ the polynomial quotient. General singular persistence remains open.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeDeformation
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Polynomial Filter
 open scoped Topology
 

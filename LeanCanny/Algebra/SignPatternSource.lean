@@ -12,7 +12,7 @@ public import LeanCanny.Encoding.TernaryFP
 @[expose] public section
 
 namespace LeanCanny.Algebra.SignPatternBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators

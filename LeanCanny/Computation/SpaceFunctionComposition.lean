@@ -11,23 +11,23 @@ public import LeanCanny.Computation.SpaceFunction
 @[expose] public section
 
 namespace LeanCanny.Computation.SpaceFunction
-open Complexity Turing.MultiTapeTM
+open Turing.MultiTapeTM
 
 theorem congr {f g : List Bool → List Bool} (E : SpaceFunction f) (h : f = g) : SpaceFunction g := h ▸ E
 
 theorem precompose {f : List Bool → List Bool} (E : SpaceFunction f)
     (g : List Bool → List Bool) (hg : g ∈ FP) : SpaceFunction (f ∘ g) :=
-  ⟨E.computable.comp (ComputableTidilyInPolySpace.of_polyTime (TidyFP.of_mem_FP hg))⟩
+  ⟨E.computable.comp (ComputableTidilyInPolySpace.of_polyTime (FP.computable hg))⟩
 
 theorem pairOutputs {f g : List Bool → List Bool} (E : SpaceFunction f) (G : SpaceFunction g) :
-    SpaceFunction (fun x => Complexity.pair (f x) (g x)) :=
+    SpaceFunction (fun x => LeanCanny.pair (f x) (g x)) :=
   ⟨(ComputableTidilyInPolySpace.of_polyTime
-    (TidyFP.pair (ComputableTidilyInPolyTime.fst encBits encBits)
+    (pair_computable (ComputableTidilyInPolyTime.fst encBits encBits)
       (ComputableTidilyInPolyTime.snd encBits encBits))).comp
         (E.computable.prod G.computable)⟩
 
 theorem withInput {f : List Bool → List Bool} (E : SpaceFunction f) :
-    SpaceFunction (fun x => Complexity.pair x (f x)) :=
+    SpaceFunction (fun x => LeanCanny.pair x (f x)) :=
   pairOutputs ⟨ComputableTidilyInPolySpace.id'⟩ E
 
 end LeanCanny.Computation.SpaceFunction

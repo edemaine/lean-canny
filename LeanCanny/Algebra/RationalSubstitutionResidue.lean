@@ -20,7 +20,7 @@ when leading coefficients vanish modulo the modulus.
 @[expose] public section
 
 namespace LeanCanny.Algebra.RationalSubstitution.IntegerBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

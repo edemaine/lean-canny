@@ -17,7 +17,7 @@ native iteration; no child execution clock or saved configuration is needed. -/
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower.ModularAccess
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation
@@ -58,15 +58,15 @@ theorem evaluatorWithEntry {F : ModularFamily} (a : ModularAccess F)
       (.eval ⟨(F.exponent c).size, F.exponent c, F.row c, F.col c⟩ [])) :=
     initialPacket_encode a.exponent a.row a.col c (residueBits (m := F.modulus c)) (F.exponent c)
       (F.row c) (F.col c) (a.exponent_eq c) (a.row_eq c) (a.col_eq c)
-  let pd := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.dimension)
+  let pd := Classical.choose (output_length_poly_of_mem_FP ha.dimension)
   have hd : ∀ c, (a.dimension c).length ≤ pd.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.dimension)
-  let pm := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.modulus)
+    Classical.choose_spec (output_length_poly_of_mem_FP ha.dimension)
+  let pm := Classical.choose (output_length_poly_of_mem_FP ha.modulus)
   have hm : ∀ c, (a.modulus c).length ≤ pm.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.modulus)
-  let pe := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.exponent)
+    Classical.choose_spec (output_length_poly_of_mem_FP ha.modulus)
+  let pe := Classical.choose (output_length_poly_of_mem_FP ha.exponent)
   have he : ∀ c, (a.exponent c).length ≤ pe.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.exponent)
+    Classical.choose_spec (output_length_poly_of_mem_FP ha.exponent)
   let p := pd + pe + pm
   let r := 2 * Polynomial.X + 2 + 64 * (p + 1) ^ 2
   have hbits (c : List Bool) :

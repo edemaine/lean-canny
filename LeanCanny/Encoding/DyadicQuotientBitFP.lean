@@ -20,7 +20,7 @@ raw string, and the semantic contract permits arbitrary binary words.
 @[expose] public section
 
 namespace LeanCanny.Encoding.DyadicQuotientBits
-open Complexity
+
 
 theorem quotient_div_power (a m p k : ℕ) (hk : k ≤ p) :
     (2 ^ p * a / m) / 2 ^ k = 2 ^ (p - k) * a / m := by

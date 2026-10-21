@@ -18,7 +18,7 @@ of the finite-variable source polynomial, before rational compactification.
 @[expose] public section
 
 namespace LeanCanny.ETR
-open Complexity
+
 
 theorem Codec.bits_length_le_size (bits : List Bool) :
     bits.length ≤ (Data.l (bits.map Codec.bit)).size := by

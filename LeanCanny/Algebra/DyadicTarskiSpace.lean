@@ -29,7 +29,7 @@ theorem tarskiQuery_C_mul (p q : ℝ[X]) (a b : ℝ) (ha : a ≠ 0) (hb : 0 < b)
 end LeanCanny.Algebra.RootSignQueries
 
 namespace LeanCanny.Algebra.DyadicTarskiBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open DyadicPolynomialBits

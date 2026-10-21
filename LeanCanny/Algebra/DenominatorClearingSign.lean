@@ -19,7 +19,7 @@ product computation and all numerator/denominator child work.
 @[expose] public section
 
 namespace LeanCanny.Algebra.DenominatorClearing
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open MatrixPower
 

@@ -13,7 +13,7 @@ public import LeanCanny.Algebra.TarskiQueryPSPACE
 @[expose] public section
 
 namespace LeanCanny.Algebra.SignQueryBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators

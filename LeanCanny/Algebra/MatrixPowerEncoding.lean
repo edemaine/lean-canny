@@ -5,14 +5,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.MatrixPowerBounds
-public import Complexitylib.Encoding.BinaryNat
-public import Complexitylib.Encoding.Pairing
+public import LeanCanny.Encoding.BinaryNatCode
+public import LeanCanny.Encoding.Pairing
 public import Mathlib.Data.ZMod.Basic
 
 /-!
 # Binary representations of streamed matrix-power states
 
-Natural fields use canonical binary codes and Complexitylib's self-delimiting
+Natural fields use canonical binary codes and the local self-delimiting
 pairing. The state representation is injective whenever the scalar representation
 is injective. Its length is bounded throughout the run when scalar codes have a
 uniform bit bound; residues modulo a nonzero runtime modulus supply such codes.
@@ -27,7 +27,7 @@ are proved in `MatrixPowerControllerCorrect`.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower
-open Complexity
+
 
 variable {R : Type*} {n : ℕ}
 

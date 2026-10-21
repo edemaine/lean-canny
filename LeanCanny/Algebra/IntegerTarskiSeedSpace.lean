@@ -19,7 +19,7 @@ uniform coefficient-residue routines are external.
 @[expose] public section
 
 namespace LeanCanny.Algebra.IntegerTarskiSeedBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

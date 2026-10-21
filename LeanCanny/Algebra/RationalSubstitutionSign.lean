@@ -21,7 +21,7 @@ rational substitution wherever its coordinate denominators are nonzero.
 @[expose] public section
 
 namespace LeanCanny.Algebra.RationalSubstitution.IntegerBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open Polynomial

@@ -20,7 +20,7 @@ and one and bound zero. Every intermediate magnitude is at most `N+1`.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PrimePowerBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

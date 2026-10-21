@@ -18,7 +18,7 @@ factor/moment pipeline, and modulus scan retain all resource certificates.
 @[expose] public section
 
 namespace LeanCanny.Algebra.Resultant.Access
-open Complexity
+
 open LeanCanny.Computation
 
 theorem integer_controls {F : Family} (a : Access F) (ha : a.bits.ControlsPolyTime) :

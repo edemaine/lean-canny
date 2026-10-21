@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Encoding.BinaryNatFP
-public import Complexitylib.Classes.P.NatCodes
+public import LeanCanny.Tactic.PolyTime
 
 /-!
 # FP lookup at a binary bit index
@@ -18,7 +18,7 @@ covers arbitrary words and indices, including redundant high zeroes.
 @[expose] public section
 
 namespace LeanCanny.Encoding.BinaryNat
-open Complexity
+
 
 def bitAt (p : List Bool) : List Bool :=
   if (pairFst p)[Nat.fromBitsLE (pairSnd p)]?.getD false then [true] else []

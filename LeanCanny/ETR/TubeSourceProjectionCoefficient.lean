@@ -17,7 +17,7 @@ query with polynomially many exponent bits. All field readers are certified FP.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeSourceProjectionCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding TubeProjectionEncoding
 open Algebra.MatrixPower

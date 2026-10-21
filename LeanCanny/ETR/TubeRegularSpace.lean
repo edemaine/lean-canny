@@ -17,7 +17,7 @@ suffices for each coefficient, with no modular inverses or uncharged work.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeRegularBits
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets
 open Geometry TubeEncoding TubeProjectionEncoding
 open LeanCanny.Algebra LeanCanny.Algebra.MatrixPower

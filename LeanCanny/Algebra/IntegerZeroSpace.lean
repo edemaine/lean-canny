@@ -19,7 +19,7 @@ The bound and scan length may be exponential; neither is written in unary.
 @[expose] public section
 
 namespace LeanCanny.Algebra.IntegerZeroBits
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets
 open MatrixPower

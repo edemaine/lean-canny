@@ -16,7 +16,7 @@ transition agrees with the mathematical power controller. -/
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower.Controller
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

@@ -17,7 +17,7 @@ every step, including row boundaries and the empty family of summands.
 @[expose] public section
 
 namespace LeanCanny.Computation.SumBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Algebra
 open scoped BigOperators

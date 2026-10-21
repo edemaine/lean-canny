@@ -11,7 +11,7 @@ public import LeanCanny.Computation.SpaceDecider
 @[expose] public section
 
 namespace LeanCanny.Computation
-open Complexity
+
 
 theorem nonempty_spaceDecider_of_mem_PSPACE {L : Language} (hL : L ∈ PSPACE) :
     Nonempty (SpaceDecider L) := ⟨⟨hL⟩⟩

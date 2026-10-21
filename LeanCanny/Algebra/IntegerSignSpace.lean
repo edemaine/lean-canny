@@ -20,7 +20,7 @@ CRT moduli, dyadic precision words, and quotient sums are never stored.
 @[expose] public section
 
 namespace LeanCanny.Algebra.IntegerSignBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open LeanCanny.Algebra.ChineseRemainder

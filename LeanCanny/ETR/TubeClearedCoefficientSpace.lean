@@ -16,7 +16,7 @@ source monomial. The parameter coordinates are uniform across spatial ranks.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCleared
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open Algebra.RationalSubstitution Algebra.MatrixPower
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm coefficientAt

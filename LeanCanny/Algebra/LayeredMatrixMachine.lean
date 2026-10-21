@@ -43,8 +43,8 @@ theorem run_controller_product (ops : MatrixPower.Controller.Callbacks) (c : Lis
     (enc : R → List Bool)
     (hc : MatrixPower.Controller.CorrectAt ops c (layeredFin A (s + e + 1)) enc) :
     (MatrixPower.Controller.step ops)^[MatrixPower.work ((s + e + 1) * n) e.size e + 1]
-      (Complexity.pair c (MatrixPower.stateBits enc (.eval (intervalQuery s e i j) []))) =
-        Complexity.pair c (MatrixPower.stateBits (n := (s + e + 1) * n) enc
+      (LeanCanny.pair c (MatrixPower.stateBits enc (.eval (intervalQuery s e i j) []))) =
+        LeanCanny.pair c (MatrixPower.stateBits (n := (s + e + 1) * n) enc
           (.done (product A s e i j))) := by
   rw [MatrixPower.Controller.iterate_packet ops c _ enc hc, run_product]
 

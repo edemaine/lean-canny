@@ -18,7 +18,7 @@ space-bounded children. Effective parameter selection remains a separate task.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeParameter
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open Algebra.RationalSubstitution Algebra.MatrixPower
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm IntegerBits.Family.polynomial

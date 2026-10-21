@@ -23,7 +23,7 @@ with bounds in the source size remains an algorithmic obligation.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCompiledAffineRoots
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Geometry TubeEncoding TubeProjectionEncoding
 open Set MvPolynomial
 open scoped Topology Classical

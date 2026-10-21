@@ -18,7 +18,7 @@ uniform FP writers in the compiled ETR input.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCleared
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open scoped BigOperators
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm

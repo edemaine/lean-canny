@@ -25,7 +25,7 @@ theorem packet_polyTime :
       (TidyBoundedFold.encPacket encBits encBits) encBits := by
   have hc := ComputableTidilyInPolyTime.fst encBits (encPair encNat encBits)
   have hr := ComputableTidilyInPolyTime.snd encBits (encPair encNat encBits)
-  exact TidyFP.pair hc (TidyFP.pair (TidyFP.natBits.comp hr.fst') hr.snd')
+  exact pair_computable hc (pair_computable (natBits_computable.comp hr.fst') hr.snd')
 
 theorem typed_fold_eq (f seed : List Bool → List Bool) (c : List Bool) (k : ℕ) :
     TidyBoundedFold.fold (fun p => f (packet p.1 p.2.1 p.2.2)) seed c k = fold f seed c k := by
@@ -36,13 +36,13 @@ theorem typed_fold_eq (f seed : List Bool → List Bool) (c : List Bool) (k : �
 /-- Polynomial-space evaluation of the existing raw-code fold. -/
 theorem evaluator {f : List Bool → List Bool}
     (E : SpaceFunction f)
-    (bound seed : List Bool → List Bool) (hb : bound ∈ Complexity.FP) (hs : seed ∈ Complexity.FP)
+    (bound seed : List Bool → List Bool) (hb : bound ∈ LeanCanny.FP) (hs : seed ∈ LeanCanny.FP)
     (s : Polynomial ℕ)
     (hstate : ∀ c i, i ≤ Nat.fromBitsLE (bound c) → (fold f seed c i).length ≤ s.eval c.length) :
     SpaceFunction (fun c => fold f seed c (Nat.fromBitsLE (bound c))) := by
   have hchild := E.computable.comp (ComputableTidilyInPolySpace.of_polyTime packet_polyTime)
-  have hcount := TidyFP.fromBitsLE.comp (TidyFP.of_mem_FP hb)
-  have hseed := ComputableTidilyInPolySpace.of_polyTime (TidyFP.of_mem_FP hs)
+  have hcount := fromBitsLE_computable.comp (FP.computable hb)
+  have hseed := ComputableTidilyInPolySpace.of_polyTime (FP.computable hs)
   have h := TidyBoundedFold.evaluator hchild hcount hseed
     (B := fun c => s.eval c.length)
     (PolyBounded.of_polynomiallyBounded _ (.polynomial_eval s)) (fun c i hi => by

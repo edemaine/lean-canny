@@ -19,7 +19,7 @@ gives precisely the degree used in the compactification denominator exponent.
 @[expose] public section
 
 namespace LeanCanny.ETR.SourceDegree
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 
 -- Keep FP field checking from unfolding the equation compiler.

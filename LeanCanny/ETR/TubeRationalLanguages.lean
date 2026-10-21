@@ -17,7 +17,7 @@ rational-evaluation signs whenever coordinate denominators are nonzero.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeRational
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets
 

@@ -16,7 +16,7 @@ arbitrary metadata. At the computed head degree the truncation is the identity.
 @[expose] public section
 
 namespace LeanCanny.Algebra.TarskiDegreeContext
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

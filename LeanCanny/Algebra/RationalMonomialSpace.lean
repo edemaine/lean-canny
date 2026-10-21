@@ -18,7 +18,7 @@ product evaluator computes the selected coefficient with every child included.
 @[expose] public section
 
 namespace LeanCanny.Algebra.RationalSubstitution
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

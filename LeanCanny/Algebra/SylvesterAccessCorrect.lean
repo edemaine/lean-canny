@@ -17,7 +17,7 @@ zero as the empty word, in particular residues of integer coefficients.
 @[expose] public section
 
 namespace LeanCanny.Algebra.SylvesterBits
-open Complexity
+
 open LeanCanny.Encoding
 
 theorem code_value (k : ℕ) : Nat.fromBitsLE (BinaryNatCode.encode k) = k := Nat.fromBitsLE_bits k

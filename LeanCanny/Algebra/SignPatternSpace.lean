@@ -17,7 +17,7 @@ workspace accounting. Original coefficient readers may use polynomial space.
 @[expose] public section
 
 namespace LeanCanny.Algebra.SignPatternBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

@@ -22,7 +22,7 @@ give zero. No expansion or coefficient oracle is assumed.
 @[expose] public section
 
 namespace LeanCanny.ETR.CollectedDegree
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 
 noncomputable def survivingValue (source varIndex : List Bool → List Bool) (q : List Bool) : List Bool := by

@@ -18,7 +18,7 @@ coefficient, even on malformed, short, or redundant binary words.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeZeroQuery
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding
 open Algebra.MatrixPower

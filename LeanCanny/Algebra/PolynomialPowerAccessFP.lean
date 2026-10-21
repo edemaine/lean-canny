@@ -20,7 +20,7 @@ the selected coefficient routine may use polynomial space.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PolynomialPower
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open Berkowitz

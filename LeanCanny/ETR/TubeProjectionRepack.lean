@@ -18,7 +18,7 @@ before conversion to unary, so malformed query indices remain polynomial-time.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeProjectionQuery
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry TubeEncoding TubeProjectionEncoding
 

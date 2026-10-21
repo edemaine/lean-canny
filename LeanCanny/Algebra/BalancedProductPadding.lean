@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.BalancedProduct
-public import Complexitylib.Encoding.BinaryNat
+public import LeanCanny.Encoding.BinaryNatCode
 
 /-!
 # Finite products and omitted factors in complete product trees

@@ -17,7 +17,7 @@ The original tube/projection mass bounds apply uniformly to all ranked terms.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeIndexed
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry TubeEncoding
 

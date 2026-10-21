@@ -19,7 +19,7 @@ resultant, decide homogeneous feasibility, or extract Canny's eliminant.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MacaulayBits
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 
 structure Family where

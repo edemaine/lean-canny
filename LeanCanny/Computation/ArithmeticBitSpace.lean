@@ -17,7 +17,7 @@ evaluators produce this same interface, so arithmetic bit routines compose.
 @[expose] public section
 
 namespace LeanCanny.Computation.ArithmeticBits
-open Complexity
+
 open LeanCanny.Encoding
 
 def bitValue (a : List Bool → ℕ) (p : List Bool) : List Bool :=

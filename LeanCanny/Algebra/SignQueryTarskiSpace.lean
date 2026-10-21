@@ -16,7 +16,7 @@ internally, and all its space-bounded calls are included in the Tarski certifica
 @[expose] public section
 
 namespace LeanCanny.Algebra.SignQueryBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

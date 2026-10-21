@@ -18,7 +18,7 @@ and a constant carry-in. The sum-bit certificate counts every space-bounded chil
 @[expose] public section
 
 namespace LeanCanny.Computation.SubtractBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Algebra

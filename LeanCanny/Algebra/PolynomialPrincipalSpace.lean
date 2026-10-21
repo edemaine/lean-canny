@@ -19,7 +19,7 @@ the padded principal deformation with the original child workspace included.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PolynomialPrincipalBits
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open scoped Classical
 
 def identityInput (q : List Bool) : List Bool :=
@@ -48,7 +48,7 @@ theorem evaluator {pred : List Bool → Prop} {modulus reader : List Bool → Li
 end PolynomialPrincipalBits
 
 namespace BerkowitzPolynomial
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open MatrixPower
 open scoped Classical
 
@@ -99,7 +99,7 @@ theorem ModularAccess.principalEntryEvaluator {F : ModularFamily} (a : ModularAc
 end BerkowitzPolynomial
 
 namespace BerkowitzAffinePolynomial
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open scoped Classical
 
 noncomputable def Family.principal (F : Family) (s : (c : List Bool) → Finset (Fin (F.source.dimension c))) : Family where

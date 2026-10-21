@@ -5,17 +5,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Encoding.Brackets
-public import Complexitylib.Classes.P
-public import Complexitylib.Classes.P.Iterate
-public import Complexitylib.Classes.P.StringAccess
-public import Complexitylib.Classes.P.BoundedQuant
-public import Complexitylib.Classes.P.Bridge
-public import Complexitylib.Classes.P.Pairing
+public import LeanCanny.Tactic.PolyTime
 
 /-!
 # Polynomial-time recognition of serialized `Data` trees
 
-The certificates use Complexitylib's verified fold, unary arithmetic, and bounded
+The certificates use the native verified fold, unary arithmetic, and bounded
 quantification interfaces. They produce membership in the multitape-machine class
 `FP`, rather than a separate cost model for Lean functions.
 -/
@@ -23,27 +18,13 @@ quantification interfaces. They produce membership in the multitape-machine clas
 @[expose] public section
 
 namespace LeanCanny.Encoding.Brackets
-open Complexity
 
 /-- Counting closing brackets is polynomial time, using a unary accumulator in a
 verified bounded fold. The accumulator never exceeds the length of the input. -/
-theorem countTrue_unary : UnaryFn (fun bits : List Bool => bits.count true) := by
-  have hacc : (fun w : List Bool => pairSnd (pairFst w)) ∈ FP :=
-    mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  refine recFold_mem_FP_of_bound
-    (g := fun _ bits => List.replicate (bits.count true) true)
-    hacc (mem_FP_comp hacc (Cobham.cons_mem_FP true))
-    (constFn_mem_FP []) (constFn_mem_FP []) id_mem_FP
-    (bound := id) ?_ ?_ ?_ PolyBound.id ?_
-  · intro z
-    rfl
-  · intro z bits
-    simp
-  · intro z bits
-    simp [List.replicate_succ]
-  · intro z bits hbits
-    simp only [List.length_replicate]
-    exact List.count_le_length.trans hbits.length_le
+theorem countTrue_unary : UnaryFn (fun bits : List Bool => bits.count true) :=
+  Turing.MultiTapeTM.ComputableTidilyInPolyTime.bitsCountWithInput
+    Turing.MultiTapeTM.ComputableTidilyInPolyTime.id'
+    (Turing.MultiTapeTM.ComputableTidilyInPolyTime.const true)
 
 theorem count_false_add_true (bits : List Bool) :
     bits.count false + bits.count true = bits.length := by
@@ -127,18 +108,15 @@ theorem recognize_eq_true_iff (bits : List Bool) :
 
 /-- Equality of polynomial-time strings is a polynomial-time predicate. -/
 theorem stringEq_fppred {a b : List Bool → List Bool} (ha : a ∈ FP) (hb : b ∈ FP) :
-    FPPred fun z => a z = b z := by
-  refine (FPPred.getBit (eqFlagFn_mem_FP ha hb) (UnaryFn.const 0)).of_iff fun z => ?_
-  calc
-    _ ↔ Cobham.eqFlag (a z) (b z) = [true] := by
-      rcases Cobham.eqFlag_flag (a z) (b z) with h | h <;> rw [h] <;> decide
-    _ ↔ _ := Cobham.eqFlag_eq_true_iff _ _
+    FPPred fun z => a z = b z :=
+  .of_computable (Turing.MultiTapeTM.ComputableTidilyInPolyTime.decide_eq'
+    (FP.computable ha) (FP.computable hb)) fun _ => decide_eq_true_iff.symm
 
 /-- Repeat a fixed finite word a polynomial-time unary number of times. -/
 theorem repeatWord_mem_FP {n : List Bool → ℕ} (hn : UnaryFn n) (word : List Bool) :
     (fun z => (List.replicate (n z) word).flatten) ∈ FP := by
   have hstep : (fun xs : List Bool => word ++ xs) ∈ FP :=
-    Cobham.appendFn_mem_FP (constFn_mem_FP word) id_mem_FP
+    appendFn_mem_FP (constFn_mem_FP word) id_mem_FP
   have hiter := iterate_mem_FP_of_step_le hstep (constFn_mem_FP []) hn.mem_FP word.length
     (fun z i _ => by rw [Function.iterate_succ_apply']; simp [Nat.add_comm])
   have heq : ∀ k : ℕ, (fun xs : List Bool => word ++ xs)^[k] [] =

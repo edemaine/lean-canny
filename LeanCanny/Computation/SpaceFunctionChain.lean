@@ -11,7 +11,7 @@ public import LeanCanny.Computation.SpaceFunctionBranch
 @[expose] public section
 
 namespace LeanCanny.Computation.SpaceFunction
-open Complexity Turing.MultiTapeTM
+open Turing.MultiTapeTM
 
 theorem exists_output_length_poly {f : List Bool → List Bool} (E : SpaceFunction f) :
     ∃ p : Polynomial ℕ, ∀ x, (f x).length ≤ p.eval x.length := by

@@ -17,7 +17,7 @@ uses the actual tube degrees and the proved fixed-width coverage condition.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCharacteristicQuotient
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open scoped BigOperators
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree

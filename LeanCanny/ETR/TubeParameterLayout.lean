@@ -17,7 +17,7 @@ The combined layout preserves the actual integer coefficient reader's order.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeParameter
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open Geometry TubeEncoding TubeProjectionEncoding
 open scoped Classical
 

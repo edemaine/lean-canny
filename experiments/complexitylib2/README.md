@@ -66,7 +66,8 @@ foundation throughout. The typed and raw-code folds, universal scan, sum and
 balanced-product bits, matrix powering, and Berkowitz use compositional space
 proofs. SpaceFunction and SpaceDecider are proof-only native certificates; their
 old execution records, the suspended scheduler, and temporary legacy-space
-adapters are removed. Existing FP primitives remain reusable through TidyFP.
+adapters are removed. The FP primitives now also use native certificates; the
+legacy Complexitylib dependency and its TidyFP bridge have been removed.
 The main ETR closure theorem targets Complexitylib2 PSPACE directly.
 Canny's ETR membership theorem remains open.
 

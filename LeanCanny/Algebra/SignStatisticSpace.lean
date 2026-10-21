@@ -20,7 +20,7 @@ included in the resulting machine certificate.
 @[expose] public section
 
 namespace LeanCanny.Algebra.SignStatisticBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation
@@ -223,9 +223,9 @@ theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (hsign : ∀ c i, f (pair c (BinaryNatCode.encode i)) = InfinitesimalSign.encode (a c i)) :
     SpaceFunction (fun c => integerCode (permanencesMinusVariations
       ((List.range (Nat.fromBitsLE (count c))).map (a c)))) := by
-  let p := Classical.choose (Cobham.output_length_poly_of_mem_FP hc)
+  let p := Classical.choose (output_length_poly_of_mem_FP hc)
   have hp : ∀ c, (count c).length ≤ p.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hc)
+    Classical.choose_spec (output_length_poly_of_mem_FP hc)
   let Q := BoundedFold.evaluator (updateEvaluator E) count (fun _ => encode initial)
     hc (constFn_mem_FP _) (5 * p + 10) (by
       intro c k hk

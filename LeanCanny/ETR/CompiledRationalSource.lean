@@ -20,7 +20,7 @@ Coordinate construction and algebraic-root sign determination remain separate.
 @[expose] public section
 
 namespace LeanCanny.ETR.RationalSubstitutionBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 

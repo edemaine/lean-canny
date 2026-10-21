@@ -18,7 +18,7 @@ coefficients. This is the regular source construction, not an eliminant proof.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeRegularMacaulay
-open Complexity LeanCanny.Encoding
+open LeanCanny.Encoding
 open Geometry TubeEncoding TubeProjectionEncoding
 open LeanCanny.Algebra
 open scoped BigOperators

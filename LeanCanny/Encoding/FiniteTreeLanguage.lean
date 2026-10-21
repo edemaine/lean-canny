@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Encoding.TreeFoldFP
-public import Complexitylib.Mathlib.NatBits
+public import LeanCanny.Encoding.NatBits
 public import Mathlib.Data.Fintype.EquivFin
 
 /-!
@@ -20,7 +20,7 @@ The implementation of the frame algebra remains the caller's responsibility.
 @[expose] public section
 
 namespace LeanCanny.Encoding.TreeFold
-open Complexity
+
 open Brackets
 
 variable {σ : Type*}

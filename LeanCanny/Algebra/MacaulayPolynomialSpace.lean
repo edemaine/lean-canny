@@ -20,7 +20,7 @@ all source-coefficient child costs.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MacaulayPolynomial
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open MacaulayBits
 

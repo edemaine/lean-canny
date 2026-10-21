@@ -19,7 +19,7 @@ The context, stack, accumulator, and polynomial traversal clock are included.
 @[expose] public section
 
 namespace LeanCanny.ETR.MonomialReader
-open Complexity
+
 open LeanCanny.Encoding
 
 def initBits (term index seed : List Bool → List Bool) (c : List Bool) : List Bool :=
@@ -69,8 +69,8 @@ theorem reader_mem_FP (htFP : term ∈ FP) (hiFP : index ∈ FP) (hsFP : seed �
       (code c (((step (constant c) (variableValue c))^[k]
         ⟨[⟨T c, Nat.fromBitsLE (index c)⟩], 1⟩).value)).length ≤ pA.eval c.length) :
     (fun c => code c (fold (constant c) (variableValue c) (T c) (Nat.fromBitsLE (index c)))) ∈ FP := by
-  obtain ⟨p, hp⟩ := Cobham.output_length_poly_of_mem_FP htFP
-  obtain ⟨q, hq⟩ := Cobham.output_length_poly_of_mem_FP hiFP
+  obtain ⟨p, hp⟩ := output_length_poly_of_mem_FP htFP
+  obtain ⟨q, hq⟩ := output_length_poly_of_mem_FP hiFP
   let B := fun n => 2 * n + 4 + (4 * q.eval n + 20) * p.eval n + pA.eval n
   have hB : PolyBound B :=
     ((((PolyBound.const 2).mul PolyBound.id).add (PolyBound.const 4)).add

@@ -17,7 +17,7 @@ positive-modulus protocol includes modulus one and arbitrary composite moduli.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower.ArithmeticBits
-open Complexity
+
 open LeanCanny.Encoding
 
 theorem mulMod_residueBits (m : ℕ) (x y : ZMod m) :

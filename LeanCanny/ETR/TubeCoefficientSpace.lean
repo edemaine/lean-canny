@@ -18,7 +18,7 @@ identity. Source validation and all space-bounded work are included.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding
 open Algebra.MatrixPower

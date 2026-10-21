@@ -19,7 +19,7 @@ or index-set cardinality computation is needed.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MacaulayBits
-open Complexity LeanCanny.Encoding
+open LeanCanny.Encoding
 open scoped BigOperators
 
 def eligibleLoop (L : Layout) (q : List Bool) : Prop :=

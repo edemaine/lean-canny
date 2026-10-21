@@ -16,7 +16,7 @@ dyadic numerator evaluator with the same exponent and clearing degree.
 @[expose] public section
 
 namespace LeanCanny.Algebra.DyadicPolynomialBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

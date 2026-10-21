@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Computation.TidyFP
+public import LeanCanny.Tactic.PolyTime
 
 public import LeanCanny.ETR.Complexity
 public import LeanCanny.ETR.EncodingFP
@@ -22,7 +22,7 @@ time implementation of the general normalizer.
 @[expose] public section
 
 namespace LeanCanny.ETR.SingleEquation
-open Complexity
+
 open LeanCanny.Encoding.Brackets
 
 def HasEquationTag (bits : List Bool) : Prop := firstChild bits = (Codec.unary 1).toBits
@@ -65,7 +65,7 @@ theorem toETR_mem_language_iff (bits : List Bool) :
     simp [hn]
 
 theorem reduces_to_etr : PolyTimeReduces language ETR.language :=
-  ⟨toETR, Computation.TidyFP.of_mem_FP toETR_mem_FP, fun bits => (toETR_mem_language_iff bits).symm⟩
+  ⟨toETR, FP.computable toETR_mem_FP, fun bits => (toETR_mem_language_iff bits).symm⟩
 
 theorem mem_existsReal : language ∈ LeanCanny.ExistsReal := reduces_to_etr
 

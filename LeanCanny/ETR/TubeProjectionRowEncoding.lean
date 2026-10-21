@@ -17,7 +17,7 @@ space certificates on every binary input, including rejected row codes.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeProjectionRow
-open Complexity
+
 open Geometry TubeEncoding TubeProjectionEncoding
 open LeanCanny.Encoding
 

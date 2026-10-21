@@ -20,7 +20,7 @@ integer coefficient is zero without storing its complete value.
 @[expose] public section
 
 namespace LeanCanny.Algebra.CannyResultantBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 
@@ -47,7 +47,7 @@ theorem BoundedFamily.coefficient_bits (F : BoundedFamily) (c : List Bool) :
     (2 ^ F.leftBits c) (2 ^ F.rightBits c) (F.source.degree c) (F.left_bound c) (F.right_bound c)
   simpa only [Family.coefficient, BoundedFamily.budget, shiftBitBudget, Nat.size_pow] using h
 
-def BoundedFamily.zeroLanguage (F : BoundedFamily) : Complexity.Language := {c | F.source.coefficient c = 0}
+def BoundedFamily.zeroLanguage (F : BoundedFamily) : LeanCanny.Language := {c | F.source.coefficient c = 0}
 
 structure IntegerAccess (F : BoundedFamily) where
   residue : Access F.source

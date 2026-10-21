@@ -21,7 +21,7 @@ prime index and one otherwise. Native space composition certifies both stages.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ChineseRemainder.ModulusBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

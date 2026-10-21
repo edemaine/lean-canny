@@ -20,7 +20,7 @@ the eliminant identification remain separate obligations.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeMacaulay
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry TubeEncoding TubeProjectionEncoding
 open LeanCanny.Algebra

@@ -19,7 +19,7 @@ canonical tags `[]`, `[true]`, and `[false,true]`. No full integer is computed.
 @[expose] public section
 
 namespace LeanCanny.Algebra.IntegerSignumBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

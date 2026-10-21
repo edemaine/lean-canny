@@ -18,7 +18,7 @@ numbers. Bits are ordered least-significant first, and redundant high zeroes
 are rejected. In particular, zero has the unique empty code.
 
 Unlike a prefix code, this representation relies on an enclosing framing
-layer to determine the field boundary. `Complexitylib.Encoding.Pairing`
+layer to determine the field boundary. `LeanCanny.Encoding.Pairing`
 provides that framing for variable-length machine inputs.
 -/
 

@@ -18,7 +18,7 @@ No derivative polynomial or unreduced coefficient is stored.
 @[expose] public section
 
 namespace LeanCanny.Algebra.DerivativeBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

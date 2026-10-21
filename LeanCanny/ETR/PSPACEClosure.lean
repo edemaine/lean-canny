@@ -18,7 +18,7 @@ hypothesis; these conditional results do not assert that unfinished theorem.
 @[expose] public section
 
 namespace LeanCanny
-open Complexity
+
 
 theorem existsReal_subset_PSPACE_iff : ExistsReal ⊆ PSPACE ↔ ETR.language ∈ PSPACE :=
   existsReal_subset_iff Computation.mem_PSPACE_of_reduction

@@ -21,7 +21,7 @@ representative; identification with the multivariate resultant remains open.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCharacteristicQuotient
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree
 attribute [local irreducible] Macaulay.matrix Matrix.det

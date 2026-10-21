@@ -11,7 +11,7 @@ public import LeanCanny.Algebra.TarskiQuerySpace
 @[expose] public section
 
 namespace LeanCanny.Algebra.TarskiQueryBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

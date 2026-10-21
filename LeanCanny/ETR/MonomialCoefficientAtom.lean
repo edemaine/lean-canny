@@ -13,7 +13,7 @@ public import LeanCanny.Encoding.BinaryPowModFP
 @[expose] public section
 
 namespace LeanCanny.ETR.MonomialReader
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Algebra.MatrixPower
 

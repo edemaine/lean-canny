@@ -20,7 +20,7 @@ tuple in the source size remains separate.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeLevelPacket
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 open scoped Classical
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm CompactSource.term
 

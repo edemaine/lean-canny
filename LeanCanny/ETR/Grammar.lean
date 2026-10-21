@@ -7,20 +7,20 @@ module
 public import LeanCanny.ETR.SyntaxClassifierCorrect
 public import LeanCanny.Encoding.FiniteTreeLanguage
 public import LeanCanny.Computation.PolyTime
-public import LeanCanny.Computation.TidyFP
+public import LeanCanny.Tactic.PolyTime
 
 /-!
 # Polynomial-time recognition of the complete canonical ETR grammar
 
 This checks syntax, including every integer payload, and makes no claim about
 real satisfiability. The recognizers are executable finite-frame stack passes.
-Their time certificates refer to Complexitylib's multitape `FP` and `P` classes.
+Their time certificates refer to the native multitape `FP` and `P` classes.
 -/
 
 @[expose] public section
 
 namespace LeanCanny.ETR.Grammar
-open Complexity
+
 open LeanCanny.Encoding
 open SyntaxClassifier
 
@@ -99,11 +99,11 @@ def termLanguage : Language := {bits | ∃ t : Term, bits = t.toData.toBits}
 def formulaLanguage : Language := {bits | ∃ p : Formula, bits = p.encode}
 
 theorem termLanguage_mem_P : termLanguage ∈ P :=
-  ⟨recognizeTerm, Computation.TidyFP.of_flag recognizeTerm_mem_FP,
+  ⟨recognizeTerm, flag_computable recognizeTerm_mem_FP,
     fun bits => (recognizeTerm_true_iff bits).symm⟩
 
 theorem formulaLanguage_mem_P : formulaLanguage ∈ P :=
-  ⟨recognizeFormula, Computation.TidyFP.of_flag recognizeFormula_mem_FP,
+  ⟨recognizeFormula, flag_computable recognizeFormula_mem_FP,
     fun bits => (recognizeFormula_true_iff bits).symm⟩
 
 end LeanCanny.ETR.Grammar

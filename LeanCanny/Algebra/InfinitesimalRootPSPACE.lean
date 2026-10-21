@@ -17,7 +17,7 @@ guarded language includes this condition in its semantics.
 @[expose] public section
 
 namespace LeanCanny.Algebra.InfinitesimalRootBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open DyadicSignPatternBits

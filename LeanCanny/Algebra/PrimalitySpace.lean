@@ -21,7 +21,7 @@ still has polynomial length. This supplies the prime guard for CRT moduli.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PrimalityBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 

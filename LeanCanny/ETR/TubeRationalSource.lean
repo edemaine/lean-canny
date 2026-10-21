@@ -18,7 +18,7 @@ The even clearing width and finite indexed source come from proved bounds.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeRational
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding
 open Algebra.MatrixPower

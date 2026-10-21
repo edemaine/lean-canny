@@ -15,7 +15,7 @@ and layered-power certificates in BerkowitzSpaceEntries. -/
 @[expose] public section
 
 namespace LeanCanny.Algebra.Berkowitz
-open Complexity
+
 open LeanCanny.Encoding
 open MatrixPower
 open LeanCanny.Computation

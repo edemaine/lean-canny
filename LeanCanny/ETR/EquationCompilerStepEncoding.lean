@@ -11,7 +11,7 @@ public import LeanCanny.ETR.EquationCompilerAtomEncoding
 @[expose] public section
 
 namespace LeanCanny.ETR.EquationCompiler
-open Complexity
+
 open LeanCanny.Encoding
 
 def todoBits (state : List Bool) : List Bool := pairFst state

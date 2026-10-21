@@ -18,7 +18,7 @@ coefficient query without enumerating monomials.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MacaulayBits
-open Complexity
+
 open LeanCanny.Encoding
 open scoped BigOperators
 

@@ -19,7 +19,7 @@ output-degree oracle is required.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeRational
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets
 open Algebra.MatrixPower Algebra.RationalSubstitution

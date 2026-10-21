@@ -18,7 +18,7 @@ not the answer to the requested factor computation.
 @[expose] public section
 
 namespace LeanCanny.Algebra.Berkowitz.FactorChild
-open Complexity
+
 open LeanCanny.Encoding
 open MatrixPower
 open Matrix

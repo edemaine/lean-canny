@@ -21,7 +21,7 @@ itself use polynomial space; its entire result is not treated as an FP step.
 @[expose] public section
 
 namespace LeanCanny.Computation.SumBits
-open Complexity
+
 open LeanCanny.Encoding
 
 def counter (p : List Bool) : List Bool := pairFst (pairSnd p)

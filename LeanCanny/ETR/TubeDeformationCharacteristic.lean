@@ -18,7 +18,7 @@ therefore has the same zero condition. The resultant quotient is not identified.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeDeformation
-open Complexity LeanCanny.Encoding LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Algebra
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.uniformDegree
 attribute [local irreducible] Macaulay.matrix Matrix.det determinant lowestCoefficient lowestScalar

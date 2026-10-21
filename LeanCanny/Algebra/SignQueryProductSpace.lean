@@ -19,7 +19,7 @@ access may use polynomial space. No query polynomial is expanded or stored.
 @[expose] public section
 
 namespace LeanCanny.Algebra.RootSignQueries
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open LeanCanny.Encoding.Brackets

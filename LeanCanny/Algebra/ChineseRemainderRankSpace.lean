@@ -18,7 +18,7 @@ composes all local preparation calls through the native space interface.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ChineseRemainder
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open scoped BigOperators

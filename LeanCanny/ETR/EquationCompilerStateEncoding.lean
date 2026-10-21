@@ -19,7 +19,7 @@ a cubic bit-length bound throughout the bounded formula compilation run.
 @[expose] public section
 
 namespace LeanCanny.ETR
-open Complexity
+
 
 theorem SignedFormula.toFormula_dataSize_le (p : SignedFormula) :
     p.toFormula.toData.size ≤ 20 * p.budget := by

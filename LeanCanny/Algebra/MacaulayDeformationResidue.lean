@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.MacaulayBounds
 @[expose] public section
 
 namespace LeanCanny.Algebra.MacaulayDeformationBits
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open MatrixPower
 

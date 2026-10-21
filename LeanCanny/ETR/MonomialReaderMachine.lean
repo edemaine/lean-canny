@@ -56,7 +56,7 @@ def work : Term → ℕ → ℕ
 
 theorem work_le_dataSize (t : Term) (r : ℕ) : work t r ≤ t.toData.size := by
   induction t generalizing r with
-  | const z => exact Complexity.Data.size_pos
+  | const z => exact LeanCanny.Data.size_pos
   | var i => simp [work]
   | add a b ha hb =>
     simp only [work, Term.dataSize_add]

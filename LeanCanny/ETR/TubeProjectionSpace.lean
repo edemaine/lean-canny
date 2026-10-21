@@ -18,7 +18,7 @@ are interpreted blockwise without width aliasing in derivative queries.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeProjection
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding TubeProjectionEncoding
 open Algebra.MatrixPower

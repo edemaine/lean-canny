@@ -36,7 +36,7 @@ theorem leafCount_pos (t : Term) : 0 < t.leafCount := by
 
 theorem leafCount_le_dataSize (t : Term) : t.leafCount ≤ t.toData.size := by
   induction t with
-  | const z => exact Complexity.Data.size_pos
+  | const z => exact LeanCanny.Data.size_pos
   | var i => simp [leafCount]
   | add a b ha hb => simp only [leafCount, dataSize_add]; omega
   | mul a b ha hb => simp only [leafCount, dataSize_mul]; omega

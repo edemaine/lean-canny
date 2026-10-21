@@ -21,7 +21,7 @@ alpha selection remain separate obligations.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeSource
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry
 

@@ -20,7 +20,7 @@ on malformed bitstrings. No monomial list or unary count is constructed.
 @[expose] public section
 
 namespace LeanCanny.ETR.MonomialCount
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 

@@ -21,7 +21,7 @@ scan packets without rebuilding or guessing polynomial coefficients.
 @[expose] public section
 
 namespace LeanCanny.ETR
-open Complexity
+
 open LeanCanny.Computation LeanCanny.Encoding.Brackets
 
 private theorem positiveLanguage_of_signum (z : List Bool → ℤ)
@@ -42,7 +42,7 @@ private theorem positiveLanguage_of_signum (z : List Bool → ℤ)
 end LeanCanny.ETR
 
 namespace LeanCanny.ETR.TubeSourceCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding
 open Algebra.MatrixPower
@@ -120,7 +120,7 @@ theorem positiveLanguage_mem_PSPACE : {c | 0 < coefficient c} ∈ PSPACE :=
 end LeanCanny.ETR.TubeSourceCoefficient
 
 namespace LeanCanny.ETR.TubeSourceProjectionCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding
 open Algebra.MatrixPower

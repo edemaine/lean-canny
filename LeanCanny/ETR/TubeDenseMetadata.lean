@@ -18,7 +18,7 @@ The bound and the coefficient query width have uniform FP writers.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeDense
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry
 

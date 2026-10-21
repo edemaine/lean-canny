@@ -19,7 +19,7 @@ throughout the space-bounded coefficient call.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PseudoRemainderBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

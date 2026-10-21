@@ -5,13 +5,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.Syntax
-public import Complexitylib.Encoding.Data
-public import Complexitylib.Encoding.BinaryNat
+public import LeanCanny.Encoding.Data
+public import LeanCanny.Encoding.BinaryNatCode
 
 /-!
 # A canonical finite encoding of ETR
 
-Formulas are tagged rose trees serialized with Complexitylib's balanced-bracket bit encoding.
+Formulas are tagged rose trees serialized with the local balanced-bracket bit encoding.
 Tags and variable indices are unary; integer magnitudes use canonical little-endian binary.
 Negative integers store `n` for `-(n+1)`, so there is no second encoding of zero.
 
@@ -23,7 +23,7 @@ bound for the parser is asserted in this module.
 @[expose] public section
 
 namespace LeanCanny.ETR.Codec
-open Complexity
+
 
 /-- Unary fields are lists of empty nodes. Used for tags and variable indices. -/
 def unary (n : ℕ) : Data := .l (List.replicate n (.l []))
@@ -80,7 +80,7 @@ def readInteger : Data → Option ℤ
 end LeanCanny.ETR.Codec
 
 namespace LeanCanny.ETR
-open Complexity Codec
+open Codec
 
 namespace Term
 

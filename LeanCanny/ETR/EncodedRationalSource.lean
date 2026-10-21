@@ -21,7 +21,7 @@ by the caller. The clearing width is twice the validated term's literal size.
 @[expose] public section
 
 namespace LeanCanny.ETR.RationalSubstitutionBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open LeanCanny.Algebra

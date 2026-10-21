@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.SignPatternSource
 
 namespace LeanCanny.Algebra.SignPatternBits
 open Polynomial
-open Complexity
+
 open LeanCanny.Encoding
 open scoped BigOperators
 

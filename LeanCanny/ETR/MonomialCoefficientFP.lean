@@ -20,7 +20,7 @@ have uniform FP residue access under the original ETR integer/term encoding.
 @[expose] public section
 
 namespace LeanCanny.ETR.MonomialReader
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Algebra.MatrixPower
 
@@ -43,7 +43,7 @@ theorem coefficientRead_mem_FP {term index modulus : List Bool → List Bool}
     (ht : term ∈ FP) (hi : index ∈ FP) (hm : modulus ∈ FP) : coefficientRead term index modulus ∈ FP := by
   have hn := mem_FP_comp ht TermView.normalize_mem_FP
   have hmod := mem_FP_comp hm BinaryNat.succ_mem_FP
-  obtain ⟨p, hp⟩ := Cobham.output_length_poly_of_mem_FP hmod
+  obtain ⟨p, hp⟩ := output_length_poly_of_mem_FP hmod
   have H := reader_mem_FP (R := fun c => ZMod (Nat.fromBitsLE (modulus c) + 1)) (fun _ => residueBits)
     (fun _ z => (z : ZMod _)) (fun _ _ => 1) (fun c => TermView.term (term c))
     (TermView.normalize ∘ term) index (coefficientSeed modulus) (coefficientAtom modulus)

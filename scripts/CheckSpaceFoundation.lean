@@ -37,12 +37,14 @@ example {F : LeanCanny.Algebra.Berkowitz.ModularFamily}
 
 #eval "Native PSPACE endpoints and arbitrary native child certificates checked."
 
-/-! The structural class theorems must use native time certificates too.
-Compiler implementations still use the legacy FP bridge during migration. -/
+/-! The structural class theorems must use native time certificates too. -/
 
 open Lean in
 run_cmd do
   let env ← getEnv
+  for name in env.header.moduleNames do
+    if (`Complexitylib).isPrefixOf name then
+      throwError "Project imports obsolete foundation module: {name}"
   let mut pending := #[`LeanCanny.P, `LeanCanny.PolyTimeReduces, `LeanCanny.ExistsReal,
     `LeanCanny.P_subset_existsReal, `LeanCanny.existsReal_subset_PSPACE_iff,
     `LeanCanny.Computation.mem_PSPACE_of_reduction]
@@ -62,8 +64,8 @@ run_cmd do
         pending := pending ++ value.getUsedConstants
   logInfo m!"Audited {visited.size} transitive constants: native P, reductions, and class closure."
 
-/-! Check actual proof dependencies, including opaque theorem bodies, rather
-than just imports: retained FP support must not reintroduce the old space class. -/
+/-! Check actual proof dependencies, including opaque theorem bodies:
+polynomial-time support must not reintroduce the old space class. -/
 
 open Lean in
 run_cmd do

@@ -20,7 +20,7 @@ falsum and therefore produces an unsatisfiable equation system.
 @[expose] public section
 
 namespace LeanCanny.ETR
-open Complexity
+
 open LeanCanny.Encoding
 
 theorem SumSquares.listBits_injective : Function.Injective SumSquares.listBits := by
@@ -47,7 +47,7 @@ theorem initBits_mem_FP : initBits ∈ FP := by
   polytime [initBits]
 
 theorem ruler_mem_FP : ruler ∈ FP :=
-  Cobham.appendFn_mem_FP NNF.normalize_mem_FP NNF.normalize_mem_FP
+  appendFn_mem_FP NNF.normalize_mem_FP NNF.normalize_mem_FP
 
 theorem initBits_of_normalize (bits : List Bool) (p : Formula)
     (hp : NNF.normalize bits = p.encode) (hn : p.IsNNF = true) :
@@ -133,7 +133,7 @@ theorem compileTerms_correct (bits : List Bool) : bits ∈ ETR.language ↔ comp
     exact ⟨env, (p.holds_toSigned true env).mp ((p.toSigned true).equations_sound _ env h)⟩
 
 theorem etr_reduces_to_equationList : PolyTimeReduces ETR.language EquationList.language :=
-  ⟨compileTerms, Computation.TidyFP.of_mem_FP compileTerms_mem_FP, compileTerms_correct⟩
+  ⟨compileTerms, FP.computable compileTerms_mem_FP, compileTerms_correct⟩
 
 def toSingleEquation (bits : List Bool) : List Bool := EquationList.toSingleEquation (compileTerms bits)
 
@@ -147,7 +147,7 @@ theorem toSingleEquation_correct (bits : List Bool) :
   (compileTerms_correct bits).trans (EquationList.toSingleEquation_correct (compileTerms bits))
 
 theorem etr_reduces_to_singleEquation : PolyTimeReduces ETR.language SingleEquation.language :=
-  ⟨toSingleEquation, Computation.TidyFP.of_mem_FP toSingleEquation_mem_FP, toSingleEquation_correct⟩
+  ⟨toSingleEquation, FP.computable toSingleEquation_mem_FP, toSingleEquation_correct⟩
 
 end EquationCompiler
 

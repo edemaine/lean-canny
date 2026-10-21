@@ -3542,16 +3542,15 @@ open.
 
 ## TM2 versus Complexitylib's machines
 
-The project now fills one class-level composition gap in Complexitylib's pinned
-API. `nonempty_spaceDecider_of_mem_PSPACE` encodes any PSPACE machine using
-Cobham's fixed-block representation in a polynomial space window. FP transition,
-halting, and verdict operations, exact run simulation, and the existing
-configuration-count theorem supply a complete `SpaceDecider` certificate.
-`SpaceDecider.precompose` composes its space/clock polynomials with the output
-length polynomial of an FP preprocessing function. Consequently PSPACE is
-proved closed under FP preimages and polynomial-time many-one reductions.
-`existsReal_subset_PSPACE_iff` discharges the class-theoretic consequence:
-$\exists \mathbb{R} \subseteq \mathrm{PSPACE} \iff \mathrm{ETR} \in \mathrm{PSPACE}$. This leaves the ETR algorithm proof open.
+The current project uses Complexitylib2's tidy multitape calculus.
+SpaceDecider.precompose combines a native space certificate with native
+polynomial-time input preparation. Closure under preimages and many-one
+reductions follows directly, and existsReal_subset_PSPACE_iff gives
+$\exists \mathbb{R} \subseteq \mathrm{PSPACE} \iff \mathrm{ETR} \in \mathrm{PSPACE}$.
+The ETR algorithm proof remains open. The custom-machine simulation and
+execution-clock interfaces from the earlier Complexitylib foundation have
+been removed. The comparison below describes the machine models evaluated
+before this migration.
 
 The distinction affects implementation and resource-accounting effort, even though
 the intended polynomial-space classes agree mathematically.
@@ -3614,12 +3613,11 @@ execution of nested children.
 
 P, the defining reductions for ExistsReal, all normalization/compiler
 reductions, and PSPACE reduction closure now use Complexitylib2 directly.
-The original Complexitylib remains for its certified FP primitives and codecs,
-whose removal is in progress. TidyFP proves their compatibility with the new
-time model. This is a polynomial-time bridge, not a conversion of legacy PSPACE
-certificates. All project PSPACE statements, including the conditional ETR and
-ExistsReal upper bounds, target Complexitylib2 directly. No TM2 simulation or
-equivalence with the trominoes predicate is assumed.
+FP primitives now also use native tidy time certificates. Local tree, pair,
+and binary codecs preserve the existing wire formats; no Complexitylib package,
+FP machine bridge, or legacy compatibility patch remains. All project P,
+reductions, and PSPACE statements use Complexitylib2 directly. No TM2 simulation
+or equivalence with the trominoes predicate is assumed.
 
 The advantage is the compositional interface: child computations may use
 polynomial space and arbitrary time without contributing initialization,

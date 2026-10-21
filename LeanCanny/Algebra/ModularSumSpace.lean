@@ -19,7 +19,7 @@ one. Native space iteration composes each child directly.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ModularSum
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower
@@ -73,9 +73,9 @@ theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (hf : ∀ c i, i < Nat.fromBitsLE (count c) →
       f (pair c (BinaryNatCode.encode i)) = residueBits (a c i)) :
     SpaceFunction (fun c => residueBits (∑ i ∈ Finset.range (Nat.fromBitsLE (count c)), a c i)) := by
-  let p := Classical.choose (Cobham.output_length_poly_of_mem_FP hm)
+  let p := Classical.choose (output_length_poly_of_mem_FP hm)
   have hp : ∀ c, (modulus c).length ≤ p.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hm)
+    Classical.choose_spec (output_length_poly_of_mem_FP hm)
   have hstate : ∀ c k, k ≤ Nat.fromBitsLE (count c) →
       (BoundedFold.fold (update modulus f) (fun _ => []) c k).length ≤ p.eval c.length := by
     intro c k hk

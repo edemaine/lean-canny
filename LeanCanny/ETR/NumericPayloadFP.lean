@@ -17,7 +17,7 @@ Both predicates recognize precisely the images of the original typed codecs.
 @[expose] public section
 
 namespace LeanCanny.ETR.Codec
-open Complexity
+
 open LeanCanny.Encoding.Brackets
 
 theorem natural_toBits (n : ℕ) :

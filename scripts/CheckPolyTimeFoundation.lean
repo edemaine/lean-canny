@@ -8,7 +8,8 @@ import LeanCanny.Encoding.Data
 import Lean.Util.CollectAxioms
 
 /-! The replacement foundation must compile without importing any legacy
-Complexitylib module. This check remains separate while clients are migrated. -/
+Complexitylib module. This independent check does not need the rest of the
+Canny development. -/
 
 open Turing.MultiTapeTM
 open LeanCanny
@@ -42,7 +43,10 @@ run_cmd do
       throwError "Native polynomial-time foundation imports legacy module: {name}"
   let mut checked : Nat := 0
   for (name, _) in env.constants.toList do
-    if (`LeanCanny).isPrefixOf name then
+    let natCodec := match env.getModuleIdxFor? name with
+      | some idx => env.header.moduleNames[idx.toNat]! == `LeanCanny.Encoding.NatBits
+      | none => false
+    if (`LeanCanny).isPrefixOf name || natCodec then
       checked := checked + 1
       for ax in ← collectAxioms name do
         unless #[`propext, `Classical.choice, `Quot.sound].contains ax do

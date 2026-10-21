@@ -17,7 +17,7 @@ zero, and every nonempty little-endian canonical word ends in `true`.
 @[expose] public section
 
 namespace LeanCanny.ETR.Codec
-open Complexity
+
 
 def CanonicalDigits (bits : List Bool) : Prop := bits = [] ∨ bits.getLast? = some true
 

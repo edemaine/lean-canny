@@ -23,7 +23,7 @@ establishing a valid initial state is a separate obligation.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower.Controller
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 
@@ -50,29 +50,29 @@ def pushBits (f stack : List Bool) : List Bool := true :: pair f stack
 
 theorem evalBits_mem_FP {q s : List Bool → List Bool} (hq : q ∈ FP) (hs : s ∈ FP) :
     (fun z => evalBits (q z) (s z)) ∈ FP :=
-  mem_FP_comp (mem_FP_comp (mem_FP_pair hq hs) (Cobham.cons_mem_FP false))
-    (Cobham.cons_mem_FP false)
+  mem_FP_comp (mem_FP_comp (mem_FP_pair hq hs) (cons_mem_FP false))
+    (cons_mem_FP false)
 
 theorem retBits_mem_FP {x s : List Bool → List Bool} (hx : x ∈ FP) (hs : s ∈ FP) :
     (fun z => retBits (x z) (s z)) ∈ FP :=
-  mem_FP_comp (mem_FP_comp (mem_FP_pair hx hs) (Cobham.cons_mem_FP true))
-    (Cobham.cons_mem_FP false)
+  mem_FP_comp (mem_FP_comp (mem_FP_pair hx hs) (cons_mem_FP true))
+    (cons_mem_FP false)
 
 theorem doneBits_mem_FP {x : List Bool → List Bool} (hx : x ∈ FP) :
-    (fun z => doneBits (x z)) ∈ FP := mem_FP_comp hx (Cobham.cons_mem_FP true)
+    (fun z => doneBits (x z)) ∈ FP := mem_FP_comp hx (cons_mem_FP true)
 
 theorem leftBits_mem_FP {q k a : List Bool → List Bool} (hq : q ∈ FP) (hk : k ∈ FP) (ha : a ∈ FP) :
     (fun z => leftBits (q z) (k z) (a z)) ∈ FP :=
-  mem_FP_comp (mem_FP_pair hq (mem_FP_pair hk ha)) (Cobham.cons_mem_FP false)
+  mem_FP_comp (mem_FP_pair hq (mem_FP_pair hk ha)) (cons_mem_FP false)
 
 theorem rightBits_mem_FP {q k a l : List Bool → List Bool}
     (hq : q ∈ FP) (hk : k ∈ FP) (ha : a ∈ FP) (hl : l ∈ FP) :
     (fun z => rightBits (q z) (k z) (a z) (l z)) ∈ FP :=
-  mem_FP_comp (mem_FP_pair hq (mem_FP_pair hk (mem_FP_pair ha hl))) (Cobham.cons_mem_FP true)
+  mem_FP_comp (mem_FP_pair hq (mem_FP_pair hk (mem_FP_pair ha hl))) (cons_mem_FP true)
 
 theorem pushBits_mem_FP {f s : List Bool → List Bool} (hf : f ∈ FP) (hs : s ∈ FP) :
     (fun z => pushBits (f z) (s z)) ∈ FP :=
-  mem_FP_comp (mem_FP_pair hf hs) (Cobham.cons_mem_FP true)
+  mem_FP_comp (mem_FP_pair hf hs) (cons_mem_FP true)
 
 def body (p : List Bool) : List Bool := (pairSnd p).drop 2
 def payload (p : List Bool) : List Bool := pairFst (body p)

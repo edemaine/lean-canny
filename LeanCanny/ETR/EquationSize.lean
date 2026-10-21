@@ -11,7 +11,7 @@ public import LeanCanny.ETR.EquationNormalization
 @[expose] public section
 
 namespace LeanCanny.ETR
-open Complexity
+
 
 namespace Term
 

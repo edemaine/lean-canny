@@ -22,7 +22,7 @@ callbacks. Matrix-entry access must also be supplied with an FP certificate.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower.ArithmeticBits
-open Complexity
+
 open LeanCanny.Encoding
 
 /-- Input: `pair modulus (pair accumulator (pair leftFactor rightFactor))`. -/

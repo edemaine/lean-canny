@@ -19,7 +19,7 @@ space evaluator, with the original query retained and included in the bound.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ShiftCoefficientBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open LeanCanny.Encoding.Brackets

@@ -16,7 +16,7 @@ the matrix row, monomial rank and coefficient degrees do not change them.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeBivariate.Query
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open Algebra.RationalSubstitution
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.rawCoefficient rawLinear

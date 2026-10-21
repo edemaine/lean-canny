@@ -17,7 +17,7 @@ The offset scan also distinguishes a zero head from a nonzero constant head.
 @[expose] public section
 
 namespace LeanCanny.Algebra.IntegerTarskiSeedBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

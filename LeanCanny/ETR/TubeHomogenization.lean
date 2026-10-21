@@ -20,7 +20,7 @@ compiled ETR source. A complete residue evaluator reuses its coefficient reader.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeHomogenization
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding TubeProjectionEncoding
 open LeanCanny.Algebra LeanCanny.Algebra.MatrixPower

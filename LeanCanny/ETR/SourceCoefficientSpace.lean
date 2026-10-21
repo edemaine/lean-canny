@@ -21,7 +21,7 @@ Compactification coefficient access is supplied by `CompactSourceCoefficient`.
 @[expose] public section
 
 namespace LeanCanny.ETR.SourceCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Algebra.RationalSubstitution.Indexed Algebra.MatrixPower
 

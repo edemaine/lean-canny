@@ -18,7 +18,7 @@ exponent blocks, and binary term counts without expanding the polynomials.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeIndexed
-open Complexity
+
 open LeanCanny.Encoding
 open Geometry TubeEncoding TubeProjectionEncoding
 open Algebra.RationalSubstitution.Indexed

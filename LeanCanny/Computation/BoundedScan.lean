@@ -16,7 +16,6 @@ a native space-bounded computation, with no child transition system exposed.
 @[expose] public section
 
 namespace LeanCanny.Computation.BoundedScan
-open Complexity LeanCanny.Encoding
 open scoped Classical
 
 def language (L : Language) (N : List Bool → ℕ) : Language :=

@@ -21,7 +21,7 @@ The scan and each modular determinant call have fully accounted workspace.
 @[expose] public section
 
 namespace LeanCanny.Algebra.Berkowitz
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

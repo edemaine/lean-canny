@@ -18,7 +18,7 @@ space-bounded states. No oracle for deformed source coefficients is assumed.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MacaulayDeformationBits
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets
 open MatrixPower

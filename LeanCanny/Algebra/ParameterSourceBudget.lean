@@ -16,7 +16,7 @@ Their semantics cover arbitrary metadata words, including redundant zero bits.
 @[expose] public section
 
 namespace LeanCanny.Algebra.ParameterBudget
-open Complexity
+
 open LeanCanny.Encoding
 
 def add (a b : List Bool) : List Bool := BinaryNat.add (pair a b)

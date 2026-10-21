@@ -20,7 +20,7 @@ computed by the transition.
 @[expose] public section
 
 namespace LeanCanny.Algebra.Berkowitz.FactorChild
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open MatrixPower

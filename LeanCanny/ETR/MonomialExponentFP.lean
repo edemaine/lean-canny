@@ -20,7 +20,7 @@ Malformed terms use the validated zero expression.
 @[expose] public section
 
 namespace LeanCanny.ETR.MonomialReader
-open Complexity
+
 open LeanCanny.Encoding
 
 def exponentRead (term index varIndex : List Bool → List Bool) : List Bool → List Bool :=
@@ -40,7 +40,7 @@ theorem exponentRead_correct (term index varIndex : List Bool → List Bool) (c 
 theorem exponentRead_mem_FP {term index varIndex : List Bool → List Bool}
     (ht : term ∈ FP) (hi : index ∈ FP) (hv : varIndex ∈ FP) : exponentRead term index varIndex ∈ FP := by
   have hn := mem_FP_comp ht TermView.normalize_mem_FP
-  obtain ⟨p, hp⟩ := Cobham.output_length_poly_of_mem_FP hn
+  obtain ⟨p, hp⟩ := output_length_poly_of_mem_FP hn
   have H := reader_mem_FP (R := fun _ => Multiplicative ℕ) (fun _ v => BinaryNatCode.encode v.toAdd)
     (fun _ _ => Multiplicative.ofAdd 0)
     (fun c j => Multiplicative.ofAdd (if Nat.fromBitsLE (varIndex c) = j then 1 else 0))

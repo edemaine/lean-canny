@@ -16,7 +16,7 @@ truncation alone can turn an oversized exponent into a supported monomial.
 @[expose] public section
 
 namespace LeanCanny.Algebra.CoefficientWidthBits
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open FixedWidthPolynomial
 
 noncomputable def Fits (A W D : List Bool → ℕ) : List Bool → Prop :=

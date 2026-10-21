@@ -17,7 +17,7 @@ child calls the original entry evaluator. FP field writers and a complete
 @[expose] public section
 
 namespace LeanCanny.Algebra.Berkowitz.ModularAccess
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

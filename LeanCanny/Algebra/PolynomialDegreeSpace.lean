@@ -18,7 +18,7 @@ the zero-polynomial flag. An FP upper-bound writer permits exponential degrees.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PolynomialDegreeBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation
@@ -108,9 +108,9 @@ theorem offsetEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     SpaceFunction (fun c => BinaryNatCode.encode (if p c = 0 then 0 else (p c).natDegree + 1)) := by
   have hb := mem_FP_comp hd BinaryNat.succ_mem_FP
   let count := BinaryNat.succ ∘ degree
-  let s := Classical.choose (Cobham.output_length_poly_of_mem_FP hb)
+  let s := Classical.choose (output_length_poly_of_mem_FP hb)
   have hs : ∀ c, (count c).length ≤ s.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hb)
+    Classical.choose_spec (output_length_poly_of_mem_FP hb)
   let Q := BoundedFold.evaluator (updateEvaluator E) count (fun _ => []) hb (constFn_mem_FP []) s (by
     intro c k hk
     rw [fold_eq_scan f c (p c).coeff (hzero c), BinaryNatCode.length_encode]

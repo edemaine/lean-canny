@@ -20,7 +20,7 @@ in the space bound. All source, target, and modulus fields are total FP maps.
 @[expose] public section
 
 namespace LeanCanny.ETR.CollectedCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Algebra.MatrixPower
 open scoped BigOperators

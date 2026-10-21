@@ -17,7 +17,7 @@ bit budget then give a complete three-way integer sign evaluator.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PrincipalCoefficientBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

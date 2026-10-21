@@ -17,7 +17,7 @@ Only reduced residues and the saved input are retained.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeCombine
-open Complexity
+
 open LeanCanny.Encoding
 open Algebra.MatrixPower
 

@@ -18,7 +18,7 @@ supplied to the algorithm. The query-family size remains polynomially bounded.
 @[expose] public section
 
 namespace LeanCanny.Algebra.InfinitesimalRootBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

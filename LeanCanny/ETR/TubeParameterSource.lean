@@ -18,7 +18,7 @@ provided by the existing regular-system coefficient evaluator.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeParameter
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open Geometry TubeEncoding TubeProjectionEncoding
 open LeanCanny.Encoding.Brackets Algebra.MatrixPower
 open scoped Classical

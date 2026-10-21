@@ -16,7 +16,7 @@ caps invalid variable indices before any unary conversion.
 @[expose] public section
 
 namespace LeanCanny.Algebra.FixedWidthPolynomial
-open Complexity
+
 open LeanCanny.Encoding
 
 def countCode (A W : List Bool → ℕ) (c : List Bool) : List Bool :=
@@ -24,7 +24,7 @@ def countCode (A W : List Bool → ℕ) (c : List Bool) : List Bool :=
 
 theorem countCode_mem_FP {A W : List Bool → ℕ} (hA : UnaryFn A) (hW : UnaryFn W) : countCode A W ∈ FP := by
   have hr := (hA.mul hW).replicate_mem_FP false
-  have h := mem_FP_comp (mem_FP_comp (mem_FP_comp hr (Cobham.cons_mem_FP true)) reverse_mem_FP) BinaryNat.normalize_mem_FP
+  have h := mem_FP_comp (mem_FP_comp (mem_FP_comp hr (cons_mem_FP true)) reverse_mem_FP) BinaryNat.normalize_mem_FP
   exact mem_FP_of_eq h (fun _ => rfl)
 
 theorem fromBitsLE_powerWord (k : ℕ) : Nat.fromBitsLE ((true :: List.replicate k false).reverse) = 2 ^ k := by

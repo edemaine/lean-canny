@@ -22,7 +22,7 @@ encoded states, so these functions need no expensive state validation.
 @[expose] public section
 
 namespace LeanCanny.Algebra.BalancedProduct.Controller
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 
@@ -38,42 +38,42 @@ def pushBits (f s : List Bool) : List Bool := true :: pair f s
 theorem putBit_mem_FP {x s : List Bool → List Bool} (hx : x ∈ FP) (hs : s ∈ FP) :
     (fun p => putBit (x p) (s p)) ∈ FP := by
   have h := (FPPred.getBit hx (UnaryFn.const 0)).ite_mem_FP
-    (mem_FP_comp hs (Cobham.cons_mem_FP true)) (mem_FP_comp hs (Cobham.cons_mem_FP false))
+    (mem_FP_comp hs (cons_mem_FP true)) (mem_FP_comp hs (cons_mem_FP false))
   refine mem_FP_of_eq h (fun p => ?_)
   simp only [putBit]
   cases (x p)[0]?.getD false <;> rfl
 
 theorem evalBits_mem_FP {q s : List Bool → List Bool} (hq : q ∈ FP) (hs : s ∈ FP) :
     (fun p => evalBits (q p) (s p)) ∈ FP :=
-  mem_FP_comp (mem_FP_comp (mem_FP_pair hq hs) (Cobham.cons_mem_FP false)) (Cobham.cons_mem_FP false)
+  mem_FP_comp (mem_FP_comp (mem_FP_pair hq hs) (cons_mem_FP false)) (cons_mem_FP false)
 
 theorem scanBits_mem_FP {q t a s : List Bool → List Bool}
     (hq : q ∈ FP) (ht : t ∈ FP) (ha : a ∈ FP) (hs : s ∈ FP) :
     (fun p => scanBits (q p) (t p) (a p) (s p)) ∈ FP :=
   mem_FP_comp (mem_FP_comp (mem_FP_pair hq (mem_FP_pair ht (mem_FP_pair ha hs)))
-    (Cobham.cons_mem_FP true)) (Cobham.cons_mem_FP false)
+    (cons_mem_FP true)) (cons_mem_FP false)
 
 theorem retBits_mem_FP {x s : List Bool → List Bool} (hx : x ∈ FP) (hs : s ∈ FP) :
     (fun p => retBits (x p) (s p)) ∈ FP :=
-  mem_FP_comp (mem_FP_comp (putBit_mem_FP hx hs) (Cobham.cons_mem_FP false)) (Cobham.cons_mem_FP true)
+  mem_FP_comp (mem_FP_comp (putBit_mem_FP hx hs) (cons_mem_FP false)) (cons_mem_FP true)
 
 theorem doneBits_mem_FP {x : List Bool → List Bool} (hx : x ∈ FP) :
     (fun p => doneBits (x p)) ∈ FP :=
   mem_FP_comp (mem_FP_comp (putBit_mem_FP hx (constFn_mem_FP []))
-    (Cobham.cons_mem_FP true)) (Cobham.cons_mem_FP true)
+    (cons_mem_FP true)) (cons_mem_FP true)
 
 theorem leftBits_mem_FP {q t a : List Bool → List Bool} (hq : q ∈ FP) (ht : t ∈ FP) (ha : a ∈ FP) :
     (fun p => leftBits (q p) (t p) (a p)) ∈ FP :=
-  mem_FP_comp (mem_FP_pair hq (mem_FP_pair ht ha)) (Cobham.cons_mem_FP false)
+  mem_FP_comp (mem_FP_pair hq (mem_FP_pair ht ha)) (cons_mem_FP false)
 
 theorem rightBits_mem_FP {q t a x : List Bool → List Bool}
     (hq : q ∈ FP) (ht : t ∈ FP) (ha : a ∈ FP) (hx : x ∈ FP) :
     (fun p => rightBits (q p) (t p) (a p) (x p)) ∈ FP :=
-  mem_FP_comp (putBit_mem_FP hx (mem_FP_pair hq (mem_FP_pair ht ha))) (Cobham.cons_mem_FP true)
+  mem_FP_comp (putBit_mem_FP hx (mem_FP_pair hq (mem_FP_pair ht ha))) (cons_mem_FP true)
 
 theorem pushBits_mem_FP {f s : List Bool → List Bool} (hf : f ∈ FP) (hs : s ∈ FP) :
     (fun p => pushBits (f p) (s p)) ∈ FP :=
-  mem_FP_comp (mem_FP_pair hf hs) (Cobham.cons_mem_FP true)
+  mem_FP_comp (mem_FP_pair hf hs) (cons_mem_FP true)
 
 def body (p : List Bool) : List Bool := (pairSnd p).drop 2
 def query (p : List Bool) : List Bool := pairFst (body p)

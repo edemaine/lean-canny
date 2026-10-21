@@ -42,7 +42,7 @@ theorem arity_power (t : Term) (n : ℕ) (hn : 0 < n) : (power t n).arity = t.ar
 end LeanCanny.ETR.Term
 
 namespace LeanCanny.ETR.TermPower
-open Complexity
+
 open LeanCanny.Encoding
 
 def step (p : List Bool) : List Bool :=
@@ -76,9 +76,9 @@ theorem write_mem_FP {source : List Bool → List Bool} {exponent : List Bool �
     (hs : source ∈ FP) (he : UnaryFn exponent) : write source exponent ∈ FP := by
   have hn := mem_FP_comp hs TermView.normalize_mem_FP
   have hi := mem_FP_pair hn (constFn_mem_FP (Term.const 1).toData.toBits)
-  obtain ⟨p, hp⟩ := Cobham.output_length_poly_of_mem_FP hi
-  obtain ⟨q, hq⟩ := Cobham.output_length_poly_of_mem_FP he
-  obtain ⟨r, hr⟩ := Cobham.output_length_poly_of_mem_FP hn
+  obtain ⟨p, hp⟩ := output_length_poly_of_mem_FP hi
+  obtain ⟨q, hq⟩ := output_length_poly_of_mem_FP he
+  obtain ⟨r, hr⟩ := output_length_poly_of_mem_FP hn
   have hb := (PolyBound.eval p).add ((PolyBound.eval q).mul ((PolyBound.eval r).add (PolyBound.const 10)))
   have hloop := iterate_mem_FP_of_polyBound step_mem_FP hi he hb (by
     intro c n hnc

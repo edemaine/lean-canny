@@ -18,7 +18,7 @@ the final normalization stage, using the already certified term recognizer.
 @[expose] public section
 
 namespace LeanCanny.ETR.EquationList
-open Complexity
+
 open LeanCanny.Encoding
 open Brackets
 open SyntaxClassifier

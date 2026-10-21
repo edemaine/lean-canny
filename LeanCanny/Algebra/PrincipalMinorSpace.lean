@@ -20,7 +20,7 @@ polynomial space. The determinant and CRT sign routines retain their costs.
 @[expose] public section
 
 namespace LeanCanny.Algebra.PrincipalMinorBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

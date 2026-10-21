@@ -20,7 +20,7 @@ term lists, as supplied by the normalization compiler.
 @[expose] public section
 
 namespace LeanCanny.ETR.SumSquares
-open Complexity
+
 open LeanCanny.Encoding.Brackets
 
 def addSquareBits (term acc : List Bool) : List Bool :=

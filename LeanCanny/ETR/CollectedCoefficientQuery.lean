@@ -7,7 +7,7 @@ module
 public import LeanCanny.ETR.CollectedCoefficients
 public import LeanCanny.ETR.MonomialExponentFP
 public import LeanCanny.Encoding.FixedWidthNatVector
-public import Complexitylib.Classes.P.BoundedQuant
+public import LeanCanny.Tactic.PolyTime
 
 /-! # FP exponent matching for collected coefficient queries
 
@@ -21,7 +21,7 @@ including for malformed source strings and noncanonical exponent words.
 @[expose] public section
 
 namespace LeanCanny.ETR.CollectedCoefficient
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open Algebra.RationalSubstitution.Indexed

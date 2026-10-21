@@ -238,7 +238,7 @@ theorem formula_run_valueSize_le (p : Formula) (fuel : ℕ) (hfuel : fuel ≤ 2 
     valueSize (run (p.toSigned true) p.encode.length fuel).values ≤ 1000 * (p.encode.length + 1) ^ 3 := by
   let n := p.encode.length
   have hb : (p.toSigned true).budget ≤ n := by
-    simpa only [n, Formula.encode, Complexity.Data.length_toBits] using p.toSigned_budget_le true
+    simpa only [n, Formula.encode, LeanCanny.Data.length_toBits] using p.toSigned_budget_le true
   have hs := run_valueSize_le (p.toSigned true) n (2 * n) fuel hfuel
   have hg : growthCap (p.toSigned true).budget n (2 * n) ≤ 200 * (n + 1) ^ 2 := by
     dsimp only [growthCap]

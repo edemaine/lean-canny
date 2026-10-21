@@ -18,7 +18,7 @@ evaluators includes both child costs; the final tag correction is FP.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeDeformation
-open Complexity LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
 open LeanCanny.Encoding.Brackets
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm characteristicScalar lowestScalar determinant SignedTagBits.correct

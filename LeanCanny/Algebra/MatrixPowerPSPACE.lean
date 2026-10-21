@@ -26,7 +26,7 @@ for a certified space-bounded entry evaluator.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower
-open Complexity
+
 open LeanCanny.Encoding
 
 /-- The mathematical problem associated with each binary input context. -/
@@ -94,15 +94,15 @@ theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.PolyTime) :
       (.eval ⟨(F.exponent c).size, F.exponent c, F.row c, F.col c⟩ [])) :=
     initialPacket_encode a.exponent a.row a.col c (residueBits (m := F.modulus c)) (F.exponent c)
       (F.row c) (F.col c) (a.exponent_eq c) (a.row_eq c) (a.col_eq c)
-  let pd := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.dimension)
+  let pd := Classical.choose (output_length_poly_of_mem_FP ha.dimension)
   have hd : ∀ c, (a.dimension c).length ≤ pd.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.dimension)
-  let pm := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.modulus)
+    Classical.choose_spec (output_length_poly_of_mem_FP ha.dimension)
+  let pm := Classical.choose (output_length_poly_of_mem_FP ha.modulus)
   have hm : ∀ c, (a.modulus c).length ≤ pm.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.modulus)
-  let pe := Classical.choose (Cobham.output_length_poly_of_mem_FP ha.exponent)
+    Classical.choose_spec (output_length_poly_of_mem_FP ha.modulus)
+  let pe := Classical.choose (output_length_poly_of_mem_FP ha.exponent)
   have he : ∀ c, (a.exponent c).length ≤ pe.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP ha.exponent)
+    Classical.choose_spec (output_length_poly_of_mem_FP ha.exponent)
   let p := pd + pe + pm
   have hbits (c : List Bool) :
       (F.dimension c).size + (F.exponent c).size + (F.modulus c).size ≤ p.eval c.length := by

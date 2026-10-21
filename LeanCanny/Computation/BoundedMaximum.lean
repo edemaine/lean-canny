@@ -17,7 +17,7 @@ The certificate accounts for saved parent states and every child computation.
 @[expose] public section
 
 namespace LeanCanny.Computation.BoundedMaximum
-open Complexity
+
 open LeanCanny.Encoding
 
 def maximum (p : List Bool) : List Bool :=
@@ -65,8 +65,8 @@ theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (hf : ∀ c i, i < Nat.fromBitsLE (count c) → f (pair c (BinaryNatCode.encode i)) = BinaryNatCode.encode (a c i))
     (hbound : ∀ c i, i < Nat.fromBitsLE (count c) → a c i ≤ Nat.fromBitsLE (bound c)) :
     SpaceFunction (fun c => BinaryNatCode.encode ((Finset.range (Nat.fromBitsLE (count c))).sup (a c))) := by
-  let p := Classical.choose (Cobham.output_length_poly_of_mem_FP hb)
-  have hp : ∀ c, (bound c).length ≤ p.eval c.length := Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hb)
+  let p := Classical.choose (output_length_poly_of_mem_FP hb)
+  have hp : ∀ c, (bound c).length ≤ p.eval c.length := Classical.choose_spec (output_length_poly_of_mem_FP hb)
   have hs : ∀ c k, k ≤ Nat.fromBitsLE (count c) →
       (BoundedFold.fold (update f) (fun _ => []) c k).length ≤ p.eval c.length := by
     intro c k hk

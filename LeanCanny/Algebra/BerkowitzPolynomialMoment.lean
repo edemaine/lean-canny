@@ -18,7 +18,7 @@ while selecting the border vectors and trailing block in the original matrix.
 @[expose] public section
 
 namespace LeanCanny.Algebra.BerkowitzPolynomial
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower
@@ -35,7 +35,7 @@ structure ModularFamily where
 noncomputable def ModularFamily.value (F : ModularFamily) (c : List Bool) : List Bool :=
   residueBits ((F.matrix c).det.coeff (F.degree c))
 
-def ModularFamily.zeroLanguage (F : ModularFamily) : Complexity.Language :=
+def ModularFamily.zeroLanguage (F : ModularFamily) : LeanCanny.Language :=
   {c | (F.matrix c).det.coeff (F.degree c) = 0}
 
 structure ModularAccess (F : ModularFamily) where

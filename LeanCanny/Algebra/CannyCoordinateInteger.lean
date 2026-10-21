@@ -19,7 +19,7 @@ All writers use certified binary arithmetic, even for exponential bit budgets.
 @[expose] public section
 
 namespace LeanCanny.Algebra.CannyCoordinateBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation

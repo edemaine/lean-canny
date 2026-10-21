@@ -109,7 +109,7 @@ theorem formula_run_steps (p : Formula) (start : ℕ) :
   apply run_steps
   have hw := work_le_budget (p.toSigned true)
   have hb := p.toSigned_budget_le true
-  simp only [Formula.encode, Complexity.Data.length_toBits]
+  simp only [Formula.encode, LeanCanny.Data.length_toBits]
   omega
 
 end LeanCanny.ETR.EquationCompiler

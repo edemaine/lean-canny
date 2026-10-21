@@ -20,7 +20,7 @@ included. The output is the sign on a sufficiently small positive interval.
 
 namespace LeanCanny.Algebra.InfinitesimalSign
 open Polynomial
-open Complexity
+
 open LeanCanny.Computation
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets

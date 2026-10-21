@@ -15,7 +15,7 @@ binary with the zero or unit exponent dictated by the selected shift term.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeDense
-open Complexity
+
 open LeanCanny.Encoding
 
 theorem expected_mem_FP {n : List Bool → ℕ} (hn : UnaryFn n) (s : Option Bool) :

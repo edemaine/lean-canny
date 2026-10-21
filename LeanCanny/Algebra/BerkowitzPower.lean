@@ -99,11 +99,11 @@ theorem controller_residue_length (ops : MatrixPower.Controller.Callbacks) (c : 
     (hc : MatrixPower.Controller.CorrectAt ops c (powerMatrix A) MatrixPower.residueBits)
     (d : Fin (n + 1)) (t : ℕ) :
     ((MatrixPower.Controller.step ops)^[t]
-      (Complexity.pair c (MatrixPower.stateBits (MatrixPower.residueBits (m := m))
+      (LeanCanny.pair c (MatrixPower.stateBits (MatrixPower.residueBits (m := m))
         (.eval (powerQuery n d) [])))).length ≤
           2 * c.length + 2 + 64 * (3 * n.size + m.size + 2) ^ 2 := by
   rw [MatrixPower.Controller.iterate_packet ops c _ MatrixPower.residueBits hc,
-    Complexity.pair_length]
+    LeanCanny.pair_length]
   exact Nat.add_le_add_left (run_powerMatrix_residue_length m A d t) _
 
 theorem controller_zero_iff (ops : MatrixPower.Controller.Callbacks) (c : List Bool)
@@ -111,7 +111,7 @@ theorem controller_zero_iff (ops : MatrixPower.Controller.Callbacks) (c : List B
     (hc : MatrixPower.Controller.CorrectAt ops c (powerMatrix A) MatrixPower.residueBits) :
     MatrixPower.Controller.zeroAnswer
       ((MatrixPower.Controller.step ops)^[MatrixPower.work ((n + 1) * (n + 1)) n.size n + 1]
-        (Complexity.pair c (MatrixPower.stateBits (MatrixPower.residueBits (m := m))
+        (LeanCanny.pair c (MatrixPower.stateBits (MatrixPower.residueBits (m := m))
           (.eval (powerQuery n 0) [])))) = true ↔ A.det = 0 := by
   rw [MatrixPower.Controller.iterate_packet ops c _ MatrixPower.residueBits hc,
     run_powerMatrix, MatrixPower.Controller.zeroAnswer_done]

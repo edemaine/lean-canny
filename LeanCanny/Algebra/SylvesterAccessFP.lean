@@ -18,7 +18,7 @@ or matrix is constructed. A separate writer computes the determinant bit budget.
 @[expose] public section
 
 namespace LeanCanny.Algebra.SylvesterBits
-open Complexity
+
 open LeanCanny.Encoding
 
 structure Access where

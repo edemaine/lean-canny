@@ -20,7 +20,7 @@ malformed syntax; this bounds every frame of the encoded tree fold.
 @[expose] public section
 
 namespace LeanCanny.ETR.MonomialCount
-open Complexity
+
 
 def countData : Data → ℕ
   | .l [tag, a, b] =>

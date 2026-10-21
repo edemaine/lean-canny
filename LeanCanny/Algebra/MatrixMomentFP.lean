@@ -21,7 +21,7 @@ child; the whole moment computation is not assumed to be FP.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixMoment.EntryBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open MatrixPower

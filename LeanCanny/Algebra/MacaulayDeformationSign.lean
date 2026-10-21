@@ -19,7 +19,7 @@ Identifying the required eliminant coefficient remains a separate obligation.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MacaulayDeformationBits
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets
 

@@ -11,7 +11,7 @@ public import LeanCanny.Computation.BoundedScan
 @[expose] public section
 
 namespace LeanCanny.Computation.BoundedScan
-open Complexity LeanCanny.Encoding Turing.MultiTapeTM
+open Turing.MultiTapeTM
 open scoped Classical
 
 theorem decider {L : Language} (D : SpaceDecider L)
@@ -21,7 +21,7 @@ theorem decider {L : Language} (D : SpaceDecider L)
     p.2.2 && decide (pair p.1 (BinaryNatCode.encode p.2.1) ∈ L)
   have hc := ComputableTidilyInPolyTime.fst encBits (encPair encNat encBool)
   have hr := ComputableTidilyInPolyTime.snd encBits (encPair encNat encBool)
-  have hquery := TidyFP.pair hc (TidyFP.natBits.comp hr.fst')
+  have hquery := pair_computable hc (natBits_computable.comp hr.fst')
   have hchild : ComputableTidilyInPolySpace child
       (TidyBoundedFold.encPacket encBits encBool) encBool := by
     have hraw := (ComputableTidilyInPolySpace.of_polyTime hr.snd').ite
@@ -38,7 +38,7 @@ theorem decider {L : Language} (D : SpaceDecider L)
     | zero => rfl
     | succ k ih => simp only [TidyBoundedFold.fold, child, allBelow, ih]
   have h := TidyBoundedFold.evaluator hchild
-    (TidyFP.fromBitsLE.comp (TidyFP.of_mem_FP hb))
+    (fromBitsLE_computable.comp (FP.computable hb))
     (ComputableTidilyInPolySpace.of_polyTime (ComputableTidilyInPolyTime.const true))
     (B := fun _ => 1) (PolyBounded.const 1) (fun _ _ _ => by simp)
   apply SpaceDecider.of_computable h

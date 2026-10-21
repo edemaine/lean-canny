@@ -18,7 +18,7 @@ certified CRT integer-sign routine, with no coefficient oracle assumption.
 @[expose] public section
 
 namespace LeanCanny.ETR.CollectedCoefficient
-open Complexity
+
 open LeanCanny.Encoding LeanCanny.Computation
 open Algebra.MatrixPower
 

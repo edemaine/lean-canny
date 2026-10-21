@@ -18,7 +18,7 @@ this supports a uniform grammar checker at every input depth.
 @[expose] public section
 
 namespace LeanCanny.Encoding.TreeFold
-open Complexity
+
 
 variable {σ : Type*}
 

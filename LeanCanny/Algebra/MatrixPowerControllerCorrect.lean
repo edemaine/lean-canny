@@ -19,7 +19,7 @@ binary arithmetic, leaving dimension/modulus extraction and entry access explici
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixPower.Controller
-open Complexity
+
 open LeanCanny.Encoding
 
 variable {R : Type*} [Semiring R] {n : ℕ}

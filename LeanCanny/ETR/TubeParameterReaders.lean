@@ -17,7 +17,7 @@ resulting certificates include the original readers' space-bounded workspace.
 @[expose] public section
 
 namespace LeanCanny.ETR.TubeParameter
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Algebra.MatrixPower
 
 def coordinateQuery (f : List Bool → List Bool) (p : List Bool) : List Bool :=

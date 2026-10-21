@@ -19,7 +19,7 @@ the denominator while a space-bounded sum avoids materializing the resulting int
 @[expose] public section
 
 namespace LeanCanny.Algebra.DyadicBits
-open Complexity Polynomial
+open Polynomial
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

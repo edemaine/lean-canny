@@ -17,7 +17,7 @@ abstract stopping index. Native iteration hides all child execution times. -/
 @[expose] public section
 
 namespace LeanCanny.Algebra.BalancedProduct
-open Complexity
+
 open LeanCanny.Computation
 open Controller
 
@@ -34,12 +34,12 @@ theorem treeEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
   let N := fun c => time (a c) (H c) (K c)
   let init := initialPacket count index
   let F := Controller.step f
-  let pc := Classical.choose (Cobham.output_length_poly_of_mem_FP hc)
+  let pc := Classical.choose (output_length_poly_of_mem_FP hc)
   have hpc : ∀ c, H c ≤ pc.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hc)
-  let pi := Classical.choose (Cobham.output_length_poly_of_mem_FP hi)
+    Classical.choose_spec (output_length_poly_of_mem_FP hc)
+  let pi := Classical.choose (output_length_poly_of_mem_FP hi)
   have hpi : ∀ c, (index c).length ≤ pi.eval c.length :=
-    Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hi)
+    Classical.choose_spec (output_length_poly_of_mem_FP hi)
   have hK (c : List Bool) : (K c).size ≤ pi.eval c.length :=
     (Nat.size_le.mpr (Nat.fromBitsLE_lt_pow_length (index c))).trans (hpi c)
   let r := 2 * Polynomial.X + 2 + 128 * (pc + pi + 1) ^ 2

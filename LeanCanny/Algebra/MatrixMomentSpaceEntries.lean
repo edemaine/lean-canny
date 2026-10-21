@@ -19,7 +19,7 @@ then computes the complete scalar moment with all child states accounted for.
 @[expose] public section
 
 namespace LeanCanny.Algebra.MatrixMoment.EntryBits
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation
@@ -84,7 +84,7 @@ theorem entryEvaluator (a : Access) (hd : a.dimension ∈ FP)
 end LeanCanny.Algebra.MatrixMoment.EntryBits
 
 namespace LeanCanny.Algebra.MatrixMoment
-open Complexity
+
 open LeanCanny.Encoding
 open LeanCanny.Computation
 open MatrixPower

@@ -18,7 +18,7 @@ subsequent perturbation/critical-point computation requires additional routines.
 @[expose] public section
 
 namespace LeanCanny.ETR.CompactSource
-open Complexity
+
 open LeanCanny.Encoding
 open scoped BigOperators
 

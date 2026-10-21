@@ -19,7 +19,7 @@ exponentially many calls while the saved index retains polynomial length.
 @[expose] public section
 
 namespace LeanCanny.Algebra.LowestCoefficientBits
-open Complexity LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Encoding.Brackets
 open scoped Classical
 
@@ -109,8 +109,8 @@ theorem evaluator {R : Type*} [Semiring R] {f : List Bool → List Bool} (E : Sp
     (hcoeff : ∀ c i, f (pair c (BinaryNatCode.encode i)) = [decide ((p c).coeff i = 0)]) :
     SpaceFunction (fun c => BinaryNatCode.encode (p c).natTrailingDegree) := by
   have hb := mem_FP_comp hd BinaryNat.succ_mem_FP
-  let q := Classical.choose (Cobham.output_length_poly_of_mem_FP hb)
-  have hq := Classical.choose_spec (Cobham.output_length_poly_of_mem_FP hb)
+  let q := Classical.choose (output_length_poly_of_mem_FP hb)
+  have hq := Classical.choose_spec (output_length_poly_of_mem_FP hb)
   have Q := BoundedFold.evaluator (updateEvaluator E) (BinaryNat.succ ∘ degree) (fun _ => []) hb (constFn_mem_FP []) q (by
     intro c i hi
     rw [fold_eq_scan f c (fun k => decide ((p c).coeff k = 0)) (hcoeff c)]
