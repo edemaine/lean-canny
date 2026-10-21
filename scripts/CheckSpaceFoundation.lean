@@ -65,6 +65,16 @@ example (F : LeanCanny.Algebra.SeparableBits.Family)
       (LeanCanny.Algebra.SquarefreePart.part ((F.polynomial c).map (Int.castRingHom ℚ))).natDegree) encBits encBits :=
   (LeanCanny.Algebra.SeparableBits.squarefreeDegreeEvaluator F A hne).computable
 
+example (F : LeanCanny.Algebra.SeparableBits.Family)
+    (A : LeanCanny.Algebra.SeparableBits.Readers F) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.SeparableBits.squarefreeValue F) encBits encBits :=
+  (LeanCanny.Algebra.SeparableBits.squarefreeEvaluator F A).computable
+
+example (F : LeanCanny.Algebra.SeparableBits.Family)
+    (A : LeanCanny.Algebra.SeparableBits.Readers F) :
+    LeanCanny.Algebra.SeparableBits.squarefreeBudgetCode F A ∈ LeanCanny.FP :=
+  LeanCanny.Algebra.SeparableBits.squarefreeBudgetCode_FP F A
+
 example {L : Type*} [Field L] [CharZero L]
     (S : LeanCanny.Algebra.PrimitivePairBits.Source)
     (A : LeanCanny.Algebra.PrimitivePairBits.Readers S)

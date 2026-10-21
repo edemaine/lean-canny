@@ -3860,9 +3860,41 @@ extension fields. `SquarefreePartDegreeSpace` derives native derivative-GCD and
 quotient degree writers from the original integer coefficient reader; constant
 and zero source inputs are included in the GCD-degree computation.
 
-Native coefficient readers for the GCD representative and the denominator-cleared
-square-free quotient, quotient height bounds, and uniform iteration over the
-actual tube annihilants remain open. The current exact
+`CoefficientMinorSpace` extends the principal-minor entry map by selecting a
+different first row. Non-strict order bounds cover terminal and empty minors.
+`CoefficientFormSpace` supplies all coefficient-form residues, returning zero
+above the selected order. `PolynomialGCDCoefficientSpace` prepares the
+space-computed GCD degree as part of the query and calls this determinant
+reader. `SquarefreeGCDSpace` derives the complete derivative-GCD reader from
+the original integer coefficient reader, including constant inputs.
+
+`ScaledPolynomialQuotient` constructs an upper triangular coefficient system
+for the high coefficients of `g*h`. Its Cramer determinants give
+`g.coeff(d)^(L+1) * h` when `g.natDegree ≤ d` and `h.natDegree ≤ L`.
+No inverses occur, and the construction commutes with coefficient maps.
+`ScaledPolynomialQuotientSpace` supplies a native modular coefficient evaluator;
+each matrix entry calls either the dividend reader, the divisor reader, or zero.
+Formal degree bounds are retained under modular degree drops.
+
+`ScaledSquarefree` applies this quotient to the actual integer derivative-GCD
+representative. For nonzero input, the resulting integer polynomial is associated
+over the rationals to the canonical square-free part. It is nonzero, separable
+over every characteristic-zero field, and has exactly the original roots there.
+`ScaledSquarefreeSpace` computes its coefficients in native polynomial space,
+composing the original reader, derivative, GCD-degree scan, GCD coefficient
+determinant, and quotient determinant through prepared contexts.
+
+`ScaledSquarefreeBounds` derives an FP output-height writer independently of the
+space-computed GCD degree. If the source degree is m and its coefficient-height
+exponent is b, put `n=m-1`, `e=b+m.size`,
+`B_G=(m+n).size*(m+n)+(m+n)*e+1`, and
+`B_Q=(m+1).size*(m+1)+(m+1)*(B_G+b)+1`.
+Every output coefficient has magnitude-bit size at most B_Q. The exact output
+degree also has a native polynomial-space evaluator for nonzero source inputs.
+Thus the square-free preprocessing step now has coefficient, degree, height,
+and root-preservation certificates under the original reader contract.
+
+Uniform iteration over the actual tube annihilants remains open. The current exact
 finite-system representations still have a qualitative construction; their
 source-size heights, native readers, effective parameter selection, and the
 full ETR PSPACE theorem are not established.
