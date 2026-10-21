@@ -1,0 +1,17 @@
+name = "canny_space_prototype"
+version = "0.1.0"
+defaultTargets = ["SpacePrototype", "BoundedFoldPrototype"]
+
+[leanOptions]
+autoImplicit = false
+
+[[require]]
+name = "complexitylib2"
+git = "https://github.com/SamuelSchlesinger/complexitylib2"
+rev = "cb1b7ce8ca0757db30ec29c8365b88d86b78c80a"
+
+[[lean_lib]]
+name = "SpacePrototype"
+
+[[lean_lib]]
+name = "BoundedFoldPrototype"

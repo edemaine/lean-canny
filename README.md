@@ -33,6 +33,11 @@ The audit checks all declarations in the `LeanCanny` namespace and their transit
 dependencies, allowing only Lean's standard `propext`, `Classical.choice`, and
 `Quot.sound` axioms.
 
+An isolated [Complexitylib2 prototype](experiments/complexitylib2/README.md)
+checks space composition with an exponential-time child and a simpler generic
+bounded-fold certificate on Lean 4.36.0-rc1. It favors adopting that space
+interface; the main development currently retains its original foundation.
+
 ## Proved so far
 
 | Module | Result |
