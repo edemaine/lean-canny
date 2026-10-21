@@ -4022,6 +4022,25 @@ coefficient reader may take arbitrary time in polynomial space. A common FP
 binary degree bound D and unary count n bound every accumulator by (D+1)^n.
 The native fold therefore needs no supplied execution clocks or child time bounds.
 
+`UnivariateRationalSpace` specializes the existing indexed modular substitution
+algorithm to one variable, width e, and e+1 terms. Its polynomial is exactly
+the univariate clearing sum, including zero width. Original, numerator, and
+denominator coefficient routines need only native polynomial space.
+`UnivariateRationalSpaceExponent` also permits e to be computed in space:
+the input and exponent are stored together, and downstream fields use FP
+projections. Every stored exponent defines a valid truncated clearing sum,
+so this preparation needs no degree validation. The complete coefficient
+routine handles every positive modulus without storing an expanded polynomial.
+
+`IntegerPolynomialDegreeSpace` gives coefficient signs and actual natural
+degrees from arbitrary integer residue readers and FP degree/mass bounds.
+It includes the zero polynomial. `RationalCoordinateSpace` computes the
+maximum numerator/denominator degree by two such scans, then uses the
+space-computed exponent in both clearing sums. Its two complete coefficient
+readers evaluate the actual common-exponent coordinate composition from four
+native space children. Only upper degree/mass controls for the outer coordinate
+must be FP; no exact FP degree or polynomial-time child assumption is added.
+
 The algebraic filtering theorem still needs specialization to the actual tube
 annihilants and constraints. Uniform native coefficient evaluation at
 input-dependent depth remains open. The native iterator

@@ -139,6 +139,28 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
       (LeanCanny.Algebra.FiniteAnnihilatorBits.parameter F count hne c).natDegree) encBits encBits :=
   (LeanCanny.Algebra.FiniteAnnihilatorBits.degreeEvaluator F A hne count D hn hD hdegree).computable
 
+example (p n d : List Bool → Polynomial ℤ) (e : List Bool → ℕ)
+    (E : ComputableTidilyInPolySpace (fun c => LeanCanny.BinaryNatCode.encode (e c)) encBits encBits)
+    (P : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient p) encBits encBits)
+    (N : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient n) encBits encBits)
+    (D : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient d) encBits encBits) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+      (fun c => LeanCanny.Algebra.UnivariateRational.clear (e c) (p c) (n c) (d c))) encBits encBits :=
+  (LeanCanny.Algebra.UnivariateRationalBits.evaluatorWithExponent p n d e ⟨E⟩ ⟨P⟩ ⟨N⟩ ⟨D⟩).computable
+
+example (outer inner : List Bool → LeanCanny.Algebra.UnivariateRational.Coordinate)
+    (ON : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (outer c).numerator)) encBits encBits)
+    (OD : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (outer c).denominator)) encBits encBits)
+    (IN : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (inner c).numerator)) encBits encBits)
+    (ID : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (inner c).denominator)) encBits encBits)
+    (bound mass : List Bool → ℕ) (hB : LeanCanny.BinaryFn bound) (hM : LeanCanny.BinaryFn mass)
+    (hdegree : ∀ c, (outer c).degree ≤ bound c)
+    (hn : ∀ c, LeanCanny.Algebra.coefficientMass (outer c).numerator ≤ 2 ^ mass c)
+    (hd : ∀ c, LeanCanny.Algebra.coefficientMass (outer c).denominator ≤ 2 ^ mass c) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+      (fun c => ((outer c).comp (inner c)).numerator)) encBits encBits :=
+  (LeanCanny.Algebra.RationalCoordinateBits.evaluators outer inner ⟨ON⟩ ⟨OD⟩ ⟨IN⟩ ⟨ID⟩ bound mass hB hM hdegree hn hd).1.computable
+
 example (S : LeanCanny.Algebra.PrimitivePairBits.Source)
     (A : LeanCanny.Algebra.PrimitivePairBits.Readers S)
     (hdegree : ∀ c, (LeanCanny.Algebra.cannyResultant (S.left c) (S.right c) (S.direction c)).natDegree =
