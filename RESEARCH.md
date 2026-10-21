@@ -3894,6 +3894,25 @@ degree also has a native polynomial-space evaluator for nonzero source inputs.
 Thus the square-free preprocessing step now has coefficient, degree, height,
 and root-preservation certificates under the original reader contract.
 
+`ValidatedPolynomialDegree` makes these space-computed degrees usable by exact
+FP metadata interfaces. A context stores the original input and a declared
+degree; a native space decider checks the declaration. Correct declarations keep
+the source polynomial. Incorrect declarations select `X^d-1`, or `1` for `d=0`.
+The fallback is separable in characteristic zero and has coefficient magnitudes
+at most one, so degree, separability, and height contracts hold on every context.
+The coefficient reader branches on that native space decision. No polynomial-time
+degree computation is assumed.
+
+`PreprocessedPairReaders` computes and stores the two square-free degrees, then
+supplies the existing pair routines with validated polynomials and FP metadata.
+`PreparedPolynomialContext` composes a space-computed context with a coefficient
+reader. `PreprocessedPair` consequently combines square-free preprocessing,
+separating-direction selection, and coefficient readers for the parameter,
+both coordinate numerators, and the denominator. Its decoding theorem recovers
+roots of the original input polynomials with a nonzero denominator. This covers
+two arbitrary nonzero integer inputs with FP degree/height controls and native
+space coefficient readers; it does not establish a uniform variable-depth fold.
+
 Uniform iteration over the actual tube annihilants remains open. The current exact
 finite-system representations still have a qualitative construction; their
 source-size heights, native readers, effective parameter selection, and the

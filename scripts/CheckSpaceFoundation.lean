@@ -89,6 +89,22 @@ example {L : Type*} [Field L] [CharZero L]
           (LeanCanny.Algebra.PrimitivePairBits.selectedDirection S A c))) encBits encBits :=
   (LeanCanny.Algebra.PrimitivePairBits.selectedResultantEvaluator S A H hp hq hsp hsq).computable
 
+example (F G : LeanCanny.Algebra.SeparableBits.Family)
+    (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (B : LeanCanny.Algebra.SeparableBits.Readers G)
+    (hF : ∀ c, F.polynomial c ≠ 0) (hG : ∀ c, G.polynomial c ≠ 0) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+      (LeanCanny.Algebra.PreprocessedPair.parameter F G A B hF hG)) encBits encBits :=
+  (LeanCanny.Algebra.PreprocessedPair.parameterEvaluator F G A B hF hG).computable
+
+example (F G : LeanCanny.Algebra.SeparableBits.Family)
+    (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (B : LeanCanny.Algebra.SeparableBits.Readers G)
+    (hF : ∀ c, F.polynomial c ≠ 0) (hG : ∀ c, G.polynomial c ≠ 0) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+      (LeanCanny.Algebra.PreprocessedPair.denominator F G A B hF hG)) encBits encBits :=
+  (LeanCanny.Algebra.PreprocessedPair.coordinateEvaluators F G A B hF hG).2.2.computable
+
 example (S : LeanCanny.Algebra.PrimitivePairBits.Source)
     (A : LeanCanny.Algebra.PrimitivePairBits.Readers S)
     (hdegree : ∀ c, (LeanCanny.Algebra.cannyResultant (S.left c) (S.right c) (S.direction c)).natDegree =
