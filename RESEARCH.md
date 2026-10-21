@@ -3535,10 +3535,52 @@ perturbation in the certified dyadic interval and affine finiteness over an
 algebraically closed extension give a finite set of **all** real projection
 values, of cardinality at most the padded Macaulay dimension. Finiteness for
 the chosen compiled sampler parameters and directions remains an explicit
-hypothesis. Connecting the existing generic-direction geometry to that
-instance, extending beyond finite affine fibers to remaining proper
-components, resultant identification, and the full ETR space proof remain
-open.
+hypothesis in this generic theorem. Stored rational packets now discharge
+it through the geometric finiteness bridge. Extending beyond finite affine
+fibers to remaining proper components, resultant identification, and the full
+ETR space proof remain open.
+
+## Compiled tube samples and nonzero eliminants
+
+`TubeRegularSpatialLift` supplies the inverse base derivative required by the
+reciprocal equation. At a normalized real projection root, all partials are
+proportional to the base partial. If that partial vanished, the entire
+hypersurface derivative would vanish, contradicting regularity. This uses
+regularity of the hypersurface, with no nonsingularity assumption on the
+larger square critical system.
+
+`TubeCompiledAffineLift` adds a projection coordinate equal to the prescribed
+integer linear form in the reciprocal and point coordinates. Every spatial
+zero gives a compiled affine zero after denominator clearing. The decoding
+map recovers the original spatial tuple. `TubeLevelRootLift` applies this
+construction to the packet's actual parameter map. A common interval of
+regular tube levels works for all active sets and all added linear forms.
+Decoding any compiled root recovers the geometric projection equations even
+outside that interval.
+
+`TubeLevelSamplingSource.compiled_correct` strengthens the encoded ETR
+criterion to actual compiled samples with strictly positive inactive signs.
+The packet and active mask are fixed throughout the level interval; every
+added integer linear projection has such samples. All compiled affine fibers
+are finite over every real extension field.
+
+`TubeLevelSamplingSource.eliminant_correct` adds a nonzero univariate
+polynomial obtained from the actual quotient's lowest characteristic
+coefficient. Finiteness over the complex numbers makes it vanish at every
+compiled real projection value, including values at singular critical points.
+The existing dyadic degree/height bound supplies an explicit nonvanishing
+threshold, using the stored packet's coordinate bounds and the chosen linear
+form's integer values. Each linear form may require its own smaller interval;
+no uniform interval over all unbounded integer linear forms is asserted.
+The polynomial degree and the number of distinct compiled projection values
+are at most the padded Macaulay dimension.
+
+These are exact qualitative ETR criteria on every bitstring. Their sample
+conditions retain the compiled equations and positive inactive constraints;
+arbitrary eliminant roots are not claimed to be valid samples. Bounds on
+suitable parameter bit lengths and levels in the original source size,
+effective selection, algebraic coordinate recovery and its space bound, and
+the complete PSPACE decision procedure remain open.
 
 ## TM2 versus Complexitylib's machines
 

@@ -174,7 +174,9 @@ exponential-time-child experiment that motivated this choice.
 | [`Algebra.MacaulayFiniteFiber`](LeanCanny/Algebra/MacaulayFiniteFiber.lean), [`ETR.TubeCharacteristicFinitePersistence`](LeanCanny/ETR/TubeCharacteristicFinitePersistence.lean), [`TubeCharacteristicFiniteBounds`](LeanCanny/ETR/TubeCharacteristicFiniteBounds.lean) | The lowest quotient coefficient vanishes at every root of a finite affine system over an algebraically closed field; infinitely many projective roots at infinity are allowed. The actual tube specialization also covers all real affine roots when the affine fiber is finite over an algebraically closed extension of the reals. On the certified perturbation interval the nonzero projection polynomial bounds all their projection values by the padded matrix dimension, including singular roots. The geometric-to-compiled finiteness bridge is proved below. Effective parameter selection and the remaining proper components stay open. |
 | [`Geometry.UniformExtendedProjectionDirections`](LeanCanny/Geometry/UniformExtendedProjectionDirections.lean), [`TubeUniformExtendedDirections`](LeanCanny/Geometry/TubeUniformExtendedDirections.lean), [`ETR.TubeRegularFiber`](LeanCanny/ETR/TubeRegularFiber.lean), [`TubeCompiledAffineRoots`](LeanCanny/ETR/TubeCompiledAffineRoots.lean), [`TubeCharacteristicGeometricPersistence`](LeanCanny/ETR/TubeCharacteristicGeometricPersistence.lean) | One nearby rational direction gives finite extended critical fibers for all active tubes on a common small-level interval, over every extension field of the reals. With nonzero substitution denominators and explicit parameter identities, these fibers give finite compiled affine zero sets; the lowest quotient coefficient then vanishes at every root over an algebraically closed field. No Jacobian invertibility is required. Concrete constant-parameter readers are supplied below; selecting suitable tuples with source-size bounds remains open. |
 | [`ETR.TubeLevelPacket`](LeanCanny/ETR/TubeLevelPacket.lean), [`TubeLevelReaders`](LeanCanny/ETR/TubeLevelReaders.lean), [`TubeLevelParameters`](LeanCanny/ETR/TubeLevelParameters.lean), [`TubeLevelPacking`](LeanCanny/ETR/TubeLevelPacking.lean), [`TubeLevelFiniteFiber`](LeanCanny/ETR/TubeLevelFiniteFiber.lean) | A concrete packet stores rational epsilon, delta, and direction coordinates, with alpha as the variable. Positive constant denominators never vanish in characteristic zero; coordinate degrees are at most one and coefficients are bounded by `2^(W+1)` for the stored width W. Uniform FP modular coefficient readers and FP degree/bit bounds instantiate the regular-system substitution interfaces on all packets. Parameter identities hold over every real extension. Every rational tuple packs exactly with a width derived from its component bit lengths. A finite geometric critical fiber therefore gives a finite compiled fiber without separate denominator or parameter-identity hypotheses. Selecting a suitable tuple with source-size bounds remains open. |
-| [`ETR.TubeLevelTuple`](LeanCanny/ETR/TubeLevelTuple.lean), [`TubeLevelChoice`](LeanCanny/ETR/TubeLevelChoice.lean), [`TubeLevelSampling`](LeanCanny/ETR/TubeLevelSampling.lean), [`TubeLevelSamplingSource`](LeanCanny/ETR/TubeLevelSamplingSource.lean) | Prescribed rational perturbations and direction coordinates pack exactly. A combined coordinate bit allowance B gives packet length at most `2*source.length + (5*parameterCount+2)*B + 8`. One packet stores a nearby normalized rational direction and gives finite compiled fibers for all active sets throughout a common positive level interval, over every real extension, and preserves positive-inactive critical samples. ETR is equivalent to the existence of a positive rational margin such that every positive rational radius admits these packet samples. This remains a qualitative criterion: source-size bounds for suitable choices, compiled lifts of the retained samples, and effective search remain open. |
+| [`ETR.TubeLevelTuple`](LeanCanny/ETR/TubeLevelTuple.lean), [`TubeLevelChoice`](LeanCanny/ETR/TubeLevelChoice.lean), [`TubeLevelSampling`](LeanCanny/ETR/TubeLevelSampling.lean), [`TubeLevelSamplingSource`](LeanCanny/ETR/TubeLevelSamplingSource.lean) | Prescribed rational perturbations and direction coordinates pack exactly. A combined coordinate bit allowance B gives packet length at most `2*source.length + (5*parameterCount+2)*B + 8`. One packet stores a nearby normalized rational direction and gives finite compiled fibers for all active sets throughout a common positive level interval, over every real extension, and preserves positive-inactive critical samples. ETR is equivalent to the existence of a positive rational margin such that every positive rational radius admits these packet samples. This remains a qualitative criterion: source-size bounds for suitable choices and effective search remain open. Compiled sample lifts and nonzero eliminant coverage are supplied below. |
+| [`ETR.TubeRegularSpatialLift`](LeanCanny/ETR/TubeRegularSpatialLift.lean), [`TubeCompiledAffineLift`](LeanCanny/ETR/TubeCompiledAffineLift.lean), [`TubeLevelRootLift`](LeanCanny/ETR/TubeLevelRootLift.lean) | A nonzero base derivative supplies the reciprocal coordinate; regular real hypersurface projection roots have that nonvanishing. Adding the prescribed linear projection gives actual compiled affine roots, and decoding preserves the original sample coordinates. One common small-level interval works for every active set and added linear projection. No full critical-system Jacobian hypothesis is imposed. |
+| [`ETR.TubeLevelCompiledSampling`](LeanCanny/ETR/TubeLevelCompiledSampling.lean), [`TubeLevelEliminantSampling`](LeanCanny/ETR/TubeLevelEliminantSampling.lean) | ETR is equivalent to stored rational packets with actual compiled samples and positive inactive signs, finite fibers over all real extensions, and nonzero lowest-coefficient eliminants annihilating their projection values. The packet and active mask are fixed; the nonvanishing interval may depend on the added integer linear projection. An explicit dyadic threshold and padded-matrix degree bound also bound all distinct compiled projection values, including singular roots. Source-size parameter bounds, effective selection, and coordinate recovery remain open. |
 | [`Algebra.MacaulayExtraneousLast`](LeanCanny/Algebra/MacaulayExtraneousLast.lean), [`MacaulayLastParameter`](LeanCanny/Algebra/MacaulayLastParameter.lean) | No extraneous row uses the last polynomial. If only that input varies with a coefficient parameter `u`, the characteristic quotient is a nonzero polynomial in `u` over `K(s)`. A faithful variable-swap map connects this polynomial to the original determinant quotient. Polynomiality in the characteristic parameter `s` is proved below; resultant identification remains open. |
 | [`Algebra.MacaulayPivotCount`](LeanCanny/Algebra/MacaulayPivotCount.lean), [`MacaulayLastParameterDegree`](LeanCanny/Algebra/MacaulayLastParameterDegree.lean) | Exactly `∏ⱼ≠last dⱼ` active rows use the last input. If its coefficients have parameter degree at most `E` and all other inputs are constant, the quotient polynomial over `K(s)` has degree at most `E*∏ⱼ≠last dⱼ`. The affine family `f_last+u*h` realizes `E=1` and preserves homogeneity when the variation has the specified degree. |
 | [`Algebra.MacaulayMultiplicationMatrix`](LeanCanny/Algebra/MacaulayMultiplicationMatrix.lean) | The full graded rectangular matrix indexes all degree-compatible monomial multiples of every input. An injective row selector recovers the true square Macaulay matrix. Finite coefficient reconstruction identifies row combinations with polynomial multiplication; homogeneous inputs give homogeneous level rows. |
@@ -822,10 +824,31 @@ active set throughout a common interval.
 [`TubeLevelSamplingSource`](LeanCanny/ETR/TubeLevelSamplingSource.lean) proves
 ETR equivalent to a positive rational epsilon for which every positive rational
 delta admits these packet samples, on all bitstrings. The reverse implication
-uses arbitrarily small rational radii and compactness. Source-size bounds on
-suitable parameter tuples and levels, lifts of the retained geometric samples
-to compiled affine roots, effective selection, the full nested perturbation
-readers, and the full PSPACE algorithm remain open.
+uses arbitrarily small rational radii and compactness.
+[`TubeRegularSpatialLift`](LeanCanny/ETR/TubeRegularSpatialLift.lean) adjoins the
+inverse base derivative. Regularity of the hypersurface and normalization of
+the critical direction ensure this derivative is nonzero at projection roots.
+[`TubeCompiledAffineLift`](LeanCanny/ETR/TubeCompiledAffineLift.lean) then adds the
+linear projection coordinate and proves the compiled equations; decoding
+recovers the original spatial tuple.
+[`TubeLevelRootLift`](LeanCanny/ETR/TubeLevelRootLift.lean) applies these maps to
+the stored packet on a common regular-level interval, for every active set
+and added integer linear projection.
+[`TubeLevelCompiledSampling`](LeanCanny/ETR/TubeLevelCompiledSampling.lean)
+therefore strengthens the ETR criterion to actual compiled samples with the
+same positive inactive signs.
+[`TubeLevelEliminantSampling`](LeanCanny/ETR/TubeLevelEliminantSampling.lean)
+proves that every compiled root annihilates the lowest-coefficient eliminant,
+using finiteness over the complex numbers. The explicit dyadic specialization
+threshold makes that polynomial nonzero. The same packet and mask work for
+every added linear projection, with a possibly smaller interval for each one.
+The projection polynomial's degree, and the number of distinct compiled
+projection values, are at most the padded Macaulay dimension. No invertibility
+of the full critical-system Jacobian is required. The resulting ETR equivalence
+retains the compiled equations and inactive-sign tests; a root of the eliminant
+alone is not asserted to be a valid sample. Source-size bounds on suitable
+parameter tuples and levels, effective selection, algebraic coordinate recovery,
+the full nested perturbation readers, and the full PSPACE algorithm remain open.
 
 [`MvCoefficientMass`](LeanCanny/Algebra/MvCoefficientMass.lean) bounds the sum of
 absolute coefficients under integer multivariate arithmetic, renaming, and
@@ -1019,7 +1042,8 @@ quantitative parameter selection, and the full ETR algorithm remain open.
    vanishing from finite affine fibers to the remaining proper components;
    bound and select suitable rational parameter packets in the source size, and
    extend the concrete variable-level readers to the full nested perturbation.
-   Lift the retained geometric samples to compiled affine roots.
+   The retained geometric samples now lift to actual compiled affine roots and
+   are covered by nonzero lowest-coefficient eliminants.
    The qualitative geometric-to-compiled finiteness
    bridge is proved, uniformly on a small level interval over real extension fields.
    Identify the polynomial Macaulay quotient with the
