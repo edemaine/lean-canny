@@ -26,6 +26,17 @@ noncomputable def search (L : Language) (c : List Bool) : ℕ → ℕ
   | 0 => 0
   | k + 1 => if pair c (BinaryNatCode.encode k) ∈ L then k + 1 else search L c k
 
+theorem search_congr (L K : Language) (c d : List Bool) (n : ℕ)
+    (h : ∀ k < n, pair c (BinaryNatCode.encode k) ∈ L ↔ pair d (BinaryNatCode.encode k) ∈ K) :
+    search L c n = search K d n := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    rw [search, search, h n (by omega)]
+    split_ifs
+    · rfl
+    · exact ih (fun k hk => h k (by omega))
+
 theorem search_le (L : Language) (c : List Bool) (n : ℕ) : search L c n ≤ n := by
   induction n with
   | zero => exact le_rfl

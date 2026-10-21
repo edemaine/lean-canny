@@ -114,6 +114,12 @@ theorem polynomial_natDegree (p : ℤ[X]) (hp : p ≠ 0) :
   have h := PrincipalSubresultant.natDegree_eq_of_associated (map_associated_part p hp)
   simpa only [natDegree_map_eq_of_injective hi] using h
 
+theorem polynomial_natDegree_le (p : ℤ[X]) (hp : p ≠ 0) : (polynomial p).natDegree ≤ p.natDegree := by
+  have hi : Function.Injective (Int.castRingHom ℚ) := Int.cast_injective
+  rw [polynomial_natDegree p hp, SquarefreePart.part_natDegree _ ((Polynomial.map_ne_zero_iff hi).mpr hp),
+    natDegree_map_eq_of_injective hi]
+  exact Nat.sub_le _ _
+
 private theorem eval₂_zero_of_dvd {R S : Type*} [CommRing R] [CommRing S]
     (f : R →+* S) (a : S) {p q : R[X]} (h : p ∣ q) (hp : p.eval₂ f a = 0) : q.eval₂ f a = 0 := by
   obtain ⟨r, rfl⟩ := h

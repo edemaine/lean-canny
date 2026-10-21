@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.PrimitivePairSeparableSpace
-public import LeanCanny.Algebra.PrimitivePairSeparation
+public import LeanCanny.Algebra.PrimitivePairConstruction
 public import LeanCanny.Computation.BoundedChoice
 
 /-! # Selecting a separating direction in polynomial space
@@ -86,6 +86,16 @@ def separatingLanguage (S : Source) : Language :=
 noncomputable def selectedDirection (S : Source) (A : Readers S) (c : List Bool) : ℕ :=
   BoundedChoice.search (separatingLanguage S) c (Nat.fromBitsLE (candidateCount S A c)) - 1
 
+theorem selectedDirection_eq (S : Source) (A : Readers S) (c : List Bool) :
+    selectedDirection S A c = PrimitivePair.select (S.left c) (S.right c) := by
+  unfold selectedDirection PrimitivePair.select
+  rw [candidateCount_eq, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  congr 1
+  apply BoundedChoice.search_congr
+  intro k _
+  simp only [separatingLanguage, PrimitivePair.candidateLanguage, Set.mem_ofPred_eq,
+    pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+
 section Correctness
 variable {L : Type*} [Field L] [CharZero L]
 
@@ -98,28 +108,7 @@ theorem selectedDirection_spec (S : Source) (A : Readers S) (c : List Bool)
       Set.InjOn (shear (selectedDirection S A c))
         (rootPairs (L := L) ((S.left c).map (Int.castRingHom L))
           ((S.right c).map (Int.castRingHom L)) : Set (L × L)) := by
-  have hsp' : (((S.left c).map (Int.castRingHom L)).map (algebraMap L L)).Splits := by
-    simpa only [Algebra.algebraMap_self, Polynomial.map_id] using hsp
-  have hsq' : (((S.right c).map (Int.castRingHom L)).map (algebraMap L L)).Splits := by
-    simpa only [Algebra.algebraMap_self, Polynomial.map_id] using hsq
-  obtain ⟨k, hk, hi⟩ := PrimitivePair.exists_bounded_direction _ _ hp hq hsp' hsq'
-  have hcast : Function.Injective (Int.castRingHom L) := Int.cast_injective
-  rw [Polynomial.natDegree_map_eq_of_injective hcast, Polynomial.natDegree_map_eq_of_injective hcast] at hk
-  have hmember (j : ℕ) : pair c (BinaryNatCode.encode j) ∈ separatingLanguage S ↔
-      Set.InjOn (shear j) (rootPairs (L := L) ((S.left c).map (Int.castRingHom L))
-        ((S.right c).map (Int.castRingHom L)) : Set (L × L)) := by
-    change ((cannyResultant (S.left (pairFst (pair c (BinaryNatCode.encode j))))
-      (S.right (pairFst (pair c (BinaryNatCode.encode j))))
-      (Nat.fromBitsLE (pairSnd (pair c (BinaryNatCode.encode j))))).map (Int.castRingHom ℚ)).Separable ↔ _
-    rw [pairFst_pair, pairSnd_pair, show Nat.fromBitsLE (BinaryNatCode.encode j) = j from Nat.fromBitsLE_bits j]
-    exact PrimitivePair.integer_separable_iff_separating _ _ j hp hq hsp hsq
-  have hex : ∃ j < Nat.fromBitsLE (candidateCount S A c), pair c (BinaryNatCode.encode j) ∈ separatingLanguage S :=
-    ⟨k, by rw [candidateCount_eq, BinaryNatCode.encode, Nat.fromBitsLE_bits]; omega, (hmember k).mpr hi⟩
-  have hw := BoundedChoice.witness (separatingLanguage S) c _ hex
-  change selectedDirection S A c < Nat.fromBitsLE (candidateCount S A c) ∧
-    pair c (BinaryNatCode.encode (selectedDirection S A c)) ∈ separatingLanguage S at hw
-  exact ⟨by rw [candidateCount_eq, BinaryNatCode.encode, Nat.fromBitsLE_bits] at hw; omega,
-    (hmember _).mp hw.2⟩
+  simpa only [selectedDirection_eq] using PrimitivePair.select_spec (S.left c) (S.right c) hp hq hsp hsq
 
 theorem selectedDirectionEvaluator (S : Source) (A : Readers S) (H : Heights S)
     (hp : ∀ c, ((S.left c).map (Int.castRingHom L)).Separable)

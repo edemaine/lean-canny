@@ -3940,7 +3940,40 @@ contracts hold even on invalid contexts. The computed pair is consequently a
 valid input for subsequent fixed algebraic stages. Uniform evaluation with an
 input-dependent nesting depth still needs a separate space proof.
 
-Uniform iteration over the actual tube annihilants remains open. The current exact
+`PrimitivePairConstruction` factors the last-successful bounded direction scan
+into a canonical operation on two integer polynomials. `selectedDirection_eq`
+proves that the existing native scan computes exactly this operation; its
+correctness proof now uses the shared canonical selection theorem.
+`SeparableIntegerPolynomial` closes certified square-free integer annihilants
+under that operation, with exact product degree. Integer pair completeness
+complements the existing soundness theorem. `SeparableIntegerPolynomialField`
+commutes the integer evaluation and rational decoding formulas with a field
+embedding, then descends soundness and completeness from an algebraic closure.
+These results apply to every characteristic-zero field, including the reals.
+
+`BalancedPrimitiveTree` recursively combines pairs at equal height. Its parameter
+is an explicit integer polynomial, and its degree equals the product of the leaf
+degrees. Recursive rational decoding and shear encoding give a root bijection
+with leaf-root tuples. `BalancedPrimitiveCoordinates` and
+`BalancedPrimitiveVectors` expose indexed leaf access, tabulation, and extensional
+comparison of these tuples.
+
+`FiniteAnnihilatorTree` square-free preprocesses each of n nonzero inputs once,
+then pads to width `2^n.size` with X. This width is at most `2*(n+1)`.
+Padding with X supplies one zero root per unused coordinate; padding with a
+nonzero constant would instead annihilate the Cartesian root product. The
+parameter degree is exactly the product of the square-free input degrees and
+is at most `D^n` for original degree bound D. `FiniteAnnihilatorEquiv.rootEquiv`
+removes the padded coordinates and gives a bijection with vectors of roots of
+the original polynomials over any characteristic-zero field. For n=0 the
+parameter is X and the root vector is the unique empty vector.
+
+The resulting tuples are Cartesian products of annihilator roots. Filtering
+them by the actual tube constraints remains a separate step. Flattened
+coordinate numerator/denominator polynomials and uniform native coefficient
+evaluation at input-dependent tree depth remain open. The native iterator
+requires one step certificate and uniform state/workspace bounds; per-node
+composition leaves those obligations open at variable depth. The current exact
 finite-system representations still have a qualitative construction; their
 source-size heights, native readers, effective parameter selection, and the
 full ETR PSPACE theorem are not established.

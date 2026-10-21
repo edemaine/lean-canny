@@ -86,8 +86,9 @@ example {L : Type*} [Field L] [CharZero L]
     ComputableTidilyInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c =>
         LeanCanny.Algebra.cannyResultant (S.left c) (S.right c)
-          (LeanCanny.Algebra.PrimitivePairBits.selectedDirection S A c))) encBits encBits :=
-  (LeanCanny.Algebra.PrimitivePairBits.selectedResultantEvaluator S A H hp hq hsp hsq).computable
+          (LeanCanny.Algebra.PrimitivePair.select (S.left c) (S.right c)))) encBits encBits := by
+  simpa only [LeanCanny.Algebra.PrimitivePairBits.selectedDirection_eq] using
+    (LeanCanny.Algebra.PrimitivePairBits.selectedResultantEvaluator S A H hp hq hsp hsq).computable
 
 example (F G : LeanCanny.Algebra.SeparableBits.Family)
     (A : LeanCanny.Algebra.SeparableBits.Readers F)

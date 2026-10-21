@@ -16,12 +16,8 @@ open LeanCanny.Encoding LeanCanny.Computation
 open SeparableBits (Family Readers)
 
 theorem reduced_degree_le (F : Family) (c : List Bool) (hp : F.polynomial c ≠ 0) :
-    (reduced F c).natDegree ≤ (F.polynomial c).natDegree := by
-  have hi : Function.Injective (Int.castRingHom ℚ) := Int.cast_injective
-  rw [reduced, ScaledSquarefree.polynomial_natDegree _ hp,
-    SquarefreePart.part_natDegree _ ((Polynomial.map_ne_zero_iff hi).mpr hp),
-    natDegree_map_eq_of_injective hi]
-  exact Nat.sub_le _ _
+    (reduced F c).natDegree ≤ (F.polynomial c).natDegree :=
+  ScaledSquarefree.polynomial_natDegree_le _ hp
 
 variable (F G : Family) (A : Readers F) (B : Readers G)
 variable (hF : ∀ c, F.polynomial c ≠ 0) (hG : ∀ c, G.polynomial c ≠ 0)

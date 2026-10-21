@@ -51,6 +51,35 @@ theorem decodeInteger_root (p q : ℤ[X]) (c : ℕ) (theta : L) (hp : p ≠ 0)
   simpa only [Polynomial.coe_aeval_eq_eval,
     ← CoordinateRecoveryMap.denominator (Int.castRingHom L) hcast p q c, Polynomial.eval_map] using he
 
+theorem integer_shear_root (p q : ℤ[X]) (c : ℕ) (a b : L)
+    (hq : (q.map (Int.castRingHom L)).Separable) (hs : (q.map (Int.castRingHom L)).Splits)
+    (ha : p.eval₂ (Int.castRingHom L) a = 0) (hb : q.eval₂ (Int.castRingHom L) b = 0) :
+    (cannyResultant p q c).eval₂ (Int.castRingHom L) (shear c (a, b)) = 0 := by
+  have hi : Function.Injective (Int.castRingHom L) := Int.cast_injective
+  have hs' : ((q.map (Int.castRingHom L)).map (algebraMap L L)).Splits := by
+    simpa only [Algebra.algebraMap_self, Polynomial.map_id] using hs
+  have ha' : Polynomial.aeval a (p.map (Int.castRingHom L)) = 0 := by
+    simpa only [Polynomial.coe_aeval_eq_eval, Polynomial.eval_map] using ha
+  have hb' : Polynomial.aeval b (q.map (Int.castRingHom L)) = 0 := by
+    simpa only [Polynomial.coe_aeval_eq_eval, Polynomial.eval_map] using hb
+  have hr := (cannyResultant_roots (p.map (Int.castRingHom L)) (q.map (Int.castRingHom L)) c
+    (shear c (a, b)) hq.ne_zero hs').mpr ⟨a, b, ha', hb', rfl⟩
+  rw [← CoordinateRecoveryMap.resultant (Int.castRingHom L) hi] at hr
+  simpa only [Polynomial.coe_aeval_eq_eval, Polynomial.eval_map] using hr
+
+theorem decodeInteger_shear (p q : ℤ[X]) (c : ℕ) (a b : L) (hp : p ≠ 0)
+    (hq : (q.map (Int.castRingHom L)).Separable) (hs : (q.map (Int.castRingHom L)).Splits)
+    (hi : Set.InjOn (shear c) (rootPairs (L := L) (p.map (Int.castRingHom L)) (q.map (Int.castRingHom L)) : Set (L × L)))
+    (ha : p.eval₂ (Int.castRingHom L) a = 0) (hb : q.eval₂ (Int.castRingHom L) b = 0) :
+    decodeInteger p q c (shear c (a, b)) = (a, b) := by
+  have hcast : Function.Injective (Int.castRingHom L) := Int.cast_injective
+  have hs' : ((q.map (Int.castRingHom L)).map (algebraMap L L)).Splits := by
+    simpa only [Algebra.algebraMap_self, Polynomial.map_id] using hs
+  rw [decodeInteger_eq]
+  apply decode_shear _ _ c a b ((Polynomial.map_ne_zero_iff hcast).mpr hp) hq hs' hi
+  · simpa only [Polynomial.coe_aeval_eq_eval, Polynomial.eval_map] using ha
+  · simpa only [Polynomial.coe_aeval_eq_eval, Polynomial.eval_map] using hb
+
 /-- The exact degree has a binary product writer when the two inputs are separable. -/
 theorem resultant_natDegree (p q : ℤ[X]) (c : ℕ)
     (hp : (p.map (Int.castRingHom L)).Separable) (hq : (q.map (Int.castRingHom L)).Separable)

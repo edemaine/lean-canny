@@ -32,6 +32,16 @@ noncomputable def direction (c : List Bool) : ℕ := PrimitivePairBits.selectedD
 noncomputable def parameter (c : List Bool) : ℤ[X] :=
   cannyResultant (reduced F c) (reduced G c) (direction F G A B hF hG c)
 
+theorem direction_eq_select (c : List Bool) :
+    direction F G A B hF hG c = PrimitivePair.select (reduced F c) (reduced G c) := by
+  unfold direction
+  rw [PrimitivePairBits.selectedDirection_eq, left_packet, right_packet]
+
+theorem parameter_eq_canonical (c : List Bool) :
+    parameter F G A B hF hG c =
+      cannyResultant (reduced F c) (reduced G c) (PrimitivePair.select (reduced F c) (reduced G c)) := by
+  rw [parameter, direction_eq_select]
+
 noncomputable def leftNumerator (c : List Bool) : ℤ[X] :=
   PrimitivePair.leftNumerator (reduced F c) (reduced G c) (direction F G A B hF hG c)
 noncomputable def rightNumerator (c : List Bool) : ℤ[X] :=
