@@ -3776,6 +3776,58 @@ An independent foundation example checks that endpoint against the native class.
 Bounds on suitable packet selection, coordinate coefficient heights, effective
 coordinate construction/readers, and the full ETR PSPACE theorem remain open.
 
+## Compositional explicit primitive-pair coordinate computation
+
+The existing Canny-specific interfaces required FP original coefficient readers,
+even though the generic determinant engines accepted native space-bounded
+children. `ShiftCoefficientSpace` and `CannyCoefficientSpace` now expose that
+composition through the actual shifted, resultant, first-subresultant, and
+piecewise coordinate formulas. Only degree/direction/selection metadata is FP.
+The source coefficient children retain their original space certificates and
+may take arbitrary time. Direct linear inputs and zero directions keep their
+proved branch semantics; original source degrees survive modular degree drops.
+
+`PrimitivePairCoordinates` defines the concrete rational coordinate pair
+`(theta*D+c*N)/D`, `-N/D`, where N,D are the piecewise recovery polynomials.
+The report's unnormalized resultant is the parameter polynomial. At every
+parameter root, D is nonzero under the separating-direction hypothesis and the
+formulas recover the unique input root pair. A root equivalence gives both
+soundness and completeness. For split separable inputs, the parameter degree is
+exactly `d1*d2`, separability is preserved by a separating direction, and a
+suitable direction exists with `c <= (d1*d2)^2`. The formulas do not require a
+finite Galois ambient field or interpolation of coordinate coefficients.
+
+`CoordinateRecoveryMap` proves injective coefficient-extension identities for
+the actual resultant and all recovery branches. `PrimitivePairInteger` thereby
+proves correctness of the integer polynomials computed by the machines over a
+characteristic-zero splitting field. This bridge preserves exact source degrees;
+it does not replace the linear/interior branch conditions by modular degrees.
+
+`PrimitivePairReaders` adapts canonical context/degree/modulus coefficient queries
+to the Canny routines. `PrimitivePairSpace` supplies native coefficient machines
+for the resultant, denominator, and both coordinate numerators. The left numerator
+includes a guarded binary predecessor query for the shifted denominator and
+modular multiplication by the direction. All dense children and retained inputs
+are included in the bound. `PrimitivePairNested` instantiates a second resultant
+with the first computed resultant as its left coefficient child. The product-degree
+identity supplies new FP degree metadata; no FP coefficient assumption or explicit
+child execution clock is introduced. Independent foundation examples check these
+native endpoints, including the nested use.
+
+`PrimitivePairBounds` bounds all three coordinate masses by `2^E`, with
+`G=max(1,(d2-1)*d1)` and
+`E=coordinateBitBudget(d1,d2,c,H1,H2)+(G+1).size+c.size`, for input coefficient
+magnitudes bounded by H1,H2. The numerator degree allowances are G+1 and G,
+and the common denominator allowance is G. These arithmetic bounds need no
+root or separability hypotheses.
+
+This completes an explicit binary combination step. Certified square-free
+preprocessing, testing/search for bounded separating directions, and uniform
+iteration over the actual tube annihilants remain open. The current exact
+finite-system representations still have a qualitative construction; their
+source-size heights, native readers, effective parameter selection, and the
+full ETR PSPACE theorem are not established.
+
 ## TM2 versus Complexitylib's machines
 
 The current project uses Complexitylib2's tidy multitape calculus.

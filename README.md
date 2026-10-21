@@ -311,6 +311,8 @@ exponential-time-child experiment that motivated this choice.
 | [`Algebra.CannyResultantResidue`](LeanCanny/Algebra/CannyResultantResidue.lean) | The actual integer `cannyResultant` has a certified modular coefficient evaluator. Shifted-coefficient evaluation supplies `p₁(θ-c*x)`; an FP guard supplies `p₂(x)`. FP source-degree/direction/output-degree fields and uniform FP original-coefficient residue access suffice. Reduction commutes with the resultant at the fixed integer source degrees, including modular degree drops. Its modular coefficient zero test is in PSPACE. |
 | [`CannySubresultantResidue`](LeanCanny/Algebra/CannySubresultantResidue.lean), [`CannySubresultantInteger`](LeanCanny/Algebra/CannySubresultantInteger.lean), [`CannySubresultantSign`](LeanCanny/Algebra/CannySubresultantSign.lean) | The concrete symbolic numerator and denominator have certified modular coefficient evaluation, integer zero testing, and three-way integer coefficient signs. The reduced-column bound fits the existing FP resultant budget writer. Under FP source metadata, coefficient selection, original-coefficient residue access, and source bit budgets, the zero and both strict-sign languages are in PSPACE. Sign evaluation at algebraic parameter values remains separate. |
 | [`CannyCoordinateResidue`](LeanCanny/Algebra/CannyCoordinateResidue.lean), [`CannyCoordinateInteger`](LeanCanny/Algebra/CannyCoordinateInteger.lean), [`CannyCoordinateSign`](LeanCanny/Algebra/CannyCoordinateSign.lean) | FP degree tests include the direct linear branches in certified modular coefficient evaluation for the combined coordinate numerator and denominator. An expanded FP binary bit budget certifies integer zero testing and full three-way coefficient signs across every branch. Under the source metadata, selection, residue, and bit-budget contracts, the integer zero and both strict-sign languages are in PSPACE. Algebraic-parameter signs remain separate. |
+| [`Algebra.ShiftCoefficientSpace`](LeanCanny/Algebra/ShiftCoefficientSpace.lean), [`CannyCoefficientSpace`](LeanCanny/Algebra/CannyCoefficientSpace.lean), [`PrimitivePairSpace`](LeanCanny/Algebra/PrimitivePairSpace.lean) | Shifted, resultant, subresultant, and full piecewise coordinate evaluation accept arbitrary native space-bounded source coefficient readers; metadata remains FP. The actual integer pair formulas have complete native coefficient readers. A computed resultant supplies a second resultant's left coefficient child under its exact product-degree identity. |
+| [`Algebra.PrimitivePairCoordinates`](LeanCanny/Algebra/PrimitivePairCoordinates.lean), [`CoordinateRecoveryMap`](LeanCanny/Algebra/CoordinateRecoveryMap.lean), [`PrimitivePairInteger`](LeanCanny/Algebra/PrimitivePairInteger.lean), [`PrimitivePairBounds`](LeanCanny/Algebra/PrimitivePairBounds.lean) | Explicit numerators `theta*D+c*N` and `-N`, with common denominator D, decode the report's resultant roots bijectively to root pairs for a separating direction. Injective coefficient maps preserve the actual formulas, including linear branches. Output degree/mass bounds are explicit; split separable inputs give exact product degree and a bounded suitable direction. Certified direction search, square-free preprocessing, and full tube coordinate construction remain open. |
 | [`Algebra.CannyResultantInteger`](LeanCanny/Algebra/CannyResultantInteger.lean) | Zero testing for a selected integer coefficient of `cannyResultant` belongs to PSPACE. FP source coefficient-bit budgets determine the resultant coefficient budget through binary arithmetic and word lengths. The certified modulus scan tests the concrete Canny residue decider over `1,...,2*B+4`, accounting for all nested evaluator states. |
 | [`Algebra.BinomialPower`](LeanCanny/Algebra/BinomialPower.lean), [`BinomialResidue`](LeanCanny/Algebra/BinomialResidue.lean) | The nth power of the lower bidiagonal matrix with diagonal and subdiagonal one contains `choose n k` at row `k`, column zero, in dimension `k+1`. An explicit FP entry accessor and binary field writers instantiate modular powering to return the complete binomial residue with a `SpaceFunction` certificate. It handles all words, modulus one, and `k>n`; its zero-test language is in PSPACE. |
 | [`Algebra.ShiftCoefficientFP`](LeanCanny/Algebra/ShiftCoefficientFP.lean), [`ShiftCoefficientResidue`](LeanCanny/Algebra/ShiftCoefficientResidue.lean) | A certified space-bounded evaluator returns the coefficient of `x^i θ^j` in `p(θ-c*x)` modulo a positive binary modulus. It retains the query while the binomial child runs, then performs FP coefficient lookup, negative-direction powering, and modular multiplication. The contract requires FP original-coefficient residue access and a canonical FP direction writer. Result correctness and modular zero testing in PSPACE hold on every binary input. |
@@ -332,9 +334,10 @@ payloads. It accepts well-formed unsatisfiable formulas; real satisfiability rem
 the decision problem. Negation normalization copies arithmetic payloads unchanged.
 
 The parameter polynomial in Lemma 2.1 is now the specified normalized Sylvester
-resultant, with its roots, degree, and separability proved. Coordinate polynomials over
-the original input field still come from Galois descent and interpolation. Linear-GCD
-coefficient recovery is also verified. The shifted input family's coefficients have
+resultant, with its roots, degree, and separability proved. The polynomial-coordinate
+existence proof uses Galois descent and interpolation. The explicit rational pair
+coordinates below use the computed recovery polynomials. Linear-GCD coefficient
+recovery is also verified. The shifted input family's coefficients have
 direct formulas and integer bit-length bounds. The unnormalized integer resultant
 has at most `d₁*d₂+1` supported coefficients. Writing `N = d₁+d₂` and
 `b = (d₁+1).size + d₁ + H₁.size + (c+1).size*d₁`, each coefficient's magnitude
@@ -345,6 +348,28 @@ have explicit bit bounds and certified modular evaluation. Direct linear branche
 also handle degree-one recovery and zero directions. Magnitude bits now have certified
 space-bounded evaluators under the same residue/budget contracts. The report's remaining
 polylogarithmic-space computations remain open.
+
+[`PrimitivePairCoordinates`](LeanCanny/Algebra/PrimitivePairCoordinates.lean)
+uses the unnormalized resultant and the explicit integer-compatible coordinate
+numerators `theta*D+c*N`, `-N`, with common denominator D. Here N,D are the
+piecewise recovery polynomials, including direct linear cases. The denominator
+is nonzero at every parameter root for a separating direction, and decoding is
+bijective onto the Cartesian product of input root sets.
+[`CoordinateRecoveryMap`](LeanCanny/Algebra/CoordinateRecoveryMap.lean) and
+[`PrimitivePairInteger`](LeanCanny/Algebra/PrimitivePairInteger.lean) connect
+these field identities to the actual integer polynomials. Coordinate degrees
+and masses have explicit bounds in
+[`PrimitivePairBounds`](LeanCanny/Algebra/PrimitivePairBounds.lean).
+
+[`CannyCoefficientSpace`](LeanCanny/Algebra/CannyCoefficientSpace.lean) lets the
+input coefficient routines use polynomial space and arbitrary time. Metadata
+writers stay FP. [`PrimitivePairSpace`](LeanCanny/Algebra/PrimitivePairSpace.lean)
+computes the resultant and all three integer coordinate polynomials' coefficient
+residues from those children. [`PrimitivePairNested`](LeanCanny/Algebra/PrimitivePairNested.lean)
+uses a computed resultant as a second resultant's left input; exact product
+degrees supply its FP metadata. This is one compositional construction step.
+Certified bounded direction search, square-free preprocessing, and uniform
+iteration over the actual tube annihilants remain open.
 
 The streamed matrix-power primitive now has a verified continuation machine and
 binary state-size bounds. Its abstract run takes at most

@@ -35,6 +35,28 @@ example {F : LeanCanny.Algebra.Berkowitz.ModularFamily}
     F.zeroLanguage ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.Algebra.Berkowitz.ModularAccess.zeroLanguage_mem_PSPACE_of_evaluator a ha ⟨he⟩
 
+example {F : LeanCanny.Algebra.CannySubresultantBits.Family}
+    (a : LeanCanny.Algebra.CannySubresultantBits.Access F) (ha : a.ControlsPolyTime)
+    (L : ComputableTidilyInPolySpace a.source.leftCoefficient encBits encBits)
+    (R : ComputableTidilyInPolySpace a.source.rightCoefficient encBits encBits) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.CannyCoordinateBits.value F) encBits encBits :=
+  (LeanCanny.Algebra.CannyCoordinateBits.evaluatorWithCoefficients a ha ⟨L⟩ ⟨R⟩).computable
+
+example (S : LeanCanny.Algebra.PrimitivePairBits.Source)
+    (A : LeanCanny.Algebra.PrimitivePairBits.Readers S) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+      (fun c => LeanCanny.Algebra.PrimitivePair.leftNumerator (S.left c) (S.right c) (S.direction c))) encBits encBits :=
+  (LeanCanny.Algebra.PrimitivePairBits.leftNumeratorEvaluator S A).computable
+
+example (S : LeanCanny.Algebra.PrimitivePairBits.Source)
+    (A : LeanCanny.Algebra.PrimitivePairBits.Readers S)
+    (hdegree : ∀ c, (LeanCanny.Algebra.cannyResultant (S.left c) (S.right c) (S.direction c)).natDegree =
+      (S.left c).natDegree * (S.right c).natDegree) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+      (fun c => LeanCanny.Algebra.cannyResultant
+        (LeanCanny.Algebra.cannyResultant (S.left c) (S.right c) (S.direction c)) (S.right c) (S.direction c))) encBits encBits :=
+  (LeanCanny.Algebra.PrimitivePairBits.nestedResultantEvaluator S A hdegree).computable
+
 example {S : LeanCanny.ETR.TubeLevelSign.Source} {B : LeanCanny.ETR.TubeLevelSign.Budget S}
     (a : LeanCanny.Algebra.SignPatternBits.Access (LeanCanny.ETR.TubeLevelSign.family S B))
     (hF : LeanCanny.Algebra.SignPatternBits.ControlsPolyTime (LeanCanny.ETR.TubeLevelSign.family S B))

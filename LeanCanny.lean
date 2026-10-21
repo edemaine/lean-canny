@@ -232,6 +232,8 @@ import LeanCanny.Algebra.CannyResultantSign
 import LeanCanny.Algebra.CannySubresultantSign
 import LeanCanny.Algebra.CannyCoordinateResidue
 import LeanCanny.Algebra.CannyCoordinateSign
+import LeanCanny.Algebra.PrimitivePairNested
+import LeanCanny.Algebra.PrimitivePairBounds
 import LeanCanny.Algebra.CannyCoefficientRank
 import LeanCanny.Algebra.CannyCoefficientDigits
 import LeanCanny.Algebra.InfinitesimalResidueSpace
