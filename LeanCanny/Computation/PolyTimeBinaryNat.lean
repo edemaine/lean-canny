@@ -39,6 +39,9 @@ theorem BinaryFn.add {f g : List Bool → ℕ} (hf : BinaryFn f) (hg : BinaryFn 
 theorem BinaryFn.mul {f g : List Bool → ℕ} (hf : BinaryFn f) (hg : BinaryFn g) :
     BinaryFn (fun z => f z * g z) := ComputableTidilyInPolyTime.binary_mul' hf hg
 
+theorem BinaryFn.powUnary {f g : List Bool → ℕ} (hf : BinaryFn f) (hg : UnaryFn g) :
+    BinaryFn (fun z => f z ^ g z) := ComputableTidilyInPolyTime.binary_pow' hf hg
+
 theorem BinaryFn.size {f : List Bool → ℕ} (hf : BinaryFn f) : BinaryFn (fun z => (f z).size) :=
   BinaryFn.of_bits (mem_FP_of_eq (LeanCanny.bits_mem_FP (UnaryFn.length hf.bits_mem_FP)) fun z =>
     congrArg Nat.bits (Nat.size_eq_bits_len (f z)))

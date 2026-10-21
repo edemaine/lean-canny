@@ -126,6 +126,19 @@ example (F G : LeanCanny.Algebra.SeparableBits.Family)
       (LeanCanny.Algebra.PreprocessedPair.reusableReaders F G A B hF hG).coefficient encBits encBits :=
   (LeanCanny.Algebra.PreprocessedPair.reusableReaders F G A B hF hG).evaluator.computable
 
+example {D b n : List Bool → ℕ} (hD : LeanCanny.BinaryFn D) (hb : LeanCanny.BinaryFn b) (hn : LeanCanny.UnaryFn n) :
+    ComputableTidilyInPolyTime (fun c => LeanCanny.Algebra.FiniteAnnihilatorTree.sourceHeight (D c) (b c) (n c)) encBits encNat :=
+  LeanCanny.Algebra.FiniteAnnihilatorTree.sourceHeight_binary hD hb hn
+
+example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (hne : ∀ c, F.polynomial c ≠ 0) (count D : List Bool → ℕ)
+    (hn : LeanCanny.UnaryFn count) (hD : LeanCanny.BinaryFn D)
+    (hdegree : ∀ c i, i < count c →
+      (F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i))).natDegree ≤ D c) :
+    ComputableTidilyInPolySpace (fun c => LeanCanny.BinaryNatCode.encode
+      (LeanCanny.Algebra.FiniteAnnihilatorBits.parameter F count hne c).natDegree) encBits encBits :=
+  (LeanCanny.Algebra.FiniteAnnihilatorBits.degreeEvaluator F A hne count D hn hD hdegree).computable
+
 example (S : LeanCanny.Algebra.PrimitivePairBits.Source)
     (A : LeanCanny.Algebra.PrimitivePairBits.Readers S)
     (hdegree : ∀ c, (LeanCanny.Algebra.cannyResultant (S.left c) (S.right c) (S.direction c)).natDegree =

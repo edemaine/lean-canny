@@ -3996,9 +3996,35 @@ equivalent to parameter roots satisfying all cleared queries. If every system
 solution satisfies the supplied annihilants, this characterizes solvability
 of the original system without an additional root-vector assumption.
 
+`UniformPrimitivePairBounds` and `SeparableIntegerUniformBounds` give a common
+polynomial envelope for a pair stage. Input degrees and mass exponents at most
+T≥4 give parameter and pair-coordinate mass exponents at most T^10, and pair
+coordinate degrees at most T^3. `BalancedPrimitiveMass.UniformBounds` tracks
+parameter degree/mass and every flattened coordinate degree/mass together.
+Composition and the pair estimates propagate T to T^16, yielding T^(16^h)
+at height h. `SquarefreeUniformBounds` includes the determinantal preprocessing
+under the same original degree/height controls.
+
+`FiniteAnnihilatorHeight` combines these estimates. Original degrees at most D
+and coefficient magnitudes at most 2^b give
+`H=(D+b+4)^(256*(n+1)^4)`. Parameter and flattened coordinate masses are at most
+2^H, and their degrees are at most H. This bound holds at every node of every
+height up to n.size, including arbitrary padded node indices. Cleared constraint
+mass exponents follow from the source constraint mass and clearing allowances.
+The bound has a native FP binary writer with binary D,b controls and unary n;
+the native binary-power theorem handles its polynomial unary exponent.
+
+`FiniteAnnihilatorDegreeSpace` supplies the exact parameter degree in native
+polynomial space for an input-dependent family count. Its fold multiplies the
+square-free leaf degrees supplied by the existing native degree computation.
+The source family is indexed by `pair context (code index)` and its original
+coefficient reader may take arbitrary time in polynomial space. A common FP
+binary degree bound D and unary count n bound every accumulator by (D+1)^n.
+The native fold therefore needs no supplied execution clocks or child time bounds.
+
 The algebraic filtering theorem still needs specialization to the actual tube
-annihilants and constraints. Source-derived flattened-coordinate heights and
-uniform native coefficient evaluation at input-dependent depth remain open. The native iterator
+annihilants and constraints. Uniform native coefficient evaluation at
+input-dependent depth remains open. The native iterator
 requires one step certificate and uniform state/workspace bounds; per-node
 composition leaves those obligations open at variable depth. The current exact
 finite-system representations still have a qualitative construction; their
