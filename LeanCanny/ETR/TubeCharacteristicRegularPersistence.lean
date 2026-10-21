@@ -32,8 +32,8 @@ abbrev RegularChart (bits : List Bool) (K : Type*) :=
 
 variable {K : Type*} [RCLike K]
 
-noncomputable def regularCoefficientMap (epsilon u : K) : Polynomial (Polynomial ℤ) →+* K :=
-  Polynomial.eval₂RingHom (Polynomial.eval₂RingHom (Int.castRingHom K) epsilon) u
+noncomputable def regularCoefficientMap {S : Type*} [CommRing S] (epsilon u : S) : Polynomial (Polynomial ℤ) →+* S :=
+  Polynomial.eval₂RingHom (Polynomial.eval₂RingHom (Int.castRingHom S) epsilon) u
 
 noncomputable def regularChart (bits : List Bool) (a : RegularChart bits K) : Fin (TubeParameter.spatialCount bits) → K :=
   Fin.cons 1 a.2
@@ -92,8 +92,8 @@ theorem polynomial_trailingCoeff_eval_eq_zero_of_regular_root (epsilon : K) (a :
     (regularCoefficientMap_contDiff (source c) epsilon) (regularChart_contDiff (source c))
     (regularChart_nonzero (source c)) a hroot hJac
 
-noncomputable def lowestProjectionPolynomial (epsilon : K) : Polynomial K :=
-  (polynomial source active n d ell c).trailingCoeff.map (Polynomial.eval₂RingHom (Int.castRingHom K) epsilon)
+noncomputable def lowestProjectionPolynomial {S : Type*} [CommRing S] (epsilon : S) : Polynomial S :=
+  (polynomial source active n d ell c).trailingCoeff.map (Polynomial.eval₂RingHom (Int.castRingHom S) epsilon)
 
 theorem lowestProjectionPolynomial_eval_eq_zero_of_regular_root (epsilon : K) (a : RegularChart (source c) K)
     (hroot : regularSystem source active n d ell c epsilon a = 0)

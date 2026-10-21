@@ -3445,7 +3445,67 @@ set of projection values of affine roots with invertible full-system
 Jacobian is finite and has cardinality at most that dimension. This
 establishes a bounded nonzero eliminant for those regular roots. Singular
 proper-component persistence, a complete sampling argument, and the full
-ETR polynomial-space theorem remain open.
+ETR polynomial-space theorem remain open. The finite-fiber algebraic result
+below now supplies the missing vanishing at singular points when the affine
+fiber is finite over an algebraically closed field.
+
+## Lowest-coefficient vanishing at singular finite-fiber points
+
+An algebraic argument now removes the full-system Jacobian hypothesis for
+finite affine fibers. `FiniteZeroLocus` applies the Nullstellensatz to write
+the radical of an ideal with finitely many affine zeros as a finite
+intersection of point ideals. Every prime above it contains one of those
+maximal ideals and is therefore maximal. `MvPolynomialPointHeight` proves
+that a point ideal in `n` variables has height `n`, by splitting off one
+polynomial variable at a time. The weak Nullstellensatz gives the same
+height for every maximal ideal over an algebraically closed field.
+
+`FiniteFiberSaturation` considers `n` equations in `n+1` affine variables,
+with a polynomial parameter whose zero fiber is finite. If that parameter
+belonged to a minimal prime of the input ideal, the prime would lie above
+the finite fiber and thus be maximal, of height `n+1`. Krull's height theorem
+bounds its height by the `n` generators, a contradiction. The parameter
+therefore avoids every minimal prime. Its powers can be cancelled in the
+radical ideal. This concerns the radical and does not assert flatness of
+the possibly nonreduced quotient ring.
+
+`FiniteFiberLowestCoefficient` encodes a polynomial in the deformation
+parameter as a multivariate polynomial. If it vanishes on the deformed
+system, the Nullstellensatz puts it in the radical input ideal. Factoring
+out a deformation power, cancelling it by the preceding theorem, and
+evaluating on the zero fiber proves vanishing of the first possibly nonzero
+coefficient there. The result applies to singular points; it neither assumes
+nor constructs an analytic root family.
+
+`MacaulayFiniteFiber` supplies the actual characteristic quotient. Polynomial
+coefficient maps and polynomial projective-coordinate functions describe a
+square affine model of the homogeneous inputs. When its affine zero set is
+finite over an algebraically closed field and the projective coordinates
+are nonzero, the globally selected lowest quotient coefficient vanishes at
+every affine root. Its characteristic degree is selected before coefficient
+specialization, so no preservation-of-order hypothesis is needed for the
+vanishing theorem. Infinite projective components at infinity are allowed.
+
+`TubeCharacteristicFinitePersistence` instantiates this with the compiled
+tube rows, fixed perturbation `ε`, projection variable `u`, and chart `x₀=1`.
+It also embeds real roots in an arbitrary algebraically closed extension of
+the reals. Finiteness of the affine system over that extension therefore
+gives lowest-coefficient vanishing for every real affine tube root, including
+singular roots, with no Jacobian assumption. The coefficient evaluation and
+lowest projection-polynomial definitions now work over arbitrary commutative
+coefficient rings and are shared with the earlier analytic result.
+
+`TubeCharacteristicFiniteBounds` combines this coverage with the proved
+effective nonvanishing interval and projection-degree bound. Under the
+existing coordinate-bound and direction-reader contracts, a positive real
+perturbation in the certified dyadic interval and affine finiteness over an
+algebraically closed extension give a finite set of **all** real projection
+values, of cardinality at most the padded Macaulay dimension. Finiteness for
+the chosen compiled sampler parameters and directions remains an explicit
+hypothesis. Connecting the existing generic-direction geometry to that
+instance, extending beyond finite affine fibers to remaining proper
+components, resultant identification, and the full ETR space proof remain
+open.
 
 ## TM2 versus Complexitylib's machines
 
