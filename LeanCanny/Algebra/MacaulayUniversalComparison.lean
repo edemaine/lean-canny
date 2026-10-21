@@ -15,8 +15,8 @@ The universal power comparison is invertible in every degree over the
 coefficient fraction field. Its alternating determinant quotient is the
 actual numerator/extraneous ratio for that ordering. Equality of these
 constructed quotients is equivalent to the polynomial cross-comparison
-needed for denominator cancellation. Equality across orderings remains
-to be proved.
+needed for denominator cancellation. Equality across orderings is proved
+in `MacaulayUniversalOrdering` using concrete coordinate permutations.
 -/
 
 @[expose] public section

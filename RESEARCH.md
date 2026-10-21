@@ -2400,8 +2400,8 @@ facts provide a multiplier at the Macaulay level, and the existing width and
 homogeneity theorems give a nonzero finite relation over `ℤ[θ][T][s]`.
 
 These relations concern the full rectangular multiplication matrix. Generic
-kernel spanning at the Macaulay level is proved below; higher graded
-exactness and the determinant cancellation/resultant identity remain open.
+kernel spanning, higher graded exactness, and polynomial determinant
+cancellation are proved below; resultant identification remains open.
 No kernel statement for the selected square matrix is inferred from these
 rectangular relations.
 
@@ -2469,9 +2469,9 @@ algebraic or coordinate-reader assumptions.
 
 This proves exactness at the multiplier space, in addition to the previously
 proved surjectivity at the final target. It concerns this single graded
-piece over the generic coefficient field. Higher Koszul exactness,
-determinant cancellation/resultant identification, and the space bounds for
-using these noncomputable inverses remain open.
+piece over the generic coefficient field. Higher Koszul exactness and
+polynomial cancellation are proved below. Resultant identification and the
+space bounds for using these noncomputable inverses remain open.
 
 ## A kernel basis and the source-contraction determinant
 
@@ -2506,8 +2506,9 @@ matrix and `B` is the complementary relation minor.
 This factorization concerns the source contraction and its kernel basis.
 The next comparison factors `det(B)` by the extraneous determinant. It does
 not prove that the extraneous characteristic determinant divides
-`det(A-sI)`. That resultant cancellation, higher Koszul exactness, and bounds
-for computing the noncomputable kernel coordinates remain open.
+`det(A-sI)`. Polynomial cancellation and higher Koszul exactness are proved
+below; resultant identification and bounds for computing the noncomputable
+kernel coordinates remain open.
 
 ## The extraneous determinant is a relation-determinant factor
 
@@ -2658,8 +2659,8 @@ spatial arity, the dimension bound, and zero consecutive matrix products.
 their matrices, and the full first-matrix reindexing identity for this system.
 The pure-power case has a polynomial contraction, described below, and
 generic characteristic invertibility transfers exactness to the shifted
-system. Determinant cancellation/resultant identification and the ETR space
-bound remain open.
+system. Polynomial cancellation is proved below; resultant identification
+and the ETR space bound remain open.
 
 ## Polynomial contraction of the finite pure-power complex
 
@@ -2729,10 +2730,10 @@ proved index equivalences and bases, proving surjectivity in degree zero.
 tube complex, together with nonzero determinants for its finite homotopy
 operators. No extra algebraic certificates or entry readers are assumed.
 
-Higher exactness at the finite Macaulay grade is thus proved. Determinant
-cancellation and identification of the quotient with the multivariate
-resultant, resource bounds for this construction, and the complete ETR
-polynomial-space theorem remain open.
+Higher exactness at the finite Macaulay grade is thus proved. Polynomial
+cancellation is proved below. Identification of the quotient with the
+multivariate resultant, resource bounds for this construction, and the
+complete ETR polynomial-space theorem remain open.
 
 ## Normalized splitting and the concrete determinant factors
 
@@ -2785,7 +2786,7 @@ the classical Macaulay formula when the degree exceeds the critical degree.
 That lemma therefore cannot supply an independent proof of the classical
 case needed here.
 
-## Universal denominator cancellation and the comparison obligation
+## Universal denominator cancellation and ordering comparisons
 
 `GroupedPolynomialDivisors` proves that a divisor of a nonzero polynomial
 can use only variables present in that polynomial. If every variable has
@@ -2816,8 +2817,8 @@ and the common power specialization is one. The universal active
 determinants have that same normalization. Consequently the actual
 cross-comparison identities for these universal numerator/denominator pairs
 are equivalent to existence of a unique common polynomial quotient
-normalized to one at the power system. The equivalence is proved; the
-cross-comparison identities are not.
+normalized to one at the power system. The concrete cross-comparisons and
+the resulting normalized polynomial quotient are proved below.
 
 `MacaulayUniversalSpecialization` proves that positive input degrees fit
 whenever the usual Macaulay-level width fits. It specializes the universal
@@ -2828,10 +2829,9 @@ subtractive system over the polynomial characteristic-parameter ring.
 
 This order of proof matters: specialize a universal polynomial quotient
 after proving it exists. The absence of a common nonunit divisor in the
-universal denominator family need not survive specialization. The next
-explicit obligation is to prove the universal numerator/denominator
-cross-comparisons from the Koszul determinant structure; it is not an
-assumed algebraic certificate in a completed Canny theorem.
+universal denominator family need not survive specialization. The universal
+numerator/denominator cross-comparisons are proved below from the Koszul
+determinant structure, before specializing the polynomial factorization.
 
 `KoszulSpecializationExact` now proves that next exactness step. For a
 homogeneous system admitting a coefficient homomorphism to the coordinate
@@ -2865,10 +2865,10 @@ partition. Its determinant is the product of the two concrete principal
 block determinants in every positive degree. For the universal system over
 the coefficient fraction field, both block determinants are nonzero.
 
-A determinant-of-complex comparison must still identify the concrete
+The determinant-of-complex comparison below identifies the concrete
 numerator/extraneous ratios across orderings, including the higher Macaulay
 factors and signs. Exactness and the monomial block factorization alone do
-not prove these comparisons or polynomial cancellation.
+not supply that comparison.
 
 `KoszulPivotEquiv` now identifies adjacent monomial summands over the
 original commutative coefficient ring. The kernel of `H_k` is the pivot
@@ -2897,8 +2897,8 @@ The canonical nonpivot indices in degree one are precisely the unselected
 Macaulay multiplier indices. Explicit reindexing identifies `Q_0` with
 `relationMinor` over any commutative ring. Thus `det(P_1)` is the relation
 determinant, already factored as `det(extraneousMinor)*higherRelationFactor`.
-The higher factors are identified below. Comparing them across orderings
-and cancelling the extraneous factor remain open.
+The higher factors, their ordering comparisons, and polynomial cancellation
+of the extraneous factor are proved below.
 
 `KoszulExteriorSupport` and `KoszulNonpivotRows` supply the higher-degree
 row formula. For a nonpivot monomial/exterior basis index `(m,s)`, its
@@ -2995,9 +2995,9 @@ det(Q_k) = det(P_(k+1)) = product_j det(W_(j+2)) ^ choose(j,k).
 Here `j` ranges over `Fin n`; the level-`n+1` determinant is one. The result
 holds over any commutative ring, including empty blocks, without genericity
 or nonvanishing assumptions. The first relation determinant is consequently
-the product of all `det(W_(j+2))`. Ordering comparisons, cancellation of the
-extraneous polynomial from the numerator, and resultant identification remain
-open.
+the product of all `det(W_(j+2))`. Ordering comparisons and cancellation of
+the extraneous polynomial from the numerator are proved below; resultant
+identification remains open.
 
 Write `D_k : V_(k+1) → V_k` and `H_k : V_k → V_(k+1)`.
 `KoszulPowerComparison` constructs `F_k = D_k H_k + H_(k-1) D^power_(k-1)`,
@@ -3032,9 +3032,8 @@ of `det(F_k)` is exactly `det(activeMinor)/det(extraneousMinor)`.
 `MacaulayUniversalComparison` proves this identification over the universal
 coefficient fraction field and proves that equality of the constructed
 ratios for two orderings is equivalent to the required polynomial
-cross-comparison. Equality of those ratios across orderings is still open;
-neither this equivalence nor the alternating factor identity alone proves
-polynomial numerator/extraneous cancellation.
+cross-comparison. The coordinate transport below proves equality across
+orderings; the denominator argument then gives polynomial cancellation.
 
 `IntertwiningDeterminant` now proves the kernel/range determinant comparison.
 An intertwining square preserves the connecting map's kernel and range.
@@ -3068,10 +3067,53 @@ a transport into the actual universal polynomial numerator/denominator
 cross-comparison; the needed nonzero determinants are supplied by the
 proved universal specializations.
 
-The remaining ordering obligation is to construct this simultaneous
-transport for the reordered input and spatial coordinates. The determinant
-invariance and finite telescoping arguments are now proved. Polynomial
-numerator/extraneous cancellation and resultant identification remain open.
+`KoszulPolynomialMap` lets an arbitrary polynomial-ring homomorphism act
+semilinearly in exterior coordinates. It fixes exterior words and
+intertwines the differential after mapping the inputs.
+`KoszulExteriorPermutation` supplies the exterior-index action. Their
+composition in `KoszulCoordinatePermutation` is an explicit linear
+equivalence over the original coefficient ring, sending a monomial word
+`(m,v)` to `(rho(m),rho(v))` and intertwining the renamed input differential.
+
+`KoszulWeightedPermutation` proves that this map preserves total weight
+under the corresponding permutation of degree labels. It restricts to
+equivalences of the finite weighted pieces, even with different fitting
+exponent widths, and intertwines both the input and coordinate-power
+differentials. `FixedWidthPermutation` permutes the actual monomial ranks;
+reindexing the universal defining sum in `MacaulayUniversalPermutation`
+proves that the concrete universal systems, including their fraction-field
+versions, transform by exactly this spatial renaming.
+
+`MacaulayUniversalOrdering` applies the transport to prove
+
+```
+numerator(pi) * denominator(sigma) = numerator(sigma) * denominator(pi)
+```
+
+for every pair of orderings, over any coefficient domain, with fitting
+input-degree and Macaulay-level widths. `MacaulayUniversalCancellation`
+uses these actual identities and the coefficient-group denominator theorem
+to obtain a unique common polynomial quotient over a UFD, normalized to
+one at coordinate powers. Its factorization holds for every ordering.
+
+`MacaulayPolynomialCancellation` extends the universal integer factorization
+to any commutative coefficient ring and then specializes its coefficients.
+For every homogeneous system with positive declared degrees and a fitting
+Macaulay width, it proves
+
+```
+det(extraneousMinor) divides det(activeMinor).
+```
+
+This includes arity zero and needs no domain or UFD assumption on the
+specialized ring. Applying it to the subtractive system gives polynomial
+divisibility of the characteristic determinants. `TubeMacaulayUniversal`
+instantiates that result for the actual tube rows and proves that their
+characteristic determinants have a unique polynomial quotient.
+
+Identification of this quotient with the multivariate resultant, its
+remaining algorithmic bounds, and the full ETR polynomial-space theorem
+remain open.
 
 ## TM2 versus Complexitylib's machines
 

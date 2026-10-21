@@ -12,7 +12,7 @@ public import LeanCanny.Algebra.KoszulComparisonTransport
 The universal comparison determinants are already nonzero. A simultaneous
 transport of the input and coordinate-power finite complexes therefore
 proves the actual polynomial numerator/denominator cross-comparison.
-Constructing this transport for coordinate permutations remains open.
+`MacaulayUniversalOrdering` constructs this transport for coordinate permutations.
 -/
 
 @[expose] public section

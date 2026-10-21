@@ -5,15 +5,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.TubeMacaulayKernelBasis
-public import LeanCanny.Algebra.MacaulayUniversalSpecialization
+public import LeanCanny.Algebra.MacaulayPolynomialCancellation
 
 /-! # Universal specialization of the tube characteristic determinants
 
 The existing tube homogeneity, positive degrees, and width bound reconstruct
 the full subtractive system by specializing universal coefficients. The
 universal numerator and denominator specialize to the actual characteristic
-determinants. Universal divisibility would therefore give the required
-characteristic divisibility; that universal premise remains unproved.
+determinants. The proved universal cancellation gives their polynomial
+divisibility and a unique characteristic quotient for the actual tube system.
+Identification of this quotient with the multivariate resultant remains open.
 -/
 
 @[expose] public section
@@ -82,5 +83,28 @@ theorem denominator_specialization :
     (Macaulay.extraneousMinor (system source active n d ell c) _ _).det at h
   rw [system, Macaulay.extraneousMinor_subtractiveSystem] at h
   exact h
+
+theorem extraneous_characteristic_dvd_active_characteristic :
+    (AffineCharacteristic.subtractiveMatrix (Macaulay.extraneousMinor (TubeBivariate.rows source active n d ell c)
+      (degrees source c) (TubeCleared.matrixWidth (source c)))).det ∣
+      (AffineCharacteristic.subtractiveMatrix (Macaulay.activeMinor (TubeBivariate.rows source active n d ell c)
+        (degrees source c) (TubeCleared.matrixWidth (source c)))).det :=
+  Macaulay.extraneous_characteristic_dvd_active_characteristic _ _ _
+    (TubeBivariate.rows_homogeneous source active n d ell c)
+    (fun i => TubeCleared.degree_pos source c i.val) (TubeMacaulayKernelBasis.width_bound source c)
+
+theorem exists_unique_characteristic_quotient :
+    ∃! q : Coefficient,
+      (AffineCharacteristic.subtractiveMatrix (Macaulay.activeMinor (TubeBivariate.rows source active n d ell c)
+        (degrees source c) (TubeCleared.matrixWidth (source c)))).det =
+      (AffineCharacteristic.subtractiveMatrix (Macaulay.extraneousMinor (TubeBivariate.rows source active n d ell c)
+        (degrees source c) (TubeCleared.matrixWidth (source c)))).det * q := by
+  obtain ⟨q, hq⟩ := extraneous_characteristic_dvd_active_characteristic source active n d ell c
+  refine ⟨q, hq, ?_⟩
+  intro q' hq'
+  apply mul_left_cancel₀ (AffineCharacteristic.subtractive_det_ne_zero
+    (Macaulay.extraneousMinor (TubeBivariate.rows source active n d ell c)
+      (degrees source c) (TubeCleared.matrixWidth (source c))))
+  exact hq'.symm.trans hq
 
 end LeanCanny.ETR.TubeMacaulayUniversal
