@@ -12,7 +12,8 @@ public import LeanCanny.Computation.SpaceFunctionPair
 
 Both complete index computations supply the signed order difference. Removing
 inactive padding also preserves the certified lowest numerator scalar signs.
-These are rational-quotient data; polynomiality is not assumed or proved here.
+`TubeCharacteristicPolynomialSpace` interprets these as polynomial data and
+extracts the natural trailing-degree evaluator without additional reader contracts.
 -/
 
 @[expose] public section

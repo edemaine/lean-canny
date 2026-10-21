@@ -2288,10 +2288,11 @@ language is in PSPACE. The complete numerator sign routine also applies to
 selected scalar coefficients of the true unpadded numerator's lowest term.
 All original search and reader costs are included.
 
-This quotient is currently a rational function. Proving that it is a polynomial
-and equals the multivariate resultant of the shifted system remains open.
-Computing polynomial-quotient coefficients, proving geometric root persistence,
-and completing the sampling algorithm remain further obligations.
+This definition uses rational functions. Its polynomial representative and
+ordinary lowest data are constructed below. Identification with the
+multivariate resultant, computing the remaining polynomial-quotient
+coefficients, proving geometric root persistence, and completing the
+sampling algorithm remain further obligations.
 
 ## Reduced-monomial count and characteristic quotient degree
 
@@ -2315,12 +2316,12 @@ homomorphism and maps fraction presentations to their coefficientwise images.
 proved positive degrees and fixed-width coverage. The existing tube quotient
 maps faithfully to the quotient over the fraction field of `ℤ[θ][T]`, with
 integer degree `D`. The tube's `D` is positive and at most the padded matrix
-dimension. If a polynomial quotient identity is later proved over the original
-coefficient ring, its natural degree is exactly `D`.
+dimension. The polynomial quotient constructed below has natural degree
+exactly `D` over the original coefficient ring.
 
-Polynomiality and multivariate resultant identification remain open. The degree
-calculation supplies the expected matrix-size difference without assuming
-either assertion.
+The degree calculation supplies the expected matrix-size difference without
+assuming polynomiality or multivariate resultant identification. Polynomiality
+is proved below; resultant identification remains open.
 
 ## Independence of the last polynomial and partial polynomiality
 
@@ -2365,9 +2366,9 @@ variation are homogeneous of the corresponding degrees. The resulting
 nonzero quotient polynomial in `K(s)[u]` has degree at most `∏ⱼ≠last dⱼ`.
 
 This proves polynomiality in a coefficient parameter confined to the last
-input. Polynomiality in the characteristic parameter `s`, the full
-multivariate resultant identity, and the subsequent sampling argument remain
-open.
+input. Polynomiality in the characteristic parameter `s` is proved below.
+The full multivariate resultant identity and subsequent sampling argument
+remain open.
 
 ## Full multiplication matrix and finite Koszul relations
 
@@ -2545,10 +2546,11 @@ contraction factorization gives the exact three-factor identity
 divisibility, and nonzero remaining factor for the actual bivariate tube
 system using the existing width bound. No coordinate-reader hypothesis or
 new algebraic assumption is supplied. These are relation and contraction
-determinant identities: polynomiality of the required quotient
-`det(A-sI)/det(extraneous-sI)` and its resultant identification remain open,
-as do the algorithmic space bounds. Higher weighted exactness is now proved
-below using the pure-power contraction and characteristic invertibility.
+determinant identities. Polynomiality of the quotient
+`det(A-sI)/det(extraneous-sI)` is proved below; resultant identification and
+the remaining algorithmic space bounds remain open. Higher weighted
+exactness is proved below using the pure-power contraction and characteristic
+invertibility.
 
 ## The exterior Koszul complex and coordinate-chart exactness
 
@@ -2766,12 +2768,10 @@ tube's pieces; `TubeMacaulayHomotopyDeterminant` supplies invariance and both
 the characteristic and generic determinant factorizations for the tube.
 
 These results connect the exact finite complex to the concrete factors in
-the proposed resultant quotient. They do not prove that the extraneous
-determinant divides the active numerator: the proved factorization is of
-the larger degree-one homotopy determinant. Cancellation still requires
-control of the remaining higher determinant factors over the polynomial
-parameter ring; exactness over its rational function field alone does not
-provide that divisibility.
+the proposed resultant quotient. This factorization concerns the larger
+degree-one homotopy determinant. The remaining higher factors are controlled
+below to prove polynomial cancellation; exactness over the rational function
+field alone does not supply that divisibility.
 
 Two sources for the remaining step were checked on 2026-10-20.
 [Quitté–Tête's combinatorial treatment](https://arxiv.org/abs/2308.12232)
@@ -3114,6 +3114,53 @@ characteristic determinants have a unique polynomial quotient.
 Identification of this quotient with the multivariate resultant, its
 remaining algorithmic bounds, and the full ETR polynomial-space theorem
 remain open.
+
+## The actual characteristic quotient polynomial
+
+`CharacteristicPolynomialQuotient` defines an exact quotient candidate by
+monic division over the original coefficient ring:
+
+```
+quotientPolynomial(A,E) = (-1)^dim(E) * (det(A-sI) /ₘ charpoly(E)).
+```
+
+When the subtractive characteristic determinants divide, this polynomial
+factors the numerator exactly. The construction commutes with every
+coefficient homomorphism, including noninjective specializations. Over a
+domain its degree is `dim(A)-dim(E)` and, when `dim(E) ≤ dim(A)`, its leading
+coefficient is the corresponding power of `-1`.
+
+`MacaulayCharacteristicQuotient` applies the proved polynomial cancellation.
+The definition needs no homogeneity proofs as data. For homogeneous inputs
+of positive declared degrees and a fitting Macaulay width, its factorization
+is exact. Over a domain its natural degree is `D = Σᵢ ∏ⱼ≠ᵢ dⱼ`, its leading
+coefficient is `(-1)^D`, and multiplying by that sign gives a monic polynomial.
+Its degree survives every coefficient specialization to a nontrivial ring.
+Its rational-function image is the prior determinant ratio, and its ordinary
+trailing degree and coefficient realize the prior signed order and fraction
+of trailing coefficients.
+
+`TubeCharacteristicPolynomial` supplies this concrete polynomial for the
+actual tube system over `ℤ[θ][T]`. Its degree is the existing positive
+`expectedDegree`, its leading coefficient is the dimension sign, and its
+rational image is the existing `value`. Every specialization to a nontrivial
+ring remains nonzero with exactly that degree; over a field its root multiset
+has cardinality at most `expectedDegree`. The prior order is its natural
+trailing degree and is therefore nonnegative; the negative-order language
+is empty.
+
+`TubeCharacteristicPolynomialSpace` postcomposes the existing signed-order
+evaluator with positive-component projection to give a `SpaceFunction` for
+the actual polynomial trailing degree. Testing positivity of that index
+decides whether its constant coefficient vanishes, in PSPACE under the
+existing `TubeBivariate.Data` contracts. All original source-reader and
+suspended-child costs are retained. No full polynomial coefficient vector
+is constructed by the evaluator.
+
+The multivariate-resultant common-root characterization and identification
+are still unproved. The construction above makes the polynomial and its
+degree/lowest-data interfaces concrete; it does not assert that its roots
+are exactly the parameters of common projective roots.
 
 ## TM2 versus Complexitylib's machines
 

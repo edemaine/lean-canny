@@ -141,6 +141,7 @@ import LeanCanny.ETR.TubeExtraneousSpace
 import LeanCanny.ETR.TubeExtraneousCharacteristicSpace
 import LeanCanny.ETR.TubeCharacteristicQuotientSpace
 import LeanCanny.ETR.TubeCharacteristicQuotientDegree
+import LeanCanny.ETR.TubeCharacteristicPolynomialSpace
 import LeanCanny.ETR.TubeMacaulayKoszul
 import LeanCanny.ETR.TubeMacaulayGenericShift
 import LeanCanny.ETR.TubeMacaulayKoszulExact

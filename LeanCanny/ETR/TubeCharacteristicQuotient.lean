@@ -14,8 +14,8 @@ public import LeanCanny.Algebra.PolynomialQuotientLowest
 The numerator uses the true degree-level Macaulay matrix; the denominator
 uses the true extraneous principal minor. Both are nonzero, and their lowest
 data agree with the certified padded computations. The quotient is defined as
-a rational function. Polynomiality and identification with the multivariate
-resultant remain obligations.
+a rational function. `TubeCharacteristicPolynomial` constructs its polynomial
+representative; identification with the multivariate resultant remains open.
 -/
 
 @[expose] public section
