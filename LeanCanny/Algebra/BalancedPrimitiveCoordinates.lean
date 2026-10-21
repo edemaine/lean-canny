@@ -8,8 +8,9 @@ public import LeanCanny.Algebra.BalancedPrimitiveTree
 
 /-! # Indexed leaf recovery from balanced primitive parameters
 
-Coordinates here are nested explicit rational pair evaluations. Flattening
-them into one numerator/denominator pair per leaf is a separate construction.
+Coordinates here are nested explicit rational pair evaluations. The module
+`BalancedPrimitivePolynomials` supplies their flattened integer numerator and
+denominator polynomials.
 -/
 
 @[expose] public section

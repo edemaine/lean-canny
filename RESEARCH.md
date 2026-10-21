@@ -3968,10 +3968,37 @@ removes the padded coordinates and gives a bijection with vectors of roots of
 the original polynomials over any characteristic-zero field. For n=0 the
 parameter is X and the root vector is the unique empty vector.
 
-The resulting tuples are Cartesian products of annihilator roots. Filtering
-them by the actual tube constraints remains a separate step. Flattened
-coordinate numerator/denominator polynomials and uniform native coefficient
-evaluation at input-dependent tree depth remain open. The native iterator
+`UnivariateRationalComposition` clears an ordinary polynomial p at a ratio n/d
+with an explicit exponent e, giving `d^e*p(n/d)` on evaluation. A coordinate
+pair uses the maximum numerator/denominator degree as the same exponent for
+both, so composition preserves the ratio. The denominator remains nonzero
+when both component denominators are nonzero. Degree grows by at most the
+product of coordinate degrees, and mass exponents satisfy `s+e*b` for outer
+mass bound `2^s` and inner mass bound `2^b`. The clearing operation commutes
+with coefficient maps while retaining e, including modular degree drops.
+
+`SeparableIntegerCoordinates` packages the primitive-pair ratios for this
+composition. `BalancedPrimitivePolynomials.flat` constructs flattened integer
+coordinates along each branch. They agree with indexed nested decoding, with
+nonzero denominators at every parameter root in any characteristic-zero field.
+Their degree budget multiplies the pair allowances along the branch; a common
+leaf degree bound D gives the bound `(D+2)^(2^(h+1))` at height h.
+`FiniteAnnihilatorPolynomials` specializes to the padded family and derives
+coordinate degree bound `(D+2)^(4*(n+1))` for original D≥1. It also proves
+coordinate recovery at the encoding of every original root vector.
+
+`FiniteAnnihilatorFiltering` substitutes these actual integer polynomials into
+multivariate constraints with fixed even clearing allowances. The queries
+preserve zero tests over all characteristic-zero fields and signs over ℝ.
+Their degrees follow from the coordinate degree bound and the supplied
+allowances. Original-polynomial root vectors satisfying all constraints are
+equivalent to parameter roots satisfying all cleared queries. If every system
+solution satisfies the supplied annihilants, this characterizes solvability
+of the original system without an additional root-vector assumption.
+
+The algebraic filtering theorem still needs specialization to the actual tube
+annihilants and constraints. Source-derived flattened-coordinate heights and
+uniform native coefficient evaluation at input-dependent depth remain open. The native iterator
 requires one step certificate and uniform state/workspace bounds; per-node
 composition leaves those obligations open at variable depth. The current exact
 finite-system representations still have a qualitative construction; their

@@ -35,6 +35,20 @@ theorem map_encode {L M : Type*} [Field L] [Field M] (f : L →+* M) (p q : Sepa
 
 variable {L : Type*} [Field L] [CharZero L]
 
+theorem denominator_ne_zero_over (p q : SeparableIntegerPolynomial) (theta : L)
+    (ht : (combine p q).polynomial.eval₂ (Int.castRingHom L) theta = 0) :
+    (PrimitivePair.denominator p.polynomial q.polynomial (PrimitivePair.select p.polynomial q.polynomial)).eval₂
+      (Int.castRingHom L) theta ≠ 0 := by
+  let f : L →+* AlgebraicClosure L := algebraMap L (AlgebraicClosure L)
+  have ht' : (combine p q).polynomial.eval₂ (Int.castRingHom (AlgebraicClosure L)) (f theta) = 0 := by
+    rw [← map_integer_eval₂, ht, map_zero]
+  have hr := PrimitivePair.decodeInteger_root p.polynomial q.polynomial _ (f theta) p.ne_zero
+    q.separable_in_field (IsAlgClosed.splits _) (PrimitivePair.select_spec p.polynomial q.polynomial
+      p.separable_in_field q.separable_in_field (IsAlgClosed.splits _) (IsAlgClosed.splits _)).2 ht'
+  intro hz
+  apply hr.2.2.2
+  rw [← map_integer_eval₂ f, hz, map_zero]
+
 theorem decode_root_over (p q : SeparableIntegerPolynomial) (theta : L)
     (ht : (combine p q).polynomial.eval₂ (Int.castRingHom L) theta = 0) :
     p.polynomial.eval₂ (Int.castRingHom L) (decode p q theta).1 = 0 ∧
