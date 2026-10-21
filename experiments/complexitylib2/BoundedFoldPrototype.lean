@@ -75,4 +75,39 @@ theorem evaluator [Inhabited α] [Inhabited β]
       (encPair encNat eB))).comp hit)
   exact hout.congr fun c => by rw [iterate_step]
 
+/-- Instantiate the generic replacement with the concrete slow summand. -/
+def modularChild (s : (ℕ × ℕ) × ℕ × ℕ) : ℕ :=
+  (s.2.2 + SpacePrototype.slowChild (s.1.1, s.2.1)) % (s.1.1 + 1)
+
+theorem modular_fold (p : ℕ × ℕ) (k : ℕ) :
+    fold modularChild (fun _ => 0) p k = SpacePrototype.value SpacePrototype.slowChild p.1 k := by
+  induction k with
+  | zero => rfl
+  | succ k ih => rw [fold, modularChild, ih]; rfl
+
+/-- The generic evaluator proves the same concrete nested-loop scan certificate. -/
+theorem slowScan_inPolySpace :
+    ComputableTidilyInPolySpace (SpacePrototype.scan SpacePrototype.slowChild)
+      SpacePrototype.encInput encNat := by
+  open ComputableTidilyInSpace in
+  have hchild : ComputableTidilyInSpace modularChild
+      (encPacket SpacePrototype.encInput encNat) encNat (fun s =>
+        (encPacket SpacePrototype.encInput encNat s).length) := by
+    have hm := fst' (fst SpacePrototype.encInput (encPair encNat encNat))
+    have hi := fst' (snd SpacePrototype.encInput (encPair encNat encNat))
+    have ha := snd' (snd SpacePrototype.encInput (encPair encNat encNat))
+    exact budget_natMod (budget_natAdd ha
+      (budget_comp_linear SpacePrototype.slowChild_inSpace (budget_prod hm hi)))
+      (budget_natSucc hm)
+  have h := evaluator (SpacePrototype.polySpace_of_linear hchild)
+    (ComputableTidilyInPolyTime.snd encNat encNat)
+    (ComputableTidilyInPolySpace.of_polyTime (ComputableTidilyInPolyTime.const 0))
+    (B := fun p => (encNat p.1).length)
+    (PolyBounded.of_forall_le 1 1 (fun p => by
+      simp only [pow_one, one_mul, SpacePrototype.encInput, length_encPair]
+      omega)) (fun p k _ => by
+      rw [modular_fold]
+      exact ComputableTidilyInO.length_encNat_mono (SpacePrototype.value_le _ _ _))
+  exact h.congr fun p => by rw [SpacePrototype.scan, SpacePrototype.iterate_step, modular_fold]
+
 end LeanCanny.BoundedFoldPrototype

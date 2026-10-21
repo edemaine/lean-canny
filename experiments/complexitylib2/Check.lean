@@ -8,6 +8,8 @@ open LeanCanny.SpacePrototype
 #guard scan slowChild (7, 0) == 0
 #guard scan slowChild (0, 6) == 0
 #guard scan (fun p => p.2) (4, 3) == 3
+#guard LeanCanny.BoundedFoldPrototype.fold LeanCanny.BoundedFoldPrototype.modularChild
+  (fun _ => 0) (7, 4) 4 == 5
 
 open Lean in
 run_cmd do

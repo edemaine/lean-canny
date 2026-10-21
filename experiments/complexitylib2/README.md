@@ -12,8 +12,8 @@ lake build --wfail
 lake env lean Check.lean
 ```
 
-The build passes without warnings (3651 jobs); `Check.lean` checks four concrete
-results and audits all 38 prototype declarations, including their dependencies,
+The build passes without warnings (3651 jobs); `Check.lean` checks five concrete
+results and audits all 44 prototype declarations, including their dependencies,
 for axioms beyond `propext`, `Classical.choice`, and `Quot.sound`.
 
 ## What was checked
@@ -42,11 +42,13 @@ The hypotheses are a polynomial-time binary count, a polynomial-space seed and
 child, and polynomially bounded accumulator prefixes. The proof certifies the
 typed update, bounds the full packet, invokes the iteration rule, and projects
 the result. It requires no first-halting time, execution clock, request/resume
-program, or saved-child configuration.
+program, or saved-child configuration. `BoundedFoldPrototype.slowScan_inPolySpace`
+instantiates that generic evaluator with the concrete slow child and proves the
+same scan certificate; its hypotheses are thus exercised by an actual example.
 
 ## Comparison and decision
 
-The generic evaluator proof is 30 lines, versus 41 lines in the current
+The generic evaluator proof is about 30 lines, versus about 40 lines in the current
 `BoundedFoldSpace.evaluator` proof, plus its separate controller and clock
 infrastructure. The modular update's space proof is 9 lines and the linear-space
 scan's is 8. Line counts alone understate the change: the new child interface
@@ -66,6 +68,25 @@ type. First check the Lean/Mathlib upgrade and the FP-to-CSLib bridge; preserve
 the existing algebraic correctness theorems and prove the required connections
 between complexity interfaces. The prototype alone does not migrate the main
 project or prove Canny's PSPACE theorem.
+
+## Upgrade compatibility check
+
+A temporary project required both library pins, explicitly overriding CSLib and
+Mathlib to the revisions above, and attempted
+`lake build --wfail LeanCanny.Computation.SpaceFunction Complexitylib.Interop.Cslib.MultiTape`.
+The unmodified old dependency fails on Lean 4.36.0-rc1:
+
+* `Cobham/Internal/Simulate.lean:490` applies `CobhamFP` as a function instead of
+  using set membership; Lean no longer elaborates this as the intended proposition.
+* `Interop/Cslib/MultiTape/Defs.lean` constructs machines with a `tr` structure
+  field. The new CSLib model uses a relation with a determinism proof and offers
+  `MultiTapeTM.ofTr` for this construction. Its generic finite-state derivation
+  also fails to elaborate.
+* Several old proofs trigger the new unused-tactic linter.
+
+These are concrete migration prerequisites, not evidence against the new space
+interface. Simply adding the new dependency and changing the toolchain is
+insufficient. The main development was kept intact during this diagnostic.
 
 The library rules used here are in
 [`InSpace`](https://github.com/SamuelSchlesinger/complexitylib2/blob/cb1b7ce8ca0757db30ec29c8365b88d86b78c80a/Complexity/Computability/Machines/Turing/MultiTape/Complexity/InSpace.lean),
