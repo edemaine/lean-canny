@@ -3738,6 +3738,44 @@ or separately assumed query degree/mass bounds remain.
 Effective construction of suitable coordinate representations and their readers,
 with bounds in the original input, and the complete ETR PSPACE theorem remain open.
 
+## Full finite solution counts and source-derived coordinate degrees
+
+`TubeCompiledReprojection` proves that decoding and relifting with a new linear
+projection is a bijection between the full compiled affine root sets. The
+spatial tail determines the extra parameter uniquely. This includes reciprocal
+coordinates and singular roots; no Jacobian condition is used.
+
+`TubeCompiledCardinality` applies the existing lowest quotient eliminant to
+each coordinate direction. Each coordinate of the spatial tuple lies among at
+most M roots, where `M=(2^W)^A`, A is the compiled coordinate count, and W is the
+Macaulay matrix width. The full zero set injects into their Cartesian product,
+so it has at most `B=M^(A-1)=(2^W)^(A*(A-1))` distinct solutions. This step
+bounds points, rather than only projection values or regular roots.
+
+`TubeLevelCardinality` transfers that bound through the full complex fiber and
+an embedding of the rational algebraic closure. `FiniteSystemCardinality`
+then bounds every representation's parameter degree by B, its coordinate
+numerator/denominator degrees by `B^2+2`, and its separating-direction entries
+by `(A+1)*B^4`. Integer clearing preserves the degree bounds.
+
+The common coordinate threshold is effective in the stored packet.
+`TubeCoordinateThreshold` proves that every coordinate direction has the same
+encoded direction-size sum: one encoded one and A-1 encoded zeros. The existing
+specialization exponent depends on this sum, so one fixed FP direction reader
+computes a binary exponent for the whole family. This supplies a positive
+common nonvanishing interval without a separate threshold oracle.
+
+`TubeLevelDegreeBounds` gives FP binary writers for B and `B^2+2`; their bit
+lengths are polynomial because A and W have unary FP controls. `MassBudget`
+constructs the former `CoordinateBudget` at positive levels below the proved
+threshold. Native sample counting and sample-existence PSPACE membership now
+need only coefficient-mass bounds and root/coordinate readers as resource
+hypotheses, along with FP packet/mask fields and the small-level condition.
+An independent foundation example checks that endpoint against the native class.
+
+Bounds on suitable packet selection, coordinate coefficient heights, effective
+coordinate construction/readers, and the full ETR PSPACE theorem remain open.
+
 ## TM2 versus Complexitylib's machines
 
 The current project uses Complexitylib2's tidy multitape calculus.

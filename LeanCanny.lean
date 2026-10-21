@@ -160,6 +160,7 @@ import LeanCanny.ETR.TubeLevelSignSpace
 import LeanCanny.ETR.TubeLevelSignBounds
 import LeanCanny.ETR.TubeConstraintCoefficientSource
 import LeanCanny.ETR.TubeLevelSignNative
+import LeanCanny.ETR.TubeLevelDegreeBounds
 import LeanCanny.Algebra.ProjectiveDepth
 import LeanCanny.Algebra.KoszulExactSurjectivity
 import LeanCanny.Algebra.KoszulIdealAnnihilator
