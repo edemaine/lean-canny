@@ -106,14 +106,6 @@ def decrement : List Bool → List Bool
   | true :: t => false :: t
   | false :: t => if normalize t = [] then [] else true :: decrement t
 
-theorem decrement_length_le (bits : List Bool) : (decrement bits).length ≤ bits.length := by
-  induction bits with
-  | nil => rfl
-  | cons b t ih =>
-      cases b with
-      | false => simp only [decrement, List.length_cons]; split_ifs <;> simp_all
-      | true => simp only [decrement, List.length_cons]; exact le_rfl
-
 theorem decrement_value (bits : List Bool) :
     Nat.fromBitsLE (decrement bits) = Nat.fromBitsLE bits - 1 := by
   induction bits with
@@ -130,27 +122,15 @@ theorem decrement_value (bits : List Bool) :
           · simp only [Nat.fromBitsLE_cons, Bool.false_eq_true, ↓reduceIte, ih]
             omega
 
-theorem decrement_mem_FP : decrement ∈ FP := by
-  have hprev := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  have hnormalized := mem_FP_comp pairSnd_mem_FP normalize_mem_FP
-  have hempty := stringEq_fppred hnormalized (constFn_mem_FP [])
-  have hfalse := hempty.ite_mem_FP (constFn_mem_FP [])
-    (mem_FP_comp hprev (cons_mem_FP true))
-  have htrue := mem_FP_comp pairSnd_mem_FP (cons_mem_FP false)
-  refine recFold_mem_FP_of_bound (g := fun _ t => decrement t)
-    hfalse htrue (constFn_mem_FP []) (constFn_mem_FP []) id_mem_FP
-    (bound := id) ?_ ?_ ?_ PolyBound.id ?_
-  · intro z; rfl
-  · intro z t; simp only [decrement, pairFst_pair, pairSnd_pair, Function.comp_apply]
-  · intro z t; simp only [decrement, pairSnd_pair, Function.comp_apply]
-  · intro z t ht; exact (decrement_length_le t).trans ht.length_le
-
 def pred (bits : List Bool) : List Bool := normalize (decrement bits)
 
 theorem pred_eq_bits (bits : List Bool) :
     pred bits = (Nat.fromBitsLE bits - 1).bits := by rw [pred, normalize_eq_bits, decrement_value]
 
-theorem pred_mem_FP : pred ∈ FP := mem_FP_comp decrement_mem_FP normalize_mem_FP
+theorem pred_mem_FP : pred ∈ FP := by
+  have h := natBits_computable.comp
+    (Turing.MultiTapeTM.ComputableTidilyInPolyTime.binary_sub' fromBitsLE_computable (.const 1))
+  exact mem_FP_of_eq h (fun p => (pred_eq_bits p).symm)
 
 theorem drop_one_value (bits : List Bool) :
     Nat.fromBitsLE (bits.drop 1) = Nat.fromBitsLE bits / 2 := by
