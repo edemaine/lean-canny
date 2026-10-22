@@ -1,3 +1,13 @@
+import LeanCanny.ETR.CoerciveCoordinateEncoding
+import LeanCanny.Algebra.SymbolicFixedTableMixedSource
+import LeanCanny.Algebra.SymbolicCoordinateClearSpace
+import LeanCanny.Algebra.SymbolicScaledSquarefreeSpace
+import LeanCanny.Algebra.SymbolicFixedTableProgram
+import LeanCanny.Algebra.SymbolicFixedTablePairSpace
+import LeanCanny.Algebra.BivariateRationalSubstitutionEncoding
+import LeanCanny.ETR.CoerciveQueryIndexed
+import LeanCanny.ETR.CoerciveInfinitesimalReadout
+import LeanCanny.ETR.CoerciveNativeOriginalResidue
 import LeanCanny.ETR.CoerciveSymbolicSampling
 import LeanCanny.Algebra.MacaulayFullBoxDeterminantSpace
 import LeanCanny.ETR.EncodingBounds

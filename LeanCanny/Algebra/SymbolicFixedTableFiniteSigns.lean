@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Algebra.SymbolicFixedTableFinite
+public import LeanCanny.Algebra.SymbolicFixedTableFiniteWith
 public import LeanCanny.Algebra.RationalSubstitutionSignWith
 
 /-! # Exact sign filtering with the actual integer-prepared symbolic table -/
@@ -17,8 +17,8 @@ set_option backward.isDefEq.respectTransparency false
 
 noncomputable def signQueryWith (F : Family) (D : Fin F.count → ℕ)
     (q : MvPolynomial (Fin F.count) Coefficient) : Polynomial Coefficient :=
-  RationalSubstitution.clearedWith D q (fun i => (F.coordinate i).numerator)
-    (fun i => (F.coordinate i).denominator)
+  RationalSubstitution.clearedWith D q (fun i => (F.fixedCoordinate i).numerator)
+    (fun i => (F.fixedCoordinate i).denominator)
 
 theorem signQueryWith_eval (F : Family) (D : Fin F.count → ℕ)
     (q : MvPolynomial (Fin F.count) Coefficient) (hD : ∀ i, q.degreeOf i ≤ D i)
@@ -27,11 +27,11 @@ theorem signQueryWith_eval (F : Family) (D : Fin F.count → ℕ)
     SignType.sign ((F.signQueryWith D q).eval₂ (scalarEvaluation beta) theta) =
       SignType.sign (q.eval₂ (scalarEvaluation beta) (F.decode beta theta)) := by
   rw [signQueryWith, RationalSubstitution.sign_eval₂_clearedWith (scalarEvaluation beta) theta D q _ _ hD
-    (fun i => (F.coordinate_spec beta hb he theta ht i).1)]
+    (fun i => (F.fixedCoordinate_spec beta hb he theta ht i).1)]
   congr 1
   apply congrArg (q.eval₂ (scalarEvaluation beta))
   funext i
-  exact (F.coordinate_spec beta hb he theta ht i).2
+  exact (F.fixedCoordinate_spec beta hb he theta ht i).2
 
 /-- Any acceptance predicate on the query signs, including combinations of
 zero and nonpositive tests, transfers to the one prepared primitive root. -/

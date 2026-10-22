@@ -1511,8 +1511,11 @@ queries; `ImplicitPowerResidueFP` computes residues of the large power-of-two
 coefficient without writing that integer. The canonical coordinate annihilant
 in `CoerciveBoxGramEliminant` uses a fixed Gram determinant and an explicit
 fixed-width matrix layout. Its block determinant form has only original
-coefficients, negations, zeroes and ones as entries. A generic native bivariate
-determinant evaluator supports this binary matrix dimension.
+coefficients, negations, zeroes and ones as entries. `CoerciveNativeOriginalResidue`
+now computes the actual annihilator coefficients in native polynomial space,
+including the perturbation pin and every out-of-range default. Its complete
+source, derivative, homogenization, matrix-entry, and determinant costs are
+included.
 `CoerciveQueryCoefficient` supplies complete native readers for the actual
 sample gradient and inequality queries. `SymbolicBalancedFiniteSigns` proves
 exact sign filtering with uniform clearing allowances. `SymbolicFixedTablePreparation`
@@ -1523,6 +1526,16 @@ accepted signs at one actual integer-prepared symbolic primitive root for all
 sufficiently small positive parameters. Its parameter is proved nonzero,
 and the prepared coordinates have uniform degree and mass bounds. This is a
 semantic reduction; its complete native coefficient evaluator remains open.
+`CoerciveSymbolicBounds` supplies native FP binary bounds for the final root
+and cleared queries. `CoerciveInfinitesimalSemantics` identifies ETR with the
+union of four exact eventual sign patterns, and `CoerciveInfinitesimalReadout`
+proves the final PSPACE composition from certified actual coefficient readers.
+Those prepared parameter and coordinate readers are still being completed.
+The cleared queries now use fixed envelopes at each coordinate-composition
+level. `SymbolicFixedTableFiniteWith` proves that these representatives have
+the same decoded values and nonzero denominators, within the original degree
+and mass budgets. Native squarefree leaf, fixed-table pair, and single symbolic
+clearing stages are certified; their complete recursive composition remains.
 
 ## Next obligations
 
@@ -1531,17 +1544,15 @@ semantic reduction; its complete native coefficient evaluator remains open.
    root-tuple correspondence and the exact ETR sign-filtering equivalence are
    proved for the actual integer-prepared table, including ordinary
    specialization. The full recursive coefficient graph remains to be certified.
-2. Stream a fixed coordinate annihilant for each coercive critical fiber.
-   The canonical Gram determinant, padded matrix layout, and generic native
-   bivariate determinant evaluator, shift guards, and numeric entry readers are
-   verified. The remaining connection supplies the actual homogenized-row
-   coefficient reader.
-3. Combine eventual root/sign realizability with
-   [`CoerciveSymbolicSampling.correct`](LeanCanny/ETR/CoerciveSymbolicSampling.lean)
-   to prove `ETR ∈ PSPACE`, then use the proved reduction closure for
-   `∃ℝ ⊆ PSPACE`. Actual source radius and penalty exponents already have
-   native FP writers; the integer query system and implicit power residues
-   are verified.
+2. Use the completed native canonical annihilator reader as the source for
+   symbolic preparation. Fixed-table pair entries and one-stage resultants
+   already have native space certificates; the uniform recursive graph and
+   squarefree leaf composition remain.
+3. Instantiate the completed four-pattern PSPACE readout with the actual
+   prepared parameter and cleared-query readers to obtain `ETR ∈ PSPACE` and
+   `∃ℝ ⊆ PSPACE`. Source, coordinate, and final query budgets have native FP
+   binary writers; the integer query readers and implicit power residues are
+   verified.
 4. For the original tube-sampling route, bound the epsilon feasibility witness,
    delta feasibility gap, rational directions, and retained-level interval,
    and stream nested implicit substitutions. These are separate from the

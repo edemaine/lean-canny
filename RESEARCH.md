@@ -5029,8 +5029,11 @@ binary writers, including the swapped coefficient orientation required by
 symbolic primitive preparation. `BivariateDeterminantInteger` supplies a generic
 native determinant coefficient evaluator with binary dimension, retaining the
 entry-reader cost. The full-box shift and entry readers and their composition
-with this determinant evaluator are verified. Actual homogenized-row readers
-are still being connected. Complete native sample-query readers are available in
+with this determinant evaluator are verified. `CoerciveHomogeneousReaderCorrect`
+connects the complete native homogenized-row program to the actual polynomial
+system. `CoerciveAnnihilatorResidue` and `CoerciveNativeOriginalResidue` compose
+it with the canonical determinant and derive actual spatial and pin leaf
+coefficient readers, including invalid-index defaults. Complete native sample-query readers are available in
 `CoerciveQueryCoefficient`, with no source coefficient oracle.
 `CoerciveNativeAnnihilators` pins the perturbation as an extra original leaf
 T-alpha, and `CoerciveNativeSampling` proves exact actual-sample filtering on
@@ -5041,7 +5044,24 @@ and `CoordinateBounds` provide the actual prepared parameter and rational
 coordinates, with uniform bounds and ordinary-small-parameter root equivalence.
 `CoerciveSymbolicSampling.correct` proves exact ETR equivalence to eventual
 accepted signs of the cleared sample queries at one such primitive root.
-The native symbolic-coordinate/sign coefficient composition is still incomplete.
+`CoerciveSymbolicBounds` supplies outer-degree, alpha-degree, and total-mass
+bounds for the final cleared queries, with FP binary writers. The concrete
+`CoerciveInfinitesimalFamily` has all native FP controls and a pattern writer.
+`CoerciveInfinitesimalSemantics.correct_patterns` proves that exactly four
+negative/zero inequality cases characterize ETR. `CoerciveInfinitesimalReadout`
+composes their native eventual-root decisions and the reduction closure, given
+certified readers for the actual prepared parameter and cleared-query
+coefficients. This remains a conditional final interface: the native symbolic
+parameter/coordinate coefficient composition is still incomplete.
+The coordinate representation now clears at each source-derived sixteenth-power
+envelope. `SymbolicFixedTableCoordinatesWith` and `FiniteWith` prove the
+ordinary real decoding and denominator guards for these representatives, with
+the same final bounds. `SymbolicScaledSquarefreeSpace` certifies actual symbolic
+leaf coefficients from exact prepared degree/GCD metadata and native original
+readers, including constant and terminal cases. Fixed-table symbolic entry,
+one-stage resultant, controller, matrix, and mixed leaf/zero stages are also
+native. The remaining scheduler must include every child cost and retain
+alpha-degree guards when moving to a smaller child radix.
 `RowSpanSpecialization` proves that one surjective specialization selects a
 nonzero maximal minor and gives generic row-span certificates, even when the
 specializing coefficient map is noninjective.
