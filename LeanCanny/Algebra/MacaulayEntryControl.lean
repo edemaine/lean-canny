@@ -113,8 +113,7 @@ theorem remainderRead_mem_FP {L : Layout} (h : L.PolyTime) : remainderRead L ∈
   have hp := pivot_unary h
   have hi := bits_mem_FP (hp.comp pairFst_mem_FP)
   have he : FPPred (fun q => Nat.fromBitsLE (pairSnd q) = pivot L (pairFst q)) :=
-    (BinaryNat.eq_fppred pairSnd_mem_FP hi).of_iff (fun q => by
-      simp only [Nat.fromBitsLE_bits] <;> omega)
+    by simpa only [Nat.fromBitsLE_bits] using BinaryNat.eq_fppred pairSnd_mem_FP hi
   have hd : UnaryFn (fun q => L.degree (context (pairFst q)) (pivot L (pairFst q))) := by
     refine (h.degree.comp (mem_FP_pair (mem_FP_comp pairFst_mem_FP context_mem_FP)
       (hp.comp pairFst_mem_FP).mem_FP)).of_eq ?_

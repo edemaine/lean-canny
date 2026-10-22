@@ -103,8 +103,7 @@ def compare (z : List Bool) : Bool := decide
 theorem compare_FP : (fun z => [compare z]) ∈ FP := by
   have hl := mem_FP_comp pairFst_mem_FP declared_FP
   have h : FPPred (fun z => Nat.fromBitsLE (declared (pairFst z)) = Nat.fromBitsLE (pairSnd z)) :=
-    (BinaryNat.eq_fppred hl pairSnd_mem_FP).of_iff
-    (fun z => by simp only [Function.comp_apply] <;> omega)
+    BinaryNat.eq_fppred hl pairSnd_mem_FP
   exact h.flag_mem_FP
 
 theorem validDecider (p : List Bool → ℤ[X])
