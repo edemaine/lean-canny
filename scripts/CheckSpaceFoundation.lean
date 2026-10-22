@@ -39,11 +39,19 @@ example (A W : List Bool → ℕ) (e : List Bool → ℕ → ℕ)
   (LeanCanny.Encoding.FixedWidthNatVector.encodeEvaluator A W e hA hW read ⟨R⟩ he).computable
 
 example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
-    (hne : ∀ c, F.polynomial c ≠ 0) (count D : List Bool → ℕ)
+    (count D : List Bool → ℕ)
     (hn : ComputableTidilyInPolyTime count encBits encUnary) (hD : ComputableTidilyInPolyTime D encBits encNat)
+    (hne : ∀ c i, i < count c → F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≠ 0)
     (hdegree : ∀ c i, i < count c → (F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i))).natDegree ≤ D c) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.BalancedDegreeTable.prepare F count D) encBits encBits :=
-  (LeanCanny.Algebra.BalancedDegreeTable.prepareEvaluator F A hne count D hn hD hdegree).computable
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.PaddedAnnihilatorBits.prepareDegrees F count D) encBits encBits :=
+  (LeanCanny.Algebra.PaddedAnnihilatorBits.prepareDegreesEvaluator F A count D hn hD hne hdegree).computable
+
+/-! The bounded test is a native decider on all words. Its separability
+interpretation is proved separately under pointwise metadata promises. -/
+example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (H : List Bool → ℕ) (hH : ComputableTidilyInPolyTime H encBits encNat) :
+    LeanCanny.Algebra.BalancedTablePolynomials.separabilityTest F H ∈ Cslib.Complexity.PSPACE encBits :=
+  (LeanCanny.Algebra.BalancedTablePolynomials.separabilityTestDecider F A H hH).mem_PSPACE
 
 /-! A single native machine handles input-dependent recursion depth. Neither
 the local instruction computation nor the reply installer needs an FP clock. -/

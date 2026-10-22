@@ -4567,10 +4567,50 @@ canonical separating direction, since the latter is at most B squared. The
 frame preserves the original source and has the exact length supplied by the
 existing frame layout theorem.
 
-This prepares degrees only. It does not claim table consistency: the canonical
-directions still need to be computed, and the padded leaf family/readers must
-be connected to the supplied-table coefficient evaluator. These steps, the
-tube-annihilator specialization, and the full ETR PSPACE theorem remain open.
+This prepares degrees only. The padded-reader connection is supplied below.
+Canonical directions still need to be computed and complete table consistency
+proved; the tube-annihilator specialization and full ETR PSPACE theorem remain
+open.
+
+## Padded original readers and pointwise separability tests
+
+`ScaledSquarefreePadding` proves that square-free preprocessing sends X to X
+literally, using the terminal GCD representative and scaled quotient identities.
+`PaddedAnnihilatorReaders` normalizes indexed source contexts and replaces every
+index beyond the finite count by X. The original reader supplies the coefficient
+and FP metadata certificates on all words. Only the actual finite family must
+be nonzero. The resulting square-free leaves agree exactly with
+`FiniteAnnihilatorTree.leaf`, and the uniform table coefficient evaluator applies
+to this padded source without further computation assumptions.
+
+`PaddedAnnihilatorMetadata` connects the degree preparer to the original finite
+family. It proves equality of the canonical padded leaves, exact prepared orders,
+and leaf consistency for any frame retaining the original source. A fully
+consistent frame computes exactly the existing finite-annihilator parameter.
+This last result remains conditional on the direction consistency clauses;
+the degree preparer still initializes those cells to zero.
+
+Direction preparation must run on partially prepared tables. Requiring exact
+degrees and height bounds for every arbitrary table context would obstruct the
+native reader interface. `ResultantBoundedTest` instead defines the actual
+specified-order modular determinant scan on all inputs. Binary order/budget
+controls and native original coefficient readers certify polynomial space,
+without a global integer-size promise. Its integer-zero interpretation is proved
+pointwise when the determinant's bit bound holds at the tested input.
+
+`SeparableBoundedTest` derives the derivative reader and its Sylvester budget
+from supplied binary degree and height controls. The native test is defined on
+every word; it recognizes separability of a nonzero polynomial when that input's
+degree is exact and its coefficients satisfy the supplied height bound. Nonzero
+constants are included. No interpretation as separability is asserted for
+contexts with invalid metadata.
+
+`BalancedTableSeparability` supplies the original coefficients from the uniform
+table-tree evaluator. The stored table order and any binary height control now
+give a native bounded test on all table contexts. Its separability correctness
+uses only pointwise nonzero, degree, and coefficient-height facts, suitable for
+a later table-preparation invariant. The bounded candidate-direction scan,
+direction-cell updates, and complete table consistency remain open.
 
 ## Savitch's theorem and Canny
 
