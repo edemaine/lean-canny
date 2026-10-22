@@ -4322,8 +4322,8 @@ task/reply bound K. Pointwise decreases for the two actual original-polynomial
 task writers imply `SourceLevels`. The uniform evaluator then returns Canny
 resultant coefficient residues from explicit child-task semantic identities,
 query closure, context-level decreases, and common task/reply/metadata bounds.
-The square-free leaf extension below supplies a base branch. Actual balanced-parameter
-child contexts and their quantitative graph contracts remain open. This conditional reader
+The square-free leaf extension below supplies a base branch. The complete balanced-parameter
+semantic and quantitative graph contracts remain open. This conditional reader
 does not establish the complete Canny coefficient graph or ETR in PSPACE.
 
 ## Square-free leaves in the recursive determinant family
@@ -4354,10 +4354,53 @@ The earlier resultant evaluator now reuses these proofs.
 
 One uniform native machine evaluates the mixed determinant family under the
 stated child-task semantic identities, context-level decreases, query closure,
-and common metadata/task/reply bounds. The actual balanced-tree contexts,
+and common metadata/task/reply bounds. Coefficient semantic identities for the actual tree,
 validated degree and direction metadata, quantitative graph contracts, and
 specialization to the tube annihilators remain open. This is a conditional
 mixed-stage reader, not the complete ETR PSPACE theorem.
+
+## Concrete balanced-tree contexts and task ranks
+
+`BalancedParameterContext` stores the original input, unary remaining height,
+and a binary node index. FP child writers implement `(h,i) → (h-1,2*i+b)`.
+The height decreases on every nonleaf step, including malformed words. On
+paired node contexts the complete child address strictly shrinks: dropping a
+height bit saves two encoded bits while the index grows by at most one.
+The packet decoder agrees with `BalancedPrimitiveTree.node`, its children
+agree with the algebraic combine operation, and the height `count.size`, index
+zero root agrees with `FiniteAnnihilatorTree.parameter`. Root preparation is
+FP from a binary FP count writer.
+
+`CannyBalancedTaskRouting` uses matrix context
+`pair (pair node degree) modulusPredecessor`. An original-coefficient request
+produces a determinant task with the child address and new coefficient degree,
+retaining the modulus. It replaces the parent address/degree rather than
+nesting its matrix indices. The exact task length is
+`4*child.length + 2*degree.length + modulusPredecessor.length + 8`.
+The concrete height-zero leaf selector and these writers discharge all
+`SourceLevels` obligations for the mixed square-free-leaf/resultant controller.
+These routing/rank proofs use no child semantic or computation certificate.
+
+`BerkowitzTaskReachability` defines the actual query-reachable task graph from
+active oracle prefixes within the logical budgets. Closure follows directly;
+ranked queries bound every reachable rank by its root rank.
+`CannyBalancedTaskRanks` combines these results with the unary address height
+and internal priorities. Every reachable task has rank at most
+`5*root.length+4`, and its context level is at most `root.length`, on every
+input word. These are native unary FP bounds. The uniform native evaluator
+now derives reachability closure, source-level decreases, and rank bounds.
+Its remaining graph hypotheses are the child coefficient semantic identities
+and common word, reply, and binary-metadata bit bounds. Concrete validated
+degree/direction metadata, those quantitative contracts, and the tube-source
+specialization remain open; ETR in PSPACE is not yet proved.
+
+The current `CannyResultantBits.Access` requires source degrees to equal the
+actual polynomial degrees on every input word. Projections from an encoded
+degree/direction table do not automatically meet that contract on inconsistent
+or malformed tables. A total specified-degree resultant family, or a proved
+validation layer, is still needed before such table projections can supply
+the concrete FP metadata interface. The routing and rank proofs above do not
+resolve this totality obligation.
 
 ## Savitch's theorem and Canny
 

@@ -39,6 +39,13 @@ theorem origin_factor (p : List Bool) : origin (factorTask p) = pairFst (pairFst
 theorem origin_moment (p : List Bool) : origin (momentTask p) = pairFst (pairFst p) := rfl
 theorem origin_source (p : List Bool) : origin (sourceTask p) = pairFst p := rfl
 
+theorem origin_length_le (q : List Bool) : (origin q).length ≤ q.length := by
+  have hp : (payload q).length ≤ q.length := by simp only [payload, List.length_drop]; omega
+  have h1 := (pairFst_length_le (payload q)).trans hp
+  have h2 := (pairFst_length_le (pairFst (payload q))).trans h1
+  unfold origin
+  split_ifs <;> first | exact Nat.zero_le _ | exact hp | exact h2 | exact h1
+
 theorem priority_le (q : List Bool) : priority q ≤ 4 := by unfold priority; split_ifs <;> decide
 
 theorem priority_pos (q : List Bool) (hq : isZero q = false) : 0 < priority q := by
