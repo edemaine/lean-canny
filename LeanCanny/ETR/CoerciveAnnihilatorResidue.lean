@@ -69,6 +69,7 @@ lemma evaluator {input rootDegree parameterDegree modulus : List Bool → List B
       exact CoerciveHomogeneousReaderCorrect.value_packet input modulus coordinate c ⟨coordinate c,hv⟩ rfl r u v i
     · rw [CoerciveAnnihilatorLayout.family, dite_eq_right hv]
       simpa [MacaulayFullBoxBits.scalar, CoerciveHomogeneousReaderCorrect.word,
+        CoerciveHomogeneousRowParts.packet,
         residueBits, BinaryNatCode.encode] using
         CoerciveHomogeneousReaderCorrect.value_invalid input modulus coordinate c r u v hv i.val
   have ED := MacaulayFullBoxBits.determinantEvaluator (CoerciveAnnihilatorLayout.layout input)

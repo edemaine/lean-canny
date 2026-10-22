@@ -13,24 +13,16 @@ public import LeanCanny.Algebra.CoerciveHomogeneousLayout
 namespace LeanCanny.ETR.CoerciveHomogeneousReaderCorrect
 open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower
 open CoerciveSourceSampling CoerciveHomogeneousRowReader
+open ModularResidueReaders (maskValue)
+open CoerciveHomogeneousRowParts (context_packet row_packet inner_packet outer_packet)
 open scoped Classical
 set_option backward.isDefEq.respectTransparency false
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm
 
-abbrev word (c : List Bool) (i r u v : ℕ) :=
-  pair c (pair (BinaryNatCode.encode i) (pair (BinaryNatCode.encode r)
-    (pair (BinaryNatCode.encode u) (BinaryNatCode.encode v))))
+abbrev word := CoerciveHomogeneousRowParts.packet
 
-@[simp] lemma context_word (c : List Bool) (i r u v : ℕ) : context (word c i r u v) = c := by
-  simp only [context, word, pairFst_pair]
-@[simp] lemma row_word (c : List Bool) (i r u v : ℕ) : row (word c i r u v) = BinaryNatCode.encode i := by
-  simp only [row, word, pairFst_pair, pairSnd_pair]
-@[simp] lemma inner_word (c : List Bool) (i r u v : ℕ) : CoerciveHomogeneousRowReader.inner (word c i r u v) = BinaryNatCode.encode u := by
-  simp only [CoerciveHomogeneousRowReader.inner, word, pairFst_pair, pairSnd_pair]
-@[simp] lemma outer_word (c : List Bool) (i r u v : ℕ) : outer (word c i r u v) = BinaryNatCode.encode v := by
-  simp only [outer, word, pairSnd_pair]
 lemma zeroRow_word (c : List Bool) (i r u v : ℕ) : zeroRow (word c i r u v) ↔ i = 0 := by
-  simp only [zeroRow, row_word, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  simp only [zeroRow, row_packet]
 
 noncomputable def residue (modulus : List Bool → List Bool) (c : List Bool) (a : ℤ) :=
   residueBits (a : ZMod (Nat.fromBitsLE (modulus c) + 1))
@@ -41,8 +33,8 @@ private lemma mask_word (modulus : List Bool → List Bool) (c : List Bool) (i r
       residue modulus c (if v = s ∧ u = t then a else 0) := by
   have h := ModularResidueReaders.maskValue_eq (phase s t) f (word c i r u v)
     (a : ZMod (Nat.fromBitsLE (modulus c) + 1)) hf
-  simpa only [ModularResidueReaders.maskValue, maskValue, residue, phase, outer_word,
-    inner_word, BinaryNatCode.encode, Nat.fromBitsLE_bits, apply_ite, Int.cast_zero] using h
+  simpa only [ModularResidueReaders.maskValue, residue, phase, outer_packet,
+    inner_packet, apply_ite, Int.cast_zero] using h
 
 variable (input modulus : List Bool → List Bool) (coordinate : List Bool → ℕ) (c : List Bool)
 variable (i : Fin (dimension (input c))) (hi : coordinate c = i.val) (r u v : ℕ)
@@ -56,8 +48,8 @@ lemma coordinatePart_packet : coordinatePart input modulus coordinate (word c 0 
   have hP := CoerciveHomogeneousRowParts.pointCoordinate_packet input modulus coordinate c i hi 0 r u v
   have hHm := mask_word modulus c 0 r u v 0 1 _ _ hH
   have hPm := mask_word modulus c 0 r u v 0 0 _ _ hP
-  rw [coordinatePart, CoerciveQueryCoefficient.addValue, CoerciveQueryCoefficient.negValue]
-  simp only [Function.comp_apply, context_word]
+  rw [coordinatePart, ModularResidueReaders.addValue, ModularResidueReaders.negValue]
+  simp only [Function.comp_apply, context_packet]
   change ModularResidueReaders.addValue (fun _ => modulus c)
     (maskValue (phase 0 1) (homogeneousCoordinate input modulus))
     (ModularResidueReaders.negValue (fun _ => modulus c)
@@ -76,8 +68,8 @@ lemma gradientPart_packet (j : Fin (dimension (input c))) :
   have hL := CoerciveHomogeneousRowParts.leading_packet input modulus c j r u v
   have hOm := mask_word modulus c j.succ.val r u v 0 0 _ _ hO
   have hLm := mask_word modulus c j.succ.val r u v 1 0 _ _ hL
-  rw [gradientPart, CoerciveQueryCoefficient.addValue]
-  simp only [Function.comp_apply, context_word]
+  rw [gradientPart, ModularResidueReaders.addValue]
+  simp only [Function.comp_apply, context_packet]
   change ModularResidueReaders.addValue (fun _ => modulus c)
     (maskValue (phase 0 0) (ordinary input modulus))
     (maskValue (phase 1 0) (leading input modulus)) (word c j.succ.val r u v) = _
@@ -93,7 +85,7 @@ lemma value_packet (j : Fin (dimension (input c) + 1)) :
         (dimension (input c) + 1) (FixedWidthPolynomial.entry (CoerciveHomogeneousRepack.width (input c)) r))).coeff v).coeff u : ℤ) :
           ZMod (Nat.fromBitsLE (modulus c) + 1)) := by
   have hv : valid input coordinate (word c j.val r u v) := by
-    simp only [valid, context_word, row_word, BinaryNatCode.encode, Nat.fromBitsLE_bits, hi]
+    simp only [valid, context_packet, row_packet, hi]
     exact ⟨i.isLt,j.isLt⟩
   unfold CoerciveHomogeneousRowReader.value
   rw [ite_eq_left hv]
@@ -108,7 +100,7 @@ lemma value_invalid (hn : ¬coordinate c < dimension (input c)) (j : ℕ) :
   have hv : ¬valid input coordinate (word c j r u v) := by
     intro h
     apply hn
-    simpa only [context_word] using h.1
+    simpa only [context_packet] using h.1
   unfold CoerciveHomogeneousRowReader.value
   rw [ite_eq_right hv]
 

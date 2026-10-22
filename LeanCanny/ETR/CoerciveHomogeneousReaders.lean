@@ -87,10 +87,13 @@ theorem ordinary_packet (input : List Bool → List Bool) (selected : List Bool 
         (FixedWidthPolynomial.nativeExponent (Equiv.refl _) (CoercivePowerReaders.width (input c)) k) : ℤ) :
           ZMod (Nat.fromBitsLE (modulus c) + 1)) := by
     rw [derivativeReader_packet, hs, derivativeCoefficient, dite_eq_left i.isLt]
-  exact HomogenizationBits.residue_packet_all (dimension ∘ input)
-    (CoercivePowerReaders.width ∘ input) (fun c => 2 * degreeAllowance (input c) + 1)
-    (derivativeReader input selected modulus) c (Equiv.refl _)
-    (MvPolynomial.pderiv i ((polynomial (input c)) ^ 2))
-    (Nat.fromBitsLE (modulus c) + 1) hp r
+  simpa only [HomogenizationLayout.prefixWeight_all, ordinaryValue,
+    CoerciveCriticalHomogenization.layout, Function.comp_apply] using
+    HomogenizationBits.value_packet (dimension ∘ input) (dimension ∘ input)
+      (CoercivePowerReaders.width ∘ input) (fun c => 2 * degreeAllowance (input c) + 1)
+      (derivativeReader input selected modulus) c (Equiv.refl _)
+      (MvPolynomial.pderiv i ((polynomial (input c)) ^ 2))
+      (fun a : ℤ => residueBits (a : ZMod (Nat.fromBitsLE (modulus c) + 1)))
+      (by simp [residueBits, BinaryNatCode.encode]) hp r
 
 end LeanCanny.ETR.CoerciveHomogeneousReaders

@@ -14,6 +14,7 @@ namespace LeanCanny.ETR.CoerciveHomogeneousRowReader
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Algebra MatrixPower
 open CoerciveSourceSampling CoerciveSparseReaders
+open ModularResidueReaders (maskValue maskEvaluator)
 open scoped Classical
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm
 attribute [local irreducible] CoerciveSourceSampling.dimension CoercivePowerReaders.size CoercivePowerReaders.width
@@ -111,22 +112,15 @@ theorem valid_fppred {input : List Bool → List Bool} {coordinate : List Bool �
     simp only [Nat.fromBitsLE_bits]
   exact (FPPred.lt (hc.comp context_FP) hn).and hr'
 
-noncomputable def maskValue (p : List Bool → Prop) (f : List Bool → List Bool) (q : List Bool) : List Bool :=
-  if p q then f q else []
-
-private theorem maskEvaluator {p : List Bool → Prop} {f : List Bool → List Bool}
-    (hp : FPPred p) (E : SpaceFunction f) : SpaceFunction (maskValue p f) :=
-  ModularResidueReaders.maskEvaluator hp E
-
 noncomputable def coordinatePart (input modulus : List Bool → List Bool) (coordinate : List Bool → ℕ) :
     List Bool → List Bool :=
-  CoerciveQueryCoefficient.addValue (modulus ∘ context)
+  ModularResidueReaders.addValue (modulus ∘ context)
     (maskValue (phase 0 1) (homogeneousCoordinate input modulus))
-    (CoerciveQueryCoefficient.negValue (modulus ∘ context)
+    (ModularResidueReaders.negValue (modulus ∘ context)
       (maskValue (phase 0 0) (pointCoordinate input modulus coordinate)))
 
 noncomputable def gradientPart (input modulus : List Bool → List Bool) : List Bool → List Bool :=
-  CoerciveQueryCoefficient.addValue (modulus ∘ context)
+  ModularResidueReaders.addValue (modulus ∘ context)
     (maskValue (phase 0 0) (ordinary input modulus))
     (maskValue (phase 1 0) (leading input modulus))
 
@@ -136,18 +130,17 @@ noncomputable def value (input modulus : List Bool → List Bool) (coordinate : 
     if zeroRow q then coordinatePart input modulus coordinate q else gradientPart input modulus q
   else []
 
-
 theorem coordinateEvaluator {input modulus : List Bool → List Bool} {coordinate : List Bool → ℕ}
     (hi : input ∈ FP) (hm : modulus ∈ FP) (hc : UnaryFn coordinate) :
     SpaceFunction (coordinatePart input modulus coordinate) :=
-  CoerciveQueryCoefficient.addEvaluator (mem_FP_comp context_FP hm)
+  ModularResidueReaders.addEvaluator (mem_FP_comp context_FP hm)
     (maskEvaluator (phase_fppred 0 1) (SpaceFunction.ofFP _ (homogeneousCoordinate_FP hi hm)))
-    (CoerciveQueryCoefficient.negEvaluator (mem_FP_comp context_FP hm)
+    (ModularResidueReaders.negEvaluator (mem_FP_comp context_FP hm)
       (maskEvaluator (phase_fppred 0 0) (SpaceFunction.ofFP _ (pointCoordinate_FP hi hm hc))))
 
 theorem gradientEvaluator {input modulus : List Bool → List Bool} (hi : input ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (gradientPart input modulus) :=
-  CoerciveQueryCoefficient.addEvaluator (mem_FP_comp context_FP hm)
+  ModularResidueReaders.addEvaluator (mem_FP_comp context_FP hm)
     (maskEvaluator (phase_fppred 0 0) (ordinaryEvaluator hi hm))
     (maskEvaluator (phase_fppred 1 0) (SpaceFunction.ofFP _ (leading_FP hi hm)))
 

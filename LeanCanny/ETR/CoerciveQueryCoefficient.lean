@@ -19,22 +19,10 @@ namespace LeanCanny.ETR.CoerciveQueryCoefficient
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Algebra MatrixPower
 open CoerciveSourceSampling CoerciveQueryReaders CoerciveSparseReaders
+open ModularResidueReaders (addValue negValue addEvaluator negEvaluator)
 open scoped Classical
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm
 attribute [local irreducible] CoerciveSourceSampling.dimension CoercivePowerReaders.size CoercivePowerReaders.width
-
-def addValue (modulus f g : List Bool → List Bool) (c : List Bool) : List Bool :=
-  ArithmeticBits.addMod (pair (BinaryNat.succ (modulus c)) (pair (f c) (g c)))
-def negValue (modulus f : List Bool → List Bool) (c : List Bool) : List Bool :=
-  ArithmeticBits.negate (pair (BinaryNat.succ (modulus c)) (f c))
-
-theorem addEvaluator {modulus f g : List Bool → List Bool} (hm : modulus ∈ FP)
-    (F : SpaceFunction f) (G : SpaceFunction g) : SpaceFunction (addValue modulus f g) :=
-  ModularResidueReaders.addEvaluator hm F G
-
-theorem negEvaluator {modulus f : List Bool → List Bool} (hm : modulus ∈ FP)
-    (F : SpaceFunction f) : SpaceFunction (negValue modulus f) :=
-  ModularResidueReaders.negEvaluator hm F
 
 noncomputable def implicitValue (input modulus : List Bool → List Bool) (c : List Bool) : List Bool :=
   residueBits (((2 : ℤ) ^ CoerciveSourceSampling.penaltyExponent (input c) : ℤ) :
@@ -53,12 +41,10 @@ noncomputable def maskedPowerValue (input target modulus : List Bool → List Bo
 
 theorem maskedPowerEvaluator {input target modulus : List Bool → List Bool} {parameter : List Bool → ℕ}
     (hi : input ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) (hp : UnaryFn parameter) :
-    SpaceFunction (maskedPowerValue input target modulus parameter) := by
-  have hmatch := matches_fppred hi ht hp (UnaryFn.const 0) (UnaryFn.const 0)
-  have E := SpaceFunction.branch (fun c => decide (Matches input target parameter (fun _ => 0) (fun _ => 0) c))
-    hmatch.flag_mem_FP (SpaceFunction.ofFP _ (implicitValue_FP hi hm))
-    (SpaceFunction.ofFP (fun _ => []) (constFn_mem_FP []))
-  exact E.congr (funext fun c => by simp only [maskedPowerValue, decide_eq_true_eq])
+    SpaceFunction (maskedPowerValue input target modulus parameter) :=
+  ModularResidueReaders.maskEvaluator
+    (matches_fppred hi ht hp (UnaryFn.const 0) (UnaryFn.const 0))
+    (SpaceFunction.ofFP _ (implicitValue_FP hi hm))
 
 theorem maskedPower_value_eq (input target modulus : List Bool → List Bool)
     (parameter : List Bool → ℕ) (c : List Bool) : maskedPowerValue input target modulus parameter c = residueBits

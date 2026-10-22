@@ -42,10 +42,10 @@ theorem target_exponent (input : List Bool → List Bool) (q : List Bool) :
       (CoercivePowerReaders.width (input (context q))) (Nat.fromBitsLE (target input q)) =
     FixedWidthPolynomial.nativeExponent (CoerciveCriticalHomogenization.layout (n := dimension (input (context q))))
       (CoerciveHomogeneousRepack.width (input (context q))) (Nat.fromBitsLE (rank q)) := by
-  apply Finsupp.mapDomain_injective CoerciveCriticalHomogenization.layout.injective
-  rw [FixedWidthPolynomial.nativeExponent_map, FixedWidthPolynomial.nativeExponent_map]
-  exact (CoerciveQueryReaders.queryExponent_rank (input ∘ context) (target input) q).symm.trans
-    (CoerciveHomogeneousRepack.exponent_eq (input ∘ context) rank q)
+  exact FixedWidthPolynomial.nativeExponent_repack CoerciveCriticalHomogenization.layout
+    (CoerciveHomogeneousRepack.width ∘ input ∘ context)
+    (CoercivePowerReaders.width ∘ input ∘ context) rank q
+    (CoerciveHomogeneousRepack.width_le (input (context q)))
 
 theorem target_packet (input : List Bool → List Bool) (c : List Bool) (j r u v : ℕ) :
     target input (packet c j r u v) =
@@ -62,14 +62,12 @@ theorem target_exponent_packet (input : List Bool → List Bool) (c : List Bool)
       (CoercivePowerReaders.width (input c)) (Nat.fromBitsLE (target input (packet c j r u v))) =
     FixedWidthPolynomial.nativeExponent (CoerciveCriticalHomogenization.layout (n := dimension (input c)))
       (CoerciveHomogeneousRepack.width (input c)) r := by
-  rw [target_packet]
-  apply Finsupp.mapDomain_injective CoerciveCriticalHomogenization.layout.injective
-  rw [FixedWidthPolynomial.nativeExponent_map, FixedWidthPolynomial.nativeExponent_map]
-  refine (CoerciveQueryReaders.queryExponent_rank input _ c).symm.trans ?_
-  refine (CoerciveHomogeneousRepack.exponent_eq input (fun _ => BinaryNatCode.encode r) c).trans ?_
-  simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits]
-  ext k
-  rfl
+  generalize hq : packet c j r u v = q
+  have hc : context q = c := by rw [← hq, context_packet]
+  have hr : Nat.fromBitsLE (rank q) = r := by
+    rw [← hq, rank_packet, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  subst c
+  simpa only [hr] using target_exponent input q
 
 noncomputable def ordinaryCoefficient (bits : List Bool) (i W r : ℕ) : ℤ :=
   if hi : i < dimension bits then
