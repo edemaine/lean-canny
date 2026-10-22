@@ -17,6 +17,7 @@ writing a unary variable index cannot hide an exponential expansion.
 @[expose] public section
 
 namespace LeanCanny.ETR.Term
+open Turing.MultiTapeTM
 
 
 def nonzeroBits (term : List Bool) (i : ℕ) : List Bool :=
@@ -40,20 +41,29 @@ def booleanBits (i : ℕ) : List Bool :=
   Codec.taggedTwo 3 (variableBits i)
     (Codec.taggedTwo 2 (variableBits i) (const (-1)).toData.toBits)
 
+@[program_certificate]
 theorem nonzeroBits_mem_FP {term : List Bool → List Bool} {i : List Bool → ℕ}
-    (ht : term ∈ FP) (hi : UnaryFn i) : (fun z => nonzeroBits (term z) (i z)) ∈ FP :=
+    (ht : ComputableTidilyInPolyTime term encBits encBits)
+    (hi : ComputableTidilyInPolyTime i encBits encUnary) :
+    ComputableTidilyInPolyTime (fun z => nonzeroBits (term z) (i z)) encBits encBits :=
   Codec.taggedTwo_mem_FP 2 (Codec.taggedTwo_mem_FP 3 ht (variableBits_mem_FP hi))
     (constFn_mem_FP (const (-1)).toData.toBits)
 
+@[program_certificate]
 theorem negativeBits_mem_FP {term : List Bool → List Bool} {i : List Bool → ℕ}
-    (ht : term ∈ FP) (hi : UnaryFn i) : (fun z => negativeBits (term z) (i z)) ∈ FP :=
+    (ht : ComputableTidilyInPolyTime term encBits encBits)
+    (hi : ComputableTidilyInPolyTime i encBits encUnary) :
+    ComputableTidilyInPolyTime (fun z => negativeBits (term z) (i z)) encBits encBits :=
   Codec.taggedTwo_mem_FP 2
     (Codec.taggedTwo_mem_FP 3 ht
       (Codec.taggedTwo_mem_FP 3 (variableBits_mem_FP hi) (variableBits_mem_FP hi)))
     (constFn_mem_FP (const 1).toData.toBits)
 
+@[program_certificate]
 theorem nonnegativeBits_mem_FP {term : List Bool → List Bool} {i : List Bool → ℕ}
-    (ht : term ∈ FP) (hi : UnaryFn i) : (fun z => nonnegativeBits (term z) (i z)) ∈ FP :=
+    (ht : ComputableTidilyInPolyTime term encBits encBits)
+    (hi : ComputableTidilyInPolyTime i encBits encUnary) :
+    ComputableTidilyInPolyTime (fun z => nonnegativeBits (term z) (i z)) encBits encBits :=
   Codec.taggedTwo_mem_FP 2 ht
     (Codec.taggedTwo_mem_FP 3 (constFn_mem_FP (const (-1)).toData.toBits)
       (Codec.taggedTwo_mem_FP 3 (variableBits_mem_FP hi) (variableBits_mem_FP hi)))

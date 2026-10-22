@@ -19,7 +19,7 @@ in polynomial time. Tagged constructors manipulate already encoded subtrees.
 
 namespace LeanCanny.ETR
 
-open LeanCanny.Encoding.Brackets
+open LeanCanny.Encoding.Brackets Turing.MultiTapeTM
 
 namespace Codec
 
@@ -27,8 +27,10 @@ theorem unary_toBits (n : ℕ) :
     (unary n).toBits = wrap (List.replicate n [false, true]).flatten := by
   simp [unary, Data.toBits_l, wrap]
 
-theorem unary_toBits_mem_FP {n : List Bool → ℕ} (hn : UnaryFn n) :
-    (fun z => (unary (n z)).toBits) ∈ FP := by
+@[program_certificate hn]
+theorem unary_toBits_mem_FP {n : List Bool → ℕ}
+    (hn : ComputableTidilyInPolyTime n encBits encUnary) :
+    ComputableTidilyInPolyTime (fun z => (unary (n z)).toBits) encBits encBits := by
   refine mem_FP_of_eq (mem_FP_comp (repeatWord_mem_FP hn [false, true]) wrap_mem_FP)
     (fun z => (unary_toBits (n z)).symm)
 
@@ -41,7 +43,8 @@ theorem unary_toBits_injective : Function.Injective (fun n => (unary n).toBits) 
 /-- The only possible unary payload of a string of the given literal length. -/
 def unaryValue (bits : List Bool) : ℕ := (bits.length - 2) / 2
 
-theorem unaryValue_unary : UnaryFn unaryValue :=
+@[program_certificate]
+theorem unaryValue_unary : ComputableTidilyInPolyTime unaryValue encBits encUnary :=
   ((UnaryFn.length id_mem_FP).sub (UnaryFn.const 2)).div (UnaryFn.const 2)
 
 @[simp] theorem unaryValue_toBits (n : ℕ) : unaryValue (unary n).toBits = n := by

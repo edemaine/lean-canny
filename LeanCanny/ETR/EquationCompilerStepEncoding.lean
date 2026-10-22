@@ -60,19 +60,6 @@ def joinStep (disjoin : Bool) (state : List Bool) : List Bool :=
     emit (pairSnd (todoBits state)) (pair out (pairSnd (pairSnd values))) (pairFst out)
 
 @[program_certificate]
-theorem third_computable : ComputableTidilyInPolyTime NNF.third encBits encBits := NNF.third_mem_FP
-
-@[program_certificate]
-theorem conjunctionBits_computable :
-    ComputableTidilyInPolyTime EquationSystem.conjunctionBits encBits encBits :=
-  EquationSystem.conjunctionBits_mem_FP
-
-@[program_certificate]
-theorem disjunctionBits_computable :
-    ComputableTidilyInPolyTime EquationSystem.disjunctionBits encBits encBits :=
-  EquationSystem.disjunctionBits_mem_FP
-
-@[program_certificate]
 theorem binaryStep_mem_FP (disjoin : Bool) :
     ComputableTidilyInPolyTime (binaryStep disjoin) encBits encBits := by
   polytime [binaryStep, emit]

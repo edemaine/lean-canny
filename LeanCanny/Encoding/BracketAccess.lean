@@ -17,6 +17,7 @@ strings, and its exact behavior is proved on a serialized node followed by any s
 @[expose] public section
 
 namespace LeanCanny.Encoding.Brackets
+open Turing.MultiTapeTM
 
 /-- Position of the first closing bracket that returns to depth zero, or the input
 length if there is no such prefix. This is a bounded search on the literal input. -/
@@ -101,9 +102,11 @@ theorem contents_mem_FP : contents ∈ FP :=
 /-- Encoded cons, taking a node and an encoded list node. -/
 def consNode (head tail : List Bool) : List Bool := false :: (head ++ tail.drop 1)
 
+@[program_certificate]
 theorem consNode_mem_FP {head tail : List Bool → List Bool}
-    (hhead : head ∈ FP) (htail : tail ∈ FP) :
-    (fun z => consNode (head z) (tail z)) ∈ FP :=
+    (hhead : ComputableTidilyInPolyTime head encBits encBits)
+    (htail : ComputableTidilyInPolyTime tail encBits encBits) :
+    ComputableTidilyInPolyTime (fun z => consNode (head z) (tail z)) encBits encBits :=
   mem_FP_comp (appendFn_mem_FP hhead (drop_mem_FP htail (UnaryFn.const 1)))
     (cons_mem_FP false)
 

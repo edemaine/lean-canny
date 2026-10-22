@@ -19,7 +19,7 @@ existing typed compiler, including term order and the next variable index.
 
 namespace LeanCanny.ETR
 
-open LeanCanny.Encoding.Brackets
+open LeanCanny.Encoding.Brackets Turing.MultiTapeTM
 
 namespace SumSquares
 
@@ -66,7 +66,8 @@ def conjunctionBits (packet : List Bool) : List Bool :=
   let b := pairSnd packet
   pair (pairFst b) (appendTerms (pairSnd a) (pairSnd b))
 
-theorem conjunctionBits_mem_FP : conjunctionBits ∈ FP := by
+@[program_certificate]
+theorem conjunctionBits_mem_FP : ComputableTidilyInPolyTime conjunctionBits encBits encBits := by
   have ha := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
   have hb := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
   have hn := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
@@ -87,7 +88,8 @@ def disjunctionBits (packet : List Bool) : List Bool :=
   pair (Codec.unary (i + 1)).toBits
     (consNode (Term.booleanBits i) (appendTerms left right))
 
-theorem disjunctionBits_mem_FP : disjunctionBits ∈ FP := by
+@[program_certificate]
+theorem disjunctionBits_mem_FP : ComputableTidilyInPolyTime disjunctionBits encBits encBits := by
   have ha := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
   have hb := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
   have hn := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP

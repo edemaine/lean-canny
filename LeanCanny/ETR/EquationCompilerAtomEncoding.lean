@@ -53,53 +53,11 @@ theorem hasTag_computable {bits : List Bool → List Bool} (tag : ℕ)
   ((hasTag_fppred tag).comp hb).computable
 
 @[program_certificate]
-theorem second_computable : ComputableTidilyInPolyTime NNF.second encBits encBits :=
-  NNF.second_mem_FP
-
-@[program_certificate]
-theorem unaryValue_computable : ComputableTidilyInPolyTime Codec.unaryValue encBits encUnary :=
-  Codec.unaryValue_unary
-
-@[program_certificate hn]
-theorem unaryBits_computable {n : List Bool → ℕ}
-    (hn : ComputableTidilyInPolyTime n encBits encUnary) :
-    ComputableTidilyInPolyTime (fun z => (Codec.unary (n z)).toBits) encBits encBits :=
-  Codec.unary_toBits_mem_FP hn
-
-@[program_certificate]
-theorem consNode_computable {head tail : List Bool → List Bool}
-    (hh : ComputableTidilyInPolyTime head encBits encBits)
-    (ht : ComputableTidilyInPolyTime tail encBits encBits) :
-    ComputableTidilyInPolyTime (fun z => consNode (head z) (tail z)) encBits encBits :=
-  consNode_mem_FP hh ht
-
-@[program_certificate]
-theorem negativeBits_computable {term : List Bool → List Bool} {i : List Bool → ℕ}
-    (ht : ComputableTidilyInPolyTime term encBits encBits)
-    (hi : ComputableTidilyInPolyTime i encBits encUnary) :
-    ComputableTidilyInPolyTime (fun z => Term.negativeBits (term z) (i z)) encBits encBits :=
-  Term.negativeBits_mem_FP ht hi
-
-@[program_certificate]
-theorem nonzeroBits_computable {term : List Bool → List Bool} {i : List Bool → ℕ}
-    (ht : ComputableTidilyInPolyTime term encBits encBits)
-    (hi : ComputableTidilyInPolyTime i encBits encUnary) :
-    ComputableTidilyInPolyTime (fun z => Term.nonzeroBits (term z) (i z)) encBits encBits :=
-  Term.nonzeroBits_mem_FP ht hi
-
-@[program_certificate]
-theorem nonnegativeBits_computable {term : List Bool → List Bool} {i : List Bool → ℕ}
-    (ht : ComputableTidilyInPolyTime term encBits encBits)
-    (hi : ComputableTidilyInPolyTime i encBits encUnary) :
-    ComputableTidilyInPolyTime (fun z => Term.nonnegativeBits (term z) (i z)) encBits encBits :=
-  Term.nonnegativeBits_mem_FP ht hi
-
-@[program_certificate]
 theorem packAtom_computable {next : List Bool → ℕ} {terms : List Bool → List Bool}
     (hn : ComputableTidilyInPolyTime next encBits encUnary)
     (ht : ComputableTidilyInPolyTime terms encBits encBits) :
     ComputableTidilyInPolyTime (fun z => packAtom (next z) (terms z)) encBits encBits :=
-  pair_computable (unaryBits_computable hn) ht
+  pair_computable (Codec.unary_toBits_mem_FP hn) ht
 
 @[program_certificate]
 theorem atomBits_mem_FP :

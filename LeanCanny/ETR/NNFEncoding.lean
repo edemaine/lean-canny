@@ -19,21 +19,20 @@ The local constructor tests also check that their operand fields are nonempty.
 
 namespace LeanCanny.ETR.NNF
 
-open LeanCanny.Encoding.Brackets
+open LeanCanny.Encoding.Brackets Turing.MultiTapeTM
 
 def second (bits : List Bool) : List Bool := firstChild (remainingChildren bits)
 
 def third (bits : List Bool) : List Bool := firstChild (remainingChildren (remainingChildren bits))
 
-theorem second_mem_FP : second ∈ FP := by
-  unfold second
-  simpa only [Function.comp_def] using
-    mem_FP_comp remainingChildren_mem_FP firstChild_mem_FP
+@[program_certificate]
+theorem second_mem_FP : ComputableTidilyInPolyTime second encBits encBits :=
+  (FP.computable firstChild_mem_FP).comp (FP.computable remainingChildren_mem_FP)
 
-theorem third_mem_FP : third ∈ FP := by
-  unfold third
-  simpa only [Function.comp_def] using
-    mem_FP_comp (mem_FP_comp remainingChildren_mem_FP remainingChildren_mem_FP) firstChild_mem_FP
+@[program_certificate]
+theorem third_mem_FP : ComputableTidilyInPolyTime third encBits encBits :=
+  (FP.computable firstChild_mem_FP).comp
+    ((FP.computable remainingChildren_mem_FP).comp (FP.computable remainingChildren_mem_FP))
 
 @[simp] theorem firstChild_empty : firstChild Data.empty.toBits = [] := by
   simp [firstChild, contents_toBits, firstNode]
