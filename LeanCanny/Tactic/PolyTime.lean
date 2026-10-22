@@ -84,11 +84,8 @@ theorem native_forall_lt {n : List Bool → ℕ} {p : List Bool → ℕ → Prop
     ComputableTidilyInPolyTime (fun z => decide (∀ i < n z, p z i)) encBits encBool := by
   have h := ComputableTidilyInPolyTime.allWithInput
     (test := fun z i => decide (p z i)) (ComputableTidilyInPolyTime.range.comp hn) hp
-  have heq (z : List Bool) :
-      (List.range (n z)).all (fun i => decide (p z i)) = decide (∀ i < n z, p z i) := by
-    apply Bool.eq_iff_iff.mpr
-    simp only [List.all_eq_true, List.mem_range, decide_eq_true_eq]
-  simpa only [Function.comp_apply, heq] using h
+  refine h.of_enc_eq fun z => congrArg encBool (Bool.eq_iff_iff.mpr ?_)
+  simp only [Function.comp_apply, List.all_eq_true, List.mem_range, decide_eq_true_eq]
 
 @[fun_prop]
 theorem native_exists_lt {n : List Bool → ℕ} {p : List Bool → ℕ → Prop}
@@ -99,11 +96,8 @@ theorem native_exists_lt {n : List Bool → ℕ} {p : List Bool → ℕ → Prop
     ComputableTidilyInPolyTime (fun z => decide (∃ i < n z, p z i)) encBits encBool := by
   have h := ComputableTidilyInPolyTime.anyWithInput
     (test := fun z i => decide (p z i)) (ComputableTidilyInPolyTime.range.comp hn) hp
-  have heq (z : List Bool) :
-      (List.range (n z)).any (fun i => decide (p z i)) = decide (∃ i < n z, p z i) := by
-    apply Bool.eq_iff_iff.mpr
-    simp only [List.any_eq_true, List.mem_range, decide_eq_true_eq]
-  simpa only [Function.comp_apply, heq] using h
+  refine h.of_enc_eq fun z => congrArg encBool (Bool.eq_iff_iff.mpr ?_)
+  simp only [Function.comp_apply, List.any_eq_true, List.mem_range, decide_eq_true_eq]
 
 /-- Counting uses the upstream typed traversal, including arbitrary decision instances. -/
 @[program_certificate hn hp]

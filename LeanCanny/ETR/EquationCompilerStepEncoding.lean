@@ -20,11 +20,25 @@ def counterBits (state : List Bool) : List Bool := pairSnd (pairSnd state)
 def frame (state : List Bool) : List Bool := pairFst (todoBits state)
 def source (state : List Bool) : List Bool := (frame state).drop 1
 
-theorem todoBits_mem_FP : todoBits ∈ FP := by polytime [todoBits]
-theorem valuesBits_mem_FP : valuesBits ∈ FP := by polytime [valuesBits]
-theorem counterBits_mem_FP : counterBits ∈ FP := by polytime [counterBits]
-theorem frame_mem_FP : frame ∈ FP := by polytime [frame, todoBits]
-theorem source_mem_FP : source ∈ FP := by polytime [source, frame, todoBits]
+@[program_certificate]
+theorem todoBits_mem_FP :
+    ComputableTidilyInPolyTime todoBits encBits encBits := by polytime [todoBits]
+
+@[program_certificate]
+theorem valuesBits_mem_FP :
+    ComputableTidilyInPolyTime valuesBits encBits encBits := by polytime [valuesBits]
+
+@[program_certificate]
+theorem counterBits_mem_FP :
+    ComputableTidilyInPolyTime counterBits encBits encBits := by polytime [counterBits]
+
+@[program_certificate]
+theorem frame_mem_FP :
+    ComputableTidilyInPolyTime frame encBits encBits := by polytime [frame, todoBits]
+
+@[program_certificate]
+theorem source_mem_FP :
+    ComputableTidilyInPolyTime source encBits encBits := by polytime [source, frame, todoBits]
 
 def emit (todo values counter : List Bool) : List Bool := pair todo (pair values counter)
 
@@ -46,21 +60,6 @@ def joinStep (disjoin : Bool) (state : List Bool) : List Bool :=
     emit (pairSnd (todoBits state)) (pair out (pairSnd (pairSnd values))) (pairFst out)
 
 @[program_certificate]
-theorem todoBits_computable : ComputableTidilyInPolyTime todoBits encBits encBits := todoBits_mem_FP
-
-@[program_certificate]
-theorem valuesBits_computable : ComputableTidilyInPolyTime valuesBits encBits encBits := valuesBits_mem_FP
-
-@[program_certificate]
-theorem counterBits_computable : ComputableTidilyInPolyTime counterBits encBits encBits := counterBits_mem_FP
-
-@[program_certificate]
-theorem frame_computable : ComputableTidilyInPolyTime frame encBits encBits := frame_mem_FP
-
-@[program_certificate]
-theorem source_computable : ComputableTidilyInPolyTime source encBits encBits := source_mem_FP
-
-@[program_certificate]
 theorem third_computable : ComputableTidilyInPolyTime NNF.third encBits encBits := NNF.third_mem_FP
 
 @[program_certificate]
@@ -73,12 +72,18 @@ theorem disjunctionBits_computable :
     ComputableTidilyInPolyTime EquationSystem.disjunctionBits encBits encBits :=
   EquationSystem.disjunctionBits_mem_FP
 
-theorem binaryStep_mem_FP (disjoin : Bool) : binaryStep disjoin ∈ FP := by
+@[program_certificate]
+theorem binaryStep_mem_FP (disjoin : Bool) :
+    ComputableTidilyInPolyTime (binaryStep disjoin) encBits encBits := by
   polytime [binaryStep, emit]
 
-theorem atomicStep_mem_FP : atomicStep ∈ FP := by polytime [atomicStep, emit]
+@[program_certificate]
+theorem atomicStep_mem_FP :
+    ComputableTidilyInPolyTime atomicStep encBits encBits := by polytime [atomicStep, emit]
 
-theorem joinStep_mem_FP (disjoin : Bool) : joinStep disjoin ∈ FP := by
+@[program_certificate]
+theorem joinStep_mem_FP (disjoin : Bool) :
+    ComputableTidilyInPolyTime (joinStep disjoin) encBits encBits := by
   cases disjoin <;> polytime [joinStep, emit]
 
 def stepBits (state : List Bool) : List Bool :=
@@ -88,17 +93,6 @@ def stepBits (state : List Bool) : List Bool :=
   else if HasTag 4 (source state) then binaryStep false state
   else if HasTag 5 (source state) then binaryStep true state
   else atomicStep state
-
-@[program_certificate]
-theorem binaryStep_computable (disjoin : Bool) :
-    ComputableTidilyInPolyTime (binaryStep disjoin) encBits encBits := binaryStep_mem_FP disjoin
-
-@[program_certificate]
-theorem atomicStep_computable : ComputableTidilyInPolyTime atomicStep encBits encBits := atomicStep_mem_FP
-
-@[program_certificate]
-theorem joinStep_computable (disjoin : Bool) :
-    ComputableTidilyInPolyTime (joinStep disjoin) encBits encBits := joinStep_mem_FP disjoin
 
 theorem stepBits_mem_FP : stepBits ∈ FP := by
   polytime [stepBits]

@@ -101,12 +101,10 @@ theorem packAtom_computable {next : List Bool → ℕ} {terms : List Bool → Li
     ComputableTidilyInPolyTime (fun z => packAtom (next z) (terms z)) encBits encBits :=
   pair_computable (unaryBits_computable hn) ht
 
-theorem atomBits_mem_FP : atomBits ∈ FP := by
-  polytime [atomBits]
-
 @[program_certificate]
-theorem atomBits_computable : ComputableTidilyInPolyTime atomBits encBits encBits :=
-  atomBits_mem_FP
+theorem atomBits_mem_FP :
+    ComputableTidilyInPolyTime atomBits encBits encBits := by
+  polytime [atomBits]
 
 def Atomic : SignedFormula → Prop
   | .and _ _ | .or _ _ => False

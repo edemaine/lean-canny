@@ -7,6 +7,7 @@ module
 public import LeanCanny.Computation.PolynomialBounds
 public import LeanCanny.Encoding.Pairing
 public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.List
+public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.BitString
 public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat
 
 /-! # Native certificates for polynomial-time string functions
@@ -87,21 +88,8 @@ theorem UnaryFn.const (n : ℕ) : UnaryFn (fun _ => n) :=
   ComputableTidilyInPolyTime.const n
 
 theorem UnaryFn.replicate_mem_FP {f : List Bool → ℕ} (hf : UnaryFn f) (bit : Bool) :
-    (fun z => List.replicate (f z) bit) ∈ FP := by
-  have h := ComputableTidilyInPolyTime.foldl_of_bounded_growth
-    (encA := encBool) (encL := encBits) (list := fun z => List.replicate (f z) true)
-    (init := fun _ => []) (step := fun acc _ => bit :: acc) hf.encoded
-    (ComputableTidilyInPolyTime.const [])
-    (show ComputableTidilyInPolyTime (fun p : List Bool × Bool => bit :: p.1)
-      (encPair encBits encBool) encBits from
-      (cons_mem_FP bit).comp (ComputableTidilyInPolyTime.fst encBits encBool))
-    (growth := 1) (fun _ _ => by simp)
-  have heq (n : ℕ) : (List.cons bit)^[n] [] = List.replicate n bit := by
-    induction n with
-    | zero => rfl
-    | succ n ih => simp [Function.iterate_succ_apply', ih, List.replicate_succ]
-  change ComputableTidilyInPolyTime _ encBits encBits
-  simpa only [List.foldl_const, List.length_replicate, heq] using h
+    (fun z => List.replicate (f z) bit) ∈ FP :=
+  (ComputableTidilyInPolyTime.bitsReplicate bit).comp hf
 
 theorem UnaryFn.add {f g : List Bool → ℕ} (hf : UnaryFn f) (hg : UnaryFn g) :
     UnaryFn (fun z => f z + g z) :=
