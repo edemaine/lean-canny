@@ -1499,27 +1499,41 @@ and penalty exponents have polynomial binary-size bounds. Real-root existence
 is equivalent to eventual bounded approximate critical samples with one
 parameter; connecting that predicate to native symbolic sign evaluation remains.
 
+The symbolic tree construction now handles every finite family of nonzero
+original bivariates: `SymbolicBalancedFiniteCoordinates` proves both the
+real-root-tuple correspondence and actual rational-coordinate recovery on a
+computed positive interval, including empty families and padding.
+`CoerciveSourceSampling.correct` specializes the one-parameter semantic route
+to the actual compiled ETR equation on all binary inputs. `CoerciveSourceControls`
+provides exact FP binary writers for its radius and penalty exponents.
+`CoerciveQuerySystem` gives the corresponding integer gradient and inequality
+queries; `ImplicitPowerResidueFP` computes residues of the large power-of-two
+coefficient without writing that integer. The canonical coordinate annihilant
+in `CoerciveGramEliminant` uses a fixed Gram determinant. Its block determinant
+form has only original coefficients, negations, zeroes and ones as entries.
+
 ## Next obligations
 
-1. Prove retained nonsingular samples at the internally selected dyadic level.
-   The native sampler already decides that exact sample predicate without a
-   global finite-fiber promise. The chosen level is not yet bounded by the
-   geometric retained-sample interval.
-2. Prove source-size bounds for the epsilon feasibility witness, the delta
-   feasibility gap, rational sampling directions, and the critical-value
-   annihilants. The current geometric sampling and finiteness intervals are
-   qualitative. Prove that an effectively selected level lies within them
-   and retains a sample whenever the input is satisfiable.
-3. Extend implicit dyadic specialization through the nested perturbations.
-   Explicit rational packets can have exponentially many denominator bits,
-   even when the exponent has a polynomial-size binary code.
-4. Combine the complete sampler and sign tests into Canny's ETR procedure;
-   prove `ETR ∈ PSPACE`, then apply the proved PSPACE reduction closure to
-   obtain `∃ℝ ⊆ PSPACE`.
-5. Relate the chosen encoding to standard ETR presentations and prove an NP
-   lower inclusion. Extend the algebraic report results beyond the finite
-   affine-fiber criterion where needed.
-6. Extend to roadmap connectivity and the geometric consequences in the report.
+1. Complete native symbolic balanced preparation, coefficient readers, and
+   rational-coordinate substitution into the sample sign queries. The symbolic
+   root-tuple correspondence is proved, including ordinary specialization;
+   its metadata choices still need native space certificates.
+2. Stream a fixed coordinate annihilant for each coercive critical fiber.
+   The canonical Gram determinant is proved nonzero and annihilating. Its
+   padded matrix layout and coefficient readers are being connected to the
+   existing determinant evaluator.
+3. Combine eventual root/sign realizability with
+   [`CoerciveSourceSampling.correct`](LeanCanny/ETR/CoerciveSourceSampling.lean)
+   to prove `ETR ∈ PSPACE`, then use the proved reduction closure for
+   `∃ℝ ⊆ PSPACE`. Actual source radius and penalty exponents already have
+   native FP writers; the integer query system and implicit power residues
+   are verified.
+4. For the original tube-sampling route, bound the epsilon feasibility witness,
+   delta feasibility gap, rational directions, and retained-level interval,
+   and stream nested implicit substitutions. These are separate from the
+   one-parameter coercive route above.
+5. Relate the encoding to standard ETR presentations, prove the NP lower
+   inclusion, and extend to the report's roadmap and connectivity results.
 
 See [`RESEARCH.md`](RESEARCH.md) for prior work, the machine-model comparison, and
 where Savitch's theorem enters.

@@ -98,6 +98,22 @@ theorem evaluator (coefficient : List Bool → List Bool) (D : List Bool → ℕ
   have ha : a.ControlsPolyTime := ⟨bits_mem_FP hN, hmod, hdegree⟩
   exact BerkowitzPolynomial.ModularAccess.evaluator a ha (entry_evaluator A W E hA hw)
 
+/-- The matrix dimension may be exponential; only its binary writer must be FP. -/
+theorem evaluator_binary_dimension (coefficient : List Bool → List Bool) (D : List Bool → ℕ)
+    (hP : ∀ c i j, (P c i j).totalDegree ≤ D c) (hW : ∀ c, D c < 2 ^ W c)
+    (hc : ∀ c (i j : Fin (N c)) r, coefficient
+      (pair c (pair (BinaryNatCode.encode i.val) (pair (BinaryNatCode.encode j.val) (BinaryNatCode.encode r)))) =
+      residueBits (((P c i j).coeff (RationalSubstitution.Indexed.exponentVector (A c) (FixedWidthPolynomial.entry (W c) r)) : ℤ) :
+        ZMod (Nat.fromBitsLE (modulus c) + 1)))
+    (E : SpaceFunction coefficient) (hA : UnaryFn A) (hN : (fun c => BinaryNatCode.encode (N c)) ∈ FP) (hw : UnaryFn W)
+    (hm : modulus ∈ FP) (hd : degree ∈ FP) :
+    SpaceFunction (family A N W modulus degree P).value := by
+  let a := access A N W modulus degree P coefficient D hP hW hc
+  have hmod : (BinaryNat.succ ∘ modulus) ∈ FP := mem_FP_comp hm BinaryNat.succ_mem_FP
+  have hdegree : (BinaryNat.normalize ∘ degree) ∈ FP := mem_FP_comp hd BinaryNat.normalize_mem_FP
+  have ha : a.ControlsPolyTime := ⟨hN, hmod, hdegree⟩
+  exact BerkowitzPolynomial.ModularAccess.evaluator a ha (entry_evaluator A W E hA hw)
+
 theorem value_eq (c : List Bool) (D : ℕ) (hD : (P c).det.totalDegree ≤ D)
     (hW : D < 2 ^ W c) (hr : Nat.fromBitsLE (degree c) < count (A c) (W c)) :
     (family A N W modulus degree P).value c =

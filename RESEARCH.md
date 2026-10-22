@@ -5003,8 +5003,25 @@ equivalent to eventual bounded critical samples with squared residual≤sB.
 `CoerciveRootRadius.root_iff_eventually_bounded_samples` supplies B internally
 as a power of two with a source-budgeted exponent. This gives a one-parameter
 semantic route to ETR, bypassing the geometric direction and nested tube
-parameter choices. The native symbolic-coordinate and sign pipeline needed to
-decide that predicate is still incomplete.
+parameter choices. `CoerciveSourceSampling.correct` instantiates this equivalence on the actual
+uncompactified compiled ETR polynomial for every binary input, avoiding
+extraneous boundary zeros. `CoerciveSourceControls` supplies exact native FP
+binary writers for the radius and penalty exponents. `CoerciveQuerySystem`
+expresses the gradient, residual, and penalty conditions as integer polynomial
+queries of degree at most 2D+2, with mass bounds. `ImplicitPowerResidueFP`
+computes residues of the implicit power-of-two coefficient in FP.
+
+`ProjectiveGramEliminant` and `CoerciveGramEliminant` replace the existential
+maximal-minor selector by the fixed determinant det(AᵀA) of the full Macaulay
+matrix. A real specialization with no complex projective roots proves it
+nonzero. Every specialized projective common root annihilates it. Its mass is
+at most C!*(R*M²)^C for C columns and R rows with entry mass at most M. The
+block matrix [[I,A],[-Aᵀ,0]] has the same determinant, so a native evaluator
+can read only original coefficients and constants rather than multiplying
+polynomial entries. `FixedWidthDeterminantBits.evaluator_binary_dimension`
+allows an exponentially large matrix dimension with an FP binary writer.
+The padded layout, coefficient readers, and native symbolic-coordinate/sign
+pipeline needed to decide the eventual sample predicate are still incomplete.
 `RowSpanSpecialization` proves that one surjective specialization selects a
 nonzero maximal minor and gives generic row-span certificates, even when the
 specializing coefficient map is noninjective.
@@ -5047,8 +5064,18 @@ polynomials, with degree and mass bounds. Both encoding and decoding persist
 on a computed small positive interval under ordinary, possibly noninjective,
 specialization. `SymbolicPrimitivePairRaw` derives all squarefree, degree, and
 separability guards from arbitrary nonzero original bivariates and their
-coefficient-mass bounds. Native symbolic readers and balanced preparation
-are still needed.
+coefficient-mass bounds. `SymbolicBalancedTree` recursively combines certified symbolic leaves;
+`SymbolicBalancedFiniteCoordinates` handles every finite original family,
+including the empty family and padding, and constructs actual rational
+numerators and denominators for every coordinate. Both directions of the
+root-tuple correspondence hold below a computed common positive threshold.
+Native symbolic readers and metadata preparation remain. In particular,
+matching the existing integer preparation to the canonical symbolic tree
+requires care: the former chooses the last successful direction, while the
+latter chooses the first. A fixed-table correctness theorem for any direction
+with nonzero symbolic discriminant can avoid an unnecessary identity of
+these tables. Dyadic denominator clearing also changes polynomials by nonzero
+scalars, so degree/separability tests need scalar-invariance proofs.
 
 The symbolic-alpha alternative is not connected yet. `InfinitesimalRootPSPACE`
 already decides eventual root/sign feasibility and computes a stability bound

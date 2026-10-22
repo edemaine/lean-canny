@@ -27,8 +27,16 @@ import LeanCanny.Algebra.CannyResultantTaskSource
 import LeanCanny.Algebra.CannySquarefreeLeaves
 import LeanCanny.Algebra.SymbolicScaledSquarefreeSmall
 import LeanCanny.Algebra.SymbolicPrimitivePairRaw
+import LeanCanny.Algebra.SymbolicBalancedFiniteCoordinates
+import LeanCanny.Algebra.SymbolicBalancedBounds
+import LeanCanny.Algebra.NestedMassSwap
 import LeanCanny.Geometry.CoerciveAnnihilatorLimit
 import LeanCanny.Geometry.CoerciveRootRadius
+import LeanCanny.ETR.CoerciveSourceControls
+import LeanCanny.Algebra.CoerciveGramEliminant
+import LeanCanny.Algebra.CoerciveQuerySystem
+import LeanCanny.Algebra.CoerciveQueryBounds
+import LeanCanny.Algebra.ImplicitPowerResidueFP
 import LeanCanny.Algebra.RowSpanSpecialization
 import LeanCanny.Algebra.CannyBalancedTaskRanks
 import LeanCanny.Algebra.CannySuppliedMetadata
