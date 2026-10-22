@@ -5020,8 +5020,28 @@ block matrix [[I,A],[-Aᵀ,0]] has the same determinant, so a native evaluator
 can read only original coefficients and constants rather than multiplying
 polynomial entries. `FixedWidthDeterminantBits.evaluator_binary_dimension`
 allows an exponentially large matrix dimension with an FP binary writer.
-The padded layout, coefficient readers, and native symbolic-coordinate/sign
-pipeline needed to decide the eventual sample predicate are still incomplete.
+`MacaulayFullBox` pads all shift and monomial ranks, and
+`MacaulayFullBoxFinite` gives the actual numeric matrix with FP-friendly
+quotient/remainder decoding. `CoerciveBoxGramEliminant` proves this padded
+canonical determinant nonzero and annihilating. `CoerciveBoxBounds` and
+`CoerciveAnnihilatorControls` derive source degree/mass budgets with native FP
+binary writers, including the swapped coefficient orientation required by
+symbolic primitive preparation. `BivariateDeterminantInteger` supplies a generic
+native determinant coefficient evaluator with binary dimension, retaining the
+entry-reader cost. The full-box shift and entry readers and their composition
+with this determinant evaluator are verified. Actual homogenized-row readers
+are still being connected. Complete native sample-query readers are available in
+`CoerciveQueryCoefficient`, with no source coefficient oracle.
+`CoerciveNativeAnnihilators` pins the perturbation as an extra original leaf
+T-alpha, and `CoerciveNativeSampling` proves exact actual-sample filtering on
+that full root product. This preserves the existing integer query layout.
+`CoercivePreparationControls` constructs the actual finite family, its integer
+preparation table, and an FP binary reference exponent. `SymbolicFixedTableFinite`
+and `CoordinateBounds` provide the actual prepared parameter and rational
+coordinates, with uniform bounds and ordinary-small-parameter root equivalence.
+`CoerciveSymbolicSampling.correct` proves exact ETR equivalence to eventual
+accepted signs of the cleared sample queries at one such primitive root.
+The native symbolic-coordinate/sign coefficient composition is still incomplete.
 `RowSpanSpecialization` proves that one surjective specialization selects a
 nonzero maximal minor and gives generic row-span certificates, even when the
 specializing coefficient map is noninjective.
@@ -5074,8 +5094,15 @@ matching the existing integer preparation to the canonical symbolic tree
 requires care: the former chooses the last successful direction, while the
 latter chooses the first. A fixed-table correctness theorem for any direction
 with nonzero symbolic discriminant can avoid an unnecessary identity of
-these tables. Dyadic denominator clearing also changes polynomials by nonzero
-scalars, so degree/separability tests need scalar-invariance proofs.
+these tables. `SymbolicFixedTableBounds`, `Subresultants`, `Tests`, `Scaling`,
+`Preparation`, and `Semantics` now prove branch-independent algebraic budgets,
+reflection of all PSC and separation tests, and scalar-invariance under dyadic
+clearing. The actual integer preparation table is admissible, and all its
+specialized nodes are associated to the corresponding raw symbolic nodes.
+The resulting root equivalence covers the original unsquarefree leaves;
+closed native budget controls and prepared-table mathematical coordinates now
+follow from `SymbolicFixedTableUniform`, `UniformPreparation`, `Coordinates`,
+`Finite`, and `CoordinateBounds`. Native coefficient readers remain.
 
 The symbolic-alpha alternative is not connected yet. `InfinitesimalRootPSPACE`
 already decides eventual root/sign feasibility and computes a stability bound

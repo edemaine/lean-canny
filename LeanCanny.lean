@@ -1,3 +1,5 @@
+import LeanCanny.ETR.CoerciveSymbolicSampling
+import LeanCanny.Algebra.MacaulayFullBoxDeterminantSpace
 import LeanCanny.ETR.EncodingBounds
 import LeanCanny.ETR.Complexity
 import LeanCanny.ETR.PSPACEClosure
@@ -29,11 +31,20 @@ import LeanCanny.Algebra.SymbolicScaledSquarefreeSmall
 import LeanCanny.Algebra.SymbolicPrimitivePairRaw
 import LeanCanny.Algebra.SymbolicBalancedFiniteCoordinates
 import LeanCanny.Algebra.SymbolicBalancedBounds
+import LeanCanny.Algebra.SymbolicBalancedFiniteSigns
+import LeanCanny.Algebra.SymbolicFixedTableSemantics
 import LeanCanny.Algebra.NestedMassSwap
 import LeanCanny.Geometry.CoerciveAnnihilatorLimit
 import LeanCanny.Geometry.CoerciveRootRadius
 import LeanCanny.ETR.CoerciveSourceControls
 import LeanCanny.Algebra.CoerciveGramEliminant
+import LeanCanny.Algebra.CoerciveBoxBounds
+import LeanCanny.Algebra.MacaulayFullBoxFinite
+import LeanCanny.Algebra.BivariateDeterminantInteger
+import LeanCanny.Algebra.ParameterCoordinate
+import LeanCanny.ETR.CoerciveAnnihilatorControls
+import LeanCanny.ETR.CoerciveNativeSampling
+import LeanCanny.ETR.CoerciveQueryCoefficient
 import LeanCanny.Algebra.CoerciveQuerySystem
 import LeanCanny.Algebra.CoerciveQueryBounds
 import LeanCanny.Algebra.ImplicitPowerResidueFP

@@ -1509,21 +1509,35 @@ provides exact FP binary writers for its radius and penalty exponents.
 `CoerciveQuerySystem` gives the corresponding integer gradient and inequality
 queries; `ImplicitPowerResidueFP` computes residues of the large power-of-two
 coefficient without writing that integer. The canonical coordinate annihilant
-in `CoerciveGramEliminant` uses a fixed Gram determinant. Its block determinant
-form has only original coefficients, negations, zeroes and ones as entries.
+in `CoerciveBoxGramEliminant` uses a fixed Gram determinant and an explicit
+fixed-width matrix layout. Its block determinant form has only original
+coefficients, negations, zeroes and ones as entries. A generic native bivariate
+determinant evaluator supports this binary matrix dimension.
+`CoerciveQueryCoefficient` supplies complete native readers for the actual
+sample gradient and inequality queries. `SymbolicBalancedFiniteSigns` proves
+exact sign filtering with uniform clearing allowances. `SymbolicFixedTablePreparation`
+connects actual integer preparation to valid symbolic direction choices,
+including denominator-clearing scalar factors.
+`CoerciveSymbolicSampling.correct` now reduces every encoded ETR input to
+accepted signs at one actual integer-prepared symbolic primitive root for all
+sufficiently small positive parameters. Its parameter is proved nonzero,
+and the prepared coordinates have uniform degree and mass bounds. This is a
+semantic reduction; its complete native coefficient evaluator remains open.
 
 ## Next obligations
 
 1. Complete native symbolic balanced preparation, coefficient readers, and
    rational-coordinate substitution into the sample sign queries. The symbolic
-   root-tuple correspondence is proved, including ordinary specialization;
-   its metadata choices still need native space certificates.
+   root-tuple correspondence and the exact ETR sign-filtering equivalence are
+   proved for the actual integer-prepared table, including ordinary
+   specialization. The full recursive coefficient graph remains to be certified.
 2. Stream a fixed coordinate annihilant for each coercive critical fiber.
-   The canonical Gram determinant is proved nonzero and annihilating. Its
-   padded matrix layout and coefficient readers are being connected to the
-   existing determinant evaluator.
+   The canonical Gram determinant, padded matrix layout, and generic native
+   bivariate determinant evaluator, shift guards, and numeric entry readers are
+   verified. The remaining connection supplies the actual homogenized-row
+   coefficient reader.
 3. Combine eventual root/sign realizability with
-   [`CoerciveSourceSampling.correct`](LeanCanny/ETR/CoerciveSourceSampling.lean)
+   [`CoerciveSymbolicSampling.correct`](LeanCanny/ETR/CoerciveSymbolicSampling.lean)
    to prove `ETR ∈ PSPACE`, then use the proved reduction closure for
    `∃ℝ ⊆ PSPACE`. Actual source radius and penalty exponents already have
    native FP writers; the integer query system and implicit power residues
