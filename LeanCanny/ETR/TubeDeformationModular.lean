@@ -62,19 +62,6 @@ theorem original_matrix_reduction (source active modulus inner middle : List Boo
   funext i
   simp only [encodedRows, MvPolynomial.map_map, hc]
 
-private theorem matrix_degree_le {R : Type*} [CommRing R] {N : ℕ}
-    (p : Fin N → MvPolynomial (Fin N) (Polynomial R)) (d : Fin N → ℕ) (W E : ℕ)
-    (hp : ∀ i e, ((p i).coeff e).natDegree ≤ E) (r s : Macaulay.Index N W) :
-    (Macaulay.matrix p d W r s).natDegree ≤ E := by
-  by_cases hr : (FixedWidthPolynomial.vector N W r).degree = Macaulay.level d
-  · rw [Macaulay.entry_active p d W r s hr]
-    split_ifs
-    · exact hp _ _
-    · simp
-  · simp only [Macaulay.matrix, dite_eq_right hr]
-    change (if r = s then (1 : Polynomial R) else 0).natDegree ≤ E
-    split_ifs <;> simp
-
 theorem original_entry_degree (source active modulus inner middle : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ)
     (B : TubeParameter.CoordinateBounds source (fun q => n (pairFst q)) (fun q => d (pairFst q))) (c : List Bool)
@@ -86,7 +73,7 @@ theorem original_entry_degree (source active modulus inner middle : List Bool �
   change (((encodedOriginalMatrix source active B.degree n d ell c) r s).map
     (Int.castRingHom (ZMod (Nat.fromBitsLE (modulus c) + 1)))).natDegree ≤ _
   apply Polynomial.natDegree_map_le.trans
-  exact matrix_degree_le _ _ _ _ (encoded_row_degree source active n d ell B c) r s
+  exact Macaulay.polynomial_entry_degree_le _ _ _ _ (encoded_row_degree source active n d ell B c) r s
 
 noncomputable def modularFamily (source active modulus inner middle outer : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ)

@@ -147,34 +147,6 @@ theorem entry_evaluator (hs : source ∈ FP) (ha : active ∈ FP) (hm : modulus 
     (TubeIndexed.degreeBound_unary.comp hsource) (selected_unary source hs) rankWord_mem_FP
     (mem_FP_comp (mem_FP_comp pairFst_mem_FP hm) BinaryNat.succ_mem_FP)
 
-private noncomputable def decoded (bits word : List Bool) : TubeRegularSource.Index bits :=
-  TubeRegularBits.decodedIndex (fun _ => bits) (fun _ => word) []
-
-private theorem decoded_pointwise (input row : List Bool → List Bool) (q : List Bool) :
-    TubeRegularBits.decodedIndex input row q = decoded (input q) (row q) := by
-  rfl
-
-private theorem decoded_code (bits : List Bool) (i : TubeRegularSource.Index bits) :
-    decoded bits (BinaryNatCode.encode (rowCode bits i)) = i := by
-  cases i with
-  | none =>
-    unfold decoded
-    apply TubeRegularBits.decodedIndex_reciprocal
-    rfl
-  | some i =>
-    unfold decoded
-    apply TubeRegularBits.decodedIndex_of_code
-    rfl
-
-private noncomputable def originalCoefficient (bits act word : List Bool) (r : ℕ) : ℤ :=
-  (TubeRegularSource.polynomial bits (activeSet (TubeIndexed.arity bits) act) (decoded bits word)).coeff
-    (FixedWidthPolynomial.nativeExponent (TubeHomogenization.outputEquiv bits) (TubeIndexed.blockWidth bits) r)
-
-private theorem originalCoefficient_pointwise (input act row : List Bool → List Bool) (q : List Bool) (r : ℕ) :
-    TubeRegularFiniteSigns.nativeCoefficient input act row q r = originalCoefficient (input q) (act q) (row q) r := by
-  unfold TubeRegularFiniteSigns.nativeCoefficient originalCoefficient
-  rw [decoded_pointwise]
-
 theorem entry_packet (c : List Bool) (i j : Fin (order (source c))) (r : ℕ) :
     entry source active modulus
       (pair c (pair (BinaryNatCode.encode i.val) (pair (BinaryNatCode.encode j.val) (BinaryNatCode.encode r)))) =
@@ -200,25 +172,26 @@ theorem entry_packet (c : List Bool) (i j : Fin (order (source c))) (r : ℕ) :
         (pair q (BinaryNatCode.encode k)) =
       residueBits ((p.coeff (FixedWidthPolynomial.nativeExponent f (TubeIndexed.blockWidth (source c)) k) : ℤ) :
         ZMod (Nat.fromBitsLE (modulus c) + 1)) := by
-    have h := TubeRegularBits.value_packet (source ∘ pairFst) (active ∘ pairFst) rowWord (modulus ∘ pairFst) q k
-    change TubeRegularBits.value (source ∘ pairFst) (active ∘ pairFst) rowWord (modulus ∘ pairFst)
-      (pair q (BinaryNatCode.encode k)) = residueBits
-        ((TubeRegularFiniteSigns.nativeCoefficient (source ∘ pairFst) (active ∘ pairFst) rowWord q k : ℤ) :
-          ZMod (Nat.fromBitsLE ((modulus ∘ pairFst) q) + 1)) at h
-    rw [originalCoefficient_pointwise] at h
-    simp only [Function.comp_apply, q, rowWord, pairFst_pair, pairSnd_pair] at h
     have hi := congrArg Fin.val ((rowEquiv (source c)).apply_symm_apply i)
     change rowCode (source c) ri = i.val at hi
-    have hd : decoded (source c) (BinaryNatCode.encode i.val) = ri := by rw [← hi, decoded_code]
-    have he : originalCoefficient (source c) (active c) (BinaryNatCode.encode i.val) k =
-        p.coeff (FixedWidthPolynomial.nativeExponent f (TubeIndexed.blockWidth (source c)) k) := by
-      unfold originalCoefficient
-      rw [hd]
-    rw [he] at h
-    have hmod : Nat.fromBitsLE ((modulus ∘ pairFst) q) + 1 = Nat.fromBitsLE (modulus c) + 1 := by
-      simp only [Function.comp_apply, q, pairFst_pair]
-    exact h.trans (congrArg (fun m : ℕ => residueBits
-      ((p.coeff (FixedWidthPolynomial.nativeExponent f (TubeIndexed.blockWidth (source c)) k) : ℤ) : ZMod m)) hmod)
+    have hrow : TubeRegularBits.decodedIndex (fun _ => source c)
+        (fun _ => BinaryNatCode.encode i.val) [] = ri := by
+      change TubeRegularFiniteSigns.row id (source c) i.val = ri
+      rw [← hi]
+      exact TubeRegularFiniteSigns.row_rowCode id (source c) ri
+    let residue (bits act word modword : List Bool) : List Bool :=
+      residueBits (((TubeRegularSource.polynomial bits (activeSet (TubeIndexed.arity bits) act)
+        (TubeRegularBits.decodedIndex (fun _ => bits) (fun _ => word) [])).coeff
+          (FixedWidthPolynomial.nativeExponent (TubeHomogenization.outputEquiv bits)
+            (TubeIndexed.blockWidth bits) k) : ℤ) : ZMod (Nat.fromBitsLE modword + 1))
+    have h := TubeRegularBits.value_packet (source ∘ pairFst) (active ∘ pairFst) rowWord (modulus ∘ pairFst) q k
+    change TubeRegularBits.value (source ∘ pairFst) (active ∘ pairFst) rowWord (modulus ∘ pairFst)
+      (pair q (BinaryNatCode.encode k)) =
+        residue ((source ∘ pairFst) q) ((active ∘ pairFst) q) (rowWord q) ((modulus ∘ pairFst) q) at h
+    simp only [Function.comp_apply, q, rowWord, pairFst_pair, pairSnd_pair] at h
+    dsimp only [residue] at h
+    rw [hrow] at h
+    exact h
 
   have hexp : FixedWidthDerivativeBits.exponent (width ∘ source ∘ pairFst) rankWord f q =
       FixedWidthPolynomial.nativeExponent f (width (source c)) r := by
