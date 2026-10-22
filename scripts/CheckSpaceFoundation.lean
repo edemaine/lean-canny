@@ -29,6 +29,22 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
     ComputableTidilyInPolySpace (LeanCanny.Algebra.BalancedTablePolynomials.nodeValue F) encBits encBits :=
   (LeanCanny.Algebra.BalancedTablePolynomials.evaluator F A).computable
 
+/-! Degree-table preparation uses the original square-free leaf computation.
+The serializer accepts arbitrary native space children, not just FP readers. -/
+example (A W : List Bool → ℕ) (e : List Bool → ℕ → ℕ)
+    (hA : ComputableTidilyInPolyTime A encBits encUnary) (hW : ComputableTidilyInPolyTime W encBits encUnary)
+    (read : List Bool → List Bool) (R : ComputableTidilyInPolySpace read encBits encBits)
+    (he : ∀ c i, read (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) = LeanCanny.BinaryNatCode.encode (e c i)) :
+    ComputableTidilyInPolySpace (fun c => LeanCanny.Encoding.FixedWidthNatVector.encode (A c) (W c) (e c)) encBits encBits :=
+  (LeanCanny.Encoding.FixedWidthNatVector.encodeEvaluator A W e hA hW read ⟨R⟩ he).computable
+
+example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (hne : ∀ c, F.polynomial c ≠ 0) (count D : List Bool → ℕ)
+    (hn : ComputableTidilyInPolyTime count encBits encUnary) (hD : ComputableTidilyInPolyTime D encBits encNat)
+    (hdegree : ∀ c i, i < count c → (F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i))).natDegree ≤ D c) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.BalancedDegreeTable.prepare F count D) encBits encBits :=
+  (LeanCanny.Algebra.BalancedDegreeTable.prepareEvaluator F A hne count D hn hD hdegree).computable
+
 /-! A single native machine handles input-dependent recursion depth. Neither
 the local instruction computation nor the reply installer needs an FP clock. -/
 example {localStep : List Bool → LeanCanny.Computation.RecursiveStack.Action (List Bool)}

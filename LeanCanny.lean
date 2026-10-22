@@ -29,6 +29,7 @@ import LeanCanny.Algebra.CannyBalancedTaskRanks
 import LeanCanny.Algebra.CannySuppliedMetadata
 import LeanCanny.Algebra.BalancedTableCoefficientSource
 import LeanCanny.Algebra.BalancedTableCoefficientSpace
+import LeanCanny.Algebra.BalancedDegreeTable
 import LeanCanny.Algebra.BerkowitzTaskMetadata
 import LeanCanny.Algebra.BerkowitzTaskResidues
 import LeanCanny.Algebra.CannyBalancedTaskResidues

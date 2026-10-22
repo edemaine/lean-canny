@@ -4533,6 +4533,45 @@ child semantic identity, task-word/reply/metadata bound, or rank/closure contrac
 Preparing consistent degree/separating-direction tables, specializing to the
 tube-annihilator source, and the full ETR PSPACE theorem remain open.
 
+## Native preparation of the canonical degree table
+
+`BalancedCanonicalDegrees` computes subtree degrees before any directions are
+chosen. A leaf is the scaled square-free original polynomial below the source
+count and the polynomial X beyond it. The canonical node degree is the product
+of the degrees in its leaf interval. The binary-counted native fold permits
+arbitrary polynomial-space square-free computations as children. Capping query
+height by the source count's binary size bounds the number of factors by
+`2*(count+1)`, even on malformed node queries. Every accumulator is bounded by
+`(D+1)^(2*(count+1))` when original degrees are at most D. The cap is inactive
+on all intended nodes, where the computed degree equals the canonical tree's
+actual degree. No direction or resultant coefficient reader is assumed.
+
+`BalancedMetadataAddress` decodes the existing inorder cell key in FP. Its
+binary word has the degree/direction bit, h zeros, a one, and the node index
+bits. A finite-state transducer writes the unary zero-prefix length. Every
+genuine degree or direction cell round-trips to its original node address.
+
+`FixedWidthNatVectorSpace.encodeEvaluator` serializes a polynomial number of
+fixed-width cells from an arbitrary native space coordinate reader. It retains
+the output prefix and one child computation. Number and width controls are
+unary FP; child computations need no time bound. Oversized coordinate values
+are truncated, exactly as in the mathematical encoder.
+
+`BalancedDegreeTable.prepareEvaluator` combines these results into a native
+space preparer for the existing metadata frame. It requires the original
+nonzero-family reader, a unary count, and a binary original-degree upper bound.
+All in-range degree cells equal the degrees of the padded finite-annihilator
+tree. Direction cells initially contain zero. With
+`B=(D+1)^(2*(count+1))`, the width `2*B.size+1` fits every degree and every later
+canonical separating direction, since the latter is at most B squared. The
+frame preserves the original source and has the exact length supplied by the
+existing frame layout theorem.
+
+This prepares degrees only. It does not claim table consistency: the canonical
+directions still need to be computed, and the padded leaf family/readers must
+be connected to the supplied-table coefficient evaluator. These steps, the
+tube-annihilator specialization, and the full ETR PSPACE theorem remain open.
+
 ## Savitch's theorem and Canny
 
 Savitch is useful for reachability in an implicitly represented exponential graph,
