@@ -484,3 +484,18 @@ example (S : LeanCanny.ETR.TubeNativeAnnihilator.Source)
 
 example : LeanCanny.ETR.TubeNativeSampling.universalLanguage ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.ETR.TubeNativeSampling.universalLanguage_mem_PSPACE
+
+example (S : LeanCanny.ETR.TubeNativeAnnihilator.Source) (c : List Bool)
+    (z : Fin (LeanCanny.ETR.TubeParameter.spatialCount (S.input c)) → ℝ)
+    (hz : LeanCanny.ETR.TubeLevelPacket.CompiledSample (S.packet c) (S.mask c) (S.projection c) (S.level c) z)
+    (hJac : S.Simple c z) : c ∈ LeanCanny.ETR.TubeNativeSampling.language S :=
+  LeanCanny.ETR.TubeNativeSampling.mem_of_regular_sample S c z hz hJac
+
+/-! The singularity polynomial's coefficients are computed from the original
+regular source, with no derivative or determinant oracle. -/
+example (source active modulus degree : List Bool → List Bool)
+    (hs : source ∈ LeanCanny.FP) (ha : active ∈ LeanCanny.FP)
+    (hm : modulus ∈ LeanCanny.FP) (hd : degree ∈ LeanCanny.FP) :
+    ComputableTidilyInPolySpace
+      (LeanCanny.ETR.TubeRegularJacobianBits.value source active modulus degree) encBits encBits :=
+  (LeanCanny.ETR.TubeRegularJacobianBits.evaluator source active modulus degree hs ha hm hd).computable

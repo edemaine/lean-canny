@@ -47,8 +47,14 @@ import LeanCanny.ETR.TubeFiniteLeafSigns
 import LeanCanny.ETR.TubeCoordinateAnnihilatorSigns
 import LeanCanny.ETR.TubeRegularFiniteSigns
 import LeanCanny.ETR.TubeNativeSampling
+import LeanCanny.ETR.TubeNativeSamplingRegular
 import LeanCanny.Algebra.GenericProjectionJacobian
 import LeanCanny.ETR.TubeRegularJacobianBudget
+import LeanCanny.Algebra.RowSpanEliminant
+import LeanCanny.Algebra.AffineMacaulayMatrix
+import LeanCanny.ETR.TubeRegularJacobianParameters
+import LeanCanny.ETR.TubeRegularJacobianReaders
+import LeanCanny.ETR.TubeRegularSingularIdeal
 import LeanCanny.Computation.FiniteBinaryEnvelope
 import LeanCanny.Algebra.BerkowitzTaskMetadata
 import LeanCanny.Algebra.BerkowitzTaskResidues

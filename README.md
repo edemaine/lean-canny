@@ -249,6 +249,11 @@ Under finite complex fibers, it accepts exactly existence of such a sample at
 the internally selected dyadic level, including singular samples. Finiteness
 and retained-sample existence at that level, together with the effective outer
 parameter choices, remain open.
+[TubeNativeSamplingRegular](LeanCanny/ETR/TubeNativeSamplingRegular.lean) also
+proves acceptance of every simple compiled sample without a global finiteness
+promise: one invertible chart Jacobian suffices for all coordinate originals.
+The actual integer Jacobian determinant supplies this condition through
+[TubeRegularJacobianChart](LeanCanny/ETR/TubeRegularJacobianChart.lean).
 
 [GenericProjectionJacobian](LeanCanny/Algebra/GenericProjectionJacobian.lean)
 proves that every generic extended projection-critical root has an invertible
@@ -258,6 +263,20 @@ arithmetic elimination bound for exceptional specializations is still needed.
 [TubeRegularJacobianBudget](LeanCanny/ETR/TubeRegularJacobianBudget.lean) defines
 the actual integer singularity polynomial and bounds its degree and whole
 coefficient mass by the source size.
+[RowSpanEliminant](LeanCanny/Algebra/RowSpanEliminant.lean) constructs a bounded
+nonzero parameter minor and an integral ideal certificate from finite affine
+row-span membership. A source-size bound on the required monomial degree is
+still needed.
+[AffineMacaulayMatrix](LeanCanny/Algebra/AffineMacaulayMatrix.lean) builds the
+actual truncated coefficient matrix and connects bounded Bézout identities to
+this minor certificate. [TubeRegularJacobianParameters](LeanCanny/ETR/TubeRegularJacobianParameters.lean)
+proves the native singularity polynomial is nonzero at every generic critical
+root, using an explicit joint level/direction parameter map.
+[TubeRegularSingularIdeal](LeanCanny/ETR/TubeRegularSingularIdeal.lean) proves the
+actual generic singular ideal is the whole ring, while
+[TubeRegularJacobianReaders](LeanCanny/ETR/TubeRegularJacobianReaders.lean)
+computes coefficients of the concrete singularity polynomial in native PSPACE.
+Neither result bounds the degree of a Bézout identity.
 
 P and all project polynomial-time reductions now use Complexitylib2 directly,
 through [PolyTime](LeanCanny/Computation/PolyTime.lean). This includes the defining
