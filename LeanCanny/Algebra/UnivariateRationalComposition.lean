@@ -87,42 +87,66 @@ def degree (r : Coordinate) : ℕ := max r.numerator.natDegree r.denominator.nat
 noncomputable def eval {K : Type*} [Field K] (r : Coordinate) (x : K) : K :=
   r.numerator.eval₂ (Int.castRingHom K) x / r.denominator.eval₂ (Int.castRingHom K) x
 
+noncomputable def compWith (e : ℕ) (outer inner : Coordinate) : Coordinate :=
+  ⟨clear e outer.numerator inner.numerator inner.denominator,
+   clear e outer.denominator inner.numerator inner.denominator⟩
+
+theorem compWith_degree (e : ℕ) (outer inner : Coordinate) : (compWith e outer inner).degree ≤ e * inner.degree :=
+  max_le (clear_degree _ _ _ _ _ (le_max_left _ _) (le_max_right _ _))
+    (clear_degree _ _ _ _ _ (le_max_left _ _) (le_max_right _ _))
+
+theorem eval_compWith {K : Type*} [Field K] (e : ℕ) (outer inner : Coordinate) (he : outer.degree ≤ e) (x : K)
+    (hd : inner.denominator.eval₂ (Int.castRingHom K) x ≠ 0) :
+    (compWith e outer inner).eval x = outer.eval (inner.eval x) := by
+  have hn : outer.numerator.natDegree ≤ e := (le_max_left _ _).trans he
+  have hden : outer.denominator.natDegree ≤ e := (le_max_right _ _).trans he
+  simp only [eval, compWith]
+  rw [eval₂_clear (Int.castRingHom K) e outer.numerator inner.numerator inner.denominator hn x hd,
+    eval₂_clear (Int.castRingHom K) e outer.denominator inner.numerator inner.denominator hden x hd]
+  exact mul_div_mul_left _ _ (pow_ne_zero _ hd)
+
+theorem compWith_denominator_ne_zero {K : Type*} [Field K] (e : ℕ) (outer inner : Coordinate)
+    (he : outer.degree ≤ e) (x : K) (hi : inner.denominator.eval₂ (Int.castRingHom K) x ≠ 0)
+    (ho : outer.denominator.eval₂ (Int.castRingHom K) (inner.eval x) ≠ 0) :
+    (compWith e outer inner).denominator.eval₂ (Int.castRingHom K) x ≠ 0 := by
+  change (clear _ _ _ _).eval₂ _ _ ≠ 0
+  rw [eval₂_clear (Int.castRingHom K) e outer.denominator inner.numerator inner.denominator
+    ((le_max_right _ _).trans he) x hi]
+  exact mul_ne_zero (pow_ne_zero _ hi) ho
+
+theorem compWith_mass (e : ℕ) (outer inner : Coordinate) (he : outer.degree ≤ e) (s b : ℕ)
+    (hon : coefficientMass outer.numerator ≤ 2 ^ s) (hod : coefficientMass outer.denominator ≤ 2 ^ s)
+    (hin : coefficientMass inner.numerator ≤ 2 ^ b) (hid : coefficientMass inner.denominator ≤ 2 ^ b) :
+    coefficientMass (compWith e outer inner).numerator ≤ 2 ^ (s + e * b) ∧
+    coefficientMass (compWith e outer inner).denominator ≤ 2 ^ (s + e * b) := by
+  have hpow : 2 ^ s * (2 ^ b) ^ e = 2 ^ (s + e * b) := by rw [← pow_mul, ← pow_add, Nat.mul_comm b]
+  exact ⟨(clear_mass _ _ _ _ ((le_max_left _ _).trans he) _ hin hid).trans ((Nat.mul_le_mul_right _ hon).trans_eq hpow),
+    (clear_mass _ _ _ _ ((le_max_right _ _).trans he) _ hin hid).trans ((Nat.mul_le_mul_right _ hod).trans_eq hpow)⟩
+
 noncomputable def comp (outer inner : Coordinate) : Coordinate :=
   ⟨clear outer.degree outer.numerator inner.numerator inner.denominator,
    clear outer.degree outer.denominator inner.numerator inner.denominator⟩
 
 theorem comp_degree (outer inner : Coordinate) : (comp outer inner).degree ≤ outer.degree * inner.degree :=
-  max_le (clear_degree _ _ _ _ _ (le_max_left _ _) (le_max_right _ _))
-    (clear_degree _ _ _ _ _ (le_max_left _ _) (le_max_right _ _))
+  compWith_degree outer.degree outer inner
 
 theorem eval_comp {K : Type*} [Field K] (outer inner : Coordinate) (x : K)
     (hd : inner.denominator.eval₂ (Int.castRingHom K) x ≠ 0) :
-    (comp outer inner).eval x = outer.eval (inner.eval x) := by
-  have hn : outer.numerator.natDegree ≤ outer.degree := le_max_left _ _
-  have hden : outer.denominator.natDegree ≤ outer.degree := le_max_right _ _
-  simp only [eval, comp]
-  rw [eval₂_clear (Int.castRingHom K) outer.degree outer.numerator inner.numerator inner.denominator hn x hd,
-    eval₂_clear (Int.castRingHom K) outer.degree outer.denominator inner.numerator inner.denominator hden x hd]
-  exact mul_div_mul_left _ _ (pow_ne_zero _ hd)
+    (comp outer inner).eval x = outer.eval (inner.eval x) :=
+  eval_compWith outer.degree outer inner le_rfl x hd
 
 theorem comp_denominator_ne_zero {K : Type*} [Field K] (outer inner : Coordinate) (x : K)
     (hi : inner.denominator.eval₂ (Int.castRingHom K) x ≠ 0)
     (ho : outer.denominator.eval₂ (Int.castRingHom K) (inner.eval x) ≠ 0) :
-    (comp outer inner).denominator.eval₂ (Int.castRingHom K) x ≠ 0 := by
-  change (clear _ _ _ _).eval₂ _ _ ≠ 0
-  have hden : outer.denominator.natDegree ≤ outer.degree := le_max_right _ _
-  rw [eval₂_clear (Int.castRingHom K) outer.degree outer.denominator inner.numerator inner.denominator hden x hi]
-  exact mul_ne_zero (pow_ne_zero _ hi) ho
+    (comp outer inner).denominator.eval₂ (Int.castRingHom K) x ≠ 0 :=
+  compWith_denominator_ne_zero outer.degree outer inner le_rfl x hi ho
 
 theorem comp_mass (outer inner : Coordinate) (s b : ℕ)
     (hon : coefficientMass outer.numerator ≤ 2 ^ s) (hod : coefficientMass outer.denominator ≤ 2 ^ s)
     (hin : coefficientMass inner.numerator ≤ 2 ^ b) (hid : coefficientMass inner.denominator ≤ 2 ^ b) :
     coefficientMass (comp outer inner).numerator ≤ 2 ^ (s + outer.degree * b) ∧
-    coefficientMass (comp outer inner).denominator ≤ 2 ^ (s + outer.degree * b) := by
-  have hpow : 2 ^ s * (2 ^ b) ^ outer.degree = 2 ^ (s + outer.degree * b) := by
-    rw [← pow_mul, ← pow_add, Nat.mul_comm b]
-  exact ⟨(clear_mass _ _ _ _ (le_max_left _ _) _ hin hid).trans ((Nat.mul_le_mul_right _ hon).trans_eq hpow),
-    (clear_mass _ _ _ _ (le_max_right _ _) _ hin hid).trans ((Nat.mul_le_mul_right _ hod).trans_eq hpow)⟩
+    coefficientMass (comp outer inner).denominator ≤ 2 ^ (s + outer.degree * b) :=
+  compWith_mass outer.degree outer inner le_rfl s b hon hod hin hid
 
 end Coordinate
 end LeanCanny.Algebra.UnivariateRational

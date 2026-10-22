@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.PaddedAnnihilatorPreparation
+public import LeanCanny.Algebra.BalancedSubtreeLocality
 
 /-! # Every subtree of a completely prepared table is consistent -/
 
@@ -16,32 +17,8 @@ open SeparableBits (Family)
 
 theorem Consistent.subtree (B : Family) (f : List Bool) (leaves : ℕ → SeparableIntegerPolynomial)
     (N : ℕ) (hc : Consistent B f leaves N 0) (h i : ℕ) (hh : h ≤ N) (hi : i < 2 ^ (N - h)) :
-    Consistent B f leaves h i := by
-  have hall : ∀ d, d ≤ N → ∀ j, j < 2 ^ d → Consistent B f leaves (N - d) j := by
-    intro d
-    induction d with
-    | zero =>
-      intro _ j hj
-      have hj' : j = 0 := by simpa only [pow_zero] using Nat.eq_zero_of_le_zero (by omega : j ≤ 0)
-      simpa only [Nat.sub_zero, hj'] using hc
-    | succ d ih =>
-      intro hd j hj
-      have hp : j / 2 < 2 ^ d := by rw [pow_succ] at hj; omega
-      have H := ih (by omega) (j / 2) hp
-      have he : N - d = (N - (d + 1)) + 1 := by omega
-      rw [he] at H
-      obtain ⟨hl, hr, _, _, _⟩ := H
-      have hm := Nat.mod_lt j (by decide : 0 < 2)
-      have hjd := Nat.mod_add_div j 2
-      by_cases hz : j % 2 = 0
-      · have he' : j = 2 * (j / 2) := by omega
-        rw [he']
-        exact hl
-      · have he' : j = 2 * (j / 2) + 1 := by omega
-        rw [he']
-        exact hr
-  have H := hall (N - h) (by omega) i hi
-  simpa only [Nat.sub_sub_self hh] using H
+    Consistent B f leaves h i :=
+  BalancedSubtreeLocality.consistent_subtree B f leaves N h i hh hi hc
 
 end LeanCanny.Algebra.BalancedTablePolynomials
 

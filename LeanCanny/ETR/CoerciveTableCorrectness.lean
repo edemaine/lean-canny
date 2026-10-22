@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 public import LeanCanny.ETR.CoerciveFormalLeafReader
 public import LeanCanny.Algebra.SymbolicPreparedTable
+public import LeanCanny.Algebra.BalancedTableSubtrees
 
 /-! # Exact reference subtrees inside the enlarged native integer table -/
 @[expose] public section
@@ -108,10 +109,6 @@ theorem interval_index_lt (bits : List Bool) (h i j : ℕ) (hh : h≤height bits
     (hi : i<2^(height bits-h)) (hj : j<2^h) : 2^h*i+j<2^(height bits) :=
   BalancedSubtreeLocality.interval_index_lt (height bits) h i j hh hi hj
 
-theorem index_lt_of_interval (bits : List Bool) (h i : ℕ) (hh : h≤height bits)
-    (hi : 2^h*(i+1)≤2^(height bits)) : i<2^(height bits-h) :=
-  BalancedSubtreeLocality.index_lt_of_interval (height bits) h i hh hi
-
 theorem leaf_eq_reference (bits : List Bool) (i : ℕ) (hi : i<count bits) :
     CoerciveFormalLeafReader.leaf (pair (tablePrepare bits) (BinaryNatCode.encode i)) =
       SymbolicScaledSquarefree.polynomial ((CoercivePreparationControls.family bits).padded i) := by
@@ -142,13 +139,8 @@ theorem table_direction_reference (bits : List Bool) (h i : ℕ)
       (CoercivePreparationControls.family bits).directions h i :=
   (table_consistent_subtree bits (h+1) i hh hi).2.2.2.2.trans (reference_direction bits h i).symm
 
-theorem height_lt (bits : List Bool) : height bits<(retainedCount (prepare bits)).size := by
-  apply Nat.lt_size.mpr
-  simpa only [height, retainedCount, prepare_source, count] using
-    FiniteAnnihilatorTree.width_bound (dimension bits+1)
-
-/-- Root-inclusive order metadata is exact. Its parent exists in the enlarged
-integer table even at the original symbolic root. -/
+/-- Preparation retains exact orders, including its root. Literal retained-leaf
+equality transports those orders to the symbolic reference subtree. -/
 theorem table_order_reference (bits : List Bool) (h i : ℕ)
     (hh : h≤height bits) (hi : i<2^(height bits-h)) :
     BalancedMetadataTable.order (BalancedParameterContext.packet (tablePrepare bits) h i) =
@@ -157,11 +149,9 @@ theorem table_order_reference (bits : List Bool) (h i : ℕ)
         (CoercivePreparationControls.family bits).directions h i).natDegree := by
   let H := (retainedCount (prepare bits)).size
   have hiH : i<2^(H-h) := hi.trans_le (Nat.pow_le_pow_right (by decide) (by
-    have ht := height_lt bits; dsimp [H]; omega))
-  have ho := BalancedSubtreeLocality.order_eq_node_degree
-    (PaddedAnnihilatorBits.family retainedFamily retainedCount) (tablePrepare bits)
-    (integerLeaves bits) H h i (by have ht := height_lt bits; dsimp [H]; omega)
-    hiH (table_consistent_integer bits)
+    have ht := height_le bits; dsimp [H]; omega))
+  have ho := (PaddedAnnihilatorPreparation.prepare_ready retainedFamily retainedCount retainedDegree retainedMass
+    retained_nonzero retained_degree retained_height (prepare bits)).orders h i (hh.trans (height_le bits)) hiH
   have hn := BalancedSubtreeLocality.node_polynomial_congr (integerLeaves bits) (referenceLeaves bits) h i
     (fun j hj => integer_leaf_polynomial bits _ ((interval_index_lt bits h i j hh hi hj).trans_le
       (FiniteAnnihilatorTree.width_bound (dimension bits+1))))
@@ -174,12 +164,7 @@ theorem pair_spec (bits : List Bool) (h i : ℕ) (hh : h + 1 ≤ height bits)
     SymbolicFixedTablePolynomialTree.PairSpec CoerciveFormalLeafReader.leaf (tablePrepare bits)
       (fun j => SymbolicScaledSquarefree.polynomial ((CoercivePreparationControls.family bits).padded j))
       (CoercivePreparationControls.family bits).directions h i := by
-  have hpow : 2 ^ (height bits - h) = 2 ^ (height bits - (h + 1)) * 2 := by
-    rw [← pow_succ]
-    congr 1
-    omega
-  have hl : 2 * i < 2 ^ (height bits - h) := by rw [hpow]; omega
-  have hr : 2 * i + 1 < 2 ^ (height bits - h) := by rw [hpow]; omega
+  obtain ⟨hl, hr⟩ := BalancedTablePolynomials.child_index_lt (height bits) h i hh hi
   exact ⟨⟨tree_eq_reference bits h (2 * i) (by omega) hl,
       table_order_reference bits h (2 * i) (by omega) hl⟩,
     ⟨tree_eq_reference bits h (2 * i + 1) (by omega) hr,
