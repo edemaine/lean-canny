@@ -27,6 +27,7 @@ import LeanCanny.Algebra.CannyResultantTaskSource
 import LeanCanny.Algebra.CannySquarefreeLeaves
 import LeanCanny.Algebra.CannyBalancedTaskRanks
 import LeanCanny.Algebra.CannySuppliedMetadata
+import LeanCanny.Algebra.BalancedTableCoefficientSource
 import LeanCanny.ETR.EquationListComplexity
 import LeanCanny.ETR.NNFComplexity
 import LeanCanny.ETR.EquationCompilerFP

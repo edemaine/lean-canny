@@ -4418,9 +4418,43 @@ generalize to the supplied-order parameters. They reuse the existing proofs;
 the exact-degree readers, integer height consequences, coordinate readers,
 and reductions retain their default exact-order interfaces. This removes the
 global degree-consistency requirement from table-driven coefficient evaluation.
-The actual encoded table access/preparation, its correctness for the intended
-balanced polynomial tree, separating-direction selection, quantitative graph
-bounds, and final ETR PSPACE theorem remain open.
+The concrete table interface below supplies access and coefficient semantics.
+Correct table preparation for the intended balanced tree, separating-direction
+selection, quantitative graph bounds, and the final ETR PSPACE theorem remain open.
+
+## Concrete metadata tables and coefficient identities
+
+`BalancedMetadataTable` uses original-input frame
+`pair source (pair unaryWidth tableBits)`. Inorder key `2^h*(2*i+1)` identifies
+a node; two fixed-width cells store its degree and direction. Keys are
+injective. Capped binary-index lookup reuses `FixedWidthQuery`, is FP on all
+words, and returns at most the supplied width, even for incomplete tables.
+`read_frame` proves exact recovery of an in-range encoded value that fits.
+For height `n.size`, `8*(n+1)` cells cover every node field in the padded tree.
+A frame with A cells of width W has length `2*source.length+2*W+A*W+4`.
+
+`BalancedTablePolynomials` defines the actual integer polynomial tree for
+every table. Leaves are scaled square-free indexed original polynomials;
+internal nodes use the table's supplied orders and direction. Its finite
+`Consistent` predicate records the exact child degrees and canonical separating
+directions needed by one rooted subtree, together with its leaf identities.
+`tree_eq_node` identifies a consistent subtree with the existing algebraic
+`BalancedPrimitiveTree.node`. No table consistency is assumed by the total
+tree definition or its native coefficient source.
+
+`SeparableReaderReindex` reuses the original polynomial reader at the node's
+indexed source context. `BalancedTableCoefficientSource` supplies literal FP
+metadata writers from the table. The mixed square-free-leaf/Sylvester matrix
+family is proved equal to this polynomial tree on every query word. Each
+child determinant query therefore returns exactly the original coefficient
+requested by its parent. These child semantic identities, local metadata
+certificates, query closure, and common rank bounds are now derived.
+
+The resulting uniform native evaluator requires the original `SeparableBits.Readers`
+and common word, reply, and binary-metadata bit bounds over the actual reachable
+task graph. Those quantitative bounds still need proofs. A native procedure
+preparing consistent degree/separating-direction tables, the tube-annihilator
+source specialization, and the complete ETR PSPACE theorem also remain open.
 
 ## Savitch's theorem and Canny
 
