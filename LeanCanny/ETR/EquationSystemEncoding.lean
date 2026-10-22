@@ -93,7 +93,7 @@ theorem disjunctionBits_mem_FP : ComputableTidilyInPolyTime disjunctionBits encB
   have ha := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
   have hb := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
   have hn := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
-  have hi := Codec.unaryValue_unary.comp hn
+  have hi := UnaryFn.comp Codec.unaryValue_unary hn
   have hl := mem_FP_comp (mem_FP_pair (Term.variableBits_mem_FP hi) ha) EquationMask.mask_mem_FP
   have hr := mem_FP_comp (mem_FP_pair (Term.oneMinusBits_mem_FP hi) hb) EquationMask.mask_mem_FP
   have ht := consNode_mem_FP (Term.booleanBits_mem_FP hi) (appendTerms_mem_FP hl hr)
