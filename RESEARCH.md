@@ -4451,12 +4451,11 @@ child determinant query therefore returns exactly the original coefficient
 requested by its parent. These child semantic identities, local metadata
 certificates, query closure, and common rank bounds are now derived.
 
-The resulting uniform native evaluator requires the original `SeparableBits.Readers`
-and a common task-word bound over the actual reachable task graph. Reply and
-metadata bounds are derived as described below. The task-word bound still needs
-a proof. A native procedure preparing consistent degree/separating-direction
-tables, the tube-annihilator source specialization, and the complete ETR PSPACE
-theorem also remain open.
+The resulting uniform native evaluator in `BalancedTableCoefficientSpace`
+requires only the original `SeparableBits.Readers`. All graph bounds are derived
+as described below. A native procedure preparing consistent degree/separating-
+direction tables, the tube-annihilator source specialization, and the complete
+ETR PSPACE theorem remain open.
 
 ## Derived common metadata and reply bounds
 
@@ -4481,10 +4480,58 @@ source entry bound. For the concrete table tree, right coefficients are integer
 residues by definition. Thus all reachable reply words have length at most
 `root.length+1`, on arbitrary query words and arbitrary supplied tables.
 
-`BalancedTablePolynomials.evaluator` now derives both common bounds and requires
-only the original leaf reader plus a common reachable task-word bound. Correct
-table preparation, that remaining bound, and ETR membership in PSPACE are still
-open.
+`BalancedTablePolynomials.evaluator_of_taskWordBound` combines these bounds
+with a supplied common task-word bound. The stronger evaluator below derives
+that bound too.
+
+## Closing the supplied-table graph bounds
+
+`CannyBalancedTaskRequests` exposes the nonleaf condition and resultant guard
+of every active source request. It propagates any context measure that is
+minimal at zero and does not increase on a nonleaf child.
+`CannyBalancedTaskAddresses` uses the maximum of actual and reconstructed node
+lengths, covering malformed roots without assuming a canonical packet. Every
+reachable node word has length at most `5*root.length+4`. Original-input and
+modulus-word lengths are at most `root.length`.
+
+`SylvesterPolynomialTaskDegrees` proves that active band guards bound the
+requested input-polynomial index by its supplied source order. The output
+coefficient degree is copied unchanged. `CannyResultantTaskDegrees` therefore
+bounds a shifted-left request degree by the selected output degree plus the
+left order, and a right request degree by the right order. The binary query
+words are canonical, and their length bounds are additive.
+
+`BerkowitzTaskDegrees` shows that internal requests never increase the selected
+polynomial degree, on arbitrary controller states and arbitrary replies. The
+flattened coefficient query reduces each degree coordinate modulo the
+truncation width before subtracting. Factor and augmented-moment routing copy
+the resulting degree. No matrix-index validity hypothesis is needed.
+
+`BalancedTableTaskDegrees` bounds the supplied orders by `root.length` bits
+using the inherited original input. Each source descent lowers height and
+adds at most one order. The potential
+`selectedDegree.size + (root.length+1)*level` never increases on actual
+requests. Thus every selected degree has at most
+`root.length+(root.length+1)*root.length` bits.
+`BalancedTableTaskContexts` combines this with the address and modulus bounds.
+Source requests rebuild their matrix context with a canonical degree; internal
+requests preserve it or request zero. This gives a common quadratic context
+bound, independently of recursion depth.
+
+`BerkowitzTaskWordGrowth` supplies a monotone polynomial envelope for internal
+request-word lengths from native metadata and query output-length bounds.
+Internal priorities strictly decrease, so at most four envelope compositions
+are needed between source descents. A source request resets to a determinant
+task with the already bounded matrix context. Induction over actual reachability
+therefore yields one common unary FP bound for complete task words.
+
+`BalancedTableCoefficientSpace` closes the remaining quantitative hypothesis.
+Its uniform native `evaluator` needs only the original leaf reader and evaluates
+the supplied-table polynomial tree on every query word, including malformed
+queries and inconsistent tables. It assumes no child coefficient certificate,
+child semantic identity, task-word/reply/metadata bound, or rank/closure contract.
+Preparing consistent degree/separating-direction tables, specializing to the
+tube-annihilator source, and the full ETR PSPACE theorem remain open.
 
 ## Savitch's theorem and Canny
 

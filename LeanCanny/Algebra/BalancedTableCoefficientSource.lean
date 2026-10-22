@@ -14,7 +14,8 @@ recursion proves the original-coefficient child identities against the same
 mixed determinant family. The native uniform reader thus assumes neither
 child answer certificates nor child semantic identities. Native FP controls
 supply common metadata bounds, and modulus preservation bounds all replies.
-Only a common reachable task-word bound remains to be instantiated.
+The conditional evaluator here accepts a common reachable task-word bound;
+`BalancedTableCoefficientSpace` proves that bound and closes the native reader.
 -/
 
 @[expose] public section
@@ -140,7 +141,7 @@ def reachableTasks (B : Family) : List Bool → List Bool → Prop := CannyBalan
 /-- Uniform evaluation of the concrete supplied-table tree. Only the original
 leaf reader and a common task-word bound are required. The child identities,
 reply bounds, metadata bounds, query closure, and rank bounds are derived. -/
-theorem evaluator (B : Family) (A : Readers B) (K : List Bool → ℕ) (hK : UnaryFn K)
+theorem evaluator_of_taskWordBound (B : Family) (A : Readers B) (K : List Bool → ℕ) (hK : UnaryFn K)
     (hword : ∀ root q, reachableTasks B root q → q.length ≤ K root) :
     SpaceFunction (nodeValue B) := by
   have hw (root q : List Bool) (hq : reachableTasks B root q) : q.length ≤ K root + 1 :=
