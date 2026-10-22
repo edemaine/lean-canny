@@ -23,6 +23,14 @@ example : LeanCanny.ExistsReal ⊆ Cslib.Complexity.PSPACE encBits ↔
     LeanCanny.ETR.language ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.existsReal_subset_PSPACE_iff
 
+/-! The concrete table tree needs neither a reply-bound hypothesis nor a
+separately supplied metadata bound. Both follow from the original controls. -/
+example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (K : List Bool → ℕ) (hK : ComputableTidilyInPolyTime K encBits encUnary)
+    (hword : ∀ root q, LeanCanny.Algebra.BalancedTablePolynomials.reachableTasks F root q → q.length ≤ K root) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.BalancedTablePolynomials.nodeValue F) encBits encBits :=
+  (LeanCanny.Algebra.BalancedTablePolynomials.evaluator F A K hK hword).computable
+
 /-! A single native machine handles input-dependent recursion depth. Neither
 the local instruction computation nor the reply installer needs an FP clock. -/
 example {localStep : List Bool → LeanCanny.Computation.RecursiveStack.Action (List Bool)}

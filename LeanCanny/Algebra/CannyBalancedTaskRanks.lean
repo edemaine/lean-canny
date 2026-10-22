@@ -6,14 +6,15 @@ module
 
 public import LeanCanny.Algebra.CannyBalancedTaskRouting
 public import LeanCanny.Algebra.BerkowitzTaskReachability
+public import LeanCanny.Algebra.BerkowitzTaskMetadata
 
 /-! # A common rank bound for the concrete balanced coefficient graph
 
 Actual query reachability supplies closure. The unary address height and
 internal stage priorities give rank at most `5*root.length+4` for every reachable
-task, on all input words. The uniform reader below therefore needs only child
-semantics and quantitative word/reply/metadata bounds, with no separate task
-closure, rank, or source-level hypotheses.
+task, on all input words. Native FP controls supply the metadata bound. The
+uniform reader below therefore needs only child semantics and quantitative
+word/reply bounds, with no separate task closure, rank, or source-level hypotheses.
 -/
 
 @[expose] public section
@@ -61,24 +62,27 @@ theorem rankBound_unary : UnaryFn (fun root : List Bool => 5 * root.length + 4) 
   ((UnaryFn.const 5).mul (UnaryFn.length id_mem_FP)).add (UnaryFn.const 4)
 
 /-- The concrete balanced address routing supplies task closure and every
-rank/level bound. Child semantic identities and quantitative graph bounds
-remain explicit, as do the original leaf readers and FP metadata. -/
+rank/level bound. FP controls supply the common metadata bound. Child semantic
+identities and word/reply bounds remain explicit, as do the original leaf readers. -/
 theorem evaluator (A : SeparableBits.Readers L) (ha : a.ControlsPolyTime)
     (hl : ∀ p, answer (CannyResultantBits.WithSquarefreeLeaves.access L a isLeaf) (coefficientTask false p) = a.leftCoefficient p)
     (hr : ∀ p, answer (CannyResultantBits.WithSquarefreeLeaves.access L a isLeaf) (coefficientTask true p) = a.rightCoefficient p)
-    (K M : List Bool → ℕ) (hK : UnaryFn K) (hM : UnaryFn M)
+    (K : List Bool → ℕ) (hK : UnaryFn K)
     (hword : ∀ root q, tasks L a root q → q.length ≤ K root)
     (hanswer : ∀ root q, tasks L a root q →
-      (answer (CannyResultantBits.WithSquarefreeLeaves.access L a isLeaf) q).length ≤ K root)
-    (hdet : ∀ root q, tasks L a root q → SelectedDeterminant q →
-      determinantFields (F := CannyResultantBits.WithSquarefreeLeaves.family L (F := F) isLeaf leftOrder rightOrder) (payload q) ≤ M root)
-    (hmoment : ∀ root q, tasks L a root q → SelectedMoment q →
-      momentFields (F := CannyResultantBits.WithSquarefreeLeaves.family L (F := F) isLeaf leftOrder rightOrder) (payload q) ≤ M root) :
-    SpaceFunction (CannyResultantBits.WithSquarefreeLeaves.family L (F := F) isLeaf leftOrder rightOrder).value :=
-  CannyResultantBits.WithSquarefreeLeaves.evaluator L a isLeaf A ha isLeaf_FP
+      (answer (CannyResultantBits.WithSquarefreeLeaves.access L a isLeaf) q).length ≤ K root) :
+    SpaceFunction (CannyResultantBits.WithSquarefreeLeaves.family L (F := F) isLeaf leftOrder rightOrder).value := by
+  obtain ⟨M, hM, hb⟩ := commonMetadata_bound (CannyResultantBits.WithSquarefreeLeaves.access L a isLeaf)
+    (CannyResultantBits.WithSquarefreeLeaves.controls L a isLeaf ha isLeaf_FP) K hK
+  have hp (root q : List Bool) (hq : tasks L a root q) : (payload q).length ≤ K root := by
+    simp only [payload, List.length_drop]
+    exact (Nat.sub_le _ _).trans (hword root q hq)
+  exact CannyResultantBits.WithSquarefreeLeaves.evaluator L a isLeaf A ha isLeaf_FP
     (coefficientTask false) (coefficientTask true) (coefficientTask_FP false) (coefficientTask_FP true) hl hr
     (tasks L a) level List.length K M (UnaryFn.length id_mem_FP) hK hM
     (tasks_root L a) (reachable_level_bound L a) hword hanswer (tasks_closed L a)
-    (source_levels L a (tasks L a)) hdet hmoment
+    (source_levels L a (tasks L a))
+    (fun root q hq _ => (hb root (payload q) (hp root q hq)).1)
+    (fun root q hq _ => (hb root (payload q) (hp root q hq)).2)
 
 end LeanCanny.Algebra.CannyBalancedTaskRouting

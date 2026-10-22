@@ -4390,9 +4390,10 @@ and internal priorities. Every reachable task has rank at most
 input word. These are native unary FP bounds. The uniform native evaluator
 now derives reachability closure, source-level decreases, and rank bounds.
 Its remaining graph hypotheses are the child coefficient semantic identities
-and common word, reply, and binary-metadata bit bounds. Correctly prepared
-degree/direction metadata, those quantitative contracts, and the tube-source
-specialization remain open; ETR in PSPACE is not yet proved.
+and common word and reply bounds; native FP controls derive a common metadata
+bound. Correctly prepared degree/direction metadata, those quantitative
+contracts, and the tube-source specialization remain open; ETR in PSPACE is
+not yet proved.
 
 ## Supplied Sylvester orders and total metadata
 
@@ -4451,10 +4452,39 @@ requested by its parent. These child semantic identities, local metadata
 certificates, query closure, and common rank bounds are now derived.
 
 The resulting uniform native evaluator requires the original `SeparableBits.Readers`
-and common word, reply, and binary-metadata bit bounds over the actual reachable
-task graph. Those quantitative bounds still need proofs. A native procedure
-preparing consistent degree/separating-direction tables, the tube-annihilator
-source specialization, and the complete ETR PSPACE theorem also remain open.
+and a common task-word bound over the actual reachable task graph. Reply and
+metadata bounds are derived as described below. The task-word bound still needs
+a proof. A native procedure preparing consistent degree/separating-direction
+tables, the tube-annihilator source specialization, and the complete ETR PSPACE
+theorem also remain open.
+
+## Derived common metadata and reply bounds
+
+`BerkowitzTaskMetadata` proves that the determinant and moment storage profiles
+are unary polynomial-time functions whenever the matrix metadata controls are FP.
+Only binary field lengths enter these profiles. The output-length theorem for
+native FP supplies constants c,d bounding their sum by `c*(p.length+1)^d`.
+Substituting any common unary FP task-word bound K gives a single unary FP
+metadata bound; it requires no coefficient computation certificate.
+
+`BerkowitzTaskResidues` bounds determinant, moment, and factor reply lengths by
+the original modulus bit length. In the diagonal factor case the negation
+routine reduces arbitrary source reply words, so canonicality of that input is
+unnecessary. A bound on source entry lengths extends the result to every task.
+
+`CannyBalancedTaskResidues` proves that every actual source request preserves
+the modulus, while internal requests preserve the original matrix context or
+request zero. Induction over actual query reachability bounds each reachable
+modulus by the root modulus, and its bit length by `root.length+1`. Square-free
+leaf entries, shifted coefficients, and guarded right coefficients supply the
+source entry bound. For the concrete table tree, right coefficients are integer
+residues by definition. Thus all reachable reply words have length at most
+`root.length+1`, on arbitrary query words and arbitrary supplied tables.
+
+`BalancedTablePolynomials.evaluator` now derives both common bounds and requires
+only the original leaf reader plus a common reachable task-word bound. Correct
+table preparation, that remaining bound, and ETR membership in PSPACE are still
+open.
 
 ## Savitch's theorem and Canny
 
