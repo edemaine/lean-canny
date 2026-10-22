@@ -4973,6 +4973,26 @@ combined endpoint returns the bounded nonzero parameter polynomial in the
 original affine ideal. The row guard currently uses exact original degrees;
 no FP exact-degree routine or effective bound on L is asserted.
 
+## Coercive critical samples toward an effective witness radius
+
+`CoercivePolynomialSampling` constructs global minimizers of
+q²+s*ΣXᵢ^(2D+2) for positive s, proves the actual gradient equations, and
+chooses a bounded convergent subsequence as s→0 whose limit is a root of q.
+Its initial compact bound uses a given root, so this geometric theorem alone
+is not a source-size bound. `CoerciveCriticalFibers` proves that the actual
+gradient quotients are finite modules for every s≠0 and D≥degree(q), including
+all constant gradient target values. Pure leading powers give division
+remainders with each coordinate exponent less than 2D+1. Coordinate annihilants
+and finite fibers follow without radical or finiteness assumptions.
+`PolynomialLimitAnnihilator` removes the lowest parameter power before taking
+limits. `CoerciveAnnihilatorLimit` combines this with the constructed critical
+samples and `IntegerRootBound` to bound a root by the masses of integer
+coordinate annihilants. This last bridge still accepts the annihilants and
+their mass budget; constructing them with source bounds is the next obligation.
+`RowSpanSpecialization` proves that one surjective specialization selects a
+nonzero maximal minor and gives generic row-span certificates, even when the
+specializing coefficient map is noninjective.
+
 ## Effective parameter selection still needed
 
 The remaining quantitative choices are separate from coefficient evaluation:

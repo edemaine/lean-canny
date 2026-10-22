@@ -1486,6 +1486,13 @@ and its dependencies. It derives degree and mass bounds and a common small
 positive interval preserving ordinary specialization, separability, and roots.
 The native symbolic primitive-coordinate pipeline remains incomplete.
 
+[`CoercivePolynomialSampling`](LeanCanny/Geometry/CoercivePolynomialSampling.lean)
+constructs critical minimizers converging to an original polynomial root.
+[`CoerciveCriticalFibers`](LeanCanny/Algebra/CoerciveCriticalFibers.lean)
+proves their gradient fibers finite from the actual leading coordinate powers.
+The limit and integer root-bound bridge is verified; source-bounded integer
+annihilants for these fibers are still needed for an effective witness radius.
+
 ## Next obligations
 
 1. Prove retained nonsingular samples at the internally selected dyadic level.

@@ -6,6 +6,7 @@ module
 
 public import LeanCanny.Algebra.CoefficientMass
 public import LeanCanny.Algebra.PseudoRemainder
+public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic.Ring
 
 /-! # Total coefficient mass for integer bivariate polynomials
@@ -176,5 +177,22 @@ theorem iterate_le (p g : (ℤ[X])[X]) (d n : ℕ) :
   | succ n ih =>
     rw [Function.iterate_succ_apply', pow_succ']
     exact (step_le p _ d).trans (by simpa only [mul_assoc] using Nat.mul_le_mul_left (2 * mass p) ih)
+
+private theorem unit_smul (u : ℤˣ) (p : (ℤ[X])[X]) : mass (u • p) = mass p := by
+  rcases Int.units_eq_one_or u with h | h <;> simp [h, Units.smul_def, neg]
+
+/-- The Leibniz bound on total integer mass of a bivariate determinant. -/
+theorem det_le {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (A : Matrix ι ι (ℤ[X])[X]) (M : ℕ) (hM : ∀ r s, mass (A r s) ≤ M) :
+    mass A.det ≤ (Fintype.card ι).factorial * M ^ Fintype.card ι := by
+  rw [Matrix.det_apply]
+  calc
+    _ ≤ ∑ σ : Equiv.Perm ι, mass (Equiv.Perm.sign σ • ∏ j, A (σ j) j) := sum_le _ _
+    _ ≤ ∑ _σ : Equiv.Perm ι, ∏ _j : ι, M := by
+      apply Finset.sum_le_sum
+      intro σ _
+      rw [unit_smul]
+      exact (prod_le _ _).trans (Finset.prod_le_prod (fun j _ => hM (σ j) j))
+    _ = _ := by simp [Fintype.card_perm]
 
 end LeanCanny.Algebra.NestedMass
