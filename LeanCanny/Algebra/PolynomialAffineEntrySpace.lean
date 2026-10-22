@@ -57,7 +57,7 @@ theorem originalInput_mem_FP {radix : List Bool → List Bool} (hB : radix ∈ F
 
 theorem natEq_fppred {f g : List Bool → List Bool} (hf : f ∈ FP) (hg : g ∈ FP) :
     FPPred (fun q => Nat.fromBitsLE (f q) = Nat.fromBitsLE (g q)) :=
-  ((BinaryNat.le_fppred hf hg).and (BinaryNat.le_fppred hg hf)).of_iff (fun _ => by omega)
+  BinaryNat.eq_fppred hf hg
 
 def diagonal (modulus radix : List Bool → List Bool) (q : List Bool) : List Bool :=
   if Nat.fromBitsLE (row q) = Nat.fromBitsLE (col q) ∧ Nat.fromBitsLE (remainder radix q) = 0 then
@@ -66,7 +66,7 @@ def diagonal (modulus radix : List Bool → List Bool) (q : List Bool) : List Bo
 theorem diagonal_mem_FP {modulus radix : List Bool → List Bool} (hm : modulus ∈ FP) (hB : radix ∈ FP) :
     diagonal modulus radix ∈ FP := by
   have hz : FPPred (fun q => Nat.fromBitsLE (remainder radix q) = 0) :=
-    (natEq_fppred (remainder_mem_FP hB) (constFn_mem_FP [])).of_iff (fun _ => Iff.rfl)
+    BinaryNat.eq_const_fppred (remainder_mem_FP hB) 0
   have ho := mem_FP_comp (mem_FP_comp pairFst_mem_FP hm) ArithmeticBits.one_mem_FP
   have h := ((natEq_fppred row_mem_FP col_mem_FP).and hz).ite_mem_FP ho (constFn_mem_FP [])
   exact mem_FP_of_eq (g := diagonal modulus radix) h (fun _ => by simp only [diagonal, Function.comp_apply])

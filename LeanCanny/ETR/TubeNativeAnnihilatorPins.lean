@@ -73,10 +73,8 @@ noncomputable def value (n d : List Bool → ℤ) (q : List Bool) : List Bool :=
 theorem valueEvaluator (n d : List Bool → ℤ)
     (N : SpaceFunction (PrimitivePairBits.coefficient (fun c => C (n c))))
     (D : SpaceFunction (PrimitivePairBits.coefficient (fun c => C (d c)))) : SpaceFunction (value n d) := by
-  have hlo := BinaryNat.le_fppred RationalSubstitution.IntegerBits.selectedDegree_mem_FP (constFn_mem_FP [true])
-  have hhi := BinaryNat.le_fppred (constFn_mem_FP [true]) RationalSubstitution.IntegerBits.selectedDegree_mem_FP
   have hone : FPPred (fun q => Nat.fromBitsLE (selectedDegree q) = 1) :=
-    (hlo.and hhi).of_iff (fun _ => le_antisymm_iff.symm)
+    BinaryNat.eq_const_fppred RationalSubstitution.IntegerBits.selectedDegree_mem_FP 1
   have EN := ((N.precompose zeroQuery zeroQuery_FP).withInput).postcompose negateFinish negateFinish_FP
   have EZ := SpaceFunction.branch (fun q => decide (Nat.fromBitsLE (selectedDegree q) = 0))
     DyadicConstantBits.degreeZero_pred.flag_mem_FP EN (SpaceFunction.ofFP _ (constFn_mem_FP []))

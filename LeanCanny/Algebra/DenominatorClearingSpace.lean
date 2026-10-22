@@ -75,9 +75,7 @@ def maskedFactor (selected modulus f : List Bool → List Bool) (p : List Bool) 
 theorem skip_mem_FP {selected : List Bool → List Bool} (hs : selected ∈ FP) :
     (fun p => [skip selected p]) ∈ FP := by
   have ht := mem_FP_comp pairFst_mem_FP hs
-  have hp := ((BinaryNat.le_fppred pairSnd_mem_FP ht).and (BinaryNat.le_fppred ht pairSnd_mem_FP)).of_iff
-    (q := fun p => Nat.fromBitsLE (pairSnd p) = Nat.fromBitsLE (selected (pairFst p))) (fun p => by dsimp only [Function.comp_apply]; omega)
-  exact hp.flag_mem_FP
+  exact (BinaryNat.eq_fppred pairSnd_mem_FP ht).flag_mem_FP
 
 theorem maskedFactorEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     (selected modulus : List Bool → List Bool) (hs : selected ∈ FP) (hm : modulus ∈ FP) :

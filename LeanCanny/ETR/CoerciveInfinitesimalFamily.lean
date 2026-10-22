@@ -84,10 +84,7 @@ theorem patternReader_mem_FP (left right : Bool) : patternReader left right ∈ 
   have hn := bits_mem_FP (dimension_unary.comp pairFst_mem_FP)
   have hlt := BinaryNat.lt_fppred pairSnd_mem_FP hn
   have heq : FPPred (fun p => Nat.fromBitsLE (pairSnd p) = dimension (pairFst p)) := by
-    apply ((BinaryNat.le_fppred pairSnd_mem_FP hn).and (BinaryNat.le_fppred hn pairSnd_mem_FP)).of_iff
-    intro p
-    simp only [Nat.fromBitsLE_bits]
-    exact le_antisymm_iff.symm
+    simpa only [Nat.fromBitsLE_bits] using BinaryNat.eq_fppred pairSnd_mem_FP hn
   have h := hlt.ite_mem_FP (constFn_mem_FP [])
     (heq.ite_mem_FP (constFn_mem_FP (InfinitesimalSign.encode (wanted left)))
       (constFn_mem_FP (InfinitesimalSign.encode (wanted right))))

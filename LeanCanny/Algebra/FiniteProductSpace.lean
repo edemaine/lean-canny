@@ -77,7 +77,7 @@ theorem retained_mem_FP {count skip : List Bool → List Bool} (hc : count ∈ F
     (fun z => [retained count skip z]) ∈ FP := by
   have hn := mem_FP_comp pairFst_mem_FP hc
   have ht := mem_FP_comp pairFst_mem_FP hs
-  have hne := ((BinaryNat.le_fppred pairSnd_mem_FP ht).and (BinaryNat.le_fppred ht pairSnd_mem_FP)).not
+  have hne := (BinaryNat.eq_fppred pairSnd_mem_FP ht).not
   have hp := (BinaryNat.lt_fppred pairSnd_mem_FP hn).and hne
   have he : FPPred (fun z => Nat.fromBitsLE (pairSnd z) < Nat.fromBitsLE (count (pairFst z)) ∧
       Nat.fromBitsLE (pairSnd z) ≠ Nat.fromBitsLE (skip (pairFst z))) := by

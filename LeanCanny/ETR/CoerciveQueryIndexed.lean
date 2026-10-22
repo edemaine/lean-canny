@@ -97,10 +97,7 @@ theorem evaluator {input row rank modulus : List Bool → List Bool}
   have hn := bits_mem_FP (dimension_unary.comp hi)
   have hlt := BinaryNat.lt_fppred hr hn
   have heq : FPPred (fun c => Nat.fromBitsLE (row c) = dimension (input c)) := by
-    apply ((BinaryNat.le_fppred hr hn).and (BinaryNat.le_fppred hn hr)).of_iff
-    intro c
-    simp only [Nat.fromBitsLE_bits]
-    exact le_antisymm_iff.symm
+    simpa only [Nat.fromBitsLE_bits] using BinaryNat.eq_fppred hr hn
   have E := SpaceFunction.branch _ hlt.flag_mem_FP
     (CoerciveQueryCoefficient.gradientEvaluator hi (target_FP hi ht) hm (selected_unary hi hr))
     (SpaceFunction.branch _ heq.flag_mem_FP

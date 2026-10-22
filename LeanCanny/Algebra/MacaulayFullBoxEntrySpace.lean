@@ -50,14 +50,6 @@ lemma rowCut_eq (L : Layout) (c : List Bool) :
   congr 1
   ring
 
-private lemma binaryEq_FP {a b : List Bool → List Bool} (ha : a ∈ FP) (hb : b ∈ FP) :
-    FPPred (fun q => Nat.fromBitsLE (a q) = Nat.fromBitsLE (b q)) :=
-  ((BinaryNat.le_fppred ha hb).and (BinaryNat.le_fppred hb ha)).of_iff (fun _ => by omega)
-
-private lemma zero_FP {a : List Bool → List Bool} (ha : a ∈ FP) :
-    FPPred (fun q => Nat.fromBitsLE (a q) = 0) :=
-  (BinaryNat.le_fppred ha (constFn_mem_FP [])).of_iff (fun _ => by change _ ≤ 0 ↔ _; omega)
-
 def unit (modulus : List Bool → List Bool) (q : List Bool) :=
   if Nat.fromBitsLE (pairFst (uv q)) = 0 ∧ Nat.fromBitsLE (pairSnd (uv q)) = 0 then
     ArithmeticBits.one (BinaryNat.succ (modulus (ctx q))) else []
@@ -65,8 +57,8 @@ def unit (modulus : List Bool → List Bool) (q : List Bool) :=
 lemma unit_FP {modulus : List Bool → List Bool} (hm : modulus ∈ FP) : unit modulus ∈ FP := by
   have hu := mem_FP_comp (mem_FP_comp ctx_FP hm) BinaryNat.succ_mem_FP
   have ho := mem_FP_comp hu ArithmeticBits.one_mem_FP
-  have ha := zero_FP (mem_FP_comp uv_FP pairFst_mem_FP)
-  have hb := zero_FP (mem_FP_comp uv_FP pairSnd_mem_FP)
+  have ha := BinaryNat.eq_const_fppred (mem_FP_comp uv_FP pairFst_mem_FP) 0
+  have hb := BinaryNat.eq_const_fppred (mem_FP_comp uv_FP pairSnd_mem_FP) 0
   exact mem_FP_of_eq ((ha.and hb).ite_mem_FP ho (constFn_mem_FP [])) (fun _ => rfl)
 
 def rawSourceInput (L : Layout) (q : List Bool) :=
@@ -102,7 +94,7 @@ lemma isPadding_FP {L : Layout} (h : L.Controls) : FPPred (isPadding L) := by
   have ha := FPPred.eq ((total_unary h).comp (rawPaddingInput_FP h)) (h.level.comp ctx_FP)
   have hc := mem_FP_comp (f := ctx) (g := sourceCut L) ctx_FP (sourceCut_FP h)
   have hd := mem_FP_comp (mem_FP_pair idx_FP hc) BinaryNat.sub_mem_FP
-  have hb := binaryEq_FP hd shift_FP
+  have hb := BinaryNat.eq_fppred hd shift_FP
   exact (ha.not.and hb).of_iff (fun q => by simp only [Function.comp_apply, BinaryNat.sub_pair, Nat.fromBitsLE_bits, isPadding])
 
 def rawEntry (L : Layout) (modulus coefficient : List Bool → List Bool) (q : List Bool) :=
@@ -139,7 +131,7 @@ lemma top_FP {L : Layout} (h : L.Controls) : FPPred (top L) :=
   BinaryNat.lt_fppred idx_FP (mem_FP_comp (f := ctx) (g := rowCut L) ctx_FP (rowCut_FP h))
 lemma left_FP {L : Layout} (h : L.Controls) : FPPred (left L) :=
   BinaryNat.lt_fppred shift_FP (mem_FP_comp (f := ctx) (g := rowCut L) ctx_FP (rowCut_FP h))
-lemma diagonal_FP : FPPred diagonal := binaryEq_FP idx_FP shift_FP
+lemma diagonal_FP : FPPred diagonal := BinaryNat.eq_fppred idx_FP shift_FP
 
 def negateEntry (modulus entry : List Bool → List Bool) (q : List Bool) :=
   ArithmeticBits.negate (pair (BinaryNat.succ (modulus (ctx q))) (entry q))

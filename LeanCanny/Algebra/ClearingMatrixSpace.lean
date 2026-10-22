@@ -53,9 +53,8 @@ attribute [local irreducible] BinaryNat.succ
 theorem monomialValue_FP (r : List Bool → ℕ) (hr : BinaryFn r) : monomialValue r ∈ FP := by
   have hr' := mem_FP_comp RationalSubstitution.IntegerBits.context_mem_FP hr.bits_mem_FP
   have hp : FPPred (fun q => Nat.fromBitsLE (selectedDegree q) = r (context q)) :=
-    ((BinaryNat.le_fppred RationalSubstitution.IntegerBits.selectedDegree_mem_FP hr').and
-      (BinaryNat.le_fppred hr' RationalSubstitution.IntegerBits.selectedDegree_mem_FP)).of_iff
-      (fun q => by simp only [Function.comp_apply, BinaryNatCode.encode, Nat.fromBitsLE_bits]; omega)
+    (BinaryNat.eq_fppred RationalSubstitution.IntegerBits.selectedDegree_mem_FP hr').of_iff
+      (fun q => by simp only [Function.comp_apply, BinaryNatCode.encode, Nat.fromBitsLE_bits] <;> omega)
   have ho := mem_FP_comp (mem_FP_comp pairSnd_mem_FP BinaryNat.succ_mem_FP) ArithmeticBits.one_mem_FP
   have h := hp.ite_mem_FP ho (constFn_mem_FP [])
   exact mem_FP_of_eq h (fun _ => rfl)

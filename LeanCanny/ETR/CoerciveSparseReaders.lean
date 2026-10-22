@@ -30,15 +30,12 @@ theorem matches_fppred {input target : List Bool → List Bool} {parameter power
   have hread := take_mem_FP (drop_mem_FP (mem_FP_comp pairFst_mem_FP ht) (UnaryFn.index.mul hw)) hw
   have hpat := UnaryFn.ite (FPPred.eq UnaryFn.index (UnaryFn.const 0)) hp.lift
     (UnaryFn.ite (FPPred.eq UnaryFn.index ((hs.add (UnaryFn.const 1)).lift)) hN.lift (UnaryFn.const 0))
-  have hcmp := (BinaryNat.le_fppred hread (bits_mem_FP hpat)).and (BinaryNat.le_fppred (bits_mem_FP hpat) hread)
   have heq : FPPred (fun q => FixedWidthQuery.coordinate (CoercivePowerReaders.width ∘ input) target
       (pairFst q) (pairSnd q).length =
       if (pairSnd q).length = 0 then parameter (pairFst q)
       else if (pairSnd q).length = selected (pairFst q) + 1 then power (pairFst q) else 0) := by
-    apply hcmp.of_iff
-    intro q
-    simp only [Function.comp_apply, Nat.fromBitsLE_bits, FixedWidthQuery.coordinate]
-    exact le_antisymm_iff.symm
+    simpa only [Function.comp_apply, Nat.fromBitsLE_bits, FixedWidthQuery.coordinate] using
+      BinaryNat.eq_fppred hread (bits_mem_FP hpat)
   apply (FPPred.forall_lt ((dimension_unary.comp hi).add (UnaryFn.const 1)) heq).of_iff
   intro c
   simp only [Matches, pairFst_pair, pairSnd_pair, List.length_replicate]

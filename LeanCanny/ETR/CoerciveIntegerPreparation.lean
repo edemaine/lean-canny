@@ -69,12 +69,6 @@ theorem dyadic_exponent (c : List Bool) : dyadicFamily.exponent c = CoercivePrep
 theorem dyadic_mass (c : List Bool) : dyadicFamily.mass c = BinaryNatCode.encode (CoerciveNativeAnnihilators.massExponent (pairFst c)) := rfl
 attribute [local irreducible] dyadicFamily DyadicPolynomialBits.Family.specialized
 
-private theorem eqCodeFP {f : List Bool → List Bool} (hf : f ∈ FP) (k : ℕ) :
-    FPPred (fun c => Nat.fromBitsLE (f c)=k) :=
-  ((BinaryNat.le_fppred hf (constFn_mem_FP (BinaryNatCode.encode k))).and
-    (BinaryNat.le_fppred (constFn_mem_FP (BinaryNatCode.encode k)) hf)).of_iff
-      (fun _ => by simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits]; omega)
-
 noncomputable def rawCoefficient : List Bool → List Bool := SymbolicFixedTableEntryBits.coefficient raw
 
 theorem rawEvaluator : SpaceFunction rawCoefficient := by
@@ -84,7 +78,7 @@ theorem rawEvaluator : SpaceFunction rawCoefficient := by
   have hj : index ∈ FP := mem_FP_comp original_FP pairSnd_mem_FP
   have E := CoerciveNativeOriginalResidue.evaluator hi hj target_FP alpha_FP modulus_FP
   have hone := mem_FP_comp (mem_FP_comp (f := modulus) (g := BinaryNat.succ) modulus_FP BinaryNat.succ_mem_FP) ArithmeticBits.one_mem_FP
-  have hpad := ((eqCodeFP target_FP 1).and (eqCodeFP alpha_FP 0)).ite_mem_FP hone (constFn_mem_FP [])
+  have hpad := ((BinaryNat.eq_const_fppred target_FP 1).and (BinaryNat.eq_const_fppred alpha_FP 0)).ite_mem_FP hone (constFn_mem_FP [])
   have hcount := bits_mem_FP (((dimension_unary.comp hi).add (UnaryFn.const 1)))
   have hvalid := BinaryNat.lt_fppred hj hcount
   have R := SpaceFunction.branch (fun q => decide (Nat.fromBitsLE (index q)<dimension (input q)+1))

@@ -62,8 +62,7 @@ def entry (a : Access) (q : List Bool) : List Bool :=
 
 theorem positive_fppred (a : Access) (hd : a.headDegree ∈ FP) : FPPred (positive a) := by
   have he : FPPred (fun q => Nat.fromBitsLE (row q) = Nat.fromBitsLE (col q)) :=
-    ((BinaryNat.le_fppred row_mem_FP col_mem_FP).and
-      (BinaryNat.le_fppred col_mem_FP row_mem_FP)).of_iff (fun q => by omega)
+    BinaryNat.eq_fppred row_mem_FP col_mem_FP
   exact he.and (BinaryNat.lt_fppred col_mem_FP (mem_FP_comp pairFst_mem_FP hd))
 
 theorem shift_mem_FP (a : Access) (hd : a.headDegree ∈ FP) : shift a ∈ FP := by

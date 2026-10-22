@@ -126,6 +126,19 @@ theorem le_fppred {a b : List Bool → List Bool} (ha : a ∈ FP) (hb : b ∈ FP
   have h := ge_fppred.comp (mem_FP_pair hb ha)
   exact h.of_iff (fun z => by simp only [pairFst_pair, pairSnd_pair])
 
+/-- Numeric equality also accepts noncanonical binary words. -/
+theorem eq_fppred {a b : List Bool → List Bool} (ha : a ∈ FP) (hb : b ∈ FP) :
+    FPPred fun z => Nat.fromBitsLE (a z) = Nat.fromBitsLE (b z) :=
+  .of_computable (Turing.MultiTapeTM.ComputableTidilyInPolyTime.decide_eq
+    Turing.MultiTapeTM.encNat |>.comp
+      ((fromBitsLE_computable.comp (FP.computable ha)).prod
+        (fromBitsLE_computable.comp (FP.computable hb))))
+    fun _ => decide_eq_true_iff.symm
+
+theorem eq_const_fppred {a : List Bool → List Bool} (ha : a ∈ FP) (k : ℕ) :
+    FPPred fun z => Nat.fromBitsLE (a z) = k := by
+  simpa only [Nat.fromBitsLE_bits] using eq_fppred ha (constFn_mem_FP k.bits)
+
 theorem lt_fppred {a b : List Bool → List Bool} (ha : a ∈ FP) (hb : b ∈ FP) :
     FPPred fun z => Nat.fromBitsLE (a z) < Nat.fromBitsLE (b z) :=
   (le_fppred hb ha).not.of_iff (fun _ => by omega)

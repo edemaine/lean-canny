@@ -38,10 +38,8 @@ def read (q : List Bool) : List Bool :=
 theorem read_mem_FP (hA : UnaryFn A) (hV : UnaryFn V) (hs : UnaryFn selected) (ht : target ∈ FP) :
     read A V selected target ∈ FP := by
   have hr := FixedWidthQuery.read_mem_FP hA hV ht
-  have hp := (BinaryNat.le_fppred pairSnd_mem_FP (bits_mem_FP hs.lift)).and
-    (BinaryNat.le_fppred (bits_mem_FP hs.lift) pairSnd_mem_FP)
   have he : FPPred (fun q => Nat.fromBitsLE (pairSnd q) = selected (pairFst q)) :=
-    hp.of_iff (fun q => by simp only [Nat.fromBitsLE_bits]; exact le_antisymm_iff.symm)
+    by simpa only [Nat.fromBitsLE_bits] using BinaryNat.eq_fppred pairSnd_mem_FP (bits_mem_FP hs.lift)
   have hinc : (BinaryNat.succ ∘ FixedWidthQuery.read A V target) ∈ FP := mem_FP_comp hr BinaryNat.succ_mem_FP
   have h := he.ite_mem_FP hinc hr
   exact mem_FP_of_eq h (fun _ => rfl)

@@ -103,8 +103,8 @@ def compare (z : List Bool) : Bool := decide
 theorem compare_FP : (fun z => [compare z]) ∈ FP := by
   have hl := mem_FP_comp pairFst_mem_FP declared_FP
   have h : FPPred (fun z => Nat.fromBitsLE (declared (pairFst z)) = Nat.fromBitsLE (pairSnd z)) :=
-    ((BinaryNat.le_fppred hl pairSnd_mem_FP).and (BinaryNat.le_fppred pairSnd_mem_FP hl)).of_iff
-    (fun z => by simp only [Function.comp_apply]; omega)
+    (BinaryNat.eq_fppred hl pairSnd_mem_FP).of_iff
+    (fun z => by simp only [Function.comp_apply] <;> omega)
   exact h.flag_mem_FP
 
 theorem validDecider (p : List Bool → ℤ[X])
@@ -130,7 +130,7 @@ theorem fallbackValue_FP : fallbackValue ∈ FP := by
   have hn : negOneValue ∈ FP := mem_FP_of_eq
     (mem_FP_comp (mem_FP_pair hm (constFn_mem_FP (BinaryNatCode.encode 1))) ArithmeticBits.negate_mem_FP) (fun _ => rfl)
   have he : FPPred (fun q => Nat.fromBitsLE (pairSnd q) = Nat.fromBitsLE (declared q)) :=
-    ((BinaryNat.le_fppred pairSnd_mem_FP declared_FP).and (BinaryNat.le_fppred declared_FP pairSnd_mem_FP)).of_iff (fun _ => by omega)
+    BinaryNat.eq_fppred pairSnd_mem_FP declared_FP
   have hz : FPPred (fun q => Nat.fromBitsLE (pairSnd q) = 0 ∧ Nat.fromBitsLE (declared q) ≠ 0) :=
     ((BinaryNat.le_fppred pairSnd_mem_FP (constFn_mem_FP [])).and
       (BinaryNat.lt_fppred (constFn_mem_FP []) declared_FP)).of_iff (fun _ => by change _ ≤ 0 ∧ 0 < _ ↔ _; omega)

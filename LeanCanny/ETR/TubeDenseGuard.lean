@@ -37,10 +37,8 @@ theorem pattern_fppred {n W : List Bool → ℕ} {target : List Bool → List Bo
   have he := expected_mem_FP hn s
   have hp : FPPred (fun q => FixedWidthQuery.coordinate W target (pairFst q) (pairSnd q).length =
       expected (n (pairFst q)) s (pairSnd q).length) := by
-    apply ((BinaryNat.le_fppred hs he).and (BinaryNat.le_fppred he hs)).of_iff
-    intro q
-    simp only [FixedWidthQuery.coordinate, Function.comp_apply, BinaryNatCode.encode, Nat.fromBitsLE_bits]
-    omega
+    simpa only [FixedWidthQuery.coordinate, Function.comp_apply, BinaryNatCode.encode, Nat.fromBitsLE_bits] using
+      BinaryNat.eq_fppred hs he
   have hor := (FPPred.lt UnaryFn.index hn.lift).or hp
   apply (FPPred.forall_lt (TubeZeroQuery.dimension_unary hn) hor).of_iff
   intro c

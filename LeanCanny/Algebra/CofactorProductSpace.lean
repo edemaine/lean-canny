@@ -52,10 +52,7 @@ theorem query_mem_FP : query ∈ FP := by
 theorem skip_fppred : FPPred skip := by
   have hj := mem_FP_comp pairFst_mem_FP BoundedFold.counter_mem_FP
   have hi := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) target_mem_FP
-  refine ((BinaryNat.le_fppred hj hi).and (BinaryNat.le_fppred hi hj)).of_iff ?_
-  intro z
-  dsimp only [skip, Function.comp_apply]
-  omega
+  exact BinaryNat.eq_fppred hj hi
 
 theorem chosenFactor_mem_FP : chosenFactor ∈ FP :=
   skip_fppred.ite_mem_FP (constFn_mem_FP [true]) pairSnd_mem_FP

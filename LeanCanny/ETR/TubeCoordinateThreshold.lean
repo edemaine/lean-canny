@@ -76,11 +76,7 @@ theorem coordinate_threshold_eq (c : List Bool)
       ((coordinate_directionSize c j.val hj).trans (coordinate_directionSize c 0 h0).symm))
 
 theorem coordinateDirectionRead_mem_FP : projectionRead (coordinateDirection 0) ∈ FP := by
-  have hlo := BinaryNat.le_fppred pairSnd_mem_FP (constFn_mem_FP [true])
-  have hhi := BinaryNat.le_fppred (constFn_mem_FP [true]) pairSnd_mem_FP
-  have htest : FPPred (fun q => Nat.fromBitsLE (pairSnd q) = 1) := (hlo.and hhi).of_iff (fun q => by
-    change (Nat.fromBitsLE (pairSnd q) ≤ 1 ∧ 1 ≤ Nat.fromBitsLE (pairSnd q)) ↔ _
-    exact le_antisymm_iff.symm)
+  have htest : FPPred (fun q => Nat.fromBitsLE (pairSnd q) = 1) := BinaryNat.eq_const_fppred pairSnd_mem_FP 1
   have he := htest.ite_mem_FP (constFn_mem_FP (Codec.integer 1).toBits) (constFn_mem_FP (Codec.integer 0).toBits)
   apply mem_FP_of_eq he
   intro q

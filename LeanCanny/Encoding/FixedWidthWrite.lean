@@ -38,8 +38,8 @@ theorem write_mem_FP {A W : List Bool → ℕ} {target : List Bool → List Bool
     write A W target index value ∈ FP := by
   have hindex := mem_FP_comp pairFst_mem_FP hi.bits_mem_FP
   have hp : FPPred (fun p => Nat.fromBitsLE (pairSnd p) = index (pairFst p)) :=
-    ((BinaryNat.le_fppred pairSnd_mem_FP hindex).and (BinaryNat.le_fppred hindex pairSnd_mem_FP)).of_iff
-    (fun p => by simp only [Function.comp_apply, BinaryNatCode.encode, Nat.fromBitsLE_bits]; omega)
+    (BinaryNat.eq_fppred pairSnd_mem_FP hindex).of_iff
+    (fun p => by simp only [Function.comp_apply, BinaryNatCode.encode, Nat.fromBitsLE_bits] <;> omega)
   let readCell := fun p => if Nat.fromBitsLE (pairSnd p) = index (pairFst p) then
     BinaryNatCode.encode (value (pairFst p)) else read A W target p
   have hread : readCell ∈ FP := hp.ite_mem_FP (mem_FP_comp pairFst_mem_FP hv.bits_mem_FP) (read_mem_FP hA hW ht)

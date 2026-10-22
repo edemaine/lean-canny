@@ -92,12 +92,8 @@ theorem oneResidue_mem_FP : oneResidue ∈ FP := by
   intro p
   simp only [Function.comp_apply, oneResidue]
 
-theorem successful_fppred : FPPred successful := by
-  refine ((BinaryNat.le_fppred tested_mem_FP oneResidue_mem_FP).and
-    (BinaryNat.le_fppred oneResidue_mem_FP tested_mem_FP)).of_iff ?_
-  intro p
-  dsimp only [successful]
-  omega
+theorem successful_fppred : FPPred successful :=
+  BinaryNat.eq_fppred tested_mem_FP oneResidue_mem_FP
 
 theorem update_mem_FP : update ∈ FP :=
   successful_fppred.ite_mem_FP (mem_FP_comp BoundedFold.counter_mem_FP BinaryNat.normalize_mem_FP)

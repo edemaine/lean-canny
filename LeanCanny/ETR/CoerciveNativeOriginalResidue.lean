@@ -16,12 +16,6 @@ open scoped Classical
 set_option backward.isDefEq.respectTransparency false
 attribute [local irreducible] ArithmeticBits.one ArithmeticBits.negate BinaryNat.succ BinaryNat.sub
 
-private lemma eqCodeFP {f : List Bool → List Bool} (hf : f ∈ FP) (k : ℕ) :
-    FPPred (fun c => Nat.fromBitsLE (f c) = k) :=
-  ((BinaryNat.le_fppred hf (constFn_mem_FP (BinaryNatCode.encode k))).and
-    (BinaryNat.le_fppred (constFn_mem_FP (BinaryNatCode.encode k)) hf)).of_iff
-      (fun _ => by simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits]; omega)
-
 def pinProgram (rootDegree parameterDegree modulus : List Bool → List Bool) (c : List Bool) : List Bool :=
   if Nat.fromBitsLE (rootDegree c) = 1 ∧ Nat.fromBitsLE (parameterDegree c) = 0 then
     ArithmeticBits.one (BinaryNat.succ (modulus c))
@@ -33,8 +27,8 @@ lemma pinProgram_FP {rootDegree parameterDegree modulus : List Bool → List Boo
   have hmod := mem_FP_comp hm BinaryNat.succ_mem_FP
   have hone := mem_FP_comp hmod ArithmeticBits.one_mem_FP
   have hneg := mem_FP_comp (mem_FP_pair hmod hone) ArithmeticBits.negate_mem_FP
-  exact mem_FP_of_eq (((eqCodeFP hr 1).and (eqCodeFP hp 0)).ite_mem_FP hone
-    (((eqCodeFP hr 0).and (eqCodeFP hp 1)).ite_mem_FP hneg (constFn_mem_FP []))) (fun _ => rfl)
+  exact mem_FP_of_eq (((BinaryNat.eq_const_fppred hr 1).and (BinaryNat.eq_const_fppred hp 0)).ite_mem_FP hone
+    (((BinaryNat.eq_const_fppred hr 0).and (BinaryNat.eq_const_fppred hp 1)).ite_mem_FP hneg (constFn_mem_FP []))) (fun _ => rfl)
 
 lemma pin_coeff (k l : ℕ) : ((CoerciveNativeAnnihilators.pin.coeff k).coeff l) =
     (if k = 1 ∧ l = 0 then (1 : ℤ) else 0) - (if k = 0 ∧ l = 1 then 1 else 0) := by
@@ -78,7 +72,7 @@ theorem evaluator {input index rootDegree parameterDegree modulus : List Bool �
   have ES := CoerciveAnnihilatorResidue.coefficientEvaluator hi hpred hr hp hm
   have EP := SpaceFunction.ofFP _ (mem_FP_of_eq (pinProgram_FP hr hp hm) (pinProgram_eq rootDegree parameterDegree modulus))
   have EB := SpaceFunction.branch (fun c => decide (Nat.fromBitsLE (index c) = 0))
-    (eqCodeFP hj 0).flag_mem_FP EP ES
+    (BinaryNat.eq_const_fppred hj 0).flag_mem_FP EP ES
   refine EB.congr (funext fun c => ?_)
   simp only [decide_eq_true_eq]
   cases h : Nat.fromBitsLE (index c) with

@@ -42,10 +42,8 @@ theorem coordinateCode_FP : coordinateCode ∈ FP := mem_FP_comp pairFst_mem_FP 
 
 theorem selectedDirectionRead_FP {read : List Bool → List Bool} (hr : read ∈ FP) : selectedDirectionRead read ∈ FP := by
   have hz := TubeBivariate.zero_fppred coordinateCode_FP
-  have hlo := BinaryNat.le_fppred pairSnd_mem_FP coordinateCode_FP
-  have hhi := BinaryNat.le_fppred coordinateCode_FP pairSnd_mem_FP
   have he : FPPred (fun q => Nat.fromBitsLE (pairSnd q) = Nat.fromBitsLE (coordinateCode q)) :=
-    (hlo.and hhi).of_iff (fun _ => le_antisymm_iff.symm)
+    BinaryNat.eq_fppred pairSnd_mem_FP coordinateCode_FP
   exact hz.ite_mem_FP (mem_FP_comp originalDirectionQuery_FP hr)
     (he.ite_mem_FP (constFn_mem_FP _) (constFn_mem_FP _))
 

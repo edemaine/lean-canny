@@ -76,8 +76,7 @@ def sameIndex (p : List Bool) : Prop := Nat.fromBitsLE (row p) = Nat.fromBitsLE 
 instance (p : List Bool) : Decidable (sameIndex p) := inferInstanceAs (Decidable (_ = _))
 
 theorem sameIndex_fppred : FPPred sameIndex :=
-  ((BinaryNat.le_fppred row_mem_FP col_mem_FP).and
-    (BinaryNat.le_fppred col_mem_FP row_mem_FP)).of_iff (fun _ => by unfold sameIndex; omega)
+  BinaryNat.eq_fppred row_mem_FP col_mem_FP
 
 def identityEntry (p : List Bool) : List Bool :=
   if sameIndex p then MatrixPower.ArithmeticBits.one (BinaryNat.succ (pairSnd (pairFst p))) else []

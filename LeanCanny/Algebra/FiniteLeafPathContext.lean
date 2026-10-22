@@ -69,11 +69,7 @@ theorem position_unary {count : List Bool → ℕ} (hn : UnaryFn count) : UnaryF
 
 theorem right_fppred {count : List Bool → ℕ} (hn : UnaryFn count) : FPPred (right count) := by
   have hm := bits_mem_FP ((position_unary hn).mod (UnaryFn.const 2))
-  have hp := (BinaryNat.le_fppred hm (constFn_mem_FP [true])).and (BinaryNat.le_fppred (constFn_mem_FP [true]) hm)
-  exact hp.of_iff (fun p => by
-    simp only [Nat.fromBitsLE_bits]
-    change _ ≤ 1 ∧ 1 ≤ _ ↔ position count p % 2 = 1
-    omega)
+  simpa only [Nat.fromBitsLE_bits] using BinaryNat.eq_const_fppred hm 1
 
 theorem parent_FP {count : List Bool → ℕ} (hn : UnaryFn count) : parent count ∈ FP :=
   BalancedParameterContext.packet_FP (mem_FP_comp pairFst_mem_FP pairFst_mem_FP)

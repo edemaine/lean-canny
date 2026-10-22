@@ -177,13 +177,11 @@ theorem residueEvaluator {F : Resultant.Family} (a : Resultant.Access F)
   let L := P.precompose directQuery directQuery_mem_FP
   let R := Q.precompose directQuery directQuery_mem_FP
   have hleft : FPPred (fun q => Nat.fromBitsLE (order q) = Nat.fromBitsLE (a.bits.leftDegree (origin q))) :=
-    ((BinaryNat.le_fppred order_mem_FP (mem_FP_comp origin_mem_FP ha.leftDegree)).and
-    (BinaryNat.le_fppred (mem_FP_comp origin_mem_FP ha.leftDegree) order_mem_FP)).of_iff
-      (fun q => by simp only [Function.comp_apply]; omega)
+    (BinaryNat.eq_fppred order_mem_FP (mem_FP_comp origin_mem_FP ha.leftDegree)).of_iff
+      (fun q => by simp only [Function.comp_apply] <;> omega)
   have hright : FPPred (fun q => Nat.fromBitsLE (order q) = Nat.fromBitsLE (a.bits.rightDegree (origin q))) :=
-    ((BinaryNat.le_fppred order_mem_FP (mem_FP_comp origin_mem_FP ha.rightDegree)).and
-    (BinaryNat.le_fppred (mem_FP_comp origin_mem_FP ha.rightDegree) order_mem_FP)).of_iff
-      (fun q => by simp only [Function.comp_apply]; omega)
+    (BinaryNat.eq_fppred order_mem_FP (mem_FP_comp origin_mem_FP ha.rightDegree)).of_iff
+      (fun q => by simp only [Function.comp_apply] <;> omega)
   let E := SpaceFunction.branch (fun q => decide (within a q)) (within_fppred a ha).flag_mem_FP M
     (SpaceFunction.branch (fun q => decide (Nat.fromBitsLE (order q) = Nat.fromBitsLE (a.bits.leftDegree (origin q))))
       hleft.flag_mem_FP L

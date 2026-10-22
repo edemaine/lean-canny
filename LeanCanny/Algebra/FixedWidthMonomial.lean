@@ -38,12 +38,11 @@ theorem matches_fppred (unit : Bool) (hA : UnaryFn A) (hW : UnaryFn W)
     · apply mem_FP_of_eq ((FPPred.eq UnaryFn.index hr.lift).ite_mem_FP (constFn_mem_FP [true]) (constFn_mem_FP []))
       intro q
       by_cases h : (pairSnd q).length = r (pairFst q) <;> simp [expected, h, BinaryNatCode.encode]
-  have hm := (BinaryNat.le_fppred hs he).and (BinaryNat.le_fppred he hs)
+  have hm := BinaryNat.eq_fppred hs he
   apply (FPPred.forall_lt hA hm).of_iff
   intro c
   simp only [Matches, pairFst_pair, pairSnd_pair, List.length_replicate, Function.comp_apply,
     BinaryNatCode.encode, Nat.fromBitsLE_bits, FixedWidthQuery.coordinate]
-  exact forall_congr' (fun i => imp_congr_right (fun _ => le_antisymm_iff.symm))
 
 theorem matches_iff (unit : Bool) (c : List Bool) (hr : r c < A c) :
     Matches A W r target unit c ↔

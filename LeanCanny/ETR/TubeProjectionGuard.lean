@@ -43,10 +43,8 @@ theorem pattern_fppred {n W r : List Bool → ℕ} {target : List Bool → List 
   have hp : FPPred (fun q => FixedWidthQuery.coordinate W target (pairFst q)
       (pointCount (n (pairFst q)) + (pairSnd q).length) =
         expected (if shifted then some (r (pairFst q)) else none) (pairSnd q).length) := by
-    apply ((BinaryNat.le_fppred hs he).and (BinaryNat.le_fppred he hs)).of_iff
-    intro q
-    simp only [FixedWidthQuery.coordinate, Function.comp_apply, BinaryNatCode.encode, Nat.fromBitsLE_bits]
-    omega
+    simpa only [FixedWidthQuery.coordinate, Function.comp_apply, BinaryNatCode.encode, Nat.fromBitsLE_bits] using
+      BinaryNat.eq_fppred hs he
   apply (FPPred.forall_lt (pointCount_unary hn) hp).of_iff
   intro c
   simp only [Pattern, pairFst_pair, pairSnd_pair, List.length_replicate]

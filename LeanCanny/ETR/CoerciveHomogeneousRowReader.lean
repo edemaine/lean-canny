@@ -89,18 +89,9 @@ noncomputable def valid (input : List Bool → List Bool) (coordinate : List Boo
   coordinate (context q) < dimension (input (context q)) ∧
     Nat.fromBitsLE (row q) < dimension (input (context q)) + 1
 
-private theorem code_eq_fppred {word : List Bool → List Bool} (hw : word ∈ FP) (k : ℕ) :
-    FPPred (fun q => Nat.fromBitsLE (word q) = k) := by
-  have h := (BinaryNat.le_fppred hw (constFn_mem_FP (BinaryNatCode.encode k))).and
-    (BinaryNat.le_fppred (constFn_mem_FP (BinaryNatCode.encode k)) hw)
-  apply h.of_iff
-  intro q
-  simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits]
-  exact le_antisymm_iff.symm
-
 theorem phase_fppred (s t : ℕ) : FPPred (phase s t) :=
-  (code_eq_fppred outer_FP s).and (code_eq_fppred inner_FP t)
-theorem zeroRow_fppred : FPPred zeroRow := code_eq_fppred row_FP 0
+  (BinaryNat.eq_const_fppred outer_FP s).and (BinaryNat.eq_const_fppred inner_FP t)
+theorem zeroRow_fppred : FPPred zeroRow := BinaryNat.eq_const_fppred row_FP 0
 
 theorem valid_fppred {input : List Bool → List Bool} {coordinate : List Bool → ℕ}
     (hi : input ∈ FP) (hc : UnaryFn coordinate) : FPPred (valid input coordinate) := by
