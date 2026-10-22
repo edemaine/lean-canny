@@ -136,58 +136,12 @@ theorem choose_state_length (eA : A ↪ List Bool) (eB : B ↪ List Bool)
 
 variable {eQ : Q ↪ List Bool} {eA : A ↪ List Bool} {eB : B ↪ List Bool}
 
-omit [Inhabited A] [Inhabited B] in
-private theorem observe_computable {O : Type} {eO : O ↪ List Bool} {f : A → O} {g : B → O}
-    (hf : ComputableTidilyInPolySpace f eA eO) (hg : ComputableTidilyInPolySpace g eB eO) :
-    ComputableTidilyInPolySpace (fun s : ChoiceState A B => if s.1 then f s.2.1 else g s.2.2)
-      (encChoice eA eB) eO := by
-  have hflag : ComputableTidilyInPolyTime (fun s : ChoiceState A B => s.1) (encChoice eA eB) encBool := by fun_prop
-  have ha : ComputableTidilyInPolyTime (fun s : ChoiceState A B => s.2.1) (encChoice eA eB) eA := by fun_prop
-  have hb : ComputableTidilyInPolyTime (fun s : ChoiceState A B => s.2.2) (encChoice eA eB) eB := by fun_prop
-  exact (ComputableTidilyInPolySpace.of_polyTime hflag).ite (hf.comp (.of_polyTime ha)) (hg.comp (.of_polyTime hb))
-
 theorem choose_certificates (hs : ComputableTidilyInPolyTime select eQ encBool)
     (hC : C.Certificates (encQ := eQ) (encS := eA)) (hD : D.Certificates (encQ := eQ) (encS := eB)) :
     (choose select C D).Certificates (encQ := eQ) (encS := encChoice eA eB) := by
-  have ht := ComputableTidilyInPolySpace.of_polyTime
-    (ComputableTidilyInPolyTime.const (encIn := eQ) (encMid := encBool) true)
-  have hf := ComputableTidilyInPolySpace.of_polyTime
-    (ComputableTidilyInPolyTime.const (encIn := eQ) (encMid := encBool) false)
-  have hda := ComputableTidilyInPolySpace.of_polyTime
-    (ComputableTidilyInPolyTime.const (encIn := eQ) (encMid := eA) default)
-  have hdb := ComputableTidilyInPolySpace.of_polyTime
-    (ComputableTidilyInPolyTime.const (encIn := eQ) (encMid := eB) default)
-  have hi := (ComputableTidilyInPolySpace.of_polyTime hs).ite (ht.prod (hC.initial.prod hdb)) (hf.prod (hda.prod hD.initial))
-  have hflag : ComputableTidilyInPolyTime (fun s : ChoiceState A B => s.1) (encChoice eA eB) encBool := by fun_prop
-  have ha : ComputableTidilyInPolyTime (fun s : ChoiceState A B => s.2.1) (encChoice eA eB) eA := by fun_prop
-  have hb : ComputableTidilyInPolyTime (fun s : ChoiceState A B => s.2.2) (encChoice eA eB) eB := by fun_prop
-  have hat := ComputableTidilyInPolySpace.of_polyTime ha
-  have hbt := ComputableTidilyInPolySpace.of_polyTime hb
-  have htrue := ComputableTidilyInPolySpace.of_polyTime
-    (ComputableTidilyInPolyTime.const (encIn := encChoice eA eB) (encMid := encBool) true)
-  have hfalse := ComputableTidilyInPolySpace.of_polyTime
-    (ComputableTidilyInPolyTime.const (encIn := encChoice eA eB) (encMid := encBool) false)
-  have hadv := (ComputableTidilyInPolySpace.of_polyTime hflag).ite
-    (htrue.prod ((hC.advance.comp hat).prod hbt)) (hfalse.prod (hat.prod (hD.advance.comp hbt)))
-  have hra : ComputableTidilyInPolyTime (fun p : ChoiceState A B × List Bool => (p.1.2.1, p.2))
-      (encPair (encChoice eA eB) encBits) (encPair eA encBits) := by fun_prop
-  have hrb : ComputableTidilyInPolyTime (fun p : ChoiceState A B × List Bool => (p.1.2.2, p.2))
-      (encPair (encChoice eA eB) encBits) (encPair eB encBits) := by fun_prop
-  have hka : ComputableTidilyInPolyTime (fun p : ChoiceState A B × List Bool => p.1.2.1)
-      (encPair (encChoice eA eB) encBits) eA := by fun_prop
-  have hkb : ComputableTidilyInPolyTime (fun p : ChoiceState A B × List Bool => p.1.2.2)
-      (encPair (encChoice eA eB) encBits) eB := by fun_prop
-  have hrf : ComputableTidilyInPolyTime (fun p : ChoiceState A B × List Bool => p.1.1)
-      (encPair (encChoice eA eB) encBits) encBool := by fun_prop
-  have hrt := ComputableTidilyInPolySpace.of_polyTime
-    (ComputableTidilyInPolyTime.const (encIn := encPair (encChoice eA eB) encBits) (encMid := encBool) true)
-  have hrff := ComputableTidilyInPolySpace.of_polyTime
-    (ComputableTidilyInPolyTime.const (encIn := encPair (encChoice eA eB) encBits) (encMid := encBool) false)
-  have hresume := (ComputableTidilyInPolySpace.of_polyTime hrf).ite
-    (hrt.prod ((hC.resume.comp (.of_polyTime hra)).prod (.of_polyTime hkb)))
-    (hrff.prod ((ComputableTidilyInPolySpace.of_polyTime hka).prod (hD.resume.comp (.of_polyTime hrb))))
-  exact ⟨hi, observe_computable hC.halted hD.halted, observe_computable hC.output hD.output,
-    observe_computable hC.needs hD.needs, observe_computable hC.query hD.query, hadv, hresume⟩
+  rcases hC with ⟨hCi, hCh, hCo, hCn, hCq, hCa, hCr⟩
+  rcases hD with ⟨hDi, hDh, hDo, hDn, hDq, hDa, hDr⟩
+  constructor <;> dsimp only [choose, encChoice] <;> fun_prop (config := { maxSteps := 256 })
 
 def prepare {S : Type} (E : Controller Q S) (input : Q → Q) : Controller Q S :=
   { E with initial := E.initial ∘ input }

@@ -91,17 +91,6 @@ theorem output_when_halted (answer : List Bool → List Bool) (p : List Bool) (t
     cases hr : P.request p <;>
       simp only [hr, Bool.false_eq_true, ite_false, ite_true, controller, initial, value]
 
-theorem state_length (answer : List Bool → List Bool) (p : List Bool) (t : ℕ) :
-    (encState ((P.controller.reference answer)^[t] (initial p))).length ≤
-      2 * p.length + 4 + (answer (P.query p)).length := by
-  cases t with
-  | zero => simp only [Function.iterate_zero, id_eq, initial, encState, length_encPair, encBits_apply,
-      encBool_apply, List.length_singleton, List.length_nil]; omega
-  | succ t =>
-    rw [P.reference_iterate]
-    split_ifs <;> simp only [initial, encState, length_encPair, encBits_apply,
-      encBool_apply, List.length_singleton, List.length_nil] <;> omega
-
 /-- Unused requests impose no answer-size obligation. -/
 theorem state_length_of_bound (answer : List Bool → List Bool) (p : List Bool) (t B : ℕ)
     (hb : P.request p = true → (answer (P.query p)).length ≤ B) :
@@ -123,6 +112,11 @@ theorem state_length_of_bound (answer : List Bool → List Bool) (p : List Bool)
       simp only [ite_true, encState, length_encPair, encBits_apply, encBool_apply, List.length_singleton]
       omega
 
+theorem state_length (answer : List Bool → List Bool) (p : List Bool) (t : ℕ) :
+    (encState ((P.controller.reference answer)^[t] (initial p))).length ≤
+      2 * p.length + 4 + (answer (P.query p)).length :=
+  P.state_length_of_bound answer p t _ (fun _ => le_rfl)
+
 structure Controls : Prop where
   request : (fun p => [P.request p]) ∈ FP
   query : P.query ∈ FP
@@ -135,23 +129,13 @@ theorem certificates_of_space (hrequest : (fun p => [P.request p]) ∈ FP) (hque
     (himmediate : ComputableTidilyInPolySpace P.immediate encBits encBits)
     (hfinish : ComputableTidilyInPolySpace P.finish encBits encBits) :
     P.controller.Certificates (encQ := encBits) (encS := encState) := by
-  have hp : ComputableTidilyInPolyTime (fun s : State => s.1) encState encBits := by fun_prop
-  have hb : ComputableTidilyInPolyTime (fun s : State => s.2.1) encState encBool := by fun_prop
-  have hr := (flag_computable hrequest).comp hp
-  have harg : ComputableTidilyInPolyTime (fun s : State => pair s.1 s.2.2) encState encBits :=
-    pair_computable hp (by fun_prop)
-  have hi : ComputableTidilyInPolyTime initial encBits encState := by unfold initial; fun_prop
-  have hhalt : ComputableTidilyInPolyTime P.controller.halted encState encBool :=
-    hb.ite' (ComputableTidilyInPolyTime.const true) ((ComputableTidilyInPolyTime.of_finite Bool.not).comp hr)
-  have hout : ComputableTidilyInPolySpace P.controller.output encState encBits :=
-    (ComputableTidilyInPolySpace.of_polyTime hb).ite
-      (hfinish.comp (ComputableTidilyInPolySpace.of_polyTime harg))
-      (himmediate.comp (ComputableTidilyInPolySpace.of_polyTime hp))
-  have hresume : ComputableTidilyInPolyTime P.controller.resume (encPair encState encBits) encState := by
-    change ComputableTidilyInPolyTime (fun p : State × List Bool => (p.1.1, true, p.2)) _ _
+  have hr := flag_computable hrequest
+  have hq := FP.computable hquery
+  constructor
+  · change ComputableTidilyInPolySpace (fun p : List Bool => (p, false, [])) _ _
     fun_prop
-  exact ⟨.of_polyTime hi, .of_polyTime hhalt, hout, .of_polyTime hr,
-    .of_polyTime ((FP.computable hquery).comp hp), .id', .of_polyTime hresume⟩
+  all_goals dsimp only [controller, encState]
+  all_goals fun_prop (config := { maxSteps := 256, maxTransitionDepth := 2 })
 
 theorem certificates (h : P.Controls) : P.controller.Certificates (encQ := encBits) (encS := encState) :=
   P.certificates_of_space h.request h.query

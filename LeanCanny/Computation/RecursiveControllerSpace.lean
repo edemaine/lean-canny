@@ -26,28 +26,15 @@ structure Certificates : Prop where
 
 theorem instruction_computable (hC : C.Certificates (encQ := encQ) (encS := encS)) :
     ComputableTidilyInPolySpace C.instruction (encPair encQ encS) (encAction (encPair encQ encS)) := by
-  have hq := ComputableTidilyInPolySpace.of_polyTime (ComputableTidilyInPolyTime.fst encQ encS)
-  have hs := ComputableTidilyInPolySpace.of_polyTime (ComputableTidilyInPolyTime.snd encQ encS)
-  have htrue := ComputableTidilyInPolySpace.of_polyTime
-    (ComputableTidilyInPolyTime.const (encIn := encPair encQ encS) (encMid := encBool) true)
-  have hfalse := ComputableTidilyInPolySpace.of_polyTime
-    (ComputableTidilyInPolyTime.const (encIn := encPair encQ encS) (encMid := encBool) false)
-  have hempty := ComputableTidilyInPolySpace.of_polyTime
-    (ComputableTidilyInPolyTime.const (encIn := encPair encQ encS) (encMid := encBits) [])
-  have hdone := htrue.prod (hfalse.prod ((hC.output.comp hs).prod ComputableTidilyInPolySpace.id'))
-  have hchild := hC.query.comp hs
-  have hcall := hfalse.prod (htrue.prod (hempty.prod (hchild.prod (hC.initial.comp hchild))))
-  have hnext := hfalse.prod (hfalse.prod (hempty.prod (hq.prod (hC.advance.comp hs))))
-  exact (hC.halted.comp hs).ite hdone ((hC.needs.comp hs).ite hcall hnext)
+  rcases hC with ⟨hi, hh, ho, hn, hq, ha, hr⟩
+  unfold instruction Action.done Action.call Action.next
+  fun_prop (config := { maxSteps := 256 })
 
 theorem receive_computable (hC : C.Certificates (encQ := encQ) (encS := encS)) :
     ComputableTidilyInPolySpace C.receive (encPair (encPair encQ encS) encBits) (encPair encQ encS) := by
-  have hquery : ComputableTidilyInPolyTime
-      (fun p : Frame Q S × List Bool => (p.1.2, p.2))
-      (encPair (encPair encQ encS) encBits) (encPair encS encBits) := by fun_prop
-  have hq : ComputableTidilyInPolyTime (fun p : Frame Q S × List Bool => p.1.1)
-      (encPair (encPair encQ encS) encBits) encQ := by fun_prop
-  exact (ComputableTidilyInPolySpace.of_polyTime hq).prod (hC.resume.comp (.of_polyTime hquery))
+  have hr := hC.resume
+  unfold receive
+  fun_prop
 
 /-- Uniform recursive evaluation of a family of streamed algorithms. The
 budget bounds logical oracle transitions; it is proof data and need not be FP.

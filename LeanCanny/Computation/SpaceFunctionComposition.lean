@@ -10,6 +10,30 @@ public import LeanCanny.Computation.SpaceFunction
 
 @[expose] public section
 
+namespace Turing.MultiTapeTM.ComputableTidilyInPolySpace
+
+-- Composed projections fix the intermediate encoding before native proof search.
+@[fun_prop]
+theorem fst' {α β γ : Type} {enc : α ↪ List Bool}
+    {eA : β ↪ List Bool} {eB : γ ↪ List Bool} {f : α → β × γ}
+    (hf : ComputableTidilyInPolySpace f enc (encPair eA eB)) :
+    ComputableTidilyInPolySpace (fun x => (f x).1) enc eA :=
+  (of_polyTime (ComputableTidilyInPolyTime.fst eA eB)).comp hf
+
+@[fun_prop]
+theorem snd' {α β γ : Type} {enc : α ↪ List Bool}
+    {eA : β ↪ List Bool} {eB : γ ↪ List Bool} {f : α → β × γ}
+    (hf : ComputableTidilyInPolySpace f enc (encPair eA eB)) :
+    ComputableTidilyInPolySpace (fun x => (f x).2) enc eB :=
+  (of_polyTime (ComputableTidilyInPolyTime.snd eA eB)).comp hf
+
+@[fun_prop]
+theorem const {α β : Type} (enc : α ↪ List Bool) (eB : β ↪ List Bool) (b : β) :
+    ComputableTidilyInPolySpace (fun _ : α => b) enc eB :=
+  of_polyTime (ComputableTidilyInPolyTime.const b)
+
+end Turing.MultiTapeTM.ComputableTidilyInPolySpace
+
 namespace LeanCanny.Computation
 open Turing.MultiTapeTM
 
