@@ -50,7 +50,7 @@ theorem alpha_fppred : FPPred S.alpha := by
   have hj := bits_mem_FP S.parameterIndex_unary
   have ha := bits_mem_FP (TubeLevelPacket.alphaIndex_unary.comp (mem_FP_comp pairFst_mem_FP S.packet_FP))
   exact (BinaryNat.eq_fppred hj ha).of_iff (fun q => by
-    simp only [Nat.fromBitsLE_bits, alpha])
+    simp only [Nat.fromBitsLE_bits, Function.comp_apply, alpha])
 
 theorem spatial_fppred : FPPred S.spatial := by
   exact (BinaryNat.lt_fppred pairSnd_mem_FP (bits_mem_FP (S.spatialPrefix_unary.comp pairFst_mem_FP))).of_iff
