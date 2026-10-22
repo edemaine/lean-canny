@@ -44,6 +44,26 @@ example {localStep : List Bool → LeanCanny.Computation.RecursiveStack.Action (
   LeanCanny.Computation.RecursiveStack.evaluator hl hr ComputableTidilyInPolySpace.id'
     hN hR hB rules hstart hrank hframe hvalue
 
+/-! Recursive entries receive no answer certificate; native base computations
+and a uniformly bounded ranked task graph suffice. -/
+example (S : LeanCanny.Algebra.RecursiveMatrixPower.Source) (h : S.Controls)
+    (rank : List Bool → ℕ) (tasks : List Bool → List Bool → Prop)
+    (R K M : List Bool → ℕ) (hR : LeanCanny.UnaryFn R)
+    (hK : LeanCanny.UnaryFn K) (hM : LeanCanny.UnaryFn M)
+    (hroot : ∀ q, tasks q q)
+    (hrank : ∀ root q, tasks root q → rank q ≤ R root)
+    (htask : ∀ root q, tasks root q → q.length ≤ K root)
+    (hbase : ∀ root q, tasks root q → (S.base q).length ≤ K root)
+    (hbits : ∀ root q, tasks root q →
+      (S.family.dimension q).size + (S.family.exponent q).size + (S.family.modulus q).size ≤ M root)
+    (hgraph : ∀ root q, tasks root q → S.leaf q = false → ∀ i j : Fin (S.family.dimension q),
+      tasks root (S.entryTask (LeanCanny.pair q (LeanCanny.pair
+        (LeanCanny.BinaryNatCode.encode i.val) (LeanCanny.BinaryNatCode.encode j.val)))) ∧
+      rank (S.entryTask (LeanCanny.pair q (LeanCanny.pair
+        (LeanCanny.BinaryNatCode.encode i.val) (LeanCanny.BinaryNatCode.encode j.val)))) < rank q) :
+    ComputableTidilyInPolySpace S.answer encBits encBits :=
+  (S.evaluator h rank tasks R K M hR hK hM hroot hrank htask hbase hbits hgraph).computable
+
 example {F : LeanCanny.Algebra.MatrixPower.ModularFamily}
     (a : LeanCanny.Algebra.MatrixPower.ModularAccess F) (ha : a.ControlsPolyTime)
     (he : ComputableTidilyInPolySpace a.entry encBits encBits) :

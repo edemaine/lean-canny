@@ -17,6 +17,7 @@ import LeanCanny.Algebra.FiniteProductSpace
 import LeanCanny.Computation.ArithmeticBitSpace
 import LeanCanny.Computation.SpaceFunctionSelect
 import LeanCanny.Computation.RecursiveStackSpace
+import LeanCanny.Algebra.RecursiveMatrixPowerSpace
 import LeanCanny.ETR.EquationListComplexity
 import LeanCanny.ETR.NNFComplexity
 import LeanCanny.ETR.EquationCompilerFP

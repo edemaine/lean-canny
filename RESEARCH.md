@@ -4061,6 +4061,32 @@ iterator's storage contract. The resulting certificate uses one fixed machine
 at input-dependent recursion depth, rather than a separate certificate at each
 fixed height. Validity may depend on the original input and need not be decidable.
 
+`RecursiveController.evaluator` specializes this to streamed oracle controllers.
+Its frames contain only a task and the current controller state. Validity
+identifies that state with a prefix of the mathematical oracle run. The least
+remaining halting index decreases at every local transition or completed reply;
+this measure is proof-only, with no counter in the frame. The stage's logical
+budget need not itself be computable when a binary FP common upper bound is
+available. Native initialization, request writing, local transitions, reply
+installation, and output are charged separately.
+
+`MatrixPowerRecursiveController` gives a concrete stage. Its FP entry-request
+test, request writer, and reply installer turn source entries into task calls.
+The mathematical oracle run agrees with the existing typed matrix-power run,
+halts at `work n e.size e + 1`, and returns the selected power entry whenever
+it halts. Every requested row and column is proved to be in range, and the
+quadratic encoded state bound transfers without an entry-answer certificate.
+
+`RecursiveMatrixPower.Source.evaluator` now evaluates a ranked graph of these
+tasks and base tasks with one uniform native machine. Base tasks may use
+arbitrary polynomial space. A non-leaf task's entries are the semantic answers
+of its designated lower-rank tasks; their computation certificates are not
+assumed. A common unary FP bound M on binary dimension/exponent/modulus lengths
+gives the logical budget `2^((M+2)*M+1)`. Common unary FP bounds on task words,
+base outputs, and rank give the state/stack bounds internally. This establishes
+uniform variable-depth nesting for the concrete matrix-power primitive, not
+yet for the complete balanced Canny resultant/square-free/coordinate graph.
+
 The algebraic filtering theorem still needs specialization to the actual tube
 annihilants and constraints. Uniform native coefficient evaluation at
 input-dependent depth remains open. The recursion theorem still needs concrete
