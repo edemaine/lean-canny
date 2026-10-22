@@ -42,10 +42,6 @@ namespace LeanCanny
 def pair (x y : List Bool) : List Bool :=
   delimit x ++ y
 
-private theorem pair_nil_eq (y : List Bool) :
-    pair [] y = false :: true :: y := by
-  simp [pair]
-
 /-- One step of the doubling encoder: `pair` on `b :: x` prepends the
     doubled bit `b, b`. -/
 theorem pair_cons_eq (b : Bool) (x y : List Bool) :
@@ -56,43 +52,14 @@ theorem pair_cons_eq (b : Bool) (x y : List Bool) :
     bit of `x`; the `+2` is the separator `[false, true]`. -/
 @[simp] theorem pair_length (x y : List Bool) :
     (pair x y).length = 2 * x.length + 2 + y.length := by
-  induction x with
-  | nil => simp [pair]; omega
-  | cons b xs ih =>
-    rw [pair_cons_eq, List.length_cons, List.length_cons, List.length_cons, ih]
-    omega
+  simp only [pair, List.length_append, delimit_length]
 
 /-- `pair` is injective: if `pair x₁ y₁ = pair x₂ y₂` then `x₁ = x₂` and
 `y₁ = y₂`. -/
 theorem pair_inj {x₁ x₂ : List Bool} {y₁ y₂ : List Bool}
     (h : pair x₁ y₁ = pair x₂ y₂) : x₁ = x₂ ∧ y₁ = y₂ := by
-  induction x₁ generalizing x₂ with
-  | nil =>
-    rw [pair_nil_eq] at h
-    cases x₂ with
-    | nil =>
-      rw [pair_nil_eq] at h
-      exact ⟨rfl, (List.cons.inj (List.cons.inj h).2).2⟩
-    | cons b x₂' =>
-      rw [pair_cons_eq] at h
-      have h1 := (List.cons.inj h).1           -- false = b
-      have h2 := (List.cons.inj (List.cons.inj h).2).1  -- true = b
-      exact absurd (h1.trans h2.symm) Bool.false_ne_true
-  | cons b₁ x₁' ih =>
-    rw [pair_cons_eq] at h
-    cases x₂ with
-    | nil =>
-      rw [pair_nil_eq] at h
-      have h1 := (List.cons.inj h).1           -- b₁ = false
-      have h2 := (List.cons.inj (List.cons.inj h).2).1  -- b₁ = true
-      exact absurd (h1.symm.trans h2) Bool.false_ne_true
-    | cons b₂ x₂' =>
-      rw [pair_cons_eq] at h
-      have hb := (List.cons.inj h).1           -- b₁ = b₂
-      have htail := (List.cons.inj (List.cons.inj h).2).2  -- pair x₁' y₁ = pair x₂' y₂
-      have ⟨hx, hy⟩ := ih htail
-      subst hb; subst hx
-      exact ⟨rfl, hy⟩
+  simpa only [pair, unpair?_delimit_append, Option.some.injEq, Prod.mk.injEq]
+    using congrArg unpair? h
 
 /-- `unpair?` is a left inverse of `pair`: decoding an encoded pair
     recovers exactly its two components. -/
@@ -120,152 +87,53 @@ theorem unpair?_eq_some_iff {z x y : List Bool} :
 theorem pair_getElem_left_first (x y : List Bool) (i : ℕ) (hi : i < x.length) :
     (pair x y)[2 * i]'(by rw [pair_length]; omega) = x[i]'hi := by
   induction x generalizing i with
-  | nil =>
-      cases hi
+  | nil => cases hi
   | cons b xs ih =>
-      cases i with
-      | zero =>
-          simp [pair_cons_eq]
-      | succ i =>
-          have hi' : i < xs.length := by simpa using hi
-          change (b :: b :: pair xs y)[2 * (i + 1)]'(
-            by simp [pair_length]; omega) = xs[i]'hi'
-          have hshift :
-              (b :: b :: pair xs y)[2 * (i + 1)]'(by simp [pair_length]; omega) =
-                (pair xs y)[2 * i]'(by rw [pair_length]; omega) := by
-            calc
-              (b :: b :: pair xs y)[2 * (i + 1)]'(by simp [pair_length]; omega)
-                  = (b :: pair xs y)[2 * i + 1]'(by simp [pair_length]; omega) := by
-                      exact List.getElem_cons_succ b (b :: pair xs y) (2 * i + 1)
-                        (by simp [pair_length]; omega)
-              _ = (pair xs y)[2 * i]'(by rw [pair_length]; omega) := by
-                      exact List.getElem_cons_succ b (pair xs y) (2 * i)
-                        (by simp [pair_length]; omega)
-          rw [hshift]
-          exact ih i hi'
+    cases i with
+    | zero => simp [pair_cons_eq]
+    | succ i =>
+      simpa only [pair_cons_eq, show 2 * (i + 1) = (2 * i + 1) + 1 by omega,
+        List.getElem_cons_succ] using ih i (by simpa using hi)
 
 /-- In `pair x y`, the second duplicated copy of `x[i]` sits at position `2*i+1`. -/
 theorem pair_getElem_left_second (x y : List Bool) (i : ℕ) (hi : i < x.length) :
     (pair x y)[2 * i + 1]'(by rw [pair_length]; omega) = x[i]'hi := by
   induction x generalizing i with
-  | nil =>
-      cases hi
+  | nil => cases hi
   | cons b xs ih =>
-      cases i with
-      | zero =>
-          simp [pair_cons_eq]
-      | succ i =>
-          have hi' : i < xs.length := by simpa using hi
-          change (b :: b :: pair xs y)[2 * (i + 1) + 1]'(
-            by simp [pair_length]; omega) = xs[i]'hi'
-          have hshift :
-              (b :: b :: pair xs y)[2 * (i + 1) + 1]'(by simp [pair_length]; omega) =
-                (pair xs y)[2 * i + 1]'(by rw [pair_length]; omega) := by
-            calc
-              (b :: b :: pair xs y)[2 * (i + 1) + 1]'(by simp [pair_length]; omega)
-                  = (b :: pair xs y)[2 * i + 2]'(by simp [pair_length]; omega) := by
-                      exact List.getElem_cons_succ b (b :: pair xs y) (2 * i + 2)
-                        (by simp [pair_length]; omega)
-              _ = (pair xs y)[2 * i + 1]'(by rw [pair_length]; omega) := by
-                      exact List.getElem_cons_succ b (pair xs y) (2 * i + 1)
-                        (by simp [pair_length]; omega)
-          rw [hshift]
-          exact ih i hi'
+    cases i with
+    | zero => simp [pair_cons_eq]
+    | succ i =>
+      simpa only [pair_cons_eq, show 2 * (i + 1) + 1 = ((2 * i + 1) + 1) + 1 by omega,
+        List.getElem_cons_succ] using ih i (by simpa using hi)
 
 /-- The first separator bit in `pair x y` is `false`. -/
 theorem pair_getElem_sep_zero (x y : List Bool) :
     (pair x y)[2 * x.length]'(by rw [pair_length]; omega) = false := by
   induction x with
-  | nil =>
-      simp [pair]
+  | nil => simp [pair]
   | cons b xs ih =>
-      change (b :: b :: pair xs y)[2 * (xs.length + 1)]'(
-        by simp [pair_length]; omega) = false
-      have hshift :
-          (b :: b :: pair xs y)[2 * (xs.length + 1)]'(by simp [pair_length]; omega) =
-            (pair xs y)[2 * xs.length]'(by rw [pair_length]; omega) := by
-        calc
-          (b :: b :: pair xs y)[2 * (xs.length + 1)]'(by simp [pair_length]; omega)
-              = (b :: pair xs y)[2 * xs.length + 1]'(by simp [pair_length]; omega) := by
-                  exact List.getElem_cons_succ b (b :: pair xs y) (2 * xs.length + 1)
-                    (by simp [pair_length]; omega)
-          _ = (pair xs y)[2 * xs.length]'(by rw [pair_length]; omega) := by
-                  exact List.getElem_cons_succ b (pair xs y) (2 * xs.length)
-                    (by simp [pair_length]; omega)
-      rw [hshift]
-      exact ih
+    simpa only [List.length_cons, pair_cons_eq,
+      show 2 * (xs.length + 1) = (2 * xs.length + 1) + 1 by omega,
+      List.getElem_cons_succ] using ih
 
 /-- The second separator bit in `pair x y` is `true`. -/
 theorem pair_getElem_sep_one (x y : List Bool) :
     (pair x y)[2 * x.length + 1]'(by rw [pair_length]; omega) = true := by
   induction x with
-  | nil =>
-      simp [pair]
+  | nil => simp [pair]
   | cons b xs ih =>
-      change (b :: b :: pair xs y)[2 * (xs.length + 1) + 1]'(
-        by simp [pair_length]; omega) = true
-      have hshift :
-          (b :: b :: pair xs y)[2 * (xs.length + 1) + 1] =
-            (pair xs y)[2 * xs.length + 1] := by
-        have h₁ : 2 * xs.length + 2 + 1 < (b :: b :: pair xs y).length := by
-          simp only [List.length_cons, pair_length]
-          omega
-        have h₂ : 2 * xs.length + 1 + 1 < (b :: pair xs y).length := by
-          simp only [List.length_cons, pair_length]
-          omega
-        calc
-          (b :: b :: pair xs y)[2 * (xs.length + 1) + 1]
-              = (b :: pair xs y)[2 * xs.length + 2] := by
-                  simpa only [Nat.mul_add, Nat.mul_one, Nat.add_assoc] using
-                    List.getElem_cons_succ b (b :: pair xs y) (2 * xs.length + 2)
-                      (h := h₁)
-          _ = (pair xs y)[2 * xs.length + 1] := by
-                  simpa only [Nat.add_assoc] using
-                    List.getElem_cons_succ b (pair xs y) (2 * xs.length + 1)
-                      (h := h₂)
-      rw [hshift]
-      exact ih
-
-/-- Length of the doubled prefix used in `pair x y`. -/
-private theorem pair_flatMap_doubled_length (x : List Bool) :
-    (x.flatMap fun b => [b, b]).length = 2 * x.length := by
-  induction x with
-  | nil =>
-      simp
-  | cons b xs ih =>
-      rw [List.flatMap_cons, List.length_append, ih]
-      simp
-      omega
+    simpa only [List.length_cons, pair_cons_eq,
+      show 2 * (xs.length + 1) + 1 = ((2 * xs.length + 1) + 1) + 1 by omega,
+      List.getElem_cons_succ] using ih
 
 /-- In `pair x y`, the suffix after the separator is exactly `y`. -/
 theorem pair_getElem_right (x y : List Bool) (j : ℕ) (hj : j < y.length) :
     (pair x y)[2 * x.length + 2 + j]'(by rw [pair_length]; omega) = y[j]'hj := by
-  have hdecomp : pair x y = (x.flatMap fun b => [b, b]) ++ [false, true] ++ y := rfl
-  have hflat := pair_flatMap_doubled_length x
-  have hprefix :
-      ((x.flatMap fun b => [b, b]) ++ [false, true]).length = 2 * x.length + 2 := by
-    rw [List.length_append, hflat]
-    rfl
-  have hge :
-      ((x.flatMap fun b => [b, b]) ++ [false, true]).length ≤ 2 * x.length + 2 + j := by
-    rw [hprefix]
-    omega
-  have hj' :
-      (2 * x.length + 2 + j) -
-        ((x.flatMap fun b => [b, b]) ++ [false, true]).length < y.length := by
-    rw [hprefix]
-    omega
-  calc
-    (pair x y)[2 * x.length + 2 + j]'(by rw [pair_length]; omega)
-        = ((x.flatMap fun b => [b, b]) ++ [false, true] ++ y)[2 * x.length + 2 + j]'
-            (by rw [← hdecomp, pair_length]; omega) := by
-              exact List.getElem_of_eq hdecomp _
-    _ = y[(2 * x.length + 2 + j) - ((x.flatMap fun b => [b, b]) ++ [false, true]).length]'hj' :=
-          List.getElem_append_right hge
-    _ = y[j]'hj := by
-          congr 1
-          rw [hprefix]
-          omega
+  simpa only [pair, delimit_length, Nat.add_sub_cancel_left] using
+    (List.getElem_append_right (as := delimit x) (bs := y)
+      (i := (delimit x).length + j) (h₂ := by simp only [List.length_append]; omega)
+      (by omega))
 
 /-! ## The projections
 

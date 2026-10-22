@@ -61,16 +61,8 @@ theorem le_zero_iff_exists_add_sq_eq_zero (x : ℝ) :
 
 /-- Conjunction of real equations is a sum-of-squares equation. -/
 theorem sq_add_sq_eq_zero_iff (x y : ℝ) :
-    x * x + y * y = 0 ↔ x = 0 ∧ y = 0 := by
-  constructor
-  · intro h
-    have hx := mul_self_nonneg x
-    have hy := mul_self_nonneg y
-    have hx0 : x * x = 0 := by linarith
-    have hy0 : y * y = 0 := by linarith
-    exact ⟨(mul_self_eq_zero.mp hx0), (mul_self_eq_zero.mp hy0)⟩
-  · rintro ⟨rfl, rfl⟩
-    norm_num
+    x * x + y * y = 0 ↔ x = 0 ∧ y = 0 :=
+  mul_self_add_mul_self_eq_zero
 
 namespace Term
 
