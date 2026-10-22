@@ -85,16 +85,9 @@ theorem symbolic_inner_degree (q : MvPolynomial (Fin n) ℤ) (D : ℕ)
 private theorem eval_swap (p : Polynomial (Polynomial ℤ)) (s t : ℝ) :
     (Polynomial.Bivariate.swap p).eval₂ (SymbolicScaledSquarefree.scalarEvaluation s) t =
       parameterMap s t p := by
-  induction p using Polynomial.induction_on' with
-  | add p q hp hq => simp only [map_add, Polynomial.eval₂_add, hp, hq]
-  | monomial j a =>
-    induction a using Polynomial.induction_on' with
-    | add a b ha hb => simp only [map_add, Polynomial.eval₂_add, ha, hb]
-    | monomial k z =>
-      rw [Polynomial.Bivariate.swap_monomial_monomial]
-      simp only [Polynomial.eval₂_monomial, SymbolicScaledSquarefree.scalarEvaluation,
-        parameterMap, Polynomial.coe_eval₂RingHom, Int.coe_castRingHom]
-      ring
+  simpa [Polynomial.aevalAeval, Polynomial.aevalAevalEquiv, Polynomial.aeval_def,
+    Polynomial.eval₂_hom, Polynomial.eval₂_eval₂RingHom_apply, Polynomial.evalEval, Polynomial.eval_map,
+    SymbolicScaledSquarefree.scalarEvaluation, parameterMap] using Polynomial.Bivariate.aevalAeval_swap s t p
 
 theorem symbolic_eval_eq_zero (q : MvPolynomial (Fin n) ℤ) (D : ℕ)
     (hD : q.totalDegree ≤ D) (i : Fin n) (s : ℝ) (x : Fin n → ℝ)

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Algebra.RationalSubstitutionMap
+public import LeanCanny.Algebra.RationalSubstitutionWith
 public import LeanCanny.Algebra.NestedCoefficientMass
 public import LeanCanny.Algebra.PolynomialKronecker
 public import LeanCanny.Algebra.MvCoefficientMass
@@ -67,23 +67,9 @@ theorem outer_degree_clearedWith {R : Type*} [CommSemiring R]
     (hD : ∀ i, p.degreeOf i ≤ D)
     (hn : ∀ i, (n i).natDegree ≤ E) (hd : ∀ i, (d i).natDegree ≤ E) :
     (RationalSubstitution.clearedWith (fun _ => D) p n d).natDegree ≤ 2 * Fintype.card σ * D * E := by
-  unfold RationalSubstitution.clearedWith
-  apply Polynomial.natDegree_sum_le_of_forall_le
-  intro e he
-  have hf (i : σ) : (n i ^ e i * d i ^ (2 * D - e i)).natDegree ≤ 2 * D * E := by
-    have hm : e i ≤ 2 * D := (MvPolynomial.monomial_le_degreeOf i he).trans (by have := hD i; omega)
-    calc
-      _ ≤ (n i ^ e i).natDegree + (d i ^ (2 * D - e i)).natDegree := natDegree_mul_le
-      _ ≤ e i * E + (2 * D - e i) * E := Nat.add_le_add
-        (natDegree_pow_le.trans (Nat.mul_le_mul_left _ (hn i)))
-        (natDegree_pow_le.trans (Nat.mul_le_mul_left _ (hd i)))
-      _ = _ := by rw [← Nat.add_mul, Nat.add_sub_of_le hm]
-  calc
-    _ ≤ (C (p.coeff e)).natDegree + (∏ i, n i ^ e i * d i ^ (2 * D - e i)).natDegree := natDegree_mul_le
-    _ = (∏ i, n i ^ e i * d i ^ (2 * D - e i)).natDegree := by simp only [natDegree_C, zero_add]
-    _ ≤ ∑ i, (n i ^ e i * d i ^ (2 * D - e i)).natDegree := natDegree_prod_le _ _
-    _ ≤ ∑ _i : σ, 2 * D * E := Finset.sum_le_sum (fun i _ => hf i)
-    _ = _ := by simp only [Finset.sum_const, Finset.card_univ, smul_eq_mul]; ring
+  apply (RationalSubstitution.natDegree_clearedWith_le (fun _ => D) p n d hD E hn hd).trans_eq
+  simp only [Finset.sum_const, Finset.card_univ, smul_eq_mul]
+  ring
 
 theorem inner_degree_clearedWith (p : MvPolynomial σ ℤ[X]) (D Ep E : ℕ)
     (n d : σ → (ℤ[X])[X]) (hD : ∀ i, p.degreeOf i ≤ D)

@@ -34,6 +34,9 @@ variable {σ R : Type*} [Fintype σ] [CommSemiring R]
 noncomputable def denominator (p : MvPolynomial σ R) (d : σ → R[X]) : R[X] :=
   ∏ i, d i ^ (2 * p.degreeOf i)
 
+noncomputable def clearedWith (D : σ → ℕ) (p : MvPolynomial σ R) (n d : σ → R[X]) : R[X] :=
+  ∑ e ∈ p.support, C (p.coeff e) * ∏ i, n i ^ e i * d i ^ (2 * D i - e i)
+
 noncomputable def cleared (p : MvPolynomial σ R) (n d : σ → R[X]) : R[X] :=
   ∑ e ∈ p.support, C (p.coeff e) * ∏ i, n i ^ e i * d i ^ (2 * p.degreeOf i - e i)
 
@@ -44,29 +47,38 @@ theorem scale_div_pow {K : Type*} [Field K] (a b : K) (s e : ℕ) (he : e ≤ s)
   rw [mul_assoc, ← pow_add, Nat.sub_add_cancel he]
   ring
 
+theorem eval₂_clearedWith {K : Type*} [Field K] (φ : R →+* K) (x : K)
+    (D : σ → ℕ) (p : MvPolynomial σ R) (n d : σ → R[X])
+    (hD : ∀ i, p.degreeOf i ≤ D i) (hd : ∀ i, (d i).eval₂ φ x ≠ 0) :
+    (clearedWith D p n d).eval₂ φ x = (∏ i, (d i).eval₂ φ x ^ (2 * D i)) *
+      p.eval₂ φ (fun i => (n i).eval₂ φ x / (d i).eval₂ φ x) := by
+  classical
+  let ψ := Polynomial.eval₂RingHom φ x
+  have hC (a : R) : ψ (C a) = φ a := Polynomial.eval₂_C _ _
+  change ψ (clearedWith D p n d) = (∏ i, ψ (d i) ^ (2 * D i)) *
+    p.eval₂ φ (fun i => ψ (n i) / ψ (d i))
+  simp only [clearedWith, map_sum, map_mul, map_prod, map_pow, hC]
+  rw [MvPolynomial.eval₂_eq', Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro e he
+  have hf (i : σ) : e i ≤ 2 * D i :=
+    ((MvPolynomial.monomial_le_degreeOf i he).trans (hD i)).trans (by omega)
+  calc
+    _ = φ (p.coeff e) * ∏ i, ψ (d i) ^ (2 * D i) * (ψ (n i) / ψ (d i)) ^ e i := by
+      congr 1
+      exact Finset.prod_congr rfl (fun i _ => (scale_div_pow _ _ _ _ (hf i) (hd i)).symm)
+    _ = _ := by rw [Finset.prod_mul_distrib]; ring
+
 theorem eval₂_cleared {K : Type*} [Field K] (φ : R →+* K) (x : K)
     (p : MvPolynomial σ R) (n d : σ → R[X]) (hd : ∀ i, (d i).eval₂ φ x ≠ 0) :
     (cleared p n d).eval₂ φ x = (denominator p d).eval₂ φ x *
       p.eval₂ φ (fun i => (n i).eval₂ φ x / (d i).eval₂ φ x) := by
   classical
-  let ψ := Polynomial.eval₂RingHom φ x
-  have hC (a : R) : ψ (C a) = φ a := Polynomial.eval₂_C _ _
-  change ψ (cleared p n d) = ψ (denominator p d) * p.eval₂ φ (fun i => ψ (n i) / ψ (d i))
-  simp only [cleared, denominator, map_sum, map_mul, map_prod, map_pow, hC]
-  rw [MvPolynomial.eval₂_eq', Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro e he
-  calc
-    φ (p.coeff e) * ∏ i, ψ (n i) ^ e i * ψ (d i) ^ (2 * p.degreeOf i - e i) =
-        φ (p.coeff e) * ∏ i, ψ (d i) ^ (2 * p.degreeOf i) * (ψ (n i) / ψ (d i)) ^ e i := by
-      congr 1
-      apply Finset.prod_congr rfl
-      intro i _
-      exact (scale_div_pow _ _ _ _ ((MvPolynomial.monomial_le_degreeOf i he).trans (by omega)) (hd i)).symm
-    _ = (∏ i, ψ (d i) ^ (2 * p.degreeOf i)) *
-        (φ (p.coeff e) * ∏ i, (ψ (n i) / ψ (d i)) ^ e i) := by
-      rw [Finset.prod_mul_distrib]
-      ring
+  have hden : (denominator p d).eval₂ φ x = ∏ i, (d i).eval₂ φ x ^ (2 * p.degreeOf i) := by
+    change (Polynomial.eval₂RingHom φ x) _ = _
+    simp only [denominator, map_prod, map_pow, Polynomial.coe_eval₂RingHom]
+  rw [hden]
+  exact eval₂_clearedWith φ x p.degreeOf p n d (fun _ => le_rfl) hd
 
 theorem denominator_eval₂_pos (φ : R →+* ℝ) (x : ℝ)
     (p : MvPolynomial σ R) (d : σ → R[X]) (hd : ∀ i, (d i).eval₂ φ x ≠ 0) :

@@ -24,9 +24,6 @@ open scoped BigOperators
 
 variable {σ R S : Type*} [Fintype σ] [CommSemiring R] [CommSemiring S]
 
-noncomputable def clearedWith (D : σ → ℕ) (p : MvPolynomial σ R) (n d : σ → R[X]) : R[X] :=
-  ∑ e ∈ p.support, C (p.coeff e) * ∏ i, n i ^ e i * d i ^ (2 * D i - e i)
-
 theorem cleared_eq_clearedWith (p : MvPolynomial σ R) (n d : σ → R[X]) :
     cleared p n d = clearedWith p.degreeOf p n d := rfl
 

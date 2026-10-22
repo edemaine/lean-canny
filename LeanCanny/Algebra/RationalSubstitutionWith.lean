@@ -21,27 +21,6 @@ open Polynomial
 open scoped BigOperators Classical
 variable {σ R : Type*} [Fintype σ] [CommSemiring R]
 
-theorem eval₂_clearedWith {K : Type*} [Field K] (φ : R →+* K) (x : K)
-    (D : σ → ℕ) (p : MvPolynomial σ R) (n d : σ → R[X])
-    (hD : ∀ i, p.degreeOf i ≤ D i) (hd : ∀ i, (d i).eval₂ φ x ≠ 0) :
-    (clearedWith D p n d).eval₂ φ x = (∏ i, (d i).eval₂ φ x ^ (2 * D i)) *
-      p.eval₂ φ (fun i => (n i).eval₂ φ x / (d i).eval₂ φ x) := by
-  let ψ := Polynomial.eval₂RingHom φ x
-  have hC (a : R) : ψ (C a) = φ a := Polynomial.eval₂_C _ _
-  change ψ (clearedWith D p n d) = (∏ i, ψ (d i) ^ (2 * D i)) *
-    p.eval₂ φ (fun i => ψ (n i) / ψ (d i))
-  simp only [clearedWith, map_sum, map_mul, map_prod, map_pow, hC]
-  rw [MvPolynomial.eval₂_eq', Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro e he
-  have hf (i : σ) : e i ≤ 2 * D i :=
-    ((MvPolynomial.monomial_le_degreeOf i he).trans (hD i)).trans (by omega)
-  calc
-    _ = φ (p.coeff e) * ∏ i, ψ (d i) ^ (2 * D i) * (ψ (n i) / ψ (d i)) ^ e i := by
-      congr 1
-      exact Finset.prod_congr rfl (fun i _ => (scale_div_pow _ _ _ _ (hf i) (hd i)).symm)
-    _ = _ := by rw [Finset.prod_mul_distrib]; ring
-
 theorem natDegree_clearedWith_le (D : σ → ℕ) (p : MvPolynomial σ R) (n d : σ → R[X])
     (hD : ∀ i, p.degreeOf i ≤ D i) (E : ℕ)
     (hn : ∀ i, (n i).natDegree ≤ E) (hd : ∀ i, (d i).natDegree ≤ E) :
