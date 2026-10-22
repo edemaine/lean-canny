@@ -4087,6 +4087,31 @@ base outputs, and rank give the state/stack bounds internally. This establishes
 uniform variable-depth nesting for the concrete matrix-power primitive, not
 yet for the complete balanced Canny resultant/square-free/coordinate graph.
 
+`PolynomialPowerRecursiveStage` now exposes the flattened coefficient-matrix
+requests as tasks. Its lower-triangular guard routes a query either to an
+original coefficient task or a fixed zero task. Correctness, the logical
+halting bound, context preservation, and the scalar controller's quadratic
+state bound transfer to the polynomial coefficient problem.
+
+`BerkowitzDeterminantRecursiveStage` specializes this to the outer layered
+power of the polynomial Berkowitz factors. It requests factor coefficients,
+then applies the existing FP parity correction to return the actual determinant
+coefficient. No native certificate for factor answers is assumed. The flattened
+dimension is `(n+1)^2*(D+1)` and the exponent is n, so the logical stopping index
+is `work ((n+1)^2*(D+1)) n.size n + 1`; the state bound depends on their binary
+sizes and the modulus size.
+
+`SingleCallController` implements one guarded request followed by FP
+postprocessing. `BerkowitzFactorRecursiveStage` uses it for the actual factor
+selector: one/zero cases return immediately, diagonal/moment cases request the
+corresponding task and negate its reply. Its mathematical run halts after at
+most one logical transition, and terminal output agrees with `factorValue`.
+All local operations have native certificates from the FP metadata and task
+writers, without assuming native diagonal/moment answer certificates. These
+are resumable stage contracts; a dispatcher connecting determinant, factor,
+moment, and original coefficient tasks with uniform rank/size bounds is still
+required before obtaining the complete recursive Canny coefficient evaluator.
+
 The algebraic filtering theorem still needs specialization to the actual tube
 annihilants and constraints. Uniform native coefficient evaluation at
 input-dependent depth remains open. The recursion theorem still needs concrete

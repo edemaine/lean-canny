@@ -64,6 +64,23 @@ example (S : LeanCanny.Algebra.RecursiveMatrixPower.Source) (h : S.Controls)
     ComputableTidilyInPolySpace S.answer encBits encBits :=
   (S.evaluator h rank tasks R K M hR hK hM hroot hrank htask hbase hbits hgraph).computable
 
+/-! Determinant and factor stages expose task calls. Their local certificates
+need FP query writers, with no certificate for factor, diagonal, or moment answers. -/
+example {F : LeanCanny.Algebra.BerkowitzPolynomial.ModularFamily}
+    (a : LeanCanny.Algebra.BerkowitzPolynomial.ModularAccess F) (ha : a.ControlsPolyTime)
+    (factorTask : List Bool → List Bool) (hf : factorTask ∈ LeanCanny.FP) (zeroTask : List Bool) :
+    (LeanCanny.Algebra.BerkowitzPolynomial.DeterminantStage.controller a factorTask zeroTask).Certificates
+      (encQ := encBits) (encS := encBits) :=
+  LeanCanny.Algebra.BerkowitzPolynomial.DeterminantStage.certificates a ha factorTask hf zeroTask
+
+example {F : LeanCanny.Algebra.BerkowitzPolynomial.ModularFamily}
+    (a : LeanCanny.Algebra.BerkowitzPolynomial.ModularAccess F) (ha : a.ControlsPolyTime)
+    (diagonalTask momentTask : List Bool → List Bool)
+    (hd : diagonalTask ∈ LeanCanny.FP) (hm : momentTask ∈ LeanCanny.FP) :
+    (LeanCanny.Algebra.BerkowitzPolynomial.FactorStage.program a diagonalTask momentTask).controller.Certificates
+      (encQ := encBits) (encS := LeanCanny.Computation.SingleCall.encState) :=
+  LeanCanny.Algebra.BerkowitzPolynomial.FactorStage.certificates a ha diagonalTask momentTask hd hm
+
 example {F : LeanCanny.Algebra.MatrixPower.ModularFamily}
     (a : LeanCanny.Algebra.MatrixPower.ModularAccess F) (ha : a.ControlsPolyTime)
     (he : ComputableTidilyInPolySpace a.entry encBits encBits) :
