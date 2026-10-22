@@ -40,6 +40,8 @@ import LeanCanny.Algebra.RationalCoordinatePath
 import LeanCanny.Algebra.UnivariateRationalSubstitutionMatrix
 import LeanCanny.Algebra.RationalCoordinatePathSpace
 import LeanCanny.Algebra.FiniteLeafCoordinateFiltering
+import LeanCanny.ETR.TubeFiniteLeafSubstitution
+import LeanCanny.Geometry.EffectiveRegularPolynomialLevels
 import LeanCanny.Algebra.BerkowitzTaskMetadata
 import LeanCanny.Algebra.BerkowitzTaskResidues
 import LeanCanny.Algebra.CannyBalancedTaskResidues

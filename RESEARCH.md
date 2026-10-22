@@ -4809,8 +4809,11 @@ zero equivalence, and real sign preservation at parameter roots. When the
 original annihilants cover every solution of a constraint system, solutions
 are equivalent to parameter roots satisfying all cleared constraints. This is
 a semantic criterion; it does not supply a new constraint coefficient reader.
-The encoded tube/sign-stage specialization, effective parameter selection,
-full ETR PSPACE theorem, and remaining report results remain open.
+`TubeFiniteLeafSubstitution` now instantiates the complete actual integer tube
+constraint source with these computed coordinate readers. It proves zero and
+real-sign preservation at every parameter root, including all native child
+computations in the substitution space certificate. Effective parameter
+selection, the full ETR PSPACE theorem, and remaining report results remain open.
 
 ## Savitch's theorem and Canny
 

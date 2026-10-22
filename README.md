@@ -207,8 +207,11 @@ proves denominator nonvanishing and agreement with the finite decoder at every
 parameter root, including recovery of every encoded original solution.
 [FiniteLeafCoordinateFiltering](LeanCanny/Algebra/FiniteLeafCoordinateFiltering.lean)
 then proves that even denominator clearing preserves constraint zeros and real
-signs for these computed coordinates. The tube specialization, effective
-parameter selection, and full ETR PSPACE theorem remain open.
+signs for these computed coordinates.
+[TubeFiniteLeafSubstitution](LeanCanny/ETR/TubeFiniteLeafSubstitution.lean)
+instantiates the actual integer tube constraints with these native readers and
+proves zero and sign preservation at parameter roots. Effective parameter
+selection and the full ETR PSPACE theorem remain open.
 
 P and all project polynomial-time reductions now use Complexitylib2 directly,
 through [PolyTime](LeanCanny/Computation/PolyTime.lean). This includes the defining
