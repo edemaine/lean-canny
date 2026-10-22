@@ -469,3 +469,18 @@ run_cmd do
       if let some value := info.value? (allowOpaque := true) then
         pending := pending ++ value.getUsedConstants
   logInfo m!"Audited {visited.size} transitive constants: no legacy space foundation."
+
+/-! The actual compiled-sample decision test uses native packet/direction
+readers. Finiteness enters correctness, not the space certificate. -/
+example (S : LeanCanny.ETR.TubeNativeAnnihilator.Source) :
+    LeanCanny.ETR.TubeNativeSampling.language S ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.ETR.TubeNativeSampling.language_mem_PSPACE S
+
+example (S : LeanCanny.ETR.TubeNativeAnnihilator.Source)
+    (hf : ∀ c, LeanCanny.ETR.TubeLevelPacket.FiniteCompiledFibers.{0} (S.packet c) (S.level c)) :
+    {c | ∃ z, LeanCanny.ETR.TubeLevelPacket.CompiledSample
+      (S.packet c) (S.mask c) (S.projection c) (S.level c) z} ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.ETR.TubeNativeSampling.compiledSampleLanguage_mem_PSPACE S hf
+
+example : LeanCanny.ETR.TubeNativeSampling.universalLanguage ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.ETR.TubeNativeSampling.universalLanguage_mem_PSPACE

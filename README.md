@@ -230,8 +230,8 @@ full determinant, with degree and nonvanishing bounds inherited from the
 characteristic quotient. The uniform coefficient family and mass budgets
 include native determinant, lowest-index, and rational-specialization costs.
 Large rational constants may be given by modular readers, so their full
-numerators and denominators need not be stored. The complete validated sampler
-and effective epsilon/delta/direction choices are still open.
+numerators and denominators need not be stored. Effective epsilon/delta/direction
+choices are still open.
 
 [TubeCoordinateAnnihilatorDyadic](LeanCanny/ETR/TubeCoordinateAnnihilatorDyadic.lean)
 selects a common binary FP exponent and supplies nonzero annihilants at its
@@ -239,12 +239,25 @@ implicit dyadic level, including their native readers and mass bounds.
 [TubeCoordinateAnnihilatorSigns](LeanCanny/ETR/TubeCoordinateAnnihilatorSigns.lean)
 proves native PSPACE feasibility of the actual tube signs on tuples of these
 roots, deriving every original algebraic reader and budget internally.
-[TubeRegularFiniteSigns](LeanCanny/ETR/TubeRegularFiniteSigns.lean) separately
-supplies the actual integer regular equations in reciprocal, point, direction,
-and perturbation variables, with a complete native zero-sign test from original
-annihilant residues. Finiteness and retained-sample existence at the selected
-level, the combined validated sampler, and the effective outer parameter
-choices remain open.
+[TubeRegularFiniteSigns](LeanCanny/ETR/TubeRegularFiniteSigns.lean) supplies the
+actual integer regular equations in reciprocal, point, direction, and
+perturbation variables. [TubeNativeSampling](LeanCanny/ETR/TubeNativeSampling.lean)
+combines these equations with inactive strict inequalities and pins the rational
+parameters, deriving all original annihilator readers and bounds internally.
+Its language is in native PSPACE and accepts only actual compiled samples.
+Under finite complex fibers, it accepts exactly existence of such a sample at
+the internally selected dyadic level, including singular samples. Finiteness
+and retained-sample existence at that level, together with the effective outer
+parameter choices, remain open.
+
+[GenericProjectionJacobian](LeanCanny/Algebra/GenericProjectionJacobian.lean)
+proves that every generic extended projection-critical root has an invertible
+Jacobian. Independent level and normalized direction parameters supply
+coordinate derivations; no coordinate-algebraicity assumption is needed. An
+arithmetic elimination bound for exceptional specializations is still needed.
+[TubeRegularJacobianBudget](LeanCanny/ETR/TubeRegularJacobianBudget.lean) defines
+the actual integer singularity polynomial and bounds its degree and whole
+coefficient mass by the source size.
 
 P and all project polynomial-time reductions now use Complexitylib2 directly,
 through [PolyTime](LeanCanny/Computation/PolyTime.lean). This includes the defining
@@ -1443,10 +1456,10 @@ quantitative parameter selection, and the full ETR algorithm remain open.
 
 ## Next obligations
 
-1. Assemble the validated sampler: align native and spatial variable layouts,
-   pin rational direction/perturbation coordinates, and combine the compiled
-   equations with inactive-constraint sign tests. Arbitrary tuples of
-   coordinate-annihilator roots can be spurious and must be filtered.
+1. Prove finite compiled fibers and retained samples at the internally selected
+   dyadic level. The combined native sampler already filters the actual regular
+   equations and inactive inequalities and proves exact correctness under
+   finiteness; the chosen level is not yet bounded by the geometric intervals.
 2. Prove source-size bounds for the epsilon feasibility witness, the delta
    feasibility gap, rational sampling directions, and the critical-value
    annihilants. The current geometric sampling and finiteness intervals are
