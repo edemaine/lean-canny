@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.CannyResultantRecursiveStage
-public import LeanCanny.Algebra.BerkowitzTaskLevels
+public import LeanCanny.Algebra.BerkowitzSingleCallSource
 
 /-! # Canny's resultant-entry source in the recursive determinant graph
 
@@ -34,23 +34,11 @@ theorem source_levels (tasks : List Bool → List Bool → Prop) (level : List B
     (hr : ∀ p, request a p = true → selectRight a p = true → isZero (rightTask (rightQuery p)) = false →
       level (origin (rightTask (rightQuery p))) < level (pairFst p)) :
     SourceLevels a.modular.determinant (program a leftTask rightTask).controller (fun _ => 1) tasks level := by
-  intro root q t hq hs ht hh hn hz
-  change (program a leftTask rightTask).controller.needs
-    (((program a leftTask rightTask).controller.reference (answer a.modular.determinant))^[t]
-      (SingleCall.Program.initial (payload q))) = true at hn
-  change isZero ((program a leftTask rightTask).controller.query
-    (((program a leftTask rightTask).controller.reference (answer a.modular.determinant))^[t]
-      (SingleCall.Program.initial (payload q)))) = false at hz
-  change level (origin ((program a leftTask rightTask).controller.query
-    (((program a leftTask rightTask).controller.reference (answer a.modular.determinant))^[t]
-      (SingleCall.Program.initial (payload q))))) < level (origin q)
-  rw [needs_iterate] at hn
-  rw [query_iterate] at hz ⊢
-  have ho : origin q = pairFst (payload q) := by
-    rcases hs with ⟨h0, hd, hf, hm⟩
-    simp only [origin, h0, hd, hf, hm, Bool.false_eq_true, ite_false]
-  rw [ho]
-  cases hsel : selectRight a (payload q) with
+  apply singleCall_source_levels
+  intro p hn hz
+  change isZero (if selectRight a p then rightTask (rightQuery p) else leftTask (leftQuery a p)) = false at hz
+  change level (origin (if selectRight a p then rightTask (rightQuery p) else leftTask (leftQuery a p))) < level (pairFst p)
+  cases hsel : selectRight a p with
   | true =>
     simp only [hsel, ite_true] at hz ⊢
     exact hr _ hn hsel hz
@@ -66,36 +54,8 @@ theorem source_state_bound (tasks : List Bool → List Bool → Prop)
     (root q : List Bool) (hq : tasks root q) (hs : SelectedSource q) (t : ℕ) :
     (SingleCall.encState (((program a leftTask rightTask).controller.reference (answer a.modular.determinant))^[t]
       (SingleCall.Program.initial (payload q)))).length ≤ 3 * K root + 4 := by
-  have hp : (payload q).length ≤ q.length := by
-    simp only [payload, List.length_drop]
-    omega
-  have hw := hp.trans (hword root q hq)
-  have hb : request a (payload q) = true →
-      (answer a.modular.determinant ((program a leftTask rightTask).query (payload q))).length ≤ K root := by
-    intro hn
-    rcases hs with ⟨hz, hd, hf, hm⟩
-    have hh : (BerkowitzPolynomial.TaskDispatch.controller a.modular.determinant (program a leftTask rightTask).controller).halted
-        (((BerkowitzPolynomial.TaskDispatch.controller a.modular.determinant (program a leftTask rightTask).controller).reference
-          (answer a.modular.determinant))^[0]
-          ((BerkowitzPolynomial.TaskDispatch.controller a.modular.determinant (program a leftTask rightTask).controller).initial q)) = false := by
-      rw [halted_iterate]
-      simp only [hz, hd, hf, hm, Bool.false_eq_true, ite_false, Function.iterate_zero, id_eq,
-        SingleCall.Program.controller, SingleCall.Program.initial, program, hn, Bool.not_true]
-    have hn' : (BerkowitzPolynomial.TaskDispatch.controller a.modular.determinant (program a leftTask rightTask).controller).needs
-        (((BerkowitzPolynomial.TaskDispatch.controller a.modular.determinant (program a leftTask rightTask).controller).reference
-          (answer a.modular.determinant))^[0]
-          ((BerkowitzPolynomial.TaskDispatch.controller a.modular.determinant (program a leftTask rightTask).controller).initial q)) = true := by
-      rw [BerkowitzPolynomial.TaskDispatch.needs_iterate]
-      simp only [hz, hd, hf, hm, Bool.false_eq_true, ite_false, Function.iterate_zero, id_eq,
-        SingleCall.Program.controller, SingleCall.Program.initial, program, hn]
-    have hc := hclosed root q 0 hq (Nat.zero_le _) hh hn'
-    rw [BerkowitzPolynomial.TaskDispatch.query_iterate] at hc
-    simp only [hz, hd, hf, hm, Bool.false_eq_true, ite_false, Function.iterate_zero, id_eq,
-      SingleCall.Program.controller, SingleCall.Program.initial] at hc
-    exact hanswer root _ hc
-  have h := (program a leftTask rightTask).state_length_of_bound (answer a.modular.determinant)
-    (payload q) t (K root) hb
-  omega
+  exact singleCall_source_state_bound a.modular.determinant (program a leftTask rightTask)
+    tasks hclosed K hword hanswer root q hq hs t
 
 /-- Uniform native coefficient access for this concrete Canny source stage.
 Child semantics, source-level decreases, query closure, and common task and
@@ -116,14 +76,10 @@ theorem evaluator (ha : a.ControlsPolyTime) (hlFP : leftTask ∈ FP) (hrFP : rig
       determinantFields (F := F.modular.determinant) (payload q) ≤ M root)
     (hmoment : ∀ root q, tasks root q → SelectedMoment q →
       momentFields (F := F.modular.determinant) (payload q) ≤ M root) : SpaceFunction F.value := by
-  have E := evaluator_of_source_levels a.modular.determinant (program a leftTask rightTask).controller
+  have E := singleCall_evaluator a.modular.determinant (program a leftTask rightTask)
     (a.modular.determinant_controls (a.modular_controlsWithCoefficients ha)) (certificates a ha leftTask rightTask hlFP hrFP)
-    (fun _ => 1) (halted_after a leftTask rightTask (answer a.modular.determinant))
-    (output_when_halted a leftTask rightTask (answer a.modular.determinant) hl hr)
-    tasks level H K M (fun root => 3 * K root + 4) (fun _ => 1) hH hK hM
-    (((UnaryFn.const 3).mul hK).add (UnaryFn.const 4)) (BinaryFn.const 1)
-    hroot hlevels hword hanswer hclosed hlevel hdet hmoment (fun _ _ _ _ => Nat.le_refl 1)
-    (fun root q hq hs t _ => source_state_bound a leftTask rightTask tasks hclosed K hword hanswer root q hq hs t)
+    (value_eq a leftTask rightTask (answer a.modular.determinant) hl hr)
+    tasks level H K M hH hK hM hroot hlevels hword hanswer hclosed hlevel hdet hmoment
   exact (determinant_reader a.modular.determinant E).congr (funext F.modular_value)
 
 end LeanCanny.Algebra.CannyResultantBits.RecursiveStage

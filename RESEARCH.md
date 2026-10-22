@@ -4322,9 +4322,42 @@ task/reply bound K. Pointwise decreases for the two actual original-polynomial
 task writers imply `SourceLevels`. The uniform evaluator then returns Canny
 resultant coefficient residues from explicit child-task semantic identities,
 query closure, context-level decreases, and common task/reply/metadata bounds.
-Base and square-free source stages, actual balanced-parameter child contexts,
-and their quantitative graph contracts remain open. This conditional reader
+The square-free leaf extension below supplies a base branch. Actual balanced-parameter
+child contexts and their quantitative graph contracts remain open. This conditional reader
 does not establish the complete Canny coefficient graph or ETR in PSPACE.
+
+## Square-free leaves in the recursive determinant family
+
+`SquarefreeLeafMatrix` places the existing scaled square-free polynomial in a
+one-by-one matrix. It proves the entry protocol, native coefficient access,
+and equality of determinant coefficients with the certified square-free
+reader. Arbitrary coefficient degrees are allowed; the leaf matrix dimension
+is always one. Original leaf degree/height metadata and original coefficient
+readers come from `SeparableBits.Readers`.
+
+`BerkowitzPolynomialBranch` selects a complete determinant family by its
+original context, including dimension, modulus, degree, matrix, and coefficient
+access. `SingleCall.Program.withLeaf` uses an FP leaf selector and a native
+space-bounded immediate output. Leaves request no child and introduce no extra
+state or execution-clock field. Internal nodes retain their original query
+and reply postprocessing.
+
+`CannySquarefreeLeaves` instantiates both constructions with square-free leaf
+matrices and the actual Canny resultant Sylvester matrices. The source's value
+agrees with the mixed matrix entry protocol. Native local certificates include
+square-free preprocessing and binomial postprocessing; internal original
+coefficient answers need no computation certificate. Only nonleaf requests
+require child-context level decreases. `BerkowitzSingleCallSource` derives the
+logical budget one and source-state bound `3*K+4` from query closure and the
+common task/reply bound K, for this and the earlier pure-resultant source.
+The earlier resultant evaluator now reuses these proofs.
+
+One uniform native machine evaluates the mixed determinant family under the
+stated child-task semantic identities, context-level decreases, query closure,
+and common metadata/task/reply bounds. The actual balanced-tree contexts,
+validated degree and direction metadata, quantitative graph contracts, and
+specialization to the tube annihilators remain open. This is a conditional
+mixed-stage reader, not the complete ETR PSPACE theorem.
 
 ## Savitch's theorem and Canny
 
