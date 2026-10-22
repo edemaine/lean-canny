@@ -499,3 +499,16 @@ example (source active modulus degree : List Bool → List Bool)
     ComputableTidilyInPolySpace
       (LeanCanny.ETR.TubeRegularJacobianBits.value source active modulus degree) encBits encBits :=
   (LeanCanny.ETR.TubeRegularJacobianBits.evaluator source active modulus degree hs ha hm hd).computable
+
+/-! The exact nonsingular-sample test has no global finite-fiber premise. -/
+example (S : LeanCanny.ETR.TubeNativeAnnihilator.Source) :
+    {c | ∃ z, LeanCanny.ETR.TubeSimpleSampling.SimpleSample S c z} ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.ETR.TubeSimpleSampling.simpleSampleLanguage_mem_PSPACE S
+
+example : LeanCanny.ETR.TubeSimpleSampling.universalLanguage ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.ETR.TubeSimpleSampling.universalLanguage_mem_PSPACE
+
+example (S : LeanCanny.ETR.TubeNativeAnnihilator.Source) :
+    {c | ∃ z, LeanCanny.ETR.TubeLevelPacket.CompiledSample
+      (S.packet c) (S.mask c) (S.projection c) (S.level c) z ∧ S.Simple c z} ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.ETR.TubeSimpleSampling.compiledSimpleSampleLanguage_mem_PSPACE S

@@ -280,4 +280,129 @@ theorem packet_isInvertible (c mask : List Bool) (ell : ℕ → ℤ) (alpha : �
     simp [assignment, chartSpatial, TubeNativeSampleGeometry.extend,
       TubeCompiledAffineRoots.decodedPoint, TubeMacaulay.values, TubeLevelPacket.parameters]
 
+
+private theorem rowCode_injective (bits : List Bool) :
+    Function.Injective (TubeCompiledAffineRoots.regularRowCode bits) := by
+  intro i j hij
+  cases i with
+  | none =>
+    cases j with
+    | none => rfl
+    | some j => simp [TubeCompiledAffineRoots.regularRowCode] at hij
+  | some i =>
+    cases j with
+    | none => simp [TubeCompiledAffineRoots.regularRowCode] at hij
+    | some j =>
+      have h : TubeProjectionRow.code (TubeIndexed.arity bits) i =
+          TubeProjectionRow.code (TubeIndexed.arity bits) j := by
+        simpa only [TubeCompiledAffineRoots.regularRowCode, Nat.add_right_cancel_iff] using hij
+      have H := congrArg (TubeProjectionRow.decode (TubeIndexed.arity bits)) h
+      simpa only [TubeProjectionRow.decode_code] using congrArg some H
+
+private noncomputable def rowIndexEquiv (bits : List Bool) :
+    TubeRegularSource.Index bits ≃ Fin (pointCount (TubeIndexed.arity bits) + 1) :=
+  Equiv.ofBijective (fun i => ⟨TubeCompiledAffineRoots.regularRowCode bits i,
+    TubeCompiledAffineRoots.regularRowCode_lt bits i⟩)
+    ((Fintype.bijective_iff_injective_and_card _).mpr ⟨fun _ _ h =>
+      rowCode_injective bits (congrArg Fin.val h), by
+      rw [Fintype.card_fin, Fintype.card_option, TubePolynomial.projection_count]
+      unfold TubeIndexed.arity pointCount constraintCount
+      simp only [Fintype.card_fin]
+      omega⟩)
+
+section Converse
+open TubeCharacteristicQuotient
+variable (source active : List Bool → List Bool)
+  (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool)
+  (epsilon : ℝ)
+  (hd : ∀ i, i < TubeParameter.parameterCount (source c) →
+    (d c i).eval₂ (Int.castRingHom ℝ) epsilon ≠ 0)
+
+include hd in
+lemma nativeDerivative_injective_of_regular (a : RegularChart (source c) ℝ)
+    (hJac : (fderiv ℝ (regularSystem source active n d ell c epsilon) a).IsInvertible) :
+    Function.Injective (nativeDerivative (source c)
+      (activeSet (TubeIndexed.arity (source c)) (active c))
+      (TubeCleared.parameterMap (source c) (n c) (d c) (Int.castRingHom ℝ) epsilon)
+      (chartSpatial (source c) a)) := by
+  apply LinearMap.ker_eq_bot.mp
+  apply LinearMap.ker_eq_bot'.mpr
+  intro h hh
+  let e := (coordinateEquiv (source c)).trans
+    (TubeMacaulay.coordinateEquiv (TubeIndexed.arity (source c)))
+  let y : Fin (pointCount (TubeIndexed.arity (source c)) + 1) → ℝ := fun i => h (e.symm i)
+  let b : RegularChart (source c) ℝ := (projectionForm source c (ell c) y, y)
+  have hs : chartSpatial (source c) b = h := by
+    funext j
+    change h (e.symm (e j)) = h j
+    rw [Equiv.symm_apply_apply]
+  have hz : fderiv ℝ (regularSystem source active n d ell c epsilon) a b = 0 := by
+    funext i
+    refine Fin.cases ?_ (fun j => ?_) i
+    · have H := head_derivative source active n d ell c epsilon a b
+      change _ = headLinear (source c) (ell c) b at H
+      exact H.trans (by simp [headLinear, b, projectionForm])
+    · obtain ⟨k, hk⟩ := (rowIndexEquiv (source c)).surjective j
+      have hc : TubeCompiledAffineRoots.regularRowIndex (source c) k = j.succ := by
+        apply Fin.ext
+        exact congrArg (fun i : Fin (pointCount (TubeIndexed.arity (source c)) + 1) => i.val + 1) hk
+      have H := selected_derivative source active n d ell c epsilon hd a b k
+      rw [hc, hs] at H
+      exact H.trans ((congrArg (fun v : ℝ =>
+        TubeCleared.scale (source c) (d c) (Int.castRingHom ℝ) epsilon * v)
+          (congrFun hh k)).trans (mul_zero _))
+  have hb : b = 0 := hJac.injective (by simpa only [map_zero] using hz)
+  rw [← hs, hb, map_zero]
+
+include hd in
+/-- The actual full affine-chart derivative is invertible exactly when the
+native reciprocal/point Jacobian determinant does not vanish. -/
+theorem regularSystem_isInvertible_iff (a : RegularChart (source c) ℝ) :
+    (fderiv ℝ (regularSystem source active n d ell c epsilon) a).IsInvertible ↔
+    (TubeRegularJacobianBudget.polynomial (source c)
+      (activeSet (TubeIndexed.arity (source c)) (active c))).eval₂ (Int.castRingHom ℝ)
+        (assignment (source c)
+          (TubeCleared.parameterMap (source c) (n c) (d c) (Int.castRingHom ℝ) epsilon)
+          (chartSpatial (source c) a)) ≠ 0 := by
+  constructor
+  · intro hJac
+    rw [TubeRegularJacobianBudget.eval_polynomial]
+    apply IsUnit.ne_zero
+    apply (Matrix.isUnit_iff_isUnit_det _).mp
+    apply Matrix.mulVec_injective_iff_isUnit.mp
+    intro h k he
+    apply nativeDerivative_injective_of_regular source active n d ell c epsilon hd a hJac
+    funext j
+    have H := congrFun he j
+    simpa only [nativeDerivative, ContinuousLinearMap.pi_apply, ContinuousLinearMap.comp_apply,
+      derivative_variation, Matrix.mulVec, dotProduct] using H
+  · exact regularSystem_isInvertible source active n d ell c epsilon hd a
+
+end Converse
+
+/-- An exact packet version of the full-chart simplicity criterion. -/
+theorem packet_isInvertible_iff (c mask : List Bool) (ell : ℕ → ℤ) (alpha : ℝ)
+    (z : Fin (TubeParameter.spatialCount (pairFst c)) → ℝ) :
+    (fderiv ℝ (TubeCharacteristicQuotient.regularSystem pairFst (fun _ => mask)
+      TubeLevelPacket.numerator TubeLevelPacket.denominator (fun _ => ell) c alpha)
+        (TubeLevelPacket.projectionValue c z, fun j => z j.succ)).IsInvertible ↔
+      (TubeRegularJacobianBudget.polynomial (pairFst c)
+        (activeSet (TubeIndexed.arity (pairFst c)) mask)).eval₂ (Int.castRingHom ℝ)
+          (TubeNativeSampleGeometry.extend c alpha
+            (TubeCompiledAffineRoots.decodedPoint (pairFst c) z)) ≠ 0 := by
+  have H := regularSystem_isInvertible_iff pairFst (fun _ => mask)
+    TubeLevelPacket.numerator TubeLevelPacket.denominator (fun _ => ell) c alpha
+    (fun i _ => TubeLevelPacket.denominator_eval_ne_zero c i alpha)
+    (TubeLevelPacket.projectionValue c z, fun j => z j.succ)
+  have he : assignment (pairFst c)
+      (TubeCleared.parameterMap (pairFst c) (TubeLevelPacket.numerator c)
+        (TubeLevelPacket.denominator c) (Int.castRingHom ℝ) alpha)
+      (chartSpatial (pairFst c) (TubeLevelPacket.projectionValue c z, fun j => z j.succ)) =
+      TubeNativeSampleGeometry.extend c alpha (TubeCompiledAffineRoots.decodedPoint (pairFst c) z) := by
+    funext i
+    rcases i with _ | ((i | i) | p) <;>
+      simp [assignment, chartSpatial, TubeNativeSampleGeometry.extend,
+        TubeCompiledAffineRoots.decodedPoint, TubeMacaulay.values, TubeLevelPacket.parameters]
+  simpa only [he] using H
+
 end LeanCanny.ETR.TubeRegularJacobianChart

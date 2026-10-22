@@ -4883,8 +4883,9 @@ accepted tuple yields a true compiled sample without a finiteness hypothesis.
 With finite complex fibers at the chosen level, every compiled sample is
 covered, so `compiledSampleLanguage_mem_PSPACE` decides exactly that sample
 language. This removes the spurious-tuple gap in the standalone sign endpoint.
-Proving finite fibers and retained samples at this level remains necessary for
-the full ETR algorithm.
+This broader endpoint still needs finite fibers for completeness; the
+nonsingular endpoint below avoids that premise. Retained-sample existence at
+the selected level remains unresolved.
 
 `TubeCoordinateAnnihilatorRegular` transports the actual shifted root curve
 from one simple compiled chart root to every added projection. Its lowest
@@ -4899,6 +4900,18 @@ that the native integer determinant being nonzero makes its derivative
 invertible. The proof includes denominator clearing and the extra projection
 row. `mem_of_jacobian_ne_zero` then supplies sampler completeness directly
 from the concrete singularity polynomial, without a fiber-finiteness promise.
+
+`TubeJacobianFiniteSigns` streams the actual determinant as one positive or
+negative sign row, with its native coefficient reader and source-derived
+budgets. `TubeSimpleSampling` appends it to all regular equations and inactive
+constraints and takes a native PSPACE union of its two signs. Its language is
+exactly existence of a compiled sample with nonzero native determinant at the
+internally selected dyadic level, without any global finite-fiber premise.
+One such root supplies its coordinate coverage by persistence, even if other
+components are infinite. `universalLanguage` uses only the encoded packet and
+mask, with no user-supplied coefficient routines. The converse chart theorem
+proves equivalence with the analytic simple-root condition; the exact language
+and its PSPACE theorem are also exported using that condition.
 
 `GenericProjectionJacobian` differentiates the algebraically independent level
 and normalized direction parameters. The resulting matrix provides a right

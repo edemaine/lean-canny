@@ -48,6 +48,7 @@ import LeanCanny.ETR.TubeCoordinateAnnihilatorSigns
 import LeanCanny.ETR.TubeRegularFiniteSigns
 import LeanCanny.ETR.TubeNativeSampling
 import LeanCanny.ETR.TubeNativeSamplingRegular
+import LeanCanny.ETR.TubeSimpleSampling
 import LeanCanny.Algebra.GenericProjectionJacobian
 import LeanCanny.ETR.TubeRegularJacobianBudget
 import LeanCanny.Algebra.RowSpanEliminant

@@ -254,6 +254,13 @@ proves acceptance of every simple compiled sample without a global finiteness
 promise: one invertible chart Jacobian suffices for all coordinate originals.
 The actual integer Jacobian determinant supplies this condition through
 [TubeRegularJacobianChart](LeanCanny/ETR/TubeRegularJacobianChart.lean).
+[TubeSimpleSampling](LeanCanny/ETR/TubeSimpleSampling.lean) additionally tests
+its positive or negative sign and decides exactly existence of a compiled
+sample with nonzero native Jacobian determinant in PSPACE. This endpoint has
+no global finite-fiber premise; determinant nonvanishing is equivalent to the
+actual chart's derivative being invertible. All coordinate originals and
+coefficient readers are constructed internally. Its universal input stores just a packet
+and active mask.
 
 [GenericProjectionJacobian](LeanCanny/Algebra/GenericProjectionJacobian.lean)
 proves that every generic extended projection-critical root has an invertible
@@ -1475,10 +1482,10 @@ quantitative parameter selection, and the full ETR algorithm remain open.
 
 ## Next obligations
 
-1. Prove finite compiled fibers and retained samples at the internally selected
-   dyadic level. The combined native sampler already filters the actual regular
-   equations and inactive inequalities and proves exact correctness under
-   finiteness; the chosen level is not yet bounded by the geometric intervals.
+1. Prove retained nonsingular samples at the internally selected dyadic level.
+   The native sampler already decides that exact sample predicate without a
+   global finite-fiber promise. The chosen level is not yet bounded by the
+   geometric retained-sample interval.
 2. Prove source-size bounds for the epsilon feasibility witness, the delta
    feasibility gap, rational sampling directions, and the critical-value
    annihilants. The current geometric sampling and finiteness intervals are
