@@ -35,6 +35,9 @@ import LeanCanny.Algebra.BalancedTableSeparability
 import LeanCanny.Algebra.BalancedDirectionCorrect
 import LeanCanny.Algebra.PaddedAnnihilatorDirection
 import LeanCanny.Algebra.FiniteAnnihilatorCoefficientSpace
+import LeanCanny.Algebra.CanonicalPairSpace
+import LeanCanny.Algebra.RationalCoordinatePath
+import LeanCanny.Algebra.UnivariateRationalSubstitutionMatrix
 import LeanCanny.Algebra.BerkowitzTaskMetadata
 import LeanCanny.Algebra.BerkowitzTaskResidues
 import LeanCanny.Algebra.CannyBalancedTaskResidues

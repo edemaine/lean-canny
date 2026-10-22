@@ -4687,6 +4687,60 @@ Uniform flattened-coordinate readers, the tube-annihilator specialization,
 effective parameter selection, the full ETR PSPACE theorem, and later report
 results remain open.
 
+## Canonical subtree and pair-coordinate readers
+
+`BalancedTableSubtrees` extracts consistency at every valid height/index from
+the prepared root. `CanonicalNodeContext` caps a raw height at the finite
+count's binary size and a raw index at the layer width minus one. The layer
+width is unary FP, so normalization is FP on all words, including count zero.
+Every normalized context names a valid node.
+
+`CanonicalNodeSpace` prepares the complete table internally and gives exact
+degree and coefficient computations for that node in native space. Its family
+height is the existing original-source envelope; every node remains a
+separable integer polynomial. Checked-family readers expose the computed
+degree through a stored FP field, with the existing separable fallback on
+incorrect declarations.
+
+`SpaceDegreePair` makes this pattern reusable for already separable input
+families. Both source residues and both exact degree computations may use
+polynomial space. Their degrees are prepared into checked packets before
+the separating-direction scan and coordinate recovery run. There is no
+additional square-free normalization, so the output polynomials are exactly
+the canonical primitive-pair polynomials of the supplied inputs.
+
+`CanonicalPairSpace` applies the theorem to the two normalized children.
+The left numerator, right numerator, and common denominator have native
+space coefficient readers on every word. At a valid parent they equal the
+pair coordinates in `BalancedPrimitiveTree.flat`. If T is the common
+source-height envelope, both coordinate degrees are at most T cubed and
+all three coefficient masses are at most `2^(T^10)`. The binary budget writers
+are native FP; no intermediate degree or coefficient oracle is assumed.
+
+## Fixed-exponent coordinate paths
+
+`UnivariateRationalCompositionWith` permits any common clearing exponent
+at least the outer coordinate's degree. Evaluation agrees with ordinary
+rational composition wherever the inner denominator is nonzero; denominator
+nonvanishing, degree, and mass bounds are proved. One composition also has
+native coefficient readers from its four space-bounded polynomial children.
+The formula `clear_coeff` is linear in the outer polynomial's coefficients.
+`UnivariateRationalSubstitutionMatrix` proves that one padded matrix acting
+on the outer coefficient row vector implements this substitution exactly.
+
+`RationalCoordinatePath` chooses exponent `D^j` at stage j when all stage
+degrees are bounded by D. A k-stage path has degree at most `D^k`. If D is at
+least one and stage masses are at most `2^b`, both path masses are at most
+`2^(k*D^k*b)`. These budgets have native binary writers for binary D,b and
+unary k. The path denominator is nonzero and evaluation equals the nested
+rational maps under the explicit recursive nonvanishing predicate.
+
+The next step is to assemble the substitution matrices into a layered
+product and supply its native entry evaluator from the canonical pair
+readers. This would compute a whole path without recursive exact-degree
+scans for intermediate flattened coordinates. The uniform path evaluator
+and its finite-tree decoding specialization are not yet proved.
+
 ## Savitch's theorem and Canny
 
 Savitch is useful for reachability in an implicitly represented exponential graph,

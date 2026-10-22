@@ -61,6 +61,23 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
     ComputableTidilyInPolySpace (LeanCanny.Algebra.FiniteAnnihilatorBits.coefficient F n hne) encBits encBits :=
   (LeanCanny.Algebra.FiniteAnnihilatorBits.coefficientEvaluator F A n D b hn hD hb hne hdegree hheight).computable
 
+/-! Every canonical pair coordinate uses original readers and source bounds.
+Subtree degrees are computed in space; no FP exact-degree oracle is supplied. -/
+example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (n D b : List Bool → ℕ) (hn : LeanCanny.UnaryFn n)
+    (hD : ComputableTidilyInPolyTime D encBits encNat) (hb : ComputableTidilyInPolyTime b encBits encNat)
+    (hne : ∀ c i, i < n c → F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≠ 0)
+    (hdegree : ∀ c i, i < n c → (F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i))).natDegree ≤ D c)
+    (hheight : ∀ c i, i < n c → F.height (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≤ b c) :
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun p => (LeanCanny.Algebra.CanonicalPairBits.leftCoordinate F n hne p).numerator)) encBits encBits ∧
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun p => (LeanCanny.Algebra.CanonicalPairBits.rightCoordinate F n hne p).numerator)) encBits encBits ∧
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun p => (LeanCanny.Algebra.CanonicalPairBits.leftCoordinate F n hne p).denominator)) encBits encBits := by
+  have E := LeanCanny.Algebra.CanonicalPairBits.coordinateEvaluators F n D b hne hdegree hheight A hn hD hb
+  exact ⟨E.1.computable, E.2.1.computable, E.2.2.computable⟩
+
 /-! Degree-table preparation uses the original square-free leaf computation.
 The serializer accepts arbitrary native space children, not just FP readers. -/
 example (A W : List Bool → ℕ) (e : List Bool → ℕ → ℕ)
