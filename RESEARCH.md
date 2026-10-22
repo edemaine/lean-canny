@@ -4987,15 +4987,31 @@ and finite fibers follow without radical or finiteness assumptions.
 `PolynomialLimitAnnihilator` removes the lowest parameter power before taking
 limits. `CoerciveAnnihilatorLimit` combines this with the constructed critical
 samples and `IntegerRootBound` to bound a root by the masses of integer
-coordinate annihilants. This last bridge still accepts the annihilants and
-their mass budget; constructing them with source bounds is the next obligation.
+coordinate annihilants. `CoerciveCriticalHomogenization` constructs the actual gradient and coordinate
+rows over ℤ[T][s], rules out infinity for s≠0, and gives a complex specialization
+without projective roots. `ProjectiveMinorEliminant` selects a nonzero maximal
+minor there; all other common projective roots annihilate it. The actual
+coefficient budgets in `CoerciveCriticalBounds` and determinant bounds give
+`CoerciveCoordinateEliminant.exists_annihilator` with no supplied annihilator,
+finiteness, or simplicity premise. `CoerciveRootRadius` therefore bounds a real
+root directly from the original degree and coefficient mass whenever a root
+exists. `CoerciveRadiusBits` bounds the radius and penalty exponents' binary
+sizes by explicit quadratics in n, D.size, and b.size for mass(q)≤2^b.
+
+`CoerciveApproximation` proves that a root in a fixed penalty sublevel is
+equivalent to eventual bounded critical samples with squared residual≤sB.
+`CoerciveRootRadius.root_iff_eventually_bounded_samples` supplies B internally
+as a power of two with a source-budgeted exponent. This gives a one-parameter
+semantic route to ETR, bypassing the geometric direction and nested tube
+parameter choices. The native symbolic-coordinate and sign pipeline needed to
+decide that predicate is still incomplete.
 `RowSpanSpecialization` proves that one surjective specialization selects a
 nonzero maximal minor and gives generic row-span certificates, even when the
 specializing coefficient map is noninjective.
 
 ## Effective parameter selection still needed
 
-The remaining quantitative choices are separate from coefficient evaluation:
+For the original tube-sampling route, these quantitative choices remain:
 
 * Choose a source-bounded positive epsilon for which the compact feasible set
   is nonempty whenever the input is satisfiable. The converse is already
@@ -5025,8 +5041,14 @@ and separability persist under ordinary real alpha evaluation throughout a
 computed positive dyadic interval: original leading-coefficient and selected
 subresultant nonvanishing follow from the same mass estimates. This handles
 noninjective evaluation maps, rather than incorrectly evaluating the fraction
-field at an algebraic alpha. Native symbolic readers, primitive-pair recovery,
-and balanced symbolic preparation are still needed.
+field at an algebraic alpha. `SymbolicPrimitivePair` and its five bounds/specialization modules now also
+construct a bounded symbolic direction, resultant, and coordinate recovery
+polynomials, with degree and mass bounds. Both encoding and decoding persist
+on a computed small positive interval under ordinary, possibly noninjective,
+specialization. `SymbolicPrimitivePairRaw` derives all squarefree, degree, and
+separability guards from arbitrary nonzero original bivariates and their
+coefficient-mass bounds. Native symbolic readers and balanced preparation
+are still needed.
 
 The symbolic-alpha alternative is not connected yet. `InfinitesimalRootPSPACE`
 already decides eventual root/sign feasibility and computes a stability bound

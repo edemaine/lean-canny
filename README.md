@@ -1484,14 +1484,20 @@ The symbolic squarefree leaf construction is also verified in
 [`SymbolicScaledSquarefreeSmall`](LeanCanny/Algebra/SymbolicScaledSquarefreeSmall.lean)
 and its dependencies. It derives degree and mass bounds and a common small
 positive interval preserving ordinary specialization, separability, and roots.
-The native symbolic primitive-coordinate pipeline remains incomplete.
+[`SymbolicPrimitivePairRaw`](LeanCanny/Algebra/SymbolicPrimitivePairRaw.lean)
+also constructs bounded symbolic resultants and rational recovery coordinates,
+with both directions of the real-root correspondence on a computed interval.
+Native readers and balanced symbolic preparation remain incomplete.
 
 [`CoercivePolynomialSampling`](LeanCanny/Geometry/CoercivePolynomialSampling.lean)
 constructs critical minimizers converging to an original polynomial root.
 [`CoerciveCriticalFibers`](LeanCanny/Algebra/CoerciveCriticalFibers.lean)
 proves their gradient fibers finite from the actual leading coordinate powers.
-The limit and integer root-bound bridge is verified; source-bounded integer
-annihilants for these fibers are still needed for an effective witness radius.
+[`CoerciveRootRadius`](LeanCanny/Geometry/CoerciveRootRadius.lean) now constructs
+integer annihilants internally and proves an effective root radius. The radius
+and penalty exponents have polynomial binary-size bounds. Real-root existence
+is equivalent to eventual bounded approximate critical samples with one
+parameter; connecting that predicate to native symbolic sign evaluation remains.
 
 ## Next obligations
 
