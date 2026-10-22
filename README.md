@@ -1,9 +1,12 @@
 # lean-canny
 
-A Lean formalization of the existential theory of the reals (ETR) in PSPACE,
-from John Canny's 1988 report
-[*Some Algebraic and Geometric Computations in PSPACE*](https://www2.eecs.berkeley.edu/Pubs/TechRpts/1988/6041.html).
-The report is saved as [`canny-tr.pdf`](canny-tr.pdf).
+A Lean formalization of the theorem that the
+Existential Theory of the Reals (ETR) is in PSPACE,
+or stated in terms of complexity-theory classes: ∃ℝ ⊆ PSPACE.
+This theorem is from John Canny's 1988 technical report
+[*Some Algebraic and Geometric Computations in PSPACE*](https://www2.eecs.berkeley.edu/Pubs/TechRpts/1988/6041.html)
+(stored in this repo as [`canny-tr.pdf`](canny-tr.pdf)), published as a
+[STOC ’88 paper](https://doi.org/10.1145/62212.62257) (pp. 460–467).
 
 The main results in [`ETR/CoercivePSPACE.lean`](LeanCanny/ETR/CoercivePSPACE.lean) are:
 
@@ -23,49 +26,16 @@ connectivity, and motion-planning algorithms remain outside the completed result
 The proof uses a coercive one-parameter sampling construction; it does not
 formalize every intermediate construction in the report verbatim.
 
+The formalization also identifies a [gap in Canny's coordinate-recovery
+argument](RESEARCH.md#gap-in-cannys-symmetric-coordinate-recovery): three
+collinear solutions can produce a cubic GCD where the construction requires a
+linear one, regardless of the projection coefficients. The completed PSPACE
+proof avoids this failed step.
+
 For an independently readable, checked statement, see
 [`Abstract.lean`](LeanCanny/Abstract.lean). A reader can inspect its definitions
 and theorem statements to assess the claimed result; Lean verifies the proofs
 through [`AbstractBridge.lean`](LeanCanny/AbstractBridge.lean) and the development.
-Import it with `import LeanCanny.Abstract`, or build it with
-`lake build --wfail LeanCanny.Abstract`. It is also included in the default build.
-
-## Build and verification
-
-Install [elan](https://github.com/leanprover/elan), then run:
-
-```sh
-lake update
-lake exe cache get
-lake build
-```
-
-[`lean-toolchain`](lean-toolchain) and [`lake-manifest.json`](lake-manifest.json)
-record the versions used. The public entry point is [`LeanCanny.lean`](LeanCanny.lean).
-
-Complexitylib moved to `cslib-community/complexitylib` from its temporary
-`complexitylib2` repository. This project retains the checked revision
-`cb1b7ce8`; that revision still declares the Lake package `complexitylib2`.
-The dependency URLs use the canonical repository. Updating to the renamed
-`complexitylib` package also requires advancing the dependency pins.
-
-For stricter verification:
-
-```sh
-lake build --wfail
-lake env lean scripts/CheckAxioms.lean
-lake env lean scripts/CheckAbstract.lean
-lake env lean scripts/CheckGrammar.lean
-lake env lean scripts/CheckSpaceFoundation.lean
-lake env lean scripts/CheckPolyTimeFoundation.lean
-```
-
-The axiom audit checks declarations in the `LeanCanny` namespace, local Nat
-codec extensions, and their transitive dependencies, allowing only Lean's
-standard `propext`, `Classical.choice`, and `Quot.sound` axioms. The foundation
-checks enforce the native Complexitylib time and space interfaces and reject
-legacy machine dependencies. `CheckAbstract` also follows public definitions
-and statement dependencies to reject hidden implementation references.
 
 ## Proof outline
 
@@ -130,7 +100,48 @@ proof details, and the unused tube route's precise gaps.
 The Sturm–Tarski proof adaptation and its changes are documented in
 [`STURM_SOURCES.md`](STURM_SOURCES.md).
 
-Source PDF: [Berkeley archive](https://www2.eecs.berkeley.edu/Pubs/TechRpts/1988/Archive/CSD-88-439.pdf).
+The report PDF [`canny-tr.pdf`](canny-tr.pdf) is from the
+[Berkeley Technical Reports archive](https://www2.eecs.berkeley.edu/Pubs/TechRpts/1988/Archive/CSD-88-439.pdf).
 The downloaded file has 936,246 bytes and SHA-256
 `7606d41dea23ac1160562a759c196267906d8aec0f754cd4998fdd14fcd185f8`.
 The report retains its original rights; the source-code license does not apply to it.
+
+## Build and verification
+
+Install [elan](https://github.com/leanprover/elan), then run:
+
+```sh
+lake update
+lake exe cache get
+lake build
+```
+
+[`lean-toolchain`](lean-toolchain) and [`lake-manifest.json`](lake-manifest.json)
+record the versions used. The public entry point is [`LeanCanny.lean`](LeanCanny.lean).
+
+Import the formal abstract with `import LeanCanny.Abstract`, or build it with
+`lake build --wfail LeanCanny.Abstract`. It is also included in the default build.
+
+Complexitylib moved to `cslib-community/complexitylib` from its temporary
+`complexitylib2` repository. This project retains the checked revision
+`cb1b7ce8`; that revision still declares the Lake package `complexitylib2`.
+The dependency URLs use the canonical repository. Updating to the renamed
+`complexitylib` package also requires advancing the dependency pins.
+
+For stricter verification:
+
+```sh
+lake build --wfail
+lake env lean scripts/CheckAxioms.lean
+lake env lean scripts/CheckAbstract.lean
+lake env lean scripts/CheckGrammar.lean
+lake env lean scripts/CheckSpaceFoundation.lean
+lake env lean scripts/CheckPolyTimeFoundation.lean
+```
+
+The axiom audit checks declarations in the `LeanCanny` namespace, local Nat
+codec extensions, and their transitive dependencies, allowing only Lean's
+standard `propext`, `Classical.choice`, and `Quot.sound` axioms. The foundation
+checks enforce the native Complexitylib time and space interfaces and reject
+legacy machine dependencies. `CheckAbstract` also follows public definitions
+and statement dependencies to reject hidden implementation references.

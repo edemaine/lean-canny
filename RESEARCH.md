@@ -48,6 +48,37 @@ Mathlib's intermediate value theorem. The native computational layer reduces
 root/sign queries to streamed determinant signs, with degree and coefficient
 budgets and all original-source reader costs included.
 
+## Gap in Canny's symmetric coordinate recovery
+
+Canny's report, printed pages 6–7, equations (13)–(16), recovers coordinates by
+shifting projection coefficients in opposite directions and taking a GCD.
+The assertion that suitable coefficient choices always make this GCD linear
+fails for a simple finite system. This is a gap in the proposed construction;
+it does not refute the PSPACE upper bound or the existence statement of
+Lemma 2.2.
+
+[`SymmetricRecoveryDegeneracy`](LeanCanny/Algebra/SymmetricRecoveryDegeneracy.lean)
+formalizes the example `x³ - x = 0, y = 0`. Its solutions are `(-1,0)`, `(0,0)`,
+and `(1,0)`, and its homogenization has no nonzero solution at infinity. For
+projection `L(x,y) = c₀x + c₁y`, the eliminant is
+`q(X) = X(X-c₀)(X+c₀)`, with distinct roots whenever `c₀ ≠ 0`.
+Changing `c₁` by either `+1` or `-1` leaves q unchanged. At the middle projected
+root zero, the recovery GCD is therefore `gcd(q(X), q(-X))`. Since
+`q(-X) = -q(X)`, this GCD has degree three, rather than one. The theorem
+`symmetric_pair_not_linear` verifies the failure for every coefficient choice.
+
+The obstruction is the midpoint relation: every linear projection preserves
+`L(-1,0) + L(1,0) = 2L(0,0)`. The corresponding instance of condition (14)
+is identically zero in the projection coefficients. Thus separating the three
+projected roots, or choosing infinitesimal coefficients, does not remove these
+spurious recovery roots as claimed on page 7.
+
+[`AsymmetricProjection`](LeanCanny/Algebra/AsymmetricProjection.lean) and
+[`AsymmetricCoordinateRecovery`](LeanCanny/Algebra/AsymmetricCoordinateRecovery.lean)
+prove bounded asymmetric recovery for finite point sets. The completed ETR
+proof uses the coercive sampling and certified primitive-coordinate construction
+described below; it does not assume the failed symmetric-recovery claim.
+
 ## Encoded statement
 
 [`ETR.Syntax`](LeanCanny/ETR/Syntax.lean) uses integer polynomial expressions
