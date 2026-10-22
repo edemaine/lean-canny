@@ -112,6 +112,23 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
 
 /-! Degree-table preparation uses the original square-free leaf computation.
 The serializer accepts arbitrary native space children, not just FP readers. -/
+section FiniteRootSigns
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+
+/-! The complete finite-root sign endpoint takes an arbitrary native residue
+child and upper bounds. No exact degree or rational-coordinate reader is given. -/
+example (F : SeparableBits.Family) (n D b : List Bool → ℕ)
+    (S : FiniteLeafSignBits.Source n) (A : S.Access)
+    (hn : UnaryFn n) (hD : BinaryFn D) (hb : BinaryFn b)
+    (hne : ∀ c i, i < n c → F.polynomial (pair c (BinaryNatCode.encode i)) ≠ 0)
+    (hd : ∀ c i, i < n c → (F.polynomial (pair c (BinaryNatCode.encode i))).natDegree ≤ D c)
+    (hm : ∀ c i, i < n c → coefficientMass (F.polynomial (pair c (BinaryNatCode.encode i))) ≤ 2 ^ b c)
+    (E : ComputableTidilyInPolySpace (PrimitivePairBits.coefficient F.polynomial) encBits encBits) :
+    FiniteLeafSignBits.finiteSignLanguage F n S ∈ Cslib.Complexity.PSPACE encBits :=
+  FiniteLeafSignBits.finiteSignLanguage_mem_PSPACE_from_residues F n D b hne hd hm S A hn hD hb ⟨E⟩
+
+end FiniteRootSigns
+
 example (A W : List Bool → ℕ) (e : List Bool → ℕ → ℕ)
     (hA : ComputableTidilyInPolyTime A encBits encUnary) (hW : ComputableTidilyInPolyTime W encBits encUnary)
     (read : List Bool → List Bool) (R : ComputableTidilyInPolySpace read encBits encBits)

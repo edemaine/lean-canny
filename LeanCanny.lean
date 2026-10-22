@@ -42,6 +42,11 @@ import LeanCanny.Algebra.RationalCoordinatePathSpace
 import LeanCanny.Algebra.FiniteLeafCoordinateFiltering
 import LeanCanny.ETR.TubeFiniteLeafSubstitution
 import LeanCanny.Geometry.EffectiveRegularPolynomialLevels
+import LeanCanny.Algebra.FiniteLeafSignAppend
+import LeanCanny.ETR.TubeFiniteLeafSigns
+import LeanCanny.ETR.TubeCoordinateAnnihilatorSigns
+import LeanCanny.ETR.TubeRegularFiniteSigns
+import LeanCanny.Computation.FiniteBinaryEnvelope
 import LeanCanny.Algebra.BerkowitzTaskMetadata
 import LeanCanny.Algebra.BerkowitzTaskResidues
 import LeanCanny.Algebra.CannyBalancedTaskResidues

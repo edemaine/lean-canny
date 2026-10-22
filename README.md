@@ -213,6 +213,39 @@ instantiates the actual integer tube constraints with these native readers and
 proves zero and sign preservation at parameter roots. Effective parameter
 selection and the full ETR PSPACE theorem remain open.
 
+[FiniteLeafSignResidue](LeanCanny/Algebra/FiniteLeafSignResidue.lean)
+proves native PSPACE feasibility of streamed polynomial sign constraints on
+finite tuples of original univariate roots. Original residue readers, unary
+coordinate/constraint counts, and binary degree/mass bounds suffice. Exact
+original degrees are computed into a checked table in polynomial space;
+all rational-coordinate and sign-query readers are then constructed internally.
+Sources can be reindexed and concatenated with their native certificates.
+[TubeFiniteLeafSigns](LeanCanny/ETR/TubeFiniteLeafSigns.lean) instantiates the
+actual tube constraints with this procedure.
+
+[TubeCoordinateAnnihilator](LeanCanny/ETR/TubeCoordinateAnnihilator.lean)
+constructs integer annihilants for every compiled coordinate at a rational
+level, including reciprocal coordinates and singular roots. It uses the lowest
+full determinant, with degree and nonvanishing bounds inherited from the
+characteristic quotient. The uniform coefficient family and mass budgets
+include native determinant, lowest-index, and rational-specialization costs.
+Large rational constants may be given by modular readers, so their full
+numerators and denominators need not be stored. The complete validated sampler
+and effective epsilon/delta/direction choices are still open.
+
+[TubeCoordinateAnnihilatorDyadic](LeanCanny/ETR/TubeCoordinateAnnihilatorDyadic.lean)
+selects a common binary FP exponent and supplies nonzero annihilants at its
+implicit dyadic level, including their native readers and mass bounds.
+[TubeCoordinateAnnihilatorSigns](LeanCanny/ETR/TubeCoordinateAnnihilatorSigns.lean)
+proves native PSPACE feasibility of the actual tube signs on tuples of these
+roots, deriving every original algebraic reader and budget internally.
+[TubeRegularFiniteSigns](LeanCanny/ETR/TubeRegularFiniteSigns.lean) separately
+supplies the actual integer regular equations in reciprocal, point, direction,
+and perturbation variables, with a complete native zero-sign test from original
+annihilant residues. Finiteness and retained-sample existence at the selected
+level, the combined validated sampler, and the effective outer parameter
+choices remain open.
+
 P and all project polynomial-time reductions now use Complexitylib2 directly,
 through [PolyTime](LeanCanny/Computation/PolyTime.lean). This includes the defining
 reduction for ∃ℝ, normalization/compiler reductions, and PSPACE reduction closure.
@@ -336,7 +369,7 @@ exponential-time-child experiment that motivated this choice.
 | [`ETR.TubeLevelCompiledSampling`](LeanCanny/ETR/TubeLevelCompiledSampling.lean), [`TubeLevelEliminantSampling`](LeanCanny/ETR/TubeLevelEliminantSampling.lean) | ETR is equivalent to stored rational packets with actual compiled samples and positive inactive signs, finite fibers over all real extensions, and nonzero lowest-coefficient eliminants annihilating their projection values. The packet and active mask are fixed; the nonvanishing interval may depend on the added integer linear projection. An explicit dyadic threshold and padded-matrix degree bound also bound all distinct compiled projection values, including singular roots. Source-size parameter bounds, effective selection, and effective coordinate recovery remain open. The qualitative rational-level decoding is supplied below. |
 | [`ETR.TubeFiniteSystemBaseChange`](LeanCanny/ETR/TubeFiniteSystemBaseChange.lean), [`TubeLevelCoordinates`](LeanCanny/ETR/TubeLevelCoordinates.lean) | At every rational level with finite compiled fibers, the actual rational system has an integer univariate representation complete over the reals. Nonzero integer parameter polynomials and rational coordinate formulas, with denominators nonzero at parameter roots, recover every compiled point. ETR is equivalent to these decoded samples with positive inactive signs at sufficiently small rational levels. The representation is existential and may vary with the level and linear projection; its coefficient-height bounds, effective construction, and relation to the computed lowest-coefficient eliminant remain open. Source-derived degree bounds at common small levels appear below. |
 | [`ETR.TubeLevelSignQueries`](LeanCanny/ETR/TubeLevelSignQueries.lean), [`TubeLevelSignSpace`](LeanCanny/ETR/TubeLevelSignSpace.lean) | Positive rational-margin clearing and even coordinate-denominator powers give integer univariate queries for the actual inactive constraints. Active queries are one. A positive finite root-sign count is equivalent to a compiled sample. ETR is equivalent to these positive counts throughout small rational-level intervals. The existing native counter computes this count and decides sample existence under explicit coefficient-reader, degree/mass-budget, and control certificates. Constructing suitably bounded coordinate representations and their coefficient readers from the original input remains open. |
-| [`Algebra.RationalSubstitutionWith`](LeanCanny/Algebra/RationalSubstitutionWith.lean), [`ETR.TubeLevelSignBounds`](LeanCanny/ETR/TubeLevelSignBounds.lean) | Fixed denominator-clearing allowances preserve evaluations and give uniform output budgets. Actual tube sign queries use raw stored margin integers and the source-size allowance `D=8*N^2+4`. With `Q=2*A*D`, coordinate degree E and coordinate mass at most `2^b` give query degree at most `Q*E` and mass at most `2^(W+N+2*N^2+4+Q*b)`. FP binary writers derive the native sign-stage budgets from coordinate bounds; separate query-bound assumptions are unnecessary. Effective coordinate construction and coefficient readers remain open. |
+| [`Algebra.RationalSubstitutionWith`](LeanCanny/Algebra/RationalSubstitutionWith.lean), [`ETR.TubeLevelSignBounds`](LeanCanny/ETR/TubeLevelSignBounds.lean) | Fixed denominator-clearing allowances preserve evaluations and give uniform output budgets. Actual tube sign queries use raw stored margin integers and the source-size allowance `D=8*N^2+4`. With `Q=2*A*D`, coordinate degree E and coordinate mass at most `2^b` give query degree at most `Q*E` and mass at most `2^(W+N+2*N^2+4+Q*b)`. FP binary writers derive the native sign-stage budgets from coordinate bounds; separate query-bound assumptions are unnecessary. Computed finite-leaf readers and their native sign endpoint are supplied below; the validated sampler remains open. |
 | [`Algebra.FixedWidthMonomial`](LeanCanny/Algebra/FixedWidthMonomial.lean), [`ModularResidueSpace`](LeanCanny/Algebra/ModularResidueSpace.lean), [`ETR.TubeSampleCoefficient`](LeanCanny/ETR/TubeSampleCoefficient.lean), [`TubeSparseConstraintCoefficient`](LeanCanny/ETR/TubeSparseConstraintCoefficient.lean), [`TubeConstraintCoefficientSource`](LeanCanny/ETR/TubeConstraintCoefficientSource.lean) | Native coefficient residues of the actual integer inactive-constraint polynomials. The dense compact source uses a guarded coordinate restriction; point, shift, and constant coefficients are FP checks. Native modular composition includes all dense-child workspace and the raw margin residues. Binary row selection is total and exact on valid indices. No constraint-coefficient oracle is assumed. Rational coordinate substitution and sign-counter integration are described below; constructing bounded coordinate representations remains open. |
 | [`ETR.TubeConstraintIndexed`](LeanCanny/ETR/TubeConstraintIndexed.lean), [`TubeConstraintSubstitution`](LeanCanny/ETR/TubeConstraintSubstitution.lean), [`TubeLevelSignNative`](LeanCanny/ETR/TubeLevelSignNative.lean) | Binary rank access and native rational substitution compute the actual integer constraints' cleared coefficients. FP active-mask lookup supplies the complete sign-query reader. Root/coordinate coefficient readers and coordinate budgets suffice for native sample counting and sample-existence PSPACE membership; expanded sign-query coefficient access is derived internally. Effective bounded coordinate construction remains open. |
 | [`ETR.TubeCompiledReprojection`](LeanCanny/ETR/TubeCompiledReprojection.lean), [`TubeCompiledCardinality`](LeanCanny/ETR/TubeCompiledCardinality.lean), [`TubeLevelDegreeBounds`](LeanCanny/ETR/TubeLevelDegreeBounds.lean) | Changing the added projection gives a bijection of full affine root sets. Coordinate eliminants bound all complex/algebraic-closure solutions, including singular roots. With A compiled coordinates, T=A-1 spatial coordinates, and matrix width W, the count is at most `B=(2^W)^(A*T)`. At a common FP-coded small-level threshold, every integer coordinate representation has parameter degree at most B and coordinate degrees at most `B^2+2`. Native sample counting derives all degree controls from the source; mass bounds and coefficient readers remain supplied. |
@@ -482,7 +515,7 @@ exponential-time-child experiment that motivated this choice.
 | [`Algebra.BalancedPrimitiveTree`](LeanCanny/Algebra/BalancedPrimitiveTree.lean), [`BalancedPrimitiveCoordinates`](LeanCanny/Algebra/BalancedPrimitiveCoordinates.lean), [`BalancedPrimitiveVectors`](LeanCanny/Algebra/BalancedPrimitiveVectors.lean) | Balanced repeated pair construction gives a separable integer parameter whose degree is the product of its leaf degrees. Its roots correspond bijectively to tuples of leaf roots. Indexed decoding uses nested explicit rational pair formulas; flattened polynomials are supplied below. Uniform native space evaluation remains open. |
 | [`Algebra.FiniteAnnihilatorTree`](LeanCanny/Algebra/FiniteAnnihilatorTree.lean), [`FiniteAnnihilatorEquiv`](LeanCanny/Algebra/FiniteAnnihilatorEquiv.lean) | Any finite family of nonzero integer annihilants has an explicit balanced parameter: preprocess the leaves once and pad with X. Height is `n.size`, padded width is at most `2*(n+1)`, and degree is the product of the square-free degrees, at most `D^n` when original degrees are at most D. Parameter roots and vectors of original-polynomial roots are in bijection over every characteristic-zero field. The empty family has parameter X. No uniform coefficient-space bound is asserted. |
 | [`Algebra.UnivariateRationalComposition`](LeanCanny/Algebra/UnivariateRationalComposition.lean), [`SeparableIntegerCoordinates`](LeanCanny/Algebra/SeparableIntegerCoordinates.lean), [`BalancedPrimitivePolynomials`](LeanCanny/Algebra/BalancedPrimitivePolynomials.lean), [`FiniteAnnihilatorPolynomials`](LeanCanny/Algebra/FiniteAnnihilatorPolynomials.lean) | Explicit common-exponent denominator clearing flattens every balanced coordinate to integer numerator/denominator polynomials. They agree with nested decoding and have nonzero denominators at every parameter root over any characteristic-zero field. Original degree bound D≥1 gives coordinate degrees at most `(D+2)^(4*(n+1))`. Clearing at a fixed exponent commutes with coefficient maps; composition has explicit degree and mass bounds. Source-derived heights are supplied below; uniform coefficient readers remain open. |
-| [`Algebra.FiniteAnnihilatorFiltering`](LeanCanny/Algebra/FiniteAnnihilatorFiltering.lean) | Fixed even allowances clear arbitrary multivariate constraints in the explicit integer coordinates. At parameter roots, the univariate queries preserve zeros over characteristic-zero fields and signs over ℝ, with derived degree bounds. A supplied nonzero coordinate-annihilator family yields an exact equivalence between system solvability and a parameter root satisfying all cleared queries. The uniform space evaluator and actual tube specialization remain open. |
+| [`Algebra.FiniteAnnihilatorFiltering`](LeanCanny/Algebra/FiniteAnnihilatorFiltering.lean) | Fixed even allowances clear arbitrary multivariate constraints in the explicit integer coordinates. At parameter roots, the univariate queries preserve zeros over characteristic-zero fields and signs over ℝ, with derived degree bounds. A supplied nonzero coordinate-annihilator family yields an exact equivalence between system solvability and a parameter root satisfying all cleared queries. The computed whole-path evaluator and actual tube specialization are supplied below. |
 | [`Algebra.UniformPrimitivePairBounds`](LeanCanny/Algebra/UniformPrimitivePairBounds.lean), [`SeparableIntegerUniformBounds`](LeanCanny/Algebra/SeparableIntegerUniformBounds.lean), [`SquarefreeUniformBounds`](LeanCanny/Algebra/SquarefreeUniformBounds.lean), [`BalancedPrimitiveMass`](LeanCanny/Algebra/BalancedPrimitiveMass.lean) | A common bound T≥4 controls parameter degrees/mass exponents and flattened coordinate degrees/mass exponents. A pair step uses T^16, and height h uses `T^(16^h)`. The estimates include integer square-free preprocessing, both direct coordinate branches, and all denominator-cleared compositions. |
 | [`Algebra.FiniteAnnihilatorHeight`](LeanCanny/Algebra/FiniteAnnihilatorHeight.lean) | Original degrees ≤D and coefficient magnitudes ≤`2^b` give the bound `H=(D+b+4)^(256*(n+1)^4)` on parameter and coordinate degrees, and mass ≤`2^H`. The same H covers every subtree of height ≤n.size. Cleared query mass exponents are derived too. The binary H writer is native FP for binary D,b controls and unary n. |
 | [`Algebra.FiniteAnnihilatorDegreeSpace`](LeanCanny/Algebra/FiniteAnnihilatorDegreeSpace.lean) | One native bounded fold computes the exact finite-family parameter degree for an input-dependent unary count. Indexed original-polynomial readers and an FP binary degree bound suffice; square-free degree children may use arbitrary time in polynomial space. The accumulator is bounded by `(D+1)^n`, and no execution clocks are exposed. Uniform parameter coefficient evaluation is supplied below. |
@@ -504,7 +537,7 @@ exponential-time-child experiment that motivated this choice.
 | [`Algebra.BalancedCanonicalDegrees`](LeanCanny/Algebra/BalancedCanonicalDegrees.lean), [`BalancedMetadataAddress`](LeanCanny/Algebra/BalancedMetadataAddress.lean), [`BalancedDegreeTable`](LeanCanny/Algebra/BalancedDegreeTable.lean), [`Encoding.FixedWidthNatVectorSpace`](LeanCanny/Encoding/FixedWidthNatVectorSpace.lean) | A native bounded product computes every canonical padded-subtree degree, independently of directions. Heights are capped at the source count's binary size, giving a polynomial accumulator bound on all words. The FP metadata-cell decoder round-trips node addresses. A generic native space serializer prepares the existing fixed-width frame; every in-range degree cell reads back correctly. Its common unary width fits both degrees and canonical directions, which start at zero. Complete direction preparation and padded source-reader integration are supplied below. |
 | [`Algebra.ScaledSquarefreePadding`](LeanCanny/Algebra/ScaledSquarefreePadding.lean), [`PaddedAnnihilatorReaders`](LeanCanny/Algebra/PaddedAnnihilatorReaders.lean), [`PaddedAnnihilatorMetadata`](LeanCanny/Algebra/PaddedAnnihilatorMetadata.lean), [`ResultantBoundedTest`](LeanCanny/Algebra/ResultantBoundedTest.lean), [`SeparableBoundedTest`](LeanCanny/Algebra/SeparableBoundedTest.lean), [`BalancedTableSeparability`](LeanCanny/Algebra/BalancedTableSeparability.lean) | Canonical indexed readers replace out-of-range inputs by X, which square-free preprocessing preserves exactly. Native prepared degrees and table leaves match the original finite-annihilator tree with nonzeroness needed only below the count. The specified-resultant modulus scan and its separability variant run in native space on all words; their integer/separability interpretation needs bounds only at the tested input. The uniform table coefficient evaluator instantiates this test without a global table-consistency assumption. Complete direction-table preparation is supplied below. |
 | [`Algebra.BalancedCandidateResultant`](LeanCanny/Algebra/BalancedCandidateResultant.lean), [`BalancedDirectionScan`](LeanCanny/Algebra/BalancedDirectionScan.lean), [`BalancedDirectionUpdate`](LeanCanny/Algebra/BalancedDirectionUpdate.lean), [`BalancedDirectionCorrect`](LeanCanny/Algebra/BalancedDirectionCorrect.lean), [`PaddedAnnihilatorDirection`](LeanCanny/Algebra/PaddedAnnihilatorDirection.lean), [`BalancedMetadataUpdate`](LeanCanny/Algebra/BalancedMetadataUpdate.lean), [`Encoding.FixedWidthWrite`](LeanCanny/Encoding/FixedWidthWrite.lean) | Native candidate resultant readers, bounded direction selection, and table writes work on every word. Pointwise exact child orders, separability, and heights identify the result with `PrimitivePair.select`. Fixed-width updates preserve source, width, frame length, and other in-range cells. Writing above a consistent subtree preserves it; one parent step extends consistency from its children. For the padded finite source, original degree/height bounds and the prepared width discharge the numerical scan promises. The complete layer fold and canonical root coefficient reader are supplied below. |
-| [`Algebra.BalancedDirectionPreparation`](LeanCanny/Algebra/BalancedDirectionPreparation.lean), [`BalancedDirectionPreservation`](LeanCanny/Algebra/BalancedDirectionPreservation.lean), [`PaddedAnnihilatorPreparation`](LeanCanny/Algebra/PaddedAnnihilatorPreparation.lean), [`FiniteAnnihilatorCoefficientSpace`](LeanCanny/Algebra/FiniteAnnihilatorCoefficientSpace.lean) | Two native folds fill every canonical direction cell. Exact degrees, child consistency, and completed parents survive each write; the full root is proved consistent. All fold prefixes share one table storage budget on arbitrary inputs. The complete finite-annihilator coefficient reader prepares the table internally, then evaluates the canonical root modulo any positive binary modulus. Only original readers, a unary count, binary original degree/height bounds, and finite-source nonzeroness are assumed. Uniform flattened-coordinate readers and the tube specialization remain open. |
+| [`Algebra.BalancedDirectionPreparation`](LeanCanny/Algebra/BalancedDirectionPreparation.lean), [`BalancedDirectionPreservation`](LeanCanny/Algebra/BalancedDirectionPreservation.lean), [`PaddedAnnihilatorPreparation`](LeanCanny/Algebra/PaddedAnnihilatorPreparation.lean), [`FiniteAnnihilatorCoefficientSpace`](LeanCanny/Algebra/FiniteAnnihilatorCoefficientSpace.lean) | Two native folds fill every canonical direction cell. Exact degrees, child consistency, and completed parents survive each write; the full root is proved consistent. All fold prefixes share one table storage budget on arbitrary inputs. The complete finite-annihilator coefficient reader prepares the table internally, then evaluates the canonical root modulo any positive binary modulus. Only original readers, a unary count, binary original degree/height bounds, and finite-source nonzeroness are assumed. Computed whole-path readers and native tube sign tests are supplied below. |
 | [`Algebra.BalancedTableSubtrees`](LeanCanny/Algebra/BalancedTableSubtrees.lean), [`CanonicalNodeContext`](LeanCanny/Algebra/CanonicalNodeContext.lean), [`CanonicalNodeSpace`](LeanCanny/Algebra/CanonicalNodeSpace.lean), [`SpaceDegreePair`](LeanCanny/Algebra/SpaceDegreePair.lean), [`CanonicalPairSpace`](LeanCanny/Algebra/CanonicalPairSpace.lean) | Complete table consistency gives every subtree. Total FP normalization selects valid heights and indices; native space readers compute subtree degrees and residues. Checked degree packets feed already separable inputs to the canonical pair algorithm without further square-free preprocessing. Both pair numerators and the common denominator have uniform native readers, exactly matching the pair coordinates used by `flat` at valid parents. The source envelope T gives degree bounds T cubed and mass bounds `2^(T^10)`. |
 | [`Algebra.UnivariateRationalCompositionWith`](LeanCanny/Algebra/UnivariateRationalCompositionWith.lean), [`UnivariateRationalSubstitutionMatrix`](LeanCanny/Algebra/UnivariateRationalSubstitutionMatrix.lean), [`RationalCoordinatePath`](LeanCanny/Algebra/RationalCoordinatePath.lean) | A chosen degree upper bound supplies the common clearing exponent while preserving rational evaluation and denominator nonvanishing. Substitution acts linearly on outer coefficients; a padded matrix implements one step exactly. A k-stage path with stage degrees at most D and masses at most `2^b` has degree at most `D^k` and masses at most `2^(k*D^k*b)` for D at least one, with native binary budget writers. One composition has native coefficient readers; the whole-path matrix evaluator is supplied below. |
 | [`Algebra.RationalCoordinatePathMatrix`](LeanCanny/Algebra/RationalCoordinatePathMatrix.lean), [`MatrixProductSpace`](LeanCanny/Algebra/MatrixProductSpace.lean), [`ClearingMatrixSpace`](LeanCanny/Algebra/ClearingMatrixSpace.lean), [`RationalCoordinatePathSource`](LeanCanny/Algebra/RationalCoordinatePathSource.lean), [`RationalCoordinatePathSpace`](LeanCanny/Algebra/RationalCoordinatePathSpace.lean) | Rows one and zero of the substitution-matrix product recover the path numerator and denominator. The ordered-product evaluator includes arbitrary native space factor-entry computations; clearing monomials supplies these entries from two indexed stage readers. Binary degree controls and unary depth give uniform native coefficient readers for the whole path, without intermediate coordinate readers or exact-degree oracles. |
@@ -1410,43 +1443,24 @@ quantitative parameter selection, and the full ETR algorithm remain open.
 
 ## Next obligations
 
-1. Relate the chosen encoding to standard ETR presentations and prove an NP lower inclusion.
-2. Instantiate the modular power PSPACE theorem with concrete validated input
-   formats and uniform entry evaluators;
-   use the native space-entry interface when the whole entry computation
-   requires more than polynomial time.
-3. Supply concrete parameter readers and bounds for the certified full Macaulay
-   coefficient and sign evaluators, including the full three-parameter
-   deformation and its computed lowest nonzero coefficient. Extend lowest-coefficient
-   vanishing from finite affine fibers to the remaining proper components;
-   bound and select suitable rational parameter packets in the source size, and
-   extend the concrete variable-level readers to the full nested perturbation.
-   The retained geometric samples now lift to actual compiled affine roots and
-   are covered by nonzero lowest-coefficient eliminants.
-   The qualitative geometric-to-compiled finiteness
-   bridge is proved, uniformly on a small level interval over real extension fields.
-   Identify the polynomial Macaulay quotient with the
-   required resultant/eliminant. Polynomial cancellation of the extraneous
-   determinant is proved, including for the actual tube characteristic pencils.
-   The sharp Macaulay degree bound and the two-way common-root criterion over
-   algebraically closed fields are proved, including for the actual tube
-   polynomial and at singular extraneous matrices.
-   The full and extraneous determinants now both have certified lowest-index and
-   integer-sign evaluators under the existing reader contracts. Qualitative
-   integer rational-coordinate decoding of actual compiled systems at rational
-   levels is now proved. Construct these coordinates effectively from the
-   streamed eliminants and bound their coefficients. Prove the full coordinate
-   computation's space bound, including algebraic parameter values,
-   and formalize the remaining parallel/streamed algebra used by the report.
-   The final decoded-sample sign stage has native count and decision certificates
-   under the explicit coefficient-reader and budget contracts. Query degree
-   and mass budgets are derived from coordinate bounds using fixed clearing
-   powers and raw packet margin integers.
-4. Prove quantitative sampling bounds and effective parameter selection, implement
-   critical-point sampling, and combine the algebraic sign tests into Canny's ETR
-   decision procedure; prove `ETR ∈ PSPACE`.
-5. Apply the proved PSPACE reduction closure once ETR membership is established;
-   the conditional equivalence `∃ℝ ⊆ PSPACE ↔ ETR ∈ PSPACE` is already proved.
+1. Assemble the validated sampler: align native and spatial variable layouts,
+   pin rational direction/perturbation coordinates, and combine the compiled
+   equations with inactive-constraint sign tests. Arbitrary tuples of
+   coordinate-annihilator roots can be spurious and must be filtered.
+2. Prove source-size bounds for the epsilon feasibility witness, the delta
+   feasibility gap, rational sampling directions, and the critical-value
+   annihilants. The current geometric sampling and finiteness intervals are
+   qualitative. Prove that an effectively selected level lies within them
+   and retains a sample whenever the input is satisfiable.
+3. Extend implicit dyadic specialization through the nested perturbations.
+   Explicit rational packets can have exponentially many denominator bits,
+   even when the exponent has a polynomial-size binary code.
+4. Combine the complete sampler and sign tests into Canny's ETR procedure;
+   prove `ETR ∈ PSPACE`, then apply the proved PSPACE reduction closure to
+   obtain `∃ℝ ⊆ PSPACE`.
+5. Relate the chosen encoding to standard ETR presentations and prove an NP
+   lower inclusion. Extend the algebraic report results beyond the finite
+   affine-fiber criterion where needed.
 6. Extend to roadmap connectivity and the geometric consequences in the report.
 
 See [`RESEARCH.md`](RESEARCH.md) for prior work, the machine-model comparison, and

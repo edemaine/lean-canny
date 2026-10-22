@@ -4815,6 +4815,94 @@ real-sign preservation at every parameter root, including all native child
 computations in the substitution space certificate. Effective parameter
 selection, the full ETR PSPACE theorem, and remaining report results remain open.
 
+## Native finite-root sign feasibility and integer coordinate annihilants
+
+`FiniteLeafSignSource` streams each constraint as binary-counted monomials.
+`FiniteLeafSignSpace` constructs all substituted sign queries from the computed
+leaf paths and proves equivalence with real tuples of original polynomial
+roots realizing the requested signs. Constraint count is unary; monomial
+counts, degree bounds, and coefficient-mass exponents are binary. Empty
+coordinate families and zero monomial counts are included.
+
+`FiniteSourceDegreePreparation` removes the exact-original-degree FP
+requirement. It computes a fixed-width finite degree table in native space,
+checks every supplied degree, and uses a nonzero fallback on incorrect frames.
+The checked family has exact FP metadata on every word and agrees literally
+with the originals on prepared frames. `FiniteLeafSignResidue` composes this
+preparation with the complete sign decider. Its only computational assumptions
+are original coefficient residues and the streamed constraint access; no
+intermediate degrees or coordinate routines are supplied.
+`FiniteLeafSignPrepared` reindexes sources and `FiniteLeafSignAppend` combines
+row families, deriving the polynomial and conjunction identities as well as
+all native reader certificates. `TubeFiniteLeafSigns` supplies the actual
+integer tube-constraint source and transfers the resulting signs to the
+geometric constraint values.
+
+`TubeCoordinateAnnihilatorSpecialization` clears rational levels with a fixed
+inner-degree allowance, preserving roots and nonvanishing. Its native reader
+accepts modular access to the rational numerator and denominator, including
+implicitly represented constants. `TubeCoordinateAnnihilator` applies this to
+the actual lowest full determinant. Quotient factorization proves vanishing
+at every finite compiled root, including singular roots. Reprojection with
+basis directions covers every spatial coordinate, including the reciprocal;
+the original projection coordinate uses its supplied direction.
+`TubeCoordinateAnnihilatorReaders` and `TubeCoordinateAnnihilatorFamily`
+assemble actual packet, mask, direction, lowest-coefficient, and specialization
+readers. `TubeCoordinateAnnihilatorBudget` gives binary mass exponents from the
+actual determinant bounds and bounds on the rational constants. These results
+alone do not guarantee a retained sample at the chosen rational level.
+
+`FiniteBinaryEnvelope` derives one binary FP envelope for any indexed binary
+FP value over a unary finite range, directly from its output-length bound.
+`TubeCoordinateAnnihilatorDyadic` applies this to all coordinate mass exponents
+and selects one common dyadic level. Modular exponentiation reads its implicit
+denominator. Nonzero coordinate annihilants, native residues, degree/mass
+bounds, and coverage of every compiled root with finite complex fibers are
+proved at this level. No externally supplied level, nonvanishing promise,
+exact-degree routine, or large denominator word is required.
+`TubeCoordinateAnnihilatorSigns.dyadic_tube_signs_mem_PSPACE` then decides the
+actual tube signs on these finite root tuples in native PSPACE, deriving all
+algebraic readers and bounds. This language does not enforce the compiled
+equations and can contain spurious tuples.
+
+`TubeRegularFiniteSigns` supplies those actual regular equations as an integer
+streamed source in all native variables (reciprocal, point, direction, and
+perturbation coordinates). Its native coefficient reader, row coverage,
+evaluation identity, regular-root equivalence, and finite-root PSPACE test
+are proved. Connecting this variable layout with the spatial annihilants,
+pinning its rational parameters, filtering inactive constraints, and proving
+that the chosen level retains samples remain necessary for a validated sampler.
+
+## Effective parameter selection still needed
+
+The remaining quantitative choices are separate from coefficient evaluation:
+
+* Choose a source-bounded positive epsilon for which the compact feasible set
+  is nonempty whenever the input is satisfiable. The converse is already
+  proved for every positive epsilon.
+* Choose delta below an effective feasibility gap: the existing compactness
+  proof only gives a sufficiently small positive interval.
+* Bound a rational direction admitting retained finite projection samples.
+  Density near a strict supporting maximum gives existence but no bound on
+  the neighborhood radius or numerator/denominator lengths.
+* Bound the critical-value annihilants used for a common regular alpha
+  interval, and connect that interval to the retained-sample interval.
+
+`CriticalValueIntegerAnnihilator` proves existence of nonzero integer
+annihilants for rational polynomial critical values, including evaluation in
+extension fields. `EffectiveRegularPolynomialLevels` turns a coefficient-mass
+bound `mass(q) <= 2^b` into the explicit closed positive regular-level interval
+`0 < alpha <= 2^(-(b+1))`, uniformly over all active tubes. This does not bound
+b in the original input size. Its annihilant-existence proof uses minimal
+primes and algebraicity, not an effective elimination estimate.
+
+An encoding issue must also be respected: `TubeLevelPacket` stores rational
+numerators and denominators explicitly. A dyadic denominator `2^s` occupies
+`s+1` bits. A binary writer for an exponentially large exponent s therefore
+does not by itself produce a polynomial-size packet. Such choices require
+implicit dyadic substitution (already available algebraically), with every
+nested parameter specialization included in the space proof.
+
 ## Savitch's theorem and Canny
 
 Savitch is useful for reachability in an implicitly represented exponential graph,
