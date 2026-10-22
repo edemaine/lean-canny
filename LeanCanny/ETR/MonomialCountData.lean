@@ -32,34 +32,30 @@ theorem countData_term (t : Term) : countData t.toData = t.monomialCount := by
   induction t <;> simp_all [countData, Term.toData, Term.monomialCount, Codec.unary]
 
 theorem countData_le_pow (d : Data) : countData d ≤ 2 ^ d.size := by
-  have key : ∀ (n : ℕ) (d : Data), d.size ≤ n → countData d ≤ 2 ^ d.size := by
-    intro n
-    induction n using Nat.strongRecOn with
-    | ind n ih =>
-      rintro ⟨xs⟩ hn
-      rcases xs with _ | ⟨tag, _ | ⟨a, _ | ⟨b, _ | ⟨c, rest⟩⟩⟩⟩
+  induction d using Data.inductionChildren with
+  | node xs ih =>
+    rcases xs with _ | ⟨tag, _ | ⟨a, _ | ⟨b, _ | ⟨c, rest⟩⟩⟩⟩
+    · exact Nat.one_le_two_pow
+    · exact Nat.one_le_two_pow
+    · exact Nat.one_le_two_pow
+    · have ha := ih a (by simp)
+      have hb := ih b (by simp)
+      have hdeg : a.size + b.size + 1 ≤ (Data.l [tag, a, b]).size := by
+        simp only [Data.cons_size, Data.size_empty]
+        omega
+      have hsum : 2 ^ a.size + 2 ^ b.size ≤ 2 ^ (a.size + b.size + 1) := by
+        rw [pow_succ, pow_add]
+        have hA : 1 ≤ 2 ^ a.size := Nat.one_le_two_pow
+        have hB : 1 ≤ 2 ^ b.size := Nat.one_le_two_pow
+        nlinarith
+      simp only [countData]
+      split_ifs
+      · exact (Nat.add_le_add ha hb).trans (hsum.trans (Nat.pow_le_pow_right (by decide) hdeg))
+      · exact (Nat.mul_le_mul ha hb).trans (by
+          rw [← pow_add]
+          exact Nat.pow_le_pow_right (by decide) (by omega))
       · exact Nat.one_le_two_pow
-      · exact Nat.one_le_two_pow
-      · exact Nat.one_le_two_pow
-      · have ha := ih a.size ((Data.size_lt_of_mem (by simp : a ∈ [tag, a, b])).trans_le hn) a le_rfl
-        have hb := ih b.size ((Data.size_lt_of_mem (by simp : b ∈ [tag, a, b])).trans_le hn) b le_rfl
-        have hdeg : a.size + b.size + 1 ≤ (Data.l [tag, a, b]).size := by
-          simp only [Data.cons_size, Data.size_empty]
-          omega
-        have hsum : 2 ^ a.size + 2 ^ b.size ≤ 2 ^ (a.size + b.size + 1) := by
-          rw [pow_succ, pow_add]
-          have hA : 1 ≤ 2 ^ a.size := Nat.one_le_two_pow
-          have hB : 1 ≤ 2 ^ b.size := Nat.one_le_two_pow
-          nlinarith
-        simp only [countData]
-        split_ifs
-        · exact (Nat.add_le_add ha hb).trans (hsum.trans (Nat.pow_le_pow_right (by decide) hdeg))
-        · exact (Nat.mul_le_mul ha hb).trans (by
-            rw [← pow_add]
-            exact Nat.pow_le_pow_right (by decide) (by omega))
-        · exact Nat.one_le_two_pow
-      · exact Nat.one_le_two_pow
-  exact key d.size d le_rfl
+    · exact Nat.one_le_two_pow
 
 theorem countData_size_le (d : Data) : (countData d).size ≤ d.size + 1 := by
   simpa only [Nat.size_pow] using Nat.size_le_size (countData_le_pow d)

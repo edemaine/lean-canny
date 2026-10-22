@@ -162,27 +162,17 @@ def classify : Data → Info
 /-- The concrete classifier is exactly the node value computed by the generic stack fold. -/
 theorem classify_eq_fold (d : Data) :
     classify d = finish (LeanCanny.Encoding.TreeFold.foldData emptyFrame combine d) := by
-  have key : ∀ (n : ℕ) (d : Data), d.size ≤ n →
-      classify d = finish (LeanCanny.Encoding.TreeFold.foldData emptyFrame combine d) := by
-    intro n
-    induction n using Nat.strongRecOn with
-    | ind n ih =>
-        rintro ⟨xs⟩ hn
-        rw [classify, LeanCanny.Encoding.TreeFold.foldData]
-        congr 1
-        have hchildren : ∀ c ∈ xs,
-            classify c = finish (LeanCanny.Encoding.TreeFold.foldData emptyFrame combine c) := by
-          intro c hc
-          exact ih c.size ((Data.size_lt_of_mem hc).trans_le hn) c le_rfl
-        induction xs with
-        | nil => rfl
-        | cons c cs ihcs =>
-            rw [List.map_cons, List.map_cons, List.foldr_cons, summary_cons,
-              hchildren c (List.mem_cons_self ..), combine]
-            congr 1
-            have htail : (Data.l cs).size ≤ n := by rw [Data.cons_size] at hn; omega
-            exact ihcs htail (fun c' hc' => hchildren c' (List.mem_cons_of_mem c hc'))
-  exact key d.size d le_rfl
+  induction d using Data.inductionChildren with
+  | node xs hchildren =>
+    rw [classify, LeanCanny.Encoding.TreeFold.foldData]
+    congr 1
+    induction xs with
+    | nil => rfl
+    | cons c cs ihcs =>
+      rw [List.map_cons, List.map_cons, List.foldr_cons, summary_cons,
+        hchildren c (List.mem_cons_self ..), combine]
+      congr 1
+      exact ihcs (fun c' hc' => hchildren c' (List.mem_cons_of_mem c hc'))
 
 /-- Intended meanings of all finite flags. Count is retained independently of unary validity. -/
 structure Correct (d : Data) (i : Info) : Prop where

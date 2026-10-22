@@ -63,28 +63,12 @@ theorem run_code_mem_FP :
   omega
 
 theorem foldData_identity (d : Data) : TreeFold.foldData ([] : List Data) combine d = d.asList := by
-  have key : ∀ (n : ℕ) (d : Data), d.size ≤ n →
-      TreeFold.foldData ([] : List Data) combine d = d.asList := by
-    intro n
-    induction n using Nat.strongRecOn with
-    | ind n ih =>
-        rintro ⟨xs⟩ hn
-        rw [TreeFold.foldData]
-        have hc : ∀ c ∈ xs, Data.l (TreeFold.foldData [] combine c) = c := by
-          intro c hmem
-          rw [ih c.size ((Data.size_lt_of_mem hmem).trans_le hn) c le_rfl, Data.asList_l]
-        have hl : ∀ ys : List Data,
-            (∀ c ∈ ys, Data.l (TreeFold.foldData [] combine c) = c) →
-            (ys.map (TreeFold.foldData [] combine)).foldr combine [] = ys := by
-          intro ys
-          induction ys with
-          | nil => intro _; rfl
-          | cons c cs ihcs =>
-              intro h
-              rw [List.map_cons, List.foldr_cons, combine, h c (List.mem_cons_self ..),
-                ihcs (fun c' hc' => h c' (List.mem_cons_of_mem c hc'))]
-        simpa only [Data.l_asList] using hl xs hc
-  exact key d.size d le_rfl
+  induction d using Data.inductionL with
+  | nil => simp only [TreeFold.foldData, List.map_nil, List.foldr_nil, Data.l_asList]
+  | cons x xs ihx ihxs =>
+    simpa only [TreeFold.foldData, List.map_cons, List.foldr_cons, combine,
+      Data.l_asList, ihx, Data.asList_l] using congrArg (List.cons x) ihxs
+
 
 def extract (positive : Bool) (state : List Bool) : List Bool :=
   let frame := pairFst (state.drop 1)

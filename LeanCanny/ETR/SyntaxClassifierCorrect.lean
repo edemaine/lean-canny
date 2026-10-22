@@ -206,29 +206,23 @@ theorem formula_image_l (xs : List Data) :
 theorem classify_syntax_iff (d : Data) :
     ((classify d).term = true ↔ ∃ t : Term, d = t.toData) ∧
       ((classify d).formula = true ↔ ∃ p : Formula, d = p.toData) := by
-  have key : ∀ (n : ℕ) (d : Data), d.size ≤ n →
-      ((classify d).term = true ↔ ∃ t : Term, d = t.toData) ∧
-        ((classify d).formula = true ↔ ∃ p : Formula, d = p.toData) := by
-    intro n
-    induction n using Nat.strongRecOn with
-    | ind n ih =>
-        rintro ⟨xs⟩ hn
-        have ht : ∀ c ∈ xs, (classify c).term = true ↔ ∃ t : Term, c = t.toData := by
-          intro c hc
-          exact (ih c.size ((Data.size_lt_of_mem hc).trans_le hn) c le_rfl).1
-        have hp : ∀ c ∈ xs, (classify c).formula = true ↔ ∃ p : Formula, c = p.toData := by
-          intro c hc
-          exact (ih c.size ((Data.size_lt_of_mem hc).trans_le hn) c le_rfl).2
-        constructor
-        · rw [classify, finish_summary, term_image_l]
-          rcases xs with _ | ⟨a, _ | ⟨b, _ | ⟨c, _ | ⟨e, rest⟩⟩⟩⟩ <;>
-            simp [direct, classify_tag_iff, classify_integer_iff, classify_unary_iff, ht]
-          all_goals aesop
-        · rw [classify, finish_summary, formula_image_l]
-          rcases xs with _ | ⟨a, _ | ⟨b, _ | ⟨c, _ | ⟨e, rest⟩⟩⟩⟩ <;>
-            simp [direct, classify_tag_iff, ht, hp]
-          all_goals aesop
-  exact key d.size d le_rfl
+  induction d using Data.inductionChildren with
+  | node xs ih =>
+    have ht : ∀ c ∈ xs, (classify c).term = true ↔ ∃ t : Term, c = t.toData := by
+      intro c hc
+      exact (ih c hc).1
+    have hp : ∀ c ∈ xs, (classify c).formula = true ↔ ∃ p : Formula, c = p.toData := by
+      intro c hc
+      exact (ih c hc).2
+    constructor
+    · rw [classify, finish_summary, term_image_l]
+      rcases xs with _ | ⟨a, _ | ⟨b, _ | ⟨c, _ | ⟨e, rest⟩⟩⟩⟩ <;>
+        simp [direct, classify_tag_iff, classify_integer_iff, classify_unary_iff, ht]
+      all_goals aesop
+    · rw [classify, finish_summary, formula_image_l]
+      rcases xs with _ | ⟨a, _ | ⟨b, _ | ⟨c, _ | ⟨e, rest⟩⟩⟩⟩ <;>
+        simp [direct, classify_tag_iff, ht, hp]
+      all_goals aesop
 
 theorem classify_correct (d : Data) : Correct d (classify d) where
   count := classify_count d

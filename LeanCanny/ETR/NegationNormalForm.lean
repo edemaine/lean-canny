@@ -143,45 +143,37 @@ theorem dual_formula (p : Formula) :
 
 /-- Both candidate polarities together have linear size on every raw tree. -/
 theorem dual_size (d : Data) : (dual d).1.size + (dual d).2.size ≤ 20 * d.size := by
-  have key : ∀ (n : ℕ) (d : Data), d.size ≤ n →
-      (dual d).1.size + (dual d).2.size ≤ 20 * d.size := by
-    intro n
-    induction n using Nat.strongRecOn with
-    | ind n ih =>
-        rintro ⟨xs⟩ hn
-        have hpos := @Data.size_pos (.l xs)
-        rcases xs with _ | ⟨tag, _ | ⟨p, _ | ⟨q, _ | ⟨r, rest⟩⟩⟩⟩
-        · simp [dual]
-        · simp only [dual, falseData_size, trueData_size]
+  induction d using Data.inductionChildren with
+  | node xs ih =>
+    have hpos := @Data.size_pos (.l xs)
+    rcases xs with _ | ⟨tag, _ | ⟨p, _ | ⟨q, _ | ⟨r, rest⟩⟩⟩⟩
+    · simp [dual]
+    · simp only [dual, falseData_size, trueData_size]
+      omega
+    · have hi := ih p (by simp)
+      simp only [dual]
+      split
+      · simp only [one_size]
+        omega
+      · split
+        · simp only [Data.cons_size, Data.size_empty] at *
           omega
-        · have hp : p.size < n := (Data.size_lt_of_mem (by simp)).trans_le hn
-          have hi := ih p.size hp p le_rfl
-          simp only [dual]
-          split
-          · simp only [one_size]
-            omega
-          · split
-            · simp only [Data.cons_size, Data.size_empty] at *
-              omega
-            · simp only [falseData_size, trueData_size]
-              omega
-        · have hp : p.size < n := (Data.size_lt_of_mem (by simp)).trans_le hn
-          have hq : q.size < n := (Data.size_lt_of_mem (by simp)).trans_le hn
-          have hi := ih p.size hp p le_rfl
-          have hj := ih q.size hq q le_rfl
-          have ht := @Data.size_pos tag
-          simp only [dual]
-          split
-          · simp only [two_size, Data.cons_size, Data.size_empty] at *
-            omega
-          · split
-            · simp only [two_size, Data.cons_size, Data.size_empty] at *
-              omega
-            · simp only [falseData_size, trueData_size]
-              omega
-        · simp only [dual, falseData_size, trueData_size]
+        · simp only [falseData_size, trueData_size]
           omega
-  exact key d.size d le_rfl
+    · have hi := ih p (by simp)
+      have hj := ih q (by simp)
+      have ht := @Data.size_pos tag
+      simp only [dual]
+      split
+      · simp only [two_size, Data.cons_size, Data.size_empty] at *
+        omega
+      · split
+        · simp only [two_size, Data.cons_size, Data.size_empty] at *
+          omega
+        · simp only [falseData_size, trueData_size]
+          omega
+    · simp only [dual, falseData_size, trueData_size]
+      omega
 
 end NNF
 end LeanCanny.ETR

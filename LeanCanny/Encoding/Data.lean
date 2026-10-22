@@ -139,6 +139,16 @@ theorem Data.inductionL {motive : Data → Prop}
     (d : Data) : motive d :=
   Data.recL nil cons d
 
+/-- Structural induction with an induction hypothesis for every child. -/
+@[elab_as_elim]
+theorem Data.inductionChildren {motive : Data → Prop}
+    (node : ∀ xs, (∀ c ∈ xs, motive c) → motive (.l xs)) (d : Data) : motive d := by
+  refine Data.rec (motive_2 := fun xs => ∀ c ∈ xs, motive c) node (by simp) ?_ d
+  intro x xs hx hxs c hc
+  rcases List.mem_cons.mp hc with rfl | hc
+  · exact hx
+  · exact hxs c hc
+
 /-! ## Bitstring serialization
 
 `Data.toBits` serializes a `Data` value into a `List Bool` using a parenthesized
@@ -190,36 +200,28 @@ stack, leaving the rest of the stack untouched. This is the key lemma behind
 theorem Data.foldl_fromBitsStep_toBits :
     ∀ (d : Data) (top : List Data) (rest : List (List Data)),
       d.toBits.foldl Data.fromBitsStep (some (top :: rest)) = some ((top ++ [d]) :: rest) := by
-  -- Strong induction on the size of `d`, so that each child (strictly smaller) can appeal to the
-  -- inductive hypothesis while a plain list induction consumes the children in order.
-  have key : ∀ (n : ℕ) (d : Data) (top : List Data) (rest : List (List Data)),
-      d.size ≤ n →
-      d.toBits.foldl Data.fromBitsStep (some (top :: rest)) = some ((top ++ [d]) :: rest) := by
-    intro n
-    induction n using Nat.strongRecOn with
-    | ind n IH =>
-      rintro ⟨xs⟩ top rest hsz
-      -- Consuming the flattened children appends them, in order, to the current frame.
-      have L : ∀ (xs : List Data) (cur : List Data) (rest : List (List Data)),
-          (∀ c ∈ xs, c.size < n) →
-          (xs.map Data.toBits).flatten.foldl Data.fromBitsStep (some (cur :: rest))
-            = some ((cur ++ xs) :: rest) := by
-        intro xs
-        induction xs with
-        | nil => intro cur rest _; simp
-        | cons c cs ihcs =>
-          intro cur rest hlt
-          have hc : c.size < n := hlt c (List.mem_cons_self ..)
-          simp only [List.map_cons, List.flatten_cons, List.foldl_append]
-          rw [IH c.size hc c cur rest (Nat.le_refl _),
-            ihcs (cur ++ [c]) rest (fun c' hc' => hlt c' (List.mem_cons_of_mem _ hc'))]
-          simp
-      rw [Data.toBits_l]
-      simp only [List.foldl_cons, List.foldl_append, Data.fromBitsStep]
-      rw [L xs [] (top :: rest) (fun c hc => Nat.lt_of_lt_of_le (Data.size_lt_of_mem hc) hsz)]
-      simp
   intro d top rest
-  exact key d.size d top rest (Nat.le_refl _)
+  induction d using Data.inductionChildren generalizing top rest with
+  | node xs ih =>
+    have children : ∀ (ys : List Data) (cur : List Data) (rest : List (List Data)),
+        (∀ c ∈ ys, ∀ top rest,
+          c.toBits.foldl Data.fromBitsStep (some (top :: rest)) = some ((top ++ [c]) :: rest)) →
+        (ys.map Data.toBits).flatten.foldl Data.fromBitsStep (some (cur :: rest))
+          = some ((cur ++ ys) :: rest) := by
+      intro ys
+      induction ys with
+      | nil => intro cur rest _; simp
+      | cons c cs ihcs =>
+        intro cur rest hchildren
+        simp only [List.map_cons, List.flatten_cons, List.foldl_append]
+        rw [hchildren c (List.mem_cons_self ..) cur rest,
+          ihcs (cur ++ [c]) rest (fun c' hc' => hchildren c' (List.mem_cons_of_mem c hc'))]
+        simp
+    rw [Data.toBits_l]
+    simp only [List.foldl_cons, List.foldl_append, Data.fromBitsStep]
+    rw [children xs [] (top :: rest) ih]
+    simp
+
 
 /-- `Data.fromBits` recovers any value serialized by `Data.toBits`. -/
 @[simp]

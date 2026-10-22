@@ -40,23 +40,19 @@ theorem arityData_term (t : Term) : arityData t.toData = t.arity := by
   | mul t u ht hu => simp [arityData, Term.toData, Term.arity, ht, hu]
 
 theorem arityData_le_size (d : Data) : arityData d ≤ d.size := by
-  have key : ∀ (n : ℕ) (d : Data), d.size ≤ n → arityData d ≤ d.size := by
-    intro n
-    induction n using Nat.strongRecOn with
-    | ind n ih =>
-      rintro ⟨xs⟩ hn
-      rcases xs with _ | ⟨tag, _ | ⟨a, _ | ⟨b, _ | ⟨c, rest⟩⟩⟩⟩
-      · simp [arityData]
-      · simp [arityData]
-      · have hdiv := Nat.div_le_self (a.size - 2) 2
-        simp only [arityData]
-        split_ifs <;> simp only [Data.cons_size, Data.size_empty] <;> omega
-      · have ha := ih a.size ((Data.size_lt_of_mem (by simp : a ∈ [tag, a, b])).trans_le hn) a le_rfl
-        have hb := ih b.size ((Data.size_lt_of_mem (by simp : b ∈ [tag, a, b])).trans_le hn) b le_rfl
-        simp only [arityData]
-        split_ifs <;> simp only [Data.cons_size, Data.size_empty] <;> omega
-      · simp [arityData]
-  exact key d.size d le_rfl
+  induction d using Data.inductionChildren with
+  | node xs ih =>
+    rcases xs with _ | ⟨tag, _ | ⟨a, _ | ⟨b, _ | ⟨c, rest⟩⟩⟩⟩
+    · simp [arityData]
+    · simp [arityData]
+    · have hdiv := Nat.div_le_self (a.size - 2) 2
+      simp only [arityData]
+      split_ifs <;> simp only [Data.cons_size, Data.size_empty] <;> omega
+    · have ha := ih a (by simp)
+      have hb := ih b (by simp)
+      simp only [arityData]
+      split_ifs <;> simp only [Data.cons_size, Data.size_empty] <;> omega
+    · simp [arityData]
 
 theorem arityData_size_le (d : Data) : (arityData d).size ≤ d.size + 1 := by
   have h := Nat.size_le.mpr ((arityData_le_size d).trans_lt (Nat.lt_two_pow_self : d.size < 2 ^ d.size))
