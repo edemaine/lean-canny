@@ -129,6 +129,30 @@ structure Controls : Prop where
   immediate : P.immediate ∈ FP
   finish : P.finish ∈ FP
 
+/-- Local output processing may use arbitrary polynomial space and time.
+Only the request flag and child-task writer are required to be FP. -/
+theorem certificates_of_space (hrequest : (fun p => [P.request p]) ∈ FP) (hquery : P.query ∈ FP)
+    (himmediate : ComputableTidilyInPolySpace P.immediate encBits encBits)
+    (hfinish : ComputableTidilyInPolySpace P.finish encBits encBits) :
+    P.controller.Certificates (encQ := encBits) (encS := encState) := by
+  have hp : ComputableTidilyInPolyTime (fun s : State => s.1) encState encBits := by fun_prop
+  have hb : ComputableTidilyInPolyTime (fun s : State => s.2.1) encState encBool := by fun_prop
+  have hr := (flag_computable hrequest).comp hp
+  have harg : ComputableTidilyInPolyTime (fun s : State => pair s.1 s.2.2) encState encBits :=
+    pair_computable hp (by fun_prop)
+  have hi : ComputableTidilyInPolyTime initial encBits encState := by unfold initial; fun_prop
+  have hhalt : ComputableTidilyInPolyTime P.controller.halted encState encBool :=
+    hb.ite' (ComputableTidilyInPolyTime.const true) ((ComputableTidilyInPolyTime.of_finite Bool.not).comp hr)
+  have hout : ComputableTidilyInPolySpace P.controller.output encState encBits :=
+    (ComputableTidilyInPolySpace.of_polyTime hb).ite
+      (hfinish.comp (ComputableTidilyInPolySpace.of_polyTime harg))
+      (himmediate.comp (ComputableTidilyInPolySpace.of_polyTime hp))
+  have hresume : ComputableTidilyInPolyTime P.controller.resume (encPair encState encBits) encState := by
+    change ComputableTidilyInPolyTime (fun p : State × List Bool => (p.1.1, true, p.2)) _ _
+    fun_prop
+  exact ⟨.of_polyTime hi, .of_polyTime hhalt, hout, .of_polyTime hr,
+    .of_polyTime ((FP.computable hquery).comp hp), .id', .of_polyTime hresume⟩
+
 theorem certificates (h : P.Controls) : P.controller.Certificates (encQ := encBits) (encS := encState) := by
   have hp : ComputableTidilyInPolyTime (fun s : State => s.1) encState encBits := by fun_prop
   have hb : ComputableTidilyInPolyTime (fun s : State => s.2.1) encState encBool := by fun_prop

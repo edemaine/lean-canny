@@ -4165,7 +4165,7 @@ is not assumed to have a native computation certificate. Internal stage bounds
 and factor reply bounds are supplied by the new proofs. The resulting native
 space certificate covers all tagged task answers at input-dependent depth;
 canonical determinant tasks give actual coefficient readers and determinant
-coefficient zero testing in native PSPACE. Canny's source controller and the
+coefficient zero testing in native PSPACE. Canny's full source controller and the
 rank/reachable-task/common-bound proofs for its concrete graph remain open.
 
 The algebraic filtering theorem still needs specialization to the actual tube
@@ -4290,9 +4290,41 @@ query contract. A common unary FP context-level bound H yields the native rank
 bound `5*H+4`; the level function itself remains proof data.
 `evaluator_of_source_levels` supplies uniform native polynomial-space evaluation
 from these simpler contracts and the existing common word, reply, metadata,
-source-budget, and source-state bounds. Canny's actual source controller and
+source-budget, and source-state bounds. Canny's full source controller and
 these graph-bound instantiations still need to be constructed. This result
 does not establish ETR membership in PSPACE.
+
+## A concrete resultant-entry source controller
+
+`SylvesterPolynomialTaskRouting` exposes the selected coefficient input and
+the binary band guards of the existing polynomial Sylvester accessor. The
+coefficient request preserves its modular context and requested output degree.
+`ShiftCoefficientRecursiveStage` suspends only for the original coefficient
+of `p(θ-c*x)`: native polynomial-space postprocessing computes the binomial
+factor and the modular power and products. `SingleCall.Program.certificates_of_space`
+allows this local postprocessing to take arbitrary time without exposing its
+execution clock or a suspended binomial controller.
+
+`CannyResultantRecursiveStage` combines these operations into the actual
+source controller for a Canny resultant determinant entry. The Sylvester
+band guards and the constant-right coefficient guard return zero immediately.
+The other cases request one original left or right coefficient and return the
+specified Sylvester entry. The proof uses the specified integer source degrees,
+so it remains valid after modular degree drops and on all binary query words.
+Its local certificate needs FP metadata and task writers, with no computation
+certificate for either original-coefficient answer function.
+
+`CannyResultantTaskSource` connects this controller to the mixed determinant
+graph. The logical source budget is one transition even though its local
+binomial postprocessing may take exponential time. Query closure bounds the
+sole stored reply, giving source-state length at most `3*K+4` under common
+task/reply bound K. Pointwise decreases for the two actual original-polynomial
+task writers imply `SourceLevels`. The uniform evaluator then returns Canny
+resultant coefficient residues from explicit child-task semantic identities,
+query closure, context-level decreases, and common task/reply/metadata bounds.
+Base and square-free source stages, actual balanced-parameter child contexts,
+and their quantitative graph contracts remain open. This conditional reader
+does not establish the complete Canny coefficient graph or ETR in PSPACE.
 
 ## Savitch's theorem and Canny
 
