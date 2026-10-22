@@ -14,7 +14,7 @@ satisfiability, and their binary encoding, and proves ETR ∈ PSPACE and
 to inspect the definitions and theorem statements here. Lean checks the proofs
 through `AbstractBridge` and the rest of the development.
 
-The background complexity library is Complexitylib2. Its PSPACE class means
+The background complexity library is Complexitylib. Its PSPACE class means
 that one deterministic Turing machine halts on every input and decides membership
 using polynomially many work-tape cells in the input's bit length.
 -/

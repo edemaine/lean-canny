@@ -6,12 +6,13 @@ module
 
 public import LeanCanny.Computation.PolyTimePairing
 public import LeanCanny.Computation.PolyTimeBounds
+public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Iteration
 
 /-! # Native polynomial-time loops and right folds
 
-The legacy raw packet interface is implemented by typed native folds. Only the
-mathematical accumulator bound remains; no execution clock or clamped evaluator
-is needed.
+Unary-counted loops and right folds use the native iteration and fold rules.
+Callers supply only mathematical accumulator bounds; no execution clock or
+clamped evaluator is needed.
 -/
 
 @[expose] public section
@@ -25,29 +26,18 @@ theorem iterate_mem_FP {F init ruler width : List Bool → List Bool}
     (hbound : ∀ z, ∀ n ≤ (ruler z).length,
       (F^[n] (init z)).length ≤ (width z).length) :
     (fun z => F^[(ruler z).length] (init z)) ∈ FP := by
-  have h := ComputableTidilyInPolyTime.foldl' (encA := encBool) (encL := encBits)
-    (step := fun state _ => F state) hruler hinit
-    (hF.comp (ComputableTidilyInPolyTime.fst encBits encBool)) hwidth.polyBounded_length
-    (fun z i _ => by
-      simpa only [List.foldl_const, List.length_take, encBits_apply] using
-        hbound z (min i (ruler z).length) (Nat.min_le_right _ _))
-  change ComputableTidilyInPolyTime _ encBits encBits
-  simpa only [List.foldl_const] using h
+  exact ComputableTidilyInPolyTime.iterate
+    (ComputableTidilyInPolyTime.length_bits.comp hruler) hinit hF
+    hwidth.polyBounded_length hbound
 
 theorem iterate_mem_FP_of_polyBound {F init ruler : List Bool → List Bool}
     (hF : F ∈ FP) (hinit : init ∈ FP) (hruler : ruler ∈ FP) {B : ℕ → ℕ}
     (hB : PolyBound B)
     (hbound : ∀ z, ∀ n ≤ (ruler z).length, (F^[n] (init z)).length ≤ B z.length) :
     (fun z => F^[(ruler z).length] (init z)) ∈ FP := by
-  have h := ComputableTidilyInPolyTime.foldl' (encA := encBool) (encL := encBits)
-    (step := fun state _ => F state) hruler hinit
-    (hF.comp (ComputableTidilyInPolyTime.fst encBits encBool))
-    (hB.polyBounded (fun z : List Bool => z.length))
-    (fun z i _ => by
-      simpa only [List.foldl_const, List.length_take, encBits_apply] using
-        hbound z (min i (ruler z).length) (Nat.min_le_right _ _))
-  change ComputableTidilyInPolyTime _ encBits encBits
-  simpa only [List.foldl_const] using h
+  exact ComputableTidilyInPolyTime.iterate
+    (ComputableTidilyInPolyTime.length_bits.comp hruler) hinit hF
+    (hB.polyBounded (fun z : List Bool => z.length)) hbound
 
 theorem iterate_length_le_of_step_le {F : List Bool → List Bool} {x : List Bool}
     {N c : ℕ} (hstep : ∀ n < N, (F^[n + 1] x).length ≤ (F^[n] x).length + c) :
@@ -67,13 +57,12 @@ theorem iterate_mem_FP_of_step_le {F init ruler : List Bool → List Bool}
     (hstep : ∀ z, ∀ n < (ruler z).length,
       (F^[n + 1] (init z)).length ≤ (F^[n] (init z)).length + c) :
     (fun z => F^[(ruler z).length] (init z)) ∈ FP := by
-  obtain ⟨p, hp⟩ := output_length_poly_of_mem_FP hinit
-  obtain ⟨q, hq⟩ := output_length_poly_of_mem_FP hruler
-  refine iterate_mem_FP_of_polyBound hF hinit hruler
-    ((PolyBound.eval p).add ((PolyBound.const c).mul (PolyBound.eval q))) fun z n hn => ?_
-  have h := iterate_length_le_of_step_le (hstep z) n hn
-  have h' := Nat.mul_le_mul_left c (hn.trans (hq z))
-  exact h.trans (Nat.add_le_add (hp z) h')
+  apply ComputableTidilyInPolyTime.iterate
+    (ComputableTidilyInPolyTime.length_bits.comp hruler) hinit hF
+    (hinit.polyBounded_length.add ((PolyBounded.const c).mul hruler.polyBounded_length))
+  intro z n hn
+  exact (iterate_length_le_of_step_le (hstep z) n hn).trans
+    (Nat.add_le_add_left (Nat.mul_le_mul_left c hn) _)
 
 theorem recFold_mem_FP_of_bound {A B E w s : List Bool → List Bool}
     {g : List Bool → List Bool → List Bool}

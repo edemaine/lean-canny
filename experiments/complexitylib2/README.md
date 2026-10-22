@@ -3,6 +3,9 @@
 The checked prototype motivated adopting Complexitylib2 for space proofs. This
 subproject pins Lean **4.36.0-rc1**, Complexitylib2 **cb1b7ce8**, CSLib **b5f3b77d**,
 and Mathlib **625d8914** independently of the main development.
+The canonical repository is now
+[Complexitylib](https://github.com/cslib-community/complexitylib). This historical
+snapshot keeps the pre-rename `complexitylib2` Lake package and directory names.
 
 ```sh
 cd experiments/complexitylib2
@@ -69,7 +72,8 @@ old execution records, the suspended scheduler, and temporary legacy-space
 adapters are removed. The FP primitives now also use native certificates; the
 legacy Complexitylib dependency and its TidyFP bridge have been removed.
 The main ETR closure theorem targets Complexitylib2 PSPACE directly.
-Canny's ETR membership theorem remains open.
+Canny's ETR membership theorem is now proved in
+[`CoercivePSPACE`](../../LeanCanny/ETR/CoercivePSPACE.lean).
 
 ## Upgrade compatibility check
 
@@ -86,13 +90,11 @@ The unmodified old dependency fails on Lean 4.36.0-rc1:
   also fails to elaborate.
 * Several old proofs trigger the new unused-tactic linter.
 
-These are concrete migration prerequisites, not evidence against the new space
-interface. The main project's revision-checked, idempotent post-update hook now
-applies a compatibility patch for these API changes. The patch also updates the
-legacy CSLib time/space bridge to the new shared halted-run bounds.
+These failures concern the historical V1 dependency. The completed main project
+no longer depends on that library or its compatibility patch.
 
 The library rules used here are in
-[`InSpace`](https://github.com/SamuelSchlesinger/complexitylib2/blob/cb1b7ce8ca0757db30ec29c8365b88d86b78c80a/Complexity/Computability/Machines/Turing/MultiTape/Complexity/InSpace.lean),
-[`InSpaceLib`](https://github.com/SamuelSchlesinger/complexitylib2/blob/cb1b7ce8ca0757db30ec29c8365b88d86b78c80a/Complexity/Computability/Machines/Turing/MultiTape/Complexity/InSpaceLib.lean),
+[`InSpace`](https://github.com/cslib-community/complexitylib/blob/cb1b7ce8ca0757db30ec29c8365b88d86b78c80a/Complexity/Computability/Machines/Turing/MultiTape/Complexity/InSpace.lean),
+[`InSpaceLib`](https://github.com/cslib-community/complexitylib/blob/cb1b7ce8ca0757db30ec29c8365b88d86b78c80a/Complexity/Computability/Machines/Turing/MultiTape/Complexity/InSpaceLib.lean),
 and
-[`PolySpace`](https://github.com/SamuelSchlesinger/complexitylib2/blob/cb1b7ce8ca0757db30ec29c8365b88d86b78c80a/Complexity/Computability/Machines/Turing/MultiTape/Complexity/PolySpace.lean).
+[`PolySpace`](https://github.com/cslib-community/complexitylib/blob/cb1b7ce8ca0757db30ec29c8365b88d86b78c80a/Complexity/Computability/Machines/Turing/MultiTape/Complexity/PolySpace.lean).

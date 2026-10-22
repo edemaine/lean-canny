@@ -6,8 +6,9 @@ package lean_canny where
   version := v!"0.1.0"
   leanOptions := #[⟨`relaxedAutoImplicit, false⟩, ⟨`maxHeartbeats, 2000000⟩]
 
+-- This pinned revision predates the upstream package rename to `complexitylib`.
 require complexitylib2 from git
-  "https://github.com/SamuelSchlesinger/complexitylib2" @
+  "https://github.com/cslib-community/complexitylib" @
   "cb1b7ce8ca0757db30ec29c8365b88d86b78c80a"
 
 -- Pin the foundation's common CSLib/Mathlib versions.

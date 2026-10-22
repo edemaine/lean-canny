@@ -5,7 +5,7 @@
 [`CoercivePSPACE`](LeanCanny/ETR/CoercivePSPACE.lean) proves
 `LeanCanny.ETR.etr_mem_PSPACE` and
 `LeanCanny.ETR.existsReal_subset_PSPACE`: the project's encoded ETR language
-belongs to Complexitylib2's PSPACE, and every language polynomial-time reducible
+belongs to Complexitylib's PSPACE, and every language polynomial-time reducible
 to it does too. The final theorem composes actual native readers and preparation
 programs; it has no supplied coefficient, metadata, finite-fiber, or geometric
 parameter-selection hypothesis.
@@ -65,7 +65,7 @@ input-size bounds. The completed route uses this uncompactified equation,
 avoiding boundary zeros introduced by compactification.
 
 [`ExistsReal`](LeanCanny/ETR/Complexity.lean) is defined as the downward closure
-of this ETR language under Complexitylib2 polynomial-time many-one reductions.
+of this ETR language under Complexitylib polynomial-time many-one reductions.
 ETR is complete for that class by definition. The class inclusion follows from
 the ETR algorithm and proved PSPACE reduction closure. Relating the encoding
 to other standard ETR presentations and proving the NP lower inclusion are
@@ -192,11 +192,11 @@ exports the unconditional ETR and ExistsReal PSPACE theorems.
 
 ## Complexity foundation and verification
 
-The development uses Complexitylib2's tidy multitape calculus throughout.
+The development uses Complexitylib's tidy multitape calculus throughout.
 [`SpaceFunction`](LeanCanny/Computation/SpaceFunction.lean) is a proof-only
 wrapper around `ComputableTidilyInPolySpace`;
 [`SpaceDecider`](LeanCanny/Computation/SpaceDecider.lean) carries membership in
-Complexitylib2's machine-based PSPACE class. P, FP, and polynomial-time
+Complexitylib's machine-based PSPACE class. P, FP, and polynomial-time
 many-one reductions also use this foundation directly.
 
 Composition, pairing, branches, binary folds, modular scans, matrix powering,
@@ -207,13 +207,13 @@ state-size bounds are still proved explicitly. Exponentially large matrices,
 polynomials, and powers of two are accessed by short binary indices and modular
 readers. They are not stored as expanded objects.
 
-The earlier Complexitylib adapters, custom-machine simulation, and suspended
+The earlier Complexitylib V1 adapters, custom-machine simulation, and suspended
 scheduler were removed. No equivalence with Mathlib's `FinTM2` or another
 library's PSPACE predicate is assumed. The historical machine comparison found
 that `lean-trominoes` supplied TM2 workspace certificates and a generic Savitch
-evaluator, while the older Complexitylib used a distinct multitape model. A
+evaluator, while the older Complexitylib V1 used a distinct multitape model. A
 space-preserving bridge between those predicates was not established here.
-The isolated [Complexitylib2 prototype](experiments/complexitylib2/README.md)
+The isolated [Complexitylib prototype](experiments/complexitylib2/README.md)
 records the composition experiments, including a space-bounded child with
 exponential running time.
 
@@ -221,6 +221,38 @@ The commands in [`README.md`](README.md) check the full build, allowed axioms,
 grammar correctness, and native space/time foundations. The axiom audit allows
 only `propext`, `Classical.choice`, and `Quot.sound`; conditional helper interfaces
 do not replace the actual programs in the final theorem.
+
+## Reusing upstream algorithm tools
+
+The polynomial-time iteration adapters now use
+`ComputableTidilyInPolyTime.iterate` directly. Output-size bounds compose with
+native `PolyBounded` operations, avoiding a second fold construction and the
+extraction and reconstruction of polynomial bounds.
+
+The binary-counted space folds and recursive stack already use native
+`ComputableTidilyInPolySpace.iterate`. Ordinary polynomial-time list folds do
+not replace them: counts may be exponential and a child may require arbitrary
+time in polynomial space. Their accumulator, rank, and task-word invariants
+remain necessary.
+
+Upstream `Classes.Inclusions` supplies exact PSPACE/tidy-machine equivalences
+and reduction closure. Using it here would replace small local adapters but
+add the PH, PP, probability, and Savitch dependency graph. A lightweight upstream
+`Space.Closure` module would make those replacements useful; the current
+adapters retain their narrower imports.
+
+Upstream `polytime`, `fun_prop`, and `program_certificate` could also replace
+much of the local proof-search machinery. This needs a small compatibility layer:
+normalize `FP`/`UnaryFn` goals and local certificates to the native predicate,
+extract a Boolean verdict for `FPPred`, and register native-form certificates for
+the raw pair codec. Typed `encPair` projections do not implement that codec.
+A prototype should retain the existing tactic as a fallback until local-function,
+encoded-output, predicate-scan, and malformed-packet regressions pass.
+
+Complexitylib's canonical repository is now
+[`cslib-community/complexitylib`](https://github.com/cslib-community/complexitylib).
+The project keeps its pre-rename revision and Lake identifier `complexitylib2`;
+this link migration does not change the checked foundation or its pins.
 
 ## Unused tube route: remaining quantitative choices
 

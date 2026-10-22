@@ -6,8 +6,9 @@ defaultTargets = ["SpacePrototype", "BoundedFoldPrototype"]
 autoImplicit = false
 
 [[require]]
+# This pinned revision still declares the pre-migration package name.
 name = "complexitylib2"
-git = "https://github.com/SamuelSchlesinger/complexitylib2"
+git = "https://github.com/cslib-community/complexitylib"
 rev = "cb1b7ce8ca0757db30ec29c8365b88d86b78c80a"
 
 [[lean_lib]]

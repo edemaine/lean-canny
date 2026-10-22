@@ -13,10 +13,10 @@ LeanCanny.ETR.existsReal_subset_PSPACE : LeanCanny.ExistsReal ⊆ LeanCanny.PSPA
 ```
 
 These are unconditional theorems for the project's encoded ETR language and
-Complexitylib2's machine-based PSPACE class. The coefficient algorithms,
+[Complexitylib](https://github.com/cslib-community/complexitylib)'s machine-based PSPACE class. The coefficient algorithms,
 metadata preparation, recursive evaluation, and final sign decisions are
 constructed internally. The development uses Lean 4.36.0-rc1 with pinned
-Mathlib, CSLib, and Complexitylib2 dependencies.
+Mathlib, CSLib, and Complexitylib dependencies.
 
 This establishes the report's ETR PSPACE upper bound. The report's roadmap,
 connectivity, and motion-planning algorithms remain outside the completed result.
@@ -43,6 +43,12 @@ lake build
 [`lean-toolchain`](lean-toolchain) and [`lake-manifest.json`](lake-manifest.json)
 record the versions used. The public entry point is [`LeanCanny.lean`](LeanCanny.lean).
 
+Complexitylib moved to `cslib-community/complexitylib` from its temporary
+`complexitylib2` repository. This project retains the checked revision
+`cb1b7ce8`; that revision still declares the Lake package `complexitylib2`.
+The dependency URLs use the canonical repository. Updating to the renamed
+`complexitylib` package also requires advancing the dependency pins.
+
 For stricter verification:
 
 ```sh
@@ -57,7 +63,7 @@ lake env lean scripts/CheckPolyTimeFoundation.lean
 The axiom audit checks declarations in the `LeanCanny` namespace, local Nat
 codec extensions, and their transitive dependencies, allowing only Lean's
 standard `propext`, `Classical.choice`, and `Quot.sound` axioms. The foundation
-checks enforce the native Complexitylib2 time and space interfaces and reject
+checks enforce the native Complexitylib time and space interfaces and reject
 legacy machine dependencies. `CheckAbstract` also follows public definitions
 and statement dependencies to reject hidden implementation references.
 
@@ -98,10 +104,10 @@ Selected entry points:
 | Final decision | [`CoerciveInfinitesimalSemantics`](LeanCanny/ETR/CoerciveInfinitesimalSemantics.lean), [`CoercivePSPACE`](LeanCanny/ETR/CoercivePSPACE.lean) |
 
 [`SpaceFunction`](LeanCanny/Computation/SpaceFunction.lean) wraps
-Complexitylib2's `ComputableTidilyInPolySpace`.
+Complexitylib's `ComputableTidilyInPolySpace`.
 [`SpaceDecider`](LeanCanny/Computation/SpaceDecider.lean) carries membership in
 its native PSPACE class. Polynomial-time reductions and all FP controls also
-use Complexitylib2 directly. Space composition charges the original readers;
+use Complexitylib directly. Space composition charges the original readers;
 no free coefficient oracle or execution-time bound on a space-bounded child
 is assumed.
 
