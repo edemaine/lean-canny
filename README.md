@@ -23,6 +23,13 @@ connectivity, and motion-planning algorithms remain outside the completed result
 The proof uses a coercive one-parameter sampling construction; it does not
 formalize every intermediate construction in the report verbatim.
 
+For an independently readable, checked statement, see
+[`Abstract.lean`](LeanCanny/Abstract.lean). A reader can inspect its definitions
+and theorem statements to assess the claimed result; Lean verifies the proofs
+through [`AbstractBridge.lean`](LeanCanny/AbstractBridge.lean) and the development.
+Import it with `import LeanCanny.Abstract`, or build it with
+`lake build --wfail LeanCanny.Abstract`. It is also included in the default build.
+
 ## Build and verification
 
 Install [elan](https://github.com/leanprover/elan), then run:
@@ -41,6 +48,7 @@ For stricter verification:
 ```sh
 lake build --wfail
 lake env lean scripts/CheckAxioms.lean
+lake env lean scripts/CheckAbstract.lean
 lake env lean scripts/CheckGrammar.lean
 lake env lean scripts/CheckSpaceFoundation.lean
 lake env lean scripts/CheckPolyTimeFoundation.lean
@@ -50,7 +58,8 @@ The axiom audit checks declarations in the `LeanCanny` namespace, local Nat
 codec extensions, and their transitive dependencies, allowing only Lean's
 standard `propext`, `Classical.choice`, and `Quot.sound` axioms. The foundation
 checks enforce the native Complexitylib2 time and space interfaces and reject
-legacy machine dependencies.
+legacy machine dependencies. `CheckAbstract` also follows public definitions
+and statement dependencies to reject hidden implementation references.
 
 ## Proof outline
 

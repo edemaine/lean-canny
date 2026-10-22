@@ -1,3 +1,4 @@
+import LeanCanny.Abstract
 import LeanCanny.ETR.CoercivePSPACE
 import LeanCanny.ETR.CoerciveFormalLeafReader
 import LeanCanny.ETR.CoerciveCoordinatePathSource
