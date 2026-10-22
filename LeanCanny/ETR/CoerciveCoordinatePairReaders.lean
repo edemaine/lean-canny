@@ -29,11 +29,10 @@ noncomputable def preparedContext (p : List Bool) : List Bool :=
   pair (pair (tablePrepare (pairFst (pairFst p))) (pairSnd (pairFst p))) (pairSnd p)
 
 theorem preparedContextEvaluator : SpaceFunction preparedContext := by
-  have T := tablePrepareEvaluator.precompose (fun p => pairFst (pairFst p))
-    (mem_FP_comp pairFst_mem_FP pairFst_mem_FP)
-  have L := SpaceFunction.ofFP (fun p => pairSnd (pairFst p)) (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP)
-  have S := SpaceFunction.ofFP pairSnd pairSnd_mem_FP
-  exact (T.pairOutputs L).pairOutputs S
+  have h := tablePrepareEvaluator.computable
+  constructor
+  unfold preparedContext
+  fun_prop
 
 lemma table_prepared (p : List Bool) : CoercivePairRouting.table (preparedContext p) = tablePrepare (pairFst (pairFst p)) := by
   simp only [CoercivePairRouting.table, preparedContext, pairFst_pair]
@@ -52,12 +51,6 @@ lemma height_prepared (p : List Bool) : CoercivePairRouting.height (preparedCont
   simp only [CoercivePairRouting.height, bits_prepared]
   simp only [preparedContext, pairSnd_pair, CoerciveCoordinatePathSource.stage, CoerciveCoordinatePathSource.depth]
 
-lemma ancestor_lt (N h j : ℕ) (hh : h ≤ N) (hj : j < 2 ^ N) : j / 2 ^ h < 2 ^ (N - h) := by
-  apply (Nat.div_lt_iff_lt_mul (Nat.two_pow_pos h)).mpr
-  calc
-    j < 2 ^ N := hj
-    _ = 2 ^ (N - h) * 2 ^ h := by rw [← pow_add, Nat.sub_add_cancel hh]
-
 lemma pair_fields (p : List Bool) :
     let F := CoercivePairRouting.pairFamily CoerciveFormalLeafReader.leaf
     let q := preparedContext p
@@ -73,58 +66,15 @@ lemma pair_fields (p : List Bool) :
   have hj : j < 2 ^ CoerciveTableCorrectness.height bits := by
     have hl := Nat.min_le_right (Nat.fromBitsLE (pairSnd (pairFst p))) (dimension bits)
     exact (hl.trans (Nat.le_succ _)).trans_lt (Nat.lt_size_self (dimension bits + 1))
-  have hi : i < 2 ^ (CoerciveTableCorrectness.height bits - (h + 1)) := ancestor_lt _ _ _ hh hj
+  have hi : i < 2 ^ (CoerciveTableCorrectness.height bits - (h + 1)) := BalancedSubtreeLocality.ancestor_lt _ _ _ hh hj
   have hp : CoercivePairRouting.parent (preparedContext p) =
       BalancedParameterContext.packet (tablePrepare bits) (h + 1) i := by
     simp only [CoercivePairRouting.parent, CoercivePairRouting.parentIndex, table_prepared,
       leaf_prepared, height_prepared, bits, h, j, i]
-  have hpow : 2 ^ (CoerciveTableCorrectness.height bits - h) =
-      2 ^ (CoerciveTableCorrectness.height bits - (h + 1)) * 2 := by
-    rw [← pow_succ]
-    apply congrArg (fun n : ℕ => 2 ^ n)
-    omega
-  have hil : 2 * i < 2 ^ (CoerciveTableCorrectness.height bits - h) := by rw [hpow]; omega
-  have hir : 2 * i + 1 < 2 ^ (CoerciveTableCorrectness.height bits - h) := by rw [hpow]; omega
-  have hl := CoerciveTableCorrectness.tree_eq_reference bits h (2 * i) (by omega) hil
-  have hr := CoerciveTableCorrectness.tree_eq_reference bits h (2 * i + 1) (by omega) hir
-  have hs := CoerciveTableCorrectness.table_consistent_subtree bits (h + 1) i hh hi
-  have hdl := hs.2.2.1.trans (CoerciveTableCorrectness.reference_node_degree bits h (2 * i) (by omega))
-  have hdr := hs.2.2.2.1.trans (CoerciveTableCorrectness.reference_node_degree bits h (2 * i + 1) (by omega))
-  have hd := CoerciveTableCorrectness.table_direction_reference bits h i hh hi
-  have hleft : (CoercivePairRouting.pairFamily CoerciveFormalLeafReader.leaf).left (preparedContext p) =
-      SymbolicFixedTable.node (fun k => SymbolicScaledSquarefree.polynomial ((family bits).padded k))
-        (family bits).directions h (2 * i) := by
-    simp only [CoercivePairRouting.pairFamily, hp, BalancedParameterContext.child_packet,
-      Bool.false_eq_true, ite_false, Nat.add_zero, SymbolicFixedTablePolynomialTree.node_packet]
-    exact hl
-  have hright : (CoercivePairRouting.pairFamily CoerciveFormalLeafReader.leaf).right (preparedContext p) =
-      SymbolicFixedTable.node (fun k => SymbolicScaledSquarefree.polynomial ((family bits).padded k))
-        (family bits).directions h (2 * i + 1) := by
-    simp only [CoercivePairRouting.pairFamily, hp, BalancedParameterContext.child_packet,
-      ite_true, SymbolicFixedTablePolynomialTree.node_packet]
-    exact hr
-  have hml : (CoercivePairRouting.pairFamily CoerciveFormalLeafReader.leaf).leftOrder (preparedContext p) =
-      ((CoercivePairRouting.pairFamily CoerciveFormalLeafReader.leaf).left (preparedContext p)).natDegree := by
-    calc
-      _ = BalancedMetadataTable.order (BalancedParameterContext.packet (tablePrepare bits) h (2 * i)) := by
-        simp only [CoercivePairRouting.pairFamily, hp, BalancedParameterContext.child_packet,
-          Bool.false_eq_true, ite_false, Nat.add_zero]
-      _ = _ := hdl
-      _ = _ := congrArg Polynomial.natDegree hleft.symm
-  have hmr : (CoercivePairRouting.pairFamily CoerciveFormalLeafReader.leaf).rightOrder (preparedContext p) =
-      ((CoercivePairRouting.pairFamily CoerciveFormalLeafReader.leaf).right (preparedContext p)).natDegree := by
-    calc
-      _ = BalancedMetadataTable.order (BalancedParameterContext.packet (tablePrepare bits) h (2 * i + 1)) := by
-        simp only [CoercivePairRouting.pairFamily, hp, BalancedParameterContext.child_packet, ite_true]
-      _ = _ := hdr
-      _ = _ := congrArg Polynomial.natDegree hright.symm
-  refine ⟨hml, hmr, ?_⟩
-  rw [SymbolicPairRecoveryBits.Family.coordinate_eq
-    (CoercivePairRouting.pairFamily CoerciveFormalLeafReader.leaf) (preparedContext p)
-    (decide (CoercivePairRouting.isRight (preparedContext p))) hml hmr, hleft, hright]
-  have hdir : (CoercivePairRouting.pairFamily CoerciveFormalLeafReader.leaf).direction (preparedContext p) =
-      (family bits).directions h i := by simpa only [CoercivePairRouting.pairFamily, hp] using hd
-  rw [hdir]
+  have spec := CoerciveTableCorrectness.pair_spec bits h i hh hi
+  have fields := spec.fields CoercivePairRouting.parent (preparedContext p) hp
+    (decide (CoercivePairRouting.isRight (preparedContext p)))
+  refine ⟨fields.1, fields.2.1, fields.2.2.trans ?_⟩
   change SymbolicFixedTable.pairCoordinate _ _ _ _ =
     SymbolicFixedTable.leafStep (fun k => SymbolicScaledSquarefree.polynomial ((family bits).padded k))
       (family bits).directions j h
@@ -144,11 +94,10 @@ noncomputable def prepareQuery (q : List Bool) : List Bool :=
   pair (pair (preparedContext (pairFst (pairFst q))) (pairSnd (pairFst q))) (pairSnd q)
 
 theorem prepareQueryEvaluator : SpaceFunction prepareQuery := by
-  have C := preparedContextEvaluator.precompose (fun q => pairFst (pairFst q))
-    (mem_FP_comp pairFst_mem_FP pairFst_mem_FP)
-  have M := SpaceFunction.ofFP (fun q => pairSnd (pairFst q)) (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP)
-  have D := SpaceFunction.ofFP pairSnd pairSnd_mem_FP
-  exact (C.pairOutputs M).pairOutputs D
+  have h := preparedContextEvaluator.computable
+  constructor
+  unfold prepareQuery
+  fun_prop
 
 lemma numerator_from_prepared
     (N : SpaceFunction (SymbolicFixedTableEntryBits.coefficient (fun p =>

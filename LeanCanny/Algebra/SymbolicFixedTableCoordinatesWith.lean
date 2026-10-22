@@ -85,38 +85,14 @@ theorem coordinateWith_spec (B : Budget) (a : ℕ → Polynomial Coefficient) (c
     (coordinateWith T a c h i j).denominator.eval₂ (scalarEvaluation beta) theta ≠ 0 ∧
       (coordinateWith T a c h i j).eval (scalarEvaluation beta) theta =
         BalancedPrimitiveTree.coordinate h (decode a c beta h i theta) j := by
-  induction h generalizing i j theta with
-  | zero => simp only [coordinateWith, SymbolicBalancedCoordinate.identity, Polynomial.eval₂_one,
-      one_ne_zero, ne_eq, not_false_eq_true, Coordinate.eval, Polynomial.eval₂_X, div_one,
-      decode, BalancedPrimitiveTree.coordinate, and_self]
-  | succ h ih =>
-    have hr := pair_decode_root (scalarEvaluation beta) (node a c h (2 * i)) (node a c h (2 * i + 1))
-      (c h i) theta (node_degree_map B a c ha hc height h (2 * i) (by omega) beta hb he)
-      (node_degree_map B a c ha hc height h (2 * i + 1) (by omega) beta hb he)
-      (specialized_node_separable B a c ha hc height hs beta hb he h (2 * i) (by omega))
-      (specialized_node_separable B a c ha hc height hs beta hb he h (2 * i + 1) (by omega))
-      (specialized_node_separable B a c ha hc height hs beta hb he (h + 1) i hh) ht
-    by_cases hjl : j < 2 ^ h
-    · have hl := ih (2 * i) j (by omega) hjl _ hr.1
-      have hd : (pairCoordinate false (node a c h (2 * i)) (node a c h (2 * i + 1)) (c h i)).denominator.eval₂
-          (scalarEvaluation beta) theta ≠ 0 := hr.2.2.2
-      refine ⟨?_, ?_⟩
-      · rw [coordinateWith, ite_eq_left hjl]
-        exact Coordinate.compWith_denominator_ne_zero _ _ _
-          (coordinateWith_uniform B a c ha hc T hT hB _ _ _).degree _ _ hd hl.1
-      · rw [coordinateWith, ite_eq_left hjl, Coordinate.eval_compWith _ _ _
-          (coordinateWith_uniform B a c ha hc T hT hB _ _ _).degree _ _ hd]
-        simpa only [decode, BalancedPrimitiveTree.coordinate, ite_eq_left hjl, eval_pairCoordinate_false] using hl.2
-    · have hjr : j - 2 ^ h < 2 ^ h := by rw [pow_succ] at hj; omega
-      have hh' := ih (2 * i + 1) (j - 2 ^ h) (by omega) hjr _ hr.2.1
-      have hd : (pairCoordinate true (node a c h (2 * i)) (node a c h (2 * i + 1)) (c h i)).denominator.eval₂
-          (scalarEvaluation beta) theta ≠ 0 := hr.2.2.2
-      refine ⟨?_, ?_⟩
-      · rw [coordinateWith, ite_eq_right hjl]
-        exact Coordinate.compWith_denominator_ne_zero _ _ _
-          (coordinateWith_uniform B a c ha hc T hT hB _ _ _).degree _ _ hd hh'.1
-      · rw [coordinateWith, ite_eq_right hjl, Coordinate.eval_compWith _ _ _
-          (coordinateWith_uniform B a c ha hc T hT hB _ _ _).degree _ _ hd]
-        simpa only [decode, BalancedPrimitiveTree.coordinate, ite_eq_right hjl, eval_pairCoordinate_true] using hh'.2
+  exact coordinate_spec_of_composition (coordinateWith T a c)
+    (fun h => Coordinate.compWith (T ^ (16 ^ h))) a c
+    (fun _ _ => rfl) (fun _ _ _ => rfl) B ha hc height hs beta hb he
+    (fun h i j inner theta hi ho =>
+      ⟨Coordinate.compWith_denominator_ne_zero _ _ inner
+          (coordinateWith_uniform B a c ha hc T hT hB h i j).degree _ theta hi ho,
+        Coordinate.eval_compWith _ _ inner
+          (coordinateWith_uniform B a c ha hc T hT hB h i j).degree _ theta hi⟩)
+    h i j hh hj theta ht
 
 end LeanCanny.Algebra.SymbolicFixedTable

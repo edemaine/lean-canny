@@ -21,7 +21,8 @@ attribute [local irreducible] BinaryNat.add BinaryNat.mul BinaryNat.sub BinaryNa
 
 /-- Entry packets are c/row/column/(inner degree,outer degree). -/
 def uv (q : List Bool) := pairSnd (pairSnd (pairSnd q))
-@[polytime] lemma uv_FP : uv ∈ FP := by polytime [uv]
+@[program_certificate] lemma uv_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+    uv Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by polytime [uv]
 
 def columnsCode (L : Layout) (c : List Bool) := FixedWidthPolynomial.countCode L.arity L.width c
 lemma columnsCode_FP {L : Layout} (h : L.Controls) : columnsCode L ∈ FP :=

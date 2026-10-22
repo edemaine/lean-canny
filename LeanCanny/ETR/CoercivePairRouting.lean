@@ -7,6 +7,7 @@ module
 public import LeanCanny.ETR.CoerciveCoordinatePathSource
 public import LeanCanny.ETR.CoerciveFormalLeafReader
 public import LeanCanny.Algebra.SymbolicFixedTableTreeSource
+public import LeanCanny.Algebra.SymbolicPreparedTable
 public import LeanCanny.Algebra.SymbolicPrimitivePairSelectedSpace
 
 /-! # Total native addressing of a prepared coordinate's ancestor pair -/
@@ -74,12 +75,8 @@ theorem isRight_fppred : FPPred isRight := by
     have he := congrArg Nat.fromBitsLE h
     simpa only [Nat.fromBitsLE_bits] using he, fun h => congrArg Nat.bits h⟩
 
-noncomputable def pairFamily (L : List Bool → Polynomial (Polynomial ℤ)) : SymbolicFixedTableEntryBits.Family where
-  left p := SymbolicFixedTablePolynomialTree.node L (BalancedParameterContext.child false (parent p))
-  right p := SymbolicFixedTablePolynomialTree.node L (BalancedParameterContext.child true (parent p))
-  leftOrder p := BalancedMetadataTable.order (BalancedParameterContext.child false (parent p))
-  rightOrder p := BalancedMetadataTable.order (BalancedParameterContext.child true (parent p))
-  direction p := BalancedMetadataTable.direction (parent p)
+noncomputable def pairFamily (L : List Bool → Polynomial (Polynomial ℤ)) : SymbolicFixedTableEntryBits.Family :=
+  SymbolicFixedTablePolynomialTree.pairFamily L parent
 
 noncomputable def bound (E : List Bool → ℕ) (p : List Bool) : ℕ :=
   SymbolicFixedTablePolynomialTree.nodeBound E (parent p)

@@ -8,6 +8,17 @@ native space-bounded child, with no legacy evaluator or execution clock. -/
 
 example : LeanCanny.PSPACE = Cslib.Complexity.PSPACE encBits := rfl
 
+/- Native automation composes arbitrary space-bounded children through the
+raw packet codec; the children need no polynomial-time certificate. -/
+example {f g : List Bool → List Bool}
+    (hf : LeanCanny.Computation.SpaceFunction f) (hg : LeanCanny.Computation.SpaceFunction g) :
+    LeanCanny.Computation.SpaceFunction (fun z =>
+      LeanCanny.pair (f (LeanCanny.pairFst z)) (g (LeanCanny.pairSnd z))) := by
+  have hf := hf.computable
+  have hg := hg.computable
+  constructor
+  fun_prop
+
 /-! The unconditional Canny endpoints target the native deterministic class. -/
 example : LeanCanny.ETR.language ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.ETR.etr_mem_PSPACE

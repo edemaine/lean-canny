@@ -58,16 +58,34 @@ noncomputable def coordinate (a : ℕ → Polynomial Coefficient) (c : ℕ → �
     else (coordinate a c h (2 * i + 1) (j - 2 ^ h)).comp
       (pairCoordinate true (node a c h (2 * i)) (node a c h (2 * i + 1)) (c h i))
 
-theorem coordinate_spec (B : Budget) (a : ℕ → Polynomial Coefficient) (c : ℕ → ℕ → ℕ)
-    (ha : ∀ i, B.Controls (a i)) (hc : Admissible B c) (height : ℕ) (hs : SeparableTable a c height)
-    (beta : ℝ) (hb : 0 < beta) (he : beta ≤ InfinitesimalSign.dyadic (referenceExponent B height))
+/-- The coordinate decoding induction depends only on the composition laws.
+Both minimal-degree and public-envelope clearing instantiate this theorem while
+retaining their own literal numerator and denominator polynomials. -/
+theorem coordinate_spec_of_composition
+    (C : ℕ → ℕ → ℕ → Coordinate) (compose : ℕ → Coordinate → Coordinate → Coordinate)
+    (a : ℕ → Polynomial Coefficient) (c : ℕ → ℕ → ℕ)
+    (hzero : ∀ i j, C 0 i j = SymbolicBalancedCoordinate.identity)
+    (hstep : ∀ h i j, C (h + 1) i j = if j < 2 ^ h then
+      compose h (C h (2 * i) j)
+        (pairCoordinate false (node a c h (2 * i)) (node a c h (2 * i + 1)) (c h i))
+      else compose h (C h (2 * i + 1) (j - 2 ^ h))
+        (pairCoordinate true (node a c h (2 * i)) (node a c h (2 * i + 1)) (c h i)))
+    (B : Budget) (ha : ∀ i, B.Controls (a i)) (hc : Admissible B c)
+    (height : ℕ) (hs : SeparableTable a c height) (beta : ℝ) (hb : 0 < beta)
+    (he : beta ≤ InfinitesimalSign.dyadic (referenceExponent B height))
+    (hcompose : ∀ h i j (inner : Coordinate) (theta : ℝ),
+      inner.denominator.eval₂ (scalarEvaluation beta) theta ≠ 0 →
+      (C h i j).denominator.eval₂ (scalarEvaluation beta) (inner.eval (scalarEvaluation beta) theta) ≠ 0 →
+      (compose h (C h i j) inner).denominator.eval₂ (scalarEvaluation beta) theta ≠ 0 ∧
+        (compose h (C h i j) inner).eval (scalarEvaluation beta) theta =
+          (C h i j).eval (scalarEvaluation beta) (inner.eval (scalarEvaluation beta) theta))
     (h i j : ℕ) (hh : h ≤ height) (hj : j < 2 ^ h) (theta : ℝ)
     (ht : (node a c h i).eval₂ (scalarEvaluation beta) theta = 0) :
-    (coordinate a c h i j).denominator.eval₂ (scalarEvaluation beta) theta ≠ 0 ∧
-      (coordinate a c h i j).eval (scalarEvaluation beta) theta =
+    (C h i j).denominator.eval₂ (scalarEvaluation beta) theta ≠ 0 ∧
+      (C h i j).eval (scalarEvaluation beta) theta =
         BalancedPrimitiveTree.coordinate h (decode a c beta h i theta) j := by
   induction h generalizing i j theta with
-  | zero => simp only [coordinate, SymbolicBalancedCoordinate.identity, Polynomial.eval₂_one,
+  | zero => simp only [hzero, SymbolicBalancedCoordinate.identity, Polynomial.eval₂_one,
       one_ne_zero, ne_eq, not_false_eq_true, Coordinate.eval, Polynomial.eval₂_X, div_one,
       decode, BalancedPrimitiveTree.coordinate, and_self]
   | succ h ih =>
@@ -81,20 +99,32 @@ theorem coordinate_spec (B : Budget) (a : ℕ → Polynomial Coefficient) (c : �
     · have hl := ih (2 * i) j (by omega) hjl _ hr.1
       have hd : (pairCoordinate false (node a c h (2 * i)) (node a c h (2 * i + 1)) (c h i)).denominator.eval₂
           (scalarEvaluation beta) theta ≠ 0 := hr.2.2.2
-      refine ⟨?_, ?_⟩
-      · rw [coordinate, ite_eq_left hjl]
-        exact Coordinate.comp_denominator_ne_zero _ _ _ _ hd hl.1
-      · rw [coordinate, ite_eq_left hjl, Coordinate.eval_comp _ _ _ _ hd]
-        simpa only [decode, BalancedPrimitiveTree.coordinate, ite_eq_left hjl, eval_pairCoordinate_false] using hl.2
+      simp only [hstep, ite_eq_left hjl]
+      have hn := hcompose h (2 * i) j _ theta hd hl.1
+      refine ⟨hn.1, hn.2.trans ?_⟩
+      simpa only [decode, BalancedPrimitiveTree.coordinate, ite_eq_left hjl, eval_pairCoordinate_false] using hl.2
     · have hjr : j - 2 ^ h < 2 ^ h := by rw [pow_succ] at hj; omega
-      have hh' := ih (2 * i + 1) (j - 2 ^ h) (by omega) hjr _ hr.2.1
+      have hr' := ih (2 * i + 1) (j - 2 ^ h) (by omega) hjr _ hr.2.1
       have hd : (pairCoordinate true (node a c h (2 * i)) (node a c h (2 * i + 1)) (c h i)).denominator.eval₂
           (scalarEvaluation beta) theta ≠ 0 := hr.2.2.2
-      refine ⟨?_, ?_⟩
-      · rw [coordinate, ite_eq_right hjl]
-        exact Coordinate.comp_denominator_ne_zero _ _ _ _ hd hh'.1
-      · rw [coordinate, ite_eq_right hjl, Coordinate.eval_comp _ _ _ _ hd]
-        simpa only [decode, BalancedPrimitiveTree.coordinate, ite_eq_right hjl, eval_pairCoordinate_true] using hh'.2
+      simp only [hstep, ite_eq_right hjl]
+      have hn := hcompose h (2 * i + 1) (j - 2 ^ h) _ theta hd hr'.1
+      refine ⟨hn.1, hn.2.trans ?_⟩
+      simpa only [decode, BalancedPrimitiveTree.coordinate, ite_eq_right hjl, eval_pairCoordinate_true] using hr'.2
+
+theorem coordinate_spec (B : Budget) (a : ℕ → Polynomial Coefficient) (c : ℕ → ℕ → ℕ)
+    (ha : ∀ i, B.Controls (a i)) (hc : Admissible B c) (height : ℕ) (hs : SeparableTable a c height)
+    (beta : ℝ) (hb : 0 < beta) (he : beta ≤ InfinitesimalSign.dyadic (referenceExponent B height))
+    (h i j : ℕ) (hh : h ≤ height) (hj : j < 2 ^ h) (theta : ℝ)
+    (ht : (node a c h i).eval₂ (scalarEvaluation beta) theta = 0) :
+    (coordinate a c h i j).denominator.eval₂ (scalarEvaluation beta) theta ≠ 0 ∧
+      (coordinate a c h i j).eval (scalarEvaluation beta) theta =
+        BalancedPrimitiveTree.coordinate h (decode a c beta h i theta) j := by
+  exact coordinate_spec_of_composition (coordinate a c) (fun _ => Coordinate.comp) a c
+    (fun _ _ => rfl) (fun _ _ _ => rfl) B ha hc height hs beta hb he
+    (fun _ _ _ inner theta hi ho =>
+      ⟨Coordinate.comp_denominator_ne_zero _ inner _ theta hi ho, Coordinate.eval_comp _ inner _ theta hi⟩)
+    h i j hh hj theta ht
 
 namespace Reference
 

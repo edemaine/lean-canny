@@ -18,19 +18,14 @@ open scoped Classical
 theorem SpaceDecider.precompose {L : Language} (D : SpaceDecider L)
     (f : List Bool → List Bool) (hf : ComputableTidilyInPolyTime f encBits encBits) :
     SpaceDecider (f ⁻¹' L) :=
-  SpaceDecider.of_computable
-    (D.computable.comp (ComputableTidilyInPolySpace.of_polyTime hf))
-    (fun _ => decide_eq_true_iff.symm)
+  ⟨NativeSpace.preimage hf D.mem_PSPACE⟩
 
 theorem mem_PSPACE_preimage {f : List Bool → List Bool} {L : Language}
     (hf : ComputableTidilyInPolyTime f encBits encBits) (hL : L ∈ PSPACE) : f ⁻¹' L ∈ PSPACE :=
-  ((SpaceDecider.ofPSPACE hL).precompose f hf).mem_PSPACE
+  NativeSpace.preimage hf hL
 
 theorem mem_PSPACE_of_reduction {L K : Language}
-    (h : PolyTimeReduces L K) (hK : K ∈ PSPACE) : L ∈ PSPACE := by
-  obtain ⟨f, hf, hc⟩ := h
-  have heq : L = f ⁻¹' K := by ext x; exact hc x
-  rw [heq]
-  exact mem_PSPACE_preimage hf hK
+    (h : PolyTimeReduces L K) (hK : K ∈ PSPACE) : L ∈ PSPACE :=
+  NativeSpace.of_reduction h hK
 
 end LeanCanny.Computation

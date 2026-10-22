@@ -26,6 +26,12 @@ variable {σ : Type*} [Fintype σ] {N : ℕ}
 
 def prefixWeight (f : σ ≃ Fin N) (A : ℕ) (i : σ) : ℕ := if (f i).val < A then 1 else 0
 
+omit [Fintype σ] in
+/-- Selecting the whole variable layout gives ordinary total-degree homogenization. -/
+@[simp] theorem prefixWeight_all (f : σ ≃ Fin N) : prefixWeight f N = fun _ => 1 := by
+  funext i
+  simp only [prefixWeight, (f i).isLt, ite_true]
+
 def variableEquiv (f : σ ≃ Fin N) : Option σ ≃ Fin (N + 1) :=
   (Equiv.optionCongr f).trans (finSuccEquiv N).symm
 

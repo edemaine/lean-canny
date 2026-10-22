@@ -21,16 +21,27 @@ allows any certified binary upper bound. Child execution times never enter.
 namespace LeanCanny.Computation.SpaceFunction
 open Turing.MultiTapeTM
 
+/-- Binary-counted iteration with a native growth certificate for the live state.
+The bound itself need not be computed by the machine. -/
+theorem iterate_of_polyBounded {step : List Bool → List Bool} (E : SpaceFunction step)
+    (init count : List Bool → List Bool) (hi : init ∈ FP) (hc : count ∈ FP)
+    (bound : List Bool → ℕ) (hbound : PolyBounded List.length bound)
+    (hstate : ∀ x k, k ≤ Nat.fromBitsLE (count x) →
+      (step^[k] (init x)).length ≤ bound x) :
+    SpaceFunction (fun x => step^[Nat.fromBitsLE (count x)] (init x)) :=
+  ⟨ComputableTidilyInPolySpace.iterate
+    (fromBitsLE_computable.comp (FP.computable hc))
+    (ComputableTidilyInPolySpace.of_polyTime (FP.computable hi)) E.computable
+    hbound hstate⟩
+
 theorem iterate {step : List Bool → List Bool} (E : SpaceFunction step)
     (init count : List Bool → List Bool) (hi : init ∈ FP) (hc : count ∈ FP)
     (s : Polynomial ℕ)
     (hstate : ∀ x k, k ≤ Nat.fromBitsLE (count x) →
       (step^[k] (init x)).length ≤ s.eval x.length) :
     SpaceFunction (fun x => step^[Nat.fromBitsLE (count x)] (init x)) :=
-  ⟨ComputableTidilyInPolySpace.iterate
-    (fromBitsLE_computable.comp (FP.computable hc))
-    (ComputableTidilyInPolySpace.of_polyTime (FP.computable hi)) E.computable
-    (PolyBounded.of_polynomiallyBounded _ (.polynomial_eval s)) hstate⟩
+  E.iterate_of_polyBounded init count hi hc (fun x => s.eval x.length)
+    (PolyBounded.of_polynomiallyBounded _ (.polynomial_eval s)) hstate
 
 private def freeze (step : List Bool → List Bool) (halt : List Bool → Bool) (x : List Bool) :=
   if halt x then x else step x

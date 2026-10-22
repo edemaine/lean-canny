@@ -42,24 +42,9 @@ theorem exponent_eq (input rank : List Bool → List Bool) (c : List Bool) :
     CoerciveQueryReaders.queryExponent input (target input rank) c =
       FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin (dimension (input c) + 1)))
         (width (input c)) (Nat.fromBitsLE (rank c)) := by
-  let A : List Bool → ℕ := fun c => dimension (input c) + 1
-  let W := width ∘ input
-  let V := CoercivePowerReaders.width ∘ input
-  have hfit (i : ℕ) : FixedWidthQuery.entry A W rank c i < 2 ^ V c := by
-    unfold FixedWidthQuery.entry
-    split_ifs
-    · apply (Nat.fromBitsLE_lt_pow_length _).trans_le
-      apply Nat.pow_le_pow_right (by decide)
-      exact (List.length_take_le _ _).trans (width_le (input c))
-    · exact Nat.two_pow_pos _
-  ext i
-  simp only [CoerciveQueryReaders.queryExponent, FixedWidthPolynomial.nativeExponent,
-    Finsupp.coe_equivFunOnFinite_symm, Equiv.refl_apply]
-  change FixedWidthQuery.coordinate V (FixedWidthQuery.repack A W A V rank) c i.val = _
-  rw [FixedWidthQuery.coordinate_repack A W A V rank c i.val i.isLt (hfit i.val)]
-  rw [FixedWidthQuery.entry, ite_eq_left i.isLt]
-  unfold FixedWidthQuery.coordinate
-  rw [FixedWidthPolynomial.entry_eq_digit, BinaryNat.value_take, FixedWidthPolynomial.drop_value]
-  rfl
+  rw [CoerciveQueryReaders.queryExponent_rank]
+  exact FixedWidthPolynomial.nativeExponent_repack
+    (Equiv.refl (Fin (dimension (input c) + 1))) (width ∘ input)
+    (CoercivePowerReaders.width ∘ input) rank c (width_le (input c))
 
 end LeanCanny.ETR.CoerciveHomogeneousRepack

@@ -87,19 +87,10 @@ theorem ordinary_packet (input : List Bool → List Bool) (selected : List Bool 
         (FixedWidthPolynomial.nativeExponent (Equiv.refl _) (CoercivePowerReaders.width (input c)) k) : ℤ) :
           ZMod (Nat.fromBitsLE (modulus c) + 1)) := by
     rw [derivativeReader_packet, hs, derivativeCoefficient, dite_eq_left i.isLt]
-  have h := HomogenizationBits.value_packet (dimension ∘ input) (dimension ∘ input)
+  exact HomogenizationBits.residue_packet_all (dimension ∘ input)
     (CoercivePowerReaders.width ∘ input) (fun c => 2 * degreeAllowance (input c) + 1)
     (derivativeReader input selected modulus) c (Equiv.refl _)
     (MvPolynomial.pderiv i ((polynomial (input c)) ^ 2))
-    (fun a : ℤ => residueBits (a : ZMod (Nat.fromBitsLE (modulus c) + 1)))
-    (by simp [residueBits, BinaryNatCode.encode]) hp r
-  have hw (N : ℕ) : HomogenizationLayout.prefixWeight (Equiv.refl (Fin N)) N =
-      (fun _ => 1) := by funext j; simp [HomogenizationLayout.prefixWeight]
-  have he := congrArg (fun w : Fin (dimension (input c)) → ℕ =>
-    WeightedHomogenization.homogenize w (2 * degreeAllowance (input c) + 1)
-      (MvPolynomial.pderiv i ((polynomial (input c)) ^ 2))) (hw (dimension (input c)))
-  exact h.trans (congrArg (fun p : MvPolynomial (Option (Fin (dimension (input c)))) ℤ =>
-    residueBits ((p.coeff (FixedWidthPolynomial.nativeExponent CoerciveCriticalHomogenization.layout
-      (CoercivePowerReaders.width (input c)) r) : ℤ) : ZMod (Nat.fromBitsLE (modulus c) + 1))) he)
+    (Nat.fromBitsLE (modulus c) + 1) hp r
 
 end LeanCanny.ETR.CoerciveHomogeneousReaders

@@ -101,4 +101,30 @@ theorem value_packet {σ R : Type*} [Fintype σ] [CommSemiring R]
   · rw [ite_eq_left (hg.mpr h), ite_eq_left h, oldQuery_packet, hc]
   · rw [ite_eq_right (fun hh => h (hg.mp hh)), ite_eq_right h, hz]
 
+/-- Ordinary homogenization uses the full layout, with no application-specific
+weight conversion. The coefficient encoding need only send zero to `[]`. -/
+theorem value_packet_all {σ R : Type*} [Fintype σ] [CommSemiring R]
+    (N W D : List Bool → ℕ) (reader : List Bool → List Bool) (c : List Bool)
+    (f : σ ≃ Fin (N c)) (p : MvPolynomial σ R) (enc : R → List Bool) (hz : enc 0 = [])
+    (hc : ∀ r, reader (pair c (BinaryNatCode.encode r)) =
+      enc (p.coeff (nativeExponent f (W c) r))) (r : ℕ) :
+    value N N W D reader (pair c (BinaryNatCode.encode r)) = enc
+      ((WeightedHomogenization.homogenize (fun _ => 1) (D c) p).coeff
+        (nativeExponent (HomogenizationLayout.variableEquiv f) (W c) r)) := by
+  simpa only [HomogenizationLayout.prefixWeight_all] using
+    value_packet N N W D reader c f p enc hz hc r
+
+/-- Residue readers inherit ordinary integer homogenization correctness. The
+modulus is arbitrary; in particular no field or primality hypothesis is needed. -/
+theorem residue_packet_all {σ : Type*} [Fintype σ]
+    (N W D : List Bool → ℕ) (reader : List Bool → List Bool) (c : List Bool)
+    (f : σ ≃ Fin (N c)) (p : MvPolynomial σ ℤ) (m : ℕ)
+    (hc : ∀ r, reader (pair c (BinaryNatCode.encode r)) =
+      MatrixPower.residueBits ((p.coeff (nativeExponent f (W c) r) : ℤ) : ZMod m)) (r : ℕ) :
+    value N N W D reader (pair c (BinaryNatCode.encode r)) = MatrixPower.residueBits
+      ((((WeightedHomogenization.homogenize (fun _ => 1) (D c) p).coeff
+        (nativeExponent (HomogenizationLayout.variableEquiv f) (W c) r)) : ℤ) : ZMod m) :=
+  value_packet_all N W D reader c f p (fun a : ℤ => MatrixPower.residueBits (a : ZMod m))
+    (by simp [MatrixPower.residueBits, BinaryNatCode.encode]) hc r
+
 end LeanCanny.Algebra.HomogenizationBits

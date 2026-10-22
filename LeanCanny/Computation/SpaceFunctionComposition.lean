@@ -10,8 +10,20 @@ public import LeanCanny.Computation.SpaceFunction
 
 @[expose] public section
 
-namespace LeanCanny.Computation.SpaceFunction
+namespace LeanCanny.Computation
 open Turing.MultiTapeTM
+
+/-- Compose arbitrary space-bounded readers with the project's raw pair codec. -/
+@[fun_prop]
+theorem rawPair_computable {α : Type} {enc : α ↪ List Bool} {f g : α → List Bool}
+    (hf : ComputableTidilyInPolySpace f enc encBits)
+    (hg : ComputableTidilyInPolySpace g enc encBits) :
+    ComputableTidilyInPolySpace (fun x => LeanCanny.pair (f x) (g x)) enc encBits :=
+  (ComputableTidilyInPolySpace.of_polyTime
+    (pair_computable (ComputableTidilyInPolyTime.fst encBits encBits)
+      (ComputableTidilyInPolyTime.snd encBits encBits))).comp (hf.prod hg)
+
+namespace SpaceFunction
 
 theorem congr {f g : List Bool → List Bool} (E : SpaceFunction f) (h : f = g) : SpaceFunction g := h ▸ E
 
@@ -21,13 +33,11 @@ theorem precompose {f : List Bool → List Bool} (E : SpaceFunction f)
 
 theorem pairOutputs {f g : List Bool → List Bool} (E : SpaceFunction f) (G : SpaceFunction g) :
     SpaceFunction (fun x => LeanCanny.pair (f x) (g x)) :=
-  ⟨(ComputableTidilyInPolySpace.of_polyTime
-    (pair_computable (ComputableTidilyInPolyTime.fst encBits encBits)
-      (ComputableTidilyInPolyTime.snd encBits encBits))).comp
-        (E.computable.prod G.computable)⟩
+  ⟨rawPair_computable E.computable G.computable⟩
 
 theorem withInput {f : List Bool → List Bool} (E : SpaceFunction f) :
     SpaceFunction (fun x => LeanCanny.pair x (f x)) :=
   pairOutputs ⟨ComputableTidilyInPolySpace.id'⟩ E
 
-end LeanCanny.Computation.SpaceFunction
+end SpaceFunction
+end LeanCanny.Computation

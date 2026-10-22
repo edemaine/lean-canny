@@ -1,3 +1,8 @@
+import LeanCanny.Algebra.SymbolicPreparedTable
+import LeanCanny.Algebra.ModularResidueReaders
+import LeanCanny.Computation.TidyBoundedProduct
+import LeanCanny.Computation.NativeSpaceClosure
+import LeanCanny.Computation.PolynomialBounds
 import LeanCanny.Abstract
 import LeanCanny.ETR.CoercivePSPACE
 import LeanCanny.ETR.CoerciveFormalLeafReader

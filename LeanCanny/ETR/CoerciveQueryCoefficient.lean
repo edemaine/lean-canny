@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.CoerciveSparseReaders
+public import LeanCanny.Algebra.ModularResidueReaders
 
 /-! # Native residues for all actual coercive sampling rows
 
@@ -27,19 +28,13 @@ def addValue (modulus f g : List Bool → List Bool) (c : List Bool) : List Bool
 def negValue (modulus f : List Bool → List Bool) (c : List Bool) : List Bool :=
   ArithmeticBits.negate (pair (BinaryNat.succ (modulus c)) (f c))
 
-private theorem addEvaluator {modulus f g : List Bool → List Bool} (hm : modulus ∈ FP)
-    (F : SpaceFunction f) (G : SpaceFunction g) : SpaceFunction (addValue modulus f g) := by
-  have hfinish := mem_FP_comp (ModularResidueSpace.prepare_mem_FP modulus hm) ArithmeticBits.addMod_mem_FP
-  have E := (F.pairOutputs G).withInput.postcompose _ hfinish
-  exact E.congr (funext fun c => by simp only [Function.comp_apply, ModularResidueSpace.prepare,
-    pairFst_pair, pairSnd_pair, addValue])
+theorem addEvaluator {modulus f g : List Bool → List Bool} (hm : modulus ∈ FP)
+    (F : SpaceFunction f) (G : SpaceFunction g) : SpaceFunction (addValue modulus f g) :=
+  ModularResidueReaders.addEvaluator hm F G
 
-private theorem negEvaluator {modulus f : List Bool → List Bool} (hm : modulus ∈ FP)
-    (F : SpaceFunction f) : SpaceFunction (negValue modulus f) := by
-  have hfinish := mem_FP_comp (ModularResidueSpace.prepare_mem_FP modulus hm) ArithmeticBits.negate_mem_FP
-  have E := F.withInput.postcompose _ hfinish
-  exact E.congr (funext fun c => by simp only [Function.comp_apply, ModularResidueSpace.prepare,
-    pairFst_pair, pairSnd_pair, negValue])
+theorem negEvaluator {modulus f : List Bool → List Bool} (hm : modulus ∈ FP)
+    (F : SpaceFunction f) : SpaceFunction (negValue modulus f) :=
+  ModularResidueReaders.negEvaluator hm F
 
 noncomputable def implicitValue (input modulus : List Bool → List Bool) (c : List Bool) : List Bool :=
   residueBits (((2 : ℤ) ^ CoerciveSourceSampling.penaltyExponent (input c) : ℤ) :
@@ -131,12 +126,11 @@ theorem gradient_value_eq (input target modulus : List Bool → List Bool) (sele
     gradientValue input target modulus selected c = residueBits
       (((CoerciveQuerySystem.gradient (polynomial (input c)) (degreeAllowance (input c)) i).coeff
         (queryExponent input target c) : ℤ) : ZMod (Nat.fromBitsLE (modulus c) + 1)) := by
-  let m := Nat.fromBitsLE (modulus c) + 1
-  let : NeZero m := ⟨by dsimp [m]; omega⟩
-  have hword : BinaryNat.succ (modulus c) = BinaryNatCode.encode m := by rw [BinaryNat.succ_eq_bits]; rfl
-  rw [gradientValue, addValue, liftedDerivative_value_eq input target modulus selected c i hs,
-    pureGradientValue, monomial_value_eq input target modulus _ _ _ _ c i hs, hword,
-    ArithmeticBits.addMod_residueBits]
+  refine (ModularResidueReaders.addValue_eq modulus _ _ c _ _
+    (liftedDerivative_value_eq input target modulus selected c i hs)
+    (monomial_value_eq input target modulus (fun _ => 1)
+      (fun c => 2 * degreeAllowance (input c) + 1) selected
+      (fun c => 2 * degreeAllowance (input c) + 2) c i hs)).trans ?_
   simp only [CoerciveQuerySystem.gradient, pureGradient_eq, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, Int.cast_add]
 
 theorem bound_value_eq (input target modulus : List Bool → List Bool) (c : List Bool) :
@@ -144,11 +138,10 @@ theorem bound_value_eq (input target modulus : List Bool → List Bool) (c : Lis
       (((CoerciveQuerySystem.bound (n := dimension (input c)) (degreeAllowance (input c))
         (CoerciveSourceSampling.penaltyExponent (input c))).coeff (queryExponent input target c) : ℤ) :
           ZMod (Nat.fromBitsLE (modulus c) + 1)) := by
-  let m := Nat.fromBitsLE (modulus c) + 1
-  let : NeZero m := ⟨by dsimp [m]; omega⟩
-  have hword : BinaryNat.succ (modulus c) = BinaryNatCode.encode m := by rw [BinaryNat.succ_eq_bits]; rfl
-  rw [boundValue, addValue, negValue, penalty_value_eq, maskedPower_value_eq, hword,
-    ArithmeticBits.negate_residueBits, ArithmeticBits.addMod_residueBits]
+  refine (ModularResidueReaders.addValue_eq modulus _ _ c _ _
+    (penalty_value_eq input target modulus c)
+    (ModularResidueReaders.negValue_eq modulus _ c _
+      (maskedPower_value_eq input target modulus (fun _ => 0) c))).trans ?_
   simp only [CoerciveQuerySystem.bound, Finsupp.single_zero, MvPolynomial.monomial_zero',
     AddMonoidAlgebra.coeff_sub, Finsupp.sub_apply, Int.cast_sub]
   rw [sub_eq_add_neg]
@@ -158,11 +151,10 @@ theorem residual_value_eq (input target modulus : List Bool → List Bool) (c : 
       (((CoerciveQuerySystem.residual (polynomial (input c))
         (CoerciveSourceSampling.penaltyExponent (input c))).coeff (queryExponent input target c) : ℤ) :
           ZMod (Nat.fromBitsLE (modulus c) + 1)) := by
-  let m := Nat.fromBitsLE (modulus c) + 1
-  let : NeZero m := ⟨by dsimp [m]; omega⟩
-  have hword : BinaryNat.succ (modulus c) = BinaryNatCode.encode m := by rw [BinaryNat.succ_eq_bits]; rfl
-  rw [residualValue, addValue, negValue, liftedSquare_value_eq, maskedPower_value_eq, hword,
-    ArithmeticBits.negate_residueBits, ArithmeticBits.addMod_residueBits]
+  refine (ModularResidueReaders.addValue_eq modulus _ _ c _ _
+    (liftedSquare_value_eq input target modulus c)
+    (ModularResidueReaders.negValue_eq modulus _ c _
+      (maskedPower_value_eq input target modulus (fun _ => 1) c))).trans ?_
   simp only [CoerciveQuerySystem.residual, parameterPower_eq, AddMonoidAlgebra.coeff_sub, Finsupp.sub_apply, Int.cast_sub]
   rw [sub_eq_add_neg]
 

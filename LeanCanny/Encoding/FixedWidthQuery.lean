@@ -70,6 +70,18 @@ theorem coordinate_repack (A W B V : List Bool → ℕ) (target : List Bool → 
     coordinate V (repack A W B V target) c i = entry A W target c i :=
   FixedWidthNatVector.decode_block (B c) (V c) (entry A W target c) i hi he
 
+/-- Widening blocks preserves every old coordinate, including zero padding. -/
+theorem coordinate_repack_of_width_le (A W B V : List Bool → ℕ)
+    (target : List Bool → List Bool) (c : List Bool) (hW : W c ≤ V c)
+    (i : ℕ) (hi : i < B c) :
+    coordinate V (repack A W B V target) c i = entry A W target c i := by
+  apply coordinate_repack A W B V target c i hi
+  unfold entry coordinate
+  split_ifs
+  · exact (Nat.fromBitsLE_lt_pow_length _).trans_le
+      (Nat.pow_le_pow_right (by decide) ((List.length_take_le _ _).trans hW))
+  · exact Nat.two_pow_pos _
+
 def Bounded (A W : List Bool → ℕ) (target : List Bool → List Bool) (bound : List Bool → ℕ) (c : List Bool) : Prop :=
   ∀ i < A c, coordinate W target c i ≤ bound c
 

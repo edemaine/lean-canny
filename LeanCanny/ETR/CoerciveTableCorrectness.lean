@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 public import LeanCanny.ETR.CoerciveFormalLeafReader
-public import LeanCanny.Algebra.BalancedSubtreeLocality
-public import LeanCanny.Algebra.SymbolicFixedTablePolynomialTree
+public import LeanCanny.Algebra.SymbolicPreparedTable
 
 /-! # Exact reference subtrees inside the enlarged native integer table -/
 @[expose] public section
@@ -99,36 +98,6 @@ theorem reference_direction (bits : List Bool) (h i : ℕ) :
   simp only [SymbolicFixedTableFinite.Family.directions, SymbolicFixedTable.Reference.directions,
     SymbolicFixedTable.integerDirections, referenceLeaves]
 
-private theorem symbolic_tree_eq (bits : List Bool) (h i : ℕ) (hh : h≤height bits)
-    (hc : BalancedTablePolynomials.Consistent (PaddedAnnihilatorBits.family retainedFamily retainedCount)
-      (tablePrepare bits) (referenceLeaves bits) h i)
-    (hl : ∀ j<2^h, CoerciveFormalLeafReader.leaf
-      (pair (tablePrepare bits) (BinaryNatCode.encode (2^h*i+j))) =
-        SymbolicScaledSquarefree.polynomial ((CoercivePreparationControls.family bits).padded (2^h*i+j))) :
-    SymbolicFixedTablePolynomialTree.tree CoerciveFormalLeafReader.leaf (tablePrepare bits) h i =
-      SymbolicFixedTable.node (fun j => SymbolicScaledSquarefree.polynomial
-        ((CoercivePreparationControls.family bits).padded j))
-        (CoercivePreparationControls.family bits).directions h i := by
-  induction h generalizing i with
-  | zero =>
-    simpa only [pow_zero, one_mul, Nat.add_zero, SymbolicFixedTablePolynomialTree.tree, SymbolicFixedTable.node]
-      using hl 0 (by decide)
-  | succ h ih =>
-    obtain ⟨hcl,hcr,hdl,hdr,hd⟩ := hc
-    have hhl : h≤height bits := by omega
-    have hL := ih (2*i) hhl hcl (fun j hj => by
-      have he : 2^h*(2*i)+j=2^(h+1)*i+j := by rw [pow_succ]; ring
-      rw [he]
-      exact hl j (hj.trans_le (Nat.pow_le_pow_right (by decide) (by omega))))
-    have hR := ih (2*i+1) hhl hcr (fun j hj => by
-      have he : 2^h*(2*i+1)+j=2^(h+1)*i+(2^h+j) := by rw [pow_succ]; ring
-      rw [he]
-      exact hl (2^h+j) (by rw [pow_succ]; omega))
-    rw [SymbolicFixedTablePolynomialTree.tree, hL, hR, hdl, hdr, hd,
-      reference_node_degree bits h (2*i) hhl, reference_node_degree bits h (2*i+1) hhl,
-      ← reference_direction bits h i, cannyResultantWithDegrees_exact]
-    simp only [SymbolicFixedTable.node]
-
 theorem table_consistent_subtree (bits : List Bool) (h i : ℕ)
     (hh : h≤height bits) (hi : i<2^(height bits-h)) :
     BalancedTablePolynomials.Consistent (PaddedAnnihilatorBits.family retainedFamily retainedCount)
@@ -136,22 +105,12 @@ theorem table_consistent_subtree (bits : List Bool) (h i : ℕ)
   BalancedSubtreeLocality.consistent_subtree _ _ _ _ _ _ hh hi (table_consistent_reference bits)
 
 theorem interval_index_lt (bits : List Bool) (h i j : ℕ) (hh : h≤height bits)
-    (hi : i<2^(height bits-h)) (hj : j<2^h) : 2^h*i+j<2^(height bits) := by
-  have hp : 2^h*2^(height bits-h)=2^(height bits) := by
-    rw [← pow_add, Nat.add_sub_of_le hh]
-  have hx : 2^h*i+j<2^h*(i+1) := by nlinarith
-  exact hx.trans_le ((Nat.mul_le_mul_left (2^h) (Nat.succ_le_of_lt hi)).trans_eq hp)
+    (hi : i<2^(height bits-h)) (hj : j<2^h) : 2^h*i+j<2^(height bits) :=
+  BalancedSubtreeLocality.interval_index_lt (height bits) h i j hh hi hj
 
 theorem index_lt_of_interval (bits : List Bool) (h i : ℕ) (hh : h≤height bits)
-    (hi : 2^h*(i+1)≤2^(height bits)) : i<2^(height bits-h) := by
-  have hp : 2^h*2^(height bits-h)=2^(height bits) := by
-    rw [← pow_add, Nat.add_sub_of_le hh]
-  by_contra hn
-  have hI : 2^(height bits-h) ≤ i := by omega
-  have hm := Nat.mul_le_mul_left (2^h) hI
-  have hz := Nat.two_pow_pos h
-  rw [← hp] at hi
-  nlinarith
+    (hi : 2^h*(i+1)≤2^(height bits)) : i<2^(height bits-h) :=
+  BalancedSubtreeLocality.index_lt_of_interval (height bits) h i hh hi
 
 theorem leaf_eq_reference (bits : List Bool) (i : ℕ) (hi : i<count bits) :
     CoerciveFormalLeafReader.leaf (pair (tablePrepare bits) (BinaryNatCode.encode i)) =
@@ -169,7 +128,10 @@ theorem tree_eq_reference (bits : List Bool) (h i : ℕ)
       SymbolicFixedTable.node (fun j => SymbolicScaledSquarefree.polynomial
         ((CoercivePreparationControls.family bits).padded j))
         (CoercivePreparationControls.family bits).directions h i := by
-  apply symbolic_tree_eq bits h i hh (table_consistent_subtree bits h i hh hi)
+  apply SymbolicFixedTablePolynomialTree.tree_eq_of_consistent
+    CoerciveFormalLeafReader.leaf _ (tablePrepare bits) (referenceLeaves bits) _ _ (height bits) h i hh
+    (table_consistent_subtree bits h i hh hi)
+    (fun h i hh => reference_node_degree bits h i hh) (reference_direction bits)
   intro j hj
   exact leaf_eq_reference bits _ ((interval_index_lt bits h i j hh hi hj).trans_le
     (FiniteAnnihilatorTree.width_bound (dimension bits+1)))
@@ -194,43 +156,41 @@ theorem table_order_reference (bits : List Bool) (h i : ℕ)
         ((CoercivePreparationControls.family bits).padded j))
         (CoercivePreparationControls.family bits).directions h i).natDegree := by
   let H := (retainedCount (prepare bits)).size
-  have hhH : h+1≤H := by have ht := height_lt bits; dsimp [H]; omega
   have hiH : i<2^(H-h) := hi.trans_le (Nat.pow_le_pow_right (by decide) (by
     have ht := height_lt bits; dsimp [H]; omega))
-  have hp : i/2<2^(H-(h+1)) := by
-    have he : H-h=(H-(h+1))+1 := by omega
-    rw [he, pow_succ] at hiH
-    omega
-  have hc := BalancedSubtreeLocality.consistent_subtree
+  have ho := BalancedSubtreeLocality.order_eq_node_degree
     (PaddedAnnihilatorBits.family retainedFamily retainedCount) (tablePrepare bits)
-    (integerLeaves bits) H (h+1) (i/2) hhH hp (table_consistent_integer bits)
-  have ho : BalancedMetadataTable.order (BalancedParameterContext.packet (tablePrepare bits) h i) =
-      (BalancedPrimitiveTree.node (integerLeaves bits) h i).polynomial.natDegree := by
-    by_cases he : i%2=0
-    · have hi0 : 2*(i/2)=i := by have hm := Nat.mod_add_div i 2; omega
-      simpa only [hi0] using hc.2.2.1
-    · have hi1 : 2*(i/2)+1=i := by
-        have hm := Nat.mod_add_div i 2
-        have hb := Nat.mod_lt i (by decide : 0<2)
-        omega
-      simpa only [hi1] using hc.2.2.2.1
+    (integerLeaves bits) H h i (by have ht := height_lt bits; dsimp [H]; omega)
+    hiH (table_consistent_integer bits)
   have hn := BalancedSubtreeLocality.node_polynomial_congr (integerLeaves bits) (referenceLeaves bits) h i
     (fun j hj => integer_leaf_polynomial bits _ ((interval_index_lt bits h i j hh hi hj).trans_le
       (FiniteAnnihilatorTree.width_bound (dimension bits+1))))
   exact ho.trans ((congrArg Polynomial.natDegree hn).trans (reference_node_degree bits h i hh))
+
+/-- One prepared ancestor pair exposes its child polynomials, exact orders,
+and actual selected direction through the generic table interface. -/
+theorem pair_spec (bits : List Bool) (h i : ℕ) (hh : h + 1 ≤ height bits)
+    (hi : i < 2 ^ (height bits - (h + 1))) :
+    SymbolicFixedTablePolynomialTree.PairSpec CoerciveFormalLeafReader.leaf (tablePrepare bits)
+      (fun j => SymbolicScaledSquarefree.polynomial ((CoercivePreparationControls.family bits).padded j))
+      (CoercivePreparationControls.family bits).directions h i := by
+  have hpow : 2 ^ (height bits - h) = 2 ^ (height bits - (h + 1)) * 2 := by
+    rw [← pow_succ]
+    congr 1
+    omega
+  have hl : 2 * i < 2 ^ (height bits - h) := by rw [hpow]; omega
+  have hr : 2 * i + 1 < 2 ^ (height bits - h) := by rw [hpow]; omega
+  exact ⟨⟨tree_eq_reference bits h (2 * i) (by omega) hl,
+      table_order_reference bits h (2 * i) (by omega) hl⟩,
+    ⟨tree_eq_reference bits h (2 * i + 1) (by omega) hr,
+      table_order_reference bits h (2 * i + 1) (by omega) hr⟩,
+    table_direction_reference bits h i hh hi⟩
 
 /-- The polynomial computed by the total malformed-frame scheduler is the
 actual source reference parameter on the concrete native prepared table. -/
 theorem tree_eq_parameter (bits : List Bool) :
     SymbolicFixedTablePolynomialTree.tree CoerciveFormalLeafReader.leaf (tablePrepare bits) (height bits) 0 =
       (CoercivePreparationControls.family bits).parameter := by
-  apply symbolic_tree_eq bits (height bits) 0 le_rfl (table_consistent_reference bits)
-  intro j hj
-  have hi : j<count bits := hj.trans_le (FiniteAnnihilatorTree.width_bound (dimension bits+1))
-  simp only [Nat.mul_zero, Nat.zero_add]
-  unfold CoerciveFormalLeafReader.leaf CoerciveFormalLeafReader.payloadInput
-  simp only [pairFst_pair, pairSnd_pair, tablePrepare_source]
-  rw [CoerciveFormalLeafReader.payloadLeaf_prepare bits j hi]
-  simp only [raw, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  exact tree_eq_reference bits (height bits) 0 le_rfl (by simp)
 
 end LeanCanny.ETR.CoerciveTableCorrectness

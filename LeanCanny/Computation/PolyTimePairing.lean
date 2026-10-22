@@ -6,6 +6,7 @@ module
 
 public import LeanCanny.Computation.PolyTimeFunctions
 public import Complexity.Computability.Machines.Turing.MultiTape.Combinators.Transducer
+public import Complexity.Tactic.PolyTime.Init
 
 /-! # Native polynomial-time certificates for the existing pair codec
 
@@ -36,7 +37,7 @@ theorem delimit_mem_FP : delimit ∈ FP := by
   exact (delimitT.computableTidilyInTimeAndSpace fun w => (delimitT_run w).symm).mono
     (fun w => by simp only [encBits_apply]; omega) (fun _ => Nat.zero_le _)
 
-@[fun_prop]
+@[program_certificate]
 theorem pair_computable {α : Type} {enc : α ↪ List Bool} {f g : α → List Bool}
     (hf : ComputableTidilyInPolyTime f enc encBits)
     (hg : ComputableTidilyInPolyTime g enc encBits) :
@@ -121,6 +122,15 @@ theorem pairSnd_mem_FP : pairSnd ∈ FP := by
     change pairSnd w = (pairT false).run (.inr none) w
     exact (pairT_run false w).symm).mono
     (fun w => by simp only [encBits_apply]; omega) (fun _ => Nat.zero_le _)
+
+/-- Native named certificates for the total raw packet projections. -/
+@[program_certificate]
+theorem pairFst_computable : ComputableTidilyInPolyTime pairFst encBits encBits :=
+  pairFst_mem_FP
+
+@[program_certificate]
+theorem pairSnd_computable : ComputableTidilyInPolyTime pairSnd encBits encBits :=
+  pairSnd_mem_FP
 
 theorem mem_FP_pairWithInput {f : List Bool → List Bool} (hf : f ∈ FP) :
     (fun z => pair (f z) z) ∈ FP := mem_FP_pair hf id_mem_FP

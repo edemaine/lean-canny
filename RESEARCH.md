@@ -266,19 +266,39 @@ not replace them: counts may be exponential and a child may require arbitrary
 time in polynomial space. Their accumulator, rank, and task-word invariants
 remain necessary.
 
-Upstream `Classes.Inclusions` supplies exact PSPACE/tidy-machine equivalences
-and reduction closure. Using it here would replace small local adapters but
-add the PH, PP, probability, and Savitch dependency graph. A lightweight upstream
-`Space.Closure` module would make those replacements useful; the current
-adapters retain their narrower imports.
+`polytime` now normalizes project goals and local certificates to the native
+predicate and delegates composition, named-certificate lookup, and search to
+upstream `fun_prop` and `PolyTime`. `FPPred` certificates expose their Boolean
+verdicts. Native `program_certificate` registrations cover the total raw packet
+codec and named readers; typed `encPair` projections have a different wire format.
+Small forwarding rules cover unary arithmetic and range operations; bounded
+quantifiers and counting use upstream typed traversals. The former local Aesop rule set and custom routine-call
+search are removed. [`CheckPolyTimeFoundation`](scripts/CheckPolyTimeFoundation.lean)
+checks local and named calls, encoded unary outputs, bounded predicate scans,
+malformed packets, and rejection of routines without certificates.
 
-Upstream `polytime`, `fun_prop`, and `program_certificate` could also replace
-much of the local proof-search machinery. This needs a small compatibility layer:
-normalize `FP`/`UnaryFn` goals and local certificates to the native predicate,
-extract a Boolean verdict for `FPPred`, and register native-form certificates for
-the raw pair codec. Typed `encPair` projections do not implement that codec.
-A prototype should retain the existing tactic as a fallback until local-function,
-encoded-output, predicate-scan, and malformed-packet regressions pass.
+[`TidyBoundedProduct`](LeanCanny/Computation/TidyBoundedProduct.lean) shares the
+binary range-product evaluator used by finite-annihilator and balanced degree
+preparation. Callers supply factor readers and polynomial bounds on every
+accumulator prefix. Generic controller lengths and execution identities live
+in `ControllerDispatch`, rather than Berkowitz-specific storage proofs.
+
+[`PolynomialBounds`](LeanCanny/Computation/PolynomialBounds.lean) extracts
+explicit polynomial witnesses only at interfaces that need them. `PolyBound`
+is a native `PolyBounded` specialization; its closure operations compose native
+certificates. [`NativeSpaceClosure`](LeanCanny/Computation/NativeSpaceClosure.lean)
+provides encoding-parametric PSPACE/tidy equivalence and reduction closure with
+narrow imports. It is a candidate for a lightweight upstream space-closure module;
+it avoids the hierarchy, probability, and Savitch dependencies of the broad
+`Classes.Inclusions` module.
+
+[`SymbolicPreparedTable`](LeanCanny/Algebra/SymbolicPreparedTable.lean) packages
+exact node polynomials, degree metadata, and actual selected directions for
+prepared tables. The coercive readers use its shared pair-recovery specification.
+Exact-degree and fixed-envelope coordinates share one decoding induction while
+retaining their respective polynomial representatives. Generic fixed-width,
+homogenization, and residue-reader helpers similarly separate reusable packet
+correctness from the coercive algebraic specialization.
 
 Complexitylib's canonical repository is now
 [`cslib-community/complexitylib`](https://github.com/cslib-community/complexitylib).

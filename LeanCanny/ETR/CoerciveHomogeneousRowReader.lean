@@ -115,10 +115,8 @@ noncomputable def maskValue (p : List Bool → Prop) (f : List Bool → List Boo
   if p q then f q else []
 
 private theorem maskEvaluator {p : List Bool → Prop} {f : List Bool → List Bool}
-    (hp : FPPred p) (E : SpaceFunction f) : SpaceFunction (maskValue p f) := by
-  have h := SpaceFunction.branch (fun q => decide (p q)) hp.flag_mem_FP E
-    (SpaceFunction.ofFP (fun _ => []) (constFn_mem_FP []))
-  exact h.congr (funext fun q => by simp only [maskValue, decide_eq_true_eq])
+    (hp : FPPred p) (E : SpaceFunction f) : SpaceFunction (maskValue p f) :=
+  ModularResidueReaders.maskEvaluator hp E
 
 noncomputable def coordinatePart (input modulus : List Bool → List Bool) (coordinate : List Bool → ℕ) :
     List Bool → List Bool :=
@@ -138,31 +136,18 @@ noncomputable def value (input modulus : List Bool → List Bool) (coordinate : 
     if zeroRow q then coordinatePart input modulus coordinate q else gradientPart input modulus q
   else []
 
-private theorem addEvaluator {modulus f g : List Bool → List Bool} (hm : modulus ∈ FP)
-    (F : SpaceFunction f) (G : SpaceFunction g) : SpaceFunction (CoerciveQueryCoefficient.addValue modulus f g) := by
-  have E := (F.pairOutputs G).withInput.postcompose _
-    (mem_FP_comp (ModularResidueSpace.prepare_mem_FP modulus hm) ArithmeticBits.addMod_mem_FP)
-  exact E.congr (funext fun q => by simp only [Function.comp_apply, ModularResidueSpace.prepare,
-    pairFst_pair, pairSnd_pair, CoerciveQueryCoefficient.addValue])
-
-private theorem negEvaluator {modulus f : List Bool → List Bool} (hm : modulus ∈ FP)
-    (F : SpaceFunction f) : SpaceFunction (CoerciveQueryCoefficient.negValue modulus f) := by
-  have E := F.withInput.postcompose _
-    (mem_FP_comp (ModularResidueSpace.prepare_mem_FP modulus hm) ArithmeticBits.negate_mem_FP)
-  exact E.congr (funext fun q => by simp only [Function.comp_apply, ModularResidueSpace.prepare,
-    pairFst_pair, pairSnd_pair, CoerciveQueryCoefficient.negValue])
 
 theorem coordinateEvaluator {input modulus : List Bool → List Bool} {coordinate : List Bool → ℕ}
     (hi : input ∈ FP) (hm : modulus ∈ FP) (hc : UnaryFn coordinate) :
     SpaceFunction (coordinatePart input modulus coordinate) :=
-  addEvaluator (mem_FP_comp context_FP hm)
+  CoerciveQueryCoefficient.addEvaluator (mem_FP_comp context_FP hm)
     (maskEvaluator (phase_fppred 0 1) (SpaceFunction.ofFP _ (homogeneousCoordinate_FP hi hm)))
-    (negEvaluator (mem_FP_comp context_FP hm)
+    (CoerciveQueryCoefficient.negEvaluator (mem_FP_comp context_FP hm)
       (maskEvaluator (phase_fppred 0 0) (SpaceFunction.ofFP _ (pointCoordinate_FP hi hm hc))))
 
 theorem gradientEvaluator {input modulus : List Bool → List Bool} (hi : input ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (gradientPart input modulus) :=
-  addEvaluator (mem_FP_comp context_FP hm)
+  CoerciveQueryCoefficient.addEvaluator (mem_FP_comp context_FP hm)
     (maskEvaluator (phase_fppred 0 0) (ordinaryEvaluator hi hm))
     (maskEvaluator (phase_fppred 1 0) (SpaceFunction.ofFP _ (leading_FP hi hm)))
 

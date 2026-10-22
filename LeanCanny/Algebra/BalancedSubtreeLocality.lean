@@ -87,6 +87,52 @@ theorem consistent_subtree (B : SeparableBits.Family) (c : List Bool)
     exact hc
   simpa only [Nat.mul_zero, Nat.zero_add] using consistent_descendant B c a h (H-h) 0 i hi hcs
 
+/-- A node's leaf interval stays inside the enclosing balanced tree. -/
+theorem interval_index_lt (H h i j : ℕ) (hh : h ≤ H)
+    (hi : i < 2 ^ (H - h)) (hj : j < 2 ^ h) : 2 ^ h * i + j < 2 ^ H := by
+  have hp : 2 ^ h * 2 ^ (H - h) = 2 ^ H := by
+    rw [← pow_add, Nat.add_sub_of_le hh]
+  have hx : 2 ^ h * i + j < 2 ^ h * (i + 1) := by nlinarith
+  exact hx.trans_le ((Nat.mul_le_mul_left (2 ^ h) (Nat.succ_le_of_lt hi)).trans_eq hp)
+
+theorem index_lt_of_interval (H h i : ℕ) (hh : h ≤ H)
+    (hi : 2 ^ h * (i + 1) ≤ 2 ^ H) : i < 2 ^ (H - h) := by
+  have hp : 2 ^ h * 2 ^ (H - h) = 2 ^ H := by
+    rw [← pow_add, Nat.add_sub_of_le hh]
+  by_contra hn
+  have hm := Nat.mul_le_mul_left (2 ^ h) (show 2 ^ (H - h) ≤ i by omega)
+  have hz := Nat.two_pow_pos h
+  rw [← hp] at hi
+  nlinarith
+
+theorem ancestor_lt (H h j : ℕ) (hh : h ≤ H) (hj : j < 2 ^ H) :
+    j / 2 ^ h < 2 ^ (H - h) := by
+  apply (Nat.div_lt_iff_lt_mul (Nat.two_pow_pos h)).mpr
+  calc
+    j < 2 ^ H := hj
+    _ = 2 ^ (H - h) * 2 ^ h := by rw [← pow_add, Nat.sub_add_cancel hh]
+
+/-- Orders are stored at a node's parent. Thus a strict descendant has exact
+order metadata, including the root of any strictly smaller retained subtree. -/
+theorem order_eq_node_degree (B : SeparableBits.Family) (c : List Bool)
+    (a : ℕ → SeparableIntegerPolynomial) (H h i : ℕ) (hh : h < H)
+    (hi : i < 2 ^ (H - h)) (hc : BalancedTablePolynomials.Consistent B c a H 0) :
+    BalancedMetadataTable.order (BalancedParameterContext.packet c h i) =
+      (BalancedPrimitiveTree.node a h i).polynomial.natDegree := by
+  have hp : i / 2 < 2 ^ (H - (h + 1)) := by
+    have he : H - h = (H - (h + 1)) + 1 := by omega
+    rw [he, pow_succ] at hi
+    omega
+  have hs := consistent_subtree B c a H (h + 1) (i / 2) (by omega) hp hc
+  by_cases he : i % 2 = 0
+  · have hi0 : 2 * (i / 2) = i := by have hm := Nat.mod_add_div i 2; omega
+    simpa only [hi0] using hs.2.2.1
+  · have hi1 : 2 * (i / 2) + 1 = i := by
+      have hm := Nat.mod_add_div i 2
+      have hb := Nat.mod_lt i (by decide : 0 < 2)
+      omega
+    simpa only [hi1] using hs.2.2.2.1
+
 /-- Replacing unused leaves preserves all finite consistency conditions. -/
 theorem consistent_congr (B : SeparableBits.Family) (c : List Bool)
     (a b : ℕ → SeparableIntegerPolynomial) (h i : ℕ)

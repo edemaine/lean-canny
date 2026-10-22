@@ -5,9 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Tactic.PolyTime
-public import Complexity.Computability.Machines.Turing.MultiTape.Combinators.TidyNormalForm
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolySpace
-public import Complexity.Computability.Complexity.Classes.Space
+public import LeanCanny.Computation.NativeSpaceClosure
 
 /-! # Polynomial-space decision certificates
 
@@ -31,26 +29,14 @@ namespace SpaceDecider
 
 theorem of_computable {L : LeanCanny.Language} {f : List Bool → Bool}
     (hf : ComputableTidilyInPolySpace f encBits encBool)
-    (hL : ∀ x, x ∈ L ↔ f x = true) : SpaceDecider L := by
-  obtain ⟨T, S, hS, c, h, -⟩ := hf
-  exact ⟨f, ⟨_, _, (PolyBounded.const c).mul (hS.add (.const 1)),
-    h.computableInTimeAndSpace⟩, hL⟩
+    (hL : ∀ x, x ∈ L ↔ f x = true) : SpaceDecider L :=
+  ⟨NativeSpace.of_computable hf hL⟩
 
 theorem computable {L : LeanCanny.Language} (D : SpaceDecider L) :
     ComputableTidilyInPolySpace (fun x => @decide (x ∈ L) (Classical.propDecidable _))
       encBits encBool := by
   classical
-  obtain ⟨g, ⟨t, s, hs, hg⟩, hL⟩ := D.mem_PSPACE
-  obtain ⟨c, hg⟩ := hg.exists_computableTidilyInTimeAndSpace
-  have hspace : ComputableTidilyInPolySpace g encBits encBool := by
-    refine ⟨(fun x => 2 * t x + 3 * s x + c), (fun x => c * (s x + 1) + 1),
-      ((PolyBounded.const c).mul (hs.add (.const 1))).add (.const 1),
-      ComputableTidilyInO.of_bounds hg 1 ?_ ?_ ?_⟩
-    · intro x; omega
-    · intro x; omega
-    · intro x
-      simp only [encBool_apply, List.length_singleton, one_mul]
-      omega
+  obtain ⟨g, hspace, hL⟩ := NativeSpace.mem_iff.mp D.mem_PSPACE
   exact hspace.congr fun x => Bool.eq_iff_iff.mpr (by
     rw [decide_eq_true_eq]
     exact (hL x).symm)

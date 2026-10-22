@@ -12,7 +12,7 @@ public import LeanCanny.ETR.EquationCompilerAtomEncoding
 
 namespace LeanCanny.ETR.EquationCompiler
 
-open LeanCanny.Encoding
+open LeanCanny.Encoding Turing.MultiTapeTM
 
 def todoBits (state : List Bool) : List Bool := pairFst state
 def valuesBits (state : List Bool) : List Bool := pairFst (pairSnd state)
@@ -45,10 +45,33 @@ def joinStep (disjoin : Bool) (state : List Bool) : List Bool :=
     let out := if disjoin then EquationSystem.disjunctionBits packet else EquationSystem.conjunctionBits packet
     emit (pairSnd (todoBits state)) (pair out (pairSnd (pairSnd values))) (pairFst out)
 
-attribute [local polytime] todoBits_mem_FP valuesBits_mem_FP counterBits_mem_FP
-  frame_mem_FP source_mem_FP NNF.second_mem_FP NNF.third_mem_FP atomBits_mem_FP
-  EquationSystem.conjunctionBits_mem_FP EquationSystem.disjunctionBits_mem_FP hasTag_fppred
-  Brackets.stringEq_fppred
+@[program_certificate]
+theorem todoBits_computable : ComputableTidilyInPolyTime todoBits encBits encBits := todoBits_mem_FP
+
+@[program_certificate]
+theorem valuesBits_computable : ComputableTidilyInPolyTime valuesBits encBits encBits := valuesBits_mem_FP
+
+@[program_certificate]
+theorem counterBits_computable : ComputableTidilyInPolyTime counterBits encBits encBits := counterBits_mem_FP
+
+@[program_certificate]
+theorem frame_computable : ComputableTidilyInPolyTime frame encBits encBits := frame_mem_FP
+
+@[program_certificate]
+theorem source_computable : ComputableTidilyInPolyTime source encBits encBits := source_mem_FP
+
+@[program_certificate]
+theorem third_computable : ComputableTidilyInPolyTime NNF.third encBits encBits := NNF.third_mem_FP
+
+@[program_certificate]
+theorem conjunctionBits_computable :
+    ComputableTidilyInPolyTime EquationSystem.conjunctionBits encBits encBits :=
+  EquationSystem.conjunctionBits_mem_FP
+
+@[program_certificate]
+theorem disjunctionBits_computable :
+    ComputableTidilyInPolyTime EquationSystem.disjunctionBits encBits encBits :=
+  EquationSystem.disjunctionBits_mem_FP
 
 theorem binaryStep_mem_FP (disjoin : Bool) : binaryStep disjoin ∈ FP := by
   polytime [binaryStep, emit]
@@ -56,8 +79,6 @@ theorem binaryStep_mem_FP (disjoin : Bool) : binaryStep disjoin ∈ FP := by
 theorem atomicStep_mem_FP : atomicStep ∈ FP := by polytime [atomicStep, emit]
 
 theorem joinStep_mem_FP (disjoin : Bool) : joinStep disjoin ∈ FP := by
-  have hc := EquationSystem.conjunctionBits_mem_FP
-  have hd := EquationSystem.disjunctionBits_mem_FP
   cases disjoin <;> polytime [joinStep, emit]
 
 def stepBits (state : List Bool) : List Bool :=
@@ -68,11 +89,18 @@ def stepBits (state : List Bool) : List Bool :=
   else if HasTag 5 (source state) then binaryStep true state
   else atomicStep state
 
-attribute [local polytime] binaryStep_mem_FP atomicStep_mem_FP joinStep_mem_FP
+@[program_certificate]
+theorem binaryStep_computable (disjoin : Bool) :
+    ComputableTidilyInPolyTime (binaryStep disjoin) encBits encBits := binaryStep_mem_FP disjoin
+
+@[program_certificate]
+theorem atomicStep_computable : ComputableTidilyInPolyTime atomicStep encBits encBits := atomicStep_mem_FP
+
+@[program_certificate]
+theorem joinStep_computable (disjoin : Bool) :
+    ComputableTidilyInPolyTime (joinStep disjoin) encBits encBits := joinStep_mem_FP disjoin
 
 theorem stepBits_mem_FP : stepBits ∈ FP := by
-  have h4 := hasTag_fppred 4
-  have h5 := hasTag_fppred 5
   polytime [stepBits]
 
 @[simp] theorem pair_ne_nil (a b : List Bool) : pair a b ≠ [] := by

@@ -33,11 +33,16 @@ def shift (q : List Bool) := pairFst (pairSnd (pairSnd q))
 def target (q : List Bool) := pairFst (pairSnd (pairSnd (pairSnd q)))
 def parameters (q : List Bool) := pairSnd (pairSnd (pairSnd (pairSnd q)))
 
-@[polytime] lemma ctx_FP : ctx ∈ FP := by polytime [ctx]
-@[polytime] lemma idx_FP : idx ∈ FP := by polytime [idx]
-@[polytime] lemma shift_FP : shift ∈ FP := by polytime [shift]
-@[polytime] lemma target_FP : target ∈ FP := by polytime [target]
-@[polytime] lemma parameters_FP : parameters ∈ FP := by polytime [parameters]
+@[program_certificate] lemma ctx_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+    ctx Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by polytime [ctx]
+@[program_certificate] lemma idx_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+    idx Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by polytime [idx]
+@[program_certificate] lemma shift_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+    shift Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by polytime [shift]
+@[program_certificate] lemma target_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+    target Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by polytime [target]
+@[program_certificate] lemma parameters_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+    parameters Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by polytime [parameters]
 
 def packet (c : List Bool) (i a b u v : ℕ) : List Bool :=
   pair c (pair (BinaryNatCode.encode i) (pair (BinaryNatCode.encode a)

@@ -109,42 +109,32 @@ theorem evaluator (B : Family) (A : Readers B) (hne : ∀ c, B.polynomial c ≠ 
     (count D : List Bool → ℕ) (hn : UnaryFn count) (hD : BinaryFn D)
     (hdegree : ∀ c i, i < count c → (B.polynomial (pair c (BinaryNatCode.encode i))).natDegree ≤ D c) :
     SpaceFunction (fun p => BinaryNatCode.encode (degree B count p)) := by
-  let child (p : List Bool × ℕ × ℕ) : ℕ := p.2.2 * leafDegree B count (original p.1) (width count p.1 * index p.1 + p.2.1)
-  have hc := ComputableTidilyInPolyTime.fst encBits (encPair encNat encNat)
-  have hr := ComputableTidilyInPolyTime.snd encBits (encPair encNat encNat)
+  have hc := ComputableTidilyInPolyTime.fst encBits encNat
+  have hi := ComputableTidilyInPolyTime.snd encBits encNat
   have hs : BinaryFn (fun p => width count p * index p) :=
     (width_binary hn).mul (BinaryFn.fromBits BalancedParameterContext.indexWord_FP)
   have hquery := pair_computable (BalancedParameterContext.original_FP.comp hc)
-    (natBits_computable.comp (ComputableTidilyInPolyTime.binary_add' (hs.comp hc) hr.fst'))
+    (natBits_computable.comp (ComputableTidilyInPolyTime.binary_add' (hs.comp hc) hi))
   have hleaf := (leafEvaluator B A hne count hn).computable.comp (ComputableTidilyInPolySpace.of_polyTime hquery)
   have hvalue := (ComputableTidilyInPolySpace.of_polyTime fromBitsLE_computable).comp hleaf
   have hd : ComputableTidilyInPolySpace
-      (fun p : List Bool × ℕ × ℕ => leafDegree B count (original p.1) (width count p.1 * index p.1 + p.2.1))
-      (TidyBoundedFold.encPacket encBits encNat) encNat :=
+      (fun p : List Bool × ℕ => leafDegree B count (original p.1) (width count p.1 * index p.1 + p.2))
+      (encPair encBits encNat) encNat :=
     hvalue.congr fun p => by
       change Nat.fromBitsLE (leafCode B count
-        (pair (original p.1) (BinaryNatCode.encode (width count p.1 * index p.1 + p.2.1)))) = _
+        (pair (original p.1) (BinaryNatCode.encode (width count p.1 * index p.1 + p.2)))) = _
       rw [leafCode_packet, BinaryNatCode.encode, Nat.fromBitsLE_bits]
-  have hchild : ComputableTidilyInPolySpace child (TidyBoundedFold.encPacket encBits encNat) encNat :=
-    ((ComputableTidilyInPolySpace.of_polyTime ComputableTidilyInPolyTime.binary_mul).comp
-      ((ComputableTidilyInPolySpace.of_polyTime hr.snd').prod hd)).congr (fun _ => rfl)
-  have hfold (p : List Bool) (k : ℕ) : TidyBoundedFold.fold child (fun _ => 1) p k =
-      product B count (original p) (width count p * index p) k := by
-    induction k with
-    | zero => simp only [TidyBoundedFold.fold, product, Finset.range_zero, Finset.prod_empty]
-    | succ k ih => simp only [TidyBoundedFold.fold, child, ih, product, Finset.prod_range_succ]
   have hDo : BinaryFn (fun p => D (original p)) := hD.comp BalancedParameterContext.original_FP
   have hbound : BinaryFn (fun p => (D (original p) + 1) ^ maxLeaves count (original p)) :=
     (hDo.add (BinaryFn.const 1)).powUnary
       ((maxLeaves_unary hn).comp BalancedParameterContext.original_FP)
-  have E := TidyBoundedFold.evaluator hchild (width_binary hn)
-    (ComputableTidilyInPolySpace.of_polyTime (ComputableTidilyInPolyTime.const 1)) hbound.polyBounded_length
-    (fun p k hk => by
-      rw [hfold]
+  have E := TidyBoundedFold.product_evaluator
+    (factor := fun p i => leafDegree B count (original p) (width count p * index p + i))
+    hd (width_binary hn) hbound.polyBounded_length (fun p k hk => by
       apply ComputableTidilyInO.length_encNat_mono
       exact (product_bound B count D hne hdegree _ _ _).trans
         (Nat.pow_le_pow_right (by omega) (hk.trans (width_le count p))))
   exact ⟨((ComputableTidilyInPolySpace.of_polyTime natBits_computable).comp E).congr
-    (fun p => congrArg BinaryNatCode.encode (hfold p _))⟩
+    (fun _ => rfl)⟩
 
 end LeanCanny.Algebra.BalancedCanonicalDegrees

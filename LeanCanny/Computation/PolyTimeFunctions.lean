@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Computation.PolyTime
+public import LeanCanny.Computation.PolynomialBounds
 public import LeanCanny.Encoding.Pairing
 public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.List
 public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat
@@ -62,10 +62,7 @@ theorem appendFn_mem_FP {a b : List Bool → List Bool} (ha : a ∈ FP) (hb : b 
 
 theorem output_length_poly_of_mem_FP {f : List Bool → List Bool} (hf : f ∈ FP) :
     ∃ p : Polynomial ℕ, ∀ z, (f z).length ≤ p.eval z.length := by
-  obtain ⟨c, d, h⟩ := hf.polyBounded_length.exists_le
-  exact ⟨Polynomial.C c * (Polynomial.X + 1) ^ d, fun z => by
-    simpa only [Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_pow,
-      Polynomial.eval_add, Polynomial.eval_X, Polynomial.eval_one, encBits_apply] using h z⟩
+  simpa only [encBits_apply] using hf.polyBounded_length.exists_polynomial
 
 theorem UnaryFn.mem_FP {f : List Bool → ℕ} (hf : UnaryFn f) :
     (fun z => List.replicate (f z) true) ∈ FP := hf.encoded

@@ -39,12 +39,10 @@ private lemma mask_word (modulus : List Bool → List Bool) (c : List Bool) (i r
     (f : List Bool → List Bool) (a : ℤ) (hf : f (word c i r u v) = residue modulus c a) :
     maskValue (phase s t) f (word c i r u v) =
       residue modulus c (if v = s ∧ u = t then a else 0) := by
-  simp only [maskValue, phase, outer_word, inner_word, BinaryNatCode.encode, Nat.fromBitsLE_bits]
-  by_cases h : v = s ∧ u = t
-  · simp only [ite_eq_left h]
-    exact hf
-  · simp only [ite_eq_right h]
-    simp [residue, residueBits, BinaryNatCode.encode]
+  have h := ModularResidueReaders.maskValue_eq (phase s t) f (word c i r u v)
+    (a : ZMod (Nat.fromBitsLE (modulus c) + 1)) hf
+  simpa only [ModularResidueReaders.maskValue, maskValue, residue, phase, outer_word,
+    inner_word, BinaryNatCode.encode, Nat.fromBitsLE_bits, apply_ite, Int.cast_zero] using h
 
 variable (input modulus : List Bool → List Bool) (coordinate : List Bool → ℕ) (c : List Bool)
 variable (i : Fin (dimension (input c))) (hi : coordinate c = i.val) (r u v : ℕ)
@@ -54,40 +52,38 @@ lemma coordinatePart_packet : coordinatePart input modulus coordinate (word c 0 
     residue modulus c (((CoerciveCriticalHomogenization.finSystem (polynomial (input c))
       (degreeAllowance (input c)) i 0).coeff (RationalSubstitution.Indexed.exponentVector
         (dimension (input c) + 1) (FixedWidthPolynomial.entry (CoerciveHomogeneousRepack.width (input c)) r))).coeff v |>.coeff u) := by
-  let m := Nat.fromBitsLE (modulus c) + 1
-  let : NeZero m := ⟨by dsimp [m]; omega⟩
-  have hword : BinaryNat.succ (modulus c) = BinaryNatCode.encode m := by rw [BinaryNat.succ_eq_bits]; rfl
   have hH := CoerciveHomogeneousRowParts.homogeneousCoordinate_packet input modulus c 0 r u v
   have hP := CoerciveHomogeneousRowParts.pointCoordinate_packet input modulus coordinate c i hi 0 r u v
   have hHm := mask_word modulus c 0 r u v 0 1 _ _ hH
   have hPm := mask_word modulus c 0 r u v 0 0 _ _ hP
   rw [coordinatePart, CoerciveQueryCoefficient.addValue, CoerciveQueryCoefficient.negValue]
   simp only [Function.comp_apply, context_word]
-  rw [hHm, hPm, hword]
-  simp only [residue]
-  rw [ArithmeticBits.negate_residueBits, ArithmeticBits.addMod_residueBits]
+  change ModularResidueReaders.addValue (fun _ => modulus c)
+    (maskValue (phase 0 1) (homogeneousCoordinate input modulus))
+    (ModularResidueReaders.negValue (fun _ => modulus c)
+      (maskValue (phase 0 0) (pointCoordinate input modulus coordinate))) (word c 0 r u v) = _
+  rw [ModularResidueReaders.addValue_eq _ _ _ _ _ _ hHm
+    (ModularResidueReaders.negValue_eq _ _ _ _ hPm)]
   rw [CoerciveHomogeneousLayout.fin_coordinate_coeff]
-  simp only [sub_eq_add_neg, Int.cast_add, Int.cast_neg]
+  simp only [residue, sub_eq_add_neg, Int.cast_add, Int.cast_neg]
 
 lemma gradientPart_packet (j : Fin (dimension (input c))) :
     gradientPart input modulus (word c j.succ.val r u v) =
     residue modulus c (((CoerciveCriticalHomogenization.finSystem (polynomial (input c))
       (degreeAllowance (input c)) i j.succ).coeff (RationalSubstitution.Indexed.exponentVector
         (dimension (input c) + 1) (FixedWidthPolynomial.entry (CoerciveHomogeneousRepack.width (input c)) r))).coeff v |>.coeff u) := by
-  let m := Nat.fromBitsLE (modulus c) + 1
-  let : NeZero m := ⟨by dsimp [m]; omega⟩
-  have hword : BinaryNat.succ (modulus c) = BinaryNatCode.encode m := by rw [BinaryNat.succ_eq_bits]; rfl
   have hO := CoerciveHomogeneousRowParts.ordinary_packet input modulus c j r u v
   have hL := CoerciveHomogeneousRowParts.leading_packet input modulus c j r u v
   have hOm := mask_word modulus c j.succ.val r u v 0 0 _ _ hO
   have hLm := mask_word modulus c j.succ.val r u v 1 0 _ _ hL
   rw [gradientPart, CoerciveQueryCoefficient.addValue]
   simp only [Function.comp_apply, context_word]
-  rw [hOm, hLm, hword]
-  simp only [residue]
-  rw [ArithmeticBits.addMod_residueBits]
+  change ModularResidueReaders.addValue (fun _ => modulus c)
+    (maskValue (phase 0 0) (ordinary input modulus))
+    (maskValue (phase 1 0) (leading input modulus)) (word c j.succ.val r u v) = _
+  rw [ModularResidueReaders.addValue_eq _ _ _ _ _ _ hOm hLm]
   rw [CoerciveHomogeneousLayout.fin_gradient]
-  simp only [Int.cast_add]
+  simp only [residue, Int.cast_add]
 
 include hi in
 lemma value_packet (j : Fin (dimension (input c) + 1)) :

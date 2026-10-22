@@ -25,6 +25,23 @@ variable {σ R : Type*} [Fintype σ] [CommSemiring R] {A : ℕ}
 noncomputable def nativeExponent (f : σ ≃ Fin A) (W r : ℕ) : σ →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm (fun j => entry W r (f j).val)
 
+/-- Repacking to a wider layout preserves the native exponent vector. -/
+theorem nativeExponent_repack (f : σ ≃ Fin A) (W V : List Bool → ℕ)
+    (target : List Bool → List Bool) (c : List Bool) (hW : W c ≤ V c) :
+    nativeExponent f (V c) (Nat.fromBitsLE
+      (FixedWidthQuery.repack (fun _ => A) W (fun _ => A) V target c)) =
+      nativeExponent f (W c) (Nat.fromBitsLE (target c)) := by
+  ext i
+  simp only [nativeExponent, Finsupp.coe_equivFunOnFinite_symm]
+  have he (width : ℕ) (bits : List Bool) (j : ℕ) :
+      entry width (Nat.fromBitsLE bits) j =
+        Nat.fromBitsLE ((bits.drop (j * width)).take width) := by
+    rw [entry_eq_digit, BinaryNat.value_take, drop_value]
+  rw [he, he]
+  simpa only [FixedWidthQuery.coordinate, FixedWidthQuery.entry, (f i).isLt, ite_true] using
+    FixedWidthQuery.coordinate_repack_of_width_le
+      (fun _ => A) W (fun _ => A) V target c hW (f i).val (f i).isLt
+
 theorem nativeExponent_map (f : σ ≃ Fin A) (W r : ℕ) :
     (nativeExponent f W r).mapDomain f = exponentVector A (entry W r) := by
   ext i

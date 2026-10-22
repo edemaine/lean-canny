@@ -153,22 +153,9 @@ theorem certificates_of_space (hrequest : (fun p => [P.request p]) ∈ FP) (hque
   exact ⟨.of_polyTime hi, .of_polyTime hhalt, hout, .of_polyTime hr,
     .of_polyTime ((FP.computable hquery).comp hp), .id', .of_polyTime hresume⟩
 
-theorem certificates (h : P.Controls) : P.controller.Certificates (encQ := encBits) (encS := encState) := by
-  have hp : ComputableTidilyInPolyTime (fun s : State => s.1) encState encBits := by fun_prop
-  have hb : ComputableTidilyInPolyTime (fun s : State => s.2.1) encState encBool := by fun_prop
-  have hr := (flag_computable h.request).comp hp
-  have harg : ComputableTidilyInPolyTime (fun s : State => pair s.1 s.2.2) encState encBits :=
-    pair_computable hp (by fun_prop)
-  have hi : ComputableTidilyInPolyTime initial encBits encState := by unfold initial; fun_prop
-  have hhalt : ComputableTidilyInPolyTime P.controller.halted encState encBool :=
-    hb.ite' (ComputableTidilyInPolyTime.const true) ((ComputableTidilyInPolyTime.of_finite Bool.not).comp hr)
-  have hout : ComputableTidilyInPolyTime P.controller.output encState encBits :=
-    hb.ite' ((FP.computable h.finish).comp harg) ((FP.computable h.immediate).comp hp)
-  have hresume : ComputableTidilyInPolyTime P.controller.resume (encPair encState encBits) encState := by
-    change ComputableTidilyInPolyTime (fun p : State × List Bool => (p.1.1, true, p.2)) _ _
-    fun_prop
-  exact ⟨.of_polyTime hi, .of_polyTime hhalt, .of_polyTime hout, .of_polyTime hr,
-    .of_polyTime ((FP.computable h.query).comp hp), .id', .of_polyTime hresume⟩
+theorem certificates (h : P.Controls) : P.controller.Certificates (encQ := encBits) (encS := encState) :=
+  P.certificates_of_space h.request h.query
+    (.of_polyTime (FP.computable h.immediate)) (.of_polyTime (FP.computable h.finish))
 
 end Program
 end LeanCanny.Computation.SingleCall

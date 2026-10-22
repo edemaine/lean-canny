@@ -19,39 +19,8 @@ namespace LeanCanny.Algebra.BerkowitzPolynomial.TaskDispatch
 open LeanCanny.Encoding LeanCanny.Computation
 open RecursiveController.Controller Turing.MultiTapeTM
 
-private theorem choice_length {A B : Type} [Inhabited A] [Inhabited B]
-    (eA : A ↪ List Bool) (eB : B ↪ List Bool) (select : List Bool → Bool)
-    (C : RecursiveController.Controller (List Bool) A) (D : RecursiveController.Controller (List Bool) B)
-    (g : List Bool → List Bool) (q : List Bool) (t : ℕ) :
-    (encChoice eA eB (((choose select C D).reference g)^[t] ((choose select C D).initial q))).length =
-      if select q then 4 + 2 * (eA ((C.reference g)^[t] (C.initial q))).length + (eB default).length
-      else 4 + 2 * (eA default).length + (eB ((D.reference g)^[t] (D.initial q))).length := by
-  cases hs : select q with
-  | true =>
-    have hi : (choose select C D).initial q = (true, C.initial q, default) := by simp only [choose, hs, ite_true]
-    rw [hi, choose_iterate_true]
-    simp only [ite_true, encChoice, length_encPair, encBool_apply, List.length_singleton]
-    omega
-  | false =>
-    have hi : (choose select C D).initial q = (false, default, D.initial q) := by
-      simp only [choose, hs, Bool.false_eq_true, ite_false]
-    rw [hi, choose_iterate_false]
-    simp only [Bool.false_eq_true, ite_false, encChoice, length_encPair, encBool_apply, List.length_singleton]
-    omega
-
-private theorem prepared_orbit {S : Type}
-    (C : RecursiveController.Controller (List Bool) S) (input g : List Bool → List Bool) (q : List Bool) (t : ℕ) :
-    ((prepare C input).reference g)^[t] ((prepare C input).initial q) =
-      (C.reference g)^[t] (C.initial (input q)) := rfl
-
 private theorem default_single : (SingleCall.encState default).length = 4 := rfl
 private theorem default_word : (default : List Bool).length = 0 := rfl
-
-private theorem choice_pair_length {A B : Type} (eA : A ↪ List Bool) (eB : B ↪ List Bool)
-    (flag : Bool) (a : A) (b : B) :
-    (encChoice eA eB (flag, a, b)).length = 4 + 2 * (eA a).length + (eB b).length := by
-  simp only [encChoice, length_encPair, encBool_apply, List.length_singleton]
-  omega
 
 private theorem default_remainder {S : Type} [Inhabited S] (eS : S ↪ List Bool) :
     (encChoice encBits eS default).length = 4 + (eS default).length := by
@@ -62,7 +31,7 @@ private theorem default_remainder {S : Type} [Inhabited S] (eS : S ↪ List Bool
 private theorem default_factor {S : Type} [Inhabited S] (eS : S ↪ List Bool) :
     (encChoice SingleCall.encState (encChoice encBits eS) default).length = 16 + (eS default).length := by
   change (encChoice SingleCall.encState (encChoice encBits eS) (false, default, default)).length = _
-  rw [choice_pair_length, default_single, default_remainder]
+  rw [encChoice_length, default_single, default_remainder]
   omega
 
 variable {F : ModularFamily} (a : ModularAccess F)
@@ -87,7 +56,7 @@ theorem encoded_length {S : Type} [Inhabited S] (eS : S ↪ List Bool)
       else if isMoment q then 32 + 2 *
         (((MomentStage.controller a sourceTask []).reference g)^[t] (MomentStage.initial a (payload q))).length + (eS default).length
       else 32 + (eS ((source.reference g)^[t] (source.initial (payload q)))).length := by
-  simp only [controller, encState, choice_length, prepared_orbit, single_initial,
+  simp only [controller, encState, choose_encoded_length, prepare_orbit, single_initial,
     determinant_initial, moment_initial, default_single, default_remainder, default_factor, encBits_apply, default_word]
   split_ifs <;> omega
 

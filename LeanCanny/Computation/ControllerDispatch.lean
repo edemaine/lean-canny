@@ -97,26 +97,42 @@ theorem choose_query_iterate (answer : Q → List Bool) (q : Q) (t : ℕ) :
       else D.query ((D.reference answer)^[t] (D.initial q)) :=
   choose_observe_iterate select C D C.query D.query answer q t
 
+theorem encChoice_length {A B : Type} (eA : A ↪ List Bool) (eB : B ↪ List Bool)
+    (flag : Bool) (a : A) (b : B) :
+    (encChoice eA eB (flag, a, b)).length = 4 + 2 * (eA a).length + (eB b).length := by
+  simp only [encChoice, length_encPair, encBool_apply, List.length_singleton]
+  omega
+
+theorem choose_encoded_length {A B : Type} [Inhabited A] [Inhabited B]
+    (eA : A ↪ List Bool) (eB : B ↪ List Bool) (select : Q → Bool)
+    (C : RecursiveController.Controller Q A) (D : RecursiveController.Controller Q B)
+    (g : Q → List Bool) (q : Q) (t : ℕ) :
+    (encChoice eA eB (((choose select C D).reference g)^[t] ((choose select C D).initial q))).length =
+      if select q then 4 + 2 * (eA ((C.reference g)^[t] (C.initial q))).length + (eB default).length
+      else 4 + 2 * (eA default).length + (eB ((D.reference g)^[t] (D.initial q))).length := by
+  cases hs : select q with
+  | true =>
+    have hi : (choose select C D).initial q = (true, C.initial q, default) := by simp only [choose, hs, ite_true]
+    rw [hi, choose_iterate_true]
+    simp only [ite_true, encChoice, length_encPair, encBool_apply, List.length_singleton]
+    omega
+  | false =>
+    have hi : (choose select C D).initial q = (false, default, D.initial q) := by
+      simp only [choose, hs, Bool.false_eq_true, ite_false]
+    rw [hi, choose_iterate_false]
+    simp only [Bool.false_eq_true, ite_false, encChoice, length_encPair, encBool_apply, List.length_singleton]
+    omega
+
 theorem choose_state_length (eA : A ↪ List Bool) (eB : B ↪ List Bool)
     (answer : Q → List Bool) (q : Q) (t L : ℕ)
     (hA : select q = true → (eA ((C.reference answer)^[t] (C.initial q))).length ≤ L)
     (hB : select q = false → (eB ((D.reference answer)^[t] (D.initial q))).length ≤ L) :
     (encChoice eA eB (((choose select C D).reference answer)^[t] ((choose select C D).initial q))).length ≤
       4 + 2 * L + 2 * (eA default).length + (eB default).length := by
+  rw [choose_encoded_length]
   cases hs : select q with
-  | true =>
-    have hi : (choose select C D).initial q = (true, C.initial q, default) := by simp only [choose, hs, ite_true]
-    rw [hi, choose_iterate_true]
-    have hl := hA hs
-    simp only [encChoice, length_encPair, encBool_apply, List.length_singleton]
-    omega
-  | false =>
-    have hi : (choose select C D).initial q = (false, default, D.initial q) := by
-      simp only [choose, hs, Bool.false_eq_true, ite_false]
-    rw [hi, choose_iterate_false]
-    have hl := hB hs
-    simp only [encChoice, length_encPair, encBool_apply, List.length_singleton]
-    omega
+  | true => simp only [ite_true]; have h := hA hs; omega
+  | false => simp only [Bool.false_eq_true, ite_false]; have h := hB hs; omega
 
 variable {eQ : Q ↪ List Bool} {eA : A ↪ List Bool} {eB : B ↪ List Bool}
 
@@ -175,6 +191,11 @@ theorem choose_certificates (hs : ComputableTidilyInPolyTime select eQ encBool)
 
 def prepare {S : Type} (E : Controller Q S) (input : Q → Q) : Controller Q S :=
   { E with initial := E.initial ∘ input }
+
+theorem prepare_orbit {S : Type}
+    (C : Controller Q S) (input : Q → Q) (g : Q → List Bool) (q : Q) (t : ℕ) :
+    ((prepare C input).reference g)^[t] ((prepare C input).initial q) =
+      (C.reference g)^[t] (C.initial (input q)) := rfl
 
 theorem prepare_halted_iterate {S : Type} (E : Controller Q S) (input : Q → Q)
     (answer : Q → List Bool) (q : Q) (t : ℕ) :

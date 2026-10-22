@@ -19,7 +19,7 @@ is an encoded equation system with the exact witness allocation of `equations`.
 
 namespace LeanCanny.ETR.EquationCompiler
 
-open LeanCanny.Encoding.Brackets
+open LeanCanny.Encoding.Brackets Turing.MultiTapeTM
 
 def HasTag (tag : ℕ) (bits : List Bool) : Prop := firstChild bits = (Codec.unary tag).toBits
 
@@ -44,12 +44,69 @@ def atomBits (packet : List Bool) : List Bool :=
   else if HasTag 1 term then packAtom (i + 1) (singleton (Term.nonzeroBits (NNF.second term) i))
   else packAtom (i + 1) (singleton (Term.nonnegativeBits (NNF.second term) i))
 
-attribute [local polytime] hasTag_fppred NNF.second_mem_FP Codec.unaryValue_unary
-  Codec.unary_toBits_mem_FP consNode_mem_FP Term.negativeBits_mem_FP
-  Term.nonzeroBits_mem_FP Term.nonnegativeBits_mem_FP
+-- Native certificates keep named writers opaque during compositional search.
+@[program_certificate]
+theorem hasTag_computable {bits : List Bool → List Bool} (tag : ℕ)
+    [DecidablePred (fun z => HasTag tag (bits z))]
+    (hb : ComputableTidilyInPolyTime bits encBits encBits) :
+    ComputableTidilyInPolyTime (fun z => decide (HasTag tag (bits z))) encBits encBool :=
+  ((hasTag_fppred tag).comp hb).computable
+
+@[program_certificate]
+theorem second_computable : ComputableTidilyInPolyTime NNF.second encBits encBits :=
+  NNF.second_mem_FP
+
+@[program_certificate]
+theorem unaryValue_computable : ComputableTidilyInPolyTime Codec.unaryValue encBits encUnary :=
+  Codec.unaryValue_unary
+
+@[program_certificate hn]
+theorem unaryBits_computable {n : List Bool → ℕ}
+    (hn : ComputableTidilyInPolyTime n encBits encUnary) :
+    ComputableTidilyInPolyTime (fun z => (Codec.unary (n z)).toBits) encBits encBits :=
+  Codec.unary_toBits_mem_FP hn
+
+@[program_certificate]
+theorem consNode_computable {head tail : List Bool → List Bool}
+    (hh : ComputableTidilyInPolyTime head encBits encBits)
+    (ht : ComputableTidilyInPolyTime tail encBits encBits) :
+    ComputableTidilyInPolyTime (fun z => consNode (head z) (tail z)) encBits encBits :=
+  consNode_mem_FP hh ht
+
+@[program_certificate]
+theorem negativeBits_computable {term : List Bool → List Bool} {i : List Bool → ℕ}
+    (ht : ComputableTidilyInPolyTime term encBits encBits)
+    (hi : ComputableTidilyInPolyTime i encBits encUnary) :
+    ComputableTidilyInPolyTime (fun z => Term.negativeBits (term z) (i z)) encBits encBits :=
+  Term.negativeBits_mem_FP ht hi
+
+@[program_certificate]
+theorem nonzeroBits_computable {term : List Bool → List Bool} {i : List Bool → ℕ}
+    (ht : ComputableTidilyInPolyTime term encBits encBits)
+    (hi : ComputableTidilyInPolyTime i encBits encUnary) :
+    ComputableTidilyInPolyTime (fun z => Term.nonzeroBits (term z) (i z)) encBits encBits :=
+  Term.nonzeroBits_mem_FP ht hi
+
+@[program_certificate]
+theorem nonnegativeBits_computable {term : List Bool → List Bool} {i : List Bool → ℕ}
+    (ht : ComputableTidilyInPolyTime term encBits encBits)
+    (hi : ComputableTidilyInPolyTime i encBits encUnary) :
+    ComputableTidilyInPolyTime (fun z => Term.nonnegativeBits (term z) (i z)) encBits encBits :=
+  Term.nonnegativeBits_mem_FP ht hi
+
+@[program_certificate]
+theorem packAtom_computable {next : List Bool → ℕ} {terms : List Bool → List Bool}
+    (hn : ComputableTidilyInPolyTime next encBits encUnary)
+    (ht : ComputableTidilyInPolyTime terms encBits encBits) :
+    ComputableTidilyInPolyTime (fun z => packAtom (next z) (terms z)) encBits encBits :=
+  pair_computable (unaryBits_computable hn) ht
 
 theorem atomBits_mem_FP : atomBits ∈ FP := by
-  polytime [atomBits, packAtom]
+  polytime [atomBits]
+
+@[program_certificate]
+theorem atomBits_computable : ComputableTidilyInPolyTime atomBits encBits encBits :=
+  atomBits_mem_FP
 
 def Atomic : SignedFormula → Prop
   | .and _ _ | .or _ _ => False
