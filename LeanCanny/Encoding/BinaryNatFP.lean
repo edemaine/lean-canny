@@ -60,19 +60,9 @@ theorem normalize_eq_bits (bits : List Bool) : normalize bits = (Nat.fromBitsLE 
 @[simp] theorem normalize_bits (n : ℕ) : normalize n.bits = n.bits := by
   rw [normalize_eq_bits, Nat.fromBitsLE_bits]
 
-theorem normalize_mem_FP : normalize ∈ FP := by
-  have hprev := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  have hempty := stringEq_fppred hprev (constFn_mem_FP [])
-  have hfalse := hempty.ite_mem_FP (constFn_mem_FP [])
-    (mem_FP_comp hprev (cons_mem_FP false))
-  have htrue := mem_FP_comp hprev (cons_mem_FP true)
-  refine recFold_mem_FP_of_bound (g := fun _ t => normalize t)
-    hfalse htrue (constFn_mem_FP []) (constFn_mem_FP []) id_mem_FP
-    (bound := id) ?_ ?_ ?_ PolyBound.id ?_
-  · intro z; rfl
-  · intro z t; simp only [normalize, pairFst_pair, pairSnd_pair, Function.comp_apply]
-  · intro z t; simp only [normalize, pairFst_pair, pairSnd_pair, Function.comp_apply]
-  · intro z t ht; exact (normalize_length_le t).trans ht.length_le
+theorem normalize_mem_FP : normalize ∈ FP :=
+  mem_FP_of_eq (natBits_computable.comp fromBitsLE_computable)
+    (fun w => (normalize_eq_bits w).symm)
 
 def increment : List Bool → List Bool
   | [] => [true]

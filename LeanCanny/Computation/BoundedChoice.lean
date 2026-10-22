@@ -116,12 +116,8 @@ theorem computable {L : Language} (D : SpaceDecider L)
 theorem evaluator {L : Language} (D : SpaceDecider L)
     (bound : List Bool → List Bool) (hb : bound ∈ FP) :
     SpaceFunction (fun c => BinaryNatCode.encode (search L c (Nat.fromBitsLE (bound c)) - 1)) := by
-  have h := (ComputableTidilyInPolySpace.of_polyTime natBits_computable).comp (computable D bound hb)
-  have E : SpaceFunction (fun c => BinaryNatCode.encode (search L c (Nat.fromBitsLE (bound c)))) :=
-    ⟨h.congr fun _ => rfl⟩
-  have hf := mem_FP_comp (mem_FP_pair id_mem_FP (constFn_mem_FP (BinaryNatCode.encode 1))) BinaryNat.sub_mem_FP
-  have R := E.postcompose (fun z => BinaryNat.sub (pair z (BinaryNatCode.encode 1))) hf
-  refine R.congr (funext fun c => ?_)
-  simp only [Function.comp_apply, BinaryNat.sub_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  have h := (ComputableTidilyInPolySpace.of_polyTime ComputableTidilyInPolyTime.binary_sub).comp
+    ((computable D bound hb).prod (ComputableTidilyInPolySpace.const encBits encNat 1))
+  exact ⟨(ComputableTidilyInPolySpace.of_polyTime natBits_computable).comp h⟩
 
 end LeanCanny.Computation.BoundedChoice

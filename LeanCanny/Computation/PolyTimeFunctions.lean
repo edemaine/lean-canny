@@ -124,11 +124,8 @@ theorem FPPred.of_computable {p : List Bool → Prop} {g : List Bool → Bool}
 theorem FPPred.computable {p : List Bool → Prop} [DecidablePred p] (hp : FPPred p) :
     ComputableTidilyInPolyTime (fun z => decide (p z)) encBits encBool := by
   obtain ⟨g, hg, h⟩ := hp
-  refine hg.of_enc_eq fun z => ?_
-  change [decide (p z)] = [g z]
-  by_cases hp : p z
-  · rw [decide_eq_true hp, (h z).mp hp]
-  · rw [decide_eq_false hp, Bool.eq_false_iff.mpr fun hv => hp ((h z).mpr hv)]
+  refine hg.of_enc_eq fun z => congrArg (fun b => [b]) (Bool.eq_iff_iff.mpr ?_)
+  simp only [decide_eq_true_eq, h]
 
 theorem FPPred.flag_mem_FP {p : List Bool → Prop} [DecidablePred p] (hp : FPPred p) :
     (fun z => [decide (p z)]) ∈ FP := hp.computable.encoded
@@ -175,11 +172,9 @@ theorem FPPred.or {p q : List Bool → Prop} (hp : FPPred p) (hq : FPPred q) :
 
 theorem FPPred.not {p : List Bool → Prop} (hp : FPPred p) :
     FPPred (fun z => ¬p z) := by
-  obtain ⟨g, hg, h⟩ := hp
-  have hgBool : ComputableTidilyInPolyTime g encBits encBool :=
-    hg.of_enc_eq fun _ => rfl
-  refine .of_computable (ComputableTidilyInPolyTime.bool_not.comp hgBool) fun z => ?_
-  simp only [h z, Function.comp_apply, Bool.not_eq_true', Bool.eq_false_iff]
+  classical
+  exact .of_computable (ComputableTidilyInPolyTime.bool_not.comp hp.computable)
+    (fun z => by simp)
 
 theorem FPPred.ite_mem_FP {p : List Bool → Prop} [DecidablePred p]
     {f g : List Bool → List Bool} (hp : FPPred p) (hf : f ∈ FP) (hg : g ∈ FP) :

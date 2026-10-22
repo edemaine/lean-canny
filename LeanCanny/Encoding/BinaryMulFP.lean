@@ -62,22 +62,10 @@ theorem mul_eq_bits (packet : List Bool) : mul packet =
   simp only [mul_eq_bits, pairFst_pair, pairSnd_pair]
 
 theorem mul_mem_FP : mul ∈ FP := by
-  have hprev := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  have hb := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have hshift := mem_FP_comp hprev (cons_mem_FP false)
-  have hfalse := mem_FP_comp hshift normalize_mem_FP
-  have htrue := mem_FP_comp (mem_FP_pair hshift hb) add_mem_FP
-  refine recFold_mem_FP_of_bound (g := fun z t => mulFold (pairSnd z) t)
-    hfalse htrue (constFn_mem_FP []) pairSnd_mem_FP pairFst_mem_FP
-    (bound := fun n => 2 * n) ?_ ?_ ?_ ((PolyBound.const 2).mul PolyBound.id) ?_
-  · intro z; rfl
-  · intro z t; simp only [mulFold, pairFst_pair, pairSnd_pair, Function.comp_apply]
-  · intro z t; simp only [mulFold, pairFst_pair, pairSnd_pair, Function.comp_apply]
-  · intro z t ht
-    have hlen := mulFold_length_le (pairSnd z) t
-    have ha := ht.length_le.trans (pairFst_length_le z)
-    have hb := pairSnd_length_le z
-    omega
+  have h := natBits_computable.comp
+    (Turing.MultiTapeTM.ComputableTidilyInPolyTime.binary_mul'
+      (fromBitsLE_computable.comp pairFst_mem_FP) (fromBitsLE_computable.comp pairSnd_mem_FP))
+  exact mem_FP_of_eq h (fun p => (mul_eq_bits p).symm)
 
 theorem mul_length_le (a b : List Bool) : (mul (pair a b)).length ≤ a.length + b.length := by
   simpa only [mul, pairFst_pair, pairSnd_pair] using mulFold_length_le b a
