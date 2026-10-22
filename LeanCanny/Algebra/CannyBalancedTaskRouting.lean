@@ -93,7 +93,8 @@ theorem coefficientTask_length_le (right : Bool) (node parentDegree modulus degr
 
 /-- The concrete address writers discharge every source-level decrease;
 neither child semantics nor computation certificates are needed here. -/
-theorem source_levels (L : SeparableBits.Family) {F : CannyResultantBits.Family} (a : CannyResultantBits.Access F)
+theorem source_levels (L : SeparableBits.Family) {F : CannyResultantBits.Family}
+    {leftOrder rightOrder : List Bool → ℕ} (a : CannyResultantBits.Access F leftOrder rightOrder)
     (tasks : List Bool → List Bool → Prop) :
     SourceLevels (CannyResultantBits.WithSquarefreeLeaves.access L a isLeaf)
       (CannyResultantBits.WithSquarefreeLeaves.program L a isLeaf (coefficientTask false) (coefficientTask true)).controller

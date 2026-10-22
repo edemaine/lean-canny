@@ -14,6 +14,8 @@ Sylvester band guards and the constant-right coefficient guard return zero
 immediately. Every other entry makes one original-polynomial coefficient
 request. The shifted-left branch computes its binomial factor locally in
 native polynomial space. No child-answer computation certificate is assumed.
+Supplied Sylvester orders need not equal source polynomial degrees; the
+default orders recover the usual Canny resultant source.
 -/
 
 @[expose] public section
@@ -22,7 +24,7 @@ namespace LeanCanny.Algebra.CannyResultantBits.RecursiveStage
 open LeanCanny.Encoding LeanCanny.Encoding.Brackets LeanCanny.Computation
 open Turing.MultiTapeTM
 
-variable {F : Family} (a : Access F)
+variable {F : Family} {leftOrder rightOrder : List Bool → ℕ} (a : Access F leftOrder rightOrder)
 
 noncomputable def selectRight : List Bool → Bool :=
   SylvesterPolynomialBits.RecursiveStage.selectRight a.modular.bits

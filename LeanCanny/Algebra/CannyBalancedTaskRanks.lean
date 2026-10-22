@@ -22,7 +22,8 @@ namespace LeanCanny.Algebra.CannyBalancedTaskRouting
 open LeanCanny.Encoding LeanCanny.Computation
 open BerkowitzPolynomial.TaskDispatch
 
-variable (L : SeparableBits.Family) {F : CannyResultantBits.Family} (a : CannyResultantBits.Access F)
+variable (L : SeparableBits.Family) {F : CannyResultantBits.Family} {leftOrder rightOrder : List Bool → ℕ}
+  (a : CannyResultantBits.Access F leftOrder rightOrder)
 
 def tasks : List Bool → List Bool → Prop :=
   Reachable (CannyResultantBits.WithSquarefreeLeaves.access L a isLeaf)
@@ -70,10 +71,10 @@ theorem evaluator (A : SeparableBits.Readers L) (ha : a.ControlsPolyTime)
     (hanswer : ∀ root q, tasks L a root q →
       (answer (CannyResultantBits.WithSquarefreeLeaves.access L a isLeaf) q).length ≤ K root)
     (hdet : ∀ root q, tasks L a root q → SelectedDeterminant q →
-      determinantFields (F := CannyResultantBits.WithSquarefreeLeaves.family L (F := F) isLeaf) (payload q) ≤ M root)
+      determinantFields (F := CannyResultantBits.WithSquarefreeLeaves.family L (F := F) isLeaf leftOrder rightOrder) (payload q) ≤ M root)
     (hmoment : ∀ root q, tasks L a root q → SelectedMoment q →
-      momentFields (F := CannyResultantBits.WithSquarefreeLeaves.family L (F := F) isLeaf) (payload q) ≤ M root) :
-    SpaceFunction (CannyResultantBits.WithSquarefreeLeaves.family L (F := F) isLeaf).value :=
+      momentFields (F := CannyResultantBits.WithSquarefreeLeaves.family L (F := F) isLeaf leftOrder rightOrder) (payload q) ≤ M root) :
+    SpaceFunction (CannyResultantBits.WithSquarefreeLeaves.family L (F := F) isLeaf leftOrder rightOrder).value :=
   CannyResultantBits.WithSquarefreeLeaves.evaluator L a isLeaf A ha isLeaf_FP
     (coefficientTask false) (coefficientTask true) (coefficientTask_FP false) (coefficientTask_FP true) hl hr
     (tasks L a) level List.length K M (UnaryFn.length id_mem_FP) hK hM

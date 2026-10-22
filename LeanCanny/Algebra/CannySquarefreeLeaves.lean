@@ -13,7 +13,8 @@ public import LeanCanny.Computation.SingleCallLeaf
 /-! # A mixed square-free-leaf and resultant-node coefficient source
 
 Leaves use a one-by-one matrix containing the scaled square-free polynomial;
-internal nodes use the actual Canny Sylvester matrix. The same one-request
+internal nodes use the shifted Sylvester matrix at the supplied source orders.
+The default orders give the usual Canny resultant. The same one-request
 state handles both cases. Native leaf computation needs no recursive child or
 execution clock. The concrete balanced-tree contexts and graph bounds remain
 parameters of the uniform evaluation theorem.
@@ -26,15 +27,18 @@ open LeanCanny.Encoding LeanCanny.Computation
 open Turing.MultiTapeTM
 open BerkowitzPolynomial.TaskDispatch
 
-variable (L : SeparableBits.Family) {F : Family} (a : Access F) (select : List Bool → Bool)
+variable (L : SeparableBits.Family) {F : Family} {leftOrder rightOrder : List Bool → ℕ}
+  (a : Access F leftOrder rightOrder) (select : List Bool → Bool)
 
 noncomputable def leafAccess : BerkowitzPolynomial.ModularAccess (SeparableBits.LeafMatrix.family L F.degree) :=
   SeparableBits.LeafMatrix.access L F.degree a.degree a.degree_eq
 
-noncomputable def family : BerkowitzPolynomial.ModularFamily :=
-  BerkowitzPolynomial.ModularFamily.branch select (SeparableBits.LeafMatrix.family L F.degree) F.modular.determinant
+noncomputable def family
+    (leftOrder : List Bool → ℕ := fun c => (F.left c).natDegree)
+    (rightOrder : List Bool → ℕ := fun c => (F.right c).natDegree) : BerkowitzPolynomial.ModularFamily :=
+  BerkowitzPolynomial.ModularFamily.branch select (SeparableBits.LeafMatrix.family L F.degree) (F.modularWithDegrees leftOrder rightOrder).determinant
 
-noncomputable def access : BerkowitzPolynomial.ModularAccess (family L (F := F) select) :=
+noncomputable def access : BerkowitzPolynomial.ModularAccess (family L (F := F) select leftOrder rightOrder) :=
   BerkowitzPolynomial.ModularAccess.branch select (leafAccess L a) a.modular.determinant
 
 def entrySelect (p : List Bool) : Bool := select (pairFst p)
@@ -108,11 +112,11 @@ theorem source_levels (leftTask rightTask : List Bool → List Bool)
     exact hl p hs hn hb hz
 
 theorem family_value (c : List Bool) :
-    (family L (F := F) select).value c = if select c then
-      SeparableBits.squarefreeValue L (pair c (BinaryNatCode.encode (F.degree (pairFst c)))) else F.value c := by
+    (family L (F := F) select leftOrder rightOrder).value c = if select c then
+      SeparableBits.squarefreeValue L (pair c (BinaryNatCode.encode (F.degree (pairFst c)))) else F.specifiedValue leftOrder rightOrder c := by
   rw [family, BerkowitzPolynomial.ModularFamily.branch_value, SeparableBits.LeafMatrix.value_eq]
-  change (if select c then _ else F.modular.value c) = _
-  rw [F.modular_value]
+  change (if select c then _ else (F.modularWithDegrees leftOrder rightOrder).value c) = _
+  rw [F.modularWithDegrees_value]
 
 /-- One native machine evaluates the mixed leaf/resultant graph. The input
 polynomial leaf readers are certified; the internal original-coefficient
@@ -131,10 +135,10 @@ theorem evaluator (A : SeparableBits.Readers L) (ha : a.ControlsPolyTime)
     (hclosed : QueriesClosed (access L a select) (program L a select leftTask rightTask).controller (fun _ => 1) tasks)
     (hlevel : SourceLevels (access L a select) (program L a select leftTask rightTask).controller (fun _ => 1) tasks level)
     (hdet : ∀ root q, tasks root q → SelectedDeterminant q →
-      determinantFields (F := family L (F := F) select) (payload q) ≤ M root)
+      determinantFields (F := family L (F := F) select leftOrder rightOrder) (payload q) ≤ M root)
     (hmoment : ∀ root q, tasks root q → SelectedMoment q →
-      momentFields (F := family L (F := F) select) (payload q) ≤ M root) :
-    SpaceFunction (family L (F := F) select).value := by
+      momentFields (F := family L (F := F) select leftOrder rightOrder) (payload q) ≤ M root) :
+    SpaceFunction (family L (F := F) select leftOrder rightOrder).value := by
   have E := singleCall_evaluator (access L a select) (program L a select leftTask rightTask)
     (controls L a select ha hs) (certificates L a select A ha hs leftTask rightTask hlFP hrFP)
     (value_eq L a select leftTask rightTask (answer (access L a select)) hl hr)

@@ -19,20 +19,20 @@ the output of an eliminant or another resultant to be used as an input.
 namespace LeanCanny.Algebra.CannyResultantBits.Access
 open LeanCanny.Encoding LeanCanny.Computation LeanCanny.Encoding.Brackets
 
-structure ControlsPolyTime {F : Family} (a : Access F) : Prop where
+structure ControlsPolyTime {F : Family} {leftOrder rightOrder : List Bool → ℕ} (a : Access F leftOrder rightOrder) : Prop where
   leftDegree : a.leftDegree ∈ FP
   rightDegree : a.rightDegree ∈ FP
   direction : a.direction ∈ FP
   degree : a.degree ∈ FP
 
-theorem controls_of_polyTime {F : Family} (a : Access F) (ha : a.PolyTime) : a.ControlsPolyTime :=
+theorem controls_of_polyTime {F : Family} {leftOrder rightOrder : List Bool → ℕ} (a : Access F leftOrder rightOrder) (ha : a.PolyTime) : a.ControlsPolyTime :=
   ⟨ha.leftDegree, ha.rightDegree, ha.direction, ha.degree⟩
 
 def constantInput (p : List Bool) : List Bool := pair (pairFst p) (ShiftCoefficientBits.leftIndex p)
 
 theorem constantInput_mem_FP : constantInput ∈ FP := mem_FP_pair pairFst_mem_FP ShiftCoefficientBits.leftIndex_mem_FP
 
-theorem constantCoefficientEvaluator {F : Family} (a : Access F) (R : SpaceFunction a.rightCoefficient) :
+theorem constantCoefficientEvaluator {F : Family} {leftOrder rightOrder : List Bool → ℕ} (a : Access F leftOrder rightOrder) (R : SpaceFunction a.rightCoefficient) :
     SpaceFunction a.constantCoefficient := by
   have hp := stringEq_fppred (mem_FP_comp ShiftCoefficientBits.rightIndex_mem_FP BinaryNat.normalize_mem_FP) (constFn_mem_FP [])
   let E := SpaceFunction.branch (fun p => decide (BinaryNat.normalize (ShiftCoefficientBits.rightIndex p) = []))
@@ -41,7 +41,7 @@ theorem constantCoefficientEvaluator {F : Family} (a : Access F) (R : SpaceFunct
     by_cases h : BinaryNat.normalize (ShiftCoefficientBits.rightIndex p) = [] <;>
       simp [constantCoefficient, constantInput, h])
 
-theorem modular_controlsWithCoefficients {F : Family} (a : Access F) (ha : a.ControlsPolyTime) :
+theorem modular_controlsWithCoefficients {F : Family} {leftOrder rightOrder : List Bool → ℕ} (a : Access F leftOrder rightOrder) (ha : a.ControlsPolyTime) :
     a.modular.bits.ControlsPolyTime := by
   have hl := mem_FP_comp pairFst_mem_FP ha.leftDegree
   have hr := mem_FP_comp pairFst_mem_FP ha.rightDegree
@@ -53,12 +53,17 @@ theorem modular_controlsWithCoefficients {F : Family} (a : Access F) (ha : a.Con
   · simpa only [modular] using hm
   · simpa only [modular] using hd
 
-theorem evaluatorWithCoefficients {F : Family} (a : Access F) (ha : a.ControlsPolyTime)
-    (L : SpaceFunction a.leftCoefficient) (R : SpaceFunction a.rightCoefficient) : SpaceFunction F.value := by
+theorem specifiedEvaluatorWithCoefficients {F : Family} {leftOrder rightOrder : List Bool → ℕ}
+    (a : Access F leftOrder rightOrder) (ha : a.ControlsPolyTime)
+    (L : SpaceFunction a.leftCoefficient) (R : SpaceFunction a.rightCoefficient) : SpaceFunction (F.specifiedValue leftOrder rightOrder) := by
   have SL := ShiftCoefficientBits.certifiedWithCoefficient a.shiftAccess ha.direction L F.shiftSource a.shift_represents
   have E := ResultantPolynomial.ModularAccess.evaluator a.modular (a.modular_controlsWithCoefficients ha)
     SL (a.constantCoefficientEvaluator R)
-  exact E.congr (funext F.modular_value)
+  exact E.congr (funext (F.modularWithDegrees_value leftOrder rightOrder))
+
+theorem evaluatorWithCoefficients {F : Family} (a : Access F) (ha : a.ControlsPolyTime)
+    (L : SpaceFunction a.leftCoefficient) (R : SpaceFunction a.rightCoefficient) : SpaceFunction F.value :=
+  (a.specifiedEvaluatorWithCoefficients ha L R).congr (funext F.specifiedValue_exact)
 
 end LeanCanny.Algebra.CannyResultantBits.Access
 

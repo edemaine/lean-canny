@@ -4355,7 +4355,7 @@ The earlier resultant evaluator now reuses these proofs.
 One uniform native machine evaluates the mixed determinant family under the
 stated child-task semantic identities, context-level decreases, query closure,
 and common metadata/task/reply bounds. Coefficient semantic identities for the actual tree,
-validated degree and direction metadata, quantitative graph contracts, and
+prepared degree and direction metadata, quantitative graph contracts, and
 specialization to the tube annihilators remain open. This is a conditional
 mixed-stage reader, not the complete ETR PSPACE theorem.
 
@@ -4390,17 +4390,37 @@ and internal priorities. Every reachable task has rank at most
 input word. These are native unary FP bounds. The uniform native evaluator
 now derives reachability closure, source-level decreases, and rank bounds.
 Its remaining graph hypotheses are the child coefficient semantic identities
-and common word, reply, and binary-metadata bit bounds. Concrete validated
+and common word, reply, and binary-metadata bit bounds. Correctly prepared
 degree/direction metadata, those quantitative contracts, and the tube-source
 specialization remain open; ETR in PSPACE is not yet proved.
 
-The current `CannyResultantBits.Access` requires source degrees to equal the
-actual polynomial degrees on every input word. Projections from an encoded
-degree/direction table do not automatically meet that contract on inconsistent
-or malformed tables. A total specified-degree resultant family, or a proved
-validation layer, is still needed before such table projections can supply
-the concrete FP metadata interface. The routing and rank proofs above do not
-resolve this totality obligation.
+## Supplied Sylvester orders and total metadata
+
+`cannyResultantWithDegrees` defines the shifted Sylvester determinant at two
+supplied natural orders, without assuming they equal the source degrees.
+Exact source degrees recover `cannyResultant`. The modular coefficient family
+`Family.modularWithDegrees` agrees with the integer residue function
+`Family.specifiedValue` at every supplied order, including modular degree
+drops. Pointwise exact-order hypotheses recover the ordinary residue function.
+
+`CannyResultantBits.Access` now takes optional order parameters, defaulting to
+the actual source degrees. Its encoded order fields represent those parameters.
+`withDegreeCodes` replaces them by normalized raw code writers, decoding the
+new orders on every word. Its native metadata certificate needs only those
+new writers and the retained direction/output-degree writers; it does not
+certify the discarded old degree writers or any original-coefficient answer.
+Incorrect degree codes still define their specified-order Sylvester determinant.
+They do not assert equality with the ordinary Canny resultant.
+
+The native streamed reader, one-request resultant source, square-free leaf
+extension, concrete child routing, and common reachable rank bound all
+generalize to the supplied-order parameters. They reuse the existing proofs;
+the exact-degree readers, integer height consequences, coordinate readers,
+and reductions retain their default exact-order interfaces. This removes the
+global degree-consistency requirement from table-driven coefficient evaluation.
+The actual encoded table access/preparation, its correctness for the intended
+balanced polynomial tree, separating-direction selection, quantitative graph
+bounds, and final ETR PSPACE theorem remain open.
 
 ## Savitch's theorem and Canny
 

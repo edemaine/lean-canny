@@ -22,7 +22,7 @@ open LeanCanny.Encoding LeanCanny.Computation
 open Turing.MultiTapeTM
 open BerkowitzPolynomial.TaskDispatch
 
-variable {F : Family} (a : Access F) (leftTask rightTask : List Bool → List Bool)
+variable {F : Family} {leftOrder rightOrder : List Bool → ℕ} (a : Access F leftOrder rightOrder) (leftTask rightTask : List Bool → List Bool)
 
 attribute [local irreducible] isZero isDeterminant isFactor isMoment payload
   BinaryNat.normalize BinaryNat.add BinaryNat.sub BinaryNat.mul BinaryNat.mulMod BinaryNat.powMod
@@ -73,13 +73,13 @@ theorem evaluator (ha : a.ControlsPolyTime) (hlFP : leftTask ∈ FP) (hrFP : rig
     (hclosed : QueriesClosed a.modular.determinant (program a leftTask rightTask).controller (fun _ => 1) tasks)
     (hlevel : SourceLevels a.modular.determinant (program a leftTask rightTask).controller (fun _ => 1) tasks level)
     (hdet : ∀ root q, tasks root q → SelectedDeterminant q →
-      determinantFields (F := F.modular.determinant) (payload q) ≤ M root)
+      determinantFields (F := (F.modularWithDegrees leftOrder rightOrder).determinant) (payload q) ≤ M root)
     (hmoment : ∀ root q, tasks root q → SelectedMoment q →
-      momentFields (F := F.modular.determinant) (payload q) ≤ M root) : SpaceFunction F.value := by
+      momentFields (F := (F.modularWithDegrees leftOrder rightOrder).determinant) (payload q) ≤ M root) : SpaceFunction (F.specifiedValue leftOrder rightOrder) := by
   have E := singleCall_evaluator a.modular.determinant (program a leftTask rightTask)
     (a.modular.determinant_controls (a.modular_controlsWithCoefficients ha)) (certificates a ha leftTask rightTask hlFP hrFP)
     (value_eq a leftTask rightTask (answer a.modular.determinant) hl hr)
     tasks level H K M hH hK hM hroot hlevels hword hanswer hclosed hlevel hdet hmoment
-  exact (determinant_reader a.modular.determinant E).congr (funext F.modular_value)
+  exact (determinant_reader a.modular.determinant E).congr (funext (F.modularWithDegrees_value leftOrder rightOrder))
 
 end LeanCanny.Algebra.CannyResultantBits.RecursiveStage

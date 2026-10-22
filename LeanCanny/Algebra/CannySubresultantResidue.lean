@@ -66,7 +66,7 @@ noncomputable def Family.modular (F : Family) : SubresultantPolynomial.ModularFa
 
 set_option backward.isDefEq.respectTransparency false in
 theorem Family.modular_value (F : Family) (q : List Bool) : F.modular.value q = F.value q := by
-  simp only [SubresultantPolynomial.ModularFamily.value, Family.modular, CannyResultantBits.Family.modular,
+  simp only [SubresultantPolynomial.ModularFamily.value, Family.modular, CannyResultantBits.Family.modular, CannyResultantBits.Family.modularWithDegrees,
     Subresultant.polynomial_map, Polynomial.coeff_map, Polynomial.coe_mapRingHom]
   rfl
 
