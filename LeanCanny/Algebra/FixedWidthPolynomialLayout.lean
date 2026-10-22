@@ -25,6 +25,11 @@ variable {σ R : Type*} [Fintype σ] [CommSemiring R] {A : ℕ}
 noncomputable def nativeExponent (f : σ ≃ Fin A) (W r : ℕ) : σ →₀ ℕ :=
   Finsupp.equivFunOnFinite.symm (fun j => entry W r (f j).val)
 
+theorem nativeExponent_refl (A W r : ℕ) :
+    nativeExponent (Equiv.refl (Fin A)) W r = exponentVector A (entry W r) := by
+  ext i
+  rfl
+
 /-- Repacking to a wider layout preserves the native exponent vector. -/
 theorem nativeExponent_repack (f : σ ≃ Fin A) (W V : List Bool → ℕ)
     (target : List Bool → List Bool) (c : List Bool) (hW : W c ≤ V c) :

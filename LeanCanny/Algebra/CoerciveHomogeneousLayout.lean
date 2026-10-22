@@ -55,17 +55,6 @@ lemma native_some (W r : ℕ) :
       FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin n)) W (Nat.fromBitsLE (r.bits.drop W)) :=
   HomogenizationLayout.native_some (Equiv.refl _) W r
 
-lemma native_eq_single (W r : ℕ) (i : Option (Fin n)) (k : ℕ) :
-    FixedWidthPolynomial.nativeExponent (layout (n := n)) W r = Finsupp.single i k ↔
-      RationalSubstitution.Indexed.exponentVector (n + 1) (FixedWidthPolynomial.entry W r) =
-        Finsupp.single (layout i) k := by
-  constructor
-  · intro h
-    rw [← FixedWidthPolynomial.nativeExponent_map layout W r, h, Finsupp.mapDomain_single]
-  · intro h
-    apply Finsupp.mapDomain_injective layout.injective
-    rw [FixedWidthPolynomial.nativeExponent_map, Finsupp.mapDomain_single, h]
-
 /-- The ordinary homogeneous gradient and the pure leading monomial occupy
 separate parameter bidegrees. -/
 lemma fin_gradient (q : MvPolynomial (Fin n) ℤ) (D : ℕ) (coordinate j : Fin n) (W r s t : ℕ) :

@@ -132,22 +132,13 @@ private theorem sparse_spatial (input modulus : List Bool → List Bool) (c : Li
           (CoerciveHomogeneousRepack.width (input c)) r) : ℤ) : ZMod (Nat.fromBitsLE (modulus c)+1)) := by
   rw [CoerciveSparseReaders.monomial_value_eq _ _ _ _ _ _ _ c j rfl,
     CoerciveHomogeneousRepack.exponent_eq]
-  simp only [Finsupp.single_zero, zero_add, BinaryNatCode.encode, Nat.fromBitsLE_bits,
-    MvPolynomial.coeff_monomial]
-  have h := CoerciveHomogeneousLayout.native_eq_single
-    (CoerciveHomogeneousRepack.width (input c)) r (some j) N
-  simp only [CoerciveHomogeneousLayout.layout_some] at h
-  have hE : FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin (dimension (input c)+1)))
-      (CoerciveHomogeneousRepack.width (input c)) r =
-      RationalSubstitution.Indexed.exponentVector (dimension (input c)+1)
-        (FixedWidthPolynomial.entry (CoerciveHomogeneousRepack.width (input c)) r) := by ext k; rfl
-  rw [hE]
-  have hguard : (Finsupp.single j.succ N = RationalSubstitution.Indexed.exponentVector
-      (dimension (input c)+1) (FixedWidthPolynomial.entry (CoerciveHomogeneousRepack.width (input c)) r)) ↔
-      (Finsupp.single (some j) N = FixedWidthPolynomial.nativeExponent CoerciveCriticalHomogenization.layout
-        (CoerciveHomogeneousRepack.width (input c)) r) := by
-    simpa only [eq_comm] using h.symm
-  simp only [hguard]
+  simp only [Finsupp.single_zero, zero_add, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  have h := FixedWidthPolynomial.coeff_rename_rank CoerciveCriticalHomogenization.layout
+    (MvPolynomial.monomial (Finsupp.single (some j) N) (a : ℤ))
+    (CoerciveHomogeneousRepack.width (input c)) r
+  simpa only [MvPolynomial.rename_monomial, Finsupp.mapDomain_single,
+    CoerciveHomogeneousLayout.layout_some, FixedWidthPolynomial.nativeExponent_refl] using
+      congrArg (fun z : ℤ => residueBits (z : ZMod (Nat.fromBitsLE (modulus c) + 1))) h
 
 theorem leading_packet (input modulus : List Bool → List Bool) (c : List Bool)
     (j : Fin (dimension (input c))) (r u v : ℕ) :
@@ -182,22 +173,13 @@ theorem homogeneousCoordinate_packet (input modulus : List Bool → List Bool)
   rw [monomial_recontext]
   unfold CoerciveSparseReaders.monomialValue
   rw [CoerciveSparseReaders.matches_parameter_iff, CoerciveHomogeneousRepack.exponent_eq]
-  simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits, MvPolynomial.coeff_monomial]
-  have h := CoerciveHomogeneousLayout.native_eq_single (n := dimension (input c))
-    (CoerciveHomogeneousRepack.width (input c)) r none 1
-  simp only [CoerciveHomogeneousLayout.layout_none] at h
-  have hE : FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin (dimension (input c)+1)))
-      (CoerciveHomogeneousRepack.width (input c)) r =
-      RationalSubstitution.Indexed.exponentVector (dimension (input c)+1)
-        (FixedWidthPolynomial.entry (CoerciveHomogeneousRepack.width (input c)) r) := by ext k; rfl
-  rw [hE]
-  have hguard : (RationalSubstitution.Indexed.exponentVector (dimension (input c)+1)
-      (FixedWidthPolynomial.entry (CoerciveHomogeneousRepack.width (input c)) r) = Finsupp.single 0 1) ↔
-      (Finsupp.single (none : Option (Fin (dimension (input c)))) 1 =
-        FixedWidthPolynomial.nativeExponent CoerciveCriticalHomogenization.layout
-          (CoerciveHomogeneousRepack.width (input c)) r) := by
-    simpa only [eq_comm] using h.symm
-  simp only [hguard]
-  split_ifs <;> rfl
+  simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  rw [← FixedWidthPolynomial.coeff_rename_rank CoerciveCriticalHomogenization.layout
+    (MvPolynomial.monomial (Finsupp.single (none : Option (Fin (dimension (input c)))) 1) (1 : ℤ))
+    (CoerciveHomogeneousRepack.width (input c)) r]
+  simp only [MvPolynomial.rename_monomial, Finsupp.mapDomain_single,
+    CoerciveHomogeneousLayout.layout_none, MvPolynomial.coeff_monomial,
+    FixedWidthPolynomial.nativeExponent_refl]
+  split_ifs <;> simp_all [eq_comm]
 
 end LeanCanny.ETR.CoerciveHomogeneousRowParts
