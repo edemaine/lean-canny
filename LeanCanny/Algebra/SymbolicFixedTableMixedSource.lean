@@ -32,6 +32,11 @@ noncomputable def program : SingleCall.Program :=
   ((F.sourceProgram radix (coefficientTask false) (coefficientTask true)).withLeaf
     (entrySelect isLeaf) leaf).withLeaf (entrySelect high) (fun _ => [])
 
+theorem query_eq (p : List Bool) : (program F radix high leaf).query p =
+    if CannyResultantBits.RecursiveStage.selectRight F.access (sourceInput radix p) then
+      coefficientTask true (CannyResultantBits.RecursiveStage.rightQuery (sourceInput radix p)) else
+      coefficientTask false (CannyResultantBits.RecursiveStage.leftQuery F.access (sourceInput radix p)) := rfl
+
 theorem value_eq (answer : List Bool → List Bool)
     (hl : ∀ p, answer (coefficientTask false p) = F.access.leftCoefficient p)
     (hr : ∀ p, answer (coefficientTask true p) = F.access.rightCoefficient p) (p : List Bool) :

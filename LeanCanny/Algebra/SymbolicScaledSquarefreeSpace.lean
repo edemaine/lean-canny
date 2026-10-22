@@ -84,18 +84,18 @@ noncomputable def gcdFamily (p : List Bool → Polynomial Coefficient) : Symboli
     have h := order_le_derivative (p c)
     split_ifs <;> omega
 
-private theorem zeroWord_fppred {w : List Bool → List Bool} (hw : w ∈ FP) :
+theorem zeroWord_fppred {w : List Bool → List Bool} (hw : w ∈ FP) :
     FPPred (fun q => Nat.fromBitsLE (w q)=0) :=
   (BinaryNat.lt_fppred hw (constFn_mem_FP (BinaryNatCode.encode 1))).of_iff (fun q => by
     simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits]; omega)
 
-private theorem sub_binary {f g : List Bool → ℕ} (hf : BinaryFn f) (hg : BinaryFn g) :
+theorem sub_binary {f g : List Bool → ℕ} (hf : BinaryFn f) (hg : BinaryFn g) :
     BinaryFn (fun c => f c-g c) := by
   apply BinaryFn.of_bits
   refine mem_FP_of_eq (mem_FP_comp (mem_FP_pair hf.bits_mem_FP hg.bits_mem_FP) BinaryNat.sub_mem_FP) (fun c => ?_)
   simp only [Function.comp_apply, BinaryNat.sub_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
 
-private theorem oneEvaluator : SpaceFunction (coefficient (fun _ => (1 : Polynomial Coefficient))) := by
+theorem oneEvaluator : SpaceFunction (coefficient (fun _ => (1 : Polynomial Coefficient))) := by
   let oneValue := fun q => BinaryNat.mod (pair (BinaryNatCode.encode 1) (BinaryNat.succ (modulus q)))
   have ho : oneValue ∈ FP := mem_FP_comp
     (f := fun q => pair (BinaryNatCode.encode 1) (BinaryNat.succ (modulus q))) (g := BinaryNat.mod)

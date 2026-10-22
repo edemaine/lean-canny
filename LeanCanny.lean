@@ -1,3 +1,10 @@
+import LeanCanny.ETR.CoercivePSPACE
+import LeanCanny.ETR.CoerciveFormalLeafReader
+import LeanCanny.ETR.CoerciveCoordinatePathSource
+import LeanCanny.Algebra.SymbolicCoordinatePathSpace
+import LeanCanny.Algebra.SymbolicFormalSquarefreeSpace
+import LeanCanny.Algebra.SymbolicFixedTableLeafPath
+import LeanCanny.ETR.CoerciveClearedQueryCoefficient
 import LeanCanny.ETR.CoerciveCoordinateEncoding
 import LeanCanny.Algebra.SymbolicFixedTableMixedSource
 import LeanCanny.Algebra.SymbolicCoordinateClearSpace

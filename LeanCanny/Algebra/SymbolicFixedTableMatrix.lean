@@ -76,6 +76,13 @@ theorem Family.encodedMatrix_controls (F : Family) (radix degree E : List Bool �
       pairSnd_mem_FP ((BinaryFn.fromBits id_mem_FP).add (BinaryFn.const 1)).bits_mem_FP
   · exact hd.bits_mem_FP
 
+theorem Family.encodedMatrixAccess_entry (F : Family) (radix degree E : List Bool → ℕ)
+    (hl : ∀ c k, ((F.left c).coeff k).natDegree ≤ E c)
+    (hr : ∀ c k, ((F.right c).coeff k).natDegree ≤ E c)
+    (hB : ∀ q, E (pairFst q) < radix q) :
+    (F.encodedMatrixAccess radix degree E hl hr hB).entry =
+      F.encodedEntry (fun q => BinaryNatCode.encode (radix q)) := rfl
+
 theorem Family.encodedMatrix_value (F : Family) (radix degree : List Bool → ℕ) (q : List Bool) :
     (F.encodedMatrixFamily radix degree).value q = integerResidue
       ((PolynomialKronecker.encode (radix q)

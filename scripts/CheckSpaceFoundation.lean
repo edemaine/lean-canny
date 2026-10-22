@@ -8,6 +8,13 @@ native space-bounded child, with no legacy evaluator or execution clock. -/
 
 example : LeanCanny.PSPACE = Cslib.Complexity.PSPACE encBits := rfl
 
+/-! The unconditional Canny endpoints target the native deterministic class. -/
+example : LeanCanny.ETR.language ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.ETR.etr_mem_PSPACE
+
+example : LeanCanny.ExistsReal ⊆ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.ETR.existsReal_subset_PSPACE
+
 example : LeanCanny.P = Cslib.Complexity.P encBits := rfl
 
 example {L K : Set (List Bool)} : LeanCanny.PolyTimeReduces L K ↔

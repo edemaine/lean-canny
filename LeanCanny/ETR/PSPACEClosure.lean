@@ -11,8 +11,8 @@ public import LeanCanny.Computation.PSPACEClosure
 # The PSPACE consequence of an ETR upper bound
 
 PSPACE closure under polynomial-time reductions discharges the class-theoretic
-part of `∃ℝ ⊆ PSPACE`. Canny's algorithm must still establish the ETR membership
-hypothesis; these conditional results do not assert that unfinished theorem.
+part of `∃ℝ ⊆ PSPACE`. The unconditional ETR membership theorem is proved in
+`ETR.CoercivePSPACE`; this module supplies the general closure interface.
 -/
 
 @[expose] public section

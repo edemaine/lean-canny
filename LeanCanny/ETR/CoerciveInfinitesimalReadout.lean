@@ -12,7 +12,7 @@ public import LeanCanny.ETR.PSPACEClosure
 
 The two readers must compute the actual prepared parameter and cleared query
 coefficients, with native space certificates. This interface isolates that
-remaining construction; it does not assert that the readers already exist.
+construction, instantiated by the actual programs in `ETR.CoercivePSPACE`.
 -/
 
 @[expose] public section
