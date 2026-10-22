@@ -51,18 +51,13 @@ theorem eval_spatialPolynomial (q : MvPolynomial (Variable ι) ℤ) (epsilon del
     (a : Constraint ι → ℝ) (x : ι → ℝ) :
     aeval x (spatialPolynomial q epsilon delta a) =
       q.eval₂ (Int.castRingHom ℝ) (assignment epsilon delta (x, a)) := by
-  unfold spatialPolynomial
-  induction q using MvPolynomial.induction_on with
-  | C c =>
-    simpa only [MvPolynomial.eval₂_C, Int.coe_castRingHom] using
-      map_intCast (MvPolynomial.aeval x : MvPolynomial ι ℝ →ₐ[ℝ] ℝ) c
-  | add p q hp hq => simp only [MvPolynomial.eval₂_add, map_add, hp, hq]
-  | mul_X p v hp =>
-    simp only [MvPolynomial.eval₂_mul, MvPolynomial.eval₂_X, map_mul, hp]
-    congr 1
-    rcases v with b | v
-    · cases b <;> simp [spatialAssignment, assignment]
-    · rcases v with i | i <;> simp [spatialAssignment, assignment]
+  change (aeval x).toRingHom (q.eval₂ (Int.castRingHom _) (spatialAssignment epsilon delta a)) = _
+  rw [MvPolynomial.hom_eval₂, RingHom.eq_intCast' ((aeval x).toRingHom.comp (Int.castRingHom (MvPolynomial ι ℝ)))]
+  congr 1
+  funext v
+  rcases v with b | v
+  · cases b <;> simp [spatialAssignment, assignment]
+  · rcases v with i | i <;> simp [spatialAssignment, assignment]
 
 variable [Fintype ι]
 

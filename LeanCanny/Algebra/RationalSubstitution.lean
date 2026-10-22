@@ -98,31 +98,36 @@ theorem sign_eval₂_cleared (φ : R →+* ℝ) (x : ℝ)
       SignType.sign (p.eval₂ φ (fun i => (n i).eval₂ φ x / (d i).eval₂ φ x)) := by
   rw [eval₂_cleared φ x p n d hd, sign_mul, sign_pos (denominator_eval₂_pos φ x p d hd), one_mul]
 
-theorem natDegree_cleared_le (p : MvPolynomial σ R) (n d : σ → R[X]) :
-    (cleared p n d).natDegree ≤ ∑ i, 2 * p.degreeOf i * max (n i).natDegree (d i).natDegree := by
+theorem natDegree_clearedWith_le_sum (D : σ → ℕ) (p : MvPolynomial σ R) (n d : σ → R[X])
+    (hD : ∀ i, p.degreeOf i ≤ D i) :
+    (clearedWith D p n d).natDegree ≤ ∑ i, 2 * D i * max (n i).natDegree (d i).natDegree := by
   classical
-  unfold cleared
+  unfold clearedWith
   apply Polynomial.natDegree_sum_le_of_forall_le
   intro e he
   calc
-    (C (p.coeff e) * ∏ i, n i ^ e i * d i ^ (2 * p.degreeOf i - e i)).natDegree ≤
-        (C (p.coeff e)).natDegree + (∏ i, n i ^ e i * d i ^ (2 * p.degreeOf i - e i)).natDegree :=
+    (C (p.coeff e) * ∏ i, n i ^ e i * d i ^ (2 * D i - e i)).natDegree ≤
+        (C (p.coeff e)).natDegree + (∏ i, n i ^ e i * d i ^ (2 * D i - e i)).natDegree :=
       Polynomial.natDegree_mul_le
-    _ = (∏ i, n i ^ e i * d i ^ (2 * p.degreeOf i - e i)).natDegree := by simp only [Polynomial.natDegree_C, Nat.zero_add]
-    _ ≤ ∑ i, (n i ^ e i * d i ^ (2 * p.degreeOf i - e i)).natDegree := Polynomial.natDegree_prod_le _ _
-    _ ≤ ∑ i, 2 * p.degreeOf i * max (n i).natDegree (d i).natDegree := by
+    _ = (∏ i, n i ^ e i * d i ^ (2 * D i - e i)).natDegree := by simp only [Polynomial.natDegree_C, Nat.zero_add]
+    _ ≤ ∑ i, (n i ^ e i * d i ^ (2 * D i - e i)).natDegree := Polynomial.natDegree_prod_le _ _
+    _ ≤ ∑ i, 2 * D i * max (n i).natDegree (d i).natDegree := by
       apply Finset.sum_le_sum
       intro i _
-      have hmon : e i ≤ 2 * p.degreeOf i := (MvPolynomial.monomial_le_degreeOf i he).trans (by omega)
+      have hmon : e i ≤ 2 * D i := ((MvPolynomial.monomial_le_degreeOf i he).trans (hD i)).trans (by omega)
       calc
-        (n i ^ e i * d i ^ (2 * p.degreeOf i - e i)).natDegree ≤
-            (n i ^ e i).natDegree + (d i ^ (2 * p.degreeOf i - e i)).natDegree := Polynomial.natDegree_mul_le
-        _ ≤ e i * (n i).natDegree + (2 * p.degreeOf i - e i) * (d i).natDegree :=
+        (n i ^ e i * d i ^ (2 * D i - e i)).natDegree ≤
+            (n i ^ e i).natDegree + (d i ^ (2 * D i - e i)).natDegree := Polynomial.natDegree_mul_le
+        _ ≤ e i * (n i).natDegree + (2 * D i - e i) * (d i).natDegree :=
           Nat.add_le_add Polynomial.natDegree_pow_le Polynomial.natDegree_pow_le
         _ ≤ e i * max (n i).natDegree (d i).natDegree +
-            (2 * p.degreeOf i - e i) * max (n i).natDegree (d i).natDegree :=
+            (2 * D i - e i) * max (n i).natDegree (d i).natDegree :=
           Nat.add_le_add (Nat.mul_le_mul_left _ (le_max_left _ _)) (Nat.mul_le_mul_left _ (le_max_right _ _))
-        _ = 2 * p.degreeOf i * max (n i).natDegree (d i).natDegree := by
+        _ = 2 * D i * max (n i).natDegree (d i).natDegree := by
           rw [← Nat.add_mul, Nat.add_sub_of_le hmon]
+
+theorem natDegree_cleared_le (p : MvPolynomial σ R) (n d : σ → R[X]) :
+    (cleared p n d).natDegree ≤ ∑ i, 2 * p.degreeOf i * max (n i).natDegree (d i).natDegree := by
+  exact natDegree_clearedWith_le_sum p.degreeOf p n d (fun _ => le_rfl)
 
 end LeanCanny.Algebra.RationalSubstitution

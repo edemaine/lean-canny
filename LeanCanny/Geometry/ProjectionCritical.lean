@@ -6,6 +6,7 @@ module
 
 public import LeanCanny.Geometry.ActiveExtremum
 public import LeanCanny.Geometry.PolynomialCalculus
+public import LeanCanny.Geometry.ParametricPolynomialCalculus
 public import LeanCanny.Algebra.ProjectionEquations
 public import Mathlib.Analysis.Calculus.ContDiff.RCLike
 import Mathlib.Tactic.Ring
@@ -35,10 +36,8 @@ theorem projection_single [DecidableEq ι] (v : ι → ℝ) (i : ι) :
 
 theorem contDiff_eval (φ : R →+* ℝ) (p : MvPolynomial ι R) :
     ContDiff ℝ ⊤ (fun y => p.eval₂ φ y) := by
-  induction p using MvPolynomial.induction_on with
-  | C c => simpa only [MvPolynomial.eval₂_C] using (contDiff_const (c := φ c))
-  | add p q hp hq => simpa only [MvPolynomial.eval₂_add] using hp.add hq
-  | mul_X p i hp => simpa only [MvPolynomial.eval₂_mul, MvPolynomial.eval₂_X] using hp.mul (contDiff_apply ℝ (fun _ => ℝ) i)
+  exact ParametricPolynomialCalculus.mvPolynomial_eval₂ p (fun _ => φ)
+    (fun y => y) ⊤ (fun _ => contDiff_const) (fun i => contDiff_apply ℝ (fun _ : ι => ℝ) i)
 
 theorem exists_scalar (φ : R →+* ℝ) (p : MvPolynomial ι R) (x v : ι → ℝ)
     (hx : p.eval₂ φ x = 0)

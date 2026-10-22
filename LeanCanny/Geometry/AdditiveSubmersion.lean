@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Geometry.PolynomialPerturbation
+public import LeanCanny.Geometry.ParametricPolynomialCalculus
 public import Mathlib.Analysis.Calculus.ContDiff.Operations
 public import Mathlib.Analysis.Calculus.FDeriv.Prod
 public import Mathlib.Analysis.Calculus.FDeriv.Add
@@ -48,10 +49,8 @@ variable {ι : Type*} [Fintype ι]
 
 theorem contDiff_eval (p : MvPolynomial ι ℤ) :
     ContDiff ℝ ⊤ (fun y : ι → ℝ => p.eval₂ (Int.castRingHom ℝ) y) := by
-  induction p using MvPolynomial.induction_on with
-  | C c => simpa only [MvPolynomial.eval₂_C, Int.coe_castRingHom] using (contDiff_const (c := (c : ℝ)))
-  | add p q hp hq => simpa only [MvPolynomial.eval₂_add] using hp.add hq
-  | mul_X p i hp => simpa only [MvPolynomial.eval₂_mul, MvPolynomial.eval₂_X] using hp.mul (contDiff_apply ℝ (fun _ : ι => ℝ) i)
+  exact ParametricPolynomialCalculus.mvPolynomial_eval₂ p (fun _ => Int.castRingHom ℝ)
+    (fun y => y) ⊤ (fun _ => contDiff_const) (fun i => contDiff_apply ℝ (fun _ : ι => ℝ) i)
 
 theorem contDiff_value (p : MvPolynomial ι ℤ) (epsilon : ℝ) (i : Constraint ι) : ContDiff ℝ ⊤ (value p epsilon i) := by
   rcases i with b | ⟨j, b⟩ <;> cases b

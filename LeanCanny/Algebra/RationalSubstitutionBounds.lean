@@ -54,27 +54,28 @@ theorem sourceMass_le_pow_uniform (p : MvPolynomial σ ℤ) (D b : ℕ)
       Nat.mul_le_mul_right _ (Nat.pow_le_pow_left (Nat.lt_size_self (D + 1)).le _)
     _ = _ := by rw [← pow_mul, ← pow_add]; congr 1; ring
 
-theorem coefficientMass_cleared_le (p : MvPolynomial σ ℤ) (n d : σ → ℤ[X]) (M : σ → ℕ)
+theorem coefficientMass_clearedWith_le (D : σ → ℕ) (p : MvPolynomial σ ℤ) (n d : σ → ℤ[X])
+    (hD : ∀ i, p.degreeOf i ≤ D i) (M : σ → ℕ)
     (hn : ∀ i, coefficientMass (n i) ≤ M i) (hd : ∀ i, coefficientMass (d i) ≤ M i) :
-    coefficientMass (cleared p n d) ≤ sourceMass p * ∏ i, M i ^ (2 * p.degreeOf i) := by
+    coefficientMass (clearedWith D p n d) ≤ sourceMass p * ∏ i, M i ^ (2 * D i) := by
   classical
   have hfactor (e : σ →₀ ℕ) (he : e ∈ p.support) (i : σ) :
-      coefficientMass (n i ^ e i * d i ^ (2 * p.degreeOf i - e i)) ≤ M i ^ (2 * p.degreeOf i) := by
-    have hmon : e i ≤ 2 * p.degreeOf i := (MvPolynomial.monomial_le_degreeOf i he).trans (by omega)
+      coefficientMass (n i ^ e i * d i ^ (2 * D i - e i)) ≤ M i ^ (2 * D i) := by
+    have hmon : e i ≤ 2 * D i := ((MvPolynomial.monomial_le_degreeOf i he).trans (hD i)).trans (by omega)
     calc
-      _ ≤ coefficientMass (n i ^ e i) * coefficientMass (d i ^ (2 * p.degreeOf i - e i)) :=
+      _ ≤ coefficientMass (n i ^ e i) * coefficientMass (d i ^ (2 * D i - e i)) :=
         coefficientMass_mul_le _ _
-      _ ≤ coefficientMass (n i) ^ e i * coefficientMass (d i) ^ (2 * p.degreeOf i - e i) :=
+      _ ≤ coefficientMass (n i) ^ e i * coefficientMass (d i) ^ (2 * D i - e i) :=
         Nat.mul_le_mul (coefficientMass_pow_le _ _) (coefficientMass_pow_le _ _)
-      _ ≤ M i ^ e i * M i ^ (2 * p.degreeOf i - e i) :=
+      _ ≤ M i ^ e i * M i ^ (2 * D i - e i) :=
         Nat.mul_le_mul (Nat.pow_le_pow_left (hn i) _) (Nat.pow_le_pow_left (hd i) _)
       _ = _ := by rw [← pow_add, Nat.add_sub_of_le hmon]
-  unfold cleared
+  unfold clearedWith
   calc
     _ ≤ ∑ e ∈ p.support,
-        coefficientMass (C (p.coeff e) * ∏ i, n i ^ e i * d i ^ (2 * p.degreeOf i - e i)) :=
+        coefficientMass (C (p.coeff e) * ∏ i, n i ^ e i * d i ^ (2 * D i - e i)) :=
       coefficientMass_sum_le _ _
-    _ ≤ ∑ e ∈ p.support, (p.coeff e).natAbs * ∏ i, M i ^ (2 * p.degreeOf i) := by
+    _ ≤ ∑ e ∈ p.support, (p.coeff e).natAbs * ∏ i, M i ^ (2 * D i) := by
       apply Finset.sum_le_sum
       intro e he
       apply (coefficientMass_mul_le _ _).trans
@@ -82,6 +83,11 @@ theorem coefficientMass_cleared_le (p : MvPolynomial σ ℤ) (n d : σ → ℤ[X
       apply Nat.mul_le_mul_left
       exact (coefficientMass_prod_le _ _).trans (Finset.prod_le_prod (fun i _ => hfactor e he i))
     _ = _ := by rw [← Finset.sum_mul]; rfl
+
+theorem coefficientMass_cleared_le (p : MvPolynomial σ ℤ) (n d : σ → ℤ[X]) (M : σ → ℕ)
+    (hn : ∀ i, coefficientMass (n i) ≤ M i) (hd : ∀ i, coefficientMass (d i) ≤ M i) :
+    coefficientMass (cleared p n d) ≤ sourceMass p * ∏ i, M i ^ (2 * p.degreeOf i) := by
+  exact coefficientMass_clearedWith_le p.degreeOf p n d (fun _ => le_rfl) M hn hd
 
 theorem coefficientMass_cleared_le_pow (p : MvPolynomial σ ℤ) (n d : σ → ℤ[X]) (s : ℕ) (b : σ → ℕ)
     (hp : sourceMass p ≤ 2 ^ s)
