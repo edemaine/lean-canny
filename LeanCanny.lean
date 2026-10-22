@@ -25,6 +25,7 @@ import LeanCanny.Algebra.BerkowitzTaskSpace
 import LeanCanny.Algebra.BerkowitzTaskLevels
 import LeanCanny.Algebra.CannyResultantTaskSource
 import LeanCanny.Algebra.CannySquarefreeLeaves
+import LeanCanny.Algebra.SymbolicScaledSquarefreeSmall
 import LeanCanny.Algebra.CannyBalancedTaskRanks
 import LeanCanny.Algebra.CannySuppliedMetadata
 import LeanCanny.Algebra.BalancedTableCoefficientSource

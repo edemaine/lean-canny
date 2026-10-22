@@ -4996,6 +4996,18 @@ bound `mass(q) <= 2^b` into the explicit closed positive regular-level interval
 b in the original input size. Its annihilant-existence proof uses minimal
 primes and algebraicity, not an effective elimination estimate.
 
+`SymbolicScaledSquarefree`, `SymbolicScaledSquarefreeBounds`,
+`SymbolicScaledSquarefreeSpecialization`, and `SymbolicScaledSquarefreeSmall`
+now construct the actual squarefree leaf in ℤ[alpha][X], choosing its generic
+GCD order from the first nonzero original principal subresultant. The scaled
+quotient has explicit alpha-degree and coefficient-mass bounds. Its root set
+and separability persist under ordinary real alpha evaluation throughout a
+computed positive dyadic interval: original leading-coefficient and selected
+subresultant nonvanishing follow from the same mass estimates. This handles
+noninjective evaluation maps, rather than incorrectly evaluating the fraction
+field at an algebraic alpha. Native symbolic readers, primitive-pair recovery,
+and balanced symbolic preparation are still needed.
+
 The symbolic-alpha alternative is not connected yet. `InfinitesimalRootPSPACE`
 already decides eventual root/sign feasibility and computes a stability bound
 from the full symbolic root and sign queries, which would remove the need for

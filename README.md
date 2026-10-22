@@ -1480,6 +1480,12 @@ polynomial identity and either strict trailing-coefficient sign in PSPACE under
 the same coordinate-reader contracts. Concrete sampler coordinate readers,
 quantitative parameter selection, and the full ETR algorithm remain open.
 
+The symbolic squarefree leaf construction is also verified in
+[`SymbolicScaledSquarefreeSmall`](LeanCanny/Algebra/SymbolicScaledSquarefreeSmall.lean)
+and its dependencies. It derives degree and mass bounds and a common small
+positive interval preserving ordinary specialization, separability, and roots.
+The native symbolic primitive-coordinate pipeline remains incomplete.
+
 ## Next obligations
 
 1. Prove retained nonsingular samples at the internally selected dyadic level.
