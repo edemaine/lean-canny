@@ -22,6 +22,7 @@ import LeanCanny.Algebra.BerkowitzFactorRecursiveStage
 import LeanCanny.Algebra.BerkowitzDeterminantRecursiveStage
 import LeanCanny.Algebra.BerkowitzTaskDispatch
 import LeanCanny.Algebra.BerkowitzTaskSpace
+import LeanCanny.Algebra.BerkowitzTaskLevels
 import LeanCanny.ETR.EquationListComplexity
 import LeanCanny.ETR.NNFComplexity
 import LeanCanny.ETR.EquationCompilerFP

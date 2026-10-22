@@ -4274,6 +4274,26 @@ Local comparison sources, at `lean-trominoes` commit
 The current `lean-wang` main branch inspected earlier did not itself define PSPACE;
 the relevant Mathlib-only package was found in `lean-trominoes`.
 
+## Internal task ranks from source-context levels
+
+`BerkowitzTaskRouting` proves that the actual internal query words follow
+determinant → factor → moment → source, with diagonal and zero shortcuts.
+The decoded original matrix context is preserved by every nonzero internal
+request. The proofs cover arbitrary task words and child replies; they do not
+assume a certificate computing child answers or their correctness.
+
+`BerkowitzTaskLevels` assigns zero rank to zero tasks and rank
+`5 * level (origin q) + priority q` to the other tasks. `SourceLevels` asks
+only that a source controller's nonzero requests strictly decrease the context
+level. Together with query closure, this yields the full mixed-stage ranked
+query contract. A common unary FP context-level bound H yields the native rank
+bound `5*H+4`; the level function itself remains proof data.
+`evaluator_of_source_levels` supplies uniform native polynomial-space evaluation
+from these simpler contracts and the existing common word, reply, metadata,
+source-budget, and source-state bounds. Canny's actual source controller and
+these graph-bound instantiations still need to be constructed. This result
+does not establish ETR membership in PSPACE.
+
 ## Savitch's theorem and Canny
 
 Savitch is useful for reachability in an implicitly represented exponential graph,
