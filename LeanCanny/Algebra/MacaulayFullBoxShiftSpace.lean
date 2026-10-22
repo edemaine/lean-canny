@@ -119,8 +119,9 @@ instance (L : Layout) : DecidablePred (active L) := fun _ => inferInstanceAs (De
 lemma active_FP {L : Layout} (h : L.Controls) : FPPred (active L) := by
   have hs := mem_FP_comp (mem_FP_pair (bits_mem_FP (total_unary h)) (degreeCode_FP h)) BinaryNat.add_mem_FP
   have hl := bits_mem_FP (h.level.comp ctx_FP)
-  simpa only [Function.comp_apply, BinaryNat.add_pair, Nat.fromBitsLE_bits, degreeCode, BinaryNatCode.encode, active] using
-    BinaryNat.eq_fppred hs hl
+  exact (BinaryNat.eq_fppred hs hl).of_iff (fun q => by
+    simp only [Function.comp_apply, BinaryNat.add_pair, Nat.fromBitsLE_bits,
+      degreeCode, BinaryNatCode.encode, active])
 
 def admissible (L : Layout) (q : List Bool) : Prop :=
   ∀ i < L.arity (ctx q), shiftAt L q i ≤ targetAt L q i
