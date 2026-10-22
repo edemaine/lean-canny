@@ -29,6 +29,20 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
     ComputableTidilyInPolySpace (LeanCanny.Algebra.BalancedTablePolynomials.nodeValue F) encBits encBits :=
   (LeanCanny.Algebra.BalancedTablePolynomials.evaluator F A).computable
 
+/-! A candidate scan and direction write use only the original readers and
+a native binary height control. Semantic promises are absent from the
+computation certificate; they enter the separate consistency theorem. -/
+example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (H : List Bool → ℕ) (hH : ComputableTidilyInPolyTime H encBits encNat) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.BalancedTablePolynomials.Candidate.update F H) encBits encBits :=
+  (LeanCanny.Algebra.BalancedTablePolynomials.Candidate.updateEvaluator F A H hH).computable
+
+example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (n D b : List Bool → ℕ) (hn : LeanCanny.UnaryFn n)
+    (hD : ComputableTidilyInPolyTime D encBits encNat) (hb : ComputableTidilyInPolyTime b encBits encNat) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.PaddedAnnihilatorBits.updateDirection F n D b) encBits encBits :=
+  (LeanCanny.Algebra.PaddedAnnihilatorBits.updateDirectionEvaluator F A n D b hn hD hb).computable
+
 /-! Degree-table preparation uses the original square-free leaf computation.
 The serializer accepts arbitrary native space children, not just FP readers. -/
 example (A W : List Bool → ℕ) (e : List Bool → ℕ → ℕ)

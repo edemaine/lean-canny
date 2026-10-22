@@ -4609,8 +4609,56 @@ contexts with invalid metadata.
 table-tree evaluator. The stored table order and any binary height control now
 give a native bounded test on all table contexts. Its separability correctness
 uses only pointwise nonzero, degree, and coefficient-height facts, suitable for
-a later table-preparation invariant. The bounded candidate-direction scan,
-direction-cell updates, and complete table consistency remain open.
+a table-preparation invariant. The candidate scan and one correct direction
+update are supplied below; complete table consistency remains open.
+
+## Candidate scans and one bottom-up direction update
+
+`BalancedCandidateResultant` reads the resultant of the two table-defined
+children at a trial direction. Supplied child orders define it on arbitrary
+words. Its native space coefficient certificate composes the uniform child
+readers with the specified-order Canny resultant evaluator, with no global
+table-validity or coefficient-size promise.
+
+`BalancedDirectionScan` scans `d^2+1` trial directions, where d is the product
+of the stored child degrees. A binary child-height control supplies a common
+resultant coefficient budget for every trial. The scan runs in native space
+on all inputs. At a node with exact child degrees, separable children, and
+the claimed child coefficient bounds, it returns exactly `PrimitivePair.select`.
+The resultant height bound is derived internally for every tested direction.
+
+`FixedWidthWrite` certifies replacement of one binary-indexed table cell in
+native FP. Every other in-range decoded cell is preserved, with no validity
+promise on the old values. `BalancedMetadataUpdate` retains the source and
+width and rewrites only `tableBits.length / width` complete cells. On canonical
+frames this preserves cell count and total length. Even for arbitrary words,
+the first replacement has length at most `5*input.length+4`, and all subsequent
+replacements have exactly that first output's length, including zero-width
+tables. A fitting direction write preserves every
+in-range degree cell and every other in-range direction cell.
+
+`BalancedDirectionUpdate.updateEvaluator` composes the scan and writer directly,
+using only the original readers and binary height control. `BalancedDirectionCorrect`
+proves that a direction write above a consistent subtree preserves its
+consistency. If a parent's children are already consistent and their stored
+orders are exact, the local child-height bounds and sufficient width for the
+canonical direction let one scan/write extend consistency to that parent.
+The prepared degree-table width already fits canonical directions; connecting
+that width fact to a complete preparation fold remains work to do.
+
+`PaddedAnnihilatorDirection` specializes the existing `sourceHeight` envelope
+to the original source retained in the metadata frame. A unary finite count
+and binary original degree and height controls make this child-height control
+native FP. When the children are consistent, their coefficient bounds follow
+from `source_tree_bounds`. The prepared width fits the canonical direction by
+`BalancedDegreeTable.direction_fits`. Thus `updateDirection_consistent` needs
+only the original finite source degree/height/nonzero bounds, frame fields,
+exact child orders, and child consistency; both numerical scan promises are
+derived. Its computation certificate itself needs no semantic source promises.
+
+The next obligations are the actual layer fold and its partial-consistency invariant.
+The full finite-annihilator reader, tube-annihilator specialization, ETR PSPACE
+theorem, and later report results remain open.
 
 ## Savitch's theorem and Canny
 
