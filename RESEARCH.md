@@ -4165,18 +4165,15 @@ is not assumed to have a native computation certificate. Internal stage bounds
 and factor reply bounds are supplied by the new proofs. The resulting native
 space certificate covers all tagged task answers at input-dependent depth;
 canonical determinant tasks give actual coefficient readers and determinant
-coefficient zero testing in native PSPACE. Canny's full source controller and the
-rank/reachable-task/common-bound proofs for its concrete graph remain open.
+coefficient zero testing in native PSPACE. The concrete supplied-table graph
+and canonical preparation below discharge the graph contracts for finite-tree
+parameter coefficients.
 
 The algebraic filtering theorem still needs specialization to the actual tube
-annihilants and constraints. Uniform native coefficient evaluation at
-input-dependent depth remains open. The recursion theorem still needs concrete
-coefficient frames, instruction/reply routines, and proofs of semantic, progress,
-and size contracts for the actual Canny stages. Per-node composition alone does
-not supply these contracts. The current exact
-finite-system representations still have a qualitative construction; their
-source-size heights, native readers, effective parameter selection, and the
-full ETR PSPACE theorem are not established.
+annihilants and constraints. The uniform native finite-annihilator coefficient
+reader below covers input-dependent tree depth. Uniform flattened-coordinate
+readers, concrete tube source bounds, effective parameter selection, and the
+full ETR PSPACE theorem remain open.
 
 ## TM2 versus Complexitylib's machines
 
@@ -4568,9 +4565,8 @@ frame preserves the original source and has the exact length supplied by the
 existing frame layout theorem.
 
 This prepares degrees only. The padded-reader connection is supplied below.
-Canonical directions still need to be computed and complete table consistency
-proved; the tube-annihilator specialization and full ETR PSPACE theorem remain
-open.
+Canonical directions and complete table consistency are supplied below; the
+tube-annihilator specialization and full ETR PSPACE theorem remain open.
 
 ## Padded original readers and pointwise separability tests
 
@@ -4610,7 +4606,7 @@ table-tree evaluator. The stored table order and any binary height control now
 give a native bounded test on all table contexts. Its separability correctness
 uses only pointwise nonzero, degree, and coefficient-height facts, suitable for
 a table-preparation invariant. The candidate scan and one correct direction
-update are supplied below; complete table consistency remains open.
+update are supplied below, followed by complete table consistency.
 
 ## Candidate scans and one bottom-up direction update
 
@@ -4643,8 +4639,8 @@ proves that a direction write above a consistent subtree preserves its
 consistency. If a parent's children are already consistent and their stored
 orders are exact, the local child-height bounds and sufficient width for the
 canonical direction let one scan/write extend consistency to that parent.
-The prepared degree-table width already fits canonical directions; connecting
-that width fact to a complete preparation fold remains work to do.
+The prepared degree-table width fits canonical directions; the complete
+preparation fold below uses this width fact.
 
 `PaddedAnnihilatorDirection` specializes the existing `sourceHeight` envelope
 to the original source retained in the metadata frame. A unary finite count
@@ -4656,9 +4652,40 @@ only the original finite source degree/height/nonzero bounds, frame fields,
 exact child orders, and child consistency; both numerical scan promises are
 derived. Its computation certificate itself needs no semantic source promises.
 
-The next obligations are the actual layer fold and its partial-consistency invariant.
-The full finite-annihilator reader, tube-annihilator specialization, ETR PSPACE
-theorem, and later report results remain open.
+## Complete direction preparation and finite-annihilator coefficients
+
+`BalancedDirectionPreparation` uses two native bounded folds. The inner fold
+writes one layer; the outer fold advances upward from height one. A binary
+counter is capped before conversion to the unary height field, so the packet
+writer is FP on arbitrary words. Every prefix preserves source, width, and
+complete-cell count. Its retained table length is at most `5*input.length+4`,
+with no multiplicative growth between layers. Native space certificates need
+only the original readers, a binary height control, and a unary source count.
+They expose no execution clocks or semantic table promises.
+
+`BalancedDirectionPreservation` proves that a direction write preserves every
+other consistent parent in its layer. `PaddedAnnihilatorPreparation.Ready`
+retains the original source, prepared width, capacity, and exact canonical
+orders. These orders alone bound the scan's returned direction, even before
+its separability interpretation is justified. Thus every write preserves
+`Ready`. The inner `LayerState` also retains consistency of all children and
+every parent preceding the current index. The new parent follows from the
+source-derived one-step theorem; earlier parents use the preservation theorem.
+The outer invariant extends consistency one layer at a time, starting with
+the padded leaves. `prepare_consistent` proves consistency of the full root.
+
+`FiniteAnnihilatorCoefficientSpace.coefficientEvaluator` prepares the complete
+table and evaluates its root with the existing uniform table reader. Its
+semantic output is the coefficient of the actual `FiniteAnnihilatorTree.parameter`,
+reduced modulo the positive binary query modulus. The original family has native
+readers, a unary finite count, and binary common degree/height bounds. Only
+the finite original family must be nonzero. There is no supplied table,
+intermediate coefficient oracle, or bound on a child execution time. Count
+zero and modulus one are included in the same theorem.
+
+Uniform flattened-coordinate readers, the tube-annihilator specialization,
+effective parameter selection, the full ETR PSPACE theorem, and later report
+results remain open.
 
 ## Savitch's theorem and Canny
 

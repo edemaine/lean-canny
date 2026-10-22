@@ -43,6 +43,24 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
     ComputableTidilyInPolySpace (LeanCanny.Algebra.PaddedAnnihilatorBits.updateDirection F n D b) encBits encBits :=
   (LeanCanny.Algebra.PaddedAnnihilatorBits.updateDirectionEvaluator F A n D b hn hD hb).computable
 
+/-! Complete preparation uses the same native fold with a fixed-size table
+accumulator on all words, without semantic table promises. -/
+example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (H n : List Bool → ℕ) (hH : ComputableTidilyInPolyTime H encBits encNat) (hn : LeanCanny.UnaryFn n) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.BalancedDirectionPreparation.directions F H n) encBits encBits :=
+  (LeanCanny.Algebra.BalancedDirectionPreparation.directionsEvaluator F A H n hH hn).computable
+
+/-! The actual canonical finite-annihilator reader constructs its own table.
+All semantic and numerical assumptions concern the original finite source. -/
+example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (n D b : List Bool → ℕ) (hn : LeanCanny.UnaryFn n)
+    (hD : ComputableTidilyInPolyTime D encBits encNat) (hb : ComputableTidilyInPolyTime b encBits encNat)
+    (hne : ∀ c i, i < n c → F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≠ 0)
+    (hdegree : ∀ c i, i < n c → (F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i))).natDegree ≤ D c)
+    (hheight : ∀ c i, i < n c → F.height (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≤ b c) :
+    ComputableTidilyInPolySpace (LeanCanny.Algebra.FiniteAnnihilatorBits.coefficient F n hne) encBits encBits :=
+  (LeanCanny.Algebra.FiniteAnnihilatorBits.coefficientEvaluator F A n D b hn hD hb hne hdegree hheight).computable
+
 /-! Degree-table preparation uses the original square-free leaf computation.
 The serializer accepts arbitrary native space children, not just FP readers. -/
 example (A W : List Bool → ℕ) (e : List Bool → ℕ → ℕ)
