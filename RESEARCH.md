@@ -244,9 +244,9 @@ library's PSPACE predicate is assumed. The historical machine comparison found
 that `lean-trominoes` supplied TM2 workspace certificates and a generic Savitch
 evaluator, while the older Complexitylib V1 used a distinct multitape model. A
 space-preserving bridge between those predicates was not established here.
-The isolated [Complexitylib prototype](experiments/complexitylib2/README.md)
-records the composition experiments, including a space-bounded child with
-exponential running time.
+[`TidyBoundedFold`](LeanCanny/Computation/TidyBoundedFold.lean) supplies the
+binary-counted fold evaluator used by the main development, accepting
+polynomial-space children without a running-time bound.
 
 The commands in [`README.md`](README.md) check the full build, allowed axioms,
 grammar correctness, and native space/time foundations. The axiom audit allows
