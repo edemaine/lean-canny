@@ -92,6 +92,12 @@ example {F : LeanCanny.Algebra.BerkowitzPolynomial.ModularFamily}
       (encQ := encBits) (encS := LeanCanny.Algebra.BerkowitzPolynomial.TaskDispatch.encState encS) :=
   LeanCanny.Algebra.BerkowitzPolynomial.TaskDispatch.certificates a ha source hs
 
+example {F : LeanCanny.Algebra.BerkowitzPolynomial.ModularFamily}
+    (a : LeanCanny.Algebra.BerkowitzPolynomial.ModularAccess F)
+    (h : ComputableTidilyInPolySpace (LeanCanny.Algebra.BerkowitzPolynomial.TaskDispatch.answer a) encBits encBits) :
+    F.zeroLanguage ∈ Cslib.Complexity.PSPACE encBits :=
+  (LeanCanny.Algebra.BerkowitzPolynomial.TaskDispatch.determinant_decider a ⟨h⟩).mem_PSPACE
+
 example {F : LeanCanny.Algebra.MatrixPower.ModularFamily}
     (a : LeanCanny.Algebra.MatrixPower.ModularAccess F) (ha : a.ControlsPolyTime)
     (he : ComputableTidilyInPolySpace a.entry encBits encBits) :

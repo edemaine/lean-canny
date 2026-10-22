@@ -4140,9 +4140,33 @@ local certificates. The original coefficient answer function is not assumed
 space-computable. Its oracle run is proved to halt at the per-stage budget and
 return the semantic task answer, assuming the explicit source-controller
 halting/output contract. Halt/output/needs/query observations agree with the
-selected stage's transcript. Common rank, reachable-task, logical-budget, and
-encoded-storage bounds remain to be supplied before applying the uniform
-recursive evaluator to the complete Canny graph.
+selected stage's transcript.
+
+`BerkowitzTaskStorage` now derives the exact encoding overhead of this dispatch.
+If the selected stage state has length at most L, the dispatcher state has
+length at most `32+2*L+c`, where c is the encoded source-state default. Each
+inactive stage contributes a fixed encoding. A common metadata bit bound M
+gives the internal logical budget `2^((M+2)*M+1)`; the overall budget adds a
+binary FP common upper bound for the source controller's logical budget.
+
+`BerkowitzTaskOrbitBounds` derives the common stage bound
+`L=3*K+4+64*(M+1)^2+V` from task/reply word bound K, determinant/moment metadata
+bound M, and source-state bound V. A factor's selected reply is bounded using
+query closure at its initial request, rather than an assumption about unused
+diagonal or moment answers. The source-state obligation is restricted to actual
+source tasks and prefixes within their logical budget.
+
+`BerkowitzTaskSpace.evaluator` applies the uniform recursive native evaluator
+to this combined graph. It requires ranked query closure, a common unary FP
+rank bound, unary FP K/M/V writers, and a binary FP source-budget upper bound.
+The supplied source controller has native local-operation certificates and
+explicit oracle-run halting/output correctness contracts. Its answer function
+is not assumed to have a native computation certificate. Internal stage bounds
+and factor reply bounds are supplied by the new proofs. The resulting native
+space certificate covers all tagged task answers at input-dependent depth;
+canonical determinant tasks give actual coefficient readers and determinant
+coefficient zero testing in native PSPACE. Canny's source controller and the
+rank/reachable-task/common-bound proofs for its concrete graph remain open.
 
 The algebraic filtering theorem still needs specialization to the actual tube
 annihilants and constraints. Uniform native coefficient evaluation at
