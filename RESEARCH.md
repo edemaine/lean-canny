@@ -4108,9 +4108,41 @@ corresponding task and negate its reply. Its mathematical run halts after at
 most one logical transition, and terminal output agrees with `factorValue`.
 All local operations have native certificates from the FP metadata and task
 writers, without assuming native diagonal/moment answer certificates. These
-are resumable stage contracts; a dispatcher connecting determinant, factor,
-moment, and original coefficient tasks with uniform rank/size bounds is still
-required before obtaining the complete recursive Canny coefficient evaluator.
+are resumable stage contracts. The dispatcher below connects them; uniform
+rank/size bounds are still required before obtaining the complete recursive
+Canny coefficient evaluator.
+
+`MatrixMomentTaskRouting` now supplies FP source/sink routing to row, column,
+matrix, or zero tasks, with a semantic equality to the actual augmented entry.
+`PolynomialMomentRecursiveStage` carries the polynomial degree through these
+requests and the flattened coefficient-matrix guard. Its oracle run returns
+the actual moment coefficient, halts at the specified logical power index, and
+inherits the scalar controller's quadratic state bound. `BerkowitzMomentRecursiveStage`
+specializes it to trailing-block moments, routing every nonzero request back
+to the original matrix coefficient protocol. The total definitions cover
+empty trailing blocks and all binary input contexts.
+
+`ControllerDispatch` chooses between resumable controllers with different state
+types. Its native certificates retain only a selector flag, the active state,
+and fixed defaults for inactive states. The selected oracle transcript, halt,
+output, request flag, and query are preserved. A state-length bound charges
+both default encodings explicitly, so repeated dispatch among a fixed number
+of stages adds only constant factors and constants. Input preparation changes
+the initializer while leaving shared task queries intact.
+
+`BerkowitzTaskDispatch` uses these operations to connect determinant, factor,
+moment, and supplied source controllers. Two-bit prefixes select the stage;
+the empty word supplies zero. The semantic task answers are the actual
+determinant coefficient, factor coefficient, moment coefficient, and original
+matrix coefficient respectively. The shared controller has native local-operation
+certificates from FP metadata/task writers and the supplied source controller's
+local certificates. The original coefficient answer function is not assumed
+space-computable. Its oracle run is proved to halt at the per-stage budget and
+return the semantic task answer, assuming the explicit source-controller
+halting/output contract. Halt/output/needs/query observations agree with the
+selected stage's transcript. Common rank, reachable-task, logical-budget, and
+encoded-storage bounds remain to be supplied before applying the uniform
+recursive evaluator to the complete Canny graph.
 
 The algebraic filtering theorem still needs specialization to the actual tube
 annihilants and constraints. Uniform native coefficient evaluation at

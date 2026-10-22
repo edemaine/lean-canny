@@ -81,6 +81,17 @@ example {F : LeanCanny.Algebra.BerkowitzPolynomial.ModularFamily}
       (encQ := encBits) (encS := LeanCanny.Computation.SingleCall.encState) :=
   LeanCanny.Algebra.BerkowitzPolynomial.FactorStage.certificates a ha diagonalTask momentTask hd hm
 
+/-! The mixed-stage dispatcher accepts a source controller's local certificates,
+without assuming a polynomial-space certificate for its coefficient answers. -/
+example {F : LeanCanny.Algebra.BerkowitzPolynomial.ModularFamily}
+    (a : LeanCanny.Algebra.BerkowitzPolynomial.ModularAccess F) (ha : a.ControlsPolyTime)
+    {S : Type} [Inhabited S] {encS : S ↪ List Bool}
+    (source : LeanCanny.Computation.RecursiveController.Controller (List Bool) S)
+    (hs : source.Certificates (encQ := encBits) (encS := encS)) :
+    (LeanCanny.Algebra.BerkowitzPolynomial.TaskDispatch.controller a source).Certificates
+      (encQ := encBits) (encS := LeanCanny.Algebra.BerkowitzPolynomial.TaskDispatch.encState encS) :=
+  LeanCanny.Algebra.BerkowitzPolynomial.TaskDispatch.certificates a ha source hs
+
 example {F : LeanCanny.Algebra.MatrixPower.ModularFamily}
     (a : LeanCanny.Algebra.MatrixPower.ModularAccess F) (ha : a.ControlsPolyTime)
     (he : ComputableTidilyInPolySpace a.entry encBits encBits) :
