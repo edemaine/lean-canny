@@ -93,6 +93,23 @@ example (F : LeanCanny.Algebra.RationalCoordinatePathBits.Source)
   have E := LeanCanny.Algebra.RationalCoordinatePathBits.coefficientEvaluators F hD hK ⟨N⟩ ⟨D⟩
   exact ⟨E.1.computable, E.2.computable⟩
 
+/-! Finite-leaf readers include their own canonical pair preparation and all
+path stages. Every promise concerns the original finite source. -/
+example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
+    (n D b : List Bool → ℕ) (hn : LeanCanny.UnaryFn n)
+    (hD : LeanCanny.BinaryFn D) (hb : LeanCanny.BinaryFn b)
+    (hne : ∀ c i, i < n c → F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≠ 0)
+    (hdegree : ∀ c i, i < n c → (F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i))).natDegree ≤ D c)
+    (hheight : ∀ c i, i < n c → F.height (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≤ b c) :
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient
+        (fun u => (LeanCanny.Algebra.FiniteLeafCoordinateBits.coordinate F n D b hne u).numerator)) encBits encBits ∧
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient
+        (fun u => (LeanCanny.Algebra.FiniteLeafCoordinateBits.coordinate F n D b hne u).denominator)) encBits encBits := by
+  have E := LeanCanny.Algebra.FiniteLeafCoordinateBits.coefficientEvaluators F n D b hne hdegree hheight A hn hD hb
+  exact ⟨E.1.computable, E.2.computable⟩
+
 /-! Degree-table preparation uses the original square-free leaf computation.
 The serializer accepts arbitrary native space children, not just FP readers. -/
 example (A W : List Bool → ℕ) (e : List Bool → ℕ → ℕ)

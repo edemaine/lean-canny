@@ -4735,8 +4735,8 @@ least one and stage masses are at most `2^b`, both path masses are at most
 unary k. The path denominator is nonzero and evaluation equals the nested
 rational maps under the explicit recursive nonvanishing predicate.
 
-The substitution matrices and uniform path evaluator are assembled below.
-Their finite-tree decoding specialization remains open.
+The substitution matrices, uniform path evaluator, and finite-tree decoding
+specialization are assembled below.
 
 ## Whole coordinate paths in native polynomial space
 
@@ -4773,11 +4773,44 @@ promises are unnecessary for computing the defined integer path polynomials;
 the earlier path bounds and rational-evaluation theorem use the stated semantic
 promises separately. Depth zero and modulus one use the same certificate.
 
-Next, instantiate the stage readers with the canonical pair readers along one
-finite-tree leaf path and prove that evaluation at the parameter root recovers
-that decoded leaf. The concrete path queries, decoding/nonvanishing invariant,
-tube specialization, effective parameter selection, and full ETR PSPACE theorem
-remain open.
+The finite-tree specialization below instantiates these indexed stage readers
+and proves the decoding and nonvanishing invariant.
+
+## Computed finite-leaf coordinates and constraint filtering
+
+`FiniteLeafPathContext` pairs an original source word with a binary leaf index.
+At stage h it selects the parent at height h+1 containing that leaf and uses
+the h-th index bit to choose its left or right coordinate. Capped indices and
+counters make the query functions total FP on every word, including malformed
+queries and an empty finite source.
+
+`FiniteLeafCoordinateSpace` supplies both indexed stage coefficient readers
+from `CanonicalPairSpace`, including canonical table preparation. It then
+instantiates the whole-path matrix evaluator. The hypotheses are native
+original-source readers, a unary count, binary original degree and height
+bounds, and nonzero original polynomials satisfying those bounds. No subtree
+degree or intermediate coordinate reader is supplied. If T is the existing
+source envelope, the stage degree control is `D=T^3` and mass exponent is
+`M=T^10`. At depth N the coordinate degree is at most `D^N` and both masses
+are at most `2^(N*D^N*M)`. These output budgets have native binary writers.
+
+`BalancedLeafPath.walk_spec` proves by induction that ascending path evaluation
+recovers the selected leaf of the balanced decoder. At every parameter root,
+each selected denominator is nonzero and the next evaluation is a child root.
+`FiniteLeafCoordinateCorrect` transfers this to the native coordinate family,
+proves its selected original polynomial vanishes, and recovers every coordinate
+of an encoded original root tuple. The new clearing exponents need not give
+the same integer polynomials as the earlier `flat` construction; their rational
+evaluations agree at every parameter root.
+
+`FiniteLeafCoordinateFiltering` clears polynomial constraints using these
+computed numerator/denominator pairs and even exponents. It proves evaluation,
+zero equivalence, and real sign preservation at parameter roots. When the
+original annihilants cover every solution of a constraint system, solutions
+are equivalent to parameter roots satisfying all cleared constraints. This is
+a semantic criterion; it does not supply a new constraint coefficient reader.
+The encoded tube/sign-stage specialization, effective parameter selection,
+full ETR PSPACE theorem, and remaining report results remain open.
 
 ## Savitch's theorem and Canny
 
