@@ -4735,11 +4735,49 @@ least one and stage masses are at most `2^b`, both path masses are at most
 unary k. The path denominator is nonzero and evaluation equals the nested
 rational maps under the explicit recursive nonvanishing predicate.
 
-The next step is to assemble the substitution matrices into a layered
-product and supply its native entry evaluator from the canonical pair
-readers. This would compute a whole path without recursive exact-degree
-scans for intermediate flattened coordinates. The uniform path evaluator
-and its finite-tree decoding specialization are not yet proved.
+The substitution matrices and uniform path evaluator are assembled below.
+Their finite-tree decoding specialization remains open.
+
+## Whole coordinate paths in native polynomial space
+
+`RationalCoordinatePathMatrix` proves that the ordered product of the
+substitution matrices acts on both coefficient vectors. Starting from X
+and one, rows one and zero recover the actual path numerator and denominator.
+The existing layered reduction expresses these product entries as one matrix
+power. Scalar ring maps preserve the product, connecting integer coefficients
+to their residues while retaining the chosen clearing exponents.
+
+`MatrixProductSpace` certifies an ordered product with binary width and factor
+count. The factor-entry reader may use arbitrary time in polynomial space;
+all its costs are included in the native layered-matrix evaluator. Division
+and remainder decode the factor position and coefficient indices on every
+entry word. No dense matrix or coefficient vector is stored.
+
+`ClearingMatrixSpace` computes a substitution entry by clearing the monomial
+X^r. The result is `n^r*d^(e-r)` when r is at most e and zero otherwise. Its
+coefficient reader composes the existing native rational-substitution routine
+with the two space-bounded stage coefficient readers and FP binary controls.
+
+`RationalCoordinatePathSource` chooses width
+`(D+1)^k + requestedDegree + 2`. This includes both seed rows, every clearing
+exponent, and the requested output index, including D or k zero. Unused stage
+indices are capped at k before conversion to unary. The modular product value
+is proved equal to the actual selected path coefficient on every query word.
+
+`RationalCoordinatePathSpace.coefficientEvaluators` supplies one native machine
+for each whole-path component at input-dependent depth. It assumes a binary
+D writer, unary depth writer, and uniform numerator/denominator coefficient
+readers for the indexed stages. There is no intermediate coordinate reader,
+exact-degree oracle, or execution-clock assumption. Stage-degree and denominator
+promises are unnecessary for computing the defined integer path polynomials;
+the earlier path bounds and rational-evaluation theorem use the stated semantic
+promises separately. Depth zero and modulus one use the same certificate.
+
+Next, instantiate the stage readers with the canonical pair readers along one
+finite-tree leaf path and prove that evaluation at the parameter root recovers
+that decoded leaf. The concrete path queries, decoding/nonvanishing invariant,
+tube specialization, effective parameter selection, and full ETR PSPACE theorem
+remain open.
 
 ## Savitch's theorem and Canny
 

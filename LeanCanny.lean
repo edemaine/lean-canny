@@ -38,6 +38,7 @@ import LeanCanny.Algebra.FiniteAnnihilatorCoefficientSpace
 import LeanCanny.Algebra.CanonicalPairSpace
 import LeanCanny.Algebra.RationalCoordinatePath
 import LeanCanny.Algebra.UnivariateRationalSubstitutionMatrix
+import LeanCanny.Algebra.RationalCoordinatePathSpace
 import LeanCanny.Algebra.BerkowitzTaskMetadata
 import LeanCanny.Algebra.BerkowitzTaskResidues
 import LeanCanny.Algebra.CannyBalancedTaskResidues

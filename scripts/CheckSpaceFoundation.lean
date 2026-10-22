@@ -78,6 +78,21 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
   have E := LeanCanny.Algebra.CanonicalPairBits.coordinateEvaluators F n D b hne hdegree hheight A hn hD hb
   exact ⟨E.1.computable, E.2.1.computable, E.2.2.computable⟩
 
+/-! A whole coordinate path includes both indexed stage-reader costs. No
+intermediate coordinate or exact-degree computation certificate is supplied. -/
+example (F : LeanCanny.Algebra.RationalCoordinatePathBits.Source)
+    (hD : LeanCanny.BinaryFn F.degree) (hK : LeanCanny.UnaryFn F.depth)
+    (N : ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Algebra.RationalCoordinatePathBits.indexedNumerator F)) encBits encBits)
+    (D : ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Algebra.RationalCoordinatePathBits.indexedDenominator F)) encBits encBits) :
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (F.coordinate c).numerator)) encBits encBits ∧
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (F.coordinate c).denominator)) encBits encBits := by
+  have E := LeanCanny.Algebra.RationalCoordinatePathBits.coefficientEvaluators F hD hK ⟨N⟩ ⟨D⟩
+  exact ⟨E.1.computable, E.2.computable⟩
+
 /-! Degree-table preparation uses the original square-free leaf computation.
 The serializer accepts arbitrary native space children, not just FP readers. -/
 example (A W : List Bool → ℕ) (e : List Bool → ℕ → ℕ)
