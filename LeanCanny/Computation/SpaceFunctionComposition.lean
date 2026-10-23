@@ -63,5 +63,12 @@ theorem withInput {f : List Bool → List Bool} (E : SpaceFunction f) :
     SpaceFunction (fun x => LeanCanny.pair x (f x)) :=
   pairOutputs ⟨ComputableTidilyInPolySpace.id'⟩ E
 
+/-- Prepare a child query, retain its input, and finish with the child result.
+All three raw functions retain their behavior on malformed packets. -/
+theorem call {f : List Bool → List Bool} (E : SpaceFunction f)
+    (query finish : List Bool → List Bool) (hq : query ∈ FP) (hf : finish ∈ FP) :
+    SpaceFunction (fun x => finish (LeanCanny.pair x (f (query x)))) := by
+  exact ((E.precompose query hq).withInput.postcompose finish hf).congr (funext fun _ => rfl)
+
 end SpaceFunction
 end LeanCanny.Computation

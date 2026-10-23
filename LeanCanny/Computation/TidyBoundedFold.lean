@@ -75,4 +75,30 @@ theorem evaluator [Inhabited α] [Inhabited β]
     ((of_linear (ComputableTidilyInSpace.snd eA (encPair encNat eB))).comp hit)
   exact hout.congr fun c => by rw [iterate_step]
 
+/-- Semantic correctness of every prefix up to and including the final state. -/
+theorem fold_spec {child : α × ℕ × β → β} {seed : α → β} {count : α → ℕ}
+    (v : α → ℕ → β) (hseed : ∀ c, seed c = v c 0)
+    (hstep : ∀ c k, k < count c → child (c, k, v c k) = v c (k + 1))
+    (c : α) (k : ℕ) (hk : k ≤ count c) : fold child seed c k = v c k := by
+  induction k with
+  | zero => exact hseed c
+  | succ k ih => rw [fold, ih (by omega), hstep c k (by omega)]
+
+/-- Evaluate a semantic prefix sequence using a bound in the original input.
+The bound includes prefix zero and the final prefix. -/
+theorem evaluator_spec [Inhabited α] [Inhabited β]
+    {child : α × ℕ × β → β} {seed : α → β} {count : α → ℕ} {B : α → ℕ}
+    (hc : ComputableTidilyInPolySpace child (encPacket eA eB) eB)
+    (hn : ComputableTidilyInPolyTime count eA encNat)
+    (hs : ComputableTidilyInPolySpace seed eA eB)
+    (v : α → ℕ → β) (hseed : ∀ c, seed c = v c 0)
+    (hstep : ∀ c k, k < count c → child (c, k, v c k) = v c (k + 1))
+    (hB : PolyBounded (fun c => (eA c).length) B)
+    (hstate : ∀ c k, k ≤ count c → (eB (v c k)).length ≤ B c) :
+    ComputableTidilyInPolySpace (fun c => v c (count c)) eA eB := by
+  have h := evaluator hc hn hs hB (fun c k hk => by
+    rw [fold_spec v hseed hstep c k hk]
+    exact hstate c k hk)
+  exact h.congr fun c => fold_spec v hseed hstep c _ le_rfl
+
 end LeanCanny.Computation.TidyBoundedFold
