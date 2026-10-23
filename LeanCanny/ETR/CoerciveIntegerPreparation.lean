@@ -117,35 +117,19 @@ theorem rawEvaluator : SpaceFunction rawCoefficient := by
         residueBits, BinaryNatCode.encode, ZMod.val_zero]
       rfl
 
-def dyadicQuery (q : List Bool) : List Bool :=
-  pair (pair (pairFst (pairFst q)) (pairSnd q))
-    (pair (pairSnd (pairSnd (pairFst q))) (pairFst (pairSnd (pairFst q))))
-theorem dyadicQuery_FP : dyadicQuery ∈ FP := mem_FP_pair
-  (mem_FP_pair (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairSnd_mem_FP)
-  (mem_FP_pair (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairSnd_mem_FP)
-    (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairFst_mem_FP))
-
-attribute [local irreducible] rawCoefficient dyadicQuery
-
-noncomputable def dyadicAccess : DyadicPolynomialBits.Access dyadicFamily where
-  coefficient := rawCoefficient ∘ dyadicQuery
-  coefficient_eq c i j m hm := by
-    simp only [Function.comp_apply, rawCoefficient, SymbolicFixedTableEntryBits.coefficient,
-      dyadicQuery, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, dyadic_polynomial,
-      Nat.sub_add_cancel (by omega : 1 ≤ m)]
+noncomputable def dyadicAccess : CertifiedPolynomial.BivariateReader dyadicFamily.polynomial where
+  coefficient := rawCoefficient
+  evaluator := rawEvaluator
+  coefficient_eq q u v := by
+    simp only [rawCoefficient, SymbolicFixedTableEntryBits.coefficient,
+      pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, dyadic_polynomial]
     rfl
 
-theorem dyadic_coefficient : @DyadicPolynomialBits.Access.coefficient dyadicFamily dyadicAccess = rawCoefficient ∘ dyadicQuery := by
-  unfold dyadicAccess
-  rfl
-attribute [local irreducible] dyadicAccess
+attribute [local irreducible] rawCoefficient dyadicAccess
 
 theorem clearEvaluator : SpaceFunction (PrimitivePairBits.coefficient dyadicFamily.specialized) := by
-  have ER : SpaceFunction (@DyadicPolynomialBits.Access.coefficient dyadicFamily dyadicAccess) := by
-    rw [dyadic_coefficient]
-    exact rawEvaluator.precompose dyadicQuery dyadicQuery_FP
   have E : SpaceFunction dyadicFamily.residue :=
-    DyadicPolynomialBits.residueEvaluator (F := dyadicFamily) dyadicAccess dyadic_controls ER
+    DyadicPolynomialBits.residueEvaluator (F := dyadicFamily) dyadicAccess dyadic_controls
   exact E.congr (funext fun q => by
     simp only [DyadicPolynomialBits.Family.residue, PrimitivePairBits.coefficient,
       DyadicBits.mValue, RationalSubstitution.IntegerBits.context,
