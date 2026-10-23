@@ -67,23 +67,15 @@ theorem integerZeroLanguage_mem_PSPACE {source active modulus inner middle : Lis
 theorem integerNegativeLanguage_mem_PSPACE {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
-    integerNegativeLanguage source active inner middle outer n d ell ∈ PSPACE := by
-  have hf := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).flag_mem_FP
-  apply ((signumEvaluator D outer ho).decider (fun w => decide (w = [true])) hf ?_).mem_PSPACE
-  intro c
-  by_cases hz : coefficient source active inner middle outer n d ell c = 0 <;>
-    by_cases hn : coefficient source active inner middle outer n d ell c < 0 <;>
-    simp [integerNegativeLanguage, integerSign, hz, hn]
+    integerNegativeLanguage source active inner middle outer n d ell ∈ PSPACE :=
+  IntegerSignumBits.negativeLanguage_of_signum
+    (coefficient source active inner middle outer n d ell) (signumEvaluator D outer ho)
 
 theorem integerPositiveLanguage_mem_PSPACE {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
-    integerPositiveLanguage source active inner middle outer n d ell ∈ PSPACE := by
-  have hf := (stringEq_fppred id_mem_FP (constFn_mem_FP [false, true])).flag_mem_FP
-  apply ((signumEvaluator D outer ho).decider (fun w => decide (w = [false, true])) hf ?_).mem_PSPACE
-  intro c
-  by_cases hz : coefficient source active inner middle outer n d ell c = 0 <;>
-    by_cases hn : coefficient source active inner middle outer n d ell c < 0 <;>
-    simp [integerPositiveLanguage, integerSign, hz, hn] <;> omega
+    integerPositiveLanguage source active inner middle outer n d ell ∈ PSPACE :=
+  IntegerSignumBits.positiveLanguage_of_signum
+    (coefficient source active inner middle outer n d ell) (signumEvaluator D outer ho)
 
 end LeanCanny.ETR.TubeDeformation

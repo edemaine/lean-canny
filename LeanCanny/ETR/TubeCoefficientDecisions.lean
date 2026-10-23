@@ -20,27 +20,6 @@ scan packets without rebuilding or guessing polynomial coefficients.
 
 @[expose] public section
 
-namespace LeanCanny.ETR
-
-open LeanCanny.Computation LeanCanny.Encoding.Brackets
-
-private theorem positiveLanguage_of_signum (z : List Bool → ℤ)
-    (E : SpaceFunction (fun c => if z c = 0 then [] else if z c < 0 then [true] else [false, true])) :
-    {c | 0 < z c} ∈ PSPACE := by
-  have ha : (fun w : List Bool => [decide (w = [false, true])]) ∈ FP :=
-    (stringEq_fppred id_mem_FP (constFn_mem_FP [false, true])).flag_mem_FP
-  apply (E.decider (fun w => decide (w = [false, true])) ha ?_).mem_PSPACE
-  intro c
-  by_cases hz : z c = 0
-  · simp [hz]
-  · by_cases hn : z c < 0
-    · have hp : ¬ 0 < z c := by omega
-      simp [hz, hn, hp]
-    · have hp : 0 < z c := by omega
-      simp [hz, hn, hp]
-
-end LeanCanny.ETR
-
 namespace LeanCanny.ETR.TubeSourceCoefficient
 
 open LeanCanny.Encoding LeanCanny.Computation
@@ -48,31 +27,6 @@ open Geometry TubeEncoding
 open Algebra.MatrixPower
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubePolynomial.integerPolynomial TubeCoefficient.value
-
-noncomputable def coefficient : List Bool → ℤ := TubeCoefficient.coefficient base width active target
-
-theorem coefficient_query (bits : List Bool) (s : Finset (Constraint (CompactSource.term bits).arity))
-    (e : Coordinate (CompactSource.term bits).arity →₀ ℕ) (m : ℕ)
-    (he : ∀ j, e j < 2 ^ (8 * CompactSource.size bits ^ 2 + 5)) :
-    coefficient (query bits s e m) = (TubeSource.integerPolynomial bits s).coeff e := by
-  let q := query bits s e m
-  have hi : input q = bits := by simp only [q, query, input, pairFst_pair]
-  have hb : base q = RationalSubstitutionBits.compiledTerm bits := by rw [base, Function.comp_apply, hi]
-  have ha : active q = activeCode (CompactSource.term bits).arity s := by
-    simp only [q, query, active, pairFst_pair, pairSnd_pair]
-  have ht : target q = exponentCode bits e := by simp only [q, query, target, pairFst_pair, pairSnd_pair]
-  have hw : width q = 8 * CompactSource.size bits ^ 2 + 5 := by rw [width, hi]
-  have hc := TubeCoefficient.coefficient_eq_native base width active target q
-  unfold TubeDense.polynomial TubeDense.arity TermArity.arity at hc
-  rw [hb, hw] at hc
-  change ∀ f : Coordinate (CompactSource.term bits).arity →₀ ℕ,
-    target q = FixedWidthNatVector.encode (dimension (CompactSource.term bits).arity)
-      (8 * CompactSource.size bits ^ 2 + 5) (TubeZero.paddedExponent (CompactSource.term bits).arity f) →
-    (∀ j, f j < 2 ^ (8 * CompactSource.size bits ^ 2 + 5)) →
-    TubeCoefficient.coefficient base width active target q =
-      (TubeSource.integerPolynomial bits (activeSet (CompactSource.term bits).arity (active q))).coeff f at hc
-  rw [ha, activeSet_activeCode] at hc
-  exact hc e ht he
 
 def budget : List Bool → List Bool := TubeSource.coefficientBits ∘ input
 
@@ -115,7 +69,7 @@ theorem signumEvaluator :
   Algebra.IntegerSignumBits.evaluator residueEvaluator budget budget_mem_FP coefficient coefficient_bits residue_packet
 
 theorem positiveLanguage_mem_PSPACE : {c | 0 < coefficient c} ∈ PSPACE :=
-  positiveLanguage_of_signum coefficient signumEvaluator
+  Algebra.IntegerSignumBits.positiveLanguage_of_signum coefficient signumEvaluator
 
 end LeanCanny.ETR.TubeSourceCoefficient
 
@@ -171,6 +125,6 @@ theorem signumEvaluator :
   Algebra.IntegerSignumBits.evaluator residueEvaluator budget budget_mem_FP coefficient coefficient_bits residue_packet
 
 theorem positiveLanguage_mem_PSPACE : {c | 0 < coefficient c} ∈ PSPACE :=
-  positiveLanguage_of_signum coefficient signumEvaluator
+  Algebra.IntegerSignumBits.positiveLanguage_of_signum coefficient signumEvaluator
 
 end LeanCanny.ETR.TubeSourceProjectionCoefficient

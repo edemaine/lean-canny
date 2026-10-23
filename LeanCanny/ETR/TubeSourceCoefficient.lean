@@ -23,7 +23,7 @@ open LeanCanny.Encoding LeanCanny.Computation
 open Geometry TubeEncoding
 open Algebra.MatrixPower
 
-attribute [local irreducible] RationalSubstitutionBits.compiledTerm
+attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubePolynomial.integerPolynomial
 
 def input (q : List Bool) : List Bool := pairFst (pairFst (pairFst q))
 def active (q : List Bool) : List Bool := pairSnd (pairFst (pairFst q))
@@ -42,6 +42,8 @@ theorem base_mem_FP : base ∈ FP :=
 theorem width_unary : UnaryFn width :=
   ((UnaryFn.const 8).mul ((CompactSource.size_unary.comp input_mem_FP).pow_const 2)).add (UnaryFn.const 5)
 
+noncomputable def coefficient : List Bool → ℤ := TubeCoefficient.coefficient base width active target
+
 noncomputable def value : List Bool → List Bool := TubeCoefficient.value base width active target pairSnd
 
 theorem evaluator : SpaceFunction value :=
@@ -59,10 +61,10 @@ noncomputable def query (bits : List Bool) (s : Finset (Constraint (CompactSourc
     (m : Coordinate (CompactSource.term bits).arity →₀ ℕ) (modulus : ℕ) : List Bool :=
   pair (pair (pair bits (activeCode (CompactSource.term bits).arity s)) (exponentCode bits m)) (BinaryNatCode.encode (modulus - 1))
 
-theorem value_query (bits : List Bool) (s : Finset (Constraint (CompactSource.term bits).arity))
-    (e : Coordinate (CompactSource.term bits).arity →₀ ℕ) (m : ℕ) (hm : 0 < m)
+theorem coefficient_query (bits : List Bool) (s : Finset (Constraint (CompactSource.term bits).arity))
+    (e : Coordinate (CompactSource.term bits).arity →₀ ℕ) (m : ℕ)
     (he : ∀ j, e j < 2 ^ (8 * CompactSource.size bits ^ 2 + 5)) :
-    value (query bits s e m) = residueBits (((TubeSource.integerPolynomial bits s).coeff e : ℤ) : ZMod m) := by
+    coefficient (query bits s e m) = (TubeSource.integerPolynomial bits s).coeff e := by
   let q := query bits s e m
   have hi : input q = bits := by simp only [q, query, input, pairFst_pair]
   have hb : base q = RationalSubstitutionBits.compiledTerm bits := by rw [base, Function.comp_apply, hi]
@@ -75,19 +77,24 @@ theorem value_query (bits : List Bool) (s : Finset (Constraint (CompactSource.te
   rw [hb, hw] at hc
   change ∀ f : Coordinate (CompactSource.term bits).arity →₀ ℕ,
     target q = FixedWidthNatVector.encode (dimension (CompactSource.term bits).arity)
-      (8 * CompactSource.size bits ^ 2 + 5)
-      (TubeZero.paddedExponent (CompactSource.term bits).arity f) →
+      (8 * CompactSource.size bits ^ 2 + 5) (TubeZero.paddedExponent (CompactSource.term bits).arity f) →
     (∀ j, f j < 2 ^ (8 * CompactSource.size bits ^ 2 + 5)) →
     TubeCoefficient.coefficient base width active target q =
-      (TubeSource.integerPolynomial bits
-        (activeSet (CompactSource.term bits).arity (active q))).coeff f at hc
+      (TubeSource.integerPolynomial bits (activeSet (CompactSource.term bits).arity (active q))).coeff f at hc
   rw [ha, activeSet_activeCode] at hc
-  have hc' := hc e (by rw [ht]; rfl) he
-  change TubeCoefficient.coefficient base width active target q = (TubeSource.integerPolynomial bits s).coeff e at hc'
+  exact hc e ht he
+
+theorem value_query (bits : List Bool) (s : Finset (Constraint (CompactSource.term bits).arity))
+    (e : Coordinate (CompactSource.term bits).arity →₀ ℕ) (m : ℕ) (hm : 0 < m)
+    (he : ∀ j, e j < 2 ^ (8 * CompactSource.size bits ^ 2 + 5)) :
+    value (query bits s e m) = residueBits (((TubeSource.integerPolynomial bits s).coeff e : ℤ) : ZMod m) := by
+  let q := query bits s e m
+  have hc := coefficient_query bits s e m he
+  change TubeCoefficient.coefficient base width active target q = (TubeSource.integerPolynomial bits s).coeff e at hc
   change residueBits ((TubeCoefficient.coefficient base width active target q : ℤ) : ZMod (Nat.fromBitsLE (pairSnd q) + 1)) = _
   have hmod : Nat.fromBitsLE (pairSnd q) + 1 = m := by
     simp only [q, query, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.sub_add_cancel hm]
-  exact congrArg₂ (fun (z : ℤ) (n : ℕ) => residueBits (z : ZMod n)) hc' hmod
+  exact congrArg₂ (fun (z : ℤ) (n : ℕ) => residueBits (z : ZMod n)) hc hmod
 
 theorem value_query_of_nonzero (bits : List Bool) (s : Finset (Constraint (CompactSource.term bits).arity))
     (e : Coordinate (CompactSource.term bits).arity →₀ ℕ) (m : ℕ) (hm : 0 < m)

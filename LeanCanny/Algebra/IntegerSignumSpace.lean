@@ -87,4 +87,47 @@ theorem evaluator {rho : List Bool → List Bool} (R : SpaceFunction rho)
     · have hp : 0 < z c := by omega
       simp [hn, hz, hp]
 
+private theorem tag_semantics (x : ℤ) :
+    ((if x = 0 then [] else if x < 0 then [true] else [false, true]) = [] ↔ x = 0) ∧
+    ((if x = 0 then [] else if x < 0 then [true] else [false, true]) = [true] ↔ x < 0) ∧
+    ((if x = 0 then [] else if x < 0 then [true] else [false, true]) = [false, true] ↔ 0 < x) := by
+  by_cases hz : x = 0
+  · simp [hz]
+  · by_cases hn : x < 0
+    · have hp : ¬ 0 < x := by omega
+      simp [hz, hn, hp]
+    · have hp : 0 < x := by omega
+      simp [hz, hn, hp]
+
+private theorem tagDecider (z : List Bool → ℤ)
+    (E : SpaceFunction (fun c => if z c = 0 then [] else if z c < 0 then [true] else [false, true]))
+    (tag : List Bool) :
+    SpaceDecider {c | (if z c = 0 then [] else if z c < 0 then [true] else [false, true]) = tag} := by
+  refine E.decider (fun w => decide (w = tag))
+    ((Brackets.stringEq_fppred id_mem_FP (constFn_mem_FP tag)).flag_mem_FP) ?_
+  intro c
+  simp only [decide_eq_true_eq]
+  rfl
+
+theorem zeroDecider_of_signum (z : List Bool → ℤ)
+    (E : SpaceFunction (fun c => if z c = 0 then [] else if z c < 0 then [true] else [false, true])) :
+    SpaceDecider {c | z c = 0} := by
+  refine (tagDecider z E []).congr ?_
+  ext c
+  exact (tag_semantics (z c)).1
+
+theorem negativeLanguage_of_signum (z : List Bool → ℤ)
+    (E : SpaceFunction (fun c => if z c = 0 then [] else if z c < 0 then [true] else [false, true])) :
+    {c | z c < 0} ∈ PSPACE := by
+  apply ((tagDecider z E [true]).congr ?_).mem_PSPACE
+  ext c
+  exact (tag_semantics (z c)).2.1
+
+theorem positiveLanguage_of_signum (z : List Bool → ℤ)
+    (E : SpaceFunction (fun c => if z c = 0 then [] else if z c < 0 then [true] else [false, true])) :
+    {c | 0 < z c} ∈ PSPACE := by
+  apply ((tagDecider z E [false, true]).congr ?_).mem_PSPACE
+  ext c
+  exact (tag_semantics (z c)).2.2
+
 end LeanCanny.Algebra.IntegerSignumBits

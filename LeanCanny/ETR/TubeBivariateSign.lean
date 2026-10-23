@@ -67,22 +67,14 @@ theorem Data.integerZeroLanguage_mem_PSPACE {source active modulus inner outer :
 
 theorem Data.integerNegativeLanguage_mem_PSPACE {source active modulus inner outer : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
-    (D : Data source active modulus inner outer n d ell) : integerNegativeLanguage source active inner outer n d ell ∈ PSPACE := by
-  have hf := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).flag_mem_FP
-  apply (D.signumEvaluator.decider (fun w => decide (w = [true])) hf ?_).mem_PSPACE
-  intro c
-  by_cases hz : integerCoefficient source active inner outer n d ell c = 0 <;>
-    by_cases hn : integerCoefficient source active inner outer n d ell c < 0 <;>
-    simp [integerNegativeLanguage, integerSign, hz, hn]
+    (D : Data source active modulus inner outer n d ell) : integerNegativeLanguage source active inner outer n d ell ∈ PSPACE :=
+  IntegerSignumBits.negativeLanguage_of_signum
+    (integerCoefficient source active inner outer n d ell) D.signumEvaluator
 
 theorem Data.integerPositiveLanguage_mem_PSPACE {source active modulus inner outer : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
-    (D : Data source active modulus inner outer n d ell) : integerPositiveLanguage source active inner outer n d ell ∈ PSPACE := by
-  have hf := (stringEq_fppred id_mem_FP (constFn_mem_FP [false, true])).flag_mem_FP
-  apply (D.signumEvaluator.decider (fun w => decide (w = [false, true])) hf ?_).mem_PSPACE
-  intro c
-  by_cases hz : integerCoefficient source active inner outer n d ell c = 0 <;>
-    by_cases hn : integerCoefficient source active inner outer n d ell c < 0 <;>
-    simp [integerPositiveLanguage, integerSign, hz, hn] <;> omega
+    (D : Data source active modulus inner outer n d ell) : integerPositiveLanguage source active inner outer n d ell ∈ PSPACE :=
+  IntegerSignumBits.positiveLanguage_of_signum
+    (integerCoefficient source active inner outer n d ell) D.signumEvaluator
 
 end LeanCanny.ETR.TubeBivariate

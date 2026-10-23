@@ -56,23 +56,15 @@ theorem characteristicZeroLanguage_mem_PSPACE {source active modulus inner middl
 theorem characteristicNegativeLanguage_mem_PSPACE {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
-    {c | characteristicScalar source active inner middle n d ell c < 0} ∈ PSPACE := by
-  have hf := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).flag_mem_FP
-  apply ((characteristicSignEvaluator D).decider (fun w => decide (w = [true])) hf ?_).mem_PSPACE
-  intro c
-  by_cases hz : characteristicScalar source active inner middle n d ell c = 0 <;>
-    by_cases hn : characteristicScalar source active inner middle n d ell c < 0 <;>
-    simp [characteristicSign, InfinitesimalSign.tag, hz, hn]
+    {c | characteristicScalar source active inner middle n d ell c < 0} ∈ PSPACE :=
+  IntegerSignumBits.negativeLanguage_of_signum
+    (characteristicScalar source active inner middle n d ell) (characteristicSignEvaluator D)
 
 theorem characteristicPositiveLanguage_mem_PSPACE {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
-    {c | 0 < characteristicScalar source active inner middle n d ell c} ∈ PSPACE := by
-  have hf := (stringEq_fppred id_mem_FP (constFn_mem_FP [false, true])).flag_mem_FP
-  apply ((characteristicSignEvaluator D).decider (fun w => decide (w = [false, true])) hf ?_).mem_PSPACE
-  intro c
-  by_cases hz : characteristicScalar source active inner middle n d ell c = 0 <;>
-    by_cases hn : characteristicScalar source active inner middle n d ell c < 0 <;>
-    simp [characteristicSign, InfinitesimalSign.tag, hz, hn] <;> omega
+    {c | 0 < characteristicScalar source active inner middle n d ell c} ∈ PSPACE :=
+  IntegerSignumBits.positiveLanguage_of_signum
+    (characteristicScalar source active inner middle n d ell) (characteristicSignEvaluator D)
 
 end LeanCanny.ETR.TubeDeformation

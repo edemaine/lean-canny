@@ -36,13 +36,9 @@ def lowestPositiveLanguage (source active inner middle : List Bool → List Bool
 theorem lowestZeroDecider {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
-    SpaceDecider (lowestZeroLanguage source active inner middle n d ell) := by
-  have hf := (stringEq_fppred id_mem_FP (constFn_mem_FP [])).flag_mem_FP
-  refine (lowestSignEvaluator D).decider (fun w => decide (w = [])) hf ?_
-  intro c
-  by_cases hz : lowestScalar source active inner middle n d ell c = 0 <;>
-    by_cases hn : lowestScalar source active inner middle n d ell c < 0 <;>
-    simp [lowestZeroLanguage, lowestSign, hz, hn]
+    SpaceDecider (lowestZeroLanguage source active inner middle n d ell) :=
+  IntegerSignumBits.zeroDecider_of_signum
+    (lowestScalar source active inner middle n d ell) (lowestSignEvaluator D)
 
 theorem lowestZeroLanguage_mem_PSPACE {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
@@ -51,22 +47,14 @@ theorem lowestZeroLanguage_mem_PSPACE {source active modulus inner middle : List
 
 theorem lowestNegativeLanguage_mem_PSPACE {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
-    (D : TubeBivariate.Data source active modulus inner middle n d ell) : lowestNegativeLanguage source active inner middle n d ell ∈ PSPACE := by
-  have hf := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).flag_mem_FP
-  apply ((lowestSignEvaluator D).decider (fun w => decide (w = [true])) hf ?_).mem_PSPACE
-  intro c
-  by_cases hz : lowestScalar source active inner middle n d ell c = 0 <;>
-    by_cases hn : lowestScalar source active inner middle n d ell c < 0 <;>
-    simp [lowestNegativeLanguage, lowestSign, hz, hn]
+    (D : TubeBivariate.Data source active modulus inner middle n d ell) : lowestNegativeLanguage source active inner middle n d ell ∈ PSPACE :=
+  IntegerSignumBits.negativeLanguage_of_signum
+    (lowestScalar source active inner middle n d ell) (lowestSignEvaluator D)
 
 theorem lowestPositiveLanguage_mem_PSPACE {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
-    (D : TubeBivariate.Data source active modulus inner middle n d ell) : lowestPositiveLanguage source active inner middle n d ell ∈ PSPACE := by
-  have hf := (stringEq_fppred id_mem_FP (constFn_mem_FP [false, true])).flag_mem_FP
-  apply ((lowestSignEvaluator D).decider (fun w => decide (w = [false, true])) hf ?_).mem_PSPACE
-  intro c
-  by_cases hz : lowestScalar source active inner middle n d ell c = 0 <;>
-    by_cases hn : lowestScalar source active inner middle n d ell c < 0 <;>
-    simp [lowestPositiveLanguage, lowestSign, hz, hn] <;> omega
+    (D : TubeBivariate.Data source active modulus inner middle n d ell) : lowestPositiveLanguage source active inner middle n d ell ∈ PSPACE :=
+  IntegerSignumBits.positiveLanguage_of_signum
+    (lowestScalar source active inner middle n d ell) (lowestSignEvaluator D)
 
 end LeanCanny.ETR.TubeDeformation
