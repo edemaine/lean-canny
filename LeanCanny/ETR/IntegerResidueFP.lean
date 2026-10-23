@@ -61,14 +61,16 @@ def value (p : List Bool) : List Bool :=
 
 theorem value_mem_FP : value ∈ FP := by
   have hmag := mem_FP_comp pairFst_mem_FP magnitudeDigits_mem_FP
-  have hsucc := mem_FP_comp hmag BinaryNat.succ_mem_FP
-  have hnegMod := mem_FP_comp (mem_FP_pair hsucc pairSnd_mem_FP) BinaryNat.mod_mem_FP
-  have hneg := mem_FP_comp (mem_FP_pair pairSnd_mem_FP hnegMod) ArithmeticBits.negate_mem_FP
-  have hpos := mem_FP_comp (mem_FP_pair hmag pairSnd_mem_FP) BinaryNat.mod_mem_FP
-  have h := (negative_fppred.comp pairFst_mem_FP).ite_mem_FP hneg hpos
+  have hnum := BinaryFn.fromBits hmag
+  have hm := BinaryFn.fromBits pairSnd_mem_FP
+  have hneg := mem_FP_comp
+    (mem_FP_pair pairSnd_mem_FP ((hnum.add (BinaryFn.const 1)).mod hm).bits_mem_FP)
+    ArithmeticBits.negate_mem_FP
+  have h := (negative_fppred.comp pairFst_mem_FP).ite_mem_FP hneg (hnum.mod hm).bits_mem_FP
   refine mem_FP_of_eq (g := value) h ?_
   intro p
-  simp only [value, Function.comp_apply]
+  simp only [value, Function.comp_apply, BinaryNat.mod_pair, BinaryNat.succ_eq_bits,
+    Nat.fromBitsLE_bits, BinaryNatCode.encode]
 
 theorem mod_nat_code (n m : ℕ) : BinaryNat.mod (pair (BinaryNatCode.encode n) (BinaryNatCode.encode m)) =
     residueBits (n : ZMod m) := by

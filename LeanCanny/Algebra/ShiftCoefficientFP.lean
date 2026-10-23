@@ -69,10 +69,10 @@ theorem modulus_mem_FP : modulus ∈ FP := by
   exact h
 
 theorem sumIndex_mem_FP : sumIndex ∈ FP := by
-  have h := mem_FP_comp (mem_FP_pair leftIndex_mem_FP rightIndex_mem_FP) BinaryNat.add_mem_FP
-  refine mem_FP_of_eq (g := sumIndex) h ?_
+  have h := (BinaryFn.fromBits leftIndex_mem_FP).add (BinaryFn.fromBits rightIndex_mem_FP)
+  refine mem_FP_of_eq h.bits_mem_FP ?_
   intro p
-  simp only [Function.comp_apply, sumIndex]
+  simp only [sumIndex, BinaryNat.add_pair, BinaryNatCode.encode]
 
 theorem coefficientInput_mem_FP : coefficientInput ∈ FP := by
   have h := mem_FP_pair pairFst_mem_FP sumIndex_mem_FP
@@ -95,11 +95,13 @@ theorem powerInput_mem_FP (a : Access) (ha : a.PolyTime) : powerInput a ∈ FP :
 
 theorem factor_mem_FP (a : Access) (ha : a.PolyTime) : factor a ∈ FP := by
   have hc := mem_FP_comp coefficientInput_mem_FP ha.coefficient
-  have hp := mem_FP_comp (powerInput_mem_FP a ha) BinaryNat.powMod_mem_FP
-  have h := mem_FP_comp (mem_FP_pair modulus_mem_FP (mem_FP_pair hc hp)) BinaryNat.mulMod_mem_FP
-  refine mem_FP_of_eq (g := factor a) h ?_
+  have hp := (BinaryFn.fromBits (negativeDirection_mem_FP a ha)).powModSucc
+    (BinaryFn.fromBits leftIndex_mem_FP) (BinaryFn.fromBits modulusMinusOne_mem_FP)
+  have h := ((BinaryFn.fromBits hc).mul hp).mod (BinaryFn.fromBits modulus_mem_FP)
+  refine mem_FP_of_eq h.bits_mem_FP ?_
   intro p
-  simp only [Function.comp_apply, factor]
+  simp only [factor, BinaryNat.mulMod_pair, BinaryNat.powMod_eq_bits, powerInput,
+    pairFst_pair, pairSnd_pair, Nat.fromBitsLE_bits, BinaryNatCode.encode, Function.comp_apply]
 
 theorem finish_mem_FP (a : Access) (ha : a.PolyTime) : finish a ∈ FP := by
   have hm := mem_FP_comp pairFst_mem_FP modulus_mem_FP

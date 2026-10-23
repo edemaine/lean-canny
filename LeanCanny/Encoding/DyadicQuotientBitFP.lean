@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Encoding.BinaryPowModFP
-public import LeanCanny.Encoding.BinaryDivFP
+public import LeanCanny.Computation.PolyTimeBinaryArithmetic
 
 /-!
 # FP access to bits of an exponentially long dyadic quotient
@@ -64,11 +63,17 @@ theorem index_mem_FP : index ∈ FP :=
   mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairSnd_mem_FP
 
 theorem doubleModulus_mem_FP : doubleModulus ∈ FP := by
-  have h := mem_FP_comp (mem_FP_pair modulus_mem_FP modulus_mem_FP) BinaryNat.add_mem_FP
-  exact mem_FP_of_eq h (fun _ => rfl)
+  have hm := BinaryFn.fromBits modulus_mem_FP
+  refine mem_FP_of_eq (hm.add hm).bits_mem_FP ?_
+  intro q
+  simp only [doubleModulus, BinaryNat.add_pair, BinaryNatCode.encode]
 
 theorem powerQuery_mem_FP : powerQuery ∈ FP := by
-  have he := mem_FP_comp (mem_FP_pair precision_mem_FP index_mem_FP) BinaryNat.sub_mem_FP
+  have he : (fun q => BinaryNat.sub (pair (precision q) (index q))) ∈ FP := by
+    refine mem_FP_of_eq
+      ((BinaryFn.fromBits precision_mem_FP).sub (BinaryFn.fromBits index_mem_FP)).bits_mem_FP ?_
+    intro q
+    simp only [BinaryNat.sub_pair, BinaryNatCode.encode]
   have hm := mem_FP_comp doubleModulus_mem_FP BinaryNat.pred_mem_FP
   have h := mem_FP_pair (constFn_mem_FP [false, true]) (mem_FP_pair he hm)
   refine mem_FP_of_eq (g := powerQuery) h ?_
@@ -76,21 +81,26 @@ theorem powerQuery_mem_FP : powerQuery ∈ FP := by
   simp only [Function.comp_apply, powerQuery]
 
 theorem residue_mem_FP : residue ∈ FP := by
-  have hp := mem_FP_comp powerQuery_mem_FP BinaryNat.powMod_mem_FP
-  have hm := mem_FP_comp (mem_FP_pair hp numerator_mem_FP) BinaryNat.mul_mem_FP
-  have h := mem_FP_comp (mem_FP_pair hm doubleModulus_mem_FP) BinaryNat.mod_mem_FP
-  refine mem_FP_of_eq (g := residue) h ?_
+  have he := (BinaryFn.fromBits precision_mem_FP).sub (BinaryFn.fromBits index_mem_FP)
+  have hm := BinaryFn.fromBits doubleModulus_mem_FP
+  have hp := (BinaryFn.const 2).powModSucc he
+    (BinaryFn.fromBits (mem_FP_comp doubleModulus_mem_FP BinaryNat.pred_mem_FP))
+  have h := (hp.mul (BinaryFn.fromBits numerator_mem_FP)).mod hm
+  refine mem_FP_of_eq h.bits_mem_FP ?_
   intro q
-  simp only [Function.comp_apply, residue]
+  simp only [residue, BinaryNat.mod_pair, BinaryNat.mul_pair, BinaryNat.powMod_eq_bits,
+    powerQuery, pairFst_pair, pairSnd_pair, BinaryNat.sub_pair, Nat.fromBitsLE_bits,
+    BinaryNatCode.encode, Function.comp_apply, show Nat.fromBitsLE [false, true] = 2 from rfl]
 
 theorem digit_mem_FP : digit ∈ FP := by
-  have h := mem_FP_comp (mem_FP_pair residue_mem_FP modulus_mem_FP) BinaryNat.div_mem_FP
-  refine mem_FP_of_eq (g := digit) h ?_
+  have h := (BinaryFn.fromBits residue_mem_FP).div (BinaryFn.fromBits modulus_mem_FP)
+  refine mem_FP_of_eq h.bits_mem_FP ?_
   intro q
-  simp only [Function.comp_apply, digit]
+  simp only [digit, BinaryNat.div_pair, BinaryNatCode.encode]
 
 theorem value_mem_FP : value ∈ FP :=
-  (BinaryNat.le_fppred index_mem_FP precision_mem_FP).ite_mem_FP digit_mem_FP (constFn_mem_FP [])
+  ((BinaryFn.fromBits index_mem_FP).le (BinaryFn.fromBits precision_mem_FP)).ite_mem_FP
+    digit_mem_FP (constFn_mem_FP [])
 
 theorem residue_eq (q : List Bool) : residue q =
     (2 ^ (Nat.fromBitsLE (precision q) - Nat.fromBitsLE (index q)) * Nat.fromBitsLE (numerator q) %

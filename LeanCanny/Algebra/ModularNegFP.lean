@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.MatrixPowerArithmeticFP
+public import LeanCanny.Computation.PolyTimeBinaryArithmetic
 
 /-!
 # Certified binary negation of residues
@@ -27,12 +28,13 @@ def negate (p : List Bool) : List Bool :=
   BinaryNat.mod (pair (BinaryNat.sub (pair m x)) m)
 
 theorem negate_mem_FP : negate ∈ FP := by
-  have hx := mem_FP_comp (mem_FP_pair pairSnd_mem_FP pairFst_mem_FP) BinaryNat.mod_mem_FP
-  have hs := mem_FP_comp (mem_FP_pair pairFst_mem_FP hx) BinaryNat.sub_mem_FP
-  have h := mem_FP_comp (mem_FP_pair hs pairFst_mem_FP) BinaryNat.mod_mem_FP
-  refine mem_FP_of_eq (g := negate) h ?_
+  have hm := BinaryFn.fromBits pairFst_mem_FP
+  have hx := (BinaryFn.fromBits pairSnd_mem_FP).mod hm
+  have h := (hm.sub hx).mod hm
+  refine mem_FP_of_eq h.bits_mem_FP ?_
   intro p
-  simp only [Function.comp_apply, negate]
+  simp only [negate, BinaryNat.mod_pair, BinaryNat.sub_pair, Nat.fromBitsLE_bits,
+    BinaryNatCode.encode]
 
 theorem negate_pair (m x : List Bool) :
     negate (pair m x) = ((Nat.fromBitsLE m - Nat.fromBitsLE x % Nat.fromBitsLE m) %

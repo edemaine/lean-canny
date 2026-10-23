@@ -22,8 +22,12 @@ def value (c : List Bool) : List Bool :=
   BinaryNat.powMod (pair (base c) (pair (exponent c) (modulus c)))
 
 theorem value_mem_FP (hb : base ∈ FP) (he : exponent ∈ FP) (hm : modulus ∈ FP) :
-    value base exponent modulus ∈ FP :=
-  mem_FP_comp (mem_FP_pair hb (mem_FP_pair he hm)) BinaryNat.powMod_mem_FP
+    value base exponent modulus ∈ FP := by
+  have h := (BinaryFn.fromBits hb).powMod (BinaryFn.fromBits he)
+    ((BinaryFn.fromBits hm).add (BinaryFn.const 1)) (fun _ => Nat.zero_lt_succ _)
+  refine mem_FP_of_eq h.bits_mem_FP ?_
+  intro c
+  simp only [value, BinaryNat.powMod_eq_bits, pairFst_pair, pairSnd_pair, BinaryNatCode.encode]
 
 theorem value_eq (c : List Bool) : value base exponent modulus c =
     residueBits ((Nat.fromBitsLE (base c) : ZMod (Nat.fromBitsLE (modulus c) + 1)) ^
