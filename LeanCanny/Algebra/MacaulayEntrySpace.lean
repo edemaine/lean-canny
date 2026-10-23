@@ -39,8 +39,9 @@ def differenceWord (L : Layout) (p : List Bool) : List Bool :=
   FixedWidthNatVector.encode (L.arity (context p)) (L.width (context p)) (differenceAt L p)
 
 theorem differenceWord_mem_FP {L : Layout} (h : L.PolyTime) : differenceWord L ∈ FP :=
-  FixedWidthNatVector.encode_mem_FP _ _ _ (h.arity.comp context_mem_FP) (h.width.comp context_mem_FP)
-    (differenceRead L) (differenceRead_mem_FP h) (differenceRead_packet L)
+  FixedWidthNatVector.encode_of_coordinate (h.arity.comp context_mem_FP) (h.width.comp context_mem_FP)
+    Turing.MultiTapeTM.ComputableTidilyInPolyTime.unary_to_binary
+    (FixedWidthNatVector.coordinate_of_reader (differenceRead_mem_FP h) (differenceRead_packet L))
 
 def admissible (L : Layout) (p : List Bool) : Prop :=
   ∀ i < L.arity (context p), remainderAt L p i ≤ colAt L p i

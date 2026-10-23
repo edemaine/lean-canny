@@ -53,14 +53,23 @@ theorem read_packet (A W : List Bool → ℕ) (target : List Bool → List Bool)
   · simp only [hi, ite_false, entry, BinaryNatCode.encode]
     rfl
 
+/-- Typed binary coordinate access, retaining zero padding outside the dimension. -/
+theorem entry_computable {A W : List Bool → ℕ} {target : List Bool → List Bool}
+    (hA : UnaryFn A) (hW : UnaryFn W) (ht : target ∈ FP) :
+    Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : List Bool × ℕ => entry A W target p.1 p.2)
+      (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encNat)
+      Turing.MultiTapeTM.encNat :=
+  FixedWidthNatVector.coordinate_of_reader (read_mem_FP hA hW ht) (read_packet A W target)
+
 def repack (A W B V : List Bool → ℕ) (target : List Bool → List Bool) (c : List Bool) : List Bool :=
   FixedWidthNatVector.encode (B c) (V c) (entry A W target c)
 
 theorem repack_mem_FP {A W B V : List Bool → ℕ} {target : List Bool → List Bool}
     (hA : UnaryFn A) (hW : UnaryFn W) (hB : UnaryFn B) (hV : UnaryFn V) (ht : target ∈ FP) :
     repack A W B V target ∈ FP :=
-  FixedWidthNatVector.encode_mem_FP B V (entry A W target) hB hV (read A W target)
-    (read_mem_FP hA hW ht) (read_packet A W target)
+  FixedWidthNatVector.encode_of_coordinate hB hV
+    Turing.MultiTapeTM.ComputableTidilyInPolyTime.unary_to_binary (entry_computable hA hW ht)
 
 @[simp] theorem repack_length (A W B V : List Bool → ℕ) (target : List Bool → List Bool) (c : List Bool) :
     (repack A W B V target c).length = B c * V c := FixedWidthNatVector.length_encode _ _ _

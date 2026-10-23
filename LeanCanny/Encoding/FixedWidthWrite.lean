@@ -43,8 +43,10 @@ theorem write_mem_FP {A W : List Bool → ℕ} {target : List Bool → List Bool
   let readCell := fun p => if Nat.fromBitsLE (pairSnd p) = index (pairFst p) then
     BinaryNatCode.encode (value (pairFst p)) else read A W target p
   have hread : readCell ∈ FP := hp.ite_mem_FP (mem_FP_comp pairFst_mem_FP hv.bits_mem_FP) (read_mem_FP hA hW ht)
-  apply FixedWidthNatVector.encode_mem_FP A W (fun c k => if k = index c then value c else entry A W target c k)
-    hA hW readCell hread
+  apply FixedWidthNatVector.encode_of_coordinate hA hW
+    Turing.MultiTapeTM.ComputableTidilyInPolyTime.unary_to_binary
+  apply FixedWidthNatVector.coordinate_of_reader
+    (e := fun c k => if k = index c then value c else entry A W target c k) hread
   intro c k
   simp only [readCell, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
   split_ifs

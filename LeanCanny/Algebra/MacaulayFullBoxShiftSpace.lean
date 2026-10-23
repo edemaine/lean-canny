@@ -89,8 +89,9 @@ def differenceWord (L : Layout) (q : List Bool) :=
   FixedWidthNatVector.encode (L.arity (ctx q)) (L.width (ctx q)) (differenceAt L q)
 
 lemma differenceWord_FP {L : Layout} (h : L.Controls) : differenceWord L ∈ FP :=
-  FixedWidthNatVector.encode_mem_FP _ _ _ (h.arity.comp ctx_FP) (h.width.comp ctx_FP)
-    (differenceRead L) (differenceRead_FP h) (differenceRead_packet L)
+  FixedWidthNatVector.encode_of_coordinate (h.arity.comp ctx_FP) (h.width.comp ctx_FP)
+    Turing.MultiTapeTM.ComputableTidilyInPolyTime.unary_to_binary
+    (FixedWidthNatVector.coordinate_of_reader (differenceRead_FP h) (differenceRead_packet L))
 
 def total (L : Layout) (q : List Bool) : ℕ :=
   ∑ i ∈ Finset.range (L.arity (ctx q)), min (shiftAt L q i) (L.level (ctx q) + 1)
