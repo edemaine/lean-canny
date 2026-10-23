@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.ETR.CoerciveCoordinateEncoding
 public import LeanCanny.ETR.CoerciveQueryIndexed
-public import LeanCanny.Algebra.RationalSubstitutionResidue
+public import LeanCanny.Algebra.IndexedSource
 
 /-! # Streamed multivariate clearing for the actual coercive sign queries -/
 
@@ -32,21 +32,21 @@ noncomputable def denominator (c : List Bool) (i : ℕ) : ℤ[X] :=
   if hi : i < dimension (pairFst c) + 1 then
     PolynomialKronecker.encode (radix (pairFst c)) ((family (pairFst c)).fixedCoordinate ⟨i, hi⟩).denominator else 0
 
-noncomputable def substitution : RationalSubstitution.IntegerBits.Family where
-  arity c := dimension (pairFst c) + 1
-  width c := 2 * allowance (pairFst c)
-  terms c := FixedWidthPolynomial.count (dimension (pairFst c) + 1) (CoerciveQueryIndexed.width (pairFst c))
-  exponent c := FixedWidthPolynomial.entry (CoerciveQueryIndexed.width (pairFst c))
-  coefficient c := CoerciveQueryIndexed.coefficient (pairFst c) (Nat.fromBitsLE (pairSnd c))
-  numerator := numerator
-  denominator := denominator
-  exponent_le c r _ i _ := CoerciveQueryIndexed.entry_le (pairFst c) r i
+noncomputable def indexedSource : RationalSubstitution.IntegerBits.IndexedSource :=
+  RationalSubstitution.IntegerBits.IndexedSource.dense (fun c => dimension (pairFst c) + 1)
+    (CoerciveQueryIndexed.width ∘ pairFst) (fun c => 2 * allowance (pairFst c))
+    (fun c => CoerciveQueryIndexed.coefficient (pairFst c) (Nat.fromBitsLE (pairSnd c)))
+    (fun c r i => CoerciveQueryIndexed.entry_le (pairFst c) r i)
+
+noncomputable def substitution : RationalSubstitution.IntegerBits.Family :=
+  indexedSource.withCoordinates numerator denominator
 
 set_option backward.isDefEq.respectTransparency false in
 theorem substitution_polynomial (c : List Bool) : substitution.polynomial c =
     PolynomialKronecker.encode (radix (pairFst c))
       (clearedQuery (pairFst c) (queryIndex (pairFst c) (Nat.fromBitsLE (pairSnd c)))) := by
-  dsimp only [RationalSubstitution.IntegerBits.Family.polynomial, substitution]
+  dsimp only [RationalSubstitution.IntegerBits.Family.polynomial, substitution, indexedSource,
+    RationalSubstitution.IntegerBits.IndexedSource.withCoordinates, RationalSubstitution.IntegerBits.IndexedSource.dense, Function.comp_apply]
   rw [RationalSubstitution.Indexed.cleared_eq_clearedWith_source, CoerciveQueryIndexed.source_eq]
   have hn : (fun i : Fin (dimension (pairFst c) + 1) => numerator c i.val) =
       (fun i => PolynomialKronecker.encode (radix (pairFst c)) ((family (pairFst c)).fixedCoordinate i).numerator) := by
@@ -121,41 +121,43 @@ theorem denominator_packet (R : CoerciveCoordinateEncoding.Readers) (c : List Bo
   rw [h, (family (pairFst c)).coordinate_denominator_encoded (radix (pairFst c)) hB i k]
   rfl
 
-noncomputable def access (R : CoerciveCoordinateEncoding.Readers) : RationalSubstitution.IntegerBits.Access substitution where
-  arity c := BinaryNatCode.encode (dimension (pairFst c) + 1)
-  width c := BinaryNatCode.encode (2 * allowance (pairFst c))
-  terms := FixedWidthPolynomial.countCode (fun c => dimension (pairFst c) + 1) (CoerciveQueryIndexed.width ∘ pairFst)
-  exponent := FixedWidthPolynomial.exponentRead (fun c => dimension (pairFst c) + 1) (CoerciveQueryIndexed.width ∘ pairFst)
-  coefficient := sourceProgram
+noncomputable def sourceAccess : RationalSubstitution.IntegerBits.IndexedSource.Access indexedSource :=
+  RationalSubstitution.IntegerBits.IndexedSource.denseAccess _ _ _ _
+    (fun c r i => CoerciveQueryIndexed.entry_le (pairFst c) r i)
+    (fun c => BinaryNatCode.encode (dimension (pairFst c) + 1))
+    (fun c => BinaryNatCode.encode (2 * allowance (pairFst c))) sourceProgram
+    (fun _ => Nat.fromBitsLE_bits _) (fun _ => Nat.fromBitsLE_bits _)
+    (by
+      intro c r _ m hm
+      let p := pair (pair c (BinaryNatCode.encode r)) (BinaryNatCode.encode (m - 1))
+      have hinput : Packet.input p = pairFst c := by
+        simp only [p, Packet.input, RationalSubstitution.IntegerBits.context, pairFst_pair]
+      have hmod : Nat.fromBitsLE (pairSnd p) + 1 = m := by
+        simp only [p, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits,
+          Nat.sub_add_cancel (show 1 ≤ m by omega)]
+      have h := CoerciveQueryIndexed.value_eq Packet.input Packet.row
+        RationalSubstitution.IntegerBits.selectedDegree pairSnd p
+      rw [hinput, hmod] at h
+      simpa only [p, Packet.input, Packet.row, RationalSubstitution.IntegerBits.context,
+        RationalSubstitution.IntegerBits.selectedDegree, pairFst_pair, pairSnd_pair,
+        BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.sub_add_cancel (show 1 ≤ m by omega),
+        CoerciveQueryIndexed.coefficient, sourceProgram, substitution] using h)
+
+noncomputable def coordinateReaders (R : CoerciveCoordinateEncoding.Readers) :
+    RationalSubstitution.IntegerBits.CoordinateReaders (fun c => dimension (pairFst c) + 1) numerator denominator where
   numerator := CoerciveCoordinateEncoding.numerator R Packet.input Packet.index Packet.degree pairSnd
   denominator := CoerciveCoordinateEncoding.denominator R Packet.input Packet.index Packet.degree pairSnd
-  arity_eq c := Nat.fromBitsLE_bits _
-  width_eq c := Nat.fromBitsLE_bits _
-  terms_eq c := by rw [FixedWidthPolynomial.countCode_code]; exact Nat.fromBitsLE_bits _
-  exponent_eq c r _ i hi := by
-    change i < dimension (pairFst c) + 1 at hi
-    rw [FixedWidthPolynomial.exponentRead_packet _ _ c r i hi]
-    exact Nat.fromBitsLE_bits _
-  coefficient_eq c r _ m hm := by
-    let p := pair (pair c (BinaryNatCode.encode r)) (BinaryNatCode.encode (m - 1))
-    have hinput : Packet.input p = pairFst c := by
-      simp only [p, Packet.input, RationalSubstitution.IntegerBits.context, pairFst_pair]
-    have hmod : Nat.fromBitsLE (pairSnd p) + 1 = m := by
-      simp only [p, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits,
-        Nat.sub_add_cancel (show 1 ≤ m by omega)]
-    have h := CoerciveQueryIndexed.value_eq Packet.input Packet.row
-      RationalSubstitution.IntegerBits.selectedDegree pairSnd p
-    rw [hinput, hmod] at h
-    simpa only [p, Packet.input, Packet.row, RationalSubstitution.IntegerBits.context,
-      RationalSubstitution.IntegerBits.selectedDegree, pairFst_pair, pairSnd_pair,
-      BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.sub_add_cancel (show 1 ≤ m by omega),
-      CoerciveQueryIndexed.coefficient, sourceProgram, substitution] using h
+  numeratorEvaluator := CoerciveCoordinateEncoding.numerator_evaluator R Packet.input_FP Packet.index_FP Packet.degree_FP pairSnd_mem_FP
+  denominatorEvaluator := CoerciveCoordinateEncoding.denominator_evaluator R Packet.input_FP Packet.index_FP Packet.degree_FP pairSnd_mem_FP
   numerator_eq c i hi k m hm := by
     change i < dimension (pairFst c) + 1 at hi
-    simpa only [substitution, numerator, dite_eq_left hi, family] using numerator_packet R c ⟨i, hi⟩ k m hm
+    simpa only [numerator, dite_eq_left hi, family] using numerator_packet R c ⟨i, hi⟩ k m hm
   denominator_eq c i hi k m hm := by
     change i < dimension (pairFst c) + 1 at hi
-    simpa only [substitution, denominator, dite_eq_left hi, family] using denominator_packet R c ⟨i, hi⟩ k m hm
+    simpa only [denominator, dite_eq_left hi, family] using denominator_packet R c ⟨i, hi⟩ k m hm
+
+noncomputable def access (R : CoerciveCoordinateEncoding.Readers) : RationalSubstitution.IntegerBits.Access substitution :=
+  RationalSubstitution.IntegerBits.IndexedSource.access sourceAccess (coordinateReaders R)
 
 theorem controls (R : CoerciveCoordinateEncoding.Readers) : (access R).ControlsPolyTime := by
   constructor
@@ -169,7 +171,6 @@ theorem controls (R : CoerciveCoordinateEncoding.Readers) : (access R).ControlsP
 theorem encodedEvaluator (R : CoerciveCoordinateEncoding.Readers) : SpaceFunction substitution.value :=
   (access R).evaluator (controls R)
     (CoerciveQueryIndexed.evaluator Packet.input_FP Packet.row_FP RationalSubstitution.IntegerBits.selectedDegree_mem_FP pairSnd_mem_FP)
-    (CoerciveCoordinateEncoding.numerator_evaluator R Packet.input_FP Packet.index_FP Packet.degree_FP pairSnd_mem_FP)
-    (CoerciveCoordinateEncoding.denominator_evaluator R Packet.input_FP Packet.index_FP Packet.degree_FP pairSnd_mem_FP)
+    (coordinateReaders R).numeratorEvaluator (coordinateReaders R).denominatorEvaluator
 
 end LeanCanny.ETR.CoerciveClearedQuerySpace

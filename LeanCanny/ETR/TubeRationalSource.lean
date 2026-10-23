@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.ETR.TubeIndexedSpace
 public import LeanCanny.ETR.TubeIndexedBounds
-public import LeanCanny.Algebra.RationalSubstitutionResidue
+public import LeanCanny.Algebra.IndexedSource
 
 /-! # Actual tube sources for streamed rational substitution
 
@@ -92,16 +92,14 @@ theorem coefficientValue_packet (projection : Bool) (source active row : List Bo
 
 end Packet
 
+noncomputable def indexedSource (projection : Bool) (source active row : List Bool → List Bool) : IntegerBits.IndexedSource :=
+  IntegerBits.IndexedSource.dense (fun c => dimension projection (source c))
+    (fun c => TubeIndexed.blockWidth (source c)) (fun c => 2 ^ TubeIndexed.blockWidth (source c))
+    (coefficient projection source active row) (fun _ _ _ => (Algebra.FixedWidthPolynomial.entry_lt _ _ _).le)
+
 noncomputable def family (projection : Bool) (source active row : List Bool → List Bool)
-    (numerator denominator : List Bool → ℕ → Polynomial ℤ) : IntegerBits.Family where
-  arity c := dimension projection (source c)
-  width c := 2 ^ TubeIndexed.blockWidth (source c)
-  terms c := Algebra.FixedWidthPolynomial.count (dimension projection (source c)) (TubeIndexed.blockWidth (source c))
-  exponent c := Algebra.FixedWidthPolynomial.entry (TubeIndexed.blockWidth (source c))
-  coefficient := coefficient projection source active row
-  numerator := numerator
-  denominator := denominator
-  exponent_le _ _ _ _ _ := (Algebra.FixedWidthPolynomial.entry_lt _ _ _).le
+    (numerator denominator : List Bool → ℕ → Polynomial ℤ) : IntegerBits.Family :=
+  (indexedSource projection source active row).withCoordinates numerator denominator
 
 noncomputable def arityCode (projection : Bool) (source : List Bool → List Bool) (c : List Bool) : List Bool :=
   BinaryNatCode.encode (dimension projection (source c))
@@ -143,5 +141,15 @@ theorem exponentRead_packet (projection : Bool) (source : List Bool → List Boo
     Nat.fromBitsLE (exponentRead projection source (pair c (pair (BinaryNatCode.encode r) (BinaryNatCode.encode i)))) =
       Algebra.FixedWidthPolynomial.entry (TubeIndexed.blockWidth (source c)) r i := by
   rw [exponentRead, Algebra.FixedWidthPolynomial.exponentRead_packet _ _ c r i hi, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+
+noncomputable def sourceAccess (projection : Bool) (source active row : List Bool → List Bool) :
+    IntegerBits.IndexedSource.Access (indexedSource projection source active row) :=
+  IntegerBits.IndexedSource.denseAccess _ _ _ _ (fun _ _ _ => (Algebra.FixedWidthPolynomial.entry_lt _ _ _).le) (arityCode projection source) (widthCode source)
+    (coefficientValue projection source active row) (arityCode_eq projection source) (widthCode_eq source)
+    (fun c r _ m hm => coefficientValue_packet projection source active row c r m hm)
+
+theorem sourceAccess_controls (projection : Bool) (source active row : List Bool → List Bool) (hs : source ∈ FP) :
+    (sourceAccess projection source active row).ControlsPolyTime :=
+  ⟨arityCode_mem_FP projection hs, widthCode_mem_FP hs, termsCode_mem_FP projection hs, exponentRead_mem_FP projection hs⟩
 
 end LeanCanny.ETR.TubeRational

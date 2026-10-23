@@ -22,41 +22,33 @@ open Algebra.MatrixPower Algebra.RationalSubstitution
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm coefficientValue
 
-structure CoordinateReaders (projection : Bool) (source : List Bool → List Bool)
-    (n d : List Bool → ℕ → Polynomial ℤ) where
-  numerator : List Bool → List Bool
-  denominator : List Bool → List Bool
-  numeratorEvaluator : SpaceFunction numerator
-  denominatorEvaluator : SpaceFunction denominator
-  numerator_eq : ∀ c i, i < dimension projection (source c) → ∀ k m, 0 < m →
-    numerator (pair (pair c (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k))) (BinaryNatCode.encode (m - 1))) =
-      residueBits (((n c i).coeff k : ℤ) : ZMod m)
-  denominator_eq : ∀ c i, i < dimension projection (source c) → ∀ k m, 0 < m →
-    denominator (pair (pair c (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k))) (BinaryNatCode.encode (m - 1))) =
-      residueBits (((d c i).coeff k : ℤ) : ZMod m)
+abbrev CoordinateReaders (projection : Bool) (source : List Bool → List Bool)
+    (n d : List Bool → ℕ → Polynomial ℤ) :=
+  IntegerBits.CoordinateReaders (fun c => dimension projection (source c)) n d
+
+-- Preserve the original qualified constructor and field names.
+namespace CoordinateReaders
+variable {projection : Bool} {source : List Bool → List Bool} {n d : List Bool → ℕ → Polynomial ℤ}
+
+abbrev mk := @IntegerBits.CoordinateReaders.mk (fun c => dimension projection (source c)) n d
+abbrev numerator (self : CoordinateReaders projection source n d) := IntegerBits.CoordinateReaders.numerator self
+abbrev denominator (self : CoordinateReaders projection source n d) := IntegerBits.CoordinateReaders.denominator self
+abbrev numeratorEvaluator (self : CoordinateReaders projection source n d) := IntegerBits.CoordinateReaders.numeratorEvaluator self
+abbrev denominatorEvaluator (self : CoordinateReaders projection source n d) := IntegerBits.CoordinateReaders.denominatorEvaluator self
+abbrev numerator_eq (self : CoordinateReaders projection source n d) := IntegerBits.CoordinateReaders.numerator_eq self
+abbrev denominator_eq (self : CoordinateReaders projection source n d) := IntegerBits.CoordinateReaders.denominator_eq self
+
+end CoordinateReaders
 
 noncomputable def access (projection : Bool) (source active row : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (C : CoordinateReaders projection source n d) :
-    IntegerBits.Access (family projection source active row n d) where
-  arity := arityCode projection source
-  width := widthCode source
-  terms := termsCode projection source
-  exponent := exponentRead projection source
-  coefficient := coefficientValue projection source active row
-  numerator := C.numerator
-  denominator := C.denominator
-  arity_eq := arityCode_eq projection source
-  width_eq := widthCode_eq source
-  terms_eq := termsCode_eq projection source
-  exponent_eq := fun c r _ i hi => exponentRead_packet projection source c r i hi
-  coefficient_eq := fun c r _ m hm => coefficientValue_packet projection source active row c r m hm
-  numerator_eq := C.numerator_eq
-  denominator_eq := C.denominator_eq
+    IntegerBits.Access (family projection source active row n d) :=
+  IntegerBits.IndexedSource.access (sourceAccess projection source active row) C
 
 theorem access_controls (projection : Bool) (source active row : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (C : CoordinateReaders projection source n d) (hs : source ∈ FP) :
     (access projection source active row n d C).ControlsPolyTime :=
-  ⟨arityCode_mem_FP projection hs, widthCode_mem_FP hs, termsCode_mem_FP projection hs, exponentRead_mem_FP projection hs⟩
+  IntegerBits.IndexedSource.access_controls _ (sourceAccess_controls projection source active row hs) C
 
 attribute [local irreducible] family
 
