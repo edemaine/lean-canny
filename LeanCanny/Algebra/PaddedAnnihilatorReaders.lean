@@ -111,7 +111,8 @@ noncomputable def readers (B : Family) (A : Readers B) (count : List Bool → �
     by_cases hp : valid count (pairFst q)
     · rw [ite_eq_left hp]
       have h := (A.reindex input input_FP).coefficient_eq q k
-      simpa only [SeparableBits.Readers.reindex, SeparableBits.Family.reindex, Function.comp_apply, family, hp, ite_true] using h
+      simpa only [SeparableBits.Readers.reindex, CertifiedPolynomial.Readers.reindex,
+        SeparableBits.Family.reindex, CertifiedPolynomial.Family.reindex, Function.comp_apply, family, hp, ite_true] using h
     · rw [ite_eq_right hp, paddingCoefficient_packet]
       simp only [family, hp, ite_false]
   evaluator := coefficientEvaluator B A count hn

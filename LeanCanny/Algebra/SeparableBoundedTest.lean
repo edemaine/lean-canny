@@ -34,7 +34,7 @@ theorem derivative_packet (p : List Bool → ℤ[X]) (coefficient : List Bool �
       residueBits ((((p (pairFst c)).derivative).coeff k : ℤ) : ZMod (Nat.fromBitsLE (pairSnd c) + 1)) := by
   have h := DerivativeBits.packet SeparableBits.modulus coefficient c _
     ((p (pairFst c)).map (Int.castRingHom (ZMod (Nat.fromBitsLE (pairSnd c) + 1))))
-    (by simp only [SeparableBits.modulus, BinaryNat.succ_eq_bits, BinaryNatCode.encode])
+    (by simp only [SeparableBits.modulus, CertifiedPolynomial.modulus, BinaryNat.succ_eq_bits, BinaryNatCode.encode])
     (fun j => by simpa only [coeff_map, Int.coe_castRingHom] using hc c j) k
   simpa only [derivativeCoefficient, derivative_map, coeff_map, Int.coe_castRingHom] using h
 
