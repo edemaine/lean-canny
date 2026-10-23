@@ -34,39 +34,31 @@ theorem treeEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
   let N := fun c => time (a c) (H c) (K c)
   let init := initialPacket count index
   let F := Controller.step f
-  let pc := Classical.choose (output_length_poly_of_mem_FP hc)
-  have hpc : ∀ c, H c ≤ pc.eval c.length :=
-    Classical.choose_spec (output_length_poly_of_mem_FP hc)
-  let pi := Classical.choose (output_length_poly_of_mem_FP hi)
-  have hpi : ∀ c, (index c).length ≤ pi.eval c.length :=
-    Classical.choose_spec (output_length_poly_of_mem_FP hi)
-  have hK (c : List Bool) : (K c).size ≤ pi.eval c.length :=
-    (Nat.size_le.mpr (Nat.fromBitsLE_lt_pow_length (index c))).trans (hpi c)
-  let r := 2 * Polynomial.X + 2 + 128 * (pc + pi + 1) ^ 2
-  let w := pc * (2 * pi + 5) + 1
+  let r := fun c => 2 * c.length + 2 + 128 * (H c + (K c).size + 1) ^ 2
+  let w := fun c => H c * (2 * (K c).size + 5) + 1
+  have hH : Turing.MultiTapeTM.PolyBounded List.length H := hc.polyBounded_length
+  have hK : Turing.MultiTapeTM.PolyBounded List.length (fun c => (K c).size) :=
+    hi.polyBounded_length.mono (fun c => Nat.size_le.mpr (Nat.fromBitsLE_lt_pow_length (index c)))
+  have hr : Turing.MultiTapeTM.PolyBounded List.length r := by
+    simpa only [r, pow_two] using
+      (((Turing.MultiTapeTM.PolyBounded.const 2).mul Turing.MultiTapeTM.PolyBounded.self).add (.const 2)).add
+        ((Turing.MultiTapeTM.PolyBounded.const 128).mul
+          (((hH.add hK).add (.const 1)).mul ((hH.add hK).add (.const 1))))
+  have hw : Turing.MultiTapeTM.PolyBounded List.length w :=
+    (hH.mul (((Turing.MultiTapeTM.PolyBounded.const 2).mul hK).add (.const 5))).add (.const 1)
   have hiter (c : List Bool) (t : ℕ) :
       F^[t] (init c) = pair c (stateBits ((step (a c))^[t] (start (H c) (K c)))) := by
     dsimp only [F, init, H, K]
     rw [initialPacket_encode, Controller.iterate_packet f c (a c) (hbits c)]
-  have hp (c : List Bool) (t : ℕ) : (F^[t] (init c)).length ≤ r.eval c.length := by
+  have hp (c : List Bool) (t : ℕ) : (F^[t] (init c)).length ≤ r c := by
     rw [hiter, pair_length]
     have hb := run_stateBits_length_le (a c) (H c) (K c) t
-    have hsum : H c + (K c).size + 1 ≤ pc.eval c.length + pi.eval c.length + 1 := by
-      have := hpc c; have := hK c; omega
-    have hpow := Nat.pow_le_pow_left hsum 2
-    simp only [r, Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat,
-      Polynomial.eval_pow, Polynomial.eval_X, Polynomial.eval_one]
+    dsimp only [r]
     omega
   have E' : SpaceFunction (fun c => SpaceStep.output (F^[N c] (init c))) := by
-    refine SpaceFunction.orbit (SpaceStep.stepEvaluator E) init (initialPacket_mem_FP hc hi)
+    refine SpaceFunction.orbit_of_polyBounded (SpaceStep.stepEvaluator E) init (initialPacket_mem_FP hc hi)
       SpaceStep.halted SpaceStep.output SpaceStep.halted_mem_FP SpaceStep.output_mem_FP
-      N r w (fun c t _ => hp c t) ?_ ?_ ?_
-    · intro c
-      have he : H c * (2 * (K c).size + 5) + 1 ≤ w.eval c.length := by
-        have hm := Nat.mul_le_mul (hpc c) (Nat.add_le_add_right (Nat.mul_le_mul_left 2 (hK c)) 5)
-        simpa only [w, Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat, Polynomial.eval_one] using
-          Nat.add_le_add_right hm 1
-      exact (time_exp_bound (a c) (H c) (K c)).trans (Nat.pow_le_pow_right (by decide) he)
+      N r w hr hw (fun c t _ => hp c t) (fun c => time_exp_bound (a c) (H c) (K c)) ?_ ?_
     · intro c t ht
       rw [hiter, SpaceStep.halted_packet]
       exact before (a c) (H c) (K c) t ht

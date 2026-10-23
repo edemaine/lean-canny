@@ -69,6 +69,16 @@ structure ModularAccess.PolyTime {F : ModularFamily} (a : ModularAccess F) : Pro
   col : a.col ∈ FP
   entry : a.entry ∈ FP
 
+structure ModularAccess.ControlsPolyTime {F : ModularFamily} (a : ModularAccess F) : Prop where
+  dimension : a.dimension ∈ FP
+  modulus : a.modulus ∈ FP
+  exponent : a.exponent ∈ FP
+  row : a.row ∈ FP
+  col : a.col ∈ FP
+
+theorem ModularAccess.controlsPolyTime_of_polyTime {F : ModularFamily} (a : ModularAccess F) (ha : a.PolyTime) :
+    a.ControlsPolyTime := ⟨ha.dimension, ha.modulus, ha.exponent, ha.row, ha.col⟩
+
 namespace ModularAccess
 open Controller
 open LeanCanny.Encoding.Brackets
@@ -81,10 +91,26 @@ theorem valueBits_done {R : Type*} {n : ℕ} (c : List Bool) (enc : R → List B
     valueBits (pair c (stateBits (n := n) enc (.done x))) = enc x := by
   simp [valueBits, stateBits]
 
-theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.PolyTime) :
+/-- The orbit proof depends only on field writers and a transition certificate. -/
+theorem evaluatorWithStep {F : ModularFamily} (a : ModularAccess F) (ha : a.ControlsPolyTime)
+    (E : Computation.SpaceFunction (Controller.step (modularCallbacks a.dimension a.modulus a.entry))) :
     Computation.SpaceFunction F.value := by
   let ops := modularCallbacks a.dimension a.modulus a.entry
-  let T := fun c => work (F.dimension c) (F.exponent c).size (F.exponent c) + 1
+  let N := fun c => work (F.dimension c) (F.exponent c).size (F.exponent c) + 1
+  let fields := fun c => (F.dimension c).size + (F.exponent c).size + (F.modulus c).size
+  let B := fun c => 2 * c.length + 2 + 64 * (fields c + 1) ^ 2
+  let W := fun c => (fields c + 2) * fields c + 1
+  have hfields : Turing.MultiTapeTM.PolyBounded List.length fields := by
+    have h := (ha.dimension.polyBounded_length.add ha.exponent.polyBounded_length).add
+      ha.modulus.polyBounded_length
+    simpa only [a.dimension_eq, a.exponent_eq, a.modulus_eq, Turing.MultiTapeTM.encBits_apply,
+      BinaryNatCode.length_encode] using h
+  have hB : Turing.MultiTapeTM.PolyBounded List.length B := by
+    simpa only [B, pow_two] using
+      (((Turing.MultiTapeTM.PolyBounded.const 2).mul Turing.MultiTapeTM.PolyBounded.self).add (.const 2)).add
+        ((Turing.MultiTapeTM.PolyBounded.const 64).mul ((hfields.add (.const 1)).mul (hfields.add (.const 1))))
+  have hW : Turing.MultiTapeTM.PolyBounded List.length W :=
+    ((hfields.add (.const 2)).mul hfields).add (.const 1)
   have hc (c : List Bool) : CorrectAt ops c (F.matrix c) residueBits := by
     let : NeZero (F.modulus c) := ⟨F.modulus_ne_zero c⟩
     exact modularCallbacks_correctAt a.dimension a.modulus a.entry c (F.modulus c)
@@ -94,64 +120,34 @@ theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.PolyTime) :
       (.eval ⟨(F.exponent c).size, F.exponent c, F.row c, F.col c⟩ [])) :=
     initialPacket_encode a.exponent a.row a.col c (residueBits (m := F.modulus c)) (F.exponent c)
       (F.row c) (F.col c) (a.exponent_eq c) (a.row_eq c) (a.col_eq c)
-  let pd := Classical.choose (output_length_poly_of_mem_FP ha.dimension)
-  have hd : ∀ c, (a.dimension c).length ≤ pd.eval c.length :=
-    Classical.choose_spec (output_length_poly_of_mem_FP ha.dimension)
-  let pm := Classical.choose (output_length_poly_of_mem_FP ha.modulus)
-  have hm : ∀ c, (a.modulus c).length ≤ pm.eval c.length :=
-    Classical.choose_spec (output_length_poly_of_mem_FP ha.modulus)
-  let pe := Classical.choose (output_length_poly_of_mem_FP ha.exponent)
-  have he : ∀ c, (a.exponent c).length ≤ pe.eval c.length :=
-    Classical.choose_spec (output_length_poly_of_mem_FP ha.exponent)
-  let p := pd + pe + pm
-  have hbits (c : List Bool) :
-      (F.dimension c).size + (F.exponent c).size + (F.modulus c).size ≤ p.eval c.length := by
-    have hdc := hd c
-    have hmc := hm c
-    have hec := he c
-    rw [a.dimension_eq, BinaryNatCode.length_encode] at hdc
-    rw [a.modulus_eq, BinaryNatCode.length_encode] at hmc
-    rw [a.exponent_eq, BinaryNatCode.length_encode] at hec
-    simp only [p, Polynomial.eval_add]
-    omega
-  refine (Computation.SpaceFunction.orbit
-    (Computation.SpaceFunction.ofFP (Controller.step ops)
-      (step_mem_FP ops (modularCallbacks_polyTime ha.dimension ha.modulus ha.entry)))
+  refine (Computation.SpaceFunction.orbit_of_polyBounded E
     (initialPacket a.exponent a.row a.col) (initialPacket_mem_FP ha.exponent ha.row ha.col)
-    halted valueBits halted_mem_FP valueBits_mem_FP T
-    (2 * Polynomial.X + 2 + 64 * (p + 1) ^ 2) ((p + 2) * p + 1)
-    ?_ ?_ ?_ ?_).congr ?_
+    halted valueBits halted_mem_FP valueBits_mem_FP N B W hB hW ?_ ?_ ?_ ?_).congr ?_
   · intro c t _
     let : NeZero (F.modulus c) := ⟨F.modulus_ne_zero c⟩
     rw [hinit c]
-    have hlen := modular_run_length_le a.dimension a.modulus a.entry c (F.modulus c)
+    exact modular_run_length_le a.dimension a.modulus a.entry c (F.modulus c)
       (F.matrix c) (hc c) (F.exponent c) t (F.row c) (F.col c)
-    have hpow := Nat.pow_le_pow_left (Nat.add_le_add_right (hbits c) 1) 2
-    simp only [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat,
-      Polynomial.eval_X, Polynomial.eval_pow, Polynomial.eval_one]
-    exact hlen.trans (Nat.add_le_add_left (Nat.mul_le_mul_left 64 hpow) _)
   · intro c
-    have hb := hbits c
-    have hw := work_add_one_le_two_pow (F.dimension c) (F.exponent c).size (F.exponent c)
-    have hprod : ((F.dimension c).size + 2) * (F.exponent c).size ≤
-        (p.eval c.length + 2) * p.eval c.length :=
-      Nat.mul_le_mul (by omega) (by omega)
-    simp only [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat,
-      Polynomial.eval_one]
-    exact hw.trans (Nat.pow_le_pow_right (by decide) (Nat.add_le_add_right hprod 1))
+    apply (work_add_one_le_two_pow (F.dimension c) (F.exponent c).size (F.exponent c)).trans
+    apply Nat.pow_le_pow_right (by decide)
+    dsimp only [W, fields]
+    exact Nat.add_le_add_right (Nat.mul_le_mul (by omega) (by omega)) 1
   · intro c t ht
     rw [hinit c]
-    exact halted_before ops c (F.matrix c) residueBits (hc c) (F.exponent c) t
-      (F.row c) (F.col c) ht
+    exact halted_before ops c (F.matrix c) residueBits (hc c) (F.exponent c) t (F.row c) (F.col c) ht
   · intro c
     rw [hinit c]
     exact halted_after ops c (F.matrix c) residueBits (hc c) (F.exponent c) (F.row c) (F.col c)
   · funext c
     let : NeZero (F.modulus c) := ⟨F.modulus_ne_zero c⟩
-    rw [hinit c, show T c = work (F.dimension c) (F.exponent c).size (F.exponent c) + 1 from rfl,
-      Controller.run_pow ops c (F.matrix c) residueBits (hc c)]
-    rw [valueBits_done]
+    rw [hinit c, Controller.run_pow ops c (F.matrix c) residueBits (hc c), valueBits_done]
     rfl
+
+theorem evaluator {F : ModularFamily} (a : ModularAccess F) (ha : a.PolyTime) :
+    Computation.SpaceFunction F.value :=
+  evaluatorWithStep a (controlsPolyTime_of_polyTime a ha)
+    (Computation.SpaceFunction.ofFP _ (step_mem_FP _ (modularCallbacks_polyTime ha.dimension ha.modulus ha.entry)))
 
 theorem zeroLanguage_mem_PSPACE {F : ModularFamily} (a : ModularAccess F) (ha : a.PolyTime) :
     F.zeroLanguage ∈ PSPACE := by
