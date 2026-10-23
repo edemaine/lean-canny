@@ -30,6 +30,17 @@ theorem derivative_inner_degree (p : Polynomial Coefficient) (E : ℕ)
   change (p.coeff (k + 1) * C ((k + 1 : ℕ) : ℤ)).natDegree ≤ E
   exact natDegree_mul_le.trans (by simpa only [natDegree_C, Nat.add_zero] using hE (k + 1))
 
+theorem subresultant_inner_degree (p : Polynomial Coefficient) (E : ℕ)
+    (hE : ∀ k, (p.coeff k).natDegree ≤ E) (j k : ℕ) :
+    (subresultantCoeff p p.derivative p.natDegree p.derivative.natDegree j k).natDegree ≤
+      2 * p.natDegree * E := by
+  rw [subresultantCoeff_eq_minor_det]
+  apply (Subresultant.minor_natDegree_le p p.derivative p.natDegree
+    p.derivative.natDegree j k E E hE (derivative_inner_degree p E hE)).trans
+  have hn := natDegree_derivative_le p
+  have hs : (p.natDegree - j) + (p.derivative.natDegree - j) ≤ 2 * p.natDegree := by omega
+  simpa only [← Nat.add_mul] using Nat.mul_le_mul_right E hs
+
 theorem gcd_inner_degree (p : Polynomial Coefficient) (E : ℕ)
     (hE : ∀ k, (p.coeff k).natDegree ≤ E) (k : ℕ) :
     ((gcd p).coeff k).natDegree ≤ 2 * p.natDegree * E := by
@@ -39,12 +50,7 @@ theorem gcd_inner_degree (p : Polynomial Coefficient) (E : ℕ)
     split_ifs <;> simp
   · rw [coefficientForm_coeff]
     split_ifs
-    · rw [subresultantCoeff_eq_minor_det]
-      apply (Subresultant.minor_natDegree_le p p.derivative p.natDegree
-        p.derivative.natDegree (degree p) k E E hE (derivative_inner_degree p E hE)).trans
-      have hn := natDegree_derivative_le p
-      have hs : (p.natDegree - degree p) + (p.derivative.natDegree - degree p) ≤ 2 * p.natDegree := by omega
-      simpa only [← Nat.add_mul] using Nat.mul_le_mul_right E hs
+    · exact subresultant_inner_degree p E hE (degree p) k
     · simp
 
 theorem polynomial_inner_degree (p : Polynomial Coefficient) (E : ℕ)
@@ -85,6 +91,28 @@ theorem derivative_coefficient_mass (p : Polynomial Coefficient) (b : ℕ)
 
 def gcdMassExponent (D b : ℕ) : ℕ := (2 * D).size * (2 * D) + (2 * D) * (b + D.size)
 
+theorem subresultant_coefficient_mass (p : Polynomial Coefficient) (b : ℕ)
+    (hb : ∀ k, coefficientMass (p.coeff k) ≤ 2 ^ b) (j k : ℕ) :
+    coefficientMass (subresultantCoeff p p.derivative p.natDegree p.derivative.natDegree j k) ≤
+      2 ^ gcdMassExponent p.natDegree b := by
+  rw [subresultantCoeff_eq_minor_det]
+  have hp (i : ℕ) : coefficientMass (p.coeff i) ≤ 2 ^ (b + p.natDegree.size) :=
+    (hb i).trans (Nat.pow_le_pow_right (by decide) (Nat.le_add_right _ _))
+  have he (i l : Fin ((p.natDegree - j) + (p.derivative.natDegree - j))) :
+      coefficientMass (Subresultant.minor p p.derivative p.natDegree p.derivative.natDegree j k i l) ≤
+        2 ^ (b + p.natDegree.size) := by
+    induction l using Fin.addCases <;>
+      simp only [Subresultant.minor, Matrix.of_apply, Fin.addCases_left, Fin.addCases_right, Subresultant.band]
+    all_goals split_ifs
+    all_goals first | exact hp _ | exact derivative_coefficient_mass p b hb _ | simp
+  have h := det_coefficientMass_le_pow _ (b + p.natDegree.size) he
+  simp only [Fintype.card_fin] at h
+  apply h.trans
+  apply Nat.pow_le_pow_right (by decide)
+  have hn := natDegree_derivative_le p
+  have hN : (p.natDegree - j) + (p.derivative.natDegree - j) ≤ 2 * p.natDegree := by omega
+  exact Nat.add_le_add (Nat.mul_le_mul (Nat.size_le_size hN) hN) (Nat.mul_le_mul_right _ hN)
+
 theorem gcd_coefficient_mass (p : Polynomial Coefficient) (b : ℕ)
     (hb : ∀ k, coefficientMass (p.coeff k) ≤ 2 ^ b) (k : ℕ) :
     coefficientMass ((gcd p).coeff k) ≤ 2 ^ gcdMassExponent p.natDegree b := by
@@ -98,23 +126,7 @@ theorem gcd_coefficient_mass (p : Polynomial Coefficient) (b : ℕ)
     · simp
   · rw [coefficientForm_coeff]
     split_ifs
-    · rw [subresultantCoeff_eq_minor_det]
-      have hp (i : ℕ) : coefficientMass (p.coeff i) ≤ 2 ^ (b + p.natDegree.size) :=
-        (hb i).trans (Nat.pow_le_pow_right (by decide) (Nat.le_add_right _ _))
-      have he (i j : Fin ((p.natDegree - degree p) + (p.derivative.natDegree - degree p))) :
-          coefficientMass (Subresultant.minor p p.derivative p.natDegree p.derivative.natDegree
-            (degree p) k i j) ≤ 2 ^ (b + p.natDegree.size) := by
-        induction j using Fin.addCases <;>
-          simp only [Subresultant.minor, Matrix.of_apply, Fin.addCases_left, Fin.addCases_right, Subresultant.band]
-        all_goals split_ifs
-        all_goals first | exact hp _ | exact derivative_coefficient_mass p b hb _ | simp
-      have h := det_coefficientMass_le_pow _ (b + p.natDegree.size) he
-      simp only [Fintype.card_fin] at h
-      apply h.trans
-      apply Nat.pow_le_pow_right (by decide)
-      have hn := natDegree_derivative_le p
-      have hN : (p.natDegree - degree p) + (p.derivative.natDegree - degree p) ≤ 2 * p.natDegree := by omega
-      exact Nat.add_le_add (Nat.mul_le_mul (Nat.size_le_size hN) hN) (Nat.mul_le_mul_right _ hN)
+    · exact subresultant_coefficient_mass p b hb (degree p) k
     · simp
 
 def massExponent (D b : ℕ) : ℕ :=
