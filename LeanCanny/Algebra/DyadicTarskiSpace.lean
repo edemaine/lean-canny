@@ -81,19 +81,19 @@ theorem family_value (F G : Family) (h : SameParameter F G) (c : List Bool) :
   rfl
 
 /-- Only the original bivariate coefficient routines are external subroutines. -/
-theorem evaluator {F G : Family} (a : Access F) (b : Access G)
-    (hF : ControlsPolyTime F) (hG : ControlsPolyTime G) (h : SameParameter F G)
-    (P : SpaceFunction a.coefficient) (Q : SpaceFunction b.coefficient) :
+theorem evaluator {F G : Family} (a : CertifiedPolynomial.BivariateReader F.polynomial)
+    (b : CertifiedPolynomial.BivariateReader G.polynomial)
+    (hF : ControlsPolyTime F) (hG : ControlsPolyTime G) (h : SameParameter F G) :
     SpaceFunction (fun c => SignStatisticBits.integerCode (value F G c)) := by
   let E := TarskiQueryBits.evaluator (access F G) (controls F G hF hG)
-    (residueEvaluator a hF P) (residueEvaluator b hG Q)
+    (residueEvaluator a hF) (residueEvaluator b hG)
   exact E.congr (funext fun c => congrArg SignStatisticBits.integerCode (family_value F G h c))
 
 def positiveLanguage (F G : Family) : Language := {c | 0 < value F G c}
 
-theorem positiveLanguage_mem_PSPACE {F G : Family} (a : Access F) (b : Access G)
-    (hF : ControlsPolyTime F) (hG : ControlsPolyTime G) (h : SameParameter F G)
-    (P : SpaceFunction a.coefficient) (Q : SpaceFunction b.coefficient) :
+theorem positiveLanguage_mem_PSPACE {F G : Family} (a : CertifiedPolynomial.BivariateReader F.polynomial)
+    (b : CertifiedPolynomial.BivariateReader G.polynomial)
+    (hF : ControlsPolyTime F) (hG : ControlsPolyTime G) (h : SameParameter F G) :
     positiveLanguage F G ∈ PSPACE := by
   have he : TarskiQueryBits.positiveLanguage (family F G) = positiveLanguage F G := by
     ext c
@@ -101,6 +101,6 @@ theorem positiveLanguage_mem_PSPACE {F G : Family} (a : Access F) (b : Access G)
     rw [family_value F G h c]
   rw [← he]
   exact TarskiQueryBits.positiveLanguage_mem_PSPACE (access F G) (controls F G hF hG)
-    (residueEvaluator a hF P) (residueEvaluator b hG Q)
+    (residueEvaluator a hF) (residueEvaluator b hG)
 
 end LeanCanny.Algebra.DyadicTarskiBits

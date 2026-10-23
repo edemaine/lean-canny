@@ -100,7 +100,7 @@ theorem controls (F : Family) (hF : ControlsPolyTime F) : SignPatternBits.Contro
     DyadicPolynomialBits.massCode_mem_FP F.root hF.root, queryMassCode_mem_FP F hF⟩
 
 structure Access (F : Family) where
-  root : DyadicPolynomialBits.Access F.root
+  root : CertifiedPolynomial.BivariateReader F.root.polynomial
   coefficient : List Bool → List Bool
   pattern : List Bool → List Bool
   coefficient_eq : ∀ c i j k m, 0 < m → coefficient
@@ -111,25 +111,33 @@ structure Access (F : Family) where
 
 def sourceQuery (p : List Bool) : List Bool :=
   pair (pair (pairFst (pairFst (pairFst p)))
-    (pair (BinaryNat.normalize (pairSnd (pairFst (pairFst p)))) (pairSnd (pairFst p)))) (pairSnd p)
+    (pair (BinaryNat.normalize (pairSnd (pairFst (pairFst p))))
+      (pair (pairSnd (pairSnd p)) (pairFst (pairSnd p)))))
+    (BinaryNat.normalize (pairSnd (pairFst p)))
 
 theorem sourceQuery_mem_FP : sourceQuery ∈ FP := by
   have hc := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairFst_mem_FP
   have hi := mem_FP_comp (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairSnd_mem_FP)
     BinaryNat.normalize_mem_FP
-  have hj := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  have h := mem_FP_pair (mem_FP_pair hc (mem_FP_pair hi hj)) pairSnd_mem_FP
+  have hj := mem_FP_pair (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP)
+    (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP)
+  have hm := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) BinaryNat.normalize_mem_FP
+  have h := mem_FP_pair (mem_FP_pair hc (mem_FP_pair hi hj)) hm
   refine mem_FP_of_eq (g := sourceQuery) h ?_
   intro p
   simp only [sourceQuery, Function.comp_apply]
 
-def queryAccess {F : Family} (a : Access F) : DyadicPolynomialBits.Access (queryFamily F) where
+def queryAccess {F : Family} (a : Access F) (P : SpaceFunction a.coefficient) :
+    CertifiedPolynomial.BivariateReader (queryFamily F).polynomial where
   coefficient := a.coefficient ∘ sourceQuery
+  evaluator := P.precompose sourceQuery sourceQuery_mem_FP
   coefficient_eq := by
-    intro r j k m hm
+    intro q k j
     simp only [Function.comp_apply, sourceQuery, pairFst_pair, pairSnd_pair, BinaryNat.normalize_eq_bits]
-    simpa only [queryFamily, BinaryNatCode.encode] using
-      a.coefficient_eq (pairFst r) (Nat.fromBitsLE (pairSnd r)) j k m hm
+    have h := a.coefficient_eq (pairFst (pairFst q)) (Nat.fromBitsLE (pairSnd (pairFst q))) j k
+      (Nat.fromBitsLE (pairSnd q) + 1) (by omega)
+    simpa only [queryFamily, Function.comp_apply, DyadicBits.integerResidue, BinaryNatCode.encode,
+      Nat.add_sub_cancel_right] using h
 
 def specializedQuery (p : List Bool) : List Bool :=
   pair (pair (pair (pairFst (pairFst p)) (pairFst (pairSnd (pairFst p))))
@@ -156,7 +164,7 @@ noncomputable def access {F : Family} (a : Access F) : SignPatternBits.Access (f
 
 theorem queryEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (P : SpaceFunction a.coefficient) : SpaceFunction (access a).polynomialCoefficient :=
-  (DyadicPolynomialBits.residueEvaluator (queryAccess a) (query_controls F hF)
-    (P.precompose sourceQuery sourceQuery_mem_FP)).precompose specializedQuery specializedQuery_mem_FP
+  (DyadicPolynomialBits.residueEvaluator (queryAccess a P) (query_controls F hF)).precompose
+    specializedQuery specializedQuery_mem_FP
 
 end LeanCanny.Algebra.DyadicSignPatternBits

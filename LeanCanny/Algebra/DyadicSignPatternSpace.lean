@@ -72,27 +72,27 @@ theorem family_rootCount (F : Family) (c : List Bool) : SignPatternBits.rootCoun
 coefficient routines. The family size has the same unary FP bound as the integer
 sign-pattern evaluator. -/
 theorem rootCountEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
+    (hs : a.pattern ∈ FP) (P : SpaceFunction a.coefficient) :
     SpaceFunction (fun c => BinaryNatCode.encode (rootCount F c)) := by
   let E := SignPatternBits.rootCountEvaluator (access a) (controls F hF) hs
-    (DyadicPolynomialBits.residueEvaluator a.root hF.root H) (queryEvaluator a hF P)
+    (DyadicPolynomialBits.residueEvaluator a.root hF.root) (queryEvaluator a hF P)
   exact E.congr (funext fun c => congrArg BinaryNatCode.encode (family_rootCount F c))
 
 def positiveLanguage (F : Family) : Language := {c | 0 < rootCount F c}
 
 theorem positiveDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
+    (hs : a.pattern ∈ FP) (P : SpaceFunction a.coefficient) :
     SpaceDecider (positiveLanguage F) := by
   have hflag := (stringEq_fppred id_mem_FP (constFn_mem_FP [])).not.flag_mem_FP
-  apply (rootCountEvaluator a hF hs H P).decider (fun v => decide (v ≠ [])) hflag
+  apply (rootCountEvaluator a hF hs P).decider (fun v => decide (v ≠ [])) hflag
   intro c
   simp only [positiveLanguage, Set.mem_ofPred_eq, decide_eq_true_eq, BinaryNatCode.encode,
     ne_eq, BinaryNat.bits_eq_nil_iff]
   omega
 
 theorem positiveLanguage_mem_PSPACE {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
-    positiveLanguage F ∈ PSPACE := (positiveDecider a hF hs H P).mem_PSPACE
+    (hs : a.pattern ∈ FP) (P : SpaceFunction a.coefficient) :
+    positiveLanguage F ∈ PSPACE := (positiveDecider a hF hs P).mem_PSPACE
 
 def realizableLanguage (F : Family) : Language := {c | ∃ x : ℝ,
   (rootPolynomial F c).eval x = 0 ∧ ∀ i : Fin (Nat.fromBitsLE (F.count c)),
@@ -116,20 +116,20 @@ theorem positiveLanguage_eq_guarded (F : Family) : positiveLanguage F = guardedR
       fun h => (positive_iff_realizable F c hp).mpr h.2⟩
 
 theorem guardedRealizableLanguage_mem_PSPACE {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
+    (hs : a.pattern ∈ FP) (P : SpaceFunction a.coefficient) :
     guardedRealizableLanguage F ∈ PSPACE := by
   rw [← positiveLanguage_eq_guarded]
-  exact positiveLanguage_mem_PSPACE a hF hs H P
+  exact positiveLanguage_mem_PSPACE a hF hs P
 
 theorem realizableLanguage_mem_PSPACE {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient)
+    (hs : a.pattern ∈ FP) (P : SpaceFunction a.coefficient)
     (hp : ∀ c, rootPolynomial F c ≠ 0) : realizableLanguage F ∈ PSPACE := by
   have he : guardedRealizableLanguage F = realizableLanguage F := by
     ext c
     change (rootPolynomial F c ≠ 0 ∧ c ∈ realizableLanguage F) ↔ c ∈ realizableLanguage F
     exact ⟨fun h => h.2, fun h => ⟨hp c, h⟩⟩
   rw [← he]
-  exact guardedRealizableLanguage_mem_PSPACE a hF hs H P
+  exact guardedRealizableLanguage_mem_PSPACE a hF hs P
 
 theorem rootPolynomial_ne_zero_of_small (F : Family) (c : List Bool)
     (hp : F.root.polynomial c ≠ 0)
@@ -150,10 +150,10 @@ theorem rootPolynomial_ne_zero_of_small (F : Family) (c : List Bool)
 /-- A nonzero original root polynomial remains nonzero at the effectively small
 parameter; no separate specialized-nonvanishing hypothesis is needed. -/
 theorem realizableLanguage_mem_PSPACE_of_small {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient)
+    (hs : a.pattern ∈ FP) (P : SpaceFunction a.coefficient)
     (hp : ∀ c, F.root.polynomial c ≠ 0)
     (hsmall : ∀ c, Nat.fromBitsLE (F.root.mass c) < Nat.fromBitsLE (F.root.exponent c)) :
     realizableLanguage F ∈ PSPACE :=
-  realizableLanguage_mem_PSPACE a hF hs H P (fun c => rootPolynomial_ne_zero_of_small F c (hp c) (hsmall c))
+  realizableLanguage_mem_PSPACE a hF hs P (fun c => rootPolynomial_ne_zero_of_small F c (hp c) (hsmall c))
 
 end LeanCanny.Algebra.DyadicSignPatternBits

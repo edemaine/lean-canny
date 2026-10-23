@@ -52,7 +52,7 @@ theorem effective_controls (F : Family) (hF : ControlsPolyTime F) : ControlsPoly
   withExponent_controls F (parameterCode F) hF (parameterCode_FP F hF)
 
 def withExponentAccess {F : Family} (a : Access F) (s : List Bool → List Bool) : Access (withExponent F s) where
-  root := ⟨a.root.coefficient, a.root.coefficient_eq⟩
+  root := a.root
   coefficient := a.coefficient
   pattern := a.pattern
   coefficient_eq := a.coefficient_eq
@@ -94,25 +94,25 @@ theorem effective_rootCount (F : Family) (c : List Bool) :
 
 theorem withExponentEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
     (s : List Bool → List Bool) (hs : s ∈ FP) (ht : a.pattern ∈ FP)
-    (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
+    (P : SpaceFunction a.coefficient) :
     SpaceFunction (fun c => BinaryNatCode.encode (DyadicSignPatternBits.rootCount (withExponent F s) c)) :=
-  DyadicSignPatternBits.rootCountEvaluator (withExponentAccess a s) (withExponent_controls F s hF hs) ht H P
+  DyadicSignPatternBits.rootCountEvaluator (withExponentAccess a s) (withExponent_controls F s hF hs) ht P
 
 /-- The original uniform bivariate coefficient routines are the only space-bounded
 arithmetic sources. The exponent is derived internally from their FP bounds. -/
 theorem rootCountEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
+    (hs : a.pattern ∈ FP) (P : SpaceFunction a.coefficient) :
     SpaceFunction (fun c => BinaryNatCode.encode (eventualRootCount F c)) := by
-  let E := withExponentEvaluator a hF (parameterCode F) (parameterCode_FP F hF) hs H P
+  let E := withExponentEvaluator a hF (parameterCode F) (parameterCode_FP F hF) hs P
   exact E.congr (funext fun c => congrArg BinaryNatCode.encode (effective_rootCount F c))
 
 def positiveLanguage (F : Family) : Language := {c | 0 < eventualRootCount F c}
 
 theorem positiveDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
+    (hs : a.pattern ∈ FP) (P : SpaceFunction a.coefficient) :
     SpaceDecider (positiveLanguage F) := by
   have hflag := (stringEq_fppred id_mem_FP (constFn_mem_FP [])).not.flag_mem_FP
-  apply (InfinitesimalRootBits.rootCountEvaluator a hF hs H P).decider (fun v => decide (v ≠ [])) hflag
+  apply (InfinitesimalRootBits.rootCountEvaluator a hF hs P).decider (fun v => decide (v ≠ [])) hflag
   intro c
   change 0 < eventualRootCount F c ↔ decide (BinaryNatCode.encode (eventualRootCount F c) ≠ []) = true
   simp only [decide_eq_true_eq, BinaryNatCode.encode,
@@ -120,7 +120,7 @@ theorem positiveDecider {F : Family} (a : Access F) (hF : ControlsPolyTime F)
   omega
 
 theorem positiveLanguage_mem_PSPACE {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
-    positiveLanguage F ∈ PSPACE := (positiveDecider a hF hs H P).mem_PSPACE
+    (hs : a.pattern ∈ FP) (P : SpaceFunction a.coefficient) :
+    positiveLanguage F ∈ PSPACE := (positiveDecider a hF hs P).mem_PSPACE
 
 end LeanCanny.Algebra.InfinitesimalRootBits

@@ -6,6 +6,7 @@ module
 
 public import LeanCanny.Algebra.DyadicPolynomialSpecialization
 public import LeanCanny.Algebra.DyadicSpecializationSpace
+public import LeanCanny.Algebra.CertifiedPolynomial
 
 /-! # Uniform coefficient access after specializing a polynomial parameter
 
@@ -53,40 +54,41 @@ theorem scalar_controls (F : Family) (hF : ControlsPolyTime F) : DyadicBits.Cont
   have hm := mem_FP_comp pairFst_mem_FP hF.mass
   exact ⟨hd, hs, hm⟩
 
-structure Access (F : Family) where
-  coefficient : List Bool → List Bool
-  coefficient_eq : ∀ c i j m, 0 < m → coefficient
-    (pair (pair c (pair (BinaryNatCode.encode i) (BinaryNatCode.encode j))) (BinaryNatCode.encode (m - 1))) =
-      DyadicBits.integerResidue (((F.polynomial c).coeff i).coeff j) m
-
+/-- Adapt scalar dyadic packets to the shared inner/outer coefficient order. -/
 def sourceQuery (p : List Bool) : List Bool :=
-  pair (pair (pairFst (pairFst (pairFst p)))
-    (pair (BinaryNat.normalize (pairSnd (pairFst (pairFst p)))) (pairSnd (pairFst p)))) (pairSnd p)
+  pair (pair (pairFst (pairFst (pairFst p))) (pairSnd p))
+    (pair (pairSnd (pairFst p)) (BinaryNat.normalize (pairSnd (pairFst (pairFst p)))))
 
 theorem sourceQuery_mem_FP : sourceQuery ∈ FP := by
   have hc := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairFst_mem_FP
   have hi := mem_FP_comp (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairSnd_mem_FP) BinaryNat.normalize_mem_FP
   have hj := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  have h := mem_FP_pair (mem_FP_pair hc (mem_FP_pair hi hj)) pairSnd_mem_FP
+  have h := mem_FP_pair (mem_FP_pair hc pairSnd_mem_FP) (mem_FP_pair hj hi)
   refine mem_FP_of_eq (g := sourceQuery) h ?_
   intro p
   simp only [sourceQuery, Function.comp_apply]
 
-def scalarAccess {F : Family} (a : Access F) : DyadicBits.Access (scalarFamily F) where
+def scalarAccess {F : Family} (a : CertifiedPolynomial.BivariateReader F.polynomial) :
+    DyadicBits.Access (scalarFamily F) where
   coefficient := a.coefficient ∘ sourceQuery
   coefficient_eq := by
     intro r j m hm
     simp only [Function.comp_apply, sourceQuery, pairFst_pair, pairSnd_pair, BinaryNat.normalize_eq_bits]
-    simpa only [scalarFamily, BinaryNatCode.encode] using a.coefficient_eq (pairFst r) (Nat.fromBitsLE (pairSnd r)) j m hm
+    have h := a.coefficient_eq (pair (pairFst r) (BinaryNatCode.encode (m - 1))) j (Nat.fromBitsLE (pairSnd r))
+    refine h.trans ?_
+    exact congrArg₂ (fun (z : ℤ) (n : ℕ) => MatrixPower.residueBits (z : ZMod n))
+      (by simp only [pairFst_pair, scalarFamily])
+      (by simp only [pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits,
+        Nat.sub_add_cancel (by omega : 1 ≤ m)])
 
 noncomputable def Family.residue (F : Family) (q : List Bool) : List Bool :=
   DyadicBits.integerResidue ((F.specialized (pairFst (pairFst q))).coeff (Nat.fromBitsLE (pairSnd (pairFst q))))
     (DyadicBits.mValue q)
 
-theorem residueEvaluator {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (P : SpaceFunction a.coefficient) : SpaceFunction F.residue := by
+theorem residueEvaluator {F : Family} (a : CertifiedPolynomial.BivariateReader F.polynomial)
+    (hF : ControlsPolyTime F) : SpaceFunction F.residue := by
   let E := DyadicBits.residueEvaluator (scalarAccess a) (scalar_controls F hF)
-    (P.precompose sourceQuery sourceQuery_mem_FP)
+    (a.evaluator.precompose sourceQuery sourceQuery_mem_FP)
   refine E.congr (funext fun q => ?_)
   simp only [Family.residue, Family.specialized, DyadicPolynomial.coeff_specialize, DyadicBits.Family.residue,
     DyadicBits.Family.value, scalarFamily, Function.comp_apply]

@@ -74,19 +74,19 @@ theorem positiveLanguage_eq_guarded (F : Family) : positiveLanguage F = guardedR
       fun h => (eventual_iff_positive F c hp).mp h.2⟩
 
 theorem guardedRealizableLanguage_mem_PSPACE {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient) :
+    (hs : a.pattern ∈ FP) (P : SpaceFunction a.coefficient) :
     guardedRealizableLanguage F ∈ PSPACE := by
   rw [← positiveLanguage_eq_guarded]
-  exact positiveLanguage_mem_PSPACE a hF hs H P
+  exact positiveLanguage_mem_PSPACE a hF hs P
 
 theorem eventualRealizableLanguage_mem_PSPACE {F : Family} (a : Access F) (hF : ControlsPolyTime F)
-    (hs : a.pattern ∈ FP) (H : SpaceFunction a.root.coefficient) (P : SpaceFunction a.coefficient)
+    (hs : a.pattern ∈ FP) (P : SpaceFunction a.coefficient)
     (hp : ∀ c, F.root.polynomial c ≠ 0) : eventualRealizableLanguage F ∈ PSPACE := by
   have he : guardedRealizableLanguage F = eventualRealizableLanguage F := by
     ext c
     change (F.root.polynomial c ≠ 0 ∧ c ∈ eventualRealizableLanguage F) ↔ c ∈ eventualRealizableLanguage F
     exact ⟨fun h => h.2, fun h => ⟨hp c, h⟩⟩
   rw [← he]
-  exact guardedRealizableLanguage_mem_PSPACE a hF hs H P
+  exact guardedRealizableLanguage_mem_PSPACE a hF hs P
 
 end LeanCanny.Algebra.InfinitesimalRootBits
