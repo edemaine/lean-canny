@@ -45,14 +45,19 @@ theorem determinantEvaluator (L : Layout) (h : L.Controls)
     BinaryFn.of_bits (mem_FP_of_eq (columnsCode_FP h) (columnsCode_eq L))
   have hA : BinaryFn (fun c => L.arity c + 2) :=
     BinaryFn.of_bits (bits_mem_FP (h.arity.add (UnaryFn.const 2)))
-  have hN := (hA.mul hC).bits_mem_FP
-  apply BivariateDeterminantBits.integerEvaluator _ _ _ _ _ _ (blockEntry L modulus coefficient)
-    (fun c => by dsimp only [MacaulayFullBoxFinite.count, FixedWidthPolynomial.count]; positivity)
-    (fun c i j k => MacaulayFullBoxFinite.matrix_inner_degree (p c) (fun i => L.degree c i.val)
-      (L.width c) (Nat.fromBitsLE (bound c)) (hbound c) i j k)
-    ?_ (blockEntryEvaluator h hm E) hN hm hi ho hb
-  intro c i j u v
-  exact blockEntry_packet L modulus coefficient c (p c) (hlevel c) (hc c) i j u v
+  let A : CertifiedMatrix.Bivariate modulus := {
+    dimension c := (L.arity c + 2) * FixedWidthPolynomial.count (L.arity c) (L.width c)
+    dimension_pos c := by dsimp only [MacaulayFullBoxFinite.count, FixedWidthPolynomial.count]; positivity
+    dimensionFP := hA.mul hC
+    bound c := Nat.fromBitsLE (bound c)
+    boundFP := BinaryFn.fromBits hb
+    matrix c := MacaulayFullBoxFinite.matrix (p c) (fun i => L.degree c i.val) (L.width c)
+    inner_bound c := MacaulayFullBoxFinite.matrix_inner_degree (p c) (fun i => L.degree c i.val)
+      (L.width c) (Nat.fromBitsLE (bound c)) (hbound c)
+    coefficient := blockEntry L modulus coefficient
+    coefficient_eq c i j u v := blockEntry_packet L modulus coefficient c (p c) (hlevel c) (hc c) i j u v
+    evaluator := blockEntryEvaluator h hm E }
+  exact A.determinantEvaluator inner outer hm hi ho
 
 lemma determinantValue_eq (L : Layout) (modulus inner outer : List Bool → List Bool)
     (p : (c : List Bool) → Fin (L.arity c) → MvPolynomial (Fin (L.arity c)) Coefficient) (c : List Bool) :

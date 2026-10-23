@@ -78,108 +78,69 @@ theorem Family.value_zero (F : Family) (c : List Bool) (hi : ¬F.inner c < F.rad
     omega
   simp [Family.value, hz, residueBits, BinaryNatCode.encode]
 
-structure Access (F : Family) where
-  dimension : List Bool → List Bool
-  modulus : List Bool → List Bool
-  inner : List Bool → List Bool
-  outer : List Bool → List Bool
-  bound : List Bool → List Bool
-  coefficient : List Bool → List Bool
-  dimension_eq : ∀ c, dimension c = BinaryNatCode.encode (F.dimension c)
-  modulus_eq : ∀ c, modulus c = BinaryNatCode.encode (F.modulus c)
-  inner_eq : ∀ c, inner c = BinaryNatCode.encode (F.inner c)
-  outer_eq : ∀ c, outer c = BinaryNatCode.encode (F.outer c)
-  bound_eq : ∀ c, bound c = BinaryNatCode.encode (F.bound c)
-  coefficient_eq : ∀ c (i j : Fin (F.dimension c)) u v,
-    coefficient (pair c (pair (BinaryNatCode.encode i.val)
-      (pair (BinaryNatCode.encode j.val) (pair (BinaryNatCode.encode u) (BinaryNatCode.encode v))))) =
-        residueBits ((((F.matrix c i j).coeff v).coeff u))
+/-- The Kronecker radix is written in binary, even for exponential dimensions. -/
+theorem Family.radix_binary (F : Family) (hn : BinaryFn F.dimension)
+    (hb : BinaryFn F.bound) : BinaryFn F.radix :=
+  (hn.mul hb).add (BinaryFn.const 1)
 
-def Access.radixCode {F : Family} (a : Access F) (c : List Bool) : List Bool :=
-  BinaryNat.succ (BinaryNat.mul (pair (a.dimension c) (a.bound c)))
-
-theorem Access.radixCode_mem_FP {F : Family} (a : Access F) (hn : a.dimension ∈ FP) (hb : a.bound ∈ FP) : a.radixCode ∈ FP :=
-  mem_FP_comp (mem_FP_comp (mem_FP_pair hn hb) BinaryNat.mul_mem_FP) BinaryNat.succ_mem_FP
-
-theorem Access.radixCode_eq {F : Family} (a : Access F) (c : List Bool) :
-    a.radixCode c = BinaryNatCode.encode (F.radix c) := by
-  simp only [Access.radixCode, a.dimension_eq, a.bound_eq,
-    BinaryNat.mul_pair, BinaryNat.succ_eq_bits, BinaryNatCode.encode, Nat.fromBitsLE_bits]
-  rfl
-
-def Access.degreeCode {F : Family} (a : Access F) (c : List Bool) : List Bool :=
-  BinaryNat.add (pair (a.inner c) (BinaryNat.mul (pair (a.radixCode c) (a.outer c))))
-
-theorem Access.degreeCode_mem_FP {F : Family} (a : Access F) (hn : a.dimension ∈ FP)
-    (hb : a.bound ∈ FP) (hi : a.inner ∈ FP) (ho : a.outer ∈ FP) : a.degreeCode ∈ FP := by
-  have hc := mem_FP_comp (mem_FP_pair hi (mem_FP_comp (mem_FP_pair (a.radixCode_mem_FP hn hb) ho) BinaryNat.mul_mem_FP)) BinaryNat.add_mem_FP
-  exact mem_FP_of_eq (g := a.degreeCode) hc (fun _ => by simp only [Access.degreeCode, Function.comp_apply])
-
-theorem Access.degreeCode_eq {F : Family} (a : Access F) (c : List Bool) :
-    a.degreeCode c = BinaryNatCode.encode (F.encoded.degree c) := by
-  simp only [Access.degreeCode, a.inner_eq, a.outer_eq, a.radixCode_eq,
-    BinaryNat.mul_pair, BinaryNat.add_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
-  rfl
-
-def Access.coefficientInput {F : Family} (a : Access F) (q : List Bool) : List Bool :=
-  let uv := BinaryNat.divMod (pair (pairSnd (pairSnd (pairSnd q))) (a.radixCode (pairFst q)))
+def Family.coefficientInput (F : Family) (q : List Bool) : List Bool :=
+  let uv := BinaryNat.divMod (pair (pairSnd (pairSnd (pairSnd q)))
+    (BinaryNatCode.encode (F.radix (pairFst q))))
   pair (pairFst q) (pair (pairFst (pairSnd q))
     (pair (pairFst (pairSnd (pairSnd q))) (pair (pairSnd uv) (pairFst uv))))
 
-theorem Access.coefficientInput_mem_FP {F : Family} (a : Access F) (hn : a.dimension ∈ FP)
-    (hb : a.bound ∈ FP) : a.coefficientInput ∈ FP := by
+theorem Family.coefficientInput_mem_FP (F : Family) (hn : BinaryFn F.dimension)
+    (hb : BinaryFn F.bound) : F.coefficientInput ∈ FP := by
   have ht := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
   have hi := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
   have hr := mem_FP_comp ht pairFst_mem_FP
   have hd := mem_FP_comp ht pairSnd_mem_FP
-  have hB := mem_FP_comp pairFst_mem_FP (a.radixCode_mem_FP hn hb)
+  have hB := mem_FP_comp pairFst_mem_FP (F.radix_binary hn hb).bits_mem_FP
   have huv := mem_FP_comp (mem_FP_pair hd hB) BinaryNat.divMod_mem_FP
-  have hc := mem_FP_pair pairFst_mem_FP (mem_FP_pair hi (mem_FP_pair hr
+  exact mem_FP_pair pairFst_mem_FP (mem_FP_pair hi (mem_FP_pair hr
     (mem_FP_pair (mem_FP_comp huv pairSnd_mem_FP) (mem_FP_comp huv pairFst_mem_FP))))
-  exact mem_FP_of_eq (g := a.coefficientInput) hc (fun _ => by simp only [Access.coefficientInput, Function.comp_apply])
 
-theorem Access.coefficientInput_packet {F : Family} (a : Access F) (c : List Bool) (i k d : ℕ) :
-    a.coefficientInput (pair c (pair (BinaryNatCode.encode i) (pair (BinaryNatCode.encode k) (BinaryNatCode.encode d)))) =
+theorem Family.coefficientInput_packet (F : Family) (c : List Bool) (i k d : ℕ) :
+    F.coefficientInput (pair c (pair (BinaryNatCode.encode i) (pair (BinaryNatCode.encode k) (BinaryNatCode.encode d)))) =
       pair c (pair (BinaryNatCode.encode i) (pair (BinaryNatCode.encode k)
         (pair (BinaryNatCode.encode (d % F.radix c)) (BinaryNatCode.encode (d / F.radix c))))) := by
-  simp only [Access.coefficientInput, pairFst_pair, pairSnd_pair, a.radixCode_eq, BinaryNat.divMod_pair,
+  simp only [Family.coefficientInput, pairFst_pair, pairSnd_pair, BinaryNat.divMod_pair,
     BinaryNatCode.encode, Nat.fromBitsLE_bits]
 
-noncomputable def Access.encoded {F : Family} (a : Access F) : BerkowitzPolynomial.ModularAccess F.encoded where
-  dimension := a.dimension
-  modulus := a.modulus
-  degree := a.degreeCode
-  entry := a.coefficient ∘ a.coefficientInput
-  dimension_eq := a.dimension_eq
-  modulus_eq := a.modulus_eq
-  degree_eq := a.degreeCode_eq
-  entry_eq c i k d := by
-    change Fin (F.dimension c) at i
-    change a.coefficient (a.coefficientInput _) = _
-    rw [a.coefficientInput_packet, a.coefficient_eq c i k (d % F.radix c) (d / F.radix c)]
-    change residueBits _ = residueBits ((PolynomialKronecker.encode (F.radix c) (F.matrix c i k)).coeff d)
-    rw [PolynomialKronecker.coefficient_any (F.radix c) (F.radix_pos c) _
-      (fun j => (F.inner_bound c i k j).trans_lt (F.bound_lt_radix c))]
-
-theorem Access.valid_fppred {F : Family} (a : Access F) (hn : a.dimension ∈ FP)
-    (hb : a.bound ∈ FP) (hi : a.inner ∈ FP) : FPPred (fun c => F.inner c < F.radix c) :=
-  (BinaryNat.lt_fppred hi (a.radixCode_mem_FP hn hb)).of_iff (fun c => by
-    simp only [a.inner_eq, a.radixCode_eq, BinaryNatCode.encode, Nat.fromBitsLE_bits])
-
-theorem Access.evaluator {F : Family} (a : Access F) (hn : a.dimension ∈ FP)
-    (hm : a.modulus ∈ FP) (hb : a.bound ∈ FP) (hi : a.inner ∈ FP) (ho : a.outer ∈ FP)
-    (E : SpaceFunction a.coefficient) : SpaceFunction F.value := by
-  have EC := E.precompose a.coefficientInput (a.coefficientInput_mem_FP hn hb)
-  have ES := BerkowitzPolynomial.ModularAccess.evaluator a.encoded
-    ⟨hn, hm, a.degreeCode_mem_FP hn hb hi ho⟩ EC
-  have EB := SpaceFunction.branch (fun c => decide (F.inner c < F.radix c)) (a.valid_fppred hn hb hi).flag_mem_FP
+/-- Canonical binary controls remove the redundant writer/equality layer. The
+entry certificate still accepts an arbitrary native polynomial-space child. -/
+theorem Family.evaluator (F : Family) (coefficient : List Bool → List Bool)
+    (hc : ∀ c (i j : Fin (F.dimension c)) u v,
+      coefficient (pair c (pair (BinaryNatCode.encode i.val)
+        (pair (BinaryNatCode.encode j.val) (pair (BinaryNatCode.encode u) (BinaryNatCode.encode v))))) =
+          residueBits (((F.matrix c i j).coeff v).coeff u))
+    (hn : BinaryFn F.dimension) (hm : BinaryFn F.modulus) (hb : BinaryFn F.bound)
+    (hi : BinaryFn F.inner) (ho : BinaryFn F.outer) (E : SpaceFunction coefficient) :
+    SpaceFunction F.value := by
+  let a : BerkowitzPolynomial.ModularAccess F.encoded := {
+    dimension := fun c => BinaryNatCode.encode (F.dimension c)
+    modulus := fun c => BinaryNatCode.encode (F.modulus c)
+    degree := fun c => BinaryNatCode.encode (F.encoded.degree c)
+    entry := coefficient ∘ F.coefficientInput
+    dimension_eq _ := rfl
+    modulus_eq _ := rfl
+    degree_eq _ := rfl
+    entry_eq c i k d := by
+      change Fin (F.dimension c) at i
+      change coefficient (F.coefficientInput _) = _
+      rw [F.coefficientInput_packet, hc c i k (d % F.radix c) (d / F.radix c)]
+      change residueBits _ = residueBits ((PolynomialKronecker.encode (F.radix c) (F.matrix c i k)).coeff d)
+      rw [PolynomialKronecker.coefficient_any (F.radix c) (F.radix_pos c) _
+        (fun j => (F.inner_bound c i k j).trans_lt (F.bound_lt_radix c))] }
+  have hr := F.radix_binary hn hb
+  have ES := a.evaluator ⟨hn.bits_mem_FP, hm.bits_mem_FP, (hi.add (hr.mul ho)).bits_mem_FP⟩
+    (E.precompose F.coefficientInput (F.coefficientInput_mem_FP hn hb))
+  have EB := SpaceFunction.branch (fun c => decide (F.inner c < F.radix c)) (hi.lt hr).flag_mem_FP
     ES (SpaceFunction.ofFP _ (constFn_mem_FP []))
   refine EB.congr (funext fun c => ?_)
   simp only [decide_eq_true_eq]
   split_ifs with hc
   · exact F.encoded_value c hc
   · exact (F.value_zero c hc).symm
-
-
 
 end LeanCanny.Algebra.BivariateDeterminantBits
