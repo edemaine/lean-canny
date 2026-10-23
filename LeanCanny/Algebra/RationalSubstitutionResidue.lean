@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Algebra.RationalSubstitutionSpace
+public import LeanCanny.Algebra.CoordinateReaders
 
 /-!
 # Uniform integer coefficient residues after rational substitution
