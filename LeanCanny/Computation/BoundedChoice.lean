@@ -100,18 +100,12 @@ theorem computable {L : Language} (D : SpaceDecider L)
       dsimp +instances only [child, Function.comp_apply, BinaryNatCode.encode]
       by_cases hp : pair p.1 p.2.1.bits ∈ L <;> simp only [hp, decide_true, decide_false, Bool.false_eq_true,
         ite_true, ite_false]
-  have hfold (c : List Bool) (k : ℕ) :
-      TidyBoundedFold.fold child (fun _ => 0) c k = search L c k := by
-    induction k with
-    | zero => rfl
-    | succ k ih => simp only [TidyBoundedFold.fold, child, search, ih]
   have hn := fromBitsLE_computable.comp (FP.computable hb)
-  have h := TidyBoundedFold.evaluator hchild hn
+  exact TidyBoundedFold.evaluator_spec hchild hn
     (ComputableTidilyInPolySpace.of_polyTime (ComputableTidilyInPolyTime.const 0))
-    hn.polyBounded_length (fun c k hk => by
-      rw [hfold]
-      exact ComputableTidilyInO.length_encNat_mono ((search_le L c k).trans hk))
-  exact h.congr fun c => hfold c _
+    (search L) (fun _ => rfl) (fun c k _ => by simp only [child, search])
+    hn.polyBounded_length (fun c k hk =>
+      ComputableTidilyInO.length_encNat_mono ((search_le L c k).trans hk))
 
 theorem evaluator {L : Language} (D : SpaceDecider L)
     (bound : List Bool → List Bool) (hb : bound ∈ FP) :

@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.IndexedModulusSpace
+public import LeanCanny.Algebra.ModularFoldSpace
 public import LeanCanny.Encoding.BinaryPowModFP
 
 /-!
@@ -72,9 +73,9 @@ theorem seed_mem_FP : seed ∈ FP := by
   simp only [Function.comp_apply, seed]
 
 theorem updateEvaluator : SpaceFunction update := by
-  let E := ((ModulusBits.evaluator.precompose query query_mem_FP).withInput).postcompose finish finish_mem_FP
+  have E := ModulusBits.evaluator.call query finish query_mem_FP finish_mem_FP
   refine E.congr (funext fun p => ?_)
-  simp only [Function.comp_apply, query, pairFst_pair, pairSnd_pair, update]
+  simp only [query, pairFst_pair, pairSnd_pair, update]
 
 theorem seed_eq (c : List Bool) : seed c = (1 % (Nat.fromBitsLE (pairSnd c) + 1)).bits := by
   simp only [seed, modulus, BinaryNat.mod_pair, BinaryNat.succ_eq_bits, Nat.fromBitsLE_bits,
@@ -102,19 +103,18 @@ theorem productEvaluator : SpaceFunction (fun c =>
     (product (Nat.fromBitsLE (source c)) (Nat.fromBitsLE (target c)) (Nat.fromBitsLE (source c) + 1) %
       (Nat.fromBitsLE (pairSnd c) + 1)).bits) := by
   have hb := mem_FP_comp source_mem_FP BinaryNat.succ_mem_FP
-  have hs : ∀ c k, k ≤ Nat.fromBitsLE ((BinaryNat.succ ∘ source) c) →
-      (BoundedFold.fold update seed c k).length ≤ (Polynomial.X : Polynomial ℕ).eval c.length := by
-    intro c k _
-    rw [fold_eq, Nat.size_eq_bits_len]
-    have hr := Nat.mod_lt (product (Nat.fromBitsLE (source c)) (Nat.fromBitsLE (target c)) k)
-      (by omega : 0 < Nat.fromBitsLE (pairSnd c) + 1)
-    have hraw := (Nat.fromBitsLE_lt_pow_length (pairSnd c)).trans_le
-      (Nat.pow_le_pow_right (by decide) (pairSnd_length_le c))
-    exact Nat.size_le.mpr (by simpa only [Polynomial.eval_X] using (by omega :
-      product (Nat.fromBitsLE (source c)) (Nat.fromBitsLE (target c)) k %
-        (Nat.fromBitsLE (pairSnd c) + 1) < 2 ^ c.length))
-  let E := BoundedFold.evaluator updateEvaluator (BinaryNat.succ ∘ source) seed hb seed_mem_FP Polynomial.X hs
+  have E := ModularFold.evaluator_spec updateEvaluator (BinaryNat.succ ∘ source) modulus seed
+    hb modulus_mem_FP seed_mem_FP
+    (fun c k => product (Nat.fromBitsLE (source c)) (Nat.fromBitsLE (target c)) k)
+    (fun c => by simp only [modulus, BinaryNat.succ_eq_bits, Nat.fromBitsLE_bits]; omega)
+    (fun c => by
+      simpa only [product, Finset.range_zero, Finset.prod_empty, modulus,
+        BinaryNat.succ_eq_bits, Nat.fromBitsLE_bits] using seed_eq c)
+    (fun c k _ => by
+      rw [update_packet]
+      simp only [product, Finset.prod_range_succ, modulus, BinaryNat.succ_eq_bits,
+        Nat.fromBitsLE_bits, Nat.mul_mod, Nat.mod_mod])
   refine E.congr (funext fun c => ?_)
-  simp only [Function.comp_apply, BinaryNat.succ_eq_bits, Nat.fromBitsLE_bits, fold_eq]
+  simp only [Function.comp_apply, BinaryNat.succ_eq_bits, Nat.fromBitsLE_bits, modulus]
 
 end LeanCanny.Algebra.ChineseRemainder.CofactorBits

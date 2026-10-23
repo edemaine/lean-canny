@@ -70,16 +70,17 @@ theorem scan_eq_trailingDegree {R : Type*} [Semiring R] (p : Polynomial R) (k : 
       (by intro i hi; simp [Polynomial.coeff_eq_zero_of_lt_natTrailingDegree hi])]
     simp only [BinaryNat.pred_eq_bits, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.add_sub_cancel]
 
-def query (p : List Bool) : List Bool := pair (pairFst p) (BoundedFold.counter p)
+def query (p : List Bool) : List Bool := BoundedFold.query p
 
 def finish (z : List Bool) : List Bool :=
   if BoundedFold.accumulator (pairFst z) = [] then
     if pairSnd z = [true] then [] else BinaryNat.succ (BoundedFold.counter (pairFst z))
   else BoundedFold.accumulator (pairFst z)
 
-def update (f : List Bool → List Bool) (p : List Bool) : List Bool := finish (pair p (f (query p)))
+def update (f : List Bool → List Bool) (p : List Bool) : List Bool :=
+  BoundedFold.update finish f p
 
-theorem query_mem_FP : query ∈ FP := mem_FP_pair pairFst_mem_FP BoundedFold.counter_mem_FP
+theorem query_mem_FP : query ∈ FP := BoundedFold.query_mem_FP
 
 theorem finish_mem_FP : finish ∈ FP := by
   have ha := mem_FP_comp pairFst_mem_FP BoundedFold.accumulator_mem_FP
@@ -89,8 +90,7 @@ theorem finish_mem_FP : finish ∈ FP := by
   exact mem_FP_of_eq (g := finish) h (fun _ => by simp only [finish, Function.comp_apply])
 
 theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) : SpaceFunction (update f) := by
-  have Q := ((E.precompose query query_mem_FP).withInput).postcompose finish finish_mem_FP
-  exact Q.congr (funext fun _ => by simp only [update, Function.comp_apply])
+  exact BoundedFold.updateEvaluator E finish finish_mem_FP
 
 theorem fold_eq_scan (f : List Bool → List Bool) (c : List Bool) (zero : ℕ → Bool)
     (hf : ∀ k, f (pair c (BinaryNatCode.encode k)) = [zero k]) (k : ℕ) :
@@ -99,7 +99,7 @@ theorem fold_eq_scan (f : List Bool → List Bool) (c : List Bool) (zero : ℕ �
   | zero => rfl
   | succ k ih =>
     rw [BoundedFold.fold, ih]
-    simp only [update, finish, query, pairFst_pair, pairSnd_pair, BoundedFold.context_packet,
+    simp only [update, BoundedFold.update, finish, BoundedFold.query, pairFst_pair, pairSnd_pair, BoundedFold.context_packet,
       BoundedFold.counter_packet, BoundedFold.accumulator_packet, hf, scan, List.cons.injEq, and_true]
     split_ifs <;> simp only [BinaryNat.succ_eq_bits, BinaryNatCode.encode, Nat.fromBitsLE_bits]
 
@@ -109,17 +109,19 @@ theorem evaluator {R : Type*} [Semiring R] {f : List Bool → List Bool} (E : Sp
     (hcoeff : ∀ c i, f (pair c (BinaryNatCode.encode i)) = [decide ((p c).coeff i = 0)]) :
     SpaceFunction (fun c => BinaryNatCode.encode (p c).natTrailingDegree) := by
   have hb := mem_FP_comp hd BinaryNat.succ_mem_FP
-  let q := Classical.choose (output_length_poly_of_mem_FP hb)
-  have hq := Classical.choose_spec (output_length_poly_of_mem_FP hb)
-  have Q := BoundedFold.evaluator (updateEvaluator E) (BinaryNat.succ ∘ degree) (fun _ => []) hb (constFn_mem_FP []) q (by
-    intro c i hi
-    rw [fold_eq_scan f c (fun k => decide ((p c).coeff k = 0)) (hcoeff c)]
-    exact (scan_length_le _ i).trans ((Nat.size_le_size hi).trans
-      ((Nat.size_le.mpr (Nat.fromBitsLE_lt_pow_length _)).trans (hq c))))
+  have Q := BoundedFold.evaluator_eq (updateEvaluator E) (BinaryNat.succ ∘ degree) (fun _ => [])
+    hb (constFn_mem_FP []) (fun c k => scan (fun i => decide ((p c).coeff i = 0)) k)
+    (fun c k _ => fold_eq_scan f c (fun i => decide ((p c).coeff i = 0)) (hcoeff c) k)
+    (B := fun c => (BinaryNat.succ (degree c)).length)
+    (by simpa only [Turing.MultiTapeTM.encBits_apply, Function.comp_apply]
+      using (FP.computable hb).polyBounded_length)
+    (by
+      intro c i hi
+      exact (scan_length_le _ i).trans ((Nat.size_le_size hi).trans
+        (Nat.size_le.mpr (Nat.fromBitsLE_lt_pow_length _))))
   have F := Q.postcompose BinaryNat.pred BinaryNat.pred_mem_FP
   refine F.congr (funext fun c => ?_)
   simp only [Function.comp_apply, BinaryNat.succ_eq_bits, Nat.fromBitsLE_bits]
-  rw [fold_eq_scan f c (fun k => decide ((p c).coeff k = 0)) (hcoeff c)]
   exact scan_eq_trailingDegree (p c) _ (by have := hdegree c; omega)
 
 end LeanCanny.Algebra.LowestCoefficientBits

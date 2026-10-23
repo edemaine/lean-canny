@@ -32,19 +32,15 @@ theorem decider {L : Language} (D : SpaceDecider L)
       cases hp : p.2.2 <;>
         simp [child, hp, BinaryNatCode.encode, Function.comp_apply]
       exact decide_eq_true_iff.symm
-  have hfold (c : List Bool) (k : ℕ) :
-      TidyBoundedFold.fold child (fun _ => true) c k = allBelow L c k := by
-    induction k with
-    | zero => rfl
-    | succ k ih => simp only [TidyBoundedFold.fold, child, allBelow, ih]
-  have h := TidyBoundedFold.evaluator hchild
+  have h := TidyBoundedFold.evaluator_spec hchild
     (fromBitsLE_computable.comp (FP.computable hb))
     (ComputableTidilyInPolySpace.of_polyTime (ComputableTidilyInPolyTime.const true))
+    (allBelow L) (fun _ => rfl) (fun c k _ => by simp only [child, allBelow])
     (B := fun _ => 1) (PolyBounded.const 1) (fun _ _ _ => by simp)
   apply SpaceDecider.of_computable h
   intro c
   simp only [Function.comp_apply]
-  rw [hfold, hbound, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  rw [hbound, BinaryNatCode.encode, Nat.fromBitsLE_bits]
   exact (allBelow_correct L c (N c)).symm
 
 theorem language_mem_PSPACE {L : Language} (D : SpaceDecider L)

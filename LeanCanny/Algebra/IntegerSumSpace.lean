@@ -26,13 +26,14 @@ open scoped BigOperators
 def positive (a : ℕ → ℤ) (n : ℕ) : ℕ := ∑ i ∈ Finset.range n, (a i).toNat
 def negative (a : ℕ → ℤ) (n : ℕ) : ℕ := ∑ i ∈ Finset.range n, (-a i).toNat
 
-def query (p : List Bool) : List Bool := pair (pairFst p) (BoundedFold.counter p)
+def query (p : List Bool) : List Bool := BoundedFold.query p
 def finish (z : List Bool) : List Bool :=
   pair (BinaryNat.add (pair (pairFst (BoundedFold.accumulator (pairFst z))) (pairFst (pairSnd z))))
     (BinaryNat.add (pair (pairSnd (BoundedFold.accumulator (pairFst z))) (pairSnd (pairSnd z))))
-def update (f : List Bool → List Bool) (p : List Bool) : List Bool := finish (pair p (f (query p)))
+def update (f : List Bool → List Bool) (p : List Bool) : List Bool :=
+  BoundedFold.update finish f p
 
-theorem query_mem_FP : query ∈ FP := mem_FP_pair pairFst_mem_FP BoundedFold.counter_mem_FP
+theorem query_mem_FP : query ∈ FP := BoundedFold.query_mem_FP
 theorem finish_mem_FP : finish ∈ FP := by
   have ha := mem_FP_comp pairFst_mem_FP BoundedFold.accumulator_mem_FP
   have hp := mem_FP_comp (mem_FP_pair (mem_FP_comp ha pairFst_mem_FP)
@@ -46,9 +47,7 @@ theorem finish_mem_FP : finish ∈ FP := by
 
 theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
     SpaceFunction (update f) := by
-  let Q := (E.precompose query query_mem_FP).withInput.postcompose finish finish_mem_FP
-  refine Q.congr (funext fun p => ?_)
-  simp only [update, Function.comp_apply]
+  exact BoundedFold.updateEvaluator E finish finish_mem_FP
 
 theorem fold_eq_parts (f : List Bool → List Bool) (c : List Bool) (a : ℕ → ℤ)
     (hf : ∀ i, f (pair c (BinaryNatCode.encode i)) = SignStatisticBits.integerCode (a i)) (n : ℕ) :
@@ -58,7 +57,7 @@ theorem fold_eq_parts (f : List Bool → List Bool) (c : List Bool) (a : ℕ →
   | zero => rfl
   | succ n ih =>
     rw [BoundedFold.fold, ih]
-    simp only [update, query, finish, pairFst_pair, pairSnd_pair, BoundedFold.counter_packet,
+    simp only [update, BoundedFold.update, BoundedFold.query, finish, pairFst_pair, pairSnd_pair, BoundedFold.counter_packet,
       BoundedFold.context_packet, BoundedFold.accumulator_packet, hf, SignStatisticBits.integerCode]
     simp only [positive, negative, Finset.sum_range_succ,
       BinaryNat.add_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
@@ -167,10 +166,11 @@ theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
   let u := 2 * Polynomial.X + q + 2
   have hN (c : List Bool) : (Nat.fromBitsLE (count c)).size ≤ q.eval c.length :=
     (Nat.size_le.mpr (Nat.fromBitsLE_lt_pow_length (count c))).trans (hq c)
-  let Q := BoundedFold.evaluator (updateEvaluator E) count (fun _ => pair [] []) hc (constFn_mem_FP _)
-    (3 * (q + p.comp u) + 2) (by
+  let Q := BoundedFold.evaluator_eq (updateEvaluator E) count (fun _ => pair [] []) hc (constFn_mem_FP _)
+    (fun c k => pair (BinaryNatCode.encode (positive (a c) k)) (BinaryNatCode.encode (negative (a c) k)))
+    (fun c k _ => fold_eq_parts f c (a c) (hf c) k)
+    (Turing.MultiTapeTM.PolyBounded.of_polynomiallyBounded _ (.polynomial_eval (3 * (q + p.comp u) + 2))) (by
       intro c k hk
-      rw [fold_eq_parts f c (a c) (hf c)]
       have ha (i : ℕ) (hi : i < k) : (SignStatisticBits.integerCode (a c i)).length ≤ (p.comp u).eval c.length := by
         have hsize := (Nat.size_le_size (show i ≤ Nat.fromBitsLE (count c) by omega)).trans (hN c)
         have hquery : (pair c (BinaryNatCode.encode i)).length ≤ u.eval c.length := by
@@ -187,6 +187,6 @@ theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
   let R := Q.postcompose difference difference_mem_FP
   refine R.congr (funext fun c => ?_)
   simp only [Function.comp_apply]
-  rw [fold_eq_parts f c (a c) (hf c), difference_parts, parts_value]
+  rw [difference_parts, parts_value]
 
 end LeanCanny.Algebra.IntegerSumBits

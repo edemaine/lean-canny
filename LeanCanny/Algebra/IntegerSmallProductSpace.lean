@@ -46,7 +46,7 @@ theorem code_length_le (z : ℤ) (n : ℕ) (hz : z.natAbs ≤ 2 ^ n) :
 def finish (z : List Bool) : List Bool :=
   IntegerSumBits.multiply (pair (BoundedFold.accumulator (pairFst z)) (pairSnd z))
 def update (f : List Bool → List Bool) (p : List Bool) : List Bool :=
-  finish (pair p (f (IntegerSumBits.query p)))
+  BoundedFold.update finish f p
 
 theorem finish_mem_FP : finish ∈ FP := by
   have h := mem_FP_comp (mem_FP_pair (mem_FP_comp pairFst_mem_FP BoundedFold.accumulator_mem_FP)
@@ -57,9 +57,7 @@ theorem finish_mem_FP : finish ∈ FP := by
 
 theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
     SpaceFunction (update f) := by
-  let Q := (E.precompose IntegerSumBits.query IntegerSumBits.query_mem_FP).withInput.postcompose finish finish_mem_FP
-  refine Q.congr (funext fun p => ?_)
-  simp only [update, Function.comp_apply]
+  exact BoundedFold.updateEvaluator E finish finish_mem_FP
 
 theorem fold_eq_product (f : List Bool → List Bool) (c : List Bool) (a : ℕ → ℤ)
     (hf : ∀ i, f (pair c (BinaryNatCode.encode i)) = SignStatisticBits.integerCode (a i)) (n : ℕ) :
@@ -69,7 +67,7 @@ theorem fold_eq_product (f : List Bool → List Bool) (c : List Bool) (a : ℕ �
   | zero => rfl
   | succ n ih =>
     rw [BoundedFold.fold, ih]
-    simp only [update, IntegerSumBits.query, finish, pairFst_pair, pairSnd_pair,
+    simp only [update, BoundedFold.update, BoundedFold.query, finish, pairFst_pair, pairSnd_pair,
       BoundedFold.context_packet, BoundedFold.counter_packet, BoundedFold.accumulator_packet, hf,
       IntegerSumBits.multiply_codes, product, Finset.prod_range_succ]
 
@@ -85,15 +83,14 @@ theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
   have hp : ∀ c, Nat.fromBitsLE (count c) ≤ p.eval c.length := by
     intro c
     simpa only [List.length_replicate] using hp0 c
-  let Q := BoundedFold.evaluator (updateEvaluator E) count (fun _ => SignStatisticBits.integerCode 1)
-    hc (constFn_mem_FP _) (3 * p + 5) (by
+  exact BoundedFold.evaluator_eq (updateEvaluator E) count (fun _ => SignStatisticBits.integerCode 1)
+    hc (constFn_mem_FP _) (fun c k => SignStatisticBits.integerCode (product (a c) k))
+    (fun c k _ => fold_eq_product f c (a c) (hf c) k)
+    (Turing.MultiTapeTM.PolyBounded.of_polynomiallyBounded _ (.polynomial_eval (3 * p + 5))) (by
       intro c i hi
-      rw [fold_eq_product f c (a c) (hf c)]
       have h := code_length_le (product (a c) i) i (product_abs_le (a c) (ha c) i)
       have hn := hi.trans (hp c)
       simp only [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat]
       omega)
-  refine Q.congr (funext fun c => ?_)
-  exact fold_eq_product f c (a c) (hf c) _
 
 end LeanCanny.Algebra.IntegerSmallProductBits

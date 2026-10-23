@@ -65,14 +65,14 @@ theorem scan_eq_degree (p : ℤ[X]) (k : ℕ) (hk : p.natDegree < k) :
     · intro i hi _
       exact coeff_eq_zero_of_natDegree_lt hi
 
-def query (p : List Bool) : List Bool := pair (pairFst p) (BoundedFold.counter p)
+def query (p : List Bool) : List Bool := BoundedFold.query p
 def finish (z : List Bool) : List Bool :=
   if pairSnd z = [] then BoundedFold.accumulator (pairFst z)
   else BinaryNat.succ (BoundedFold.counter (pairFst z))
 def update (f : List Bool → List Bool) (p : List Bool) : List Bool :=
-  finish (pair p (f (query p)))
+  BoundedFold.update finish f p
 
-theorem query_mem_FP : query ∈ FP := mem_FP_pair pairFst_mem_FP BoundedFold.counter_mem_FP
+theorem query_mem_FP : query ∈ FP := BoundedFold.query_mem_FP
 theorem finish_mem_FP : finish ∈ FP := by
   have ha := mem_FP_comp pairFst_mem_FP BoundedFold.accumulator_mem_FP
   have hc := mem_FP_comp (mem_FP_comp pairFst_mem_FP BoundedFold.counter_mem_FP) BinaryNat.succ_mem_FP
@@ -83,9 +83,7 @@ theorem finish_mem_FP : finish ∈ FP := by
 
 theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
     SpaceFunction (update f) := by
-  let Q := ((E.precompose query query_mem_FP).withInput).postcompose finish finish_mem_FP
-  refine Q.congr (funext fun p => ?_)
-  simp only [update, Function.comp_apply]
+  exact BoundedFold.updateEvaluator E finish finish_mem_FP
 
 theorem fold_eq_scan (f : List Bool → List Bool) (c : List Bool) (a : ℕ → ℤ)
     (hf : ∀ i, f (pair c (BinaryNatCode.encode i)) = [] ↔ a i = 0) (k : ℕ) :
@@ -94,7 +92,7 @@ theorem fold_eq_scan (f : List Bool → List Bool) (c : List Bool) (a : ℕ → 
   | zero => rfl
   | succ k ih =>
     rw [BoundedFold.fold, ih]
-    simp only [update, finish, query, pairFst_pair, pairSnd_pair, BoundedFold.context_packet,
+    simp only [update, BoundedFold.update, finish, BoundedFold.query, pairFst_pair, pairSnd_pair, BoundedFold.context_packet,
       BoundedFold.counter_packet, BoundedFold.accumulator_packet]
     by_cases ha : a k = 0
     · rw [ite_eq_left ((hf k).mpr ha), scan, ite_eq_left ha]
@@ -108,16 +106,17 @@ theorem offsetEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
     SpaceFunction (fun c => BinaryNatCode.encode (if p c = 0 then 0 else (p c).natDegree + 1)) := by
   have hb := mem_FP_comp hd BinaryNat.succ_mem_FP
   let count := BinaryNat.succ ∘ degree
-  let s := Classical.choose (output_length_poly_of_mem_FP hb)
-  have hs : ∀ c, (count c).length ≤ s.eval c.length :=
-    Classical.choose_spec (output_length_poly_of_mem_FP hb)
-  let Q := BoundedFold.evaluator (updateEvaluator E) count (fun _ => []) hb (constFn_mem_FP []) s (by
-    intro c k hk
-    rw [fold_eq_scan f c (p c).coeff (hzero c), BinaryNatCode.length_encode]
-    exact ((Nat.size_le_size (scan_le (p c).coeff k)).trans
-      ((Nat.size_le_size hk).trans (Nat.size_le.mpr (Nat.fromBitsLE_lt_pow_length (count c))))).trans (hs c))
+  let Q := BoundedFold.evaluator_eq (updateEvaluator E) count (fun _ => []) hb (constFn_mem_FP [])
+    (fun c k => BinaryNatCode.encode (scan (p c).coeff k))
+    (fun c k _ => fold_eq_scan f c (p c).coeff (hzero c) k)
+    (B := fun c => (count c).length)
+    (by simpa only [Turing.MultiTapeTM.encBits_apply] using (FP.computable hb).polyBounded_length)
+    (by
+      intro c k hk
+      rw [BinaryNatCode.length_encode]
+      exact (Nat.size_le_size (scan_le (p c).coeff k)).trans
+        ((Nat.size_le_size hk).trans (Nat.size_le.mpr (Nat.fromBitsLE_lt_pow_length (count c)))))
   refine Q.congr (funext fun c => ?_)
-  rw [fold_eq_scan f c (p c).coeff (hzero c)]
   have hk : (p c).natDegree < Nat.fromBitsLE (count c) := by
     simp only [count, Function.comp_apply, BinaryNat.succ_eq_bits, Nat.fromBitsLE_bits]
     have := hdegree c
