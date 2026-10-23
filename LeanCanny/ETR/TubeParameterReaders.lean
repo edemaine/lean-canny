@@ -45,21 +45,29 @@ noncomputable def CoordinateReaders.precomposeUniform {source : List Bool → Li
     (C : CoordinateReaders source (fun c => n (pairFst c)) (fun c => d (pairFst c)))
     (f : List Bool → List Bool) (hf : f ∈ FP) :
     CoordinateReaders (source ∘ f) (fun c => n (f (pairFst c))) (fun c => d (f (pairFst c))) := by
-  simpa only [CoordinateReaders, Function.comp_def, coordinateContext, pairFst_pair] using
-    Algebra.RationalSubstitution.IntegerBits.CoordinateReaders.precompose
-      (arity := fun c => parameterCount (source (pairFst c)))
-      (n := fun c => n (pairFst c)) (d := fun c => d (pairFst c)) C
-      (coordinateContext f) (coordinateContext_mem_FP hf)
+  exact (Algebra.RationalSubstitution.IntegerBits.CoordinateReaders.precompose
+    (arity := fun c => parameterCount (source (pairFst c)))
+    (n := fun c => n (pairFst c)) (d := fun c => d (pairFst c)) C
+    (coordinateContext f) (coordinateContext_mem_FP hf)).congr
+      (arity' := fun c => parameterCount (source (f (pairFst c))))
+      (n' := fun c => n (f (pairFst c))) (d' := fun c => d (f (pairFst c)))
+      (funext fun c => by simp only [Function.comp_apply, coordinateContext, pairFst_pair])
+      (funext fun c => by simp only [coordinateContext, pairFst_pair])
+      (funext fun c => by simp only [coordinateContext, pairFst_pair])
 
 noncomputable def CoordinateBounds.precomposeUniform {source : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ}
     (B : CoordinateBounds source (fun c => n (pairFst c)) (fun c => d (pairFst c)))
     (f : List Bool → List Bool) (hf : f ∈ FP) :
     CoordinateBounds (source ∘ f) (fun c => n (f (pairFst c))) (fun c => d (f (pairFst c))) := by
-  simpa only [CoordinateBounds, Function.comp_def, coordinateContext, pairFst_pair] using
-    Algebra.RationalSubstitution.IntegerBits.CoordinateBounds.precompose
-      (arity := fun c => parameterCount (source (pairFst c)))
-      (n := fun c => n (pairFst c)) (d := fun c => d (pairFst c)) B
-      (coordinateContext f) (coordinateContext_mem_FP hf)
+  exact (Algebra.RationalSubstitution.IntegerBits.CoordinateBounds.precompose
+    (arity := fun c => parameterCount (source (pairFst c)))
+    (n := fun c => n (pairFst c)) (d := fun c => d (pairFst c)) B
+    (coordinateContext f) (coordinateContext_mem_FP hf)).congr
+      (arity' := fun c => parameterCount (source (f (pairFst c))))
+      (n' := fun c => n (f (pairFst c))) (d' := fun c => d (f (pairFst c)))
+      (funext fun c => by simp only [Function.comp_apply, coordinateContext, pairFst_pair])
+      (funext fun c => by simp only [coordinateContext, pairFst_pair])
+      (funext fun c => by simp only [coordinateContext, pairFst_pair])
 
 end LeanCanny.ETR.TubeParameter
