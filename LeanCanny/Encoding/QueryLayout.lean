@@ -37,17 +37,18 @@ private meta partial def fields (shape : TSyntax `queryShape) (value certificate
         (← `(LeanCanny.mem_FP_comp $certificate LeanCanny.pairSnd_mem_FP)))
   | _ => Macro.throwErrorAt shape "expected a field or a pair of query layouts"
 
-private meta def wordName (field : Ident) : Ident := mkIdent (field.getId.appendAfter "Word")
+private meta def binderName (field : Ident) (suffix : String) : MacroM Ident :=
+  return mkIdent (← Macro.addMacroScope (field.getId.appendAfter suffix))
 
 private meta partial def writer (shape : TSyntax `queryShape) : MacroM (TSyntax `term) := do
   match shape with
-  | `(queryShape| $field:ident) => return ⟨(wordName field).raw⟩
+  | `(queryShape| $field:ident) => return ⟨(← binderName field "Word").raw⟩
   | `(queryShape| ($left, $right)) => `(LeanCanny.pair $(← writer left) $(← writer right))
   | _ => Macro.throwErrorAt shape "expected a field or a pair of query layouts"
 
 private meta partial def writerCertificate (shape : TSyntax `queryShape) : MacroM (TSyntax `term) := do
   match shape with
-  | `(queryShape| $field:ident) => return ⟨(mkIdent (field.getId.appendAfter "Cert")).raw⟩
+  | `(queryShape| $field:ident) => return ⟨(← binderName field "Cert").raw⟩
   | `(queryShape| ($left, $right)) =>
     `(LeanCanny.mem_FP_pair $(← writerCertificate left) $(← writerCertificate right))
   | _ => Macro.throwErrorAt shape "expected a field or a pair of query layouts"
@@ -55,20 +56,20 @@ private meta partial def writerCertificate (shape : TSyntax `queryShape) : Macro
 macro_rules
   | `(query_layout $packet:ident $[certs $suffix:str]? := $shape:queryShape) => do
     let suffix := suffix.map (·.getString) |>.getD "_FP"
-    let q := mkIdent `q
+    let q := mkIdent (← Macro.addMacroScope `q)
     let fs ← fields shape (← `($q)) (← `(LeanCanny.id_mem_FP))
     let names := fs.map (·.1.getId)
     if names.toList.eraseDups.length != names.size then
       Macro.throwErrorAt shape "query field names must be distinct"
-    let args := fs.map (fun f => wordName f.1)
+    let args ← fs.mapM (fun f => binderName f.1 "Word")
     let argTerms : Array (TSyntax `term) := args.map (fun a => ⟨a.raw⟩)
     let application ← `($packet $argTerms*)
     let body ← writer shape
-    let functions := fs.map (fun f => mkIdent (f.1.getId.appendAfter "Fn"))
+    let functions ← fs.mapM (fun f => binderName f.1 "Fn")
     let mut certificates : Array (TSyntax ``Lean.Parser.Term.bracketedBinder) := #[]
     let mut values : Array (TSyntax `term) := #[]
     for ((field, _, _), fn) in fs.zip functions do
-      let h := mkIdent (field.getId.appendAfter "Cert")
+      let h ← binderName field "Cert"
       certificates := certificates.push (← `(bracketedBinder| ($h : $fn ∈ LeanCanny.FP)))
       values := values.push (← `($fn $q))
     let computation ← writerCertificate shape
@@ -85,7 +86,7 @@ macro_rules
     for (field, projection, certificate) in fs do
       let fp := mkIdent (field.getId.appendAfter suffix)
       let law := mkIdent (field.getId.appendAfter ("_" ++ packet.getId.toString))
-      let word := wordName field
+      let word ← binderName field "Word"
       commands := commands.push (← `(command|
         def $field ($q : List Bool) : List Bool := $projection))
       commands := commands.push (← `(command|
