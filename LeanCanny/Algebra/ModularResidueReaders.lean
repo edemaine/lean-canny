@@ -85,4 +85,51 @@ theorem maskValue_eq (p : List Bool → Prop) (f : List Bool → List Bool) (c :
   · simpa only [maskValue, h, ite_true] using hf
   · simp [maskValue, h, residueBits, BinaryNatCode.encode]
 
+/-- A native reader with canonical residue semantics on its declared domain.
+The domain permits partially prepared contexts without imposing any new
+invariant on malformed packets. -/
+structure Reader (modulus : List Bool → List Bool)
+    (meaning : (c : List Bool) → ZMod (ModularResidueSpace.m modulus c))
+    (valid : List Bool → Prop := fun _ => True) where
+  value : List Bool → List Bool
+  evaluator : SpaceFunction value
+  correct : ∀ c, valid c → value c = residueBits (meaning c)
+
+namespace Reader
+variable {modulus : List Bool → List Bool}
+variable {a b : (c : List Bool) → ZMod (ModularResidueSpace.m modulus c)}
+variable {valid : List Bool → Prop}
+
+def add (A : Reader modulus a valid) (B : Reader modulus b valid) (hm : modulus ∈ FP) :
+    Reader modulus (fun c => a c + b c) valid where
+  value := addValue modulus A.value B.value
+  evaluator := addEvaluator hm A.evaluator B.evaluator
+  correct c hc := addValue_eq modulus _ _ c _ _ (A.correct c hc) (B.correct c hc)
+
+def neg (A : Reader modulus a valid) (hm : modulus ∈ FP) :
+    Reader modulus (fun c => -a c) valid where
+  value := negValue modulus A.value
+  evaluator := negEvaluator hm A.evaluator
+  correct c hc := negValue_eq modulus _ c _ (A.correct c hc)
+
+noncomputable def mask (A : Reader modulus a valid) (p : List Bool → Prop) (hp : FPPred p) :
+    Reader modulus (fun c => if p c then a c else 0) valid where
+  value := maskValue p A.value
+  evaluator := maskEvaluator hp A.evaluator
+  correct c hc := maskValue_eq p _ c _ (A.correct c hc)
+
+/-- Semantic replacement preserves the native function definitionally. -/
+def congr (A : Reader modulus a valid) (h : ∀ c, valid c → a c = b c) : Reader modulus b valid where
+  value := A.value
+  evaluator := A.evaluator
+  correct c hc := by rw [← h c hc]; exact A.correct c hc
+
+def precompose (A : Reader modulus a valid) (input : List Bool → List Bool) (hi : input ∈ FP) :
+    Reader (modulus ∘ input) (fun c => a (input c)) (valid ∘ input) where
+  value := A.value ∘ input
+  evaluator := A.evaluator.precompose input hi
+  correct c hc := A.correct (input c) hc
+
+end Reader
+
 end LeanCanny.Algebra.ModularResidueReaders
