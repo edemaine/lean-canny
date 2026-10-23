@@ -26,17 +26,10 @@ theorem countTrue_unary : UnaryFn (fun bits : List Bool => bits.count true) :=
     Turing.MultiTapeTM.ComputableTidilyInPolyTime.id'
     (Turing.MultiTapeTM.ComputableTidilyInPolyTime.const true)
 
-theorem count_false_add_true (bits : List Bool) :
-    bits.count false + bits.count true = bits.length := by
-  induction bits with
-  | nil => rfl
-  | cons b bits ih => cases b <;> simp at * <;> omega
-
 theorem countFalse_unary : UnaryFn (fun bits : List Bool => bits.count false) :=
-  ((UnaryFn.length id_mem_FP).sub countTrue_unary).of_eq fun bits => by
-    change bits.length - bits.count true = bits.count false
-    have h := count_false_add_true bits
-    omega
+  Turing.MultiTapeTM.ComputableTidilyInPolyTime.bitsCountWithInput
+    Turing.MultiTapeTM.ComputableTidilyInPolyTime.id'
+    (Turing.MultiTapeTM.ComputableTidilyInPolyTime.const false)
 
 /-- Prefix counts are polynomial-time functions of the word and a unary position. -/
 theorem prefixTrue_unary {bits : List Bool → List Bool} {n : List Bool → ℕ}
@@ -114,18 +107,9 @@ theorem stringEq_fppred {a b : List Bool → List Bool} (ha : a ∈ FP) (hb : b 
 
 /-- Repeat a fixed finite word a polynomial-time unary number of times. -/
 theorem repeatWord_mem_FP {n : List Bool → ℕ} (hn : UnaryFn n) (word : List Bool) :
-    (fun z => (List.replicate (n z) word).flatten) ∈ FP := by
-  have hstep : (fun xs : List Bool => word ++ xs) ∈ FP :=
-    appendFn_mem_FP (constFn_mem_FP word) id_mem_FP
-  have hiter := iterate_mem_FP_of_step_le hstep (constFn_mem_FP []) hn.mem_FP word.length
-    (fun z i _ => by rw [Function.iterate_succ_apply']; simp [Nat.add_comm])
-  have heq : ∀ k : ℕ, (fun xs : List Bool => word ++ xs)^[k] [] =
-      (List.replicate k word).flatten := by
-    intro k
-    induction k with
-    | zero => rfl
-    | succ k ih => simp [Function.iterate_succ_apply', ih, List.replicate_succ]
-  refine mem_FP_of_eq hiter fun z => ?_
-  simpa only [List.length_replicate] using heq (n z)
+    (fun z => (List.replicate (n z) word).flatten) ∈ FP :=
+  Turing.MultiTapeTM.ComputableTidilyInPolyTime.bitsFlatten
+    (Turing.MultiTapeTM.ComputableTidilyInPolyTime.replicate hn
+      (Turing.MultiTapeTM.ComputableTidilyInPolyTime.const word))
 
 end LeanCanny.Encoding.Brackets
