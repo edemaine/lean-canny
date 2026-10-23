@@ -29,10 +29,7 @@ noncomputable def coefficientPolynomial (D : Derivation K B B) (p : Polynomial B
 theorem eval_map (x : L) (q : PolynomialModule B B) :
     PolynomialModule.eval x (PolynomialModule.map L (Algebra.linearMap B L) q) =
       Polynomial.aeval x (PolynomialModule.equivPolynomial q) := by
-  induction q using PolynomialModule.induction_linear with
-  | zero => simp
-  | add p q hp hq => simp only [map_add, hp, hq]
-  | single n b => simp [mul_comm]
+  exact (PolynomialModule.aeval_equivPolynomial q x).symm
 
 theorem chain_rule (D : Derivation K B B) (δ : Derivation K L L)
     (hD : ∀ b : B, δ (algebraMap B L b) = algebraMap B L (D b)) (x : L) (p : Polynomial B) :

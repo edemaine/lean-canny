@@ -69,11 +69,9 @@ theorem specialized_factors_ne_zero (c : Certificate I) (φ : A →+* K) (hφ : 
 
 theorem specialized_polynomial_ne_zero (c : Certificate I) (φ : A →+* K) (hφ : φ c.exceptional ≠ 0) (i : ι) :
     (c.polynomial i).map φ ≠ 0 := by
-  intro he
-  have hc := congrArg (fun p : Polynomial K => p.coeff (c.polynomial i).natDegree) he
-  have hz : φ (c.polynomial i).leadingCoeff = 0 := by
-    simpa only [Polynomial.coeff_map, Polynomial.coeff_natDegree, Polynomial.coeff_zero] using hc
-  exact (c.specialized_factors_ne_zero φ hφ i).2 hz
+  apply Polynomial.leadingCoeff_ne_zero.mp
+  simpa only [Polynomial.leadingCoeff_map_of_leadingCoeff_ne_zero φ (c.specialized_factors_ne_zero φ hφ i).2] using
+    (c.specialized_factors_ne_zero φ hφ i).2
 
 /-- The annihilators remain over K even when the solution lies in a larger E. -/
 theorem aeval_specialized_eq_zero {E : Type*} [Field E] [Algebra K E]

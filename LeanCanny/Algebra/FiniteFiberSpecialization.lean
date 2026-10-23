@@ -91,11 +91,8 @@ theorem finite_specialization_of_certificates [Fintype ι]
     rw [map_mul] at hi
     exact mul_ne_zero_iff.mp hi
   have hmap (i : ι) : (Q i).map φ ≠ 0 := by
-    intro he
-    have hc := congrArg (fun p : Polynomial L => p.coeff (Q i).natDegree) he
-    have hzero : φ (Q i).leadingCoeff = 0 := by
-      simpa only [Polynomial.coeff_map, Polynomial.coeff_natDegree, Polynomial.coeff_zero] using hc
-    exact (hfac i).2 hzero
+    apply Polynomial.leadingCoeff_ne_zero.mp
+    simpa only [Polynomial.leadingCoeff_map_of_leadingCoeff_ne_zero φ (hfac i).2] using (hfac i).2
   apply (Set.Finite.pi' (fun i => Polynomial.finite_setOfPred_isRoot (hmap i))).subset
   intro x hx i
   obtain ⟨n, hn⟩ := hm i

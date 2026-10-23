@@ -90,12 +90,7 @@ theorem algebraic_coordinates [CharZero K] (f : σ → MvPolynomial ι K)
 
 theorem algebraic_finset_sum {τ : Type*} (s : Finset τ) (g : τ → L)
     (hg : ∀ i ∈ s, IsAlgebraic B (g i)) : IsAlgebraic B (∑ i ∈ s, g i) := by
-  classical
-  induction s using Finset.induction_on with
-  | empty => simpa only [Finset.sum_empty] using (isAlgebraic_zero : IsAlgebraic B (0 : L))
-  | @insert a s ha hs =>
-    rw [Finset.sum_insert ha]
-    exact (hg a (Finset.mem_insert_self a s)).add (hs (fun i hi => hg i (Finset.mem_insert_of_mem hi)))
+  exact (IsIntegral.sum g (fun i hi => (hg i hi).isIntegral)).isAlgebraic
 
 theorem algebraic_normalized_coordinates [CharZero K] (f : σ → MvPolynomial ι K)
     (x : ι → L) (v : ι → B) (lambda : σ → L) (hf : ∀ a, aeval x (f a) = 0)

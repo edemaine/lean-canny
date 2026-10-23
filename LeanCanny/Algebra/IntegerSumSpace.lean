@@ -6,6 +6,7 @@ module
 
 public import LeanCanny.Algebra.SignStatisticSpace
 public import LeanCanny.Computation.SpaceFunctionChain
+public import Cslib.Foundations.Data.Polynomial.Monotone
 import Mathlib.Tactic.Ring
 
 /-! # Streaming signed sums with space-bounded integer evaluators
@@ -17,16 +18,6 @@ the summands' bit length plus the binary length of the number of summands.
 @[expose] public section
 
 namespace LeanCanny.Algebra.IntegerSumBits
-
-private theorem polynomial_eval_mono_nat (p : Polynomial ℕ) : Monotone p.eval := by
-  induction p using Polynomial.induction_on' with
-  | add p q hp hq =>
-    intro a b hab
-    simpa only [Polynomial.eval_add] using Nat.add_le_add (hp hab) (hq hab)
-  | monomial n c =>
-    intro a b hab
-    simpa only [Polynomial.eval_monomial] using
-      Nat.mul_le_mul_left c (Nat.pow_le_pow_left hab n)
 
 open LeanCanny.Encoding
 open LeanCanny.Computation
@@ -188,7 +179,7 @@ theorem evaluator {f : List Bool → List Bool} (E : SpaceFunction f)
           omega
         have h := hp (pair c (BinaryNatCode.encode i))
         rw [hf c i] at h
-        simpa only [Polynomial.eval_comp] using h.trans (polynomial_eval_mono_nat p hquery)
+        simpa only [Polynomial.eval_comp] using h.trans (p.eval_mono hquery)
       have h := parts_length_le (a c) k _ _ hk ha
       have hn := hN c
       simp only [Polynomial.eval_add, Polynomial.eval_mul, Polynomial.eval_ofNat]
