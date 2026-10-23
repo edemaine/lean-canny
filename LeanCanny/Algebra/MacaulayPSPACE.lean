@@ -40,16 +40,13 @@ theorem dimensionCode_mem_FP {L : Layout} (h : L.PolyTime) : dimensionCode L ∈
 
 theorem budgetCode_mem_FP {L : Layout} (h : L.PolyTime) {bits : List Bool → List Bool}
     (hb : bits ∈ FP) : budgetCode L bits ∈ FP := by
-  have hd := dimensionCode_mem_FP h
-  have hs := bits_mem_FP (UnaryFn.length hd)
-  have hleft := mem_FP_comp (mem_FP_pair hs hd) BinaryNat.mul_mem_FP
-  have hright := mem_FP_comp (mem_FP_pair hd hb) BinaryNat.mul_mem_FP
-  have hsum := mem_FP_comp (mem_FP_pair hleft hright) BinaryNat.add_mem_FP
-  have hout := mem_FP_comp hsum BinaryNat.succ_mem_FP
-  refine mem_FP_of_eq (g := budgetCode L bits) hout ?_
-  intro c
-  simp only [Function.comp_apply, budgetCode]
-  rfl
+  have hn : BinaryFn (fun c => FixedWidthPolynomial.count (L.arity c) (L.width c)) :=
+    BinaryFn.of_bits (mem_FP_of_eq (dimensionCode_mem_FP h) (FixedWidthPolynomial.countCode_code L.arity L.width))
+  have hout := ((hn.size.mul hn).add (hn.mul (BinaryFn.fromBits hb))).add (BinaryFn.const 1)
+  refine mem_FP_of_eq hout.bits_mem_FP (fun c => ?_)
+  simp only [budgetCode, dimensionCode, FixedWidthPolynomial.countCode_code,
+    BinaryNat.succ_eq_bits, BinaryNat.add_pair, BinaryNat.mul_pair,
+    BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.size_eq_bits_len]
 
 theorem budgetCode_code (L : Layout) (bits : List Bool → List Bool) (B : List Bool → ℕ)
     (hb : ∀ c, bits c = BinaryNatCode.encode (B c)) (c : List Bool) :
@@ -104,20 +101,18 @@ noncomputable def Access.integer {F : Family} (a : Access F) : Berkowitz.Integer
   entry_eq := fun q i j => entry_packet F.layout a.coefficient q (F.polynomial (pairFst q))
     (a.coefficient_eq q) i j
 
-theorem Access.integer_controls {F : Family} (a : Access F) (h : F.layout.PolyTime)
-    (hb : a.bits ∈ FP) : a.integer.ControlsPolyTime := by
-  constructor
-  · simpa only [Access.integer] using dimensionCode_mem_FP h
-  · simpa only [Access.integer] using budgetCode_mem_FP h hb
-
 theorem Access.integer_entryEvaluator {F : Family} (a : Access F) (h : F.layout.PolyTime)
     (E : SpaceFunction a.coefficient) : SpaceFunction a.integer.entry := by
   have EC := entryEvaluator h E
   simpa only [Access.integer] using EC
 
 theorem Access.decider {F : Family} (a : Access F) (h : F.layout.PolyTime)
-    (hb : a.bits ∈ FP) (E : SpaceFunction a.coefficient) : SpaceDecider F.zeroLanguage :=
-  Berkowitz.IntegerAccess.deciderWithEntry a.integer (a.integer_controls h hb) (a.integer_entryEvaluator h E)
+    (hb : a.bits ∈ FP) (E : SpaceFunction a.coefficient) : SpaceDecider F.zeroLanguage := by
+  have controls : a.integer.ControlsPolyTime := by
+    constructor
+    · simpa only [Access.integer] using dimensionCode_mem_FP h
+    · simpa only [Access.integer] using budgetCode_mem_FP h hb
+  exact Berkowitz.IntegerAccess.deciderWithEntry a.integer controls (a.integer_entryEvaluator h E)
 
 theorem Access.zeroLanguage_mem_PSPACE {F : Family} (a : Access F) (h : F.layout.PolyTime)
     (hb : a.bits ∈ FP) (E : SpaceFunction a.coefficient) : F.zeroLanguage ∈ PSPACE :=
