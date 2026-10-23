@@ -36,9 +36,7 @@ theorem powerComparisonMatrix_map (φ : R →+* S) (p : Fin n → Poly n R) (d :
   | succ k =>
     rw [powerComparisonMatrix_succ, powerComparisonMatrix_succ, homotopyMatrix_map φ, homotopyMatrix_map φ,
       canonicalMatrix_map φ p d (Macaulay.level d) W hp hW (k + 1), canonicalMatrix_powers_map φ,
-      ← Matrix.map_mul, ← Matrix.map_mul]
-    funext a b
-    exact (φ.map_add _ _).symm
+      ← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_add φ φ.map_add]
 
 theorem powerComparisonMatrix_specialization (φ : R →+* S)
     (p : Fin n → Poly n R) (d : Fin n → ℕ) (W : ℕ)
@@ -52,20 +50,9 @@ theorem powerComparisonMatrix_det_specialization (φ : R →+* S)
     (p : Fin n → Poly n R) (d : Fin n → ℕ) (W : ℕ)
     (hp : ∀ i, (p i).IsHomogeneous (d i)) (hW : Macaulay.level d < 2 ^ W)
     (hpower : ∀ i, (p i).map φ = Macaulay.powers (R := S) d i) (k : ℕ) :
-    φ (powerComparisonMatrix p d W hp hW k).det = 1 := by
-  rw [φ.map_det]
-  change ((powerComparisonMatrix p d W hp hW k).map φ).det = 1
-  rw [powerComparisonMatrix_specialization φ p d W hp hW hpower k, Matrix.det_one]
-
-theorem powerComparisonMatrix_det_ne_zero_of_specialization [Nontrivial S] (φ : R →+* S)
-    (p : Fin n → Poly n R) (d : Fin n → ℕ) (W : ℕ)
-    (hp : ∀ i, (p i).IsHomogeneous (d i)) (hW : Macaulay.level d < 2 ^ W)
-    (hpower : ∀ i, (p i).map φ = Macaulay.powers (R := S) d i) (k : ℕ) :
-    (powerComparisonMatrix p d W hp hW k).det ≠ 0 := by
-  intro hz
-  have he := powerComparisonMatrix_det_specialization φ p d W hp hW hpower k
-  rw [hz, map_zero] at he
-  exact zero_ne_one he
+    φ (powerComparisonMatrix p d W hp hW k).det = 1 :=
+  MatrixScalarTransport.det_specialization φ _
+    (powerComparisonMatrix_specialization φ p d W hp hW hpower k)
 
 section Field
 variable {K : Type*} [Field K]
@@ -104,11 +91,8 @@ theorem fraction_powerComparison_det_ne_zero (φ : R →+* S)
     (powerComparisonMatrix (fun i => (p i).map (algebraMap R K)) d W
       (fun i => (hp i).map (algebraMap R K)) hW k).det ≠ 0 := by
   rw [powerComparisonMatrix_map (algebraMap R K) p d W hp hW k]
-  have hm := (algebraMap R K).map_det (powerComparisonMatrix p d W hp hW k)
-  change (algebraMap R K) (powerComparisonMatrix p d W hp hW k).det =
-    ((powerComparisonMatrix p d W hp hW k).map (algebraMap R K)).det at hm
-  rw [← hm, ne_eq, IsFractionRing.to_map_eq_zero_iff]
-  exact powerComparisonMatrix_det_ne_zero_of_specialization φ p d W hp hW hpower k
+  exact MatrixScalarTransport.det_map_ne_zero_of_specialization φ (algebraMap R K)
+    (IsFractionRing.injective R K) _ (powerComparisonMatrix_det_specialization φ p d W hp hW hpower k)
 
 end FractionField
 end LeanCanny.Algebra.KoszulWeighted

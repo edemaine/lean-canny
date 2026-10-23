@@ -41,21 +41,8 @@ theorem genericShift_matrix_zero_surjective (p : Fin n → Poly n R) (d : Fin n 
 theorem genericShift_weighted_zero_surjective (p : Fin n → Poly n R) (d : Fin n → ℕ) (W : ℕ)
     (hp : ∀ i, (p i).IsHomogeneous (d i)) (hW : Macaulay.level d < 2 ^ W) :
     Function.Surjective (differential (Macaulay.genericShift p d) d (Macaulay.level d) W
-      (Macaulay.genericShift_homogeneous p d hp) hW 0) := by
-  intro x
-  obtain ⟨w, hw⟩ := genericShift_matrix_zero_surjective p d W hp hW
-    ((canonicalBasis (R := RatFunc R) d (Macaulay.level d) W 0).equivFun x)
-  change Matrix.vecMul w (canonicalMatrix (Macaulay.genericShift p d) d (Macaulay.level d) W
-    (Macaulay.genericShift_homogeneous p d hp) hW 0) =
-      (canonicalBasis (R := RatFunc R) d (Macaulay.level d) W 0).equivFun x at hw
-  let y := (canonicalBasis (R := RatFunc R) d (Macaulay.level d) W 1).equivFun.symm w
-  refine ⟨y, ?_⟩
-  apply (canonicalBasis (R := RatFunc R) d (Macaulay.level d) W 0).equivFun.injective
-  have hm := canonicalMatrix_vecMul_coordinates (Macaulay.genericShift p d) d (Macaulay.level d) W
-    (Macaulay.genericShift_homogeneous p d hp) hW 0 y
-  have hy : (canonicalBasis (R := RatFunc R) d (Macaulay.level d) W 1).equivFun y = w :=
-    LinearEquiv.apply_symm_apply _ _
-  rw [hy, hw] at hm
-  exact hm.symm
+      (Macaulay.genericShift_homogeneous p d hp) hW 0) :=
+  (weighted_surjective_iff_matrix _ d (Macaulay.level d) W _ hW 0).mpr
+    (genericShift_matrix_zero_surjective p d W hp hW)
 
 end LeanCanny.Algebra.KoszulWeighted

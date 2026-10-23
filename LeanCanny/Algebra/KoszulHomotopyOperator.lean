@@ -47,20 +47,12 @@ theorem homotopyOperator_comp_homotopy (p : Fin n → Poly n R) (d : Fin n → �
       (weightedHomotopy d W hW (k + 1)).comp (homotopyOperator p d W hp hW k) := by
   apply LinearMap.ext
   intro x
-  change differential p d (Macaulay.level d) W hp hW (k + 2)
-        (weightedHomotopy d W hW (k + 2) (weightedHomotopy d W hW (k + 1) x)) +
-      weightedHomotopy d W hW (k + 1)
-        (differential p d (Macaulay.level d) W hp hW (k + 1) (weightedHomotopy d W hW (k + 1) x)) =
-    weightedHomotopy d W hW (k + 1)
-      (differential p d (Macaulay.level d) W hp hW (k + 1) (weightedHomotopy d W hW (k + 1) x) +
-        weightedHomotopy d W hW k (differential p d (Macaulay.level d) W hp hW k x))
   have hnext := LinearMap.congr_fun (weightedHomotopy_comp (R := R) d W hW (k + 1)) x
-  change weightedHomotopy d W hW (k + 2) (weightedHomotopy d W hW (k + 1) x) = 0 at hnext
   have hprev := LinearMap.congr_fun (weightedHomotopy_comp (R := R) d W hW k)
     (differential p d (Macaulay.level d) W hp hW k x)
-  change weightedHomotopy d W hW (k + 1)
-    (weightedHomotopy d W hW k (differential p d (Macaulay.level d) W hp hW k x)) = 0 at hprev
-  rw [hnext, map_zero, zero_add, map_add, hprev, add_zero]
+  simp only [LinearMap.comp_apply, LinearMap.zero_apply] at hnext hprev
+  simp only [homotopyOperator, LinearMap.add_apply, LinearMap.comp_apply, map_add,
+    hnext, hprev, map_zero, zero_add, add_zero]
 
 theorem homotopyOperator_zero_apply_homotopy (p : Fin n → Poly n R) (d : Fin n → ℕ) (W : ℕ)
     (hp : ∀ i, (p i).IsHomogeneous (d i)) (hW : Macaulay.level d < 2 ^ W)

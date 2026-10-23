@@ -41,11 +41,7 @@ theorem powerComparison_chain (p : Fin n → Poly n R) (d : Fin n → ℕ) (W : 
     have hd := LinearMap.congr_fun (differential_comp p d (Macaulay.level d) W hp hW 0)
       (weightedHomotopy d W hW 1 x)
     simp only [LinearMap.comp_apply, LinearMap.zero_apply] at hd
-    change differential p d (Macaulay.level d) W hp hW 0
-      (differential p d (Macaulay.level d) W hp hW 1 (weightedHomotopy d W hW 1 x) +
-        weightedHomotopy d W hW 0 (differential (Macaulay.powers d) d (Macaulay.level d) W (powers_homogeneous d) hW 0 x)) = _
-    rw [map_add, hd, zero_add]
-    rfl
+    simp only [powerComparison, LinearMap.comp_apply, LinearMap.add_apply, map_add, hd, zero_add]
   | succ k =>
     apply LinearMap.ext
     intro x
@@ -54,17 +50,8 @@ theorem powerComparison_chain (p : Fin n → Poly n R) (d : Fin n → ℕ) (W : 
     have he := LinearMap.congr_fun (differential_comp (Macaulay.powers (R := R) d) d (Macaulay.level d) W
       (powers_homogeneous d) hW k) x
     simp only [LinearMap.comp_apply, LinearMap.zero_apply] at hd he
-    change differential p d (Macaulay.level d) W hp hW (k + 1)
-      (differential p d (Macaulay.level d) W hp hW (k + 1 + 1) (weightedHomotopy d W hW (k + 1 + 1) x) +
-        weightedHomotopy d W hW (k + 1)
-          (differential (Macaulay.powers d) d (Macaulay.level d) W (powers_homogeneous d) hW (k + 1) x)) =
-      differential p d (Macaulay.level d) W hp hW (k + 1)
-        (weightedHomotopy d W hW (k + 1)
-          (differential (Macaulay.powers d) d (Macaulay.level d) W (powers_homogeneous d) hW (k + 1) x)) +
-      weightedHomotopy d W hW k
-        (differential (Macaulay.powers d) d (Macaulay.level d) W (powers_homogeneous d) hW k
-          (differential (Macaulay.powers d) d (Macaulay.level d) W (powers_homogeneous d) hW (k + 1) x))
-    rw [map_add, hd, zero_add, he, map_zero, add_zero]
+    simp only [powerComparison, LinearMap.comp_apply, LinearMap.add_apply, map_add,
+      hd, he, map_zero, zero_add, add_zero]
 
 theorem powerComparison_powers (d : Fin n → ℕ) (W : ℕ) (hW : Macaulay.level d < 2 ^ W) (k : ℕ) :
     powerComparison (Macaulay.powers (R := R) d) d W (powers_homogeneous d) hW k = LinearMap.id := by

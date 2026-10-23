@@ -93,20 +93,11 @@ theorem homotopyMatrix_mul (d : Fin n → ℕ) (W : ℕ) (hW : Macaulay.level d 
 
 theorem weightedHomotopy_exact (d : Fin n → ℕ) (W : ℕ) (hW : Macaulay.level d < 2 ^ W) (k : ℕ) :
     LinearMap.ker (weightedHomotopy (R := R) d W hW (k + 1)) =
-      LinearMap.range (weightedHomotopy (R := R) d W hW k) := by
-  ext x
-  constructor
-  · intro hx
-    refine ⟨differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW k x, ?_⟩
-    have h := LinearMap.congr_fun (weightedHomotopy_identity (R := R) d W hW k) x
-    change differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW (k + 1)
-        (weightedHomotopy (R := R) d W hW (k + 1) x) +
-      weightedHomotopy (R := R) d W hW k
-        (differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW k x) = x at h
-    rw [hx, map_zero, zero_add] at h
-    exact h
-  · rintro ⟨y, rfl⟩
-    exact LinearMap.congr_fun (weightedHomotopy_comp (R := R) d W hW k) y
+      LinearMap.range (weightedHomotopy (R := R) d W hW k) :=
+  FiniteComplexTransport.exact_of_homotopy _ _
+    (differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW k)
+    (differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW (k + 1))
+    (weightedHomotopy_comp d W hW k) ((add_comm _ _).trans (weightedHomotopy_identity d W hW k))
 
 theorem weightedHomotopy_zero_injective (d : Fin n → ℕ) (W : ℕ) (hW : Macaulay.level d < 2 ^ W) :
     Function.Injective (weightedHomotopy (R := R) d W hW 0) := by

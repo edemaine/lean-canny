@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.KoszulLevelHomotopy
+public import LeanCanny.Algebra.FiniteComplexTransport
 
 /-! # Contraction of the finite weighted pure-power Koszul complex
 
@@ -97,31 +98,12 @@ theorem weightedHomotopy_zero_identity (d : Fin n → ℕ) (W : ℕ) (hW : Macau
   rw [differential_degree_zero _ _ _ _ _ x.property, map_zero, add_zero] at h
   exact h
 
-theorem powers_weighted_kernel_iff (d : Fin n → ℕ) (W k : ℕ) (hW : Macaulay.level d < 2 ^ W)
-    (x : Total n R) (hx : x ∈ space (R := R) d (Macaulay.level d) W k) :
-    KoszulExterior.differential (Macaulay.powers (R := R) d) x = 0 ↔
-      ∃ y ∈ space (R := R) d (Macaulay.level d) W (k + 1),
-        KoszulExterior.differential (Macaulay.powers (R := R) d) y = x := by
-  constructor
-  · intro hz
-    refine ⟨levelHomotopy (R := R) d x, levelHomotopy_mem d W k hW x hx, ?_⟩
-    have h := levelHomotopy_identity d W k x hx
-    simpa only [hz, map_zero, add_zero] using h
-  · rintro ⟨y, _, rfl⟩
-    exact KoszulExterior.differential_square_zero _ _
-
 theorem powers_weighted_exact (d : Fin n → ℕ) (W : ℕ) (hW : Macaulay.level d < 2 ^ W) (k : ℕ) :
     LinearMap.ker (differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW k) =
-      LinearMap.range (differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW (k + 1)) := by
-  ext x
-  constructor
-  · intro hx
-    have hz : KoszulExterior.differential (Macaulay.powers (R := R) d) x.val = 0 := congrArg Subtype.val hx
-    obtain ⟨y, hy, he⟩ := (powers_weighted_kernel_iff d W (k + 1) hW x.val x.property).mp hz
-    exact ⟨⟨y, hy⟩, Subtype.ext he⟩
-  · rintro ⟨y, rfl⟩
-    apply Subtype.ext
-    exact KoszulExterior.differential_square_zero _ _
+      LinearMap.range (differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW (k + 1)) :=
+  FiniteComplexTransport.exact_of_homotopy _ _ _ _
+    (differential_comp _ d (Macaulay.level d) W (powers_homogeneous d) hW k)
+    (weightedHomotopy_identity d W hW k)
 
 theorem powers_weighted_zero_surjective (d : Fin n → ℕ) (W : ℕ) (hW : Macaulay.level d < 2 ^ W) :
     Function.Surjective (differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW 0) := by

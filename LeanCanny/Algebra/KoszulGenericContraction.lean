@@ -58,20 +58,13 @@ noncomputable def contractionMatrix (p : Fin n → Poly n R) (d : Fin n → ℕ)
   homotopyMatrix d W hW (k + 1) * canonicalMatrix p d (Macaulay.level d) W hp hW (k + 1) +
     canonicalMatrix p d (Macaulay.level d) W hp hW k * homotopyMatrix d W hW k
 
-private theorem mapped_pair {I J K : Type*} [Fintype J] [Fintype K]
-    (φ : R →+* S) (H : Matrix I J R) (B : Matrix J I R) (A : Matrix I K R) (J' : Matrix K I R) :
-    H.map φ * B.map φ + A.map φ * J'.map φ = (H * B + A * J').map φ := by
-  rw [← Matrix.map_mul, ← Matrix.map_mul]
-  funext a b
-  exact (φ.map_add _ _).symm
-
 theorem contractionMatrix_map (φ : R →+* S) (p : Fin n → Poly n R) (d : Fin n → ℕ) (W : ℕ)
     (hp : ∀ i, (p i).IsHomogeneous (d i)) (hW : Macaulay.level d < 2 ^ W) (k : ℕ) :
     contractionMatrix (fun i => (p i).map φ) d W (fun i => (hp i).map φ) hW k =
       (contractionMatrix p d W hp hW k).map φ := by
   unfold contractionMatrix
   rw [canonicalMatrix_map, canonicalMatrix_map, homotopyMatrix_map φ, homotopyMatrix_map φ]
-  exact mapped_pair φ _ _ _ _
+  rw [← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_add φ φ.map_add]
 
 private theorem subtractive_pair {I J K : Type*} [Fintype I] [Fintype J] [Fintype K] [DecidableEq I]
     (H : Matrix I J R) (B B₀ : Matrix J I R) (A A₀ : Matrix I K R) (J' : Matrix K I R)
@@ -80,9 +73,6 @@ private theorem subtractive_pair {I J K : Type*} [Fintype I] [Fintype J] [Fintyp
       (A.map Polynomial.C - (Polynomial.X : Polynomial R) • A₀.map Polynomial.C) * J'.map Polynomial.C =
       AffineCharacteristic.subtractiveMatrix (H * B + A * J') := by
   rw [Matrix.mul_sub, Matrix.mul_smul, Matrix.sub_mul, Matrix.smul_mul]
-  have hbase := mapped_pair (Polynomial.C : R →+* Polynomial R) H B A J'
-  have hcoord := mapped_pair (Polynomial.C : R →+* Polynomial R) H B₀ A₀ J'
-  rw [h₀, Matrix.map_one Polynomial.C (map_zero _) (map_one _)] at hcoord
   calc
     _ = (H.map Polynomial.C * B.map Polynomial.C + A.map Polynomial.C * J'.map Polynomial.C) -
         (Polynomial.X : Polynomial R) •
@@ -90,7 +80,10 @@ private theorem subtractive_pair {I J K : Type*} [Fintype I] [Fintype J] [Fintyp
       rw [smul_add]
       abel
     _ = (H * B + A * J').map Polynomial.C - (Polynomial.X : Polynomial R) • (1 : Matrix I I (Polynomial R)) := by
-      rw [hbase, hcoord]
+      rw [← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_mul, ← Matrix.map_mul,
+        ← Matrix.map_add Polynomial.C Polynomial.C.map_add,
+        ← Matrix.map_add Polynomial.C Polynomial.C.map_add,
+        h₀, Matrix.map_one Polynomial.C (map_zero _) (map_one _)]
     _ = _ := by
       funext a b
       change Polynomial.C ((H * B + A * J') a b) - Polynomial.X * (1 : Matrix I I (Polynomial R)) a b =

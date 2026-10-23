@@ -44,18 +44,13 @@ theorem fullMatrix_surjective_of_weighted_zero_surjective (p : Fin n → Poly n 
   intro v
   let es := macaulaySourceEquiv d W
   let et := macaulayTargetEquiv d W
-  let x := (canonicalBasis (R := K) d (Macaulay.level d) W 0).equivFun.symm (v ∘ et.symm)
-  obtain ⟨y, hy⟩ := hs x
-  let w := (canonicalBasis (R := K) d (Macaulay.level d) W 1).equivFun y
+  obtain ⟨w, hw⟩ := (weighted_surjective_iff_matrix p d (Macaulay.level d) W hp hW 0).mp hs (v ∘ et.symm)
   let M := canonicalMatrix p d (Macaulay.level d) W hp hW 0
-  have hw : Matrix.vecMul w M = v ∘ et.symm := by
-    have he := canonicalMatrix_vecMul_coordinates p d (Macaulay.level d) W hp hW 0 y
-    rw [hy] at he
-    exact he.trans (LinearEquiv.apply_symm_apply _ _)
   refine ⟨w ∘ es, ?_⟩
   have hm : M.submatrix es et = Macaulay.fullMatrix p d W := canonicalMatrix_macaulay p d W hp hW
   have he := Matrix.submatrix_vecMul_equiv M (w ∘ es) es et
   have hc : (w ∘ es) ∘ es.symm = w := by funext a; simp only [Function.comp_apply, Equiv.apply_symm_apply]
+  change Matrix.vecMul w M = v ∘ et.symm at hw
   rw [hm, hc, hw] at he
   simpa only [Function.comp_def, Equiv.symm_apply_apply] using he
 

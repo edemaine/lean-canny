@@ -29,17 +29,8 @@ theorem isCompl_range (P Q : M →ₗ[R] M) (hs : P + Q = LinearMap.id) (hz : P.
       P.comp P = P.comp P + P.comp Q := by rw [hz, add_zero]
       _ = P.comp (P + Q) := by rw [LinearMap.comp_add]
       _ = P := by rw [hs, LinearMap.comp_id]
-  have hk : LinearMap.ker P = LinearMap.range Q := by
-    ext x
-    constructor
-    · intro hx
-      refine ⟨x, ?_⟩
-      have h := LinearMap.congr_fun hs x
-      change P x + Q x = x at h
-      rw [hx, zero_add] at h
-      exact h
-    · rintro ⟨y, rfl⟩
-      exact LinearMap.congr_fun hz y
+  have hk := FiniteComplexTransport.exact_of_homotopy P Q LinearMap.id LinearMap.id hz
+    (by simpa only [LinearMap.comp_id, LinearMap.id_comp, add_comm] using hs)
   rw [← hk]
   exact LinearMap.IsIdempotentElem.isCompl hp
 
@@ -87,12 +78,9 @@ theorem range_homotopyProjection (d : Fin n → ℕ) (W : ℕ) (hW : Macaulay.le
     have h := LinearMap.congr_fun (weightedHomotopy_identity (R := R) d W hW k)
       (weightedHomotopy (R := R) d W hW k y)
     have hz := LinearMap.congr_fun (weightedHomotopy_comp (R := R) d W hW k) y
-    change weightedHomotopy (R := R) d W hW (k + 1) (weightedHomotopy (R := R) d W hW k y) = 0 at hz
-    change differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW (k + 1)
-        (weightedHomotopy (R := R) d W hW (k + 1) (weightedHomotopy (R := R) d W hW k y)) +
-      homotopyProjection (R := R) d W hW k (weightedHomotopy (R := R) d W hW k y) = _ at h
-    rw [hz, map_zero, zero_add] at h
-    exact h
+    simp only [LinearMap.comp_apply, LinearMap.zero_apply] at hz
+    simpa only [LinearMap.add_apply, LinearMap.comp_apply, LinearMap.id_apply,
+      hz, map_zero, zero_add, homotopyProjection] using h
 
 theorem range_powerProjection (d : Fin n → ℕ) (W : ℕ) (hW : Macaulay.level d < 2 ^ W) (k : ℕ) :
     LinearMap.range (powerProjection (R := R) d W hW k) =
@@ -106,11 +94,11 @@ theorem range_powerProjection (d : Fin n → ℕ) (W : ℕ) (hW : Macaulay.level
     refine ⟨x, ?_⟩
     have h := LinearMap.congr_fun (projections_add (R := R) d W hW k) x
     have hz : homotopyProjection (R := R) d W hW k x = 0 := by
-      change weightedHomotopy (R := R) d W hW k
-        (differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW k x) = 0
-      rw [show differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W (powers_homogeneous d) hW k x = 0 from
-        LinearMap.congr_fun (differential_comp (Macaulay.powers (R := R) d) d (Macaulay.level d) W
-          (powers_homogeneous d) hW k) y, map_zero]
+      have hx : differential (Macaulay.powers (R := R) d) d (Macaulay.level d) W
+          (powers_homogeneous d) hW k x = 0 :=
+        LinearMap.congr_fun (differential_comp _ d (Macaulay.level d) W (powers_homogeneous d) hW k) y
+      change weightedHomotopy d W hW k (_ : space (R := R) d (Macaulay.level d) W k) = 0
+      rw [hx, map_zero]
     change homotopyProjection (R := R) d W hW k x + powerProjection (R := R) d W hW k x = x at h
     rw [hz, zero_add] at h
     exact h
