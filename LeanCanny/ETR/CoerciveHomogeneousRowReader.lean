@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.CoerciveHomogeneousReaders
+public import LeanCanny.Encoding.QueryLayout
 public import LeanCanny.ETR.CoerciveHomogeneousRepack
 
 /-! # Native row and parameter-degree branching for homogeneous coefficients -/
@@ -19,17 +20,7 @@ open scoped Classical
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm
 attribute [local irreducible] CoerciveSourceSampling.dimension CoercivePowerReaders.size CoercivePowerReaders.width
 
-def context (q : List Bool) : List Bool := pairFst q
-def row (q : List Bool) : List Bool := pairFst (pairSnd q)
-def rank (q : List Bool) : List Bool := pairFst (pairSnd (pairSnd q))
-def inner (q : List Bool) : List Bool := pairFst (pairSnd (pairSnd (pairSnd q)))
-def outer (q : List Bool) : List Bool := pairSnd (pairSnd (pairSnd (pairSnd q)))
-
-theorem context_FP : context ∈ FP := pairFst_mem_FP
-theorem row_FP : row ∈ FP := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
-theorem rank_FP : rank ∈ FP := mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairFst_mem_FP
-theorem inner_FP : inner ∈ FP := mem_FP_comp (mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairSnd_mem_FP) pairFst_mem_FP
-theorem outer_FP : outer ∈ FP := mem_FP_comp (mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairSnd_mem_FP) pairSnd_mem_FP
+query_layout queryPacket := (context, (row, (rank, (inner, outer))))
 
 noncomputable def selected (input : List Bool → List Bool) (q : List Bool) : ℕ :=
   min (Nat.fromBitsLE (row q)) (dimension (input (context q)) + 1) - 1
