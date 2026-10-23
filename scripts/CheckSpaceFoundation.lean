@@ -1,4 +1,4 @@
-import LeanCanny
+import LeanCanny.Alternatives
 import Lean.Util.FoldConsts
 
 open Turing.MultiTapeTM

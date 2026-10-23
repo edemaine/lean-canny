@@ -81,7 +81,12 @@ use Complexitylib directly. Space composition charges the original readers;
 no free coefficient oracle or execution-time bound on a space-bounded child
 is assumed.
 
-## Other constructions and scope
+## Alternative constructions
+
+The default `LeanCanny` library and `import LeanCanny` contain the completed
+coercive ETR proof and formal abstract. The optional `LeanCannyAlternatives`
+library is available through `import LeanCanny.Alternatives`; it also imports
+the completed result. All source modules retain their existing paths.
 
 The repository also develops Canny's compact tube and generic projection
 constructions, projective elimination, finite-root sign feasibility, and
@@ -92,7 +97,9 @@ coercive route and does not depend on those choices.
 
 Further work includes relating this encoding to other ETR presentations,
 proving the NP lower inclusion, and formalizing the report's roadmap and
-connectivity consequences. See [`RESEARCH.md`](RESEARCH.md) for prior work,
+connectivity consequences. The alternative library remains checked by the full
+verification commands below.
+See [`RESEARCH.md`](RESEARCH.md) for prior work,
 proof details, and the unused tube route's precise gaps.
 
 ## Attribution and report integrity
@@ -117,7 +124,10 @@ lake build
 ```
 
 [`lean-toolchain`](lean-toolchain) and [`lake-manifest.json`](lake-manifest.json)
-record the versions used. The public entry point is [`LeanCanny.lean`](LeanCanny.lean).
+record the versions used. The default entry point is [`LeanCanny.lean`](LeanCanny.lean).
+`lake build` checks the completed coercive proof. To also build the retained
+alternative constructions, run `lake build LeanCannyAlternatives`; their entry
+point is [`Alternatives.lean`](LeanCanny/Alternatives.lean).
 
 Import the formal abstract with `import LeanCanny.Abstract`, or build it with
 `lake build --wfail LeanCanny.Abstract`. It is also included in the default build.
@@ -131,7 +141,8 @@ The dependency URLs use the canonical repository. Updating to the renamed
 For stricter verification:
 
 ```sh
-lake build --wfail
+lake build LeanCanny LeanCannyAlternatives --wfail --iofail
+lake env lean scripts/CheckCoreImports.lean
 lake env lean scripts/CheckAxioms.lean
 lake env lean scripts/CheckAbstract.lean
 lake env lean scripts/CheckGrammar.lean
@@ -139,7 +150,9 @@ lake env lean scripts/CheckSpaceFoundation.lean
 lake env lean scripts/CheckPolyTimeFoundation.lean
 ```
 
-The axiom audit checks declarations in the `LeanCanny` namespace, local Nat
+The core import check enforces the separation from the optional tube route.
+The axiom and space audits include both library targets. The axiom audit checks
+declarations in the `LeanCanny` namespace, local Nat
 codec extensions, and their transitive dependencies, allowing only Lean's
 standard `propext`, `Classical.choice`, and `Quot.sound` axioms. The foundation
 checks enforce the native Complexitylib time and space interfaces and reject

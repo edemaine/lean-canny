@@ -22,3 +22,7 @@ require mathlib from git
 
 @[default_target]
 lean_lib LeanCanny
+
+-- Optional constructions are retained without entering the default proof closure.
+lean_lib LeanCannyAlternatives where
+  roots := #[`LeanCanny.Alternatives]

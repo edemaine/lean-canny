@@ -1,0 +1,54 @@
+import LeanCanny
+import LeanCanny.Algebra.AffineMacaulayMatrix
+import LeanCanny.Algebra.BerkowitzCoefficientPower
+import LeanCanny.Algebra.BoundedIntegerCoordinates
+import LeanCanny.Algebra.CannyCoefficientDigits
+import LeanCanny.Algebra.CannyCoefficientRank
+import LeanCanny.Algebra.CannyResultantTaskSource
+import LeanCanny.Algebra.CannySuppliedMetadata
+import LeanCanny.Algebra.CoerciveGramEliminant
+import LeanCanny.Algebra.DenominatorClearingSign
+import LeanCanny.Algebra.DyadicTarskiSpace
+import LeanCanny.Algebra.IntegerProjectionCoordinates
+import LeanCanny.Algebra.MacaulayDeformationSign
+import LeanCanny.Algebra.MacaulayLastParameterDegree
+import LeanCanny.Algebra.MatrixPowerDecoding
+import LeanCanny.Algebra.ParameterCoordinate
+import LeanCanny.Algebra.PreprocessedPairReusable
+import LeanCanny.Algebra.PrimitivePairNested
+import LeanCanny.Algebra.RationalCoordinateSpace
+import LeanCanny.Algebra.RecursiveMatrixPowerSpace
+import LeanCanny.Algebra.ResultantSpaceEntries
+import LeanCanny.Algebra.SymbolicBalancedFiniteSigns
+import LeanCanny.Algebra.SymbolicCoordinateClearSpace
+import LeanCanny.Algebra.SymbolicFixedTablePairSpace
+import LeanCanny.Algebra.SymmetricRecoveryDegeneracy
+import LeanCanny.ETR.CompactCoefficientZero
+import LeanCanny.ETR.CompactSourceCoefficient
+import LeanCanny.ETR.IndexedRationalSubstitution
+import LeanCanny.ETR.SourceDegreeSpace
+import LeanCanny.ETR.TubeCharacteristicCriterion
+import LeanCanny.ETR.TubeCharacteristicPolynomialSpace
+import LeanCanny.ETR.TubeCharacteristicSurjectivity
+import LeanCanny.ETR.TubeCoefficientDecisions
+import LeanCanny.ETR.TubeCoordinateAnnihilatorSigns
+import LeanCanny.ETR.TubeLevelDegreeBounds
+import LeanCanny.ETR.TubeMacaulayHomotopyDeterminant
+import LeanCanny.ETR.TubeMacaulayKoszul
+import LeanCanny.ETR.TubeMacaulayKoszulExact
+import LeanCanny.ETR.TubeMacaulayLocalizedKoszul
+import LeanCanny.ETR.TubeMacaulayUniversal
+import LeanCanny.ETR.TubeRationalLanguages
+import LeanCanny.ETR.TubeRegularSingularIdeal
+import LeanCanny.ETR.TubeSimpleSampling
+import LeanCanny.ETR.TubeUniformRationalSamplingSource
+import LeanCanny.Geometry.EffectiveRegularPolynomialLevels
+import LeanCanny.Geometry.TubeIntegerDirections
+
+/-! # Additional algebraic and geometric constructions
+
+These developments are retained independently of the completed coercive ETR
+proof: compact tubes, generic projections, nonsingular sampling, and additional
+elimination and coordinate-recovery results. Import this module to also obtain
+the completed theorem. `lake build LeanCannyAlternatives` checks this collection.
+-/
