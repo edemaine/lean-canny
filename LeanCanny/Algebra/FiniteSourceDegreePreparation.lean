@@ -167,8 +167,8 @@ noncomputable def family : Family :=
 include hmass in
 theorem family_height (p : List Bool) :
     (family F count D b hmass).height p = b (pairFst (pairFst p)) := by
-  simp only [family, SeparableBits.Family.reindex, ValidatedDegreeBits.family, paddedFamily,
-    checkedInput, PaddedAnnihilatorBits.input, pairFst_pair]
+  simp only [family, SeparableBits.Family.reindex, CertifiedPolynomial.Family.reindex,
+    ValidatedDegreeBits.family, paddedFamily, checkedInput, PaddedAnnihilatorBits.input, pairFst_pair]
 
 include hmass in
 theorem family_nonzero
