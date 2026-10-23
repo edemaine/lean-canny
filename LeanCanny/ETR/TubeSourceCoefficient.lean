@@ -87,9 +87,7 @@ theorem value_query (bits : List Bool) (s : Finset (Constraint (CompactSource.te
   change residueBits ((TubeCoefficient.coefficient base width active target q : ℤ) : ZMod (Nat.fromBitsLE (pairSnd q) + 1)) = _
   have hmod : Nat.fromBitsLE (pairSnd q) + 1 = m := by
     simp only [q, query, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.sub_add_cancel hm]
-  have hcast := congrArg (fun n : ℕ => residueBits ((TubeCoefficient.coefficient base width active target q : ℤ) : ZMod n)) hmod
-  have hvalue := congrArg (fun z : ℤ => residueBits (z : ZMod m)) hc'
-  exact hcast.trans hvalue
+  exact congrArg₂ (fun (z : ℤ) (n : ℕ) => residueBits (z : ZMod n)) hc' hmod
 
 theorem value_query_of_nonzero (bits : List Bool) (s : Finset (Constraint (CompactSource.term bits).arity))
     (e : Coordinate (CompactSource.term bits).arity →₀ ℕ) (m : ℕ) (hm : 0 < m)

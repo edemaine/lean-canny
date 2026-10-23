@@ -69,10 +69,7 @@ theorem value_packet (bits : List Bool) (e : ℕ → ℕ) (m : ℕ) (hm : 0 < m)
     ZMod (Nat.fromBitsLE (pairSnd q) + 1)) = _
   have hmod : Nat.fromBitsLE (pairSnd q) + 1 = m := by
     simp only [q, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.sub_add_cancel hm]
-  have hcast := congrArg (fun n : ℕ => residueBits
-    ((CompactCoefficient.coefficient SourceCoefficient.source SourceCoefficient.target q : ℤ) : ZMod n)) hmod
-  have hvalue := congrArg (fun z : ℤ => residueBits (z : ZMod m)) hc
-  exact hcast.trans hvalue
+  exact congrArg₂ (fun (z : ℤ) (n : ℕ) => residueBits (z : ZMod n)) hc hmod
 
 noncomputable def paddedExponent (bits : List Bool) (e : Fin (CompactSource.term bits).arity →₀ ℕ) (i : ℕ) : ℕ :=
   if hi : i < (CompactSource.term bits).arity then e ⟨i, hi⟩ else 0

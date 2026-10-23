@@ -6,6 +6,7 @@ module
 
 public import LeanCanny.ETR.CoercivePowerReaders
 public import LeanCanny.Algebra.CoerciveQuerySystem
+public import LeanCanny.Algebra.EmbeddedCoefficient
 public import LeanCanny.Algebra.ModularResidueSpace
 public import LeanCanny.Algebra.ImplicitPowerResidueFP
 
@@ -109,22 +110,10 @@ theorem exponent_tail (input target : List Bool → List Bool) (c : List Bool) :
 private theorem coeff_rename_succ {n : ℕ} (p : MvPolynomial (Fin n) ℤ) (e : Fin (n + 1) →₀ ℕ) :
     (MvPolynomial.rename Fin.succ p).coeff e =
       if e 0 = 0 then p.coeff (e.comapDomain Fin.succ (Fin.succ_injective _).injOn) else 0 := by
-  have hnot : (0 : Fin (n + 1)) ∉ Set.range (Fin.succ : Fin n → Fin (n + 1)) := by
-    rintro ⟨i, hi⟩
-    exact Fin.succ_ne_zero i hi
-  split_ifs with he
-  · have hm : (e.comapDomain Fin.succ (Fin.succ_injective _).injOn).mapDomain Fin.succ = e := by
-      ext j
-      refine Fin.cases ?_ (fun i => ?_) j
-      · rw [Finsupp.mapDomain_of_notMem_range _ _ hnot, he]
-      · simp only [Finsupp.mapDomain_apply_of_injective (Fin.succ_injective _), Finsupp.comapDomain_apply]
-    conv_lhs => rw [← hm]
-    exact MvPolynomial.coeff_rename_mapDomain _ (Fin.succ_injective _) _ _
-  · apply MvPolynomial.coeff_rename_eq_zero
-    intro u hu
-    have hz := congrArg (fun v : Fin (n + 1) →₀ ℕ => v 0) hu
-    rw [Finsupp.mapDomain_of_notMem_range _ _ hnot] at hz
-    exact (he hz.symm).elim
+  classical
+  rw [EmbeddedCoefficient.coeff_rename Fin.succ (Fin.succ_injective _) p e]
+  simp only [EmbeddedCoefficient.value, Fin.range_succ,
+    Set.subset_compl_singleton_iff, Finset.mem_coe, Finsupp.notMem_support_iff]
 
 noncomputable def zeroParameter (input target : List Bool → List Bool) (c : List Bool) : Prop :=
   queryExponent input target c 0 = 0

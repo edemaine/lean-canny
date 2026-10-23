@@ -81,9 +81,7 @@ theorem value_packet (bits : List Bool) (e : ℕ → ℕ) (m : ℕ) (hm : 0 < m)
     ZMod (Nat.fromBitsLE (pairSnd q) + 1)) = _
   have hmod : Nat.fromBitsLE (pairSnd q) + 1 = m := by
     simp only [q, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.sub_add_cancel hm]
-  have hcast := congrArg (fun n : ℕ => residueBits ((CollectedCoefficient.coefficient source target q : ℤ) : ZMod n)) hmod
-  have hvalue := congrArg (fun z : ℤ => residueBits (z : ZMod m)) hc
-  exact hcast.trans hvalue
+  exact congrArg₂ (fun (z : ℤ) (n : ℕ) => residueBits (z : ZMod n)) hc hmod
 
 theorem value_packet_of_nonzero (bits : List Bool) (e : ℕ → ℕ) (m : ℕ) (hm : 0 < m)
     (hne : (Term.finitePolynomial (CompactSource.size bits) (CompactSource.term bits)).coeff
