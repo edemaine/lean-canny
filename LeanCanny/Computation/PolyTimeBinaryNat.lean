@@ -38,10 +38,6 @@ theorem BinaryFn.of_eq {f g : List Bool → ℕ} (hf : BinaryFn f)
     (h : ∀ z, f z = g z) : BinaryFn g := by
   simpa only [funext h] using hf
 
-theorem BinaryFn.comp {f : List Bool → ℕ} {g : List Bool → List Bool}
-    (hf : BinaryFn f) (hg : g ∈ FP) : BinaryFn (fun z => f (g z)) :=
-  ComputableTidilyInPolyTime.comp hf hg
-
 theorem BinaryFn.ofUnary {f : List Bool → ℕ} (hf : UnaryFn f) : BinaryFn f :=
   ComputableTidilyInPolyTime.unary_to_binary.comp hf
 
