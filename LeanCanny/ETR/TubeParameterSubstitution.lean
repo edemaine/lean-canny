@@ -94,7 +94,7 @@ theorem exponentRead_packet (source : List Bool → List Bool) (c : List Bool) (
     (coordinateIndexCode source) (fun c i => spatialCount (source (pairFst c)) + i)
     (fun c i _ => coordinateIndexCode_packet source c i) (coordinateIndex_lt source) c r i hi
 
-abbrev CoordinateReaders (source : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ) :=
+def CoordinateReaders (source : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ) :=
   IntegerBits.CoordinateReaders (fun c => parameterCount (source (pairFst c))) n d
 
 -- Preserve the original qualified constructor and field names.

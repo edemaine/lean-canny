@@ -22,7 +22,7 @@ open Algebra.RationalSubstitution
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm nativePolynomial
 
-abbrev CoordinateBounds (source : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ) :=
+def CoordinateBounds (source : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ) :=
   IntegerBits.CoordinateBounds (fun c => parameterCount (source (pairFst c))) n d
 
 -- Preserve the original qualified constructor and field names.

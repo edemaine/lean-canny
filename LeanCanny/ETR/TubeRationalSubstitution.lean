@@ -22,7 +22,7 @@ open Algebra.MatrixPower Algebra.RationalSubstitution
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm coefficientValue
 
-abbrev CoordinateReaders (projection : Bool) (source : List Bool → List Bool)
+def CoordinateReaders (projection : Bool) (source : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) :=
   IntegerBits.CoordinateReaders (fun c => dimension projection (source c)) n d
 

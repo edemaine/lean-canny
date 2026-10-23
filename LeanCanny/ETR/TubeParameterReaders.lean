@@ -45,21 +45,21 @@ noncomputable def CoordinateReaders.precomposeUniform {source : List Bool → Li
     (C : CoordinateReaders source (fun c => n (pairFst c)) (fun c => d (pairFst c)))
     (f : List Bool → List Bool) (hf : f ∈ FP) :
     CoordinateReaders (source ∘ f) (fun c => n (f (pairFst c))) (fun c => d (f (pairFst c))) := by
-  convert Algebra.RationalSubstitution.IntegerBits.CoordinateReaders.precompose
-    (arity := fun c => parameterCount (source (pairFst c)))
-    (n := fun c => n (pairFst c)) (d := fun c => d (pairFst c)) C
-    (coordinateContext f) (coordinateContext_mem_FP hf) using 1 <;>
-    funext c <;> simp only [Function.comp_apply, coordinateContext, pairFst_pair]
+  simpa only [CoordinateReaders, Function.comp_def, coordinateContext, pairFst_pair] using
+    Algebra.RationalSubstitution.IntegerBits.CoordinateReaders.precompose
+      (arity := fun c => parameterCount (source (pairFst c)))
+      (n := fun c => n (pairFst c)) (d := fun c => d (pairFst c)) C
+      (coordinateContext f) (coordinateContext_mem_FP hf)
 
 noncomputable def CoordinateBounds.precomposeUniform {source : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ}
     (B : CoordinateBounds source (fun c => n (pairFst c)) (fun c => d (pairFst c)))
     (f : List Bool → List Bool) (hf : f ∈ FP) :
     CoordinateBounds (source ∘ f) (fun c => n (f (pairFst c))) (fun c => d (f (pairFst c))) := by
-  convert Algebra.RationalSubstitution.IntegerBits.CoordinateBounds.precompose
-    (arity := fun c => parameterCount (source (pairFst c)))
-    (n := fun c => n (pairFst c)) (d := fun c => d (pairFst c)) B
-    (coordinateContext f) (coordinateContext_mem_FP hf) using 1 <;>
-    funext c <;> simp only [Function.comp_apply, coordinateContext, pairFst_pair]
+  simpa only [CoordinateBounds, Function.comp_def, coordinateContext, pairFst_pair] using
+    Algebra.RationalSubstitution.IntegerBits.CoordinateBounds.precompose
+      (arity := fun c => parameterCount (source (pairFst c)))
+      (n := fun c => n (pairFst c)) (d := fun c => d (pairFst c)) B
+      (coordinateContext f) (coordinateContext_mem_FP hf)
 
 end LeanCanny.ETR.TubeParameter
