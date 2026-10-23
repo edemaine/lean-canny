@@ -167,24 +167,30 @@ theorem encodedAdvance_mem_FP (b : Bool) : encodedAdvance b ∈ FP := by
 
 /-- The complete decoder runs in the machine-level polynomial-time class. -/
 theorem runEncoded_mem_FP : (fun bits => encode (run bits)) ∈ FP := by
-  have hacc : (fun w : List Bool => pairSnd (pairFst w)) ∈ FP :=
-    mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  refine recFold_mem_FP_of_bound (g := fun _ bits => encode (run bits))
-    (mem_FP_comp hacc (encodedAdvance_mem_FP false))
-    (mem_FP_comp hacc (encodedAdvance_mem_FP true))
-    (constFn_mem_FP (encode ⟨.ready, []⟩)) (constFn_mem_FP []) id_mem_FP
-    ?_ ?_ ?_ ((PolyBound.const 3).add PolyBound.id) ?_
-  · intro z
-    rfl
-  · intro z bits
-    simpa only [Function.comp_apply, pairFst_pair, pairSnd_pair, run_cons] using
-      (encodedAdvance_encode false (run bits)).symm
-  · intro z bits
-    simpa only [Function.comp_apply, pairFst_pair, pairSnd_pair, run_cons] using
-      (encodedAdvance_encode true (run bits)).symm
-  · intro z bits hbits
-    rw [encode_length]
-    exact Nat.add_le_add_left ((run_output_length_le bits).trans hbits.length_le) 3
+  let step := fun (_ : List Bool) acc bit => encodedAdvance bit acc
+  have hacc : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : (List Bool × List Bool) × Bool => p.1.2)
+      (Turing.MultiTapeTM.encPair
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+        Turing.MultiTapeTM.encBool) Turing.MultiTapeTM.encBits := by fun_prop
+  have hstep : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : (List Bool × List Bool) × Bool => step p.1.1 p.1.2 p.2)
+      (Turing.MultiTapeTM.encPair
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+        Turing.MultiTapeTM.encBool) Turing.MultiTapeTM.encBits := by
+    have hb := Turing.MultiTapeTM.ComputableTidilyInPolyTime.snd
+      (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+      Turing.MultiTapeTM.encBool
+    exact (hb.cond ((encodedAdvance_mem_FP true).comp hacc)
+      ((encodedAdvance_mem_FP false).comp hacc)).of_enc_eq
+        fun p => by cases p.2 <;> rfl
+  refine foldrEncodedWith_spec encode (step := step) (g := fun _ bits => run bits)
+    (constFn_mem_FP []) id_mem_FP (constFn_mem_FP (encode ⟨.ready, []⟩)) hstep
+    (fun _ bits bit => encodedAdvance_encode bit (run bits))
+    (((PolyBound.const 3).add PolyBound.id).polyBounded (fun z : List Bool => z.length)) ?_
+  intro z bits hbits
+  rw [encode_length]
+  exact Nat.add_le_add_left ((run_output_length_le bits).trans hbits.length_le) 3
 
 theorem output_mem_FP : (fun bits => (run bits).output) ∈ FP := by
   refine mem_FP_of_eq (drop_mem_FP runEncoded_mem_FP (UnaryFn.const 3)) fun bits => ?_

@@ -55,9 +55,10 @@ def packed (c : List Bool) : List Bool := FixedWidthNatVector.encode (A c) (W c)
 
 theorem packed_mem_FP (hA : UnaryFn A) (hW : UnaryFn W) (hV : UnaryFn V)
     (hs : UnaryFn selected) (ht : target ∈ FP) : packed A W V selected target ∈ FP :=
-  FixedWidthNatVector.encode_mem_FP A W (bumped A V selected target) hA hW
-    (read A V selected target) (read_mem_FP A V selected target hA hV hs ht)
-    (read_packet A V selected target)
+  FixedWidthNatVector.encode_of_coordinate hA hW
+    Turing.MultiTapeTM.ComputableTidilyInPolyTime.unary_to_binary
+    (FixedWidthNatVector.coordinate_of_reader (read_mem_FP A V selected target hA hV hs ht)
+      (read_packet A V selected target))
 
 def query (c : List Bool) : List Bool := pair c (BinaryNat.normalize (packed A W V selected target c))
 
