@@ -23,7 +23,7 @@ open LeanCanny.Computation
 /-- The actual prepared parameter and final sign-query programs. -/
 noncomputable def coerciveReaders : CoerciveInfinitesimalFamily.Readers :=
   CoerciveClearedQueryCoefficient.readers CoerciveCoordinatePairReaders.readers
-    CoerciveParameterAccess.access CoerciveParameterAccess.evaluator
+    CoerciveParameterAccess.access
 
 /-- Encoded existential real feasibility belongs to native deterministic PSPACE. -/
 theorem etr_mem_PSPACE : language ∈ PSPACE :=

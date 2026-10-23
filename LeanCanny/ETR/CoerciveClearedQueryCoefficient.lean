@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.CoerciveClearedQuerySpace
+public import LeanCanny.Encoding.QueryLayout
 public import LeanCanny.ETR.CoerciveInfinitesimalReadout
 
 /-! # Actual final bivariate query residues from native fixed-coordinate readers -/
@@ -23,17 +24,7 @@ set_option allowUnsafeReducibility true in
 attribute [local reducible] CoercivePreparationControls.family
 attribute [local irreducible] CoercivePreparationControls.referenceExponent CoerciveSymbolicBounds.queryDegree
 
-def input (p : List Bool) := pairFst (pairFst p)
-def row (p : List Bool) := pairFst (pairSnd (pairFst p))
-def rootDegree (p : List Bool) := pairFst (pairSnd (pairSnd (pairFst p)))
-def alphaDegree (p : List Bool) := pairSnd (pairSnd (pairSnd (pairFst p)))
-
-theorem input_FP : input ∈ FP := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-theorem row_FP : row ∈ FP := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairFst_mem_FP
-theorem rootDegree_FP : rootDegree ∈ FP :=
-  mem_FP_comp (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairSnd_mem_FP) pairFst_mem_FP
-theorem alphaDegree_FP : alphaDegree ∈ FP :=
-  mem_FP_comp (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairSnd_mem_FP) pairSnd_mem_FP
+query_layout queryPacket := ((input, (row, (rootDegree, alphaDegree))), modulusWord)
 
 noncomputable def prepare (p : List Bool) : List Bool :=
   pair (pair (pair (input p) (row p))
@@ -90,10 +81,8 @@ theorem value_packet (R : CoerciveCoordinateEncoding.Readers) (bits : List Bool)
     rw [hz]
     simp only [DyadicBits.integerResidue, Int.cast_zero, residueBits, ZMod.val_zero, BinaryNatCode.encode, Nat.zero_bits]
 
-noncomputable def readers (R : CoerciveCoordinateEncoding.Readers) (H : DyadicPolynomialBits.Access rootFamily)
-    (hH : SpaceFunction H.coefficient) : CoerciveInfinitesimalFamily.Readers where
+noncomputable def readers (R : CoerciveCoordinateEncoding.Readers) (H : CertifiedPolynomial.BivariateReader rootFamily.polynomial) : CoerciveInfinitesimalFamily.Readers where
   root := H
-  root_space := hH
   coefficient := coefficient R
   coefficient_space := evaluator R
   coefficient_eq := value_packet R

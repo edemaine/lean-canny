@@ -23,13 +23,12 @@ open scoped Classical
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm Matrix.det Macaulay.fullMatrix
 
 structure Readers where
-  root : DyadicPolynomialBits.Access rootFamily
+  root : CertifiedPolynomial.BivariateReader rootFamily.polynomial
   coefficient : List Bool → List Bool
   coefficient_eq : ∀ c i j k m, 0 < m → coefficient
     (pair (pair c (pair (BinaryNatCode.encode i) (pair (BinaryNatCode.encode j) (BinaryNatCode.encode k))))
       (BinaryNatCode.encode (m - 1))) =
       DyadicBits.integerResidue (((clearedQuery c (queryIndex c i)).coeff j).coeff k) m
-  root_space : SpaceFunction root.coefficient
   coefficient_space : SpaceFunction coefficient
 
 noncomputable def Readers.access (R : Readers) (left right : Bool) :
@@ -45,7 +44,7 @@ noncomputable def Readers.access (R : Readers) (left right : Bool) :
 theorem Readers.pattern_language_mem_PSPACE (R : Readers) (left right : Bool) :
     InfinitesimalRootBits.eventualRealizableLanguage (signFamily left right) ∈ PSPACE :=
   InfinitesimalRootBits.eventualRealizableLanguage_mem_PSPACE (R.access left right) (controls left right)
-    (patternReader_mem_FP left right) R.root_space R.coefficient_space root_ne_zero
+    (patternReader_mem_FP left right) R.coefficient_space root_ne_zero
 
 /-- All semantic reductions and final native PSPACE decisions are discharged.
 The hypotheses are exactly the actual two coefficient programs and their
