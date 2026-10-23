@@ -21,6 +21,14 @@ example {f : List Bool → List Bool} : f ∈ LeanCanny.FP ↔
 example {f : List Bool → ℕ} : LeanCanny.BinaryFn f ↔
     ComputableTidilyInPolyTime f encBits encNat := Iff.rfl
 
+-- Binary helpers must preserve native composition from structured inputs.
+example {f : List Bool → ℕ} (hf : BinaryFn f) :
+    ComputableTidilyInPolyTime (fun p : List Bool × ℕ => f p.1 + p.2)
+      (encPair encBits encNat) encNat :=
+  ComputableTidilyInPolyTime.binary_add'
+    (hf.comp (ComputableTidilyInPolyTime.fst encBits encNat))
+    (ComputableTidilyInPolyTime.snd encBits encNat)
+
 example {f : List Bool → List Bool}
     (hf : ComputableTidilyInPolyTime f encBits encBits) :
     (fun z => LeanCanny.pair (f z) z) ∈ LeanCanny.FP :=
