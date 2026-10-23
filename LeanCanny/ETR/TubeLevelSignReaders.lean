@@ -74,8 +74,8 @@ theorem substitutionPolynomial (S : Source) (c : List Bool)
   rw [hr] at he
   have hl : (substitutionFamily S).polynomial (pair c code) =
       (TubeConstraintSubstitution.family S.packet (fun _ => code) (numerator S) (denominator S)).polynomial c := by
-    simp only [IntegerBits.Family.polynomial, substitutionFamily, TubeConstraintSubstitution.family,
-      TubeSampleCoefficient.A, TubeConstraintIndexed.blockWidth, Function.comp_apply, pairFst_pair]
+    simp only [IntegerBits.Family.polynomial, substitutionFamily, TubeConstraintSubstitution.family, TubeConstraintSubstitution.indexedSource,
+      IntegerBits.IndexedSource.withCoordinates, IntegerBits.IndexedSource.dense, TubeSampleCoefficient.A, TubeConstraintIndexed.blockWidth, Function.comp_apply, pairFst_pair]
     congr 1
     funext r
     simp only [TubeConstraintIndexed.coefficient, Function.comp_apply, pairFst_pair, pairSnd_pair]
