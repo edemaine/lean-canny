@@ -101,8 +101,10 @@ def repacked (n W r : List Bool → ℕ) (target : List Bool → List Bool) (bum
 
 theorem repacked_mem_FP {n W r : List Bool → ℕ} {target : List Bool → List Bool}
     (hn : UnaryFn n) (hW : UnaryFn W) (hr : UnaryFn r) (ht : target ∈ FP) (bumped : Bool) : repacked n W r target bumped ∈ FP :=
-  FixedWidthNatVector.encode_mem_FP _ _ _ (TubeZeroQuery.dimension_unary hn) (hW.add (UnaryFn.const 1))
-    (read n W r target bumped) (read_mem_FP hn hW hr ht bumped) (read_packet n W r target bumped)
+  FixedWidthNatVector.encode_of_coordinate (TubeZeroQuery.dimension_unary hn) (hW.add (UnaryFn.const 1))
+    Turing.MultiTapeTM.ComputableTidilyInPolyTime.unary_to_binary
+    (FixedWidthNatVector.coordinate_of_reader (read_mem_FP hn hW hr ht bumped)
+      (read_packet n W r target bumped))
 
 theorem coordinate_lt (W : List Bool → ℕ) (target : List Bool → List Bool) (c : List Bool) (i : ℕ) :
     FixedWidthQuery.coordinate W target c i < 2 ^ W c := by

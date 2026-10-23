@@ -29,8 +29,11 @@ theorem exponentVectorWord_mem_FP {source index : List Bool → List Bool} (hs :
   let read := exponentRead (source ∘ pairFst) (index ∘ pairFst) pairSnd
   have hr : read ∈ FP := exponentRead_mem_FP (mem_FP_comp pairFst_mem_FP hs)
     (mem_FP_comp pairFst_mem_FP hi) pairSnd_mem_FP
-  apply FixedWidthNatVector.encode_mem_FP _ _ _ (CollectedCoefficient.dimension_unary hs)
-    ((CollectedCoefficient.dimension_unary hs).add (UnaryFn.const 1)) read hr
+  apply FixedWidthNatVector.encode_of_coordinate (CollectedCoefficient.dimension_unary hs)
+    ((CollectedCoefficient.dimension_unary hs).add (UnaryFn.const 1))
+    Turing.MultiTapeTM.ComputableTidilyInPolyTime.unary_to_binary
+  apply FixedWidthNatVector.coordinate_of_reader
+    (e := fun c => (TermView.term (source c)).monomialExponent (Nat.fromBitsLE (index c))) hr
   intro c i
   simp only [read, exponentRead_correct, Function.comp_apply, pairFst_pair, pairSnd_pair,
     BinaryNatCode.encode, Nat.fromBitsLE_bits]
