@@ -106,7 +106,7 @@ theorem foldrWith_spec {γ β π : Type} {encIn : γ ↪ List Bool}
 /-- Right-fold recursion with an arbitrary mathematical state code. The code
 need not be injective and no decoder is required. Only reachable suffix states
 need a length bound. -/
-theorem foldrEncodedWith_spec {γ σ π : Type} {encIn : γ ↪ List Bool}
+theorem foldrEncodedWith_spec {γ π : Type} {σ : Type*} {encIn : γ ↪ List Bool}
     {encP : π ↪ List Bool} (code : σ → List Bool)
     {par : γ → π} {list : γ → List Bool} {g : γ → List Bool → σ}
     {step : π → List Bool → Bool → List Bool}
@@ -176,7 +176,7 @@ theorem paraWith_spec {γ β π : Type} {encIn : γ ↪ List Bool}
 
 /-- Suffix-aware recursion for existing wire formats, without a state decoder
 or an injectivity requirement on the mathematical state's code. -/
-theorem paraEncodedWith_spec {γ σ π : Type} {encIn : γ ↪ List Bool}
+theorem paraEncodedWith_spec {γ π : Type} {σ : Type*} {encIn : γ ↪ List Bool}
     {encP : π ↪ List Bool} (code : σ → List Bool)
     {par : γ → π} {list : γ → List Bool} {g : γ → List Bool → σ}
     {step : π → List Bool → List Bool → Bool → List Bool}

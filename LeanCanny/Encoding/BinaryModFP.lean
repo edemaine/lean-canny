@@ -85,20 +85,18 @@ theorem mod_eq_bits (packet : List Bool) : mod packet =
   simp only [mod_eq_bits, pairFst_pair, pairSnd_pair]
 
 theorem mod_mem_FP : mod ∈ FP := by
-  have hprev := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  have hm := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have hfalse := mem_FP_comp
-    (mem_FP_pair (mem_FP_comp hprev (cons_mem_FP false)) hm) reduceOnce_mem_FP
-  have htrue := mem_FP_comp
-    (mem_FP_pair (mem_FP_comp hprev (cons_mem_FP true)) hm) reduceOnce_mem_FP
-  refine recFold_mem_FP_of_bound (g := fun z t => modFold (pairSnd z) t)
-    hfalse htrue (constFn_mem_FP []) pairSnd_mem_FP pairFst_mem_FP
-    (bound := id) ?_ ?_ ?_ PolyBound.id ?_
-  · intro z; rfl
-  · intro z t; simp only [modFold, pairFst_pair, pairSnd_pair, Function.comp_apply]
-  · intro z t; simp only [modFold, pairFst_pair, pairSnd_pair, Function.comp_apply]
-  · intro z t ht
-    exact (modFold_length_le (pairSnd z) t).trans (ht.length_le.trans (pairFst_length_le z))
+  let step := fun m acc bit => reduceOnce (pair (bit :: acc) m)
+  have hstep : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : (List Bool × List Bool) × Bool => step p.1.1 p.1.2 p.2)
+      (Turing.MultiTapeTM.encPair
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+        Turing.MultiTapeTM.encBool) Turing.MultiTapeTM.encBits := by
+    exact reduceOnce_mem_FP.comp (by fun_prop)
+  refine foldrEncodedWith_spec id (step := step) (g := fun z t => modFold (pairSnd z) t)
+    pairSnd_mem_FP pairFst_mem_FP (constFn_mem_FP []) hstep
+    (fun _ _ _ => rfl) (PolyBound.id.polyBounded (fun z : List Bool => z.length)) ?_
+  intro z t ht
+  exact (modFold_length_le (pairSnd z) t).trans (ht.length_le.trans (pairFst_length_le z))
 
 theorem mod_length_le (a m : List Bool) : (mod (pair a m)).length ≤ a.length := by
   simpa only [mod, pairFst_pair, pairSnd_pair] using modFold_length_le m a

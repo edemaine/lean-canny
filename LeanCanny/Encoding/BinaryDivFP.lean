@@ -98,14 +98,31 @@ theorem div_eq_bits (packet : List Bool) : div packet =
   simp only [div_eq_bits, pairFst_pair, pairSnd_pair]
 
 theorem div_mem_FP : div ∈ FP := by
-  refine recFold_mem_FP_of_bound (g := fun z t => divFold (pairSnd z) t)
-    (divDigit_mem_FP false) (divDigit_mem_FP true) (constFn_mem_FP []) pairSnd_mem_FP pairFst_mem_FP
-    (bound := id) ?_ ?_ ?_ PolyBound.id ?_
-  · intro z; rfl
-  · intro z t; simp only [divFold, pairFst_pair, pairSnd_pair]
-  · intro z t; simp only [divFold, pairFst_pair, pairSnd_pair]
-  · intro z t ht
-    exact (divFold_length_le (pairSnd z) t).trans (ht.length_le.trans (pairFst_length_le z))
+  let step := fun m acc tail bit => divDigit m bit acc tail
+  have hp : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : (List Bool × (List Bool × List Bool)) × Bool =>
+        pair (pair p.1.1 p.1.2.1) p.1.2.2)
+      (Turing.MultiTapeTM.encPair (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits))
+        Turing.MultiTapeTM.encBool) Turing.MultiTapeTM.encBits := by fun_prop
+  have hstep : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : (List Bool × (List Bool × List Bool)) × Bool => step p.1.1 p.1.2.1 p.1.2.2 p.2)
+      (Turing.MultiTapeTM.encPair (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits))
+        Turing.MultiTapeTM.encBool) Turing.MultiTapeTM.encBits := by
+    have hb := Turing.MultiTapeTM.ComputableTidilyInPolyTime.snd
+      (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits))
+      Turing.MultiTapeTM.encBool
+    exact (hb.cond ((divDigit_mem_FP true).comp hp) ((divDigit_mem_FP false).comp hp)).of_enc_eq
+      fun p => by
+        cases p.2 <;> simp only [step, Function.comp_apply, Turing.MultiTapeTM.encBits_apply,
+          pairFst_pair, pairSnd_pair, Bool.false_eq_true, ↓reduceIte]
+  refine paraEncodedWith_spec id (step := step) (g := fun z t => divFold (pairSnd z) t)
+    pairSnd_mem_FP pairFst_mem_FP (constFn_mem_FP []) hstep
+    (fun _ _ _ => rfl) (PolyBound.id.polyBounded (fun z : List Bool => z.length)) ?_
+  intro z t ht
+  exact (divFold_length_le (pairSnd z) t).trans (ht.length_le.trans (pairFst_length_le z))
 
 theorem div_length_le (a m : List Bool) : (div (pair a m)).length ≤ a.length := by
   simpa only [div, pairFst_pair, pairSnd_pair] using divFold_length_le m a

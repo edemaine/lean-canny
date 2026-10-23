@@ -106,16 +106,31 @@ theorem powMod_mem_FP : powMod ∈ FP := by
   have hs := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
   have hm := mem_FP_comp powContext_mem_FP pairSnd_mem_FP
   have he := mem_FP_comp (mem_FP_pair (constFn_mem_FP [true]) hm) mod_mem_FP
-  refine recFold_mem_FP_of_bound
+  let step := fun ctx acc (bit : Bool) =>
+    if bit then powOdd (pair (pair ctx acc) []) else powSquare (pair (pair ctx acc) [])
+  have hp : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : (List Bool × List Bool) × Bool => pair (pair p.1.1 p.1.2) [])
+      (Turing.MultiTapeTM.encPair
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+        Turing.MultiTapeTM.encBool) Turing.MultiTapeTM.encBits := by fun_prop
+  have hstep : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : (List Bool × List Bool) × Bool => step p.1.1 p.1.2 p.2)
+      (Turing.MultiTapeTM.encPair
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+        Turing.MultiTapeTM.encBool) Turing.MultiTapeTM.encBits := by
+    have hb := Turing.MultiTapeTM.ComputableTidilyInPolyTime.snd
+      (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+      Turing.MultiTapeTM.encBool
+    have hc := hb.cond (powOdd_mem_FP.comp hp) (powSquare_mem_FP.comp hp)
+    refine hc.of_enc_eq fun p => ?_
+    simp only [Turing.MultiTapeTM.encBits_apply, step, Function.comp_apply]
+  refine foldrEncodedWith_spec id (step := step)
     (g := fun z t => powFold (pairFst (powContext z)) (pairSnd (powContext z)) t)
-    powSquare_mem_FP powOdd_mem_FP he powContext_mem_FP hs
-    (bound := fun n => n + 1) ?_ ?_ ?_ (PolyBound.id.add (PolyBound.const 1)) ?_
-  · intro z
-    simp only [powFold, Function.comp_apply]
-  · intro z t
-    simp only [powFold, powSquare, pairFst_pair, pairSnd_pair]
-  · intro z t
-    simp only [powFold, powOdd, powSquare, pairFst_pair, pairSnd_pair]
+    powContext_mem_FP hs he hstep ?_
+    ((PolyBound.id.add (PolyBound.const 1)).polyBounded (fun z : List Bool => z.length)) ?_
+  · intro z t bit
+    cases bit <;> simp only [step, powFold, powOdd, powSquare, pairFst_pair, pairSnd_pair,
+      id_eq, Bool.false_eq_true, ↓reduceIte]
   · intro z t _
     have hpos : 0 < Nat.fromBitsLE (pairSnd (powContext z)) := by
       simp only [powContext, pairSnd_pair, succ_eq_bits, Nat.fromBitsLE_bits]
