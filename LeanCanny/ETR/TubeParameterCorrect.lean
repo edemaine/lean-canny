@@ -50,7 +50,7 @@ theorem source_eq (source active row : List Bool → List Bool) (n d : List Bool
       ((family source active row n d).coefficient c) ((family source active row n d).exponent c) =
       MvPolynomial.rename (parameterEquiv (source (pairFst c)))
         ((spatialPolynomial source active row (pairFst c)).coeff (spatialExponent source c)) := by
-  simp only [family]
+  simp only [family, indexedSource, IntegerBits.IndexedSource.withCoordinates, IntegerBits.IndexedSource.projected, Function.comp_apply]
   have hc := funext (coefficient_formula source active row c)
   rw [hc]
   have h := PartialCoefficient.slice_source_eq _ _ _ _ (fullEquiv (source (pairFst c)))

@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.TubeParameterSource
+public import LeanCanny.Algebra.IndexedSource
 
 /-! # Polynomial-space substitution into a regular spatial coefficient
 
@@ -21,16 +22,16 @@ open Algebra.RationalSubstitution Algebra.MatrixPower
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm coefficientValue coefficient
 
+noncomputable def indexedSource (source active row : List Bool → List Bool) : IntegerBits.IndexedSource :=
+  IntegerBits.IndexedSource.projected (nativeCount ∘ source ∘ pairFst)
+    (parameterCount ∘ source ∘ pairFst) (TubeIndexed.blockWidth ∘ source ∘ pairFst)
+    (fun c => 2 ^ TubeIndexed.blockWidth (source (pairFst c)))
+    (fun c i => spatialCount (source (pairFst c)) + i) (coefficient source active row)
+    (fun _ _ _ => (FixedWidthPolynomial.entry_lt _ _ _).le)
+
 noncomputable def family (source active row : List Bool → List Bool)
-    (n d : List Bool → ℕ → Polynomial ℤ) : IntegerBits.Family where
-  arity c := parameterCount (source (pairFst c))
-  width c := 2 ^ TubeIndexed.blockWidth (source (pairFst c))
-  terms c := FixedWidthPolynomial.count (nativeCount (source (pairFst c))) (TubeIndexed.blockWidth (source (pairFst c)))
-  exponent c r i := FixedWidthPolynomial.entry (TubeIndexed.blockWidth (source (pairFst c))) r (spatialCount (source (pairFst c)) + i)
-  coefficient := coefficient source active row
-  numerator := n
-  denominator := d
-  exponent_le _ _ _ _ _ := (FixedWidthPolynomial.entry_lt _ _ _).le
+    (n d : List Bool → ℕ → Polynomial ℤ) : IntegerBits.Family :=
+  (indexedSource source active row).withCoordinates n d
 
 noncomputable def arityCode (source : List Bool → List Bool) (c : List Bool) : List Bool :=
   BinaryNatCode.encode (parameterCount (source (pairFst c)))
@@ -40,12 +41,16 @@ def widthCode (source : List Bool → List Bool) : List Bool → List Bool := Tu
 noncomputable def termsCode (source : List Bool → List Bool) : List Bool → List Bool :=
   FixedWidthPolynomial.countCode (nativeCount ∘ source ∘ pairFst) (TubeIndexed.blockWidth ∘ source ∘ pairFst)
 
+/-- A binary writer for the native index of a substituted parameter. -/
+noncomputable def coordinateIndexCode (source : List Bool → List Bool) (q : List Bool) : List Bool :=
+  BinaryNat.add (pair (BinaryNatCode.encode (spatialCount (source (pairFst (pairFst q))))) (pairSnd q))
+
 noncomputable def exponentPacket (source : List Bool → List Bool) (q : List Bool) : List Bool :=
-  pair (pairFst q) (pair (pairFst (pairSnd q)) (BinaryNat.add
-    (pair (BinaryNatCode.encode (spatialCount (source (pairFst (pairFst q))))) (pairSnd (pairSnd q)))))
+  IntegerBits.IndexedSource.projectedPacket (coordinateIndexCode source) q
 
 noncomputable def exponentRead (source : List Bool → List Bool) : List Bool → List Bool :=
-  FixedWidthPolynomial.exponentRead (nativeCount ∘ source ∘ pairFst) (TubeIndexed.blockWidth ∘ source ∘ pairFst) ∘ exponentPacket source
+  IntegerBits.IndexedSource.projectedExponentRead (nativeCount ∘ source ∘ pairFst)
+    (TubeIndexed.blockWidth ∘ source ∘ pairFst) (coordinateIndexCode source)
 
 theorem arityCode_mem_FP {source : List Bool → List Bool} (hs : source ∈ FP) : arityCode source ∈ FP :=
   bits_mem_FP ((parameterCount_unary.comp hs).comp pairFst_mem_FP)
@@ -57,75 +62,90 @@ theorem termsCode_mem_FP {source : List Bool → List Bool} (hs : source ∈ FP)
   FixedWidthPolynomial.countCode_mem_FP ((nativeCount_unary.comp hs).comp pairFst_mem_FP)
     ((TubeIndexed.blockWidth_unary.comp hs).comp pairFst_mem_FP)
 
-theorem exponentPacket_mem_FP {source : List Bool → List Bool} (hs : source ∈ FP) : exponentPacket source ∈ FP := by
+theorem coordinateIndexCode_mem_FP {source : List Bool → List Bool} (hs : source ∈ FP) : coordinateIndexCode source ∈ FP := by
   have hA := bits_mem_FP (((spatialCount_unary.comp hs).comp pairFst_mem_FP).comp pairFst_mem_FP)
-  have hi := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
-  have hsum := mem_FP_comp (mem_FP_pair hA hi) BinaryNat.add_mem_FP
-  have h := mem_FP_pair pairFst_mem_FP (mem_FP_pair (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP) hsum)
-  exact mem_FP_of_eq (g := exponentPacket source) h (fun _ => by simp only [exponentPacket, Function.comp_apply, BinaryNatCode.encode])
+  exact mem_FP_comp (mem_FP_pair hA pairSnd_mem_FP) BinaryNat.add_mem_FP
+
+theorem coordinateIndexCode_packet (source : List Bool → List Bool) (c : List Bool) (i : ℕ) :
+    coordinateIndexCode source (pair c (BinaryNatCode.encode i)) =
+      BinaryNatCode.encode (spatialCount (source (pairFst c)) + i) := by
+  simp only [coordinateIndexCode, pairFst_pair, pairSnd_pair, BinaryNat.add_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+
+theorem coordinateIndex_lt (source : List Bool → List Bool) (c : List Bool) (i : ℕ)
+    (hi : i < parameterCount (source (pairFst c))) :
+    spatialCount (source (pairFst c)) + i < nativeCount (source (pairFst c)) := by
+  rw [← counts_add]
+  omega
+
+theorem exponentPacket_mem_FP {source : List Bool → List Bool} (hs : source ∈ FP) : exponentPacket source ∈ FP :=
+  IntegerBits.IndexedSource.projectedPacket_mem_FP (coordinateIndexCode_mem_FP hs)
 
 theorem exponentRead_mem_FP {source : List Bool → List Bool} (hs : source ∈ FP) : exponentRead source ∈ FP :=
-  mem_FP_comp (exponentPacket_mem_FP hs) (FixedWidthPolynomial.exponentRead_mem_FP
-    ((nativeCount_unary.comp hs).comp pairFst_mem_FP) ((TubeIndexed.blockWidth_unary.comp hs).comp pairFst_mem_FP))
+  IntegerBits.IndexedSource.projectedExponentRead_mem_FP
+    ((nativeCount_unary.comp hs).comp pairFst_mem_FP) ((TubeIndexed.blockWidth_unary.comp hs).comp pairFst_mem_FP)
+    (coordinateIndexCode_mem_FP hs)
 
 theorem exponentRead_packet (source : List Bool → List Bool) (c : List Bool) (r i : ℕ)
     (hi : i < parameterCount (source (pairFst c))) :
     Nat.fromBitsLE (exponentRead source (pair c (pair (BinaryNatCode.encode r) (BinaryNatCode.encode i)))) =
-      FixedWidthPolynomial.entry (TubeIndexed.blockWidth (source (pairFst c))) r (spatialCount (source (pairFst c)) + i) := by
-  have hl : spatialCount (source (pairFst c)) + i < nativeCount (source (pairFst c)) := by
-    rw [← counts_add]
-    omega
-  simp only [exponentRead, Function.comp_apply, exponentPacket, pairFst_pair, pairSnd_pair,
-    BinaryNat.add_pair, MacaulayBits.fromBits_encode]
-  change Nat.fromBitsLE (FixedWidthPolynomial.exponentRead (nativeCount ∘ source ∘ pairFst)
-    (TubeIndexed.blockWidth ∘ source ∘ pairFst)
-    (pair c (pair (BinaryNatCode.encode r) (BinaryNatCode.encode (spatialCount (source (pairFst c)) + i))))) = _
-  rw [FixedWidthPolynomial.exponentRead_packet _ _ c r _ hl, MacaulayBits.fromBits_encode]
-  rfl
+      FixedWidthPolynomial.entry (TubeIndexed.blockWidth (source (pairFst c))) r (spatialCount (source (pairFst c)) + i) :=
+  IntegerBits.IndexedSource.projectedExponentRead_packet (nativeCount ∘ source ∘ pairFst)
+    (parameterCount ∘ source ∘ pairFst) (TubeIndexed.blockWidth ∘ source ∘ pairFst)
+    (coordinateIndexCode source) (fun c i => spatialCount (source (pairFst c)) + i)
+    (fun c i _ => coordinateIndexCode_packet source c i) (coordinateIndex_lt source) c r i hi
 
-structure CoordinateReaders (source : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ) where
-  numerator : List Bool → List Bool
-  denominator : List Bool → List Bool
-  numeratorEvaluator : SpaceFunction numerator
-  denominatorEvaluator : SpaceFunction denominator
-  numerator_eq : ∀ c i, i < parameterCount (source (pairFst c)) → ∀ k m, 0 < m →
-    numerator (pair (pair c (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k))) (BinaryNatCode.encode (m - 1))) =
-      residueBits (((n c i).coeff k : ℤ) : ZMod m)
-  denominator_eq : ∀ c i, i < parameterCount (source (pairFst c)) → ∀ k m, 0 < m →
-    denominator (pair (pair c (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k))) (BinaryNatCode.encode (m - 1))) =
-      residueBits (((d c i).coeff k : ℤ) : ZMod m)
+abbrev CoordinateReaders (source : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ) :=
+  IntegerBits.CoordinateReaders (fun c => parameterCount (source (pairFst c))) n d
 
-noncomputable def access (source active row : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ)
-    (C : CoordinateReaders source n d) : IntegerBits.Access (family source active row n d) where
+-- Preserve the original qualified constructor and field names.
+namespace CoordinateReaders
+variable {source : List Bool → List Bool} {n d : List Bool → ℕ → Polynomial ℤ}
+
+abbrev mk := @IntegerBits.CoordinateReaders.mk (fun c => parameterCount (source (pairFst c))) n d
+abbrev numerator (self : CoordinateReaders source n d) := IntegerBits.CoordinateReaders.numerator self
+abbrev denominator (self : CoordinateReaders source n d) := IntegerBits.CoordinateReaders.denominator self
+abbrev numeratorEvaluator (self : CoordinateReaders source n d) := IntegerBits.CoordinateReaders.numeratorEvaluator self
+abbrev denominatorEvaluator (self : CoordinateReaders source n d) := IntegerBits.CoordinateReaders.denominatorEvaluator self
+abbrev numerator_eq (self : CoordinateReaders source n d) := IntegerBits.CoordinateReaders.numerator_eq self
+abbrev denominator_eq (self : CoordinateReaders source n d) := IntegerBits.CoordinateReaders.denominator_eq self
+
+end CoordinateReaders
+
+noncomputable def sourceAccess (source active row : List Bool → List Bool) :
+    IntegerBits.IndexedSource.Access (indexedSource source active row) where
   arity := arityCode source
   width := widthCode source
   terms := termsCode source
   exponent := exponentRead source
   coefficient := coefficientValue source active row
-  numerator := C.numerator
-  denominator := C.denominator
   arity_eq _ := Nat.fromBitsLE_bits _
-  width_eq c := by simp only [family, widthCode, Function.comp_apply, TubeIndexed.clearingWidthCode_code, MacaulayBits.fromBits_encode]
-  terms_eq c := by simp only [family, termsCode, FixedWidthPolynomial.countCode_code, MacaulayBits.fromBits_encode, Function.comp_apply]
+  width_eq c := by
+    simp only [indexedSource, IntegerBits.IndexedSource.projected, widthCode, Function.comp_apply,
+      TubeIndexed.clearingWidthCode_code, MacaulayBits.fromBits_encode]
+  terms_eq c := by
+    simp only [indexedSource, IntegerBits.IndexedSource.projected, termsCode, FixedWidthPolynomial.countCode_code,
+      MacaulayBits.fromBits_encode, Function.comp_apply]
   exponent_eq c r _ i hi := exponentRead_packet source c r i hi
   coefficient_eq c r _ m hm := coefficientValue_packet source active row c r m hm
-  numerator_eq := C.numerator_eq
-  denominator_eq := C.denominator_eq
-
 
 attribute [local irreducible] exponentRead
 
-theorem access_controls (source active row : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ)
-    (C : CoordinateReaders source n d) (hs : source ∈ FP) : (access source active row n d C).ControlsPolyTime := by
+theorem sourceAccess_controls (source active row : List Bool → List Bool) (hs : source ∈ FP) :
+    (sourceAccess source active row).ControlsPolyTime := by
   constructor
-  · change arityCode source ∈ FP
-    exact arityCode_mem_FP hs
-  · change widthCode source ∈ FP
-    exact widthCode_mem_FP hs
-  · change termsCode source ∈ FP
-    exact termsCode_mem_FP hs
-  · dsimp only [access]
-    exact exponentRead_mem_FP hs
+  · exact arityCode_mem_FP hs
+  · exact widthCode_mem_FP hs
+  · exact termsCode_mem_FP hs
+  · exact exponentRead_mem_FP (source := source) hs
+
+noncomputable def access (source active row : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ)
+    (C : CoordinateReaders source n d) : IntegerBits.Access (family source active row n d) :=
+  IntegerBits.IndexedSource.access (sourceAccess source active row) C
+
+theorem access_controls (source active row : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ)
+    (C : CoordinateReaders source n d) (hs : source ∈ FP) : (access source active row n d C).ControlsPolyTime :=
+  IntegerBits.IndexedSource.access_controls _
+    (sourceAccess_controls source active row hs) C
 
 attribute [local irreducible] family
 
