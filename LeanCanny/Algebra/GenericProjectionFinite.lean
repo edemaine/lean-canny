@@ -68,6 +68,15 @@ theorem eval_liftPolynomial (p : MvPolynomial ι K) (z : Option ι → L) :
   rfl
 
 omit [Fintype ι] in
+theorem equations_iff (p : MvPolynomial ι K) (base : ι) (v : ι → B) (z : Option ι → L) :
+    (∀ j, aeval z (equation p base v j) = 0) ↔
+      let x : ι → L := fun i => z (some i)
+      aeval x p = 0 ∧ z none * aeval x (pderiv base p) = 1 ∧
+        ∀ i, aeval x (pderiv i p) = algebraMap B L (v i) * aeval x (pderiv base p) := by
+  simp only [Sum.forall, Bool.forall_bool, equation, map_sub, map_mul, aeval_X,
+    eval_liftPolynomial, map_one, aeval_C, sub_eq_zero, and_assoc]
+
+omit [Fintype ι] in
 theorem algebraic_polynomial_value (p : MvPolynomial ι K) (x : ι → L)
     (hx : ∀ i, IsAlgebraic B (x i)) : IsAlgebraic B (aeval x p) := by
   induction p using MvPolynomial.induction_on with
@@ -82,16 +91,7 @@ theorem algebraic_extended_coordinates [CharZero K] (p : MvPolynomial ι K) (bas
     (hind : AlgebraicIndependent K (fun i : {i : ι // i ≠ base} => v i))
     (hz : ∀ j, aeval z (equation p base v j) = 0) : ∀ j, IsAlgebraic B (z j) := by
   let x : ι → L := fun i => z (some i)
-  have hp : aeval x p = 0 := by
-    simpa only [equation, eval_liftPolynomial] using hz (.inl false)
-  have hinv : z none * aeval x (pderiv base p) = 1 := by
-    have h := hz (.inl true)
-    rw [equation, map_sub, map_mul, aeval_X, eval_liftPolynomial, map_one] at h
-    exact sub_eq_zero.mp h
-  have hpartial (i : ι) : aeval x (pderiv i p) = algebraMap B L (v i) * aeval x (pderiv base p) := by
-    have h := hz (.inr i)
-    rw [equation, map_sub, map_mul, aeval_C, eval_liftPolynomial, eval_liftPolynomial] at h
-    exact sub_eq_zero.mp h
+  obtain ⟨hp, hinv, hpartial⟩ := (equations_iff p base v z).mp hz
   have hw (i : ι) : algebraMap B L (v i) = z none * aeval x (pderiv i p) := by
     calc
       _ = algebraMap B L (v i) * (z none * aeval x (pderiv base p)) := by rw [hinv, mul_one]
@@ -130,17 +130,10 @@ theorem finite_regular_projection_roots_of_extended (p : MvPolynomial ι K) (bas
   apply (hfinite.image (fun z i => z (some i))).subset
   rintro x ⟨hp, hpartial, hne⟩
   let z : Option ι → B := fun j => j.elim ((aeval x (pderiv base p))⁻¹) x
-  have hzx : (fun i => z (some i)) = x := rfl
   refine ⟨z, ?_, rfl⟩
-  intro j
-  rcases j with b | i
-  · cases b
-    · rw [equation, eval_liftPolynomial, hzx]
-      exact hp
-    · rw [equation, map_sub, map_mul, aeval_X, eval_liftPolynomial, hzx, map_one]
-      exact sub_eq_zero.mpr (inv_mul_cancel₀ hne)
-  · rw [equation, map_sub, map_mul, aeval_C, eval_liftPolynomial, eval_liftPolynomial, hzx]
-    exact sub_eq_zero.mpr (hpartial i)
+  refine (equations_iff p base v z).mpr ⟨hp, inv_mul_cancel₀ hne, ?_⟩
+  intro i
+  simpa only [z, Option.elim_some, Algebra.algebraMap_self, RingHom.id_apply] using hpartial i
 
 theorem finite_regular_projection_roots [CharZero K] (p : MvPolynomial ι K) (base : ι) (v : ι → B)
     (hbase : v base = 1) (hind : AlgebraicIndependent K (fun i : {i : ι // i ≠ base} => v i)) :

@@ -268,22 +268,12 @@ theorem generic_extended_det_ne_zero [CharZero K] (p : MvPolynomial ι K) (base 
   have hpartial (i : ι) : aeval x (pderiv i (levelPolynomial p (genericLevel (K := K) base))) =
       aeval x (pderiv i p) := by
     rw [pderiv_levelPolynomial, eval_map_tower]
-  have hp : aeval x p = a := by
-    have h := hz (.inl false)
-    rw [GenericProjectionFinite.equation, GenericProjectionFinite.eval_liftPolynomial, heval] at h
-    exact sub_eq_zero.mp h
-  have hr : z none * aeval x (pderiv base p) = 1 := by
-    have h := hz (.inl true)
-    rw [GenericProjectionFinite.equation, map_sub, map_mul, aeval_X,
-      GenericProjectionFinite.eval_liftPolynomial, hpartial, map_one] at h
-    exact sub_eq_zero.mp h
-  have hc : ∀ i, aeval x (pderiv i p) = v i * aeval x (pderiv base p) := by
-    intro i
-    have h := hz (.inr i)
-    rw [GenericProjectionFinite.equation, map_sub, map_mul, aeval_C,
-      GenericProjectionFinite.eval_liftPolynomial, GenericProjectionFinite.eval_liftPolynomial,
-      hpartial, hpartial] at h
-    exact sub_eq_zero.mp h
+  obtain ⟨hp, hr, hc⟩ := (GenericProjectionFinite.equations_iff
+    (levelPolynomial p (genericLevel (K := K) base)) base (genericDirection (K := K) base) z).mp hz
+  rw [heval, sub_eq_zero] at hp
+  rw [hpartial] at hr
+  dsimp only [x] at hpartial
+  simp only [hpartial] at hc
   exact extended_det_ne_zero p base a v x (z none) hind hp hc hr
 
 end LeanCanny.Algebra.GenericProjectionJacobian
