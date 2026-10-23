@@ -7,6 +7,7 @@ module
 public import LeanCanny.ETR.TermView
 public import LeanCanny.ETR.SumSquaresFP
 public import LeanCanny.ETR.FinitePolynomial
+public import LeanCanny.Computation.PolyTimeCaptured
 
 /-! # Polynomial-time writing of polynomially bounded source powers
 
@@ -75,20 +76,13 @@ def write (source : List Bool → List Bool) (exponent : List Bool → ℕ) (c :
 theorem write_mem_FP {source : List Bool → List Bool} {exponent : List Bool → ℕ}
     (hs : source ∈ FP) (he : UnaryFn exponent) : write source exponent ∈ FP := by
   have hn := mem_FP_comp hs TermView.normalize_mem_FP
-  have hi := mem_FP_pair hn (constFn_mem_FP (Term.const 1).toData.toBits)
-  obtain ⟨p, hp⟩ := output_length_poly_of_mem_FP hi
-  obtain ⟨q, hq⟩ := output_length_poly_of_mem_FP he
-  obtain ⟨r, hr⟩ := output_length_poly_of_mem_FP hn
-  have hb := (PolyBound.eval p).add ((PolyBound.eval q).mul ((PolyBound.eval r).add (PolyBound.const 10)))
-  have hloop := iterate_mem_FP_of_polyBound step_mem_FP hi he hb (by
-    intro c n hnc
-    rw [iterate_pair_length]
-    have hinit := hp c
-    have hexp := hq c
-    simp only [List.length_replicate] at hexp hnc
-    exact Nat.add_le_add hinit (Nat.mul_le_mul (hnc.trans hexp) (Nat.add_le_add_right (hr c) 10)))
-  have h := mem_FP_comp hloop pairSnd_mem_FP
-  exact mem_FP_of_eq h (fun _ => by simp only [write, Function.comp_apply, List.length_replicate])
+  have hloop := CapturedIteration.mem_FP (fun f a => Codec.taggedTwo 3 f a)
+    step_mem_FP hn (constFn_mem_FP (Term.const 1).toData.toBits) he
+    (fun f a => by simp only [step, pairFst_pair, pairSnd_pair])
+    (hn.polyBounded_length.add (.const 10)) (fun c a => by
+      simp only [SumSquares.taggedTwo_length, Turing.MultiTapeTM.encBits_apply]
+      omega)
+  exact mem_FP_of_eq (mem_FP_comp hloop pairSnd_mem_FP) (fun _ => rfl)
 
 theorem iterate_term (t : Term) (n : ℕ) :
     step^[n] (pair t.toData.toBits (Term.const 1).toData.toBits) = pair t.toData.toBits (t.power n).toData.toBits := by

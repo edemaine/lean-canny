@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.EquationEncoding
+public import LeanCanny.Computation.PolyTimeCaptured
 
 /-!
 # A polynomial-time equation-list masking pass
@@ -90,23 +91,29 @@ def mask (input : List Bool) : List Bool :=
 
 theorem mask_mem_FP : mask ∈ FP := by
   have hr : ruler ∈ FP := mem_FP_comp pairSnd_mem_FP contents_mem_FP
-  have hi : init ∈ FP := mem_FP_pair pairFst_mem_FP (mem_FP_pair hr (constFn_mem_FP []))
-  obtain ⟨p, hp⟩ := output_length_poly_of_mem_FP hi
-  obtain ⟨q, hq⟩ := output_length_poly_of_mem_FP hr
-  obtain ⟨r, hfactor⟩ := output_length_poly_of_mem_FP pairFst_mem_FP
-  have hb := (PolyBound.eval p).add ((PolyBound.eval q).mul ((PolyBound.eval r).add (PolyBound.const 10)))
-  have hloop := iterate_mem_FP_of_polyBound step_mem_FP hi hr hb (fun z n hn => by
-    have hs := iterate_pair_length_le n (pairFst z) (ruler z) []
-    have hm := Nat.mul_le_mul (hn.trans (hq z)) (Nat.add_le_add_right (hfactor z) 10)
-    change (step^[n] (init z)).length ≤ _
-    dsimp only [init] at hs ⊢
-    have hi' := hp z
-    dsimp only [init] at hi'
-    omega)
+  let next := fun factor work =>
+    if pairFst work = [] then work else pair (afterNode (pairFst work))
+      (pairSnd work ++ Codec.taggedTwo 3 factor (firstNode (pairFst work)))
+  have hloop := CapturedIteration.mem_FP next step_mem_FP pairFst_mem_FP
+    (mem_FP_pair hr (constFn_mem_FP [])) (UnaryFn.length hr)
+    (fun factor work => by
+      dsimp only [step, next]
+      simp only [pairFst_pair, pairSnd_pair]
+      split_ifs <;> rfl)
+    (pairFst_mem_FP.polyBounded_length.add (.const 12)) (fun z work => by
+      have hp := CapturedIteration.pair_components_length_le work
+      have hnode : (firstNode (pairFst work)).length + (afterNode (pairFst work)).length =
+          (pairFst work).length := by
+        simpa only [List.length_append, firstNode, afterNode] using
+          congrArg List.length (List.take_append_drop (nodeLength (pairFst work)) (pairFst work))
+      simp only [Turing.MultiTapeTM.encBits_apply]
+      dsimp only [next]
+      split_ifs
+      · omega
+      · simp only [pair_length, List.length_append, SumSquares.taggedTwo_length]
+        omega)
   have ho := mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) wrap_mem_FP
-  have hdone := mem_FP_comp hloop ho
-  refine mem_FP_of_eq hdone (fun z => ?_)
-  simp only [mask, Function.comp_apply]
+  exact mem_FP_of_eq (mem_FP_comp hloop ho) (fun _ => rfl)
 
 theorem step_term_cons (factor t : Term) (ts : List Term) (acc : List Bool) :
     step (pair factor.toData.toBits (pair (SumSquares.forest (t :: ts)) acc)) =
