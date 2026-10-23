@@ -20,6 +20,8 @@ namespace LeanCanny.ETR.TubeParameter
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Algebra.MatrixPower
 
+attribute [local irreducible] parameterCount
+
 def coordinateQuery (f : List Bool → List Bool) (p : List Bool) : List Bool :=
   pair (pair (pair (f (pairFst (pairFst (pairFst p)))) []) (pairSnd (pairFst p))) (pairSnd p)
 
@@ -42,52 +44,22 @@ noncomputable def CoordinateReaders.precomposeUniform {source : List Bool → Li
     {n d : List Bool → ℕ → Polynomial ℤ}
     (C : CoordinateReaders source (fun c => n (pairFst c)) (fun c => d (pairFst c)))
     (f : List Bool → List Bool) (hf : f ∈ FP) :
-    CoordinateReaders (source ∘ f) (fun c => n (f (pairFst c))) (fun c => d (f (pairFst c))) where
-  numerator := C.numerator ∘ coordinateQuery f
-  denominator := C.denominator ∘ coordinateQuery f
-  numeratorEvaluator := C.numeratorEvaluator.precompose _ (coordinateQuery_mem_FP hf)
-  denominatorEvaluator := C.denominatorEvaluator.precompose _ (coordinateQuery_mem_FP hf)
-  numerator_eq c i hi k m hm := by
-    change C.numerator (coordinateQuery f _) = _
-    rw [coordinateQuery_packet]
-    have h := C.numerator_eq (pair (f (pairFst c)) []) i (by simpa only [pairFst_pair, Function.comp_apply] using hi) k m hm
-    simp only [pairFst_pair] at h
-    exact h
-  denominator_eq c i hi k m hm := by
-    change C.denominator (coordinateQuery f _) = _
-    rw [coordinateQuery_packet]
-    have h := C.denominator_eq (pair (f (pairFst c)) []) i (by simpa only [pairFst_pair, Function.comp_apply] using hi) k m hm
-    simp only [pairFst_pair] at h
-    exact h
+    CoordinateReaders (source ∘ f) (fun c => n (f (pairFst c))) (fun c => d (f (pairFst c))) := by
+  convert Algebra.RationalSubstitution.IntegerBits.CoordinateReaders.precompose
+    (arity := fun c => parameterCount (source (pairFst c)))
+    (n := fun c => n (pairFst c)) (d := fun c => d (pairFst c)) C
+    (coordinateContext f) (coordinateContext_mem_FP hf) using 1 <;>
+    funext c <;> simp only [Function.comp_apply, coordinateContext, pairFst_pair]
 
 noncomputable def CoordinateBounds.precomposeUniform {source : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ}
     (B : CoordinateBounds source (fun c => n (pairFst c)) (fun c => d (pairFst c)))
     (f : List Bool → List Bool) (hf : f ∈ FP) :
-    CoordinateBounds (source ∘ f) (fun c => n (f (pairFst c))) (fun c => d (f (pairFst c))) where
-  degree := B.degree ∘ coordinateContext f
-  bits := B.bits ∘ coordinateContext f
-  degreeFP := mem_FP_comp (coordinateContext_mem_FP hf) B.degreeFP
-  bitsFP := mem_FP_comp (coordinateContext_mem_FP hf) B.bitsFP
-  numerator_degree c i hi := by
-    have h := B.numerator_degree (coordinateContext f c) i (by
-      simpa only [coordinateContext, pairFst_pair, Function.comp_apply] using hi)
-    simp only [coordinateContext, pairFst_pair] at h
-    exact h
-  denominator_degree c i hi := by
-    have h := B.denominator_degree (coordinateContext f c) i (by
-      simpa only [coordinateContext, pairFst_pair, Function.comp_apply] using hi)
-    simp only [coordinateContext, pairFst_pair] at h
-    exact h
-  numerator_coeff c i hi k := by
-    have h := B.numerator_coeff (coordinateContext f c) i (by
-      simpa only [coordinateContext, pairFst_pair, Function.comp_apply] using hi) k
-    simp only [coordinateContext, pairFst_pair] at h
-    exact h
-  denominator_coeff c i hi k := by
-    have h := B.denominator_coeff (coordinateContext f c) i (by
-      simpa only [coordinateContext, pairFst_pair, Function.comp_apply] using hi) k
-    simp only [coordinateContext, pairFst_pair] at h
-    exact h
+    CoordinateBounds (source ∘ f) (fun c => n (f (pairFst c))) (fun c => d (f (pairFst c))) := by
+  convert Algebra.RationalSubstitution.IntegerBits.CoordinateBounds.precompose
+    (arity := fun c => parameterCount (source (pairFst c)))
+    (n := fun c => n (pairFst c)) (d := fun c => d (pairFst c)) B
+    (coordinateContext f) (coordinateContext_mem_FP hf) using 1 <;>
+    funext c <;> simp only [Function.comp_apply, coordinateContext, pairFst_pair]
 
 end LeanCanny.ETR.TubeParameter
