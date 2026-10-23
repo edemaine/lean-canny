@@ -43,7 +43,10 @@ def singleVector (A W : List Bool → ℕ) (p : List Bool) : List Bool :=
     (fun j => if j = Nat.fromBitsLE (pairSnd p) then 1 else 0)
 
 theorem singleVector_mem_FP {A W : List Bool → ℕ} (hA : UnaryFn A) (hW : UnaryFn W) : singleVector A W ∈ FP := by
-  apply FixedWidthNatVector.encode_mem_FP _ _ _ (hA.comp original_mem_FP) (hW.comp original_mem_FP) singleRead singleRead_mem_FP
+  apply FixedWidthNatVector.encode_of_coordinate (hA.comp original_mem_FP) (hW.comp original_mem_FP)
+    Turing.MultiTapeTM.ComputableTidilyInPolyTime.unary_to_binary
+  apply FixedWidthNatVector.coordinate_of_reader
+    (e := fun p j => if j = Nat.fromBitsLE (pairSnd p) then 1 else 0) singleRead_mem_FP
   intro p j
   simp only [singleRead, pairFst_pair, pairSnd_pair, BinaryNat.normalize_eq_bits, MacaulayBits.fromBits_encode]
   by_cases h : j = Nat.fromBitsLE (pairSnd p)

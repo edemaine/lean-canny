@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.RecursiveMatrixPower
+public import LeanCanny.Computation.ControllerRequests
 
 /-! # One native space machine for input-dependent matrix-power nesting -/
 
@@ -60,7 +61,7 @@ theorem evaluator (h : S.Controls) (rank : List Bool → ℕ) (tasks : List Bool
       ((UnaryFn.const 64).mul ((hM.add (UnaryFn.const 1)).pow_const 2))
   have hB : PolyBounded List.length B := by
     simpa only [encBits_apply, encUnary_apply, List.length_replicate] using hB'.polyBounded_length
-  refine ⟨S.controller.evaluator (S.certificates h) S.answer rank S.budget tasks N R B hN hR hB hroot
+  refine ⟨S.controller.evaluatorOfOrbits (S.certificates h) S.answer rank S.budget tasks N R B hN hR hB hroot
     (fun _ q _ => S.budget_halts q) ?_ ?_ ?_ hrank ?_ ?_ ?_⟩
   · intro root q hq
     have hbq : S.budget q ≤ work (S.family.dimension q) (S.family.exponent q).size (S.family.exponent q) + 1 := by
@@ -72,17 +73,12 @@ theorem evaluator (h : S.Controls) (rank : List Bool → ℕ) (tasks : List Bool
         (M root + 2) * M root + 1 :=
       Nat.add_le_add_right (Nat.mul_le_mul (by omega) (by omega)) 1
     exact hbq.trans (hw.trans (Nat.pow_le_pow_right (by decide) he))
-  · intro root f hf hh
-    obtain ⟨_, t, _, he⟩ := hf
-    rw [he] at hh ⊢
-    exact S.output_correct f.1 t hh
-  · intro root f hf _ hn
-    obtain ⟨hq, t, _, he⟩ := hf
-    change f.2 = (S.controller.reference S.answer)^[t] (S.initial f.1) at he
-    rw [he] at hn
-    obtain ⟨hl, i, j, hij⟩ := S.query_indices f.1 t hn
-    rw [he, hij]
-    exact hgraph root f.1 hq hl i j
+  · intro root q t _ _ hh
+    exact S.output_correct q t hh
+  · intro root q t hq _ _ hn
+    obtain ⟨hl, i, j, hij⟩ := S.query_indices q t hn
+    rw [show S.controller.initial q = S.initial q from rfl, hij]
+    exact hgraph root q hq hl i j
   · intro root q hq
     change q.length ≤ B root
     have hq' := htask root q hq

@@ -4,8 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Encoding.BinaryPowModFP
-public import LeanCanny.Encoding.BinaryDivFP
+public import LeanCanny.Computation.PolyTimeBinaryArithmetic
 public import Mathlib.Algebra.BigOperators.Fin
 
 /-! # Polynomial-time ternary counts and digit access
@@ -55,19 +54,29 @@ theorem padding_mem_FP {k : List Bool → List Bool} (hk : UnaryFn (fun c => Nat
 theorem power_mem_FP {k n : List Bool → List Bool}
     (hk : UnaryFn (fun c => Nat.fromBitsLE (k c))) (hn : n ∈ FP) :
     (fun c => power (k c) (n c)) ∈ FP := by
-  have h := mem_FP_comp (mem_FP_pair (constFn_mem_FP (BinaryNatCode.encode 3))
-    (mem_FP_pair hn (padding_mem_FP hk))) BinaryNat.powMod_mem_FP
-  refine mem_FP_of_eq h ?_
+  have h := (BinaryFn.const 3).powModSucc (BinaryFn.fromBits hn)
+    (BinaryFn.fromBits (padding_mem_FP hk))
+  refine mem_FP_of_eq h.bits_mem_FP ?_
   intro c
-  simp only [power, Function.comp_apply]
+  simp only [power, BinaryNat.powMod_eq_bits, pairFst_pair, pairSnd_pair,
+    BinaryNatCode.encode, Nat.fromBitsLE_bits]
+
+/-- The unreduced power certificate requires the same bound as `power_eq`. -/
+theorem power_binary {k n : List Bool → List Bool}
+    (hk : UnaryFn (fun c => Nat.fromBitsLE (k c))) (hn : n ∈ FP)
+    (hbound : ∀ c, Nat.fromBitsLE (n c) ≤ Nat.fromBitsLE (k c)) :
+    BinaryFn (fun c => 3 ^ Nat.fromBitsLE (n c)) :=
+  BinaryFn.of_bits (mem_FP_of_eq (power_mem_FP hk hn) (fun c => power_eq _ _ (hbound c)))
 
 def count (k : List Bool) : List Bool := power k k
 
 theorem count_eq (k : List Bool) : count k = BinaryNatCode.encode (3 ^ Nat.fromBitsLE k) := power_eq _ _ le_rfl
 
 theorem count_mem_FP {k : List Bool → List Bool} (hk : k ∈ FP)
-    (hu : UnaryFn (fun c => Nat.fromBitsLE (k c))) : (fun c => count (k c)) ∈ FP :=
-  power_mem_FP hu hk
+    (hu : UnaryFn (fun c => Nat.fromBitsLE (k c))) : (fun c => count (k c)) ∈ FP := by
+  refine mem_FP_of_eq (power_binary hu hk (fun _ => le_rfl)).bits_mem_FP ?_
+  intro c
+  exact (count_eq (k c)).symm
 
 def digit (k q i : List Bool) : List Bool :=
   if Nat.fromBitsLE i < Nat.fromBitsLE k then
@@ -81,13 +90,14 @@ theorem digit_eq (k q i : List Bool) (hi : Nat.fromBitsLE i < Nat.fromBitsLE k) 
 
 theorem digit_mem_FP {k q i : List Bool → List Bool} (hk : k ∈ FP) (hq : q ∈ FP) (hi : i ∈ FP)
     (hu : UnaryFn (fun c => Nat.fromBitsLE (k c))) : (fun c => digit (k c) (q c) (i c)) ∈ FP := by
-  have hp := power_mem_FP hu hi
-  have hd := mem_FP_comp (mem_FP_pair hq hp) BinaryNat.div_mem_FP
-  have hm := mem_FP_comp (mem_FP_pair hd (constFn_mem_FP (BinaryNatCode.encode 3))) BinaryNat.mod_mem_FP
-  have h := (BinaryNat.lt_fppred hi hk).ite_mem_FP hm (constFn_mem_FP [])
+  have hp := BinaryFn.fromBits (power_mem_FP hu hi)
+  have hd := (BinaryFn.fromBits hq).div hp
+  have hm := hd.mod (BinaryFn.const 3)
+  have h := ((BinaryFn.fromBits hi).lt (BinaryFn.fromBits hk)).ite_mem_FP hm.bits_mem_FP (constFn_mem_FP [])
   refine mem_FP_of_eq h ?_
   intro c
-  simp only [digit, Function.comp_apply]
+  simp only [digit, BinaryNat.mod_pair, BinaryNat.div_pair,
+    BinaryNatCode.encode, Nat.fromBitsLE_bits]
 
 def vector (k q : ℕ) (i : Fin k) : Fin 3 := ⟨q / 3 ^ i.val % 3, Nat.mod_lt _ (by decide)⟩
 
