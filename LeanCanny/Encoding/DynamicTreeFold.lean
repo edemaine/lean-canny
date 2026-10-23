@@ -142,21 +142,29 @@ theorem runEncoded_mem_FP (empty : List Bool → σ) (combine : List Bool → σ
       (mem_FP_comp (mem_FP_pair hempty (constFn_mem_FP [])) (cons_mem_FP true)) ?_
     intro z
     simp only [hempty_eq, encode, stackBits, Function.comp_apply]
-  refine recFold_mem_FP_of_bound
-    (g := fun z t => encode code (TreeFold.run (empty z) (combine z) t))
-    (mem_FP_comp pairFst_mem_FP (update_mem_FP hempty hcombine false))
-    (mem_FP_comp pairFst_mem_FP (update_mem_FP hempty hcombine true))
-    hinit id_mem_FP id_mem_FP ?_ ?_ ?_ hbound hle
-  · intro z
-    rfl
-  · intro z t
-    simpa only [Function.comp_apply, pairFst_pair, id_eq, TreeFold.run_cons] using
-      (update_encode empty combine code emptyBits combineBits hempty_eq hcombine_eq z false
-        (TreeFold.run (empty z) (combine z) t)).symm
-  · intro z t
-    simpa only [Function.comp_apply, pairFst_pair, id_eq, TreeFold.run_cons] using
-      (update_encode empty combine code emptyBits combineBits hempty_eq hcombine_eq z true
-        (TreeFold.run (empty z) (combine z) t)).symm
+  let step := fun z acc bit => update emptyBits combineBits bit (pair z acc)
+  have hp : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : (List Bool × List Bool) × Bool => pair p.1.1 p.1.2)
+      (Turing.MultiTapeTM.encPair
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+        Turing.MultiTapeTM.encBool) Turing.MultiTapeTM.encBits := by fun_prop
+  have hstep : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : (List Bool × List Bool) × Bool => step p.1.1 p.1.2 p.2)
+      (Turing.MultiTapeTM.encPair
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+        Turing.MultiTapeTM.encBool) Turing.MultiTapeTM.encBits := by
+    have hb := Turing.MultiTapeTM.ComputableTidilyInPolyTime.snd
+      (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+      Turing.MultiTapeTM.encBool
+    exact (hb.cond ((update_mem_FP hempty hcombine true).comp hp)
+      ((update_mem_FP hempty hcombine false).comp hp)).of_enc_eq
+        fun p => by cases p.2 <;> rfl
+  refine foldrEncodedWith_spec (encode code) (step := step)
+    (g := fun z t => TreeFold.run (empty z) (combine z) t)
+    id_mem_FP id_mem_FP hinit hstep ?_ (hbound.polyBounded (fun z : List Bool => z.length)) hle
+  intro z t bit
+  exact update_encode empty combine code emptyBits combineBits hempty_eq hcombine_eq z bit
+    (TreeFold.run (empty z) (combine z) t)
 
 theorem step_encode_length_le (empty : σ) (combine : σ → σ → σ)
     (code : σ → List Bool) (c : ℕ)

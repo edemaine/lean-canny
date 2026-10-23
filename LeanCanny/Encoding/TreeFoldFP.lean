@@ -151,27 +151,33 @@ theorem runEncoded_mem_FP (empty : σ) (combine : σ → σ → σ) (code : σ �
     (width : ℕ) (hwidth : 0 < width) (hlen : ∀ s, (code s).length = width)
     (hinj : Function.Injective code) (keys : List σ) (hkeys : ∀ s, s ∈ keys) :
     (fun bits => encode code (run empty combine bits)) ∈ FP := by
-  have hacc : (fun w : List Bool => pairSnd (pairFst w)) ∈ FP :=
-    mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  refine recFold_mem_FP_of_bound (g := fun _ bits => encode code (run empty combine bits))
-    (mem_FP_comp hacc (encodedStep_mem_FP empty combine code width keys false))
-    (mem_FP_comp hacc (encodedStep_mem_FP empty combine code width keys true))
-    (constFn_mem_FP (encode code (some [empty]))) (constFn_mem_FP []) id_mem_FP
-    ?_ ?_ ?_ ((PolyBound.const 1).add
-      ((PolyBound.const width).mul (PolyBound.id.add (PolyBound.const 1)))) ?_
-  · intro z
-    rfl
-  · intro z bits
-    simpa only [Function.comp_apply, pairFst_pair, pairSnd_pair, run_cons] using
-      (encodedStep_encode empty combine code width hwidth hlen hinj keys hkeys false
-        (run empty combine bits)).symm
-  · intro z bits
-    simpa only [Function.comp_apply, pairFst_pair, pairSnd_pair, run_cons] using
-      (encodedStep_encode empty combine code width hwidth hlen hinj keys hkeys true
-        (run empty combine bits)).symm
-  · intro z bits hbits
-    rw [encode_length code width hlen]
-    have hh := (run_frameCount_le empty combine bits).trans (Nat.add_le_add_right hbits.length_le 1)
-    exact Nat.add_le_add_left (Nat.mul_le_mul_left width hh) 1
+  let step := fun (_ : List Bool) acc bit => encodedStep empty combine code width keys bit acc
+  have hacc : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : (List Bool × List Bool) × Bool => p.1.2)
+      (Turing.MultiTapeTM.encPair
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+        Turing.MultiTapeTM.encBool) Turing.MultiTapeTM.encBits := by fun_prop
+  have hstep : Turing.MultiTapeTM.ComputableTidilyInPolyTime
+      (fun p : (List Bool × List Bool) × Bool => step p.1.1 p.1.2 p.2)
+      (Turing.MultiTapeTM.encPair
+        (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+        Turing.MultiTapeTM.encBool) Turing.MultiTapeTM.encBits := by
+    have hb := Turing.MultiTapeTM.ComputableTidilyInPolyTime.snd
+      (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
+      Turing.MultiTapeTM.encBool
+    exact (hb.cond ((encodedStep_mem_FP empty combine code width keys true).comp hacc)
+      ((encodedStep_mem_FP empty combine code width keys false).comp hacc)).of_enc_eq
+        fun p => by cases p.2 <;> rfl
+  refine foldrEncodedWith_spec (encode code) (step := step) (g := fun _ bits => run empty combine bits)
+    (constFn_mem_FP []) id_mem_FP (constFn_mem_FP (encode code (some [empty]))) hstep
+    (fun _ bits bit => encodedStep_encode empty combine code width hwidth hlen hinj keys hkeys bit
+      (run empty combine bits))
+    (((PolyBound.const 1).add
+      ((PolyBound.const width).mul (PolyBound.id.add (PolyBound.const 1)))).polyBounded
+        (fun z : List Bool => z.length)) ?_
+  intro z bits hbits
+  rw [encode_length code width hlen]
+  have hh := (run_frameCount_le empty combine bits).trans (Nat.add_le_add_right hbits.length_le 1)
+  exact Nat.add_le_add_left (Nat.mul_le_mul_left width hh) 1
 
 end LeanCanny.Encoding.TreeFold
