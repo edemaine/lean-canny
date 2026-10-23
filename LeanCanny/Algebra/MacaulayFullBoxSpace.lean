@@ -107,6 +107,40 @@ theorem Family.coefficientInput_packet (F : Family) (c : List Bool) (i k d : ℕ
   simp only [Family.coefficientInput, pairFst_pair, pairSnd_pair, BinaryNat.divMod_pair,
     BinaryNatCode.encode, Nat.fromBitsLE_bits]
 
+/-- The shared univariate encoding retains the native matrix-entry reader. -/
+noncomputable def Family.encodedAccess (F : Family) (coefficient : List Bool → List Bool)
+    (hc : ∀ c (i j : Fin (F.dimension c)) u v,
+      coefficient (pair c (pair (BinaryNatCode.encode i.val)
+        (pair (BinaryNatCode.encode j.val) (pair (BinaryNatCode.encode u) (BinaryNatCode.encode v))))) =
+          residueBits (((F.matrix c i j).coeff v).coeff u)) : BerkowitzPolynomial.ModularAccess F.encoded where
+  dimension := fun c => BinaryNatCode.encode (F.dimension c)
+  modulus := fun c => BinaryNatCode.encode (F.modulus c)
+  degree := fun c => BinaryNatCode.encode (F.encoded.degree c)
+  entry := coefficient ∘ F.coefficientInput
+  dimension_eq _ := rfl
+  modulus_eq _ := rfl
+  degree_eq _ := rfl
+  entry_eq c i k d := by
+    change Fin (F.dimension c) at i
+    change coefficient (F.coefficientInput _) = _
+    rw [F.coefficientInput_packet, hc c i k (d % F.radix c) (d / F.radix c)]
+    change residueBits _ = residueBits ((PolynomialKronecker.encode (F.radix c) (F.matrix c i k)).coeff d)
+    rw [PolynomialKronecker.coefficient_any (F.radix c) (F.radix_pos c) _
+      (fun j => (F.inner_bound c i k j).trans_lt (F.bound_lt_radix c))]
+
+theorem Family.encodedEntryEvaluator (F : Family) (coefficient : List Bool → List Bool)
+    (hc : ∀ c (i j : Fin (F.dimension c)) u v,
+      coefficient (pair c (pair (BinaryNatCode.encode i.val)
+        (pair (BinaryNatCode.encode j.val) (pair (BinaryNatCode.encode u) (BinaryNatCode.encode v))))) =
+          residueBits (((F.matrix c i j).coeff v).coeff u))
+    (hn : BinaryFn F.dimension) (hb : BinaryFn F.bound) (E : SpaceFunction coefficient) :
+    SpaceFunction (F.encodedAccess coefficient hc).entry :=
+  E.precompose F.coefficientInput (F.coefficientInput_mem_FP hn hb)
+
+theorem Family.encodedDegree_binary (F : Family) (hn : BinaryFn F.dimension)
+    (hb : BinaryFn F.bound) (hi : BinaryFn F.inner) (ho : BinaryFn F.outer) :
+    BinaryFn F.encoded.degree := hi.add ((F.radix_binary hn hb).mul ho)
+
 /-- Canonical binary controls remove the redundant writer/equality layer. The
 entry certificate still accepts an arbitrary native polynomial-space child. -/
 theorem Family.evaluator (F : Family) (coefficient : List Bool → List Bool)
@@ -117,24 +151,10 @@ theorem Family.evaluator (F : Family) (coefficient : List Bool → List Bool)
     (hn : BinaryFn F.dimension) (hm : BinaryFn F.modulus) (hb : BinaryFn F.bound)
     (hi : BinaryFn F.inner) (ho : BinaryFn F.outer) (E : SpaceFunction coefficient) :
     SpaceFunction F.value := by
-  let a : BerkowitzPolynomial.ModularAccess F.encoded := {
-    dimension := fun c => BinaryNatCode.encode (F.dimension c)
-    modulus := fun c => BinaryNatCode.encode (F.modulus c)
-    degree := fun c => BinaryNatCode.encode (F.encoded.degree c)
-    entry := coefficient ∘ F.coefficientInput
-    dimension_eq _ := rfl
-    modulus_eq _ := rfl
-    degree_eq _ := rfl
-    entry_eq c i k d := by
-      change Fin (F.dimension c) at i
-      change coefficient (F.coefficientInput _) = _
-      rw [F.coefficientInput_packet, hc c i k (d % F.radix c) (d / F.radix c)]
-      change residueBits _ = residueBits ((PolynomialKronecker.encode (F.radix c) (F.matrix c i k)).coeff d)
-      rw [PolynomialKronecker.coefficient_any (F.radix c) (F.radix_pos c) _
-        (fun j => (F.inner_bound c i k j).trans_lt (F.bound_lt_radix c))] }
+  let a := F.encodedAccess coefficient hc
   have hr := F.radix_binary hn hb
-  have ES := a.evaluator ⟨hn.bits_mem_FP, hm.bits_mem_FP, (hi.add (hr.mul ho)).bits_mem_FP⟩
-    (E.precompose F.coefficientInput (F.coefficientInput_mem_FP hn hb))
+  have ES := a.evaluator ⟨hn.bits_mem_FP, hm.bits_mem_FP, (F.encodedDegree_binary hn hb hi ho).bits_mem_FP⟩
+    (F.encodedEntryEvaluator coefficient hc hn hb E)
   have EB := SpaceFunction.branch (fun c => decide (F.inner c < F.radix c)) (hi.lt hr).flag_mem_FP
     ES (SpaceFunction.ofFP _ (constFn_mem_FP []))
   refine EB.congr (funext fun c => ?_)
