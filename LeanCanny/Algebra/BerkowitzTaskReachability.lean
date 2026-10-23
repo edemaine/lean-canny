@@ -23,11 +23,8 @@ open LeanCanny.Computation
 variable {F : ModularFamily} (a : ModularAccess F)
 variable {S : Type} [Inhabited S] (source : RecursiveController.Controller (List Bool) S)
 
-def Requests (sourceBudget : List Bool → ℕ) (q child : List Bool) : Prop :=
-  ∃ t, t ≤ budget (F := F) sourceBudget q ∧
-    (controller a source).halted (((controller a source).reference (answer a))^[t] ((controller a source).initial q)) = false ∧
-    (controller a source).needs (((controller a source).reference (answer a))^[t] ((controller a source).initial q)) = true ∧
-    child = (controller a source).query (((controller a source).reference (answer a))^[t] ((controller a source).initial q))
+abbrev Requests (sourceBudget : List Bool → ℕ) (q child : List Bool) : Prop :=
+  (controller a source).Requests (answer a) (budget (F := F) sourceBudget) q child
 
 def Reachable (sourceBudget : List Bool → ℕ) : List Bool → List Bool → Prop :=
   Relation.ReflTransGen (Requests a source sourceBudget)

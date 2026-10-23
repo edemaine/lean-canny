@@ -46,23 +46,10 @@ theorem singleCall_source_state_bound (tasks : List Bool → List Bool → Prop)
   have hw := hp.trans (hword root q hq)
   have hb : P.request (payload q) = true → (answer a (P.query (payload q))).length ≤ K root := by
     intro hn
-    rcases hs with ⟨hz, hd, hf, hm⟩
-    have hh : (controller a P.controller).halted
-        (((controller a P.controller).reference (answer a))^[0] ((controller a P.controller).initial q)) = false := by
-      rw [halted_iterate]
-      simp only [hz, hd, hf, hm, Bool.false_eq_true, ite_false, Function.iterate_zero, id_eq]
-      change Bool.not (P.request (payload q)) = false
-      rw [hn]; rfl
-    have hn' : (controller a P.controller).needs
-        (((controller a P.controller).reference (answer a))^[0] ((controller a P.controller).initial q)) = true := by
-      rw [needs_iterate]
-      simpa only [hz, hd, hf, hm, Bool.false_eq_true, ite_false, Function.iterate_zero, id_eq,
-        SingleCall.Program.controller, SingleCall.Program.initial] using hn
-    have hc := hclosed root q 0 hq (Nat.zero_le _) hh hn'
-    rw [query_iterate] at hc
-    simp only [hz, hd, hf, hm, Bool.false_eq_true, ite_false, Function.iterate_zero, id_eq,
-      SingleCall.Program.controller, SingleCall.Program.initial] at hc
-    exact hanswer root _ hc
+    apply hanswer root _
+    apply queriesClosed_request a P.controller (fun _ => 1) tasks hclosed root q _ hq
+    apply (source_requests_iff a P.controller (answer a) (budget (F := F) (fun _ => 1)) q _ hs).mpr
+    exact (P.requests_iff (answer a) _ (payload q) _).mpr ⟨hn, rfl⟩
   have h := P.state_length_of_bound (answer a) (payload q) t (K root) hb
   omega
 

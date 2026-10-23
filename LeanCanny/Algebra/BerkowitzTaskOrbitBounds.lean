@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.BerkowitzTaskStorage
+public import LeanCanny.Computation.ControllerRequests
 
 /-! # Storage bounds for reachable mixed-stage tasks
 
@@ -32,33 +33,41 @@ def QueriesClosed (sourceBudget : List Bool → ℕ) (tasks : List Bool → List
     tasks root ((controller a source).query
       (((controller a source).reference (answer a))^[t] ((controller a source).initial q)))
 
+theorem queriesClosed_request (sourceBudget : List Bool → ℕ) (tasks : List Bool → List Bool → Prop)
+    (hclosed : QueriesClosed a source sourceBudget tasks) (root q child : List Bool)
+    (hq : tasks root q)
+    (hr : (controller a source).Requests (answer a) (budget (F := F) sourceBudget) q child) :
+    tasks root child := by
+  obtain ⟨t, ht, hh, hn, he⟩ := hr
+  rw [he]
+  exact hclosed root q t hq ht hh hn
+
+theorem factor_requests_iff (g : List Bool → List Bool) (B : List Bool → ℕ)
+    (q child : List Bool) (hf : SelectedFactor q) :
+    (controller a source).Requests g B q child ↔
+      (FactorStage.program a sourceTask momentTask).request (payload q) = true ∧
+        child = (FactorStage.program a sourceTask momentTask).query (payload q) := by
+  simp only [controller, RecursiveController.Controller.choose_requests_iff,
+    hf.1, hf.2.1, hf.2.2, Bool.false_eq_true, ite_false, ite_true,
+    RecursiveController.Controller.prepare_requests_iff, SingleCall.Program.requests_iff]
+
+theorem source_requests_iff (g : List Bool → List Bool) (B : List Bool → ℕ)
+    (q child : List Bool) (hs : SelectedSource q) :
+    (controller a source).Requests g B q child ↔
+      source.Requests g (fun _ => B q) (payload q) child := by
+  simp only [controller, RecursiveController.Controller.choose_requests_iff,
+    hs.1, hs.2.1, hs.2.2.1, hs.2.2.2, Bool.false_eq_true, ite_false,
+    RecursiveController.Controller.prepare_requests_iff]
+
 theorem factor_reply_bound (sourceBudget : List Bool → ℕ) (tasks : List Bool → List Bool → Prop)
     (hclosed : QueriesClosed a source sourceBudget tasks) (K : List Bool → ℕ)
     (ha : ∀ root q, tasks root q → (answer a q).length ≤ K root)
     (root q : List Bool) (hq : tasks root q) (hf : SelectedFactor q)
     (hr : (FactorStage.program a sourceTask momentTask).request (payload q) = true) :
     (answer a ((FactorStage.program a sourceTask momentTask).query (payload q))).length ≤ K root := by
-  have hh : (controller a source).halted
-      (((controller a source).reference (answer a))^[0] ((controller a source).initial q)) = false := by
-    rw [halted_iterate]
-    simp only [hf.1, hf.2.1, hf.2.2, Bool.false_eq_true, ite_false, ite_true, Function.iterate_zero, id_eq]
-    change Bool.not ((FactorStage.program a sourceTask momentTask).request (payload q)) = false
-    rw [hr]
-    rfl
-  have hn : (controller a source).needs
-      (((controller a source).reference (answer a))^[0] ((controller a source).initial q)) = true := by
-    rw [needs_iterate]
-    simpa only [hf.1, hf.2.1, hf.2.2, Bool.false_eq_true, ite_false, ite_true, Function.iterate_zero,
-      id_eq, SingleCall.Program.controller, SingleCall.Program.initial] using hr
-  have he : (controller a source).query
-      (((controller a source).reference (answer a))^[0] ((controller a source).initial q)) =
-        (FactorStage.program a sourceTask momentTask).query (payload q) := by
-    rw [query_iterate]
-    simp only [hf.1, hf.2.1, hf.2.2, Bool.false_eq_true, ite_false, ite_true, Function.iterate_zero,
-      id_eq, SingleCall.Program.controller, SingleCall.Program.initial]
-  have hc := hclosed root q 0 hq (Nat.zero_le _) hh hn
-  rw [he] at hc
-  exact ha root _ hc
+  apply ha root _
+  apply queriesClosed_request a source sourceBudget tasks hclosed root q _ hq
+  exact (factor_requests_iff a source (answer a) (budget (F := F) sourceBudget) q _ hf).mpr ⟨hr, rfl⟩
 
 def stageBound (K M V : ℕ) : ℕ := 3 * K + 4 + 64 * (M + 1) ^ 2 + V
 

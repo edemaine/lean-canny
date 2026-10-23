@@ -75,24 +75,14 @@ theorem evaluator {eS : S ↪ List Bool} (ha : a.ControlsPolyTime)
   have hb' : PolyBounded List.length commonState := by
     simpa only [encBits_apply, encUnary_apply, List.length_replicate] using hb.polyBounded_length
   have hclosed := ranked_queries_closed a source sourceBudget tasks rank hgraph
-  refine ⟨(controller a source).evaluator (certificates a ha source hC) (answer a) rank
+  refine ⟨(controller a source).evaluatorOfOrbits (certificates a ha source hC) (answer a) rank
     (budget (F := F) sourceBudget) tasks commonBudget R commonState hn hR hb' hroot
     (fun _ q _ => halted_after a source sourceBudget hstop q) ?_ ?_ ?_ hrank ?_ ?_ ?_⟩
   · intro root q hq
     exact budget_le sourceBudget q (M root) (N root) (hdet root q hq) (hmoment root q hq) (hsourceBudget root q hq)
-  · intro root f hf hh
-    obtain ⟨_, t, _, he⟩ := hf
-    rw [he] at hh ⊢
-    exact output_correct a source hcorrect f.1 t hh
-  · intro root f hf hh hneeds
-    obtain ⟨hq, t, ht, he⟩ := hf
-    have hh' : (controller a source).halted
-        (((controller a source).reference (answer a))^[t] ((controller a source).initial f.1)) = false := by rwa [← he]
-    have hn' : (controller a source).needs
-        (((controller a source).reference (answer a))^[t] ((controller a source).initial f.1)) = true := by rwa [← he]
-    have h := hgraph root f.1 t hq ht hh' hn'
-    rw [← he] at h
-    exact h
+  · intro root q t _ _ hh
+    exact output_correct a source hcorrect q t hh
+  · exact hgraph
   · intro root q hq
     change q.length ≤ commonState root
     have h := hword root q hq
