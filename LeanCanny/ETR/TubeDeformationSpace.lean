@@ -25,41 +25,61 @@ attribute [local irreducible] PolynomialAffineEntryBits.value BerkowitzAffinePol
 attribute [local irreducible] Macaulay.matrix Matrix.det
 attribute [local irreducible] TubeIndexed.degreeBound TubeParameter.spatialCount TubeCleared.matrixWidth
 
+/-- Both consumers use binary dimension and entry-degree controls. -/
+theorem determinantControls {source active modulus inner middle : List Bool → List Bool}
+    {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
+    (D : TubeBivariate.Data source active modulus inner middle n d ell) :
+    BinaryFn (TubeBivariate.family source active modulus inner middle n d ell D.bounds).determinant.dimension ∧
+    BinaryFn (TubeBivariate.family source active modulus inner middle n d ell D.bounds).determinant.bound := by
+  constructor
+  · exact BinaryFn.of_bits (mem_FP_of_eq
+      (MacaulayBits.dimensionCode_mem_FP (TubeCleared.layout_polyTime D.sourceFP))
+      (FixedWidthPolynomial.countCode_code _ _))
+  · exact BinaryFn.fromBits (TubeCleared.uniformDegree_mem_FP D.sourceFP D.bounds.degreeFP)
+
 theorem originalEntryEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) :
     SpaceFunction (originalAccess source active modulus inner middle n d ell D.bounds).entry := by
   let a := TubeBivariate.access source active modulus inner middle n d ell D.bounds
-  have hL := TubeCleared.layout_polyTime D.sourceFP
-  have hM := mem_FP_comp D.modulusFP BinaryNat.succ_mem_FP
-  have hB := mem_FP_comp (TubeCleared.uniformDegree_mem_FP D.sourceFP D.bounds.degreeFP) BinaryNat.normalize_mem_FP
+  let F := (TubeBivariate.family source active modulus inner middle n d ell D.bounds).determinant
   have ES := TubeBivariate.sourceEvaluator source active modulus D.direction n d ell D.coordinates
     D.sourceFP D.activeFP D.modulusFP D.directionFP D.direction_eq
-  have EC := ES.precompose a.coefficientInput (a.coefficientInput_mem_FP hL hB)
-  change SpaceFunction a.encoded.coefficient at EC
-  have EE := a.encoded.determinantEntryEvaluator hL hM EC
-  change SpaceFunction a.encoded.determinant.entry
-  exact EE
+  have hM := mem_FP_comp D.modulusFP BinaryNat.succ_mem_FP
+  have EE := a.entryEvaluator (TubeCleared.layout_polyTime D.sourceFP) hM ES
+  exact F.encodedEntryEvaluator a.entry a.entry_correct
+    (determinantControls D).1 (determinantControls D).2 EE
+
+theorem originalControls {source active modulus inner middle : List Bool → List Bool}
+    {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
+    (D : TubeBivariate.Data source active modulus inner middle n d ell) :
+    (originalAccess source active modulus inner middle n d ell D.bounds).ControlsPolyTime := by
+  let F := (TubeBivariate.family source active modulus inner middle n d ell D.bounds).determinant
+  exact ⟨(determinantControls D).1.bits_mem_FP,
+    ((BinaryFn.fromBits D.modulusFP).add (BinaryFn.const 1)).bits_mem_FP,
+    (F.encodedDegree_binary (determinantControls D).1 (determinantControls D).2
+      (BinaryFn.fromBits D.innerFP) (BinaryFn.fromBits D.outerFP)).bits_mem_FP⟩
+
+theorem valid_fppred {source active modulus inner middle : List Bool → List Bool}
+    {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
+    (D : TubeBivariate.Data source active modulus inner middle n d ell) :
+    FPPred (fun c => Nat.fromBitsLE (inner c) < radix source D.bounds.degree c) :=
+  (BinaryFn.fromBits D.innerFP).lt
+    ((TubeBivariate.family source active modulus inner middle n d ell D.bounds).determinant.radix_binary
+      (determinantControls D).1 (determinantControls D).2)
 
 theorem familyEvaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
     SpaceFunction (modularFamily source active modulus inner middle outer n d ell D.bounds).value := by
-  let a := TubeBivariate.access source active modulus inner middle n d ell D.bounds
-  have hL := TubeCleared.layout_polyTime D.sourceFP
-  have hN := MacaulayBits.dimensionCode_mem_FP hL
-  have hM := mem_FP_comp D.modulusFP BinaryNat.succ_mem_FP
-  have hB := mem_FP_comp (TubeCleared.uniformDegree_mem_FP D.sourceFP D.bounds.degreeFP) BinaryNat.normalize_mem_FP
-  have hI := mem_FP_comp D.innerFP BinaryNat.normalize_mem_FP
-  have hT := mem_FP_comp D.outerFP BinaryNat.normalize_mem_FP
-  have hPacked := a.degreeCode_mem_FP hL hB hI hT
+  have controls := originalControls D
   have hEntryBound := mem_FP_comp (entryDegreeCode_mem_FP D.sourceFP D.bounds.degreeFP) BinaryNat.normalize_mem_FP
   have hOuter := mem_FP_comp ho BinaryNat.normalize_mem_FP
   let b := modularAccess source active modulus inner middle outer n d ell D.bounds
-  have hN' : b.original.dimension ∈ FP := mem_FP_of_eq hN (fun _ => rfl)
-  have hM' : b.original.modulus ∈ FP := mem_FP_of_eq hM (fun _ => rfl)
+  have hN' : b.original.dimension ∈ FP := controls.dimension
+  have hM' : b.original.modulus ∈ FP := controls.modulus
   have hB' : b.bound ∈ FP := mem_FP_of_eq hEntryBound (fun _ => rfl)
-  have hI' : b.inner ∈ FP := mem_FP_of_eq hPacked (fun _ => rfl)
+  have hI' : b.inner ∈ FP := controls.degree
   have hO' : b.outer ∈ FP := mem_FP_of_eq hOuter (fun _ => rfl)
   exact b.evaluator hN' hM' hB' hI' hO' (originalEntryEvaluator D)
 
@@ -73,14 +93,9 @@ theorem evaluator {source active modulus inner middle : List Bool → List Bool}
     {n d : List Bool → ℕ → Polynomial ℤ} {ell : List Bool → ℕ → ℤ}
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
     SpaceFunction (modularValue source active modulus inner middle outer n d ell) := by
-  let a := TubeBivariate.access source active modulus inner middle n d ell D.bounds
-  have hL := TubeCleared.layout_polyTime D.sourceFP
-  have hB := mem_FP_comp (TubeCleared.uniformDegree_mem_FP D.sourceFP D.bounds.degreeFP) BinaryNat.normalize_mem_FP
-  have hI := mem_FP_comp D.innerFP BinaryNat.normalize_mem_FP
-  let F := TubeBivariate.family source active modulus inner middle n d ell D.bounds
-  have hV := a.valid_fppred hL hB hI
   have ES := familyEvaluator D outer ho
-  have EB := SpaceFunction.branch (fun c => decide (F.inner c < F.radix c)) hV.flag_mem_FP
+  have EB := SpaceFunction.branch (fun c => decide (Nat.fromBitsLE (inner c) < radix source D.bounds.degree c))
+    (valid_fppred D).flag_mem_FP
     ES (SpaceFunction.ofFP _ (constFn_mem_FP []))
   refine EB.congr (funext fun c => ?_)
   simp only [decide_eq_true_eq]

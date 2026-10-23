@@ -25,13 +25,15 @@ attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.
 noncomputable def originalFamily (source active modulus inner middle : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ)
     (B : TubeParameter.CoordinateBounds source (fun q => n (pairFst q)) (fun q => d (pairFst q))) : BerkowitzPolynomial.ModularFamily :=
-  (TubeBivariate.family source active modulus inner middle n d ell B).encoded.determinant
+  (TubeBivariate.family source active modulus inner middle n d ell B).determinant.encoded
 
 noncomputable def originalAccess (source active modulus inner middle : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ)
     (B : TubeParameter.CoordinateBounds source (fun q => n (pairFst q)) (fun q => d (pairFst q))) :
     BerkowitzPolynomial.ModularAccess (originalFamily source active modulus inner middle n d ell B) :=
-  (TubeBivariate.access source active modulus inner middle n d ell B).encoded.determinant
+  (TubeBivariate.family source active modulus inner middle n d ell B).determinant.encodedAccess
+    (TubeBivariate.access source active modulus inner middle n d ell B).entry
+    (TubeBivariate.access source active modulus inner middle n d ell B).entry_correct
 
 noncomputable def encodedOriginalMatrix (source active degree : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ)
     (ell : List Bool → ℕ → ℤ) (c : List Bool) :=
@@ -51,6 +53,12 @@ theorem original_matrix_reduction (source active modulus inner middle : List Boo
     apply RingHom.ext
     intro p
     exact PolynomialKronecker.encode_map φ _ p
+  change (Macaulay.matrix (fun i => (TubeBivariate.rows source active n d ell c i).map
+    (TubeBivariate.reduction (Nat.fromBitsLE (modulus c) + 1)))
+      (fun i : Fin (TubeParameter.spatialCount (source c)) =>
+        if i.val = 0 then 1 else TubeIndexed.degreeBound (source c)) (TubeCleared.matrixWidth (source c))).map
+        (PolynomialKronecker.encode (radix source B.degree c)) = _
+  rw [Macaulay.matrix_map]
   change Macaulay.matrix (fun i => ((TubeBivariate.rows source active n d ell c i).map
     (TubeBivariate.reduction (Nat.fromBitsLE (modulus c) + 1))).map
       (PolynomialKronecker.encode (radix source B.degree c))) (fun i : Fin (TubeParameter.spatialCount (source c)) => if i.val = 0 then 1 else TubeIndexed.degreeBound (source c))
