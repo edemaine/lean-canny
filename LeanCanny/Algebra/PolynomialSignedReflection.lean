@@ -6,6 +6,7 @@ module
 
 public import Mathlib.Algebra.Polynomial.AlgebraMap
 public import Mathlib.Algebra.Polynomial.Degree.TrailingDegree
+public import Mathlib.Algebra.Polynomial.Eval.Degree
 
 /-! # Lowest coefficients under parameter sign reversal
 
@@ -21,30 +22,11 @@ open Polynomial
 variable {R : Type*} [CommRing R]
 
 theorem sign_mul_eq_zero_iff (n : ℕ) (a : R) : (-1 : R) ^ n * a = 0 ↔ a = 0 := by
-  have hs : (-1 : R) ^ n * (-1 : R) ^ n = 1 := by rw [← mul_pow]; simp
-  constructor
-  · intro h
-    calc
-      a = 1 * a := (one_mul a).symm
-      _ = ((-1 : R) ^ n * (-1 : R) ^ n) * a := by rw [hs]
-      _ = (-1 : R) ^ n * ((-1 : R) ^ n * a) := mul_assoc _ _ _
-      _ = 0 := by rw [h, mul_zero]
-  · intro h
-    rw [h, mul_zero]
+  exact (isUnit_neg_one.pow n).mul_right_eq_zero
 
 theorem coefficient (p : Polynomial R) (k : ℕ) : (p.comp (-Polynomial.X)).coeff k = (-1 : R) ^ k * p.coeff k := by
-  induction p using Polynomial.induction_on' with
-  | add p q hp hq => simp only [Polynomial.add_comp, Polynomial.coeff_add, hp, hq, mul_add]
-  | monomial i r =>
-    have hpow : (-Polynomial.X : Polynomial R) ^ i = Polynomial.C ((-1 : R) ^ i) * Polynomial.X ^ i := by
-      rw [map_pow, ← mul_pow]
-      simp
-    rw [Polynomial.monomial_comp, hpow, ← mul_assoc, ← map_mul, Polynomial.coeff_C_mul,
-      Polynomial.coeff_X_pow, Polynomial.coeff_monomial]
-    by_cases hi : i = k
-    · subst i
-      simp [mul_comm]
-    · simp [hi, Ne.symm hi]
+  simpa only [map_neg, map_one, neg_one_mul, mul_comm] using
+    (Polynomial.comp_C_mul_X_coeff (p := p) (r := (-1 : R)) (n := k))
 
 theorem preserves_lowest (p : Polynomial R) :
     (p.comp (-Polynomial.X)).natTrailingDegree = p.natTrailingDegree ∧
