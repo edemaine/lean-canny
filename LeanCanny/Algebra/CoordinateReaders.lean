@@ -30,6 +30,19 @@ structure CoordinateReaders (arity : List Bool → ℕ)
     denominator (pair (pair c (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k))) (BinaryNatCode.encode (m - 1))) =
       residueBits (((d c i).coeff k : ℤ) : ZMod m)
 
+/-- Change the semantic interface while retaining the reader programs definitionally. -/
+def CoordinateReaders.congr {arity arity' : List Bool → ℕ}
+    {n d n' d' : List Bool → ℕ → Polynomial ℤ} (C : CoordinateReaders arity n d)
+    (hA : arity = arity') (hn : n = n') (hd : d = d') : CoordinateReaders arity' n' d' where
+  numerator := C.numerator
+  denominator := C.denominator
+  numeratorEvaluator := C.numeratorEvaluator
+  denominatorEvaluator := C.denominatorEvaluator
+  numerator_eq c i hi k m hm := by
+    simpa only [hn] using C.numerator_eq c i (by simpa only [hA] using hi) k m hm
+  denominator_eq c i hi k m hm := by
+    simpa only [hd] using C.denominator_eq c i (by simpa only [hA] using hi) k m hm
+
 /-- Reindex the context while retaining coordinate, degree, and modulus words. -/
 def coordinateQuery (f : List Bool → List Bool) (q : List Bool) : List Bool :=
   pair (pair (f (pairFst (pairFst q))) (pairSnd (pairFst q))) (pairSnd q)
@@ -63,6 +76,23 @@ structure CoordinateBounds (arity : List Bool → ℕ)
   denominator_degree : ∀ c i, i < arity c → (d c i).natDegree ≤ Nat.fromBitsLE (degree c)
   numerator_coeff : ∀ c i, i < arity c → ∀ k, ((n c i).coeff k).natAbs ≤ 2 ^ Nat.fromBitsLE (bits c)
   denominator_coeff : ∀ c i, i < arity c → ∀ k, ((d c i).coeff k).natAbs ≤ 2 ^ Nat.fromBitsLE (bits c)
+
+/-- Semantic transport keeps both allowance writers definitionally unchanged. -/
+def CoordinateBounds.congr {arity arity' : List Bool → ℕ}
+    {n d n' d' : List Bool → ℕ → Polynomial ℤ} (B : CoordinateBounds arity n d)
+    (hA : arity = arity') (hn : n = n') (hd : d = d') : CoordinateBounds arity' n' d' where
+  degree := B.degree
+  bits := B.bits
+  degreeFP := B.degreeFP
+  bitsFP := B.bitsFP
+  numerator_degree c i hi := by
+    simpa only [hn] using B.numerator_degree c i (by simpa only [hA] using hi)
+  denominator_degree c i hi := by
+    simpa only [hd] using B.denominator_degree c i (by simpa only [hA] using hi)
+  numerator_coeff c i hi k := by
+    simpa only [hn] using B.numerator_coeff c i (by simpa only [hA] using hi) k
+  denominator_coeff c i hi k := by
+    simpa only [hd] using B.denominator_coeff c i (by simpa only [hA] using hi) k
 
 def CoordinateBounds.precompose {arity : List Bool → ℕ}
     {n d : List Bool → ℕ → Polynomial ℤ} (B : CoordinateBounds arity n d)
