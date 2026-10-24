@@ -5,7 +5,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.TubeParameterBounds
-public import LeanCanny.Encoding.QueryLayout
 public import LeanCanny.Encoding.FixedWidthQuery
 
 /-! # Rational tube parameters with a variable level
@@ -25,9 +24,10 @@ open LeanCanny.Encoding LeanCanny.Algebra
 open Geometry TubeProjectionEncoding
 open scoped Classical
 
-query_layout packetWords certs "_mem_FP" :=
-  (sourceWord, (widthWord, (positiveWord, (negativeWord, denominatorWord))))
-
+def widthWord (c : List Bool) : List Bool := pairFst (pairSnd c)
+def positiveWord (c : List Bool) : List Bool := pairFst (pairSnd (pairSnd c))
+def negativeWord (c : List Bool) : List Bool := pairFst (pairSnd (pairSnd (pairSnd c)))
+def denominatorWord (c : List Bool) : List Bool := pairSnd (pairSnd (pairSnd (pairSnd c)))
 def width (c : List Bool) : ℕ := (widthWord c).length
 noncomputable def arity (c : List Bool) : ℕ := TubeParameter.parameterCount (pairFst c)
 noncomputable def alphaIndex (c : List Bool) : ℕ := pointCount (TubeIndexed.arity (pairFst c))
@@ -39,6 +39,14 @@ noncomputable def numerator (c : List Bool) (i : ℕ) : Polynomial ℤ :=
   if i = alphaIndex c then Polynomial.X else Polynomial.C (integer c i)
 noncomputable def denominator (c : List Bool) (i : ℕ) : Polynomial ℤ :=
   if i = alphaIndex c then 1 else Polynomial.C (denominatorNat c i : ℤ)
+
+theorem widthWord_mem_FP : widthWord ∈ FP := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
+theorem positiveWord_mem_FP : positiveWord ∈ FP :=
+  mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairFst_mem_FP
+theorem negativeWord_mem_FP : negativeWord ∈ FP :=
+  mem_FP_comp (mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairSnd_mem_FP) pairFst_mem_FP
+theorem denominatorWord_mem_FP : denominatorWord ∈ FP :=
+  mem_FP_comp (mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairSnd_mem_FP) pairSnd_mem_FP
 
 theorem width_unary : UnaryFn width := UnaryFn.length widthWord_mem_FP
 theorem arity_unary : UnaryFn arity := TubeParameter.parameterCount_unary.comp pairFst_mem_FP

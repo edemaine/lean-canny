@@ -5,7 +5,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.TubeRegularJacobianBudget
-public import LeanCanny.Encoding.QueryLayout
 public import LeanCanny.ETR.TubeRegularFiniteSigns
 public import LeanCanny.Algebra.FixedWidthDerivativeSpace
 public import LeanCanny.Algebra.FixedWidthDeterminantSpace
@@ -114,8 +113,13 @@ theorem nativeMatrix_det (bits : List Bool) (s : Finset (PerturbedSource.Index b
 
 variable (source active modulus : List Bool → List Bool)
 
-query_layout packetWords certs "_mem_FP" :=
-  (queryContext, (rowWord, (colWord, rankWord)))
+def rowWord (q : List Bool) : List Bool := pairFst (pairSnd q)
+def colWord (q : List Bool) : List Bool := pairFst (pairSnd (pairSnd q))
+def rankWord (q : List Bool) : List Bool := pairSnd (pairSnd (pairSnd q))
+
+theorem rowWord_mem_FP : rowWord ∈ FP := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
+theorem colWord_mem_FP : colWord ∈ FP := mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairFst_mem_FP
+theorem rankWord_mem_FP : rankWord ∈ FP := mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairSnd_mem_FP
 
 noncomputable def selected (q : List Bool) : ℕ :=
   column (TubeIndexed.arity (source (pairFst q)))

@@ -5,7 +5,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.SymbolicFixedTableEntrySpace
-public import LeanCanny.Encoding.QueryLayout
 public import LeanCanny.Algebra.CertifiedMatrix
 
 /-! # A native symbolic pair coefficient stage
@@ -22,7 +21,15 @@ namespace LeanCanny.Algebra.SymbolicFixedTableEntryBits
 open Polynomial SymbolicScaledSquarefree SymbolicFixedTable
 open LeanCanny.Encoding LeanCanny.Computation MatrixPower
 
-query_layout pairPacket := ((original, modulus), (inner, outer))
+def original (q : List Bool) : List Bool := pairFst (pairFst q)
+def modulus (q : List Bool) : List Bool := pairSnd (pairFst q)
+def inner (q : List Bool) : List Bool := pairFst (pairSnd q)
+def outer (q : List Bool) : List Bool := pairSnd (pairSnd q)
+
+theorem original_FP : original ∈ FP := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
+theorem modulus_FP : modulus ∈ FP := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
+theorem inner_FP : inner ∈ FP := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
+theorem outer_FP : outer ∈ FP := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
 
 noncomputable def Family.matrix (F : Family) (c : List Bool) :
     Matrix (Fin (F.leftOrder c + F.rightOrder c)) (Fin (F.leftOrder c + F.rightOrder c)) (Polynomial Coefficient) :=

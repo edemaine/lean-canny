@@ -19,7 +19,7 @@ namespace LeanCanny.ETR.CoerciveQueryCoefficient
 open LeanCanny.Encoding LeanCanny.Computation
 open LeanCanny.Algebra MatrixPower
 open CoerciveSourceSampling CoerciveQueryReaders CoerciveSparseReaders
-open ModularResidueReaders (addValue negValue Reader)
+open ModularResidueReaders (addValue negValue addEvaluator negEvaluator)
 open scoped Classical
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm
 attribute [local irreducible] CoerciveSourceSampling.dimension CoercivePowerReaders.size CoercivePowerReaders.width
@@ -39,20 +39,12 @@ noncomputable def maskedPowerValue (input target modulus : List Bool → List Bo
     (parameter : List Bool → ℕ) (c : List Bool) : List Bool :=
   if Matches input target parameter (fun _ => 0) (fun _ => 0) c then implicitValue input modulus c else []
 
-noncomputable def maskedPowerReader {input target modulus : List Bool → List Bool} {parameter : List Bool → ℕ}
-    (hi : input ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) (hp : UnaryFn parameter) :
-    Reader modulus (fun c => if Matches input target parameter (fun _ => 0) (fun _ => 0) c then
-      (((2 : ℤ) ^ CoerciveSourceSampling.penaltyExponent (input c) : ℤ) :
-        ZMod (Nat.fromBitsLE (modulus c) + 1)) else 0) := by
-  let A : Reader modulus (fun c => (((2 : ℤ) ^ CoerciveSourceSampling.penaltyExponent (input c) : ℤ) :
-      ZMod (Nat.fromBitsLE (modulus c) + 1))) :=
-    ⟨implicitValue input modulus, SpaceFunction.ofFP _ (implicitValue_FP hi hm), fun _ _ => rfl⟩
-  exact A.mask _ (matches_fppred hi ht hp (UnaryFn.const 0) (UnaryFn.const 0))
-
 theorem maskedPowerEvaluator {input target modulus : List Bool → List Bool} {parameter : List Bool → ℕ}
     (hi : input ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) (hp : UnaryFn parameter) :
     SpaceFunction (maskedPowerValue input target modulus parameter) :=
-  (maskedPowerReader hi ht hm hp).evaluator
+  ModularResidueReaders.maskEvaluator
+    (matches_fppred hi ht hp (UnaryFn.const 0) (UnaryFn.const 0))
+    (SpaceFunction.ofFP _ (implicitValue_FP hi hm))
 
 theorem maskedPower_value_eq (input target modulus : List Bool → List Bool)
     (parameter : List Bool → ℕ) (c : List Bool) : maskedPowerValue input target modulus parameter c = residueBits
@@ -84,6 +76,23 @@ noncomputable def boundValue (input target modulus : List Bool → List Bool) : 
   addValue modulus (penaltyValue input target modulus) (negValue modulus (maskedPowerValue input target modulus (fun _ => 0)))
 noncomputable def residualValue (input target modulus : List Bool → List Bool) : List Bool → List Bool :=
   addValue modulus (liftedSquareValue input target modulus) (negValue modulus (maskedPowerValue input target modulus (fun _ => 1)))
+
+theorem gradientEvaluator {input target modulus : List Bool → List Bool} {selected : List Bool → ℕ}
+    (hi : input ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) (hs : UnaryFn selected) :
+    SpaceFunction (gradientValue input target modulus selected) :=
+  addEvaluator hm (liftedDerivativeEvaluator hi ht hm hs) (SpaceFunction.ofFP _ (pureGradientValue_FP hi ht hm hs))
+
+theorem boundEvaluator {input target modulus : List Bool → List Bool}
+    (hi : input ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
+    SpaceFunction (boundValue input target modulus) :=
+  addEvaluator hm (SpaceFunction.ofFP _ (penaltyValue_FP hi ht hm))
+    (negEvaluator hm (maskedPowerEvaluator hi ht hm (UnaryFn.const 0)))
+
+theorem residualEvaluator {input target modulus : List Bool → List Bool}
+    (hi : input ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
+    SpaceFunction (residualValue input target modulus) :=
+  addEvaluator hm (liftedSquareEvaluator hi ht hm)
+    (negEvaluator hm (maskedPowerEvaluator hi ht hm (UnaryFn.const 1)))
 
 private theorem pureGradient_eq {n : ℕ} (D : ℕ) (i : Fin n) :
     (MvPolynomial.C ((2 * D + 2 : ℕ) : ℤ) * MvPolynomial.X 0 * MvPolynomial.X i.succ ^ (2 * D + 1) :
@@ -134,63 +143,5 @@ theorem residual_value_eq (input target modulus : List Bool → List Bool) (c : 
       (maskedPower_value_eq input target modulus (fun _ => 1) c))).trans ?_
   simp only [CoerciveQuerySystem.residual, parameterPower_eq, AddMonoidAlgebra.coeff_sub, Finsupp.sub_apply, Int.cast_sub]
   rw [sub_eq_add_neg]
-
-/-- The certified program retains the raw bound reader on every input. -/
-noncomputable def boundReader {input target modulus : List Bool → List Bool}
-    (hi : input ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
-    Reader modulus (fun c => (((CoerciveQuerySystem.bound (n := dimension (input c)) (degreeAllowance (input c))
-      (CoerciveSourceSampling.penaltyExponent (input c))).coeff (queryExponent input target c) : ℤ) :
-        ZMod (Nat.fromBitsLE (modulus c) + 1))) where
-  value := boundValue input target modulus
-  evaluator := by
-    let A : Reader modulus (fun c => (((CoerciveQuerySystem.penalty (n := dimension (input c))
-        (degreeAllowance (input c))).coeff (queryExponent input target c) : ℤ) :
-          ZMod (Nat.fromBitsLE (modulus c) + 1))) :=
-      ⟨penaltyValue input target modulus, SpaceFunction.ofFP _ (penaltyValue_FP hi ht hm),
-        fun c _ => penalty_value_eq input target modulus c⟩
-    let R := A.add ((maskedPowerReader hi ht hm (UnaryFn.const 0)).neg hm) hm
-    have hmask : (maskedPowerReader hi ht hm (UnaryFn.const 0)).value =
-        maskedPowerValue input target modulus (fun _ => 0) := funext fun _ => rfl
-    have hv : R.value = boundValue input target modulus := by
-      dsimp only [R, Reader.add, Reader.neg, A, boundValue]
-      exact congrArg (fun f => addValue modulus (penaltyValue input target modulus) (negValue modulus f)) hmask
-    exact R.evaluator.congr hv
-  correct c _ := bound_value_eq input target modulus c
-
-noncomputable def residualReader {input target modulus : List Bool → List Bool}
-    (hi : input ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
-    Reader modulus (fun c => (((CoerciveQuerySystem.residual (polynomial (input c))
-      (CoerciveSourceSampling.penaltyExponent (input c))).coeff (queryExponent input target c) : ℤ) :
-        ZMod (Nat.fromBitsLE (modulus c) + 1))) where
-  value := residualValue input target modulus
-  evaluator := by
-    let A : Reader modulus (fun c => (((CoerciveQuerySystem.lift (polynomial (input c))) ^ 2).coeff
-        (queryExponent input target c) : ZMod (Nat.fromBitsLE (modulus c) + 1))) :=
-      ⟨liftedSquareValue input target modulus, liftedSquareEvaluator hi ht hm,
-        fun c _ => liftedSquare_value_eq input target modulus c⟩
-    let R := A.add ((maskedPowerReader hi ht hm (UnaryFn.const 1)).neg hm) hm
-    have hmask : (maskedPowerReader hi ht hm (UnaryFn.const 1)).value =
-        maskedPowerValue input target modulus (fun _ => 1) := funext fun _ => rfl
-    have hv : R.value = residualValue input target modulus := by
-      dsimp only [R, Reader.add, Reader.neg, A, residualValue]
-      exact congrArg (fun f => addValue modulus (liftedSquareValue input target modulus) (negValue modulus f)) hmask
-    exact R.evaluator.congr hv
-  correct c _ := residual_value_eq input target modulus c
-
-theorem gradientEvaluator {input target modulus : List Bool → List Bool} {selected : List Bool → ℕ}
-    (hi : input ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) (hs : UnaryFn selected) :
-    SpaceFunction (gradientValue input target modulus selected) :=
-  ModularResidueReaders.addEvaluator hm (liftedDerivativeEvaluator hi ht hm hs)
-    (SpaceFunction.ofFP _ (pureGradientValue_FP hi ht hm hs))
-
-theorem boundEvaluator {input target modulus : List Bool → List Bool}
-    (hi : input ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
-    SpaceFunction (boundValue input target modulus) :=
-  (boundReader hi ht hm).evaluator
-
-theorem residualEvaluator {input target modulus : List Bool → List Bool}
-    (hi : input ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
-    SpaceFunction (residualValue input target modulus) :=
-  (residualReader hi ht hm).evaluator
 
 end LeanCanny.ETR.CoerciveQueryCoefficient

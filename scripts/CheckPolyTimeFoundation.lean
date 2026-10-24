@@ -5,7 +5,6 @@ import LeanCanny.Computation.PolyTimeBinary
 import LeanCanny.Computation.PolyTimeBinaryNat
 import LeanCanny.Computation.PolyTimeArithmetic
 import LeanCanny.Tactic.PolyTime
-import LeanCanny.Encoding.QueryLayout
 import LeanCanny.Encoding.Data
 import Lean.Util.CollectAxioms
 
@@ -163,22 +162,3 @@ run_cmd do
         unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
           throwError "{name} depends on unexpected axiom {ax}"
   logInfo m!"Audited {checked} native declarations: no legacy imports or nonstandard axioms."
-
--- Generated packet certificates must support native named-call automation,
--- and their projections preserve the total raw parser on arbitrary words.
-namespace QueryLayoutRegression
-query_layout packet := ((context, index), modulus)
-example (q : List Bool) : context q = LeanCanny.pairFst (LeanCanny.pairFst q) := rfl
-example (x y z : List Bool) : context (packet x y z) = x := context_packet x y z
-attribute [local irreducible] context packet
-example {f g h : List Bool → List Bool} (hf : f ∈ LeanCanny.FP)
-    (hg : g ∈ LeanCanny.FP) (hh : h ∈ LeanCanny.FP) :
-    (fun q => packet (f q) (g q) (h q)) ∈ LeanCanny.FP := by polytime
-end QueryLayoutRegression
-
-namespace QueryLayoutHygiene
-query_layout q := (x, xWord)
-example (u v : List Bool) : xWord (q u v) = v := xWord_q u v
-example {f g : List Bool → List Bool} (hf : f ∈ LeanCanny.FP) (hg : g ∈ LeanCanny.FP) :
-    (fun z => q (f z) (g z)) ∈ LeanCanny.FP := q_FP hf hg
-end QueryLayoutHygiene

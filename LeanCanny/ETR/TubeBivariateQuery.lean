@@ -5,7 +5,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.TubeBivariateCoefficients
-public import LeanCanny.Encoding.QueryLayout
 
 /-! # Certified row queries for the full bivariate tube source
 
@@ -25,8 +24,17 @@ attribute [local irreducible] RationalSubstitutionBits.compiledTerm TubeCleared.
 def packet (c : List Bool) (i k u v : ℕ) : List Bool :=
   pair c (pair (BinaryNatCode.encode i) (pair (BinaryNatCode.encode k) (pair (BinaryNatCode.encode u) (BinaryNatCode.encode v))))
 
-query_layout rawPacket certs "_mem_FP" :=
-  (base, (rowCode, (rankCode, (innerCode, outerCode))))
+def base : List Bool → List Bool := pairFst
+def rowCode (q : List Bool) : List Bool := pairFst (pairSnd q)
+def rankCode (q : List Bool) : List Bool := pairFst (pairSnd (pairSnd q))
+def innerCode (q : List Bool) : List Bool := pairFst (pairSnd (pairSnd (pairSnd q)))
+def outerCode (q : List Bool) : List Bool := pairSnd (pairSnd (pairSnd (pairSnd q)))
+
+theorem base_mem_FP : base ∈ FP := pairFst_mem_FP
+theorem rowCode_mem_FP : rowCode ∈ FP := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
+theorem rankCode_mem_FP : rankCode ∈ FP := mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairFst_mem_FP
+theorem innerCode_mem_FP : innerCode ∈ FP := mem_FP_comp (mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairSnd_mem_FP) pairFst_mem_FP
+theorem outerCode_mem_FP : outerCode ∈ FP := mem_FP_comp (mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairSnd_mem_FP) pairSnd_mem_FP
 
 @[simp] theorem base_packet (c : List Bool) (i k u v : ℕ) : base (packet c i k u v) = c := by simp only [base, packet, pairFst_pair]
 @[simp] theorem rowCode_packet (c : List Bool) (i k u v : ℕ) : rowCode (packet c i k u v) = BinaryNatCode.encode i := by

@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.Algebra.ResultantSpace
 public import LeanCanny.Algebra.SeparableResultant
-public import LeanCanny.Algebra.CertifiedPolynomial
+public import LeanCanny.Algebra.DerivativeCoefficientSpace
 public import LeanCanny.Computation.SpaceDeciderFunction
 
 /-! # Native separability tests from streamed integer coefficients
@@ -24,15 +24,34 @@ open LeanCanny.Encoding LeanCanny.Computation MatrixPower
 open scoped Classical
 attribute [local irreducible] BinaryNat.add BinaryNat.sub
 
-abbrev Family := CertifiedPolynomial.Family
+structure Family where
+  polynomial : List Bool → ℤ[X]
+  height : List Bool → ℕ
+  coefficient_bound : ∀ c k, ((polynomial c).coeff k).natAbs ≤ 2 ^ height c
 
-structure Readers (F : Family) extends CertifiedPolynomial.Readers F,
-    CertifiedPolynomial.ExactDegree F.polynomial
+structure Readers (F : Family) where
+  degree : List Bool → List Bool
+  height : List Bool → List Bool
+  coefficient : List Bool → List Bool
+  degreeFP : degree ∈ FP
+  heightFP : height ∈ FP
+  degree_eq : ∀ c, degree c = BinaryNatCode.encode (F.polynomial c).natDegree
+  height_eq : ∀ c, height c = BinaryNatCode.encode (F.height c)
+  coefficient_eq : ∀ q k, coefficient (pair q (BinaryNatCode.encode k)) =
+    residueBits (((F.polynomial (pairFst q)).coeff k : ℤ) : ZMod (Nat.fromBitsLE (pairSnd q) + 1))
+  evaluator : SpaceFunction coefficient
 
 theorem derivative_bound (p : ℤ[X]) (b : ℕ)
     (h : ∀ k, (p.coeff k).natAbs ≤ 2 ^ b) (k : ℕ) :
-    (p.derivative.coeff k).natAbs ≤ 2 ^ (b + p.natDegree.size) :=
-  CertifiedPolynomial.derivative_bound p b p.natDegree le_rfl h k
+    (p.derivative.coeff k).natAbs ≤ 2 ^ (b + p.natDegree.size) := by
+  rw [coeff_derivative, ← Nat.cast_add_one, Int.natAbs_mul, Int.natAbs_natCast]
+  by_cases hk : k + 1 ≤ p.natDegree
+  · calc
+      _ ≤ 2 ^ b * 2 ^ p.natDegree.size :=
+        Nat.mul_le_mul (h _) (hk.trans (Nat.lt_size_self _).le)
+      _ = _ := (pow_add _ _ _).symm
+  · rw [coeff_eq_zero_of_natDegree_lt (by omega), Int.natAbs_zero, zero_mul]
+    exact Nat.zero_le _
 
 noncomputable def resultantFamily (F : Family) : Resultant.Family where
   left := F.polynomial
@@ -49,9 +68,9 @@ def derivativeDegree {F : Family} (A : Readers F) (c : List Bool) : List Bool :=
 def derivativeHeight {F : Family} (A : Readers F) (c : List Bool) : List Bool :=
   BinaryNat.add (pair (A.height c) (BinaryNatCode.encode (A.degree c).length))
 
-abbrev modulus := CertifiedPolynomial.modulus
+def modulus (q : List Bool) : List Bool := BinaryNat.succ (pairSnd q)
 
-theorem modulus_FP : modulus ∈ FP := CertifiedPolynomial.modulus_FP
+theorem modulus_FP : modulus ∈ FP := mem_FP_comp pairSnd_mem_FP BinaryNat.succ_mem_FP
 
 noncomputable def access (F : Family) (A : Readers F) : Resultant.Access (resultantFamily F) where
   bits := ⟨A.degree, derivativeDegree A, derivativeHeight A, A.coefficient,
@@ -64,7 +83,12 @@ noncomputable def access (F : Family) (A : Readers F) : Resultant.Access (result
     simp only [derivativeHeight, A.height_eq, A.degree_eq, BinaryNat.add_pair,
       BinaryNatCode.encode, Nat.fromBitsLE_bits, ← Nat.size_eq_bits_len, resultantFamily]
   leftCoefficient := A.coefficient_eq
-  rightCoefficient := (A.toReaders.derivative A.toExactDegree.allowance).coefficient_eq
+  rightCoefficient q k := by
+    have h := DerivativeBits.packet modulus A.coefficient q _
+      ((F.polynomial (pairFst q)).map (Int.castRingHom (ZMod (Nat.fromBitsLE (pairSnd q) + 1))))
+      (by simp only [modulus, BinaryNat.succ_eq_bits, BinaryNatCode.encode])
+      (fun k => by simpa only [coeff_map, Int.coe_castRingHom] using A.coefficient_eq q k) k
+    simpa only [derivative_map, coeff_map, Int.coe_castRingHom, resultantFamily] using h
 
 theorem access_controls (F : Family) (A : Readers F) : (access F A).bits.ControlsPolyTime := by
   have hd := mem_FP_comp (mem_FP_pair A.degreeFP (constFn_mem_FP (BinaryNatCode.encode 1))) BinaryNat.sub_mem_FP
@@ -80,7 +104,7 @@ theorem decider (F : Family) (A : Readers F) (hne : ∀ c, F.polynomial c ≠ 0)
   have EL : SpaceFunction (access F A).bits.leftCoefficient := by
     simpa only [access] using A.evaluator
   have ER : SpaceFunction (access F A).bits.rightCoefficient := by
-    exact (A.toReaders.derivative A.toExactDegree.allowance).evaluator
+    simpa only [access] using DerivativeBits.evaluator A.evaluator modulus modulus_FP
   have D := Resultant.Access.deciderWithCoefficients (access F A) (access_controls F A)
     EL ER
   have E := D.flagEvaluator

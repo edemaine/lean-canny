@@ -5,7 +5,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.TubeProjectionNative
-public import LeanCanny.Encoding.QueryLayout
 public import LeanCanny.ETR.TubeSource
 
 /-! # Full projection coefficient residues for compiled ETR inputs
@@ -25,11 +24,18 @@ open Algebra.MatrixPower
 
 attribute [local irreducible] RationalSubstitutionBits.compiledTerm
 
-query_layout packetWords certs "_mem_FP" := ((((input, active), row), target), modulusWord)
-
+def input (q : List Bool) : List Bool := pairFst (pairFst (pairFst (pairFst q)))
+def active (q : List Bool) : List Bool := pairSnd (pairFst (pairFst (pairFst q)))
+def row (q : List Bool) : List Bool := pairSnd (pairFst (pairFst q))
+def target (q : List Bool) : List Bool := pairSnd (pairFst q)
 def base : List Bool → List Bool := RationalSubstitutionBits.compiledTerm ∘ input
 
 def width (q : List Bool) : ℕ := 8 * CompactSource.size (input q) ^ 2 + 5
+
+theorem input_mem_FP : input ∈ FP := mem_FP_comp (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairFst_mem_FP) pairFst_mem_FP
+theorem active_mem_FP : active ∈ FP := mem_FP_comp (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairFst_mem_FP) pairSnd_mem_FP
+theorem row_mem_FP : row ∈ FP := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairSnd_mem_FP
+theorem target_mem_FP : target ∈ FP := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
 
 theorem base_mem_FP : base ∈ FP :=
   mem_FP_comp (f := input) (g := RationalSubstitutionBits.compiledTerm) input_mem_FP RationalSubstitutionBits.compiledTerm_mem_FP

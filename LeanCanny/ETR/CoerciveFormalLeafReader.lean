@@ -40,7 +40,7 @@ theorem sourceEvaluator : SpaceFunction (SymbolicFixedTableEntryBits.coefficient
     (SeparableBits.reindexQuery_FP rawInput rawInput_FP)
   refine E.congr (funext fun q => ?_)
   simp only [Function.comp_apply, rawCoefficient, SymbolicFixedTableEntryBits.coefficient,
-    SeparableBits.reindexQuery, CertifiedPolynomial.reindexQuery, source, pairFst_pair, pairSnd_pair]
+    SeparableBits.reindexQuery, source, pairFst_pair, pairSnd_pair]
 
 noncomputable def payloadLeaf (p : List Bool) : Polynomial (Polynomial ℤ) :=
   SymbolicFormalSquarefreeBits.polynomial (source p) (degree p) (order p)
@@ -107,7 +107,7 @@ theorem leafEvaluator : SpaceFunction (SymbolicFixedTableEntryBits.coefficient l
     (SeparableBits.reindexQuery_FP payloadInput payloadInput_FP)
   refine E.congr (funext fun q => ?_)
   simp only [Function.comp_apply, SymbolicFixedTableEntryBits.coefficient,
-    SeparableBits.reindexQuery, CertifiedPolynomial.reindexQuery, leaf, pairFst_pair, pairSnd_pair]
+    SeparableBits.reindexQuery, leaf, pairFst_pair, pairSnd_pair]
 
 theorem leaf_inner_degree (p : List Bool) (i k : ℕ) :
     ((leaf (pair p (BinaryNatCode.encode i))).coeff k).natDegree ≤ bound p := by
