@@ -97,7 +97,9 @@ theorem div_eq_bits (packet : List Bool) : div packet =
     div (pair a m) = (Nat.fromBitsLE a / Nat.fromBitsLE m).bits := by
   simp only [div_eq_bits, pairFst_pair, pairSnd_pair]
 
-theorem div_mem_FP : div ∈ FP := by
+@[program_certificate]
+theorem div_mem_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime div
+    Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by
   let step := fun m acc tail bit => divDigit m bit acc tail
   have hp : Turing.MultiTapeTM.ComputableTidilyInPolyTime
       (fun p : (List Bool × (List Bool × List Bool)) × Bool =>
@@ -129,7 +131,9 @@ theorem div_length_le (a m : List Bool) : (div (pair a m)).length ≤ a.length :
 
 def divMod (packet : List Bool) : List Bool := pair (div packet) (mod packet)
 
-theorem divMod_mem_FP : divMod ∈ FP := mem_FP_pair div_mem_FP mod_mem_FP
+@[program_certificate]
+theorem divMod_mem_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime divMod
+    Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := mem_FP_pair div_mem_FP mod_mem_FP
 
 theorem divMod_pair (a m : List Bool) : divMod (pair a m) =
     pair (Nat.fromBitsLE a / Nat.fromBitsLE m).bits (Nat.fromBitsLE a % Nat.fromBitsLE m).bits := by

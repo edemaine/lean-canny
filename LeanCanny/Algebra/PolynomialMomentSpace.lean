@@ -100,32 +100,13 @@ def augmentedInput (p : List Bool) : List Bool :=
     (pair (pairFst (pairSnd p)) (pairFst (pairSnd (pairSnd p))))
 
 theorem vectorInput_mem_FP : vectorInput ∈ FP := by
-  have hc := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have hd := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  have h := mem_FP_pair hc (mem_FP_pair pairSnd_mem_FP hd)
-  refine mem_FP_of_eq (g := vectorInput) h ?_
-  intro p
-  simp only [Function.comp_apply, vectorInput]
+  polytime [vectorInput]
 
 theorem matrixInput_mem_FP : matrixInput ∈ FP := by
-  have hc := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have hi := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
-  have hj := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
-  have hd := mem_FP_comp pairFst_mem_FP pairSnd_mem_FP
-  have h := mem_FP_pair hc (mem_FP_pair hi (mem_FP_pair hj hd))
-  refine mem_FP_of_eq (g := matrixInput) h ?_
-  intro p
-  simp only [Function.comp_apply, matrixInput]
+  polytime [matrixInput]
 
 theorem augmentedInput_mem_FP : augmentedInput ∈ FP := by
-  have hi := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
-  have ht := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
-  have hj := mem_FP_comp ht pairFst_mem_FP
-  have hd := mem_FP_comp ht pairSnd_mem_FP
-  have h := mem_FP_pair (mem_FP_pair pairFst_mem_FP hd) (mem_FP_pair hi hj)
-  refine mem_FP_of_eq (g := augmentedInput) h ?_
-  intro p
-  simp only [Function.comp_apply, augmentedInput]
+  polytime [augmentedInput]
 
 namespace ModularAccess
 

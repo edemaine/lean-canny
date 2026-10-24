@@ -69,18 +69,13 @@ theorem modulus_mem_FP : modulus ∈ FP := by
   exact h
 
 theorem sumIndex_mem_FP : sumIndex ∈ FP := by
-  have h := (BinaryFn.fromBits leftIndex_mem_FP).add (BinaryFn.fromBits rightIndex_mem_FP)
-  refine mem_FP_of_eq h.bits_mem_FP ?_
-  intro p
-  simp only [sumIndex, BinaryNat.add_pair, BinaryNatCode.encode]
+  polytime [sumIndex, leftIndex, rightIndex]
 
 theorem coefficientInput_mem_FP : coefficientInput ∈ FP := by
-  have h := mem_FP_pair pairFst_mem_FP sumIndex_mem_FP
-  exact mem_FP_of_eq h (fun _ => rfl)
+  polytime [coefficientInput, sumIndex, leftIndex, rightIndex]
 
 theorem binomialInput_mem_FP : binomialInput ∈ FP := by
-  have h := mem_FP_pair sumIndex_mem_FP (mem_FP_pair leftIndex_mem_FP modulusMinusOne_mem_FP)
-  exact mem_FP_of_eq h (fun _ => rfl)
+  polytime [binomialInput, sumIndex, leftIndex, rightIndex, modulusMinusOne]
 
 theorem negativeDirection_mem_FP (a : Access) (ha : a.PolyTime) : negativeDirection a ∈ FP := by
   have hd := mem_FP_comp original_mem_FP ha.direction

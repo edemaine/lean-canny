@@ -42,42 +42,21 @@ def matrixInput (dim : List Bool → List Bool) (p : List Bool) : List Bool :=
 
 theorem diagonalInput_mem_FP {dim : List Bool → List Bool} (hd : dim ∈ FP) : diagonalInput dim ∈ FP := by
   have hs := sourceLayer_mem_FP hd
-  have h := mem_FP_pair pairFst_mem_FP (mem_FP_pair hs hs)
-  refine mem_FP_of_eq (g := diagonalInput dim) h ?_
-  intro p
-  simp only [diagonalInput]
+  polytime [diagonalInput]
 
 theorem rowInput_mem_FP {dim : List Bool → List Bool} (hd : dim ∈ FP) : rowInput dim ∈ FP := by
-  have hc := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have hs := mem_FP_comp pairFst_mem_FP (sourceLayer_mem_FP hd)
-  have ho := mem_FP_comp pairFst_mem_FP (offset_mem_FP hd)
-  have hj := mem_FP_comp (mem_FP_pair ho pairSnd_mem_FP) BinaryNat.add_mem_FP
-  have h := mem_FP_pair hc (mem_FP_pair hs hj)
-  refine mem_FP_of_eq (g := rowInput dim) h ?_
-  intro p
-  simp only [Function.comp_apply, rowInput]
+  have hs := sourceLayer_mem_FP hd
+  have ho := offset_mem_FP hd
+  polytime [rowInput]
 
 theorem columnInput_mem_FP {dim : List Bool → List Bool} (hd : dim ∈ FP) : columnInput dim ∈ FP := by
-  have hc := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have hs := mem_FP_comp pairFst_mem_FP (sourceLayer_mem_FP hd)
-  have ho := mem_FP_comp pairFst_mem_FP (offset_mem_FP hd)
-  have hi := mem_FP_comp (mem_FP_pair ho pairSnd_mem_FP) BinaryNat.add_mem_FP
-  have h := mem_FP_pair hc (mem_FP_pair hi hs)
-  refine mem_FP_of_eq (g := columnInput dim) h ?_
-  intro p
-  simp only [Function.comp_apply, columnInput]
+  have hs := sourceLayer_mem_FP hd
+  have ho := offset_mem_FP hd
+  polytime [columnInput]
 
 theorem matrixInput_mem_FP {dim : List Bool → List Bool} (hd : dim ∈ FP) : matrixInput dim ∈ FP := by
-  have hc := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have ho := mem_FP_comp pairFst_mem_FP (offset_mem_FP hd)
-  have hi := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
-  have hj := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
-  have hrow := mem_FP_comp (mem_FP_pair ho hi) BinaryNat.add_mem_FP
-  have hcol := mem_FP_comp (mem_FP_pair ho hj) BinaryNat.add_mem_FP
-  have h := mem_FP_pair hc (mem_FP_pair hrow hcol)
-  refine mem_FP_of_eq (g := matrixInput dim) h ?_
-  intro p
-  simp only [Function.comp_apply, matrixInput]
+  have ho := offset_mem_FP hd
+  polytime [matrixInput]
 
 theorem diagonalInput_code (dim : List Bool → List Bool) (p : List Bool) (s : ℕ)
     (hs : sourceLayer dim p = BinaryNatCode.encode s) :

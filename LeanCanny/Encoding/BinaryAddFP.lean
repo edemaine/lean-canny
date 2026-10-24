@@ -75,7 +75,9 @@ theorem add_eq_bits (packet : List Bool) : add packet =
     add (pair a b) = (Nat.fromBitsLE a + Nat.fromBitsLE b).bits := by
   simp only [add_eq_bits, pairFst_pair, pairSnd_pair]
 
-theorem add_mem_FP : add ∈ FP := by
+@[program_certificate]
+theorem add_mem_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime add
+    Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by
   have h := natBits_computable.comp
     (Turing.MultiTapeTM.ComputableTidilyInPolyTime.binary_add'
       (fromBitsLE_computable.comp pairFst_mem_FP) (fromBitsLE_computable.comp pairSnd_mem_FP))

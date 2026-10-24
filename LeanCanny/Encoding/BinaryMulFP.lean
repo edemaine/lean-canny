@@ -61,7 +61,9 @@ theorem mul_eq_bits (packet : List Bool) : mul packet =
     mul (pair a b) = (Nat.fromBitsLE a * Nat.fromBitsLE b).bits := by
   simp only [mul_eq_bits, pairFst_pair, pairSnd_pair]
 
-theorem mul_mem_FP : mul ∈ FP := by
+@[program_certificate]
+theorem mul_mem_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime mul
+    Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by
   have h := natBits_computable.comp
     (Turing.MultiTapeTM.ComputableTidilyInPolyTime.binary_mul'
       (fromBitsLE_computable.comp pairFst_mem_FP) (fromBitsLE_computable.comp pairSnd_mem_FP))

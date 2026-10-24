@@ -84,7 +84,9 @@ theorem mod_eq_bits (packet : List Bool) : mod packet =
     mod (pair a m) = (Nat.fromBitsLE a % Nat.fromBitsLE m).bits := by
   simp only [mod_eq_bits, pairFst_pair, pairSnd_pair]
 
-theorem mod_mem_FP : mod ∈ FP := by
+@[program_certificate]
+theorem mod_mem_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime mod
+    Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by
   let step := fun m acc bit => reduceOnce (pair (bit :: acc) m)
   have hstep : Turing.MultiTapeTM.ComputableTidilyInPolyTime
       (fun p : (List Bool × List Bool) × Bool => step p.1.1 p.1.2 p.2)

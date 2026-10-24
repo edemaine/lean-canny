@@ -54,23 +54,16 @@ theorem width_mem_FP (a : Access) (ha : a.ControlsPolyTime) : width a ∈ FP :=
   mem_FP_comp ha.degree BinaryNat.succ_mem_FP
 
 theorem liftedDimension_mem_FP (a : Access) (ha : a.ControlsPolyTime) : liftedDimension a ∈ FP := by
-  have h := mem_FP_comp (mem_FP_pair ha.dimension (width_mem_FP a ha)) BinaryNat.mul_mem_FP
-  refine mem_FP_of_eq (g := liftedDimension a) h ?_
-  intro c
-  simp only [Function.comp_apply, liftedDimension]
+  rcases ha with ⟨hd, hm, he, hr, hc, hk⟩
+  polytime [liftedDimension, width]
 
 theorem liftedRow_mem_FP (a : Access) (ha : a.ControlsPolyTime) : liftedRow a ∈ FP := by
-  have hp := mem_FP_comp (mem_FP_pair ha.row (width_mem_FP a ha)) BinaryNat.mul_mem_FP
-  have h := mem_FP_comp (mem_FP_pair hp ha.degree) BinaryNat.add_mem_FP
-  refine mem_FP_of_eq (g := liftedRow a) h ?_
-  intro c
-  simp only [Function.comp_apply, liftedRow]
+  rcases ha with ⟨hd, hm, he, hr, hc, hk⟩
+  polytime [liftedRow, width]
 
 theorem liftedCol_mem_FP (a : Access) (ha : a.ControlsPolyTime) : liftedCol a ∈ FP := by
-  have h := mem_FP_comp (mem_FP_pair ha.col (width_mem_FP a ha)) BinaryNat.mul_mem_FP
-  refine mem_FP_of_eq (g := liftedCol a) h ?_
-  intro c
-  simp only [Function.comp_apply, liftedCol]
+  rcases ha with ⟨hd, hm, he, hr, hc, hk⟩
+  polytime [liftedCol, width]
 
 def coefficientInput (a : Access) (p : List Bool) : List Bool :=
   pair (pairFst p) (pair (QueryBits.sourceLayer a.degree p)

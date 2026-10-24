@@ -116,16 +116,7 @@ def sourceQuery (p : List Bool) : List Bool :=
     (BinaryNat.normalize (pairSnd (pairFst p)))
 
 theorem sourceQuery_mem_FP : sourceQuery ∈ FP := by
-  have hc := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairFst_mem_FP
-  have hi := mem_FP_comp (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairSnd_mem_FP)
-    BinaryNat.normalize_mem_FP
-  have hj := mem_FP_pair (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP)
-    (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP)
-  have hm := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) BinaryNat.normalize_mem_FP
-  have h := mem_FP_pair (mem_FP_pair hc (mem_FP_pair hi hj)) hm
-  refine mem_FP_of_eq (g := sourceQuery) h ?_
-  intro p
-  simp only [sourceQuery, Function.comp_apply]
+  polytime [sourceQuery]
 
 def queryAccess {F : Family} (a : Access F) (P : SpaceFunction a.coefficient) :
     CertifiedPolynomial.BivariateReader (queryFamily F).polynomial where
@@ -144,13 +135,7 @@ def specializedQuery (p : List Bool) : List Bool :=
     (pairSnd (pairSnd (pairFst p)))) (pairSnd p)
 
 theorem specializedQuery_mem_FP : specializedQuery ∈ FP := by
-  have hc := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have hi := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairFst_mem_FP
-  have hj := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairSnd_mem_FP
-  have h := mem_FP_pair (mem_FP_pair (mem_FP_pair hc hi) hj) pairSnd_mem_FP
-  refine mem_FP_of_eq (g := specializedQuery) h ?_
-  intro p
-  simp only [specializedQuery, Function.comp_apply]
+  polytime [specializedQuery]
 
 noncomputable def access {F : Family} (a : Access F) : SignPatternBits.Access (family F) where
   rootCoefficient := F.root.residue

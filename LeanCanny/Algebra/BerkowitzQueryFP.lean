@@ -63,21 +63,17 @@ theorem targetDegree_mem_FP {dim : List Bool → List Bool} (hd : dim ∈ FP) : 
   mem_FP_comp (splitIndex_mem_FP hd colIndex_mem_FP) pairSnd_mem_FP
 
 theorem remaining_mem_FP {dim : List Bool → List Bool} (hd : dim ∈ FP) : remaining dim ∈ FP := by
-  have hs := mem_FP_comp (mem_FP_pair (inputDimension_mem_FP hd) (sourceLayer_mem_FP hd)) BinaryNat.sub_mem_FP
-  have h := mem_FP_comp hs BinaryNat.pred_mem_FP
-  refine mem_FP_of_eq (g := remaining dim) h ?_
-  intro p
-  simp only [Function.comp_apply, remaining]
+  have hn := inputDimension_mem_FP hd
+  have hs := sourceLayer_mem_FP hd
+  polytime [remaining]
 
 theorem offset_mem_FP {dim : List Bool → List Bool} (hd : dim ∈ FP) : offset dim ∈ FP :=
   mem_FP_comp (sourceLayer_mem_FP hd) BinaryNat.succ_mem_FP
 
 theorem momentExponent_mem_FP {dim : List Bool → List Bool} (hd : dim ∈ FP) : momentExponent dim ∈ FP := by
-  have hsucc := mem_FP_comp (sourceDegree_mem_FP hd) BinaryNat.succ_mem_FP
-  have h := mem_FP_comp (mem_FP_pair (targetDegree_mem_FP hd) hsucc) BinaryNat.sub_mem_FP
-  refine mem_FP_of_eq (g := momentExponent dim) h ?_
-  intro p
-  simp only [Function.comp_apply, momentExponent]
+  have hs := sourceDegree_mem_FP hd
+  have ht := targetDegree_mem_FP hd
+  polytime [momentExponent]
 
 theorem code_value (b : ℕ) : Nat.fromBitsLE (BinaryNatCode.encode b) = b := Nat.fromBitsLE_bits b
 

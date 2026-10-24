@@ -37,23 +37,14 @@ def value (bound rho : List Bool → List Bool) (q : List Bool) : List Bool :=
   finish (pair w (rho (residueQuery w)))
 
 theorem weightQuery_mem_FP {bound : List Bool → List Bool} (hb : bound ∈ FP) : weightQuery bound ∈ FP := by
-  have hN := mem_FP_comp (mem_FP_comp pairFst_mem_FP hb) BinaryNat.normalize_mem_FP
-  have hi := mem_FP_comp pairSnd_mem_FP BinaryNat.normalize_mem_FP
-  have h := mem_FP_pair hN hi
-  refine mem_FP_of_eq (g := weightQuery bound) h ?_
-  intro q
-  simp only [Function.comp_apply, weightQuery]
+  polytime [weightQuery]
 
 theorem original_mem_FP : original ∈ FP := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
 theorem modulus_mem_FP : modulus ∈ FP := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
 theorem inverse_mem_FP : inverse ∈ FP := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
 
 theorem residueQuery_mem_FP : residueQuery ∈ FP := by
-  have hm := mem_FP_comp modulus_mem_FP BinaryNat.pred_mem_FP
-  have h := mem_FP_pair original_mem_FP hm
-  refine mem_FP_of_eq (g := residueQuery) h ?_
-  intro w
-  simp only [Function.comp_apply, residueQuery]
+  polytime [residueQuery, original, modulus]
 
 theorem finish_mem_FP : finish ∈ FP := by
   have hm := mem_FP_comp pairFst_mem_FP modulus_mem_FP

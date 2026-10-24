@@ -93,48 +93,25 @@ def matrixInput (dim : List Bool → List Bool) (p : List Bool) : List Bool :=
   attachDegree (pair (EntryAccess.matrixInput dim (matrixBase p)) (pairSnd (pairSnd (pairSnd p))))
 
 theorem attachDegree_mem_FP : attachDegree ∈ FP := by
-  have hc := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have hi := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairFst_mem_FP
-  have hj := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairSnd_mem_FP
-  have h := mem_FP_pair hc (mem_FP_pair hi (mem_FP_pair hj pairSnd_mem_FP))
-  refine mem_FP_of_eq (g := attachDegree) h ?_
-  intro p
-  simp only [Function.comp_apply, attachDegree]
+  polytime [attachDegree]
 
 theorem vectorBase_mem_FP : vectorBase ∈ FP := by
-  have hc := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have hi := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
-  exact mem_FP_pair hc hi
+  polytime [vectorBase]
 
 theorem matrixBase_mem_FP : matrixBase ∈ FP := by
-  have hc := mem_FP_comp pairFst_mem_FP pairFst_mem_FP
-  have hi := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
-  have hj := mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairFst_mem_FP
-  exact mem_FP_pair hc (mem_FP_pair hi hj)
+  polytime [matrixBase]
 
 theorem rowInput_mem_FP {dim : List Bool → List Bool} (hd : dim ∈ FP) : rowInput dim ∈ FP := by
-  have hq := mem_FP_comp vectorBase_mem_FP (EntryAccess.rowInput_mem_FP hd)
-  have hk := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
-  have h := mem_FP_comp (mem_FP_pair hq hk) attachDegree_mem_FP
-  refine mem_FP_of_eq (g := rowInput dim) h ?_
-  intro p
-  simp only [Function.comp_apply, rowInput]
+  have hr := EntryAccess.rowInput_mem_FP hd
+  polytime [rowInput, attachDegree, vectorBase]
 
 theorem columnInput_mem_FP {dim : List Bool → List Bool} (hd : dim ∈ FP) : columnInput dim ∈ FP := by
-  have hq := mem_FP_comp vectorBase_mem_FP (EntryAccess.columnInput_mem_FP hd)
-  have hk := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
-  have h := mem_FP_comp (mem_FP_pair hq hk) attachDegree_mem_FP
-  refine mem_FP_of_eq (g := columnInput dim) h ?_
-  intro p
-  simp only [Function.comp_apply, columnInput]
+  have hc := EntryAccess.columnInput_mem_FP hd
+  polytime [columnInput, attachDegree, vectorBase]
 
 theorem matrixInput_mem_FP {dim : List Bool → List Bool} (hd : dim ∈ FP) : matrixInput dim ∈ FP := by
-  have hq := mem_FP_comp matrixBase_mem_FP (EntryAccess.matrixInput_mem_FP hd)
-  have hk := mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairSnd_mem_FP
-  have h := mem_FP_comp (mem_FP_pair hq hk) attachDegree_mem_FP
-  refine mem_FP_of_eq (g := matrixInput dim) h ?_
-  intro p
-  simp only [Function.comp_apply, matrixInput]
+  have hm := EntryAccess.matrixInput_mem_FP hd
+  polytime [matrixInput, attachDegree, matrixBase]
 
 namespace ModularAccess
 

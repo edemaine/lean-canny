@@ -54,10 +54,7 @@ theorem root_FP {count : List Bool → ℕ} (hn : BinaryFn count) :
   exact packet_FP id_mem_FP hh (BinaryFn.const 0)
 
 theorem child_FP (right : Bool) : child right ∈ FP := by
-  have hi := mem_FP_comp (mem_FP_comp indexWord_FP (cons_mem_FP right)) BinaryNat.normalize_mem_FP
-  have hh := drop_mem_FP heightWord_FP (UnaryFn.const 1)
-  have h := mem_FP_pair original_FP (mem_FP_pair hh hi)
-  exact mem_FP_of_eq h (fun p => by simp only [child, Function.comp_apply])
+  polytime [child, original, heightWord, indexWord]
 
 theorem original_packet (c : List Bool) (h i : ℕ) : original (packet c h i) = c := by
   simp only [original, packet, pairFst_pair]

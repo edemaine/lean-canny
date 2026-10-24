@@ -47,51 +47,27 @@ theorem build_mem_FP {h n k : List Bool → List Bool} (hh : h ∈ FP) (hn : n �
     (fun c => build (h c) (n c) (k c)) ∈ FP := mem_FP_pair hh (mem_FP_pair hn hk)
 
 theorem width_mem_FP : width ∈ FP := by
-  have he := mem_FP_comp (mem_FP_pair index_mem_FP (constFn_mem_FP (BinaryNatCode.encode 2))) BinaryNat.add_mem_FP
-  refine mem_FP_of_eq (g := width) he ?_
-  intro q
-  simp only [Function.comp_apply, width]
+  polytime [width, index]
 
 theorem coordinate_mem_FP : coordinate ∈ FP := by
-  have hw := mem_FP_comp pairFst_mem_FP width_mem_FP
-  have he := mem_FP_comp (mem_FP_pair pairSnd_mem_FP hw) BinaryNat.divMod_mem_FP
-  refine mem_FP_of_eq (g := coordinate) he ?_
-  intro p
-  simp only [Function.comp_apply, coordinate]
+  have hw := width_mem_FP
+  polytime [coordinate]
 
 theorem doubleNode_mem_FP : doubleNode ∈ FP := by
-  have he := mem_FP_comp (mem_FP_pair node_mem_FP node_mem_FP) BinaryNat.add_mem_FP
-  refine mem_FP_of_eq (g := doubleNode) he ?_
-  intro q
-  simp only [Function.comp_apply, doubleNode]
+  polytime [doubleNode, node]
 
 theorem childLeft_mem_FP : childLeft ∈ FP := by
-  have hh := mem_FP_comp (mem_FP_comp pairFst_mem_FP height_mem_FP) BinaryNat.pred_mem_FP
-  have hn := mem_FP_comp pairFst_mem_FP doubleNode_mem_FP
-  have hk := mem_FP_comp coordinate_mem_FP pairSnd_mem_FP
-  have he := build_mem_FP hh hn hk
-  refine mem_FP_of_eq (g := childLeft) he ?_
-  intro p
-  simp only [Function.comp_apply, childLeft]
+  have hn := doubleNode_mem_FP
+  have hc := coordinate_mem_FP
+  polytime [childLeft, build, height]
 
 theorem childRight_mem_FP : childRight ∈ FP := by
-  have hh := mem_FP_comp (mem_FP_comp pairFst_mem_FP height_mem_FP) BinaryNat.pred_mem_FP
-  have hn := mem_FP_comp (mem_FP_comp pairFst_mem_FP doubleNode_mem_FP) BinaryNat.succ_mem_FP
-  have hj := mem_FP_comp coordinate_mem_FP pairFst_mem_FP
-  have hi := mem_FP_comp coordinate_mem_FP pairSnd_mem_FP
-  have hk := mem_FP_comp (mem_FP_pair hj hi) BinaryNat.sub_mem_FP
-  have he := build_mem_FP hh hn hk
-  refine mem_FP_of_eq (g := childRight) he ?_
-  intro p
-  simp only [Function.comp_apply, childRight]
+  have hn := doubleNode_mem_FP
+  have hc := coordinate_mem_FP
+  polytime [childRight, build, height]
 
 theorem initial_mem_FP {count index : List Bool → List Bool} (hc : count ∈ FP) (hi : index ∈ FP) : initial count index ∈ FP := by
-  have hh := bits_mem_FP (UnaryFn.length hc)
-  have hk := mem_FP_comp hi BinaryNat.normalize_mem_FP
-  have he := build_mem_FP hh (constFn_mem_FP []) hk
-  refine mem_FP_of_eq (g := initial count index) he ?_
-  intro c
-  simp only [Function.comp_apply, initial, BinaryNatCode.encode]
+  polytime [initial, build, BinaryNatCode.encode]
 
 theorem width_queryBits (q : Query) : width (queryBits q) = BinaryNatCode.encode (BalancedProduct.width q.index) := by
   simp only [width, index, queryBits, pairSnd_pair, BinaryNat.add_pair, BinaryNatCode.encode,

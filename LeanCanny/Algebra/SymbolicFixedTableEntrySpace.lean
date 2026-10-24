@@ -40,10 +40,7 @@ def sliceCoefficientQuery (q : List Bool) : List Bool :=
     (pair (pairSnd (pairFst (pairFst q))) (pairSnd q))
 
 theorem sliceCoefficientQuery_FP : sliceCoefficientQuery ∈ FP := by
-  exact mem_FP_pair
-    (mem_FP_pair (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairFst_mem_FP)
-      (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP))
-    (mem_FP_pair (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) pairSnd_mem_FP) pairSnd_mem_FP)
+  polytime [sliceCoefficientQuery]
 
 noncomputable def Family.sliced (F : Family) : CannyResultantBits.Family where
   left c := slice (F.left (pairFst c)) (Nat.fromBitsLE (pairSnd c))
@@ -92,13 +89,7 @@ def entryQuery (q : List Bool) : List Bool :=
     (pair (pairFst (pairSnd q)) (pair (pairFst (pairSnd (pairSnd q))) (pairSnd (pairSnd (pairSnd (pairSnd q))))))
 
 theorem entryQuery_FP : entryQuery ∈ FP := by
-  have h3 := mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairSnd_mem_FP
-  exact mem_FP_pair
-    (mem_FP_pair (mem_FP_pair (mem_FP_comp pairFst_mem_FP pairFst_mem_FP) (mem_FP_comp h3 pairFst_mem_FP))
-      (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP))
-    (mem_FP_pair (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP)
-      (mem_FP_pair (mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairFst_mem_FP)
-        (mem_FP_comp h3 pairSnd_mem_FP)))
+  polytime [entryQuery]
 
 noncomputable def Family.entry (F : Family) : List Bool → List Bool :=
   F.access.modular.determinant.entry ∘ entryQuery

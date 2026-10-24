@@ -60,7 +60,9 @@ theorem normalize_eq_bits (bits : List Bool) : normalize bits = (Nat.fromBitsLE 
 @[simp] theorem normalize_bits (n : ℕ) : normalize n.bits = n.bits := by
   rw [normalize_eq_bits, Nat.fromBitsLE_bits]
 
-theorem normalize_mem_FP : normalize ∈ FP :=
+@[program_certificate]
+theorem normalize_mem_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime normalize
+    Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits :=
   mem_FP_of_eq (natBits_computable.comp fromBitsLE_computable)
     (fun w => (normalize_eq_bits w).symm)
 
@@ -87,7 +89,9 @@ def succ (bits : List Bool) : List Bool := normalize (increment bits)
 theorem succ_eq_bits (bits : List Bool) :
     succ bits = (Nat.fromBitsLE bits + 1).bits := by rw [succ, normalize_eq_bits, increment_value]
 
-theorem succ_mem_FP : succ ∈ FP := by
+@[program_certificate]
+theorem succ_mem_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime succ
+    Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by
   have h := natBits_computable.comp
     (Turing.MultiTapeTM.ComputableTidilyInPolyTime.binary_add' fromBitsLE_computable (.const 1))
   exact mem_FP_of_eq h (fun bits => (succ_eq_bits bits).symm)
@@ -118,7 +122,9 @@ def pred (bits : List Bool) : List Bool := normalize (decrement bits)
 theorem pred_eq_bits (bits : List Bool) :
     pred bits = (Nat.fromBitsLE bits - 1).bits := by rw [pred, normalize_eq_bits, decrement_value]
 
-theorem pred_mem_FP : pred ∈ FP := by
+@[program_certificate]
+theorem pred_mem_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime pred
+    Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by
   have h := natBits_computable.comp
     (Turing.MultiTapeTM.ComputableTidilyInPolyTime.binary_sub' fromBitsLE_computable (.const 1))
   exact mem_FP_of_eq h (fun p => (pred_eq_bits p).symm)
@@ -135,7 +141,9 @@ def half (bits : List Bool) : List Bool := normalize (bits.drop 1)
 theorem half_eq_bits (bits : List Bool) : half bits = (Nat.fromBitsLE bits / 2).bits := by
   rw [half, normalize_eq_bits, drop_one_value]
 
-theorem half_mem_FP : half ∈ FP :=
+@[program_certificate]
+theorem half_mem_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime half
+    Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits :=
   mem_FP_comp (drop_mem_FP id_mem_FP (UnaryFn.const 1)) normalize_mem_FP
 
 def upperHalf (bits : List Bool) : List Bool :=
@@ -151,7 +159,9 @@ theorem upperHalf_eq_bits (bits : List Bool) :
         List.drop_zero, Nat.fromBitsLE_cons]
       all_goals congr 1; omega
 
-theorem upperHalf_mem_FP : upperHalf ∈ FP := by
+@[program_certificate]
+theorem upperHalf_mem_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime upperHalf
+    Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by
   have hdrop := drop_mem_FP id_mem_FP (UnaryFn.const 1)
   have hs := mem_FP_comp hdrop succ_mem_FP
   have h := (FPPred.getBit id_mem_FP (UnaryFn.const 0)).ite_mem_FP hs half_mem_FP

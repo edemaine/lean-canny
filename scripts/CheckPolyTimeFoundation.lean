@@ -6,6 +6,7 @@ import LeanCanny.Computation.PolyTimeBinaryNat
 import LeanCanny.Computation.PolyTimeArithmetic
 import LeanCanny.Tactic.PolyTime
 import LeanCanny.Encoding.Data
+import LeanCanny.Encoding.BinaryDivFP
 import Lean.Util.CollectAxioms
 
 /-! The replacement foundation must compile without importing any legacy
@@ -162,3 +163,19 @@ run_cmd do
         unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
           throwError "{name} depends on unexpected axiom {ax}"
   logInfo m!"Audited {checked} native declarations: no legacy imports or nonstandard axioms."
+
+-- Named raw word calls must use their native certificates without unfolding
+-- the arithmetic implementations, including inside larger packet programs.
+namespace WordCertificateRegression
+open LeanCanny.Encoding
+attribute [local irreducible] BinaryNat.mul BinaryNat.succ BinaryNat.divMod
+  BinaryNat.normalize BinaryNat.sub BinaryNat.mod
+
+example {f g : List Bool → List Bool} (hf : f ∈ FP) (hg : g ∈ FP) :
+    (fun q => BinaryNat.divMod (pair (BinaryNat.mul (pair (f q) (g q)))
+      (BinaryNat.succ (g (pairFst q))))) ∈ FP := by polytime
+
+example {f g : List Bool → List Bool} (hf : f ∈ FP) (hg : g ∈ FP) :
+    (fun q => BinaryNat.mod (pair (BinaryNat.normalize (f q))
+      (BinaryNat.sub (pair (f q) (g q))))) ∈ FP := by polytime
+end WordCertificateRegression

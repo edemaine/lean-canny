@@ -157,7 +157,9 @@ theorem sub_eq_bits (packet : List Bool) : sub packet =
     sub (pair a b) = (Nat.fromBitsLE a - Nat.fromBitsLE b).bits := by
   simp only [sub_eq_bits, pairFst_pair, pairSnd_pair]
 
-theorem sub_mem_FP : sub ∈ FP := by
+@[program_certificate]
+theorem sub_mem_FP : Turing.MultiTapeTM.ComputableTidilyInPolyTime sub
+    Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits := by
   have h := natBits_computable.comp
     (Turing.MultiTapeTM.ComputableTidilyInPolyTime.binary_sub'
       (fromBitsLE_computable.comp pairFst_mem_FP) (fromBitsLE_computable.comp pairSnd_mem_FP))
