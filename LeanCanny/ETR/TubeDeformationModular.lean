@@ -92,16 +92,5 @@ noncomputable def modularFamily (source active modulus inner middle outer : List
   bound c := Nat.fromBitsLE (entryDegreeCode source B.degree c)
   entry_degree := original_entry_degree source active modulus inner middle n d ell B
 
-noncomputable def modularAccess (source active modulus inner middle outer : List Bool → List Bool)
-    (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ)
-    (B : TubeParameter.CoordinateBounds source (fun q => n (pairFst q)) (fun q => d (pairFst q))) :
-    BerkowitzAffinePolynomial.Access (modularFamily source active modulus inner middle outer n d ell B) where
-  original := originalAccess source active modulus inner middle n d ell B
-  inner := (originalAccess source active modulus inner middle n d ell B).degree
-  outer := BinaryNat.normalize ∘ outer
-  bound := BinaryNat.normalize ∘ entryDegreeCode source B.degree
-  inner_eq := (originalAccess source active modulus inner middle n d ell B).degree_eq
-  outer_eq c := BinaryNat.normalize_eq_bits (outer c)
-  bound_eq c := BinaryNat.normalize_eq_bits (entryDegreeCode source B.degree c)
 
 end LeanCanny.ETR.TubeDeformation

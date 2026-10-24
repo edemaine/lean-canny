@@ -116,17 +116,6 @@ noncomputable def Family.principal (F : Family) (s : (c : List Bool) → Finset 
     · simp
     · simp
 
-noncomputable def Access.principal {F : Family} (a : Access F)
-    (s : (c : List Bool) → Finset (Fin (F.source.dimension c))) (pred : List Bool → Prop)
-    (hpred : ∀ c (r t : Fin (F.source.dimension c)) d, pred (PolynomialAffineEntryBits.packet c r.val t.val d) ↔ r ∈ s c) : Access (F.principal s) where
-  original := a.original.principal s pred hpred
-  inner := a.inner
-  outer := a.outer
-  bound := a.bound
-  inner_eq := a.inner_eq
-  outer_eq := a.outer_eq
-  bound_eq := a.bound_eq
-
 theorem Family.matrix_eq_affine (F : Family) (c : List Bool) :
     F.matrix c = AffineCharacteristic.affineMatrix (F.source.matrix c) := by
   funext r t
@@ -141,13 +130,14 @@ theorem Family.principal_matrix (F : Family) (s : (c : List Bool) → Finset (Fi
     PrincipalPadding.matrix (AffineCharacteristic.affineMatrix (F.source.matrix c)) (s c)
   exact (PrincipalPadding.matrix_affine _ _).symm
 
-theorem Access.principalEvaluator {F : Family} (a : Access F)
+theorem Family.principalEvaluator (F : Family) (a : BerkowitzPolynomial.ModularAccess F.source)
     (s : (c : List Bool) → Finset (Fin (F.source.dimension c))) (pred : List Bool → Prop)
     (hpred : ∀ c (r t : Fin (F.source.dimension c)) d, pred (PolynomialAffineEntryBits.packet c r.val t.val d) ↔ r ∈ s c)
-    (hp : FPPred pred) (hN : a.original.dimension ∈ FP) (hm : a.original.modulus ∈ FP)
-    (hb : a.bound ∈ FP) (hi : a.inner ∈ FP) (ho : a.outer ∈ FP) (E : SpaceFunction a.original.entry) :
+    (hp : FPPred pred) (hN : BinaryFn F.source.dimension) (hm : a.modulus ∈ FP)
+    (hb : BinaryFn F.bound) (hi : BinaryFn F.inner) (ho : BinaryFn F.outer) (E : SpaceFunction a.entry) :
     SpaceFunction (F.principal s).value :=
-  (a.principal s pred hpred).evaluator hN hm hb hi ho (a.original.principalEntryEvaluator s pred hpred hp hm E)
+  (F.principal s).evaluator (a.principal s pred hpred) hN hm hb hi ho
+    (a.principalEntryEvaluator s pred hpred hp hm E)
 
 end BerkowitzAffinePolynomial
 end LeanCanny.Algebra

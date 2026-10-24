@@ -33,8 +33,8 @@ theorem selection_packet (source active modulus inner middle : List Bool → Lis
 noncomputable def access (source active modulus inner middle outer : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ)
     (B : TubeParameter.CoordinateBounds source (fun q => n (pairFst q)) (fun q => d (pairFst q))) :
-    BerkowitzAffinePolynomial.Access (family source active modulus inner middle outer n d ell B) :=
-  (TubeDeformation.modularAccess source active modulus inner middle outer n d ell B).principal
+    BerkowitzPolynomial.ModularAccess (family source active modulus inner middle outer n d ell B).source :=
+  (TubeDeformation.originalAccess source active modulus inner middle n d ell B).principal
     (indices source) (MacaulayBits.extraneousEntry (TubeCleared.layout source))
     (selection_packet source active modulus inner middle n d ell B)
 

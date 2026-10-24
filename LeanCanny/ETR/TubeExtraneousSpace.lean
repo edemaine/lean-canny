@@ -42,15 +42,14 @@ theorem familyEvaluator {source active modulus inner middle : List Bool → List
     (D : TubeBivariate.Data source active modulus inner middle n d ell) (outer : List Bool → List Bool) (ho : outer ∈ FP) :
     SpaceFunction (family source active modulus inner middle outer n d ell D.bounds).value := by
   have controls := TubeDeformation.originalControls D
-  have hEntryBound := mem_FP_comp (TubeDeformation.entryDegreeCode_mem_FP D.sourceFP D.bounds.degreeFP) BinaryNat.normalize_mem_FP
-  have hOuter := mem_FP_comp ho BinaryNat.normalize_mem_FP
-  let b := access source active modulus inner middle outer n d ell D.bounds
-  have hN' : b.original.dimension ∈ FP := controls.dimension
-  have hM' : b.original.modulus ∈ FP := controls.modulus
-  have hB' : b.bound ∈ FP := mem_FP_of_eq hEntryBound (fun _ => rfl)
-  have hI' : b.inner ∈ FP := controls.degree
-  have hO' : b.outer ∈ FP := mem_FP_of_eq hOuter (fun _ => rfl)
-  exact b.evaluator hN' hM' hB' hI' hO' (originalEntryEvaluator D)
+  let F := family source active modulus inner middle outer n d ell D.bounds
+  let a := access source active modulus inner middle outer n d ell D.bounds
+  have hi : BinaryFn F.inner := BinaryFn.of_bits
+    (mem_FP_of_eq controls.degree (TubeDeformation.originalAccess source active modulus inner middle n d ell D.bounds).degree_eq)
+  exact F.evaluator a (TubeDeformation.determinantControls D).1 controls.modulus
+    (BinaryFn.fromBits (TubeDeformation.entryDegreeCode_mem_FP D.sourceFP D.bounds.degreeFP)) hi
+    (BinaryFn.fromBits ho) (originalEntryEvaluator D)
+
 
 noncomputable def modularValue (source active modulus inner middle outer : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) : List Bool :=
