@@ -1150,3 +1150,41 @@ example : ¬ (∀ y : Fin 3 → ℂ,
     eval₂_pow, eval₂_X, eval₂_sub, Fin.sum_univ_succ]
 
 end BadRootChartTests
+
+namespace InfinityCircuitTests
+open LeanCanny.ETR
+open LeanCanny.ETR.ComplexCircuit
+open scoped Classical BigOperators
+
+-- An exponent with 80 bits still needs only two arithmetic operations per bit
+-- in each block; none of its numerical value is expanded into unary.
+#guard (Infinity.prefixProgram 3 (List.replicate 80 true) (fun _ => 0) 3).length == 499
+#guard compile (encode (Infinity.query 1 [] (fun _ => 0) 0)) ==
+  SumSquares.listBits (equations (Infinity.query 1 [] (fun _ => 0) 0))
+
+-- The normalized cubic direction has a genuine infinity root (1,-1).
+example : Satisfiable (Infinity.query 2 [false, true] (fun _ => 1) 0) := by
+  rw [Infinity.query_satisfiable_fin 1 [false, true] (fun _ => 1) ⟨0, by decide⟩]
+  have hb : Nat.fromBitsLE [false, true] = 2 := by decide
+  refine ⟨Fin.cons 1 (fun _ : Fin 1 => -1), rfl, ?_, ?_⟩
+  · norm_num [hb, Fin.sum_univ_succ]
+  · intro j
+    fin_cases j
+    norm_num [hb]
+
+-- A single normalized input cannot have zero power sum, also for the empty
+-- exponent word (N-1=0). Completeness must preserve the original input wire.
+example : ¬ Satisfiable (Infinity.query 1 [] (fun _ => 0) 0) := by
+  rw [Infinity.query_satisfiable_fin 0 [] (fun _ => 0) ⟨0, by decide⟩]
+  rintro ⟨x, hx, hs, _⟩
+  have hx0 : x (0 : Fin 1) = 1 := by
+    have he : (0 : Fin 1) = ⟨0, by decide⟩ := Subsingleton.elim _ _
+    exact (congrArg x he).trans hx
+  simp [Nat.fromBitsLE, Nat.fromBits, hx0] at hs
+
+example {dim degree index : List Bool → ℕ} {record : List Bool → List Bool}
+    (hd : UnaryFn dim) (hN : BinaryFn degree) (hi : UnaryFn index) (hr : record ∈ FP) :
+    SpaceFunction (LeanCanny.Encoding.FermatInfinityQuery.empty dim degree index record) :=
+  LeanCanny.Encoding.FermatInfinityQuery.empty_evaluator hd hN hi hr
+
+end InfinityCircuitTests

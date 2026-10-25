@@ -32,6 +32,7 @@ import LeanCanny.ETR.ComplexDyadicPSPACE
 import LeanCanny.ETR.ComplexDifferentialEncoding
 import LeanCanny.ETR.ComplexTermDifferential
 import LeanCanny.Encoding.FermatSweepKernelCertificate
+import LeanCanny.Encoding.FermatInfinityQuery
 
 /-! # Connectivity development
 
@@ -147,8 +148,12 @@ normalized kernel vectors detect affine singular critical roots, and explicit
 pure-power equations detect roots at infinity. The spatial Jacobian's actual
 degree is strictly below its assigned homogenization degree, so its appended
 row vanishes at infinity. This split allows coefficient specialization maps
-with a kernel, including evaluation at the finite sweep sample. Native query
-writers for these two chart families remain required.
+with a kernel, including evaluation at the finite sweep sample. The infinity
+charts now have shared binary-power circuits with exact completion and root
+semantics, native polynomial-time query writers, and native PSPACE feasibility
+and emptiness tests. Their direction coefficients are read from the actual
+fixed-width record and kept binary; the nonzero leading scalar cancels from
+the equations. Native affine Hessian/kernel query writers remain required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices, effective direction selection, and the full recursive query
 encodings remain required.

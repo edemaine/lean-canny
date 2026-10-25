@@ -198,7 +198,9 @@ The checked ingredients are:
   networks remain open. Certificate validity is now proved equivalent to
   excluding normalized affine Jacobian-kernel roots and roots of the explicit
   pure-power infinity system. This removes determinant homogenization from
-  the required query writers.
+  the required query writers. Infinity charts have native PSPACE tests using
+  shared binary powers and actual fixed-width record readers. The affine
+  Hessian/kernel circuit queries remain required.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A

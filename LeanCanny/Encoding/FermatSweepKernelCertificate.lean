@@ -67,4 +67,13 @@ theorem infinity_bad_iff (a : ℚ) (N : ℕ) (record : List Bool) (i : Fin (n + 
     sampledDirection, sampleMap, map_mul, map_natCast, Polynomial.coe_eval₂RingHom,
     Polynomial.eval₂_C, eq_ratCast]
 
+theorem infinity_bad_iff_reduced (a : ℚ) (ha : a ≠ 0) (N : ℕ) (hN : 0 < N)
+    (record : List Bool) (i : Fin (n + 1)) :
+    InfinityBad a N record i ↔ ∃ x : Fin (n + 1) → ℂ, x i = 1 ∧
+      (∑ j : Fin (n + 1), x j ^ N) = 0 ∧
+      ∀ j : Fin n, x j.succ ^ (N - 1) - (direction n N record j : ℂ) * x 0 ^ (N - 1) = 0 := by
+  have ha' : (a : ℂ) ≠ 0 := by exact_mod_cast ha
+  have hN' : (N : ℂ) ≠ 0 := by exact_mod_cast (Nat.ne_of_gt hN)
+  simp only [infinity_bad_iff, mul_eq_zero, ha', hN', false_or]
+
 end LeanCanny.Encoding.FermatSweepCertificate
