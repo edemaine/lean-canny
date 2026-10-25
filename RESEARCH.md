@@ -868,6 +868,14 @@ reader and unary dimension. The actual arity bound implies validity and
 generic-slice regularity of its selected direction. These source-preparation
 theorems do not establish component preservation for the original formula.
 
+`Geometry/CompactSublevelComponents` proves that components commute with
+decreasing compact intersections at a retained point. For a continuous
+nonnegative energy on a compact set, membership in the zero-set component is
+equivalent to membership in every positive sublevel component. Distinct zero
+components therefore separate at some positive tolerance, with no regularity
+assumption at the zeros. This limit theorem does not supply a finite effective
+tolerance or identify connected components with path components.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

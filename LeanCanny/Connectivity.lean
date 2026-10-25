@@ -40,6 +40,7 @@ import LeanCanny.Encoding.FermatFrozenSource
 import LeanCanny.Encoding.FermatInfinityQuery
 import LeanCanny.Encoding.FermatDirectionChoice
 import LeanCanny.Encoding.FermatTermPreparation
+import LeanCanny.Geometry.CompactSublevelComponents
 
 /-! # Connectivity development
 
@@ -178,6 +179,10 @@ For an encoded low term, its normalized size supplies an even degree and
 coefficient-mass control. This gives native record preparation from the
 source reader and unary dimension, and generic-slice regularity whenever
 the term's variables fit that dimension.
+For compact decreasing sublevel neighborhoods, component intersections now
+recover the exact zero-set component, even at singular zeros. Distinct zero
+components separate at some positive tolerance. A finite effective tolerance
+and path recovery for arbitrary formula inputs remain required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

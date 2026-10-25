@@ -1442,3 +1442,33 @@ example : degree (fun _ : List Bool => []) [] = 22 := by
   simp only [degree, size, ht, Term.dataSize_const_zero]
 
 end EncodedSweepPreparationTests
+
+namespace CompactComponentLimitTests
+open LeanCanny.Geometry.CompactSublevelComponents Set
+
+private def energy (x : ℝ) : ℝ := (x ^ 2 - 1) ^ 2
+
+-- Both zeros are singular. The limit theorem nevertheless supplies a
+-- positive sublevel tolerance that preserves their separation.
+example : ∃ e : ℝ, 0 < e ∧ (1 : ℝ) ∉ connectedComponentIn
+    (sublevel (Icc (-2 : ℝ) 2) energy e) (-1) := by
+  apply separated_at_positive_sublevel (Icc (-2 : ℝ) 2) isCompact_Icc energy
+    (by unfold energy; fun_prop) (fun x _ => sq_nonneg (x ^ 2 - 1)) (-1) 1 (by norm_num) (by norm_num [energy])
+  intro hy
+  have hx : (-1 : ℝ) ∈ Icc (-2 : ℝ) 2 ∩ energy ⁻¹' {0} := by norm_num [energy]
+  have h0 := isPreconnected_connectedComponentIn.Icc_subset (mem_connectedComponentIn hx) hy
+    (show (0 : ℝ) ∈ Icc (-1 : ℝ) 1 by norm_num)
+  have hz := (connectedComponentIn_subset _ _ h0).2
+  norm_num [energy] at hz
+
+-- An explicit tolerance also separates them: a connected subset of the
+-- real line containing -1 and 1 would contain zero, whose energy is one.
+example : (1 : ℝ) ∉ connectedComponentIn (sublevel (Icc (-2 : ℝ) 2) energy (1 / 2)) (-1) := by
+  intro hy
+  have hx : (-1 : ℝ) ∈ sublevel (Icc (-2 : ℝ) 2) energy (1 / 2) := by norm_num [sublevel, energy]
+  have h0 := isPreconnected_connectedComponentIn.Icc_subset (mem_connectedComponentIn hx) hy
+    (show (0 : ℝ) ∈ Icc (-1 : ℝ) 1 by norm_num)
+  have hz := (connectedComponentIn_subset _ _ h0).2
+  norm_num [energy] at hz
+
+end CompactComponentLimitTests
