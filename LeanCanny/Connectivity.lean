@@ -16,6 +16,8 @@ import LeanCanny.Algebra.FixedLevelRegularSpecialization
 import LeanCanny.Geometry.CoordinateSlice
 import LeanCanny.Connectivity.CoordinateSlabCover
 import LeanCanny.Connectivity.OneDimensionPoint
+import LeanCanny.Geometry.BoundedCriticalCoordinates
+import LeanCanny.Geometry.RegularCoordinateRootCount
 
 /-! # Connectivity development
 
@@ -55,8 +57,14 @@ arcs extend continuously to exceptional endpoints. Their saturated components
 give the original coordinate slab a finite clopen path cover. Overlap tests are
 connections in an actual polynomial slice in one fewer coordinate. Recursive
 endpoint component covers give a finite closed path cover of the whole closed
-coordinate slab, with both connectivity tests preserved. Effective encoding
-bounds remain required.
+coordinate slab, with both connectivity tests preserved. Concrete Macaulay
+numerator coefficients now give bounded nonzero coordinate equations at regular
+affine roots, also for the integer spatial critical slice systems. Both variable
+degrees, coefficient bits, and the coordinate-specialization factor are bounded.
+These certificates bound regular root fibers by a product of coordinate degrees,
+with an explicit binary label-width allowance.
+Input bounds for the direction and regularity factor, and effective recursive
+record and query encodings, remain required.
 Each sweep fiber is homeomorphic to its polynomial slice in one fewer
 coordinate. Properness and regularity pass to this lower-dimensional equation.
 Dimension-zero connectivity algorithms are proved, and both connectivity

@@ -102,4 +102,20 @@ theorem trailingCoeff_eq_zero_of_regular_root (p : Fin (n + 1) → MvPolynomial 
       (φ z) d W hdegree hW p hp hd s (x z) hr (hnz z)
     rwa [Polynomial.eval_map] at he
 
+/-- The numerator also gives an annihilating lowest coefficient. Unlike the
+quotient, it has immediate determinant coefficient budgets. -/
+theorem numerator_trailingCoeff_eq_zero_of_regular_root [IsDomain R]
+    (p : Fin (n + 1) → MvPolynomial (Fin (n + 1)) R)
+    (d : Fin (n + 1) → ℕ) (W : ℕ) (hdegree : ∀ i, d i < 2 ^ W) (hW : Macaulay.level d < 2 ^ W)
+    (hp : ∀ i, (p i).IsHomogeneous (d i)) (hd : ∀ i, 0 < d i)
+    (φ : E → R →+* K) (x : E → Fin (n + 1) → K)
+    (hφ : ∀ r, ContDiff K 1 (fun a => φ a r)) (hx : ∀ i, ContDiff K 1 (fun a => x a i))
+    (hnz : ∀ a, ∃ j, x a j ≠ 0) (a : E) (hroot : family p φ x a = 0)
+    (hJac : (fderiv K (family p φ x) a).IsInvertible) :
+    φ a (Macaulay.characteristicNumerator p d W).trailingCoeff = 0 := by
+  have hQ := trailingCoeff_eq_zero_of_regular_root p d W hdegree hW hp hd φ x hφ hx hnz a hroot hJac
+  rw [(Macaulay.characteristicNumerator_lowest_active p d W).2,
+    Macaulay.characteristicQuotient_factorization p d W hp hd hW,
+    Polynomial.trailingCoeff_mul, map_mul, hQ, mul_zero]
+
 end LeanCanny.Geometry.MacaulayRegularPersistence

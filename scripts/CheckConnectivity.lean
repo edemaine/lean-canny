@@ -718,3 +718,46 @@ example {α : Type} [Inhabited α] {enc : α ↪ List Bool} {p s t : α → Form
       enc encBool := OneDimension.point_computable hp hs ht
 
 end LowDimensionTests
+
+namespace BoundedEliminantTests
+open LeanCanny.Geometry LeanCanny.Algebra MvPolynomial Set
+
+-- The eliminant is constructed from the equations, not supplied as a
+-- certificate. Here the original square system is a translated identity.
+example : ∃ H : Polynomial ℤ, H ≠ 0 ∧
+    H.natDegree ≤ FixedWidthPolynomial.count 2 2 ∧ H.eval₂ (Int.castRingHom ℝ) 2 = 0 := by
+  let q : Fin 1 → MvPolynomial (Fin 1) ℤ := fun i => X i - C 2
+  let d : Fin 1 → ℕ := fun _ => 1
+  let x : Fin 1 → ℝ := fun _ => 2
+  have hD (i : Fin 1) : (q i).totalDegree ≤ d i := by
+    change (X i - C (2 : ℤ)).totalDegree ≤ 1
+    exact (MvPolynomial.totalDegree_sub _ _).trans (by rw [MvPolynomial.totalDegree_X, MvPolynomial.totalDegree_C]; decide)
+  have hroot (i : Fin 1) : (q i).eval₂ (Int.castRingHom ℝ) x = 0 := by simp [q, x]
+  have he : (fun y : Fin 1 → ℝ => fun j => (q j).eval₂ (Int.castRingHom ℝ) y) =
+      (fun y => y - x) := by funext y j; simp [q, x]
+  have hJac : (fderiv ℝ (fun y => fun j => (q j).eval₂ (Int.castRingHom ℝ) y) x).IsInvertible := by
+    rw [he, fderiv_sub_const]
+    change (fderiv ℝ (id : (Fin 1 → ℝ) → Fin 1 → ℝ) x).IsInvertible
+    rw [fderiv_id]
+    exact ⟨ContinuousLinearEquiv.refl ℝ _, rfl⟩
+  refine ⟨AffineCoordinateEliminant.polynomial q d 0 2, AffineCoordinateEliminant.ne_zero q d 0 2,
+    AffineCoordinateEliminant.degree_le q d 0 2, ?_⟩
+  exact AffineCoordinateEliminant.eval_eq_zero (Int.castRingHom ℝ) q d hD (by intro j; exact Nat.zero_lt_one)
+    0 2 (by norm_num [Macaulay.level, AffineCoordinateSystem.degrees, d, Fin.sum_univ_succ]) x hroot hJac
+
+-- A retained parameter may enter both coefficients. The lowest numerator
+-- retains the equation u-t and its specialization, even at t=0.
+private noncomputable def A : Matrix (Fin 1) (Fin 1) (Polynomial (Polynomial ℤ)) :=
+  fun _ _ => Polynomial.X - Polynomial.C Polynomial.X
+
+example : CharacteristicLowestBounds.lowest A = Polynomial.X - Polynomial.C Polynomial.X := by
+  have hA : A 0 0 ≠ 0 := by
+    intro hz
+    have hc := congrArg (fun p : Polynomial (Polynomial ℤ) => p.coeff 1) hz
+    simp [A] at hc
+  have h0 : (AffineCharacteristic.subtractiveMatrix A).det.coeff 0 ≠ 0 := by
+    simpa [AffineCharacteristic.subtractiveMatrix, Matrix.det_unique] using hA
+  rw [CharacteristicLowestBounds.lowest, Polynomial.trailingCoeff_eq_coeff_zero h0]
+  simp [A, AffineCharacteristic.subtractiveMatrix, Matrix.det_unique]
+
+end BoundedEliminantTests

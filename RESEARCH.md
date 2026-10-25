@@ -677,6 +677,31 @@ combines singleton validation, both endpoint membership tests, and absence
 of a separator. These base cases include empty, singular, and unbounded sets;
 they do not settle the varying-dimensional languages.
 
+`Algebra/CharacteristicLowestBounds` and `MacaulayLowestBounds` give explicit
+degree, mass, and scalar coefficient-bit bounds for the lowest coefficient of
+the padded characteristic numerator. This coefficient is nonzero over a
+domain. `Geometry/MacaulayRegularPersistence` now proves that it vanishes at
+regular projective-chart roots, using the proved quotient factorization.
+Thus coefficient bounds for polynomial division are unnecessary here.
+
+`Algebra/AffineCoordinateSystem` homogenizes an arbitrary square affine system
+and adds `u X₀-Xᵢ`. `Geometry/AffineCoordinateEliminant` proves that adding this
+coordinate equation preserves Jacobian invertibility and constructs an actual
+nonzero coordinate polynomial at every regular real root. Its degree is at
+most the fixed-width Macaulay matrix count, and its integer coefficient-bit
+budget is explicit. Bivariate characteristic bounds retain a sweep parameter.
+`UniformAffineCoordinates` constructs bounded coordinate polynomials and the
+product of their leading coefficients as a nonzero specialization factor;
+both parameter degree and factor mass are bounded. `ProjectionCriticalBounds`
+and `BoundedCriticalCoordinates` apply these estimates to the actual spatial
+critical equations, with explicit dependence on the supplied integer direction.
+The chosen direction and the separate factor excluding singular roots still
+lack input-size bounds; the native recursive query construction is also open.
+`RegularCoordinateRootCount` uses these constructed equations to bound every
+retained regular fiber by `N^n`, where `N` is the fixed-width matrix count.
+This equals `2^(n*(n+1)*W)`, giving an explicit cardinality allowance for binary
+branch labels. Locating and querying those labels still need native routines.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

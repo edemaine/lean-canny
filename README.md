@@ -166,8 +166,10 @@ The checked ingredients are:
   family. Its complete spatial critical arcs extend to both endpoints.
   Saturation gives a clopen path cover of the original coordinate slab;
   overlap tests are connections in one lower-dimensional slice. Recursive
-  endpoint component covers complete the closed slab. Effective encoding
-  bounds remain open.
+  endpoint component covers complete the closed slab. Concrete coordinate
+  eliminants now have bounded spatial and parameter degrees, coefficient
+  bits, and specialization factors. Input bounds for the integer direction,
+  regularity factor, and recursive query encodings remain open.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
