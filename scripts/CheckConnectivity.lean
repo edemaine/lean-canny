@@ -924,6 +924,11 @@ open LeanCanny.Algebra LeanCanny.Geometry MvPolynomial
 #guard (CriticalRegularLevel.exponent 1 (2 ^ 80)
   (FermatRegularSource.width 0 (2 ^ 80)) (2 ^ 80)).size < 2000
 
+-- The scaling reader receives the actual modulus. Its modular-power call
+-- must convert to the predecessor-modulus protocol, including modulus one.
+#guard FixedWidthDyadicScaleBits.factor (fun _ => 80) (fun _ => BinaryNatCode.encode 5) [] == [true]
+#guard FixedWidthDyadicScaleBits.factor (fun _ => 80) (fun _ => BinaryNatCode.encode 1) [] == []
+
 -- The origin is a degenerate critical point of X^4. It must still contribute
 -- its value to the bounded annihilator; an invertible-gradient-Jacobian
 -- argument would miss it.

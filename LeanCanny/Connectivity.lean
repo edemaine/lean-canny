@@ -105,7 +105,10 @@ for pure-power leading sources now follows from a bounded critical-value
 annihilator, including degenerate complex critical points. An explicit positive
 dyadic level avoids every critical value and has a polynomial binary exponent
 budget. Native polynomial-time metadata and modular denominator access are
-provided. The actual coordinate-slice polynomial preserves the leading form
+provided. Clearing this denominator preserves the actual hypersurface and
+extension-field regularity in an integer pure-power leading equation. Its
+native coefficient evaluator uses one source call and modular arithmetic,
+with no materialized denominator. The actual coordinate-slice polynomial preserves the leading form
 and commutes with differentiation. A transcendental sweep value makes that
 slice regular over every extension field, so the bounded integer direction
 also applies to the generic slice family of the constructed dyadic source.

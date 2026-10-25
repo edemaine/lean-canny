@@ -7,6 +7,8 @@ module
 public import LeanCanny.Geometry.FermatRegularSource
 public import LeanCanny.Algebra.FixedWidthPolynomialFP
 public import LeanCanny.Algebra.DyadicConstantCoefficient
+public import LeanCanny.Geometry.IntegerRegularSource
+public import LeanCanny.Algebra.FixedWidthDyadicScaleSpace
 
 /-! # Native binary metadata for the constructed regular level
 
@@ -46,5 +48,16 @@ theorem denominator_coefficient_FP {dim degree mass : List Bool → ℕ}
       ((2 ^ Geometry.CriticalRegularLevel.exponent (dim c + 1) (degree c)
         (FermatRegularSource.width (dim c) (degree c)) (mass c) : ℕ) : ℤ)) ∈ FP :=
   DyadicConstantBits.coefficient_FP (exponent_binary hd hN hb)
+
+/-- A native coefficient evaluator for the original integer polynomial
+supplies one for its constructed regular integer source. -/
+theorem integerSource_evaluator {dim degree mass A W : List Bool → ℕ}
+    {target modulus coefficient : List Bool → List Bool}
+    (hd : UnaryFn dim) (hN : BinaryFn degree) (hb : BinaryFn mass)
+    (hA : UnaryFn A) (hW : UnaryFn W) (ht : target ∈ FP) (hm : modulus ∈ FP)
+    (P : Computation.SpaceFunction coefficient) :
+    Computation.SpaceFunction (FixedWidthDyadicScaleBits.value A W
+      (fun c => IntegerRegularSource.exponent (dim c) (degree c) (mass c)) target modulus coefficient) :=
+  FixedWidthDyadicScaleBits.evaluator A W _ target modulus P hA hW (exponent_binary hd hN hb) ht hm
 
 end LeanCanny.Encoding.CriticalRegularLevel
