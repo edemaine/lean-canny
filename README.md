@@ -102,6 +102,35 @@ verification commands below.
 See [`RESEARCH.md`](RESEARCH.md) for prior work,
 proof details, and the unused tube route's precise gaps.
 
+## Connectivity development
+
+The separate `LeanCannyConnectivity` target (`import LeanCanny.Connectivity`)
+develops point-to-point path reachability and whole-space connectivity for
+semialgebraic sets. **Neither geometric language has a PSPACE theorem yet.**
+
+The checked ingredients are:
+
+- Formula-based inputs with unary dimension and unique-solution endpoint
+  descriptions, including irrational algebraic endpoints.
+- Native polynomial-space implicit-graph reachability and whole-graph
+  connectivity, allowing polynomial-space adjacency and invalid records.
+- A finite closed path-cover theorem identifying topological connectivity with
+  intersection-graph connectivity.
+- Transfers from bit-indexed covers to the graph algorithms. For
+  formula-defined pieces, the completed ETR theorem supplies nonemptiness and
+  overlap tests, given polynomial-time writers for the queries. A
+  polynomial-space scan locates pieces containing the described endpoints.
+
+The missing construction must produce suitable covers uniformly from input
+formulas, prove closedness, path connectivity and coverage, bound the vertex
+width and query writers, and validate the described endpoints. Endpoint
+attachment is handled by ETR when the corresponding query writers are supplied.
+The current cover theorems state these obligations explicitly; they do not
+establish them for arbitrary semialgebraic inputs. Empty spaces are accepted
+by the whole-space connectivity convention.
+The formula-cover interface is a sufficient criterion; the more general
+bit-cover interface also permits implicit polynomial-space adjacency routines.
+
 ## Attribution and report integrity
 
 The Sturm–Tarski proof adaptation and its changes are documented in
@@ -128,6 +157,7 @@ record the versions used. The default entry point is [`LeanCanny.lean`](LeanCann
 `lake build` checks the completed coercive proof. To also build the retained
 alternative constructions, run `lake build LeanCannyAlternatives`; their entry
 point is [`Alternatives.lean`](LeanCanny/Alternatives.lean).
+Build the connectivity extension with `lake build LeanCannyConnectivity`.
 
 Import the formal abstract with `import LeanCanny.Abstract`, or build it with
 `lake build --wfail LeanCanny.Abstract`. It is also included in the default build.
@@ -141,17 +171,18 @@ The dependency URLs use the canonical repository. Updating to the renamed
 For stricter verification:
 
 ```sh
-lake build LeanCanny LeanCannyAlternatives --wfail --iofail
+lake build LeanCanny LeanCannyAlternatives LeanCannyConnectivity --wfail --iofail
 lake env lean scripts/CheckCoreImports.lean
 lake env lean scripts/CheckAxioms.lean
 lake env lean scripts/CheckAbstract.lean
 lake env lean scripts/CheckGrammar.lean
 lake env lean scripts/CheckSpaceFoundation.lean
 lake env lean scripts/CheckPolyTimeFoundation.lean
+lake env lean scripts/CheckConnectivity.lean
 ```
 
 The core import check enforces the separation from the optional tube route.
-The axiom and space audits include both library targets. The axiom audit checks
+The axiom and space audits include all three library targets. The axiom audit checks
 declarations in the `LeanCanny` namespace, local Nat
 codec extensions, and their transitive dependencies, allowing only Lean's
 standard `propext`, `Classical.choice`, and `Quot.sound` axioms. The foundation

@@ -352,3 +352,31 @@ testing; its completed proof does not require Savitch. Generic Savitch support
 in another library does not automatically transfer an algorithm or class
 membership between machine models. Formalizing the report's roadmap and
 connectivity results requires those additional constructions and bounds.
+
+The `LeanCannyConnectivity` target now provides native fixed-width graph
+reachability and whole-graph connectivity with polynomial-space edge routines.
+`SpaceReachability` derives the space-only interface from the pinned native
+Savitch theorem, including the edge workspace. `ImplicitGraphPSPACE` guards
+invalid records and scans all valid vertex pairs with binary counters. Width
+zero and empty graphs are included.
+
+`Connectivity/ClosedPathCover` proves the topological transfer for finite
+relatively closed, path-connected pieces. `BitPathCover` connects this theorem
+to the actual graph routines. `FormulaPathCover` uses ETR to decide whether
+pieces are nonempty and intersect; its effectivity hypotheses are FP query
+writers and a unary FP width. The geometric cover is still supplied, not
+constructed. Its existence alone would not prove those quantitative bounds.
+Endpoint identifiers may themselves be computed in polynomial space. A
+binary-counter scan of piece/endpoint ETR intersection queries locates pieces
+containing singleton-described endpoints, including irrational points.
+Polynomial-time explicit formula writers are a sufficient condition for this
+adapter, not a bound proved for Canny's roadmap pieces. `BitPathCover` also
+supports other polynomial-space adjacency implementations, including implicit
+algebraic representations.
+
+`Connectivity/Problem` and `Connectivity/Encoding` specify the two geometric
+languages. Endpoint formulas must denote unique points; arbitrary real
+constants and a rational-point sampling assumption are absent. No membership
+theorem for either language is claimed: effective cover construction,
+endpoint validation, and the total encoded decision procedure
+remain to be supplied.

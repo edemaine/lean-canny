@@ -26,3 +26,7 @@ lean_lib LeanCanny
 -- Optional constructions are retained without entering the default proof closure.
 lean_lib LeanCannyAlternatives where
   roots := #[`LeanCanny.Alternatives]
+
+-- Connectivity is an ongoing extension, separate from the completed ETR proof.
+lean_lib LeanCannyConnectivity where
+  roots := #[`LeanCanny.Connectivity]

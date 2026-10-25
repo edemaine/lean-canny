@@ -1,9 +1,10 @@
 import LeanCanny.Alternatives
+import LeanCanny.Connectivity
 import Lean.Util.CollectAxioms
 
 /-! Audit every declaration in the project's namespace and the local Nat codec
 extensions, including transitive dependencies.
-Run with `lake env lean scripts/CheckAxioms.lean` after `lake build LeanCanny LeanCannyAlternatives`.
+Run with `lake env lean scripts/CheckAxioms.lean` after building all three library targets.
 -/
 
 open Lean in
