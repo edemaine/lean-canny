@@ -42,4 +42,9 @@ theorem Term.negNat_toBits_mem_FP {n : List Bool → ℕ} (hn : BinaryFn n) :
   · have hz : -(n c : ℤ) = Int.negSucc (n c - 1) := by omega
     simp only [ite_eq_right hc, hz, Codec.taggedOne_toBits, Term.toData, Codec.integer]
 
+theorem Term.nat_toBits_mem_FP {n : List Bool → ℕ} (hn : BinaryFn n) :
+    (fun c => (Term.const (n c : ℤ)).toData.toBits) ∈ FP := by
+  have h := Codec.taggedOne_mem_FP 0 (Codec.taggedOne_mem_FP 0 (Codec.natural_toBits_mem_FP hn))
+  exact mem_FP_of_eq h (fun c => by simp only [Codec.taggedOne_toBits, Term.toData, Codec.integer])
+
 end LeanCanny.ETR

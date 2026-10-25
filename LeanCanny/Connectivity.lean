@@ -33,8 +33,10 @@ import LeanCanny.ETR.ComplexDifferentialEncoding
 import LeanCanny.ETR.ComplexTermDifferential
 import LeanCanny.ETR.ComplexHessianFamily
 import LeanCanny.ETR.ComplexKernelRowEncoding
+import LeanCanny.ETR.ComplexSampledPSPACE
 import LeanCanny.Encoding.FermatSweepKernelCertificate
 import LeanCanny.Encoding.FermatAffineKernelBridge
+import LeanCanny.Encoding.FermatFrozenSource
 import LeanCanny.Encoding.FermatInfinityQuery
 
 /-! # Connectivity development
@@ -163,8 +165,12 @@ compute the critical equations and Hessian-vector sums. The actual affine
 chart predicate expands into these gradient and Hessian equations. Complete
 normalized critical-kernel queries now have exact shared-circuit semantics,
 native polynomial-time encoders, and native PSPACE tests for compiled source
-terms. Constructing the complete sampled Fermat source circuit and its
-polynomial identity remains required.
+terms. The original compiler's wires can now be reindexed to freeze the actual
+record's swept coordinate, with an exact coordinate-slice polynomial identity.
+Shared pure-power sums and dyadic scaling append to this source in one acyclic
+program. Its native encoder, output metadata, and critical-kernel tests retain
+both binary exponent words. Identifying that complete source polynomial with
+the finite-coordinate Fermat certificate remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices, effective direction selection, and the full recursive query
 encodings remain required.

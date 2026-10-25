@@ -203,7 +203,9 @@ The checked ingredients are:
   expand into explicit gradient and Hessian kernel sums. Shared Hessian copies
   and kernel-row arithmetic form complete normalized critical-kernel queries,
   with exact semantics and native PSPACE tests for compiled source terms.
-  Constructing the sampled Fermat source circuit remains required.
+  Sampled-source circuits now compute the frozen low term, full pure-power
+  sum, and dyadic regularization with native encoders and kernel tests. Their
+  finite-coordinate identity with the Fermat certificate remains required.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A

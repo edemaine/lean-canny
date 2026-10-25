@@ -1308,3 +1308,45 @@ example : SpaceFunction (CriticalKernel.sourceBad pairFst (fun _ => 1) (fun _ =>
     (constFn_mem_FP (Term.const 0).toData.toBits)
 
 end CompleteKernelCircuitTests
+
+namespace SampledSourceCircuitTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit MvPolynomial
+open scoped Classical
+
+private def low : Term := .mul (.var 0) (.var 1)
+
+-- Freezing variable zero redirects it to the computed sample. Variable one
+-- becomes spatial coordinate zero; the multiplication output stays fresh.
+#guard StraightLine.gates 2 (FrozenSource.program 2 2 7 low) == [.constant 2 7, .mul 3 2 0]
+#guard Reindex.run FrozenSource.Encoded.index
+    (pair (pair (List.replicate 2 true) (List.replicate 2 true)) (encode (Source.gates 2 low))) ==
+  encode [.mul 3 2 0]
+#guard (FrozenSource.program 1 1 7 (.var 0)).length == 1
+#guard FrozenSource.output 1 1 (.var 0) == 1
+
+-- Two 80-bit exponent words still produce only 503 source operations.
+#guard (SampledSource.program 2 2 1 2 1 low (List.replicate 80 true) (List.replicate 80 true)).length == 503
+
+-- With sample2, spatial coordinate3, N=3, a=1, and E=2, the actual shared
+-- source computes 4*(2*3+2^3+3^3)-1=163.
+example : ∃ env : ℕ → ℂ,
+    (∀ g ∈ StraightLine.gates 2 (SampledSource.program 2 2 1 2 1 low [false, true] [false, true]), g.Holds env) ∧
+      env (SampledSource.output 2 1 low [false, true] [false, true]) = 163 := by
+  let ops := SampledSource.program 2 2 1 2 1 low [false, true] [false, true]
+  let wire := Differential.symbolicRun (fun i => (X i : MvPolynomial ℕ ℤ)) 2 ops
+  let x : ℕ → ℂ := fun _ => 3
+  have hw := SampledSource.wellFormed 2 2 1 2 1 low [false, true] [false, true] (by decide) (by decide) (by decide)
+  have hr := Differential.symbolicRun_realizes (fun i => (X i : MvPolynomial ℕ ℤ)) 2 ops hw
+  refine ⟨fun i => (wire i).eval₂ (Int.castRingHom ℂ) x, Differential.realizes_gates_eval wire 2 ops hr x, ?_⟩
+  change (Differential.symbolicRun _ 2 _ _).eval₂ _ x = _
+  rw [SampledSource.symbolic_output 2 2 1 2 1 low [false, true] [false, true] (by decide) (by decide) (by decide),
+    SampledSource.polynomial_eval]
+  norm_num [low, Term.eval, FrozenSource.inputs, x, Nat.fromBitsLE, Nat.fromBits]
+
+example : SpaceFunction (SampledSource.kernelBad pairFst pairSnd pairSnd
+    (fun c => c.length + 10) (fun _ => 1) (fun _ => 0) (fun _ => 2) (fun _ => 1) (fun _ _ => 0)) :=
+  SampledSource.kernelBad_evaluator pairFst_mem_FP ((UnaryFn.length id_mem_FP).add (UnaryFn.const 10))
+    (UnaryFn.const 1) (UnaryFn.const 0) (constFn_mem_FP (Term.const 2).toData.toBits)
+    (constFn_mem_FP (Term.const 1).toData.toBits) pairSnd_mem_FP pairSnd_mem_FP (constFn_mem_FP (Term.const 0).toData.toBits)
+
+end SampledSourceCircuitTests

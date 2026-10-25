@@ -834,8 +834,23 @@ provides native feasibility and emptiness certificates for compiled source
 terms, with the in-range chart condition kept separate from the total cost
 proof. `ComplexCriticalKernelFinite` transfers values, gradients, Hessians,
 and normalized roots through one coefficient-map and variable-renaming identity.
-The complete sampled Fermat source circuit and that polynomial identity still
-need to be constructed.
+`ETR/ComplexCircuitReindex` supplies native captured wire maps with independent
+input and auxiliary-wire behavior. `ComplexFrozenSource` redirects variable
+zero to a computed integer sample and shifts positive variables down one
+coordinate, preserving the original compiled body. Its native encoder charges
+the actual validated source and sample literal. `ComplexFrozenSlice` proves
+the exact coefficient-specialized coordinate-slice identity.
+`Encoding/FermatFrozenSource` reads the actual certificate sample in binary and
+constructs the frozen program and all fresh-wire metadata.
+
+`ComplexSamplePowers` redirects a shared binary power-sum circuit to that
+computed sample and the spatial coordinates. `ComplexSampledSource` joins it
+to the low source and dyadic regularization, with one acyclic program and an
+exact symbolic polynomial. Its native encoder and critical-kernel tests retain
+both binary exponent words, including the scale that is never serialized as
+an integer literal. The final coefficient-map identity with the existing
+finite-coordinate Fermat certificate still needs to be proved before composing
+the actual validity checker.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
