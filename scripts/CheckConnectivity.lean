@@ -101,3 +101,56 @@ example : ∃ x : Fin 1 → ℝ, Denotes 1 positiveSqrtTwo x := by
 -- The two input tags cannot be confused by either language.
 example (d : Description) : (Input.whole d).encode ∉ pointLanguage := by simp
 example (q : PointQuery) : (Input.point q).encode ∉ connectedLanguage := by simp
+
+-- Frontier incidence connects a disjoint arc and its included endpoint.
+example :
+    let piece : Bool → Set ℝ := fun b => if b then {0} else Set.Ioo 0 1
+    FrontierCover.Incident piece false true ∧ ¬ ClosedPathCover.Overlap piece false true := by
+  dsimp only
+  constructor
+  · right
+    refine ⟨0, by simp, ?_⟩
+    simp only [Bool.false_eq_true, ite_false]
+    rw [closure_Ioo (by norm_num : (0 : ℝ) ≠ 1)]
+    norm_num
+  · rintro ⟨x, hx, hy⟩
+    simp only [Bool.false_eq_true, ite_false, ite_true, Set.mem_singleton_iff] at hx hy
+    subst x
+    exact lt_irrefl _ hx.1
+
+-- A branch can have a finite endpoint even when direct specialization of its
+-- equation is identically zero. The derivative of sqrt also diverges there.
+open Polynomial Filter in
+open scoped Topology in
+example : Tendsto Real.sqrt (𝓝[>] (0 : ℝ)) (𝓝 0) := by
+  let q : Polynomial (Polynomial ℝ) := C (X ^ 2) - X
+  have hq0 : q.coeff 0 = X ^ 2 := by
+    simp only [q, Polynomial.coeff_sub, Polynomial.coeff_C_zero, Polynomial.coeff_X_zero, sub_zero]
+  have hq0ne : q.coeff 0 ≠ 0 := by rw [hq0]; exact pow_ne_zero _ X_ne_zero
+  have hq : q ≠ 0 := by intro h; exact hq0ne (by rw [h]; simp)
+  let p : Polynomial (Polynomial ℝ) := X ^ 3 * q
+  have hp : p ≠ 0 := mul_ne_zero (pow_ne_zero _ X_ne_zero) hq
+  have htc : p.trailingCoeff = X ^ 2 := by
+    have hx : ((X : Polynomial (Polynomial ℝ)) ^ 3).trailingCoeff = 1 := by
+      simp only [Polynomial.trailingCoeff, Polynomial.natTrailingDegree_X_pow,
+        Polynomial.coeff_X_pow_self]
+    rw [show p.trailingCoeff = (X ^ 3 : Polynomial (Polynomial ℝ)).trailingCoeff *
+      q.trailingCoeff from Polynomial.trailingCoeff_mul _ _, hx, one_mul,
+      Polynomial.trailingCoeff_eq_coeff_zero hq0ne, hq0]
+  have hinterval : ∀ᶠ t in 𝓝[>] (0 : ℝ), t ∈ Set.Ioo 0 1 :=
+    (nhdsGT_basis 0).mem_of_mem (by norm_num)
+  have hbound : ∀ᶠ t in 𝓝[>] (0 : ℝ), Real.sqrt t ∈ Set.Icc 0 1 := by
+    filter_upwards [hinterval] with t ht
+    exact ⟨Real.sqrt_nonneg _, Real.sqrt_le_one.mpr ht.2.le⟩
+  have hz : ∀ᶠ t in 𝓝[>] (0 : ℝ),
+      Geometry.AlgebraicBranchLimit.value p t (Real.sqrt t) = 0 := by
+    filter_upwards [hinterval] with t ht
+    have hs := Real.sq_sqrt ht.1.le
+    simp only [Geometry.AlgebraicBranchLimit.value, p, q, Polynomial.eval₂_mul,
+      Polynomial.eval₂_pow, Polynomial.eval₂_X, Polynomial.eval₂_sub, Polynomial.eval₂_C,
+      Polynomial.coe_evalRingHom, Polynomial.eval_pow, Polynomial.eval_X, hs, sub_self, mul_zero]
+  obtain ⟨x, _, hlim, hx⟩ := Geometry.AlgebraicBranchLimit.exists_limit p hp
+    (by norm_num : (0 : ℝ) < 1) Real.continuous_sqrt.continuousOn isCompact_Icc hbound hz
+  rw [htc] at hx
+  have hxe : x = 0 := by simpa using hx
+  rwa [hxe] at hlim

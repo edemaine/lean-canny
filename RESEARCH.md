@@ -401,3 +401,35 @@ component-preserving roadmaps for these inputs. Canny's later
 provides a separate generalization beyond the earlier compact, regular case.
 That geometric construction and its quantitative representation bounds remain
 substantial missing formalization work.
+
+`Connectivity/FrontierCover` extends the graph transfer to finite decompositions
+with pieces that are not closed. An edge records a point of one piece in the
+relative closure of the other. Finite graph clusters are clopen; consequently
+every path induces a graph walk. If boundary points can access the corresponding
+piece by a path, walks conversely give paths. Both closures and paths can be
+taken in the subtype of the original space, so a missing boundary point cannot
+silently join two components.
+
+`Geometry/AlgebraicBranchLimit` proves endpoint continuation for bounded
+continuous algebraic branches. The cluster values of a continuous real branch
+form an interval. Factoring out the lowest parameter power leaves a nonzero
+univariate polynomial that annihilates every cluster value. Compactness supplies
+a cluster value; the finite root set and interval property force convergence.
+Translation and reflection give both endpoints, and coordinatewise convergence
+extends vector-valued branches continuously to the closed parameter interval.
+The statement permits singular endpoint fibers and identically zero direct
+specializations before removing the parameter factor.
+
+`Connectivity/AccessibleArc` derives boundary accessibility for these algebraic
+arcs from their continuous extensions. These lemmas do not assume nonvanishing
+derivatives at their endpoints. They still require the continuous branches and
+their coordinate equations: existence and effective construction of a finite
+component-preserving family, the critical slices, and the quantitative bounds
+for the full roadmap are not established by these endpoint lemmas.
+
+`Geometry/RootBranchLocal` constructs a continuous branch on a closed parameter
+interval around each regular root of a system. Every sufficiently nearby root
+lies on this branch. It derives the interval and its continuity from the
+implicit function theorem; no root family is assumed. Neither this local
+construction nor the endpoint-continuation theorem bounds the number of
+branches or supplies the global component-preserving projection sweep.

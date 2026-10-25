@@ -120,6 +120,11 @@ The checked ingredients are:
   connectivity, allowing polynomial-space adjacency and invalid records.
 - A finite closed path-cover theorem identifying topological connectivity with
   intersection-graph connectivity.
+- A frontier-incidence theorem for finite decompositions whose pieces need not
+  be closed. Bounded continuous algebraic curve branches extend to finite
+  endpoints, which proves the required boundary accessibility for their arcs.
+  The implicit function theorem constructs local branches at regular roots
+  and proves their local completeness.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
