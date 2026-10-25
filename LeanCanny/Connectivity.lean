@@ -20,6 +20,7 @@ import LeanCanny.Geometry.BoundedCriticalCoordinates
 import LeanCanny.Geometry.RegularCoordinateRootCount
 import LeanCanny.Geometry.CoordinateSweepBounds
 import LeanCanny.Geometry.SingularParameterBounds
+import LeanCanny.Geometry.UniformCriticalRegularityBounds
 
 /-! # Connectivity development
 
@@ -75,7 +76,13 @@ system query encodings remain required. For integer systems with finitely many
 singular parameter values, a new bounded exceptional factor replaces any
 qualitative regularity witness, allowing positive-dimensional bad fibers.
 Applying this bound to the parameter-ring critical systems still requires
-an effective integer representation of the parameter variables.
+native access to their coefficient encodings. Integer parameter substitution
+now preserves evaluation and spatial Jacobians with bounded degree and mass;
+qualitative regularity factors for the spatial critical systems can be replaced
+by bounded factors for those same parameter-ring equations.
+The generic field direction and regular-slice certificate now construct one
+such bounded factor for the uniform spatial critical system. Its mass bound
+still depends on the chosen direction allowance, which lacks an input bound.
 Each sweep fiber is homeomorphic to its polynomial slice in one fewer
 coordinate. Properness and regularity pass to this lower-dimensional equation.
 Dimension-zero connectivity algorithms are proved, and both connectivity

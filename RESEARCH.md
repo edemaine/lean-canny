@@ -736,6 +736,27 @@ suffices; none of its arithmetic bounds are used. Transferring this result to
 the parameter-ring critical systems requires an effective integer polynomial
 representation of their parameter variables.
 
+`Algebra/IntegerParameterFlatten` now supplies that integer polynomial
+representation, with the parameter in coordinate zero. Evaluation and spatial
+partial derivatives commute with this representation, as does the formal
+spatial Jacobian. Its degree is bounded by the sum of spatial and parameter
+degrees, and its mass exponent is bounded using source coefficient mass and
+the number of spatial monomials. `Geometry/ParameterizedSingularityBounds`
+transfers the bounded exceptional factor back to the original equations over
+`ℤ[T]`. `BoundedCriticalCoordinates.exists_bounded_regularity` applies it to
+the actual spatial critical equations. Only a qualitative regularity factor
+is supplied; its degree and mass are not premises. The chosen integer direction
+and native coefficient/query access still require effective bounds and
+constructions.
+
+`Geometry/UniformCriticalRegularityBounds` connects this factor to the actual
+uniform integer direction from `UniformCriticalSpecialization`. Regularity of
+the original slices outside any qualitative nonzero factor suffices. The
+reciprocal-variable Jacobian transfers regularity to the spatial system, and
+the new construction bounds its exceptional factor independently of both
+qualitative witnesses. Its mass budget still uses the existential direction
+allowance; bounding that allowance from the input remains open.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

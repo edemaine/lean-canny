@@ -6,6 +6,7 @@ module
 
 public import LeanCanny.Geometry.UniformAffineCoordinates
 public import LeanCanny.Algebra.ProjectionCriticalBounds
+public import LeanCanny.Geometry.ParameterizedSingularityBounds
 
 /-! # Bounded coordinate certificates for spatial critical slice families
 
@@ -13,13 +14,16 @@ The actual critical equations retain the original spatial and parameter
 degree allowances. Their coefficient-mass increase depends explicitly on the
 degree and integer direction. Applying the concrete affine eliminant gives
 bounded coordinate equations and a bounded-degree specialization factor.
-The direction and the separate regularity factor still require input bounds.
+A qualitative regularity factor can now be replaced by a bounded factor
+for the same spatial system. Bounds for the chosen direction and native
+coefficient access remain separate obligations.
 -/
 
 @[expose] public section
 
 namespace LeanCanny.Geometry.BoundedCriticalCoordinates
 open LeanCanny.Algebra Polynomial
+set_option backward.isDefEq.respectTransparency false
 
 variable {n : ℕ}
 
@@ -49,5 +53,36 @@ theorem exists_bounded (q : MvPolynomial (Fin n) (Polynomial ℤ)) (base : Fin n
     exact lt_of_lt_of_le (by decide : 0 < 1) (le_max_left 1 D)
   · exact ProjectionCriticalBounds.spatial_parameter_degree q base v E hdegree
   · exact ProjectionCriticalBounds.spatial_coefficient_mass q base v D U b hD hU hmass
+
+/-- Replace a qualitative factor excluding singular spatial roots with a
+factor whose degree and mass depend only on the source allowances. -/
+theorem exists_bounded_regularity (q : MvPolynomial (Fin n) (Polynomial ℤ)) (base : Fin n)
+    (v : Fin n → ℕ) (D U E b : ℕ) (hD : q.totalDegree ≤ D) (hU : ∀ i, v i ≤ U)
+    (hdegree : ∀ e, (q.coeff e).natDegree ≤ E)
+    (hmass : ∀ e, coefficientMass (q.coeff e) ≤ 2 ^ b)
+    (d : Polynomial ℤ) (hd : d ≠ 0)
+    (hgeneric : ∀ (t : ℝ) (x : Fin n → ℝ),
+      (∀ j, (ProjectionCriticalFamily.spatialEquation q base (fun i => (v i : Polynomial ℤ)) j).eval₂
+        (Polynomial.eval₂RingHom (Int.castRingHom ℝ) t) x = 0) →
+      d.eval₂ (Int.castRingHom ℝ) t ≠ 0 →
+        (ProjectionCriticalFamily.spatialJacobian q base (fun i => (v i : Polynomial ℤ))).eval₂
+          (Polynomial.eval₂RingHom (Int.castRingHom ℝ) t) x ≠ 0) :
+    ∃ r : Polynomial ℤ, r ≠ 0 ∧ r.natDegree ≤ ParameterizedSingularityBounds.degreeBound n D E ∧
+      coefficientMass r < 2 ^ ParameterizedSingularityBounds.massExponent n D E
+        (ProjectionCriticalBounds.massExponent b D U) ∧
+      ∀ (t : ℝ) (x : Fin n → ℝ),
+        (∀ j, (ProjectionCriticalFamily.spatialEquation q base (fun i => (v i : Polynomial ℤ)) j).eval₂
+          (Polynomial.eval₂RingHom (Int.castRingHom ℝ) t) x = 0) →
+        r.eval₂ (Int.castRingHom ℝ) t ≠ 0 →
+          (ProjectionCriticalFamily.spatialJacobian q base (fun i => (v i : Polynomial ℤ))).eval₂
+            (Polynomial.eval₂RingHom (Int.castRingHom ℝ) t) x ≠ 0 := by
+  apply ParameterizedSingularityBounds.exists_bounded
+    (ProjectionCriticalFamily.spatialEquation q base (fun i => (v i : Polynomial ℤ)))
+    D E (ProjectionCriticalBounds.massExponent b D U)
+  · exact ProjectionCriticalBounds.spatial_degree q base v D hD
+  · exact ProjectionCriticalBounds.spatial_parameter_degree q base v E hdegree
+  · exact ProjectionCriticalBounds.spatial_coefficient_mass q base v D U b hD hU hmass
+  · exact hd
+  · exact hgeneric
 
 end LeanCanny.Geometry.BoundedCriticalCoordinates

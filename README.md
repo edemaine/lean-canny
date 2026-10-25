@@ -173,8 +173,11 @@ The checked ingredients are:
   coordinate images even when spatial fibers have positive dimension. These
   bounds construct exceptional factors for regular integer hypersurface
   sweeps and integer systems with finitely many singular parameter values.
-  Input bounds for the integer direction and effective parameter-ring and
-  recursive query encodings remain open.
+  Integer parameter substitution preserves evaluation and spatial Jacobians
+  with bounded degree and mass. The chosen direction now has a constructed
+  bounded regularity factor for its actual parameter-ring critical equations.
+  Input bounds for that direction and native coefficient and recursive query
+  encodings remain open.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
