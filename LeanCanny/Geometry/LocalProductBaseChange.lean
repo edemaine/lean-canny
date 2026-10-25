@@ -88,4 +88,31 @@ theorem exists_restricted_chart (p : X → B) (S : Set B)
   change (e (incU.symm x).val.val).1 = p x.val
   exact (hfirst _ (incU.symm x).property).trans (congrArg (fun w : p ⁻¹' S => p w.val) hinc)
 
+section Homeomorphs
+variable {Y C : Type*} [TopologicalSpace Y] [TopologicalSpace C]
+  {H : Y → Type*} [∀ y, TopologicalSpace (H y)]
+
+/-- Change source and base coordinates in a point-dependent product atlas. -/
+theorem exists_transported_charts (p : X → B) (q : Y → C)
+    (source : X ≃ₜ Y) (base : B ≃ₜ C)
+    (chart : ∀ y, OpenPartialHomeomorph Y (C × H y))
+    (hsource : ∀ y, y ∈ (chart y).source)
+    (hfirst : ∀ a y, y ∈ (chart a).source → (chart a y).1 = q y)
+    (hmap : ∀ x, base.symm (q (source x)) = p x) :
+    ∃ atlas : ∀ x, OpenPartialHomeomorph X (B × H (source x)),
+      (∀ x, x ∈ (atlas x).source) ∧
+        ∀ a x, x ∈ (atlas a).source → (atlas a x).1 = p x := by
+  let atlas := fun x => (source.toOpenPartialHomeomorph.trans (chart (source x))).trans
+    ((base.symm.prodCongr (Homeomorph.refl (H (source x)))).toOpenPartialHomeomorph)
+  have hmem (a x : X) : x ∈ (atlas a).source ↔ source x ∈ (chart (source a)).source := by
+    simp only [atlas, OpenPartialHomeomorph.trans_source, Homeomorph.toOpenPartialHomeomorph_source,
+      preimage_univ, inter_univ, mem_inter_iff, mem_univ, true_and]
+    rfl
+  refine ⟨atlas, (fun x => (hmem x x).mpr (hsource (source x))), ?_⟩
+  intro a x hx
+  change base.symm (chart (source a) (source x)).1 = p x
+  rw [hfirst _ _ ((hmem a x).mp hx)]
+  exact hmap x
+
+end Homeomorphs
 end LeanCanny.Geometry.LocalProductFibers

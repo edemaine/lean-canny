@@ -156,6 +156,13 @@ The checked ingredients are:
   interior and endpoint label families. Overlap and validity have descriptions
   containing no closure queries. Component membership uses native PSPACE
   reachability once a piece containing the queried point is located.
+- Coordinate sweeps on fixed proper polynomial hypersurfaces have constructed
+  finite exceptional value sets and local product charts on the retained
+  intervals. Their fibers are homeomorphic to proper polynomial slices in one
+  fewer coordinate, and regularity passes to those slices. Generic critical
+  projections on a fixed level have finite simple roots and coordinate
+  annihilators for one integer direction. Uniform specialization of these
+  critical families in the sweep parameter is still required.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A

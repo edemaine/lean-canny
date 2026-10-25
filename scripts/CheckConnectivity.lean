@@ -564,3 +564,56 @@ example : ComponentSlabCover.piece D (C 0) (C 1) (.inl ((), false, true)) = ∅ 
   simp only [ComponentSlabCover.piece, ComponentSlabCover.ambientPiece, Sum.elim_inl,
     ite_eq_right hn, preimage_empty, mem_empty_iff_false]
 end ClosedSlabTests
+
+namespace HypersurfaceSweepTests
+open LeanCanny.Geometry LeanCanny.Algebra MvPolynomial Set
+
+noncomputable def q : MvPolynomial Unit ℚ := X () ^ 2 - 1
+
+-- A zero-dimensional regular hypersurface still has exceptional coordinate
+-- values: both isolated points must be excluded from any regular sweep slab.
+example : ∃ d : Polynomial ℚ, d ≠ 0 ∧ d.eval 1 = 0 ∧ d.eval (-1) = 0 := by
+  obtain ⟨d, hd, hm⟩ := CoordinateCriticalValues.exists_annihilator q ()
+  refine ⟨d, hd, ?_, ?_⟩
+  · have he := CoordinateCriticalValues.eval_annihilator q () d hm (fun _ : Unit => (1 : ℚ))
+      (by norm_num [q]) (by norm_num [q, pderiv_pow]) (by intro i hi; cases i; exact False.elim (hi rfl))
+    simpa only [Polynomial.aeval_def, Algebra.algebraMap_self, Polynomial.eval₂_id] using he
+  · have he := CoordinateCriticalValues.eval_annihilator q () d hm (fun _ : Unit => (-1 : ℚ))
+      (by norm_num [q]) (by norm_num [q, pderiv_pow]) (by intro i hi; cases i; exact False.elim (hi rfl))
+    simpa only [Polynomial.aeval_def, Algebra.algebraMap_self, Polynomial.eval₂_id] using he
+
+noncomputable def circle : MvPolynomial (Fin 2) ℝ := X 0 ^ 2 + X 1 ^ 2
+
+-- A non-base partial supplies the normal direction independently of the
+-- swept coordinate, giving rank two on the regular part of a circle sweep.
+example (x : Fin 2 → ℝ) (hx : x 1 ≠ 0) :
+    Function.Surjective (fderiv ℝ
+      (HypersurfaceSweep.combined (fun y => circle.eval y) (fun y => y 0)) x) := by
+  apply PolynomialHypersurfaceSweep.surjective_combined_of_partial circle 0 1 x (by decide)
+  simpa [circle, pderiv_pow, mul_ne_zero_iff] using hx
+
+-- The source-coordinate identification keeps paths on the fixed level;
+-- it is valid even when the sweep region has no interior.
+example (q g : ℝ → ℝ) (c t : ℝ) :
+    HypersurfaceSweep.Slab q g c ({t} : Set ℝ) ≃ₜ
+      (HypersurfaceSweep.combined q g ⁻¹' HypersurfaceSweep.region c {t}) :=
+  HypersurfaceSweep.slabHomeomorph q g c {t}
+
+-- Slicing the circle at its first coordinate transfers the regularity test
+-- to the actual polynomial in the one remaining coordinate.
+example (y : CoordinateSlice.Index (0 : Fin 2) → ℝ)
+    (hy : y ⟨1, by decide⟩ ≠ 0) :
+    Function.Surjective (fderiv ℝ (fun z : CoordinateSlice.Index (0 : Fin 2) → ℝ =>
+      (CoordinateSlice.family 0 circle).eval₂ (Polynomial.eval₂RingHom (RingHom.id ℝ) 0) z) y) := by
+  apply CoordinateSlice.surjective_fderiv_family 0 circle (RingHom.id ℝ) 0 y
+  have h := PolynomialHypersurfaceSweep.surjective_combined_of_partial circle 0 1
+    (CoordinateSlice.restore 0 0 y) (by decide) (by
+      simpa [circle, pderiv_pow, CoordinateSlice.restore, mul_ne_zero_iff] using hy)
+  simpa only [eval₂_id] using h
+
+example : Nat.card (CoordinateSlice.Index (0 : Fin 2)) = 1 := by
+  have h := CoordinateSlice.card_index_add_one (0 : Fin 2)
+  have he : Nat.card (Fin 2) = 2 := by norm_num [Nat.card_eq_fintype_card]
+  rw [he] at h
+  omega
+end HypersurfaceSweepTests

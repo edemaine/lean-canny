@@ -11,6 +11,9 @@ import LeanCanny.Geometry.ComponentCriticalSampling
 import LeanCanny.Geometry.PolynomialComponentTransport
 import LeanCanny.Connectivity.PolynomialSlabCover
 import LeanCanny.Connectivity.EndpointAttachment
+import LeanCanny.Geometry.PolynomialHypersurfaceSweep
+import LeanCanny.Algebra.FixedLevelRegularSpecialization
+import LeanCanny.Geometry.CoordinateSlice
 
 /-! # Connectivity development
 
@@ -39,6 +42,14 @@ cover of the entire original closed slab. Its final label families form a sum;
 overlap and validity require no closure queries. Membership in a recursive
 clopen component is computed by the native polynomial-space graph algorithm
 given a locator for an original piece containing the queried point.
+Coordinate sweeps on fixed proper polynomial hypersurfaces have constructed
+finite exceptional value sets, proper projections, and actual regular product
+charts. Fixed-level generic critical projections also retain finite simple
+roots and coordinate annihilators over coefficient fields containing a sweep
+parameter. Specializing those families uniformly and bounding their encodings
+remain required.
+Each sweep fiber is homeomorphic to its polynomial slice in one fewer
+coordinate. Properness and regularity pass to this lower-dimensional equation.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

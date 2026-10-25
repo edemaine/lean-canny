@@ -599,6 +599,46 @@ hypotheses from the original proper polynomial, preserves both connectivity
 tests, and allows singular endpoint fibers. Recursive endpoint covers themselves
 are still inputs to this theorem.
 
+`Geometry/HypersurfaceSweep` constructs genuine local products for a sweep
+on a fixed hypersurface. The combined smooth map `(q,g)` is restricted to
+`{c} × S`, then explicit source and base homeomorphisms identify it with the
+sweep on `q=c`. Its derivative kernels supply the chart models. Properness of
+`q` makes each fixed hypersurface compact, hence any continuous sweep on it
+proper. The constructed atlas proves moving-endpoint component persistence
+and section transport within its regular sweep region.
+
+`Algebra/CoordinateCriticalValues` constructs a nonzero polynomial vanishing
+on the regular critical values of a coordinate projection on a fixed level.
+When all non-base partials vanish, the chain rule and the nonzero base partial
+force every coefficient-field derivation to kill the swept coordinate.
+Minimal-prime annihilators combine into one polynomial. This works over
+extension fields and gives rational coefficients for rational input equations.
+`Geometry/PolynomialHypersurfaceSweep` applies it to a regular polynomial
+level: a non-base partial gives an explicit right inverse of the combined
+derivative. A critical-value factor first constructs regular hypersurface
+levels; their coordinate sweeps then have constructed finite exceptional sets,
+proper projections, and regular product atlases. Certificate sizes remain open.
+
+`Algebra/FixedLevelProjectionJacobian` removes the independent-level hypothesis
+from generic critical-root nonsingularity. Derivations in the independent
+direction coordinates supply all tangent directions. A left-kernel argument
+and the nonzero base partial supply the remaining normal direction.
+`FixedLevelRegularSpecialization` clears the generic singularity ideal and
+chooses one integer direction retaining finite simple extended critical roots
+and nonzero coordinate annihilators over every extension field. Its coefficient
+field may already contain a sweep parameter. The direction bound still depends
+on an exceptional polynomial with no input-size estimate.
+
+`Geometry/CoordinateSlice` replaces the swept coordinate by a polynomial
+parameter over the original coefficient ring. Evaluation agrees exactly with
+the original polynomial on the coordinate slice. An explicit homeomorphism
+identifies each hypersurface sweep fiber with this equation in the remaining
+coordinates, including irrational values and empty fibers. The coordinate
+count drops by one. Closed embedding of coordinate insertion transfers
+properness, and its derivative transfers combined-map regularity to the slice
+equation. Uniform critical families for these slices, their specialization
+factors, and their actual finite global branches are the next construction.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.
