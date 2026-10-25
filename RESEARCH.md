@@ -811,6 +811,21 @@ real regularity alone does not supply it. The original input reduction still
 needs to construct this source shape, select a regular level over complex
 extensions, and supply the recursive geometric queries.
 
+`ETR/ComplexDifferentialSymbolic` proves polynomial equality for the shared
+derivative transformation by evaluation over `ℂ`. Applying it twice computes
+the value, two first partials, and their mixed second partial.
+`ComplexTermHessian` identifies these outputs with the original compiled term.
+`ComplexCircuitCapturedTransform` and `ComplexCircuitShift` supply native
+parameter-dependent gate substitution and uniform wire relocation.
+`ComplexHessianCircuit`, `ComplexHessianEncoding`, and `ComplexHessianFamily`
+initialize fresh copies and prove simultaneous completion at one shared input
+point, including their native polynomial-time generation costs.
+`ComplexKernelRow` and `ComplexKernelRowEncoding` compute the required linear
+combinations of Hessian rows, kernel-vector sums, and first-derivative critical
+equations. `FermatSweepKernelCertificate.affine_bad_iff` expands the existing
+affine chart predicate into these equations. The complete sampled source and
+assembled affine query still need their circuit bridge.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

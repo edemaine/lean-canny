@@ -1188,3 +1188,71 @@ example {dim degree index : List Bool → ℕ} {record : List Bool → List Bool
   LeanCanny.Encoding.FermatInfinityQuery.empty_evaluator hd hN hi hr
 
 end InfinityCircuitTests
+
+namespace HessianCircuitTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit MvPolynomial
+open scoped Classical
+
+private def mixedTerm : Term := .mul (.var 0) (.mul (.var 1) (.var 1))
+
+-- The executable double transformation matches the independent operation list.
+#guard Transform.run Differential.gateBits
+    (Transform.run Differential.gateBits (encode (Source.gates 2 mixedTerm))) ==
+  encode (StraightLine.gates 32 (Differential.secondProgram 2 (Source.program 2 mixedTerm)))
+
+-- Fresh seeds cover the two first-derivative slots even for a variable-only
+-- source with no arithmetic operations. The mixed derivative starts at zero.
+#guard Hessian.seedOp 2 0 0 0 == .add 0 2
+#guard Hessian.seedOp 2 0 0 3 == .constant 1
+#guard Hessian.seedOp 2 0 0 12 == .constant 1
+#guard Hessian.seedOp 2 0 0 15 == .constant 0
+#guard (Hessian.program 2 3 2 0 1 []).length == 32
+#guard (HessianFamily.program 2 3 2 2 (Source.program 2 mixedTerm) 4).length == 256
+
+-- Relocation handles all gate constructors, preserves long negative binary
+-- constants, and accepts an empty circuit.
+private def shiftGates : List Gate :=
+  [.constant 1 (-(2 ^ 80 + 3)), .add 2 0 1, .mul 3 2 2, .zero 3]
+#guard WireShift.run (pair (List.replicate 7 true) (encode shiftGates)) ==
+  encode (shiftGates.map (Gate.shift 7))
+#guard WireShift.run (pair (List.replicate 7 true) (encode [])) == encode []
+
+example : StraightLine.WellFormed 3 (HessianFamily.program 2 3 2 2 (Source.program 2 mixedTerm) 4) :=
+  HessianFamily.wellFormed 2 3 2 2 _ 4 (by decide) (by decide)
+    (Source.wellFormed 2 mixedTerm (by decide))
+
+-- The original source has mixed derivative 2*x_1, rather than a derivative
+-- of an auxiliary wire treated as an independent variable.
+example : ∃ env : ℕ → ℂ,
+    (∀ g ∈ StraightLine.gates 3 (Hessian.program 2 3 2 0 1 (Source.program 2 mixedTerm)), g.Holds env) ∧
+      env 66 = 10 := by
+  let x : ℕ → ℂ := fun i => if i = 0 then 3 else if i = 1 then 5 else 0
+  obtain ⟨env, _, hg, hv⟩ := Hessian.source_exists_completion 2 3 2 0 1 mixedTerm
+    (by decide) (by decide) (by decide) x (by norm_num [x])
+  have hp : pderiv 1 (pderiv 0 mixedTerm.toPolynomial) = X 1 + X 1 := by
+    simp [mixedTerm, Term.toPolynomial, pderiv_X]
+  refine ⟨env, hg, ?_⟩
+  have h := hv.2.2.2
+  change env 66 = _ at h
+  norm_num [hp, eval₂_add, eval₂_X, x] at h
+  exact h
+
+end HessianCircuitTests
+
+namespace KernelRowCircuitTests
+open LeanCanny.ETR.ComplexCircuit
+
+-- One row computes ((entry-2*first)*u, value-2*baseGradient).
+#guard StraightLine.gates 4 (KernelRow.program 3 4 2 1 0 1 (-2) (fun _ => 0) (fun _ => 1)) ==
+  [.constant 4 (-2), .mul 5 4 0, .add 6 1 5, .mul 7 6 2,
+    .add 8 3 7, .mul 9 4 1, .add 10 0 9]
+
+-- The empty column range retains the shared zero accumulator.
+#guard KernelRow.sumWire 3 4 0 == 3
+#guard (KernelRow.program 3 4 2 0 0 1 (-2) (fun _ => 0) (fun _ => 1)).length == 3
+
+example : StraightLine.WellFormed 4 (KernelRow.program 3 4 2 1 0 1 (-2) (fun _ => 0) (fun _ => 1)) :=
+  KernelRow.wellFormed 3 4 2 1 0 1 (-2) _ _ (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide)
+
+end KernelRowCircuitTests

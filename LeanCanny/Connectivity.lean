@@ -31,6 +31,8 @@ import LeanCanny.ETR.ComplexCircuitBuilders
 import LeanCanny.ETR.ComplexDyadicPSPACE
 import LeanCanny.ETR.ComplexDifferentialEncoding
 import LeanCanny.ETR.ComplexTermDifferential
+import LeanCanny.ETR.ComplexHessianFamily
+import LeanCanny.ETR.ComplexKernelRowEncoding
 import LeanCanny.Encoding.FermatSweepKernelCertificate
 import LeanCanny.Encoding.FermatInfinityQuery
 
@@ -153,7 +155,12 @@ charts now have shared binary-power circuits with exact completion and root
 semantics, native polynomial-time query writers, and native PSPACE feasibility
 and emptiness tests. Their direction coefficients are read from the actual
 fixed-width record and kept binary; the nonzero leading scalar cancels from
-the equations. Native affine Hessian/kernel query writers remain required.
+the equations. Repeated shared differentiation computes exact Hessians of the
+original source. Initialized copies share input coordinates and use disjoint
+auxiliary ranges, with native polynomial-time encoders. Kernel-row circuits
+compute the critical equations and Hessian-vector sums. The actual affine
+chart predicate expands into these gradient and Hessian equations; connecting
+the whole sampled source and its assembled query remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices, effective direction selection, and the full recursive query
 encodings remain required.

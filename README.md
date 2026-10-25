@@ -199,8 +199,10 @@ The checked ingredients are:
   excluding normalized affine Jacobian-kernel roots and roots of the explicit
   pure-power infinity system. This removes determinant homogenization from
   the required query writers. Infinity charts have native PSPACE tests using
-  shared binary powers and actual fixed-width record readers. The affine
-  Hessian/kernel circuit queries remain required.
+  shared binary powers and actual fixed-width record readers. Affine charts
+  expand into explicit gradient and Hessian kernel sums. Shared Hessian copies
+  and kernel-row arithmetic have exact semantics and native polynomial-time
+  encoders; assembling the complete sampled affine query remains required.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A

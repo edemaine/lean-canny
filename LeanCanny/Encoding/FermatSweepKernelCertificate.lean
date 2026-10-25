@@ -67,6 +67,24 @@ theorem infinity_bad_iff (a : ℚ) (N : ℕ) (record : List Bool) (i : Fin (n + 
     sampledDirection, sampleMap, map_mul, map_natCast, Polynomial.coe_eval₂RingHom,
     Polynomial.eval₂_C, eq_ratCast]
 
+theorem affine_bad_iff (low : MvPolynomial (Fin (n + 2)) ℚ) (a : ℚ) (N : ℕ)
+    (record : List Bool) (i : Fin (n + 1)) :
+    let p := FermatCriticalHomogenization.polynomial (FermatBoundedSweepSample.lower low a N) (Polynomial.C a) N
+    AffineBad low a N record i ↔ ∃ x u : Fin (n + 1) → ℂ, u i = 1 ∧
+      (p.eval₂ (sampleMap n N record) x = 0 ∧ ∀ j : Fin n,
+        (pderiv j.succ p).eval₂ (sampleMap n N record) x -
+          (direction n N record j : ℂ) * (pderiv 0 p).eval₂ (sampleMap n N record) x = 0) ∧
+      ((∑ k : Fin (n + 1), (pderiv k p).eval₂ (sampleMap n N record) x * u k) = 0 ∧
+        ∀ j : Fin n, (∑ k : Fin (n + 1),
+          ((pderiv k (pderiv j.succ p)).eval₂ (sampleMap n N record) x -
+            (direction n N record j : ℂ) * (pderiv k (pderiv 0 p)).eval₂ (sampleMap n N record) x) * u k) = 0) := by
+  dsimp only
+  simp only [AffineBad, criticalRows, FermatCriticalHomogenization.spatial,
+    funext_iff, Fin.forall_fin_succ, JacobianKernelCharts.matrix, Matrix.mulVec, dotProduct,
+    Matrix.of_apply, Pi.zero_apply, Fin.cons_zero, Fin.cons_succ, map_sub, pderiv_C_mul,
+    eval₂_sub, eval₂_mul, eval₂_C, sampledDirection, sampleMap, Polynomial.coe_eval₂RingHom,
+    Polynomial.eval₂_C, eq_ratCast, Rat.cast_natCast]
+
 theorem infinity_bad_iff_reduced (a : ℚ) (ha : a ≠ 0) (N : ℕ) (hN : 0 < N)
     (record : List Bool) (i : Fin (n + 1)) :
     InfinityBad a N record i ↔ ∃ x : Fin (n + 1) → ℂ, x i = 1 ∧
