@@ -1,4 +1,5 @@
 import LeanCanny.Connectivity
+import LeanCanny.Geometry.SingularParameterBounds
 import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Topology.Connected.TotallyDisconnected
 import Mathlib.Analysis.Normed.Ring.Lemmas
@@ -761,3 +762,85 @@ example : CharacteristicLowestBounds.lowest A = Polynomial.X - Polynomial.C Poly
   simp [A, AffineCharacteristic.subtractiveMatrix, Matrix.det_unique]
 
 end BoundedEliminantTests
+
+namespace SingularEliminantTests
+open LeanCanny.Geometry LeanCanny.Algebra MvPolynomial Set
+
+-- A double root has zero Jacobian, but the same constructed affine
+-- coordinate eliminant still annihilates it over an algebraically closed field.
+example {K : Type*} [Field K] [IsAlgClosed K] :
+    ∃ H : Polynomial ℤ, H ≠ 0 ∧
+      H.natDegree ≤ FixedWidthPolynomial.count 2 2 ∧ H.eval₂ (Int.castRingHom K) 0 = 0 := by
+  let q : Fin 1 → MvPolynomial (Fin 1) ℤ := fun i => X i ^ 2
+  let d : Fin 1 → ℕ := fun _ => 2
+  have hD (i : Fin 1) : (q i).totalDegree ≤ d i := by
+    simpa only [q, d, totalDegree_X, Nat.mul_one] using totalDegree_pow (X i : MvPolynomial (Fin 1) ℤ) 2
+  have hfinite : {x : Fin 1 → K | ∀ j, (q j).eval₂ (Int.castRingHom K) x = 0}.Finite := by
+    apply (finite_singleton (0 : Fin 1 → K)).subset
+    intro x hx
+    apply mem_singleton_iff.mpr
+    funext i
+    exact sq_eq_zero_iff.mp (by simpa [q] using hx i)
+  refine ⟨AffineCoordinateEliminant.polynomial q d 0 2, AffineCoordinateEliminant.ne_zero q d 0 2,
+    AffineCoordinateEliminant.degree_le q d 0 2, ?_⟩
+  exact AffineCoordinateEliminant.eval_eq_zero_of_finite (Int.castRingHom K) q d hD
+    (by intro j; exact Nat.zero_lt_two) 0 2
+    (by norm_num [Macaulay.level, AffineCoordinateSystem.degrees, d, Fin.sum_univ_succ])
+    hfinite (fun _ => 0) (by intro j; simp [q])
+
+-- The zero set is an entire line. Finiteness of its first-coordinate image
+-- suffices; finiteness of the spatial fiber is deliberately unavailable.
+example : ∃ H : Polynomial ℤ, H ≠ 0 ∧
+    H.natDegree ≤ CoerciveCoordinateEliminant.columnBound 2 2 ∧
+    H.eval₂ (Int.castRingHom ℝ) 0 = 0 := by
+  let q : MvPolynomial (Fin 2) ℤ := X 0 ^ 2
+  have hD : q.totalDegree ≤ 2 := by
+    simpa only [q, totalDegree_X, Nat.mul_one] using
+      totalDegree_pow (X 0 : MvPolynomial (Fin 2) ℤ) 2
+  have hfinite : {t : ℝ | ∃ x : Fin 2 → ℝ,
+      q.eval₂ (Int.castRingHom ℝ) x = 0 ∧ x 0 = t}.Finite := by
+    apply (finite_singleton (0 : ℝ)).subset
+    rintro t ⟨x, hx, ht⟩
+    have hx0 : x 0 = 0 := sq_eq_zero_iff.mp (by simpa [q] using hx)
+    exact mem_singleton_iff.mpr (ht.symm.trans hx0)
+  obtain ⟨H, hH, hd, _hm, hann⟩ := FiniteCoordinateAnnihilator.exists_bounded q 2 hD 0 hfinite
+  exact ⟨H, hH, hd, hann (fun _ => 0) (by simp [q])⟩
+
+end SingularEliminantTests
+
+namespace SingularParameterTests
+open LeanCanny.Geometry LeanCanny.Algebra MvPolynomial
+set_option backward.isDefEq.respectTransparency false
+
+-- At t=0 both equations vanish identically in the spatial variables. A
+-- bounded exceptional factor still exists; the bad spatial fiber is a plane.
+example : ∃ r : Polynomial ℤ, r ≠ 0 ∧
+    r.natDegree ≤ CoerciveCoordinateEliminant.columnBound 3
+      (2 * SingularParameterBounds.systemDegree 2 2) ∧
+    coefficientMass r < 2 ^ SingularParameterBounds.factorMassExponent 2 2 0 ∧
+    ∀ z : Fin 3 → ℝ, r.eval₂ (Int.castRingHom ℝ) (z 0) ≠ 0 → z 0 ≠ 0 := by
+  let q : Fin 2 → MvPolynomial (Fin 3) ℤ := fun i => X 0 * X i.succ
+  have hD (i : Fin 2) : (q i).totalDegree ≤ 2 := by
+    exact (totalDegree_mul _ _).trans (by simp [totalDegree_X])
+  have hb (i : Fin 2) : MvMass.mass (q i) ≤ 2 ^ 0 := by
+    exact (MvMass.mul_le _ _).trans (by simp)
+  have hj (z : Fin 3 → ℝ) :
+      (SingularParameterBounds.jacobian q).eval₂ (Int.castRingHom ℝ) z = z 0 ^ 2 := by
+    unfold SingularParameterBounds.jacobian
+    rw [Matrix.det_fin_two]
+    simp [q, pow_two]
+  have hfinite : (SingularParameterBounds.SingularValues q).Finite := by
+    apply (Set.finite_singleton (0 : ℝ)).subset
+    rintro t ⟨z, _hz, hsing, ht⟩
+    rw [hj] at hsing
+    exact Set.mem_singleton_iff.mpr (ht.symm.trans (sq_eq_zero_iff.mp hsing))
+  obtain ⟨r, hr, hd, hm, hgood⟩ :=
+    SingularParameterBounds.exists_bounded_of_finite q 2 0 hD hb hfinite
+  refine ⟨r, hr, hd, hm, ?_⟩
+  intro z hz ht
+  have he : ∀ j, (q j).eval₂ (Int.castRingHom ℝ) z = 0 := by simp [q, ht]
+  have h := hgood z he hz
+  rw [hj, ht, zero_pow (by decide : 2 ≠ 0)] at h
+  exact h rfl
+
+end SingularParameterTests

@@ -702,6 +702,40 @@ retained regular fiber by `N^n`, where `N` is the fixed-width matrix count.
 This equals `2^(n*(n+1)*W)`, giving an explicit cardinality allowance for binary
 branch labels. Locating and querying those labels still need native routines.
 
+`Geometry/AffineCoordinateFinite` extends the same constructed coordinate
+eliminant to finite affine zero sets over algebraically closed fields, including
+singular roots and projective zeros at infinity. Real roots inherit this result
+from any algebraically closed extension. `UniformAffineCoordinates` and
+`RegularCoordinateRootCount` retain their original degree, mass, and binary
+label allowances for these singular finite fibers.
+
+`Geometry/CoerciveConstrainedSampling` minimizes on a closed coordinate slab
+isolating a projected zero. Its bounded minimizers have a convergent subsequence
+whose limit retains that coordinate; they are eventually interior critical
+points. `PolynomialLimitAnnihilator` now accepts eventual annihilation.
+`FiniteCoordinateAnnihilator` consequently constructs one bounded nonzero
+integer polynomial for every finite coordinate image of a polynomial zero set,
+even with positive-dimensional spatial fibers. Its mass-exponent allowance has
+the polynomial binary-length estimate already proved in `CoerciveRadiusBits`.
+
+`Geometry/CoordinateSweepBounds` applies this result to the sum of squares
+defining the coordinate critical locus of a regular integer hypersurface. It
+constructs an integer exceptional factor with explicit degree and mass bounds
+from dimension, source degree, and source mass exponent. Outside its roots the
+combined hypersurface/sweep derivative is surjective. This bounds the sweep
+critical values; the generic direction and the separate critical-root
+regularity factor remain to be bounded.
+
+`Geometry/SystemCoordinateBounds` gives the same projected-value theorem for
+arbitrary finite integer polynomial systems using their sum of squares.
+`SingularParameterBounds` includes the formal spatial Jacobian, bounds its
+degree and mass from the equations, and constructs a bounded exceptional factor
+when there are only finitely many singular parameter values. Singular bad
+fibers may have positive dimension. A qualitative real regularity factor
+suffices; none of its arithmetic bounds are used. Transferring this result to
+the parameter-ring critical systems requires an effective integer polynomial
+representation of their parameter variables.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

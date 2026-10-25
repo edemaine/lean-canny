@@ -6,6 +6,7 @@ module
 
 public import LeanCanny.Algebra.HomogenizationLayout
 public import LeanCanny.Algebra.CoefficientMass
+public import LeanCanny.Algebra.PolynomialMapDegree
 public import Mathlib.RingTheory.MvPolynomial.Homogeneous
 public import Mathlib.Algebra.MvPolynomial.CommRing
 
@@ -37,6 +38,25 @@ noncomputable def rows (q : Fin n → MvPolynomial (Fin n) R) (d : Fin n → ℕ
     (fun j => rename layout (nativeRow q d coordinate (some j)))
 
 def degrees (d : Fin n → ℕ) : Fin (n + 1) → ℕ := Fin.cons 1 d
+
+theorem eval_rows {S : Type*} [CommRing S] (φ : R →+* S)
+    (q : Fin n → MvPolynomial (Fin n) R) (d : Fin n → ℕ)
+    (hD : ∀ j, (q j).totalDegree ≤ d j) (coordinate : Fin n) (u : S) (x : Fin n → S) :
+    (fun j => (rows q d coordinate j).eval₂ (Polynomial.eval₂RingHom φ u)
+      (fun k => (layout.symm k).elim 1 x)) =
+      Fin.cons (u - x coordinate) (fun j => (q j).eval₂ φ x) := by
+  funext j
+  refine Fin.cases ?_ (fun j => ?_) j
+  · simp only [rows, Fin.cons_zero, eval₂_rename, Function.comp_def,
+      Equiv.symm_apply_apply, nativeRow, eval₂_sub, eval₂_mul, eval₂_C, eval₂_X,
+      Option.elim_none, Option.elim_some, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X, mul_one]
+  · simp only [rows, Fin.cons_succ, eval₂_rename, Function.comp_def,
+      Equiv.symm_apply_apply, nativeRow]
+    rw [WeightedHomogenization.eval_chart]
+    · simp [eval₂_map]
+    · intro e he
+      exact (WeightedHomogenization.weight_le_degree _ (by simp) e).trans
+        ((MvPolynomial.le_totalDegree he).trans ((PolynomialMapDegree.degree_le Polynomial.C (q j)).trans (hD j)))
 
 theorem homogeneous (q : Fin n → MvPolynomial (Fin n) R) (d : Fin n → ℕ)
     (coordinate : Fin n) (j : Fin (n + 1)) :

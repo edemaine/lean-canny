@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import LeanCanny.Geometry.AffineCoordinateEliminant
+public import LeanCanny.Geometry.AffineCoordinateFinite
 
 /-! # Bounded coordinate certificates and a uniform specialization factor
 
@@ -30,11 +30,12 @@ def count (d : Fin n → ℕ) : ℕ := FixedWidthPolynomial.count (n + 1) (width
 
 def bitBudget (d : Fin n → ℕ) (b : ℕ) : ℕ := (count d).size * count d + count d * (b + 3) + 1
 
-theorem exists_bounded (q : Fin n → MvPolynomial (Fin n) (Polynomial ℤ)) (d : Fin n → ℕ)
-    (hD : ∀ j, (q j).totalDegree ≤ d j) (hd : ∀ j, 0 < d j) (E b : ℕ)
+theorem exists_bounded_polynomials (q : Fin n → MvPolynomial (Fin n) (Polynomial ℤ)) (d : Fin n → ℕ)
+    (E b : ℕ)
     (hdegree : ∀ j e, ((q j).coeff e).natDegree ≤ E)
     (hmass : ∀ j e, coefficientMass ((q j).coeff e) ≤ 2 ^ b) :
-    ∃ P : Fin n → Polynomial (Polynomial ℤ), ∃ r : Polynomial ℤ,
+    let P := fun i => AffineCoordinateEliminant.polynomial q d i (width d)
+    ∃ r : Polynomial ℤ,
       r ≠ 0 ∧ r.natDegree ≤ n * (count d * E) ∧
       coefficientMass r ≤ ((count d * E + 1) * 2 ^ bitBudget d b) ^ n ∧
       (∀ i, P i ≠ 0 ∧ (P i).natDegree ≤ count d ∧
@@ -42,10 +43,7 @@ theorem exists_bounded (q : Fin n → MvPolynomial (Fin n) (Polynomial ℤ)) (d 
         ∀ k l, (((P i).coeff k).coeff l).natAbs.size ≤ bitBudget d b) ∧
       ∀ t : ℝ, r.eval₂ (Int.castRingHom ℝ) t ≠ 0 →
         let φ := Polynomial.eval₂RingHom (Int.castRingHom ℝ) t
-        (∀ i, (P i).map φ ≠ 0) ∧
-        ∀ x : Fin n → ℝ, (∀ j, (q j).eval₂ φ x = 0) →
-          (fderiv ℝ (fun y => fun j => (q j).eval₂ φ y) x).IsInvertible →
-            ∀ i, ((P i).map φ).eval (x i) = 0 := by
+        ∀ i, (P i).map φ ≠ 0 := by
   let P := fun i => AffineCoordinateEliminant.polynomial q d i (width d)
   have hP (i : Fin n) : P i ≠ 0 := AffineCoordinateEliminant.ne_zero q d i (width d)
   have hcoord (i : Fin n) : (P i).natDegree ≤ count d := AffineCoordinateEliminant.degree_le q d i (width d)
@@ -62,7 +60,7 @@ theorem exists_bounded (q : Fin n → MvPolynomial (Fin n) (Polynomial ℤ)) (d 
     intro k
     exact (Nat.lt_size_self _).le.trans
       (Nat.pow_le_pow_right (by decide) (hbits i (P i).natDegree k))
-  refine ⟨P, r, hr, ?_, ?_, (fun i => ⟨hP i, hcoord i, hparam i, hbits i⟩), ?_⟩
+  refine ⟨r, hr, ?_, ?_, (fun i => ⟨hP i, hcoord i, hparam i, hbits i⟩), ?_⟩
   · exact (Polynomial.natDegree_prod_le _ _).trans (by
       have h := Finset.sum_le_sum (fun i (_ : i ∈ Finset.univ) => hparam i (P i).natDegree)
       simpa only [Finset.sum_const, Finset.card_univ, Fintype.card_fin, smul_eq_mul,
@@ -77,14 +75,63 @@ theorem exists_bounded (q : Fin n → MvPolynomial (Fin n) (Polynomial ℤ)) (d 
         change φ r ≠ 0 at ht
         simpa only [r, map_prod] using ht
       exact Finset.prod_ne_zero_iff.mp he i (Finset.mem_univ i)
-    refine ⟨?_, ?_⟩
-    · intro i hz
-      have hc := congrArg (fun f : Polynomial ℝ => f.coeff (P i).natDegree) hz
-      exact hnonzero i (by simpa only [Polynomial.coeff_map, Polynomial.coeff_natDegree,
-        Polynomial.coeff_zero] using hc)
-    · intro x hx hJac i
-      rw [Polynomial.eval_map]
-      exact AffineCoordinateEliminant.eval_eq_zero φ q d hD hd i (width d)
-        (Nat.lt_size_self _) x hx hJac
+    change ∀ i, (P i).map φ ≠ 0
+    intro i hz
+    have hc := congrArg (fun f : Polynomial ℝ => f.coeff (P i).natDegree) hz
+    exact hnonzero i (by simpa only [Polynomial.coeff_map, Polynomial.coeff_natDegree,
+      Polynomial.coeff_zero] using hc)
+
+theorem exists_bounded (q : Fin n → MvPolynomial (Fin n) (Polynomial ℤ)) (d : Fin n → ℕ)
+    (hD : ∀ j, (q j).totalDegree ≤ d j) (hd : ∀ j, 0 < d j) (E b : ℕ)
+    (hdegree : ∀ j e, ((q j).coeff e).natDegree ≤ E)
+    (hmass : ∀ j e, coefficientMass ((q j).coeff e) ≤ 2 ^ b) :
+    ∃ P : Fin n → Polynomial (Polynomial ℤ), ∃ r : Polynomial ℤ,
+      r ≠ 0 ∧ r.natDegree ≤ n * (count d * E) ∧
+      coefficientMass r ≤ ((count d * E + 1) * 2 ^ bitBudget d b) ^ n ∧
+      (∀ i, P i ≠ 0 ∧ (P i).natDegree ≤ count d ∧
+        (∀ k, ((P i).coeff k).natDegree ≤ count d * E) ∧
+        ∀ k l, (((P i).coeff k).coeff l).natAbs.size ≤ bitBudget d b) ∧
+      ∀ t : ℝ, r.eval₂ (Int.castRingHom ℝ) t ≠ 0 →
+        let φ := Polynomial.eval₂RingHom (Int.castRingHom ℝ) t
+        (∀ i, (P i).map φ ≠ 0) ∧
+        ∀ x : Fin n → ℝ, (∀ j, (q j).eval₂ φ x = 0) →
+          (fderiv ℝ (fun y => fun j => (q j).eval₂ φ y) x).IsInvertible →
+            ∀ i, ((P i).map φ).eval (x i) = 0 := by
+  obtain ⟨r, hr, hdeg, hmass, hP, hspec⟩ := exists_bounded_polynomials q d E b hdegree hmass
+  refine ⟨_, r, hr, hdeg, hmass, hP, ?_⟩
+  intro t ht
+  refine ⟨hspec t ht, ?_⟩
+  intro x hx hJac i
+  rw [Polynomial.eval_map]
+  exact AffineCoordinateEliminant.eval_eq_zero _ q d hD hd i (width d)
+    (Nat.lt_size_self _) x hx hJac
+
+/-- The same bounded polynomials and factor also work on finite complex
+extension fibers, without any Jacobian assumption at their real roots. -/
+theorem exists_bounded_of_finite_extension {L : Type*} [Field L] [IsAlgClosed L] [Algebra ℝ L]
+    (q : Fin n → MvPolynomial (Fin n) (Polynomial ℤ)) (d : Fin n → ℕ)
+    (hD : ∀ j, (q j).totalDegree ≤ d j) (hd : ∀ j, 0 < d j) (E b : ℕ)
+    (hdegree : ∀ j e, ((q j).coeff e).natDegree ≤ E)
+    (hmass : ∀ j e, coefficientMass ((q j).coeff e) ≤ 2 ^ b) :
+    ∃ P : Fin n → Polynomial (Polynomial ℤ), ∃ r : Polynomial ℤ,
+      r ≠ 0 ∧ r.natDegree ≤ n * (count d * E) ∧
+      coefficientMass r ≤ ((count d * E + 1) * 2 ^ bitBudget d b) ^ n ∧
+      (∀ i, P i ≠ 0 ∧ (P i).natDegree ≤ count d ∧
+        (∀ k, ((P i).coeff k).natDegree ≤ count d * E) ∧
+        ∀ k l, (((P i).coeff k).coeff l).natAbs.size ≤ bitBudget d b) ∧
+      ∀ t : ℝ, r.eval₂ (Int.castRingHom ℝ) t ≠ 0 →
+        let φ := Polynomial.eval₂RingHom (Int.castRingHom ℝ) t
+        (∀ i, (P i).map φ ≠ 0) ∧
+        ({x : Fin n → L | ∀ j, (q j).eval₂ ((algebraMap ℝ L).comp φ) x = 0}.Finite →
+          ∀ x : Fin n → ℝ, (∀ j, (q j).eval₂ φ x = 0) →
+            ∀ i, ((P i).map φ).eval (x i) = 0) := by
+  obtain ⟨r, hr, hdeg, hmass, hP, hspec⟩ := exists_bounded_polynomials q d E b hdegree hmass
+  refine ⟨_, r, hr, hdeg, hmass, hP, ?_⟩
+  intro t ht
+  refine ⟨hspec t ht, ?_⟩
+  intro hfinite x hx i
+  rw [Polynomial.eval_map]
+  exact AffineCoordinateEliminant.eval_eq_zero_of_finite_extension _ q d hD hd i (width d)
+    (Nat.lt_size_self _) hfinite x hx
 
 end LeanCanny.Geometry.UniformAffineCoordinates

@@ -168,8 +168,13 @@ The checked ingredients are:
   overlap tests are connections in one lower-dimensional slice. Recursive
   endpoint component covers complete the closed slab. Concrete coordinate
   eliminants now have bounded spatial and parameter degrees, coefficient
-  bits, and specialization factors. Input bounds for the integer direction,
-  regularity factor, and recursive query encodings remain open.
+  bits, and specialization factors, also for singular finite fibers over
+  algebraically closed extensions. Constrained coercive limits bound finite
+  coordinate images even when spatial fibers have positive dimension. These
+  bounds construct exceptional factors for regular integer hypersurface
+  sweeps and integer systems with finitely many singular parameter values.
+  Input bounds for the integer direction and effective parameter-ring and
+  recursive query encodings remain open.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A

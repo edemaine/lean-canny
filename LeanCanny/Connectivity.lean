@@ -18,6 +18,8 @@ import LeanCanny.Connectivity.CoordinateSlabCover
 import LeanCanny.Connectivity.OneDimensionPoint
 import LeanCanny.Geometry.BoundedCriticalCoordinates
 import LeanCanny.Geometry.RegularCoordinateRootCount
+import LeanCanny.Geometry.CoordinateSweepBounds
+import LeanCanny.Geometry.SingularParameterBounds
 
 /-! # Connectivity development
 
@@ -63,8 +65,17 @@ affine roots, also for the integer spatial critical slice systems. Both variable
 degrees, coefficient bits, and the coordinate-specialization factor are bounded.
 These certificates bound regular root fibers by a product of coordinate degrees,
 with an explicit binary label-width allowance.
-Input bounds for the direction and regularity factor, and effective recursive
-record and query encodings, remain required.
+The same constructed coordinate polynomials also annihilate singular finite
+fibers over algebraically closed extensions, with the same root-count budget.
+Constrained coercive minimization constructs bounded integer annihilators for
+finite projected zero sets even when their spatial fibers have positive
+dimension. For a regular integer hypersurface this gives a bounded exceptional
+coordinate-sweep factor. Input bounds for the generic direction and critical
+system query encodings remain required. For integer systems with finitely many
+singular parameter values, a new bounded exceptional factor replaces any
+qualitative regularity witness, allowing positive-dimensional bad fibers.
+Applying this bound to the parameter-ring critical systems still requires
+an effective integer representation of the parameter variables.
 Each sweep fiber is homeomorphic to its polynomial slice in one fewer
 coordinate. Properness and regularity pass to this lower-dimensional equation.
 Dimension-zero connectivity algorithms are proved, and both connectivity

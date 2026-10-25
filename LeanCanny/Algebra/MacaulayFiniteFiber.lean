@@ -91,4 +91,20 @@ theorem trailingCoeff_eval_eq_zero_of_finite_fiber
     (shiftedSystem p d φ x) q Q.natTrailingDegree hk hf hvanish z hz'
   simpa only [q, Q, Polynomial.coeff_map, Polynomial.trailingCoeff, RingHom.comp_apply] using he
 
+/-- The same finite-fiber conclusion holds for the explicit characteristic
+numerator, retaining its direct determinant budgets. -/
+theorem numerator_trailingCoeff_eval_eq_zero_of_finite_fiber [IsDomain R]
+    (p : Fin (n + 1) → MvPolynomial (Fin (n + 1)) R) (d : Fin (n + 1) → ℕ) (W : ℕ)
+    (hdegree : ∀ i, d i < 2 ^ W) (hW : Macaulay.level d < 2 ^ W)
+    (hp : ∀ i, (p i).IsHomogeneous (d i)) (hd : ∀ i, 0 < d i)
+    (φ : R →+* MvPolynomial (Fin (n + 1)) K) (x : Fin (n + 1) → MvPolynomial (Fin (n + 1)) K)
+    (hnz : ∀ z : Fin (n + 1) → K, ∃ j, MvPolynomial.eval z (x j) ≠ 0)
+    (hfinite : (zeroLocus K (ProjectiveNullstellensatz.generated (originalSystem p φ x))).Finite)
+    (z : Fin (n + 1) → K) (hz : z ∈ zeroLocus K (ProjectiveNullstellensatz.generated (originalSystem p φ x))) :
+    ((MvPolynomial.eval z).comp φ) (Macaulay.characteristicNumerator p d W).trailingCoeff = 0 := by
+  have hQ := trailingCoeff_eval_eq_zero_of_finite_fiber p d W hdegree hW hp hd φ x hnz hfinite z hz
+  rw [(Macaulay.characteristicNumerator_lowest_active p d W).2,
+    Macaulay.characteristicQuotient_factorization p d W hp hd hW,
+    Polynomial.trailingCoeff_mul, map_mul, hQ, mul_zero]
+
 end LeanCanny.Algebra.MacaulayFiniteFiber

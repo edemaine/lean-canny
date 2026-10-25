@@ -104,19 +104,7 @@ theorem family_eq (φ : R →+* ℝ) (q : Fin n → MvPolynomial (Fin n) R) (d :
     (hD : ∀ j, (q j).totalDegree ≤ d j) (coordinate : Fin n) (a : ℝ × (Fin n → ℝ)) :
     MacaulayRegularPersistence.family (rows q d coordinate) (coefficientMap φ) chart a =
       Fin.cons (a.1 - a.2 coordinate) (fun j => (q j).eval₂ φ a.2) := by
-  funext j
-  refine Fin.cases ?_ (fun j => ?_) j
-  · simp only [MacaulayRegularPersistence.family, rows, Fin.cons_zero, eval₂_rename,
-      Function.comp_def, chart, Equiv.symm_apply_apply, nativeRow, eval₂_sub, eval₂_mul,
-      eval₂_C, eval₂_X, Option.elim_none, Option.elim_some, coefficientMap,
-      Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X, mul_one]
-  · simp only [MacaulayRegularPersistence.family, rows, Fin.cons_succ, eval₂_rename,
-      Function.comp_def, chart, Equiv.symm_apply_apply, nativeRow]
-    rw [WeightedHomogenization.eval_chart]
-    · simp [eval₂_map, coefficientMap]
-    · intro e he
-      exact (WeightedHomogenization.weight_le_degree _ (by simp) e).trans
-        ((MvPolynomial.le_totalDegree he).trans ((PolynomialMapDegree.degree_le Polynomial.C (q j)).trans (hD j)))
+  exact AffineCoordinateSystem.eval_rows φ q d hD coordinate a.1 a.2
 
 omit [CommRing R] in
 /-- The extra coordinate equation gives a triangular derivative with the
