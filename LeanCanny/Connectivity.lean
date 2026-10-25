@@ -8,6 +8,7 @@ import LeanCanny.Connectivity.BitFrontierCover
 import LeanCanny.Geometry.RootBranchCount
 import LeanCanny.Geometry.ProjectionCriticalBranches
 import LeanCanny.Geometry.ComponentCriticalSampling
+import LeanCanny.Geometry.PolynomialComponentTransport
 
 /-! # Connectivity development
 
@@ -23,9 +24,10 @@ connectivity tests. Explicit polynomial systems have the expected analytic
 Jacobian. Proper polynomial level functions give spatial critical curves with
 an integer projection direction and finitely many exceptional levels. Regular
 compact fibers have finitely many path components, all sampled by the critical
-equations. The
-effective semialgebraic roadmap
-construction is not yet supplied. In particular, neither
+equations. Fiber connection between continuous sections is constant on each
+preconnected regular-value region; the exceptional levels are constructed
+algebraically. The effective semialgebraic roadmap construction is not yet
+supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
 membership theorem here.
 -/

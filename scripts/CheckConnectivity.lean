@@ -1,6 +1,8 @@
 import LeanCanny.Connectivity
 import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Topology.Connected.TotallyDisconnected
+import Mathlib.Analysis.Normed.Ring.Lemmas
+import Mathlib.Topology.Maps.Proper.CompactlyGenerated
 
 /-! Boundary cases for the implicit graph algorithm and the total input codec.
 The axiom audit covers the connectivity declarations and their dependencies.
@@ -378,3 +380,59 @@ example : ∃ y : Unit → ℝ, y () = -1 ∧
 end ComponentSamplingChecks
 
 end RegularFiberTests
+
+section ComponentTransportTests
+open LeanCanny.Geometry LeanCanny.Connectivity Set Filter
+
+-- The cover has an infinite index type; a path still yields a finite walk.
+example : Relation.ReflTransGen
+    (ClosedPathCover.Overlap (fun r : ℝ => Ioo (r - 1) (r + 1))) 0 1000 := by
+  apply OpenPathCover.reachable_of_joinedIn _ (fun _ => isOpen_Ioo)
+    (fun x => ⟨x, by constructor <;> linarith⟩)
+    (x := (0 : ℝ)) (y := (1000 : ℝ)) (by norm_num) (by norm_num)
+  exact joinedIn_univ.mpr (PathConnectedSpace.joined _ _)
+
+-- Square has a critical value at zero. Component transport on the positive
+-- parameter region must neither require regularity there nor merge its two roots.
+example (t : ℝ) (ht : 0 < t) :
+    ¬ JoinedIn {x : ℝ | x ^ 2 = t} (Real.sqrt t) (-Real.sqrt t) := by
+  let S : Set ℝ := Ioi 0
+  let : PreconnectedSpace S := Subtype.preconnectedSpace isPreconnected_Ioi
+  have hp : IsProperMap (fun x : ℝ => x ^ 2) := by
+    apply isProperMap_iff_tendsto_cocompact.mpr
+    refine ⟨continuous_id.pow 2, ?_⟩
+    simpa only [← Metric.cobounded_eq_cocompact] using
+      (tendsto_pow_cobounded_cobounded (α := ℝ) (by norm_num : (2 : ℕ) ≠ 0))
+  have hreg (x : ℝ) (hx : x ^ 2 ∈ S) : Function.Surjective (fderiv ℝ (fun y : ℝ => y ^ 2) x) := by
+    have hxn : x ≠ 0 := by intro h; simp [h, S] at hx
+    rw [(hasFDerivAt_pow (𝕜 := ℝ) 2).fderiv]
+    intro y
+    refine ⟨y / (2 * x), ?_⟩
+    change (2 • x ^ (2 - 1)) * (y / (2 * x)) = y
+    norm_num only [Nat.reduceSub, pow_one, nsmul_eq_mul, Nat.cast_ofNat]
+    field_simp [hxn]
+  let s : S → ℝ := fun b => Real.sqrt b.val
+  let d : S → ℝ := fun b => -Real.sqrt b.val
+  have hs : Continuous s := Real.continuous_sqrt.comp continuous_subtype_val
+  have hd : Continuous d := hs.neg
+  have hps (b : S) : s b ^ 2 = b.val := Real.sq_sqrt b.property.le
+  have hpd (b : S) : d b ^ 2 = b.val := by simpa only [d, neg_sq] using hps b
+  let a : S := ⟨1, by norm_num [S]⟩
+  let b : S := ⟨t, ht⟩
+  have H := RegularComponentTransport.joined_sections_iff (fun x : ℝ => x ^ 2) S hp
+    (fun _ _ => by fun_prop) hreg hs hd hps hpd a b
+  intro hjoin
+  have h1 : JoinedIn {x : ℝ | x ^ 2 = 1} 1 (-1) := by
+    simpa only [s, d, a, Real.sqrt_one, Set.preimage, mem_singleton_iff] using H.mpr hjoin
+  obtain ⟨γ, hγ⟩ := h1
+  have hf : {x : ℝ | x ^ 2 = 1}.Finite := by
+    have heq : {x : ℝ | x ^ 2 = 1} = {1, -1} := by ext x; simp [sq_eq_one_iff]
+    rw [heq]
+    exact toFinite _
+  have hfinite : (range γ).Finite := hf.subset (by rintro x ⟨u, rfl⟩; exact hγ u)
+  have hsub : (range γ).Subsingleton :=
+    (isPreconnected_range γ.continuous).isDiscrete_iff_subsingleton.mp hfinite.isDiscrete
+  have heq : (1 : ℝ) = -1 := hsub γ.source_mem_range γ.target_mem_range
+  norm_num at heq
+
+end ComponentTransportTests

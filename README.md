@@ -138,6 +138,9 @@ The checked ingredients are:
 - Regular compact levels have finitely many path components. Every point can
   reach a critical sample within its own component; one integer direction
   gives finite sample sets covering all components at every retained level.
+- Fiber connection between continuous sections of a proper polynomial is
+  constant on each connected region avoiding its constructed exceptional
+  levels. Critical values outside the chosen region are allowed.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A

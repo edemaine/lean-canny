@@ -517,5 +517,29 @@ fiber components is surjective, so any finite bound on the root set bounds
 the number of components. Combining properness, the constructed integer
 direction, and a critical-value annihilator gives finite sample sets covering
 all components at every level outside a finite exceptional set.
-Transport of components between levels, the full recursive roadmap for general
-Boolean inputs, and its polynomial-space representation bounds remain unproved.
+The full recursive roadmap for general Boolean inputs and its polynomial-space
+representation bounds remain unproved.
+
+`Connectivity/OpenPathCover` proves that paths induce finite overlap-graph
+walks even for an infinite open cover. `Geometry/FiberPathPersistence` applies
+this to open slice neighborhoods: overlap parameters form open sets under an
+open fiber map, so each finite walk persists near its original parameter.
+Continuous sections retain their endpoint neighborhoods, making their fiber
+connection an open condition.
+
+`Geometry/FiberPathSeparation` proves the complementary persistence statement
+for proper maps with locally path-connected fibers. A fiber component and its
+complement are disjoint compact sets. Disjoint ambient neighborhoods separate
+them, and closedness of the projection keeps nearby fibers within their union.
+Fiber connection of continuous sections is therefore also closed, and hence
+constant on a preconnected parameter space.
+
+`Geometry/LocalProductFibers` constructs the slice cover and proves openness and
+fiber local path connectivity from local product charts. `LocalProductBaseChange`
+pulls these charts back to any parameter subset. `RegularComponentTransport`
+constructs the charts by the implicit function theorem for a proper smooth map
+on a regular-value region; regularity outside that region is not assumed.
+`PolynomialComponentTransport` derives all analytic hypotheses from polynomial
+evaluation and a critical-value annihilator, giving an actual finite exceptional
+set for this transport theorem. Assembling the sampled branches and transported
+fiber components into the full recursive, effective roadmap is still required.
