@@ -6,6 +6,7 @@ import LeanCanny.Connectivity.RegularRootArcs
 import LeanCanny.Connectivity.SlabCover
 import LeanCanny.Connectivity.BitFrontierCover
 import LeanCanny.Geometry.RootBranchCount
+import LeanCanny.Geometry.ProjectionCriticalBranches
 
 /-! # Connectivity development
 
@@ -17,7 +18,10 @@ tests. Proper regular root systems have complete finite global branches;
 bounded continuous algebraic branches extend to their finite endpoints. These
 arcs and accessible endpoint-slice covers preserve slab connectivity through
 their frontier graph. Effective frontier graphs have native polynomial-space
-connectivity tests. The effective semialgebraic roadmap
+connectivity tests. Explicit polynomial systems have the expected analytic
+Jacobian. Proper polynomial level functions give spatial critical curves with
+an integer projection direction and finitely many exceptional levels. The
+effective semialgebraic roadmap
 construction is not yet supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
 membership theorem here.

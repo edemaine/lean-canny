@@ -275,3 +275,44 @@ example : IsPreconnected (univ : Set (SlabCover.Space H 0 1)) := by
   exact (hin i).trans (hout j)
 
 end ParabolaSlab
+
+section CriticalProjectionTests
+open LeanCanny.Geometry LeanCanny.Algebra Set MvPolynomial
+
+-- The unknown can be unbounded globally while its level projection is proper.
+example : IsProperMap (fun z : {z : ℝ × ℝ // z.1 = z.2} => z.val.1) :=
+  ProperProjection.isProperMap_fst_of_level (isClosed_eq continuous_fst continuous_snd)
+    isProperMap_id (fun _ hz => hz)
+
+-- The construction must exclude the singular level of x² even though it
+-- produces finite regular critical fibers at all other retained levels.
+example : ∃ r : Polynomial ℝ, r ≠ 0 ∧ r.eval 0 = 0 := by
+  let p : MvPolynomial Unit ℝ := X () ^ 2
+  obtain ⟨u, r, hr, _, hregular⟩ := ProjectionCriticalBranches.exists_regular_direction p ()
+  refine ⟨r, hr, ?_⟩
+  by_contra hn
+  let v := ProjectionFiniteSpecialization.normalizedDirection () (fun i => (u i : ℝ))
+  have hv : v () = 1 := by simp [v, ProjectionFiniteSpecialization.normalizedDirection]
+  have hroot : PolynomialRootFamily.value (ProjectionCriticalBranches.equation p () v)
+      (0, fun _ => 0) = 0 := by
+    apply (ProjectionCriticalBranches.value_iff p () v hv 0 (fun _ => 0)).mpr
+    constructor
+    · simp [p]
+    · intro i
+      have hi : i = () := Subsingleton.elim _ _
+      subst i
+      simp [hv, p]
+  have hdet := hregular 0 (fun _ => 0) hn hroot
+  rw [ProjectionCriticalBranches.eval_jacobian] at hdet
+  have hz : GenericProjectionJacobian.spatial p () v (fun _ => 0) = 0 := by
+    apply Matrix.ext
+    intro i j
+    have hi : i = () := Subsingleton.elim _ _
+    have hj : j = () := Subsingleton.elim _ _
+    subst i
+    subst j
+    simp [GenericProjectionJacobian.spatial, p]
+  rw [hz, Matrix.det_zero] at hdet
+  exact hdet rfl
+
+end CriticalProjectionTests

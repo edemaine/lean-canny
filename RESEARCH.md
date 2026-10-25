@@ -470,3 +470,33 @@ descriptions: suitable critical root systems and slices, a component-preserving
 recursion through singular and noncompact cases, and polynomial bounds on the
 vertex descriptions and graph routines. The regular-slab results do not supply
 these obligations, so the two full connectivity PSPACE theorems remain open.
+
+`Geometry/PolynomialRootFamily` derives smoothness of an explicit square
+polynomial family in the parameter and unknowns. Its analytic derivative in
+the unknowns is invertible exactly when the evaluated formal Jacobian
+determinant is nonzero. `ProperProjection` now also derives properness for a
+closed family lying on the level graph of a proper function, without a fixed
+global compact bound on the unknowns.
+
+`Algebra/RegularFiberSpecialization` constructs an exceptional parameter factor
+when all generic roots are regular in every field extension. The singularity
+ideal becomes the unit ideal over the fraction field; clearing denominators
+puts a nonzero parameter scalar in the original ideal. Its nonvanishing rules
+out singular specialized roots. `ProjectionRegularSpecialization` applies this
+to the actual reciprocal/level/partial equations and their square Jacobian.
+`ParameterLineSpecialization` chooses integer direction coordinates so the
+joint exceptional polynomial remains nonzero as a univariate level polynomial.
+The integer coordinates and univariate degree are bounded by the joint
+exceptional polynomial's total degree; that degree has no input-size bound yet.
+
+`Geometry/ProjectionCriticalBranches` constructs spatial projection-critical
+equations with the level retained as a polynomial parameter. Removing the
+reciprocal coordinate is necessary here: it may diverge at exceptional levels
+even when the spatial curve is bounded. A critical-value annihilator excludes
+singular hypersurface levels, so the reciprocal can be introduced temporarily
+at every retained spatial root to transfer the nonsingularity certificate.
+For any proper polynomial level function, a constructed integer direction and
+finite exceptional level set make its spatial root projection a finite-sheeted
+covering. No regularity hypothesis on the original polynomial is assumed.
+The theorem does not yet prove that these critical curves, together with
+recursive slices, preserve all components of the original semialgebraic set.

@@ -131,6 +131,10 @@ The checked ingredients are:
 - A slab-gluing theorem combines those arcs with accessible endpoint-fiber
   covers and preserves paths and whole-space connectivity. Arc-to-slice
   incidence is exactly endpoint membership. Endpoint roots may be singular.
+- Explicit polynomial equations have the expected analytic Jacobian. For a
+  proper polynomial level function, an integer direction and a nonzero level
+  polynomial give regular finite critical fibers outside finitely many levels.
+  These choices are proved qualitatively; their input-size bounds remain open.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
