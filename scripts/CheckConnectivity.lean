@@ -978,3 +978,44 @@ example : ∃ y : Fin 2 → ℂ, y 0 = 1 ∧ ∀ j, (complexOnlyRows j).eval₂ 
   simp [complexOnlyRows, Complex.I_sq]
 
 end SweepCertificateTests
+
+namespace ComplexCircuitTests
+open LeanCanny.ETR
+open LeanCanny.ETR.ComplexCircuit
+open scoped Classical
+
+private def imaginaryRoot : List Gate := [.constant 0 (-1), .mul 0 1 1, .add 2 1 1, .zero 3]
+
+-- Every gate constructor is compiled without expanding the shared wires.
+#guard compile (encode imaginaryRoot) == SumSquares.listBits (equations imaginaryRoot)
+#guard constantGateBits 3 (Term.const (-(2 ^ 80))).toData.toBits == (Gate.constant 3 (-(2 ^ 80))).encode
+#guard arithmeticGateBits 2 2 1 1 == (Gate.mul 2 1 1).encode
+#guard zeroGateBits 3 == (Gate.zero 3).encode
+
+private theorem imaginaryRoot_sat : Satisfiable imaginaryRoot := by
+  let env : ℕ → ℂ := fun i => if i = 0 then -1 else if i = 1 then Complex.I
+    else if i = 2 then Complex.I + Complex.I else 0
+  refine ⟨env, ?_⟩
+  intro g hg
+  simp only [imaginaryRoot, List.mem_cons, List.not_mem_nil, or_false] at hg
+  rcases hg with rfl | rfl | rfl | rfl <;> simp [Gate.Holds, env, Complex.I_mul_I]
+
+-- The network has a nonreal solution. Adding a zero constraint on that same
+-- wire must make it inconsistent; shared wire identity is essential here.
+example : feasible (encode imaginaryRoot) = [true] := by
+  rw [feasible_encode, decide_eq_true imaginaryRoot_sat]
+
+example : empty (encode (imaginaryRoot ++ [.zero 1])) = [true] := by
+  rw [empty_encode]
+  have hn : ¬ Satisfiable (imaginaryRoot ++ [.zero 1]) := by
+    rintro ⟨env, h⟩
+    have hc := h (.constant 0 (-1)) (by simp [imaginaryRoot])
+    have hm := h (.mul 0 1 1) (by simp [imaginaryRoot])
+    have hz := h (.zero 1) (by simp)
+    simp only [Gate.Holds] at hc hm hz
+    rw [hz, mul_zero] at hm
+    rw [hm] at hc
+    norm_num at hc
+  rw [decide_eq_true hn]
+
+end ComplexCircuitTests

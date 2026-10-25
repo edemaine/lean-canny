@@ -26,6 +26,8 @@ import LeanCanny.Algebra.ProjectiveDirectionGrid
 import LeanCanny.Encoding.FermatCriticalDirection
 import LeanCanny.Encoding.CriticalRegularLevel
 import LeanCanny.Geometry.IntegerRegularSweepCertificate
+import LeanCanny.ETR.ComplexCircuitPSPACE
+import LeanCanny.ETR.ComplexCircuitBuilders
 
 /-! # Connectivity development
 
@@ -120,6 +122,11 @@ the sampled complex projective bad-root fiber. Any valid sample certifies
 generic Jacobian regularity through maximal-minor transfer; the minor itself
 is not retained. The complex test is equivalent to finitely many normalized
 affine charts. Its native decision procedure remains to be constructed.
+Complex arithmetic networks now have an explicit native polynomial-time
+compiler to real equations, preserving shared wires and integer payloads.
+The completed ETR procedure supplies native feasibility and emptiness tests
+for these compiled networks. Constructing the actual normalized bad-root
+networks, including binary powers and spatial derivatives, remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices, effective direction selection, and the full recursive query
 encodings remain required.
