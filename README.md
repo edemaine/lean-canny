@@ -118,21 +118,29 @@ The checked ingredients are:
   descriptions are rejected, as are malformed bitstrings.
 - Native polynomial-space implicit-graph reachability and whole-graph
   connectivity, allowing polynomial-space adjacency and invalid records.
+  The transfer applies to accessible frontier covers with nonclosed pieces.
 - A finite closed path-cover theorem identifying topological connectivity with
   intersection-graph connectivity.
 - A frontier-incidence theorem for finite decompositions whose pieces need not
   be closed. Bounded continuous algebraic curve branches extend to finite
   endpoints, which proves the required boundary accessibility for their arcs.
-  The implicit function theorem constructs local branches at regular roots
-  and proves their local completeness.
+  Proper regular root projections give complete finite global branches across
+  an open interval. Nonzero coordinate equations bound their number by a
+  product of degrees; a simultaneous nonzero specialization exists in every
+  nonempty open interval.
+- A slab-gluing theorem combines those arcs with accessible endpoint-fiber
+  covers and preserves paths and whole-space connectivity. Arc-to-slice
+  incidence is exactly endpoint membership. Endpoint roots may be singular.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
   polynomial-space scan locates pieces containing the described endpoints.
 
 The missing construction must produce suitable covers uniformly from input
-formulas, prove closedness, path connectivity and coverage, bound the vertex
-width and query writers. Endpoint validation is proved separately. Endpoint
+formulas, handle Boolean constraints, singularities and unbounded sets, prove
+component preservation, and bound the vertex records and all graph routines.
+The regular-slab theorem does not establish this construction. Endpoint
+validation is proved separately. Endpoint
 attachment is handled by ETR when the corresponding query writers are supplied.
 The current cover theorems state these obligations explicitly; they do not
 establish them for arbitrary semialgebraic inputs. Empty spaces are accepted

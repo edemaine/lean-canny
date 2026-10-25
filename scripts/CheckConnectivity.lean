@@ -154,3 +154,124 @@ example : Tendsto Real.sqrt (𝓝[>] (0 : ℝ)) (𝓝 0) := by
   rw [htc] at hx
   have hxe : x = 0 := by simpa using hx
   rwa [hxe] at hlim
+
+-- Global continuation must enumerate both isolated regular roots at every
+-- parameter, not just a branch chosen at the initial root.
+open LeanCanny.Geometry Set in
+example :
+    ∃ curve : RootBranches.Index (fun z : ℝ × ℝ => z.2 ^ 2 - 1) 0 1
+        (⟨1/2, by norm_num⟩ : Ioo (0 : ℝ) 1) → C(Ioo (0 : ℝ) 1, ℝ),
+      (∀ i t, (curve i t) ^ 2 = 1) ∧
+      ∀ t : Ioo (0 : ℝ) 1, ∀ x : ℝ, x ^ 2 = 1 ↔ ∃! i, curve i t = x := by
+  let f : ℝ × ℝ → ℝ := fun z => z.2 ^ 2 - 1
+  have hcont : Continuous f := by fun_prop
+  have hproper : IsProperMap (RootProjection.projection f) := by
+    apply RootProjection.isProperMap_of_compact_bound f hcont isCompact_Icc
+      (K := Icc (-1 : ℝ) 1)
+    intro z
+    have hz : z.val.2 ^ 2 - 1 = 0 := z.property
+    constructor <;> nlinarith [sq_nonneg (z.val.2 + 1), sq_nonneg (z.val.2 - 1)]
+  have hf (z : RootProjection.Space f) : ContDiffAt ℝ 1 f z.val := by fun_prop
+  have hJac (z : RootProjection.Space f) :
+      (fderiv ℝ f z.val ∘L ContinuousLinearMap.inr ℝ ℝ ℝ).IsInvertible := by
+    have hz : z.val.2 ^ 2 - 1 = 0 := z.property
+    have hn : (2 : ℝ) * z.val.2 ≠ 0 := by intro h; nlinarith
+    have hzn : z.val.2 ≠ 0 := by intro h; apply hn; rw [h, mul_zero]
+    have hd := ((hasFDerivAt_snd (𝕜 := ℝ) (p := z.val)).pow 2).sub_const 1
+    rw [hd.fderiv]
+    apply ContinuousLinearMap.IsInvertible.of_inverse
+      (g := ((2 * z.val.2)⁻¹) • ContinuousLinearMap.id ℝ ℝ)
+    · apply ContinuousLinearMap.ext
+      intro x
+      change (2 • z.val.2 ^ (2 - 1)) * ((2 * z.val.2)⁻¹ * x) = x
+      norm_num only [Nat.reduceSub, pow_one, nsmul_eq_mul, Nat.cast_ofNat]
+      field_simp [hzn]
+    · apply ContinuousLinearMap.ext
+      intro x
+      change (2 * z.val.2)⁻¹ * ((2 • z.val.2 ^ (2 - 1)) * x) = x
+      norm_num only [Nat.reduceSub, pow_one, nsmul_eq_mul, Nat.cast_ofNat]
+      field_simp [hzn]
+  obtain ⟨curve, hroots, hcomplete⟩ := RootBranches.exists_branches f 0 1
+    ⟨1/2, by norm_num⟩ hproper (fun z _ => hf z) (fun z _ => hJac z)
+  refine ⟨curve, ?_, ?_⟩
+  · intro i t
+    exact sub_eq_zero.mp (hroots i t)
+  · intro t x
+    exact (sub_eq_zero.symm).trans (hcomplete t x)
+
+namespace ParabolaSlab
+open Set
+
+private noncomputable def curve (b : Bool) (t : ℝ) : ℝ := if b then Real.sqrt t else -Real.sqrt t
+private def H (t x : ℝ) : Prop := x ^ 2 = t
+private def left : Unit → Set ℝ := fun _ => {0}
+private def right : Bool → Set ℝ := fun b => {if b then 1 else -1}
+
+private theorem hc (b : Bool) : ContinuousOn (curve b) (Icc 0 1) := by
+  cases b
+  · exact Real.continuous_sqrt.neg.continuousOn
+  · exact Real.continuous_sqrt.continuousOn
+
+private theorem hroot (b : Bool) (t : ℝ) (ht : t ∈ Icc (0 : ℝ) 1) : H t (curve b t) := by
+  have hs := Real.sq_sqrt ht.1
+  cases b <;> simpa [H, curve] using hs
+
+private theorem hcomplete (t : ℝ) (_ : t ∈ Ioo (0 : ℝ) 1) (x : ℝ) (hx : H t x) :
+    ∃ b, curve b t = x := by
+  have ht : 0 ≤ t := by dsimp [H] at hx; nlinarith [sq_nonneg x]
+  have hs := Real.sq_sqrt ht
+  have heq : x = Real.sqrt t ∨ x = -Real.sqrt t :=
+    sq_eq_sq_iff_eq_or_eq_neg.mp (hx.trans hs.symm)
+  rcases heq with h | h
+  · exact ⟨true, by simpa [curve] using h.symm⟩
+  · exact ⟨false, by simpa [curve] using h.symm⟩
+
+private theorem hlsub (u : Unit) (x : ℝ) (hx : x ∈ left u) : H 0 x := by
+  simp only [left, mem_singleton_iff] at hx
+  simp [H, hx]
+
+private theorem hrsub (b : Bool) (x : ℝ) (hx : x ∈ right b) : H 1 x := by
+  cases b <;> simp_all [right, H]
+
+private theorem hlcover (x : ℝ) (hx : H 0 x) : ∃ u, x ∈ left u := by
+  exact ⟨(), by simpa [left] using sq_eq_zero_iff.mp hx⟩
+
+private theorem hrcover (x : ℝ) (hx : H 1 x) : ∃ b, x ∈ right b := by
+  have heq : x = 1 ∨ x = -1 := sq_eq_one_iff.mp hx
+  rcases heq with h | h
+  · exact ⟨true, by simp [right, h]⟩
+  · exact ⟨false, by simp [right, h]⟩
+
+-- The two disjoint interior branches merge at the singular left endpoint.
+-- Connectivity is proved by the assembled frontier graph, including the
+-- distinct right endpoints, rather than assuming the arcs already overlap.
+example : IsPreconnected (univ : Set (SlabCover.Space H 0 1)) := by
+  let piece := SlabCover.piece H curve left right 0 1
+  have hL (b : Bool) : FrontierCover.Incident piece (.inl b) (.inr (.inl ())) := by
+    apply (SlabCover.incident_arc_left_iff H (by norm_num) curve hc hroot
+      left right hlsub hrsub b ()).mpr
+    simp [left, curve]
+  have hR (b : Bool) : FrontierCover.Incident piece (.inl b) (.inr (.inr b)) := by
+    apply (SlabCover.incident_arc_right_iff H (by norm_num) curve hc hroot
+      left right hlsub hrsub b b).mpr
+    cases b <;> simp [right, curve]
+  have hin (i : SlabCover.Index Bool Unit Bool) :
+      Relation.ReflTransGen (FrontierCover.Incident piece) i (.inr (.inl ())) := by
+    rcases i with b | (u | b)
+    · exact .single (hL b)
+    · cases u; exact .refl
+    · exact (Relation.ReflTransGen.single ((FrontierCover.incident_symm piece).mp (hR b))).tail (hL b)
+  have hout (i : SlabCover.Index Bool Unit Bool) :
+      Relation.ReflTransGen (FrontierCover.Incident piece) (.inr (.inl ())) i := by
+    rcases i with b | (u | b)
+    · exact .single ((FrontierCover.incident_symm piece).mp (hL b))
+    · cases u; exact .refl
+    · exact (Relation.ReflTransGen.single ((FrontierCover.incident_symm piece).mp (hL b))).tail (hR b)
+  apply (SlabCover.isPreconnected_iff_reachable H (by norm_num) curve hc hroot hcomplete
+    left right hlsub hrsub hlcover hrcover
+    (fun _ => FrontierCover.accessible_singleton 0)
+    (fun b => FrontierCover.accessible_singleton (if b then 1 else -1))).mpr
+  intro i j _ _
+  exact (hin i).trans (hout j)
+
+end ParabolaSlab

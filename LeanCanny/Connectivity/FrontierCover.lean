@@ -32,6 +32,12 @@ def Incident (i j : ι) : Prop :=
 
 theorem incident_symm {i j : ι} : Incident piece i j ↔ Incident piece j i := or_comm
 
+theorem Incident.nonempty {i j : ι} (h : Incident piece i j) :
+    (piece i).Nonempty ∧ (piece j).Nonempty := by
+  rcases h with ⟨x, hx, hy⟩ | ⟨x, hy, hx⟩
+  · exact ⟨⟨x, hx⟩, (show (closure (piece j)).Nonempty from ⟨x, hy⟩).of_closure⟩
+  · exact ⟨(show (closure (piece i)).Nonempty from ⟨x, hx⟩).of_closure, ⟨x, hy⟩⟩
+
 private def cluster (i : ι) : Set X :=
   {x | ∃ j, Relation.ReflTransGen (Incident piece) i j ∧ x ∈ piece j}
 
@@ -89,6 +95,14 @@ with a path contained in that piece apart from its new starting point. -/
 def Accessible (s : Set X) : Prop :=
   ∀ x ∈ closure s, ∀ y ∈ s, JoinedIn (insert x s) x y
 
+theorem accessible_singleton [T1Space X] (x : X) : Accessible ({x} : Set X) := by
+  intro y hy z hz
+  rw [closure_singleton, mem_singleton_iff] at hy
+  rw [mem_singleton_iff] at hz
+  subst y
+  subst z
+  exact JoinedIn.refl (mem_insert _ _)
+
 theorem Accessible.isPreconnected {s : Set X} (h : Accessible s) : IsPreconnected s := by
   apply isPreconnected_of_forall_pair
   intro x hx y hy
@@ -145,6 +159,24 @@ theorem isPreconnected_iff_reachable [Finite ι]
 
 section Images
 variable {Y : Type*} [TopologicalSpace Y]
+
+/-- Frontier incidence is unchanged by embedding the ambient space, provided
+all pieces lie in its image. This includes relative closures in a subtype. -/
+theorem incident_preimage_iff {f : Y → X} (hf : Topology.IsEmbedding f)
+    (hsub : ∀ i, piece i ⊆ range f) (i j : ι) :
+    Incident (fun k => f ⁻¹' piece k) i j ↔ Incident piece i j := by
+  have hcl (k : ι) : closure (f ⁻¹' piece k) = f ⁻¹' closure (piece k) := by
+    rw [hf.closure_eq_preimage_closure_image, image_preimage_eq_of_subset (hsub k)]
+  simp only [Incident, hcl]
+  constructor
+  · rintro (⟨x, hx, hy⟩ | ⟨x, hx, hy⟩)
+    · exact Or.inl ⟨f x, hx, hy⟩
+    · exact Or.inr ⟨f x, hx, hy⟩
+  · rintro (⟨z, hz, hcl⟩ | ⟨z, hz, hcl⟩)
+    · obtain ⟨x, rfl⟩ := hsub i hz
+      exact Or.inl ⟨x, hz, hcl⟩
+    · obtain ⟨x, rfl⟩ := hsub j hz
+      exact Or.inr ⟨x, hz, hcl⟩
 
 /-- Closed continuous parametrizations preserve boundary accessibility.
 Closedness is what prevents missing limit points of the parametrization. -/

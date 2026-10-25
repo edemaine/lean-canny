@@ -422,14 +422,51 @@ specializations before removing the parameter factor.
 
 `Connectivity/AccessibleArc` derives boundary accessibility for these algebraic
 arcs from their continuous extensions. These lemmas do not assume nonvanishing
-derivatives at their endpoints. They still require the continuous branches and
-their coordinate equations: existence and effective construction of a finite
-component-preserving family, the critical slices, and the quantitative bounds
-for the full roadmap are not established by these endpoint lemmas.
+derivatives at their endpoints. The coordinate equations must still be supplied.
 
 `Geometry/RootBranchLocal` constructs a continuous branch on a closed parameter
 interval around each regular root of a system. Every sufficiently nearby root
 lies on this branch. It derives the interval and its continuity from the
-implicit function theorem; no root family is assumed. Neither this local
-construction nor the endpoint-continuation theorem bounds the number of
-branches or supplies the global component-preserving projection sweep.
+implicit function theorem; no root family is assumed.
+
+`Geometry/RootProjection` constructs local projection charts from those
+branches. A proper root projection has compact regular fibers; the charts make
+them discrete and hence finite. A closed-map covering theorem then gives a
+covering over every interval of regular values. `Geometry/ProperProjection`
+also derives properness from closedness and a fixed compact coordinate bound;
+the parameter itself need not be bounded.
+
+`Geometry/CoveringBranches` proves completeness and uniqueness of global
+branches by unique continuous lifting over a simply connected base.
+`Geometry/RootBranches` applies this to the root projection over an open real
+interval. `Connectivity/RegularRootArcs` derives compact coordinate bounds from
+properness, applies the algebraic endpoint-continuation theorem, and proves
+that all extended endpoints satisfy the original equations. No regularity at
+the endpoints is required.
+
+`Geometry/RootBranchCount` bounds a fiber by the product of degrees of its
+nonzero coordinate equations. For a nonzero bivariate polynomial, only finitely
+many parameter values give the zero coordinate polynomial. Thus every open
+interval contains a simultaneous good specialization for finitely many such
+equations, and the branch count is bounded by their coordinate degrees.
+This is a cardinality bound, not an effective root encoding or coefficient bound.
+
+`Connectivity/SlabCover` glues complete interior arcs to accessible covers of
+the endpoint fibers and proves the resulting finite frontier graph preserves
+both paths and preconnectedness of the entire slab. `RegularRootArcs` constructs
+this cover from a proper regular root system and its endpoint-fiber covers.
+`Connectivity/ArcIncidence` proves that arc-to-slice incidence is endpoint
+membership, distinct interior branches have no incidence, distinct slices have
+no incidence, and same-slice incidence reduces to the fiber's own relation.
+These results hold for nonclosed slice pieces and use relative closures.
+
+`Connectivity/BitFrontierCover` transfers such accessible covers to the native
+polynomial-space implicit-graph algorithms. Both frontier adjacency and endpoint
+location may use polynomial space, and that workspace is included in the bound.
+No general closure-membership oracle or effective roadmap is assumed to exist.
+
+The unproved part is the uniform construction for arbitrary Boolean polynomial
+descriptions: suitable critical root systems and slices, a component-preserving
+recursion through singular and noncompact cases, and polynomial bounds on the
+vertex descriptions and graph routines. The regular-slab results do not supply
+these obligations, so the two full connectivity PSPACE theorems remain open.
