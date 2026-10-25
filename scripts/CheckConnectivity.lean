@@ -913,3 +913,34 @@ example : ∃ v : ℕ, v ≤ FermatBoundedCriticalDirection.allowance 1 4 ∧ v 
   exact hgood ℚ x hx hj
 
 end BoundedDirectionTests
+
+namespace ConstructedRegularLevelTests
+open LeanCanny.Algebra LeanCanny.Geometry MvPolynomial
+
+-- The width formula includes the value coordinate and its homogeneous
+-- coordinate row. Binary source values can be much larger than these widths.
+#guard FermatRegularSource.width 0 2 = 2
+#guard FermatRegularSource.width 0 (2 ^ 80) < 90
+#guard (CriticalRegularLevel.exponent 1 (2 ^ 80)
+  (FermatRegularSource.width 0 (2 ^ 80)) (2 ^ 80)).size < 2000
+
+-- The origin is a degenerate critical point of X^4. It must still contribute
+-- its value to the bounded annihilator; an invertible-gradient-Jacobian
+-- argument would miss it.
+example :
+    let p := FermatCriticalHomogenization.polynomial (0 : MvPolynomial (Fin 1) ℤ) 1 4
+    let W := FermatRegularSource.width 0 4
+    CriticalValueBounds.polynomial p 4 W ≠ 0 ∧
+      (CriticalValueBounds.polynomial p 4 W).eval₂ (Int.castRingHom ℚ) 0 = 0 := by
+  dsimp only
+  refine ⟨CriticalValueBounds.ne_zero _ _ _, ?_⟩
+  have he := CriticalValueBounds.eval_eq_zero_fermat_extension (Int.castRingHom ℚ)
+    (0 : MvPolynomial (Fin 1) ℤ) 1 4 (FermatRegularSource.width 0 4)
+    (by simp) (by norm_num) (by decide) (Nat.lt_size_self _) (fun _ => 0)
+    (fun _ => by simp [FermatCriticalHomogenization.pderiv_polynomial])
+  have hvalue : (FermatCriticalHomogenization.polynomial (0 : MvPolynomial (Fin 1) ℤ) 1 4).eval₂
+      (Int.castRingHom ℚ) (fun _ => 0) = 0 := by simp [FermatCriticalHomogenization.polynomial]
+  rw [hvalue] at he
+  exact he
+
+end ConstructedRegularLevelTests

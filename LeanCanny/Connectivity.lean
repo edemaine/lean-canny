@@ -24,6 +24,7 @@ import LeanCanny.Geometry.UniformCriticalRegularityBounds
 import LeanCanny.Algebra.ParameterizedCriticalCoefficientSpace
 import LeanCanny.Algebra.ProjectiveDirectionGrid
 import LeanCanny.Encoding.FermatCriticalDirection
+import LeanCanny.Encoding.CriticalRegularLevel
 
 /-! # Connectivity development
 
@@ -100,7 +101,17 @@ the hypersurface is regular over field extensions. The bounded grid therefore
 constructs an integer critical direction for this family, with a polynomial
 binary-width bound. Its direction has a fixed-length record with native field
 access, allowing binary source degrees. Establishing extension-field regularity
-and the required source-family shape from arbitrary inputs remains required.
+for pure-power leading sources now follows from a bounded critical-value
+annihilator, including degenerate complex critical points. An explicit positive
+dyadic level avoids every critical value and has a polynomial binary exponent
+budget. Native polynomial-time metadata and modular denominator access are
+provided. The actual coordinate-slice polynomial preserves the leading form
+and commutes with differentiation. A transcendental sweep value makes that
+slice regular over every extension field, so the bounded integer direction
+also applies to the generic slice family of the constructed dyadic source.
+Component-preserving reduction from arbitrary Boolean inputs and singular
+endpoint slices, effective direction selection, and the full recursive query
+encodings remain required.
 Each sweep fiber is homeomorphic to its polynomial slice in one fewer
 coordinate. Properness and regularity pass to this lower-dimensional equation.
 Dimension-zero connectivity algorithms are proved, and both connectivity
