@@ -217,6 +217,12 @@ The checked ingredients are:
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
   polynomial-space scan locates pieces containing the described endpoints.
+- Component preservation from compact zero sets to a dyadic sublevel, for
+  nonnegative polynomial energies with compact sublevels. Bounded critical-value
+  annihilators cover singular and positive-dimensional critical loci, and the
+  tolerance exponent has native polynomial-time computation. Two pure-power
+  slack coordinates preserve sublevel components and regularity. Original
+  zero-set path recovery and the full Boolean reduction remain required.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

@@ -42,6 +42,9 @@ import LeanCanny.Encoding.FermatDirectionChoice
 import LeanCanny.Encoding.FermatTermPreparation
 import LeanCanny.Geometry.CompactSublevelComponents
 import LeanCanny.Geometry.CircleSublevelLift
+import LeanCanny.Geometry.PurePowerSublevelLevels
+import LeanCanny.Geometry.EffectiveSublevelComponents
+import LeanCanny.Encoding.GeneralRegularLevel
 
 /-! # Connectivity development
 
@@ -176,18 +179,27 @@ the source with the finite-coordinate Fermat certificate. The affine and
 infinity tests give a native PSPACE checker for the original Valid predicate.
 A bounded fixed-width search selects a valid direction-and-sample record for
 the constructed regular integer source, with no supplied validity algorithm.
-For an encoded low term, its normalized size supplies an even degree and
+For an encoded low term, its normalized size supplies a degree twice an odd number and
 coefficient-mass control. This gives native record preparation from the
 source reader and unary dimension, and generic-slice regularity whenever
 the term's variables fit that dimension.
 For compact decreasing sublevel neighborhoods, component intersections now
 recover the exact zero-set component, even at singular zeros. Distinct zero
-components separate at some positive tolerance. A finite effective tolerance
-and path recovery for arbitrary formula inputs remain required.
+components separate at some positive tolerance.
 Adding two squared slack coordinates gives a level equation with connected
 circle fibers over its sublevel set, including singleton fibers at radius
 zero. Its continuous section constructs a quotient projection preserving
 exact connected components and whole-space preconnectedness.
+For nonnegative smooth energies with compact sublevels, a positive interval
+free of critical values preserves the component relation on the original
+zeros. Arbitrary integer polynomials now have bounded critical-value
+annihilators, including positive-dimensional critical loci. These give an
+explicit dyadic component tolerance whose exponent has native polynomial-time
+computation from dimension, degree and mass controls. This result concerns
+connections between zeros; path recovery for the original zero set remains
+required. Two even pure-power slack coordinates retain the same critical
+values and properness. When the degree is twice an odd number, a constructed
+coordinate homeomorphism transfers the circle lift's component preservation.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

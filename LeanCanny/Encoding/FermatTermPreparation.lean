@@ -10,7 +10,7 @@ public import LeanCanny.ETR.PolynomialMass
 /-! # Regular sweep preparation from the actual encoded low term
 
 The normalized syntax supplies the degree and coefficient-mass allowances.
-The chosen pure-power degree is even and strictly exceeds the low degree.
+The chosen pure-power degree is twice an odd number and strictly exceeds the low degree.
 Only the source reader and unary spatial dimension enter the native space
 certificate; correctness requires that the term's variables fit.
 -/
@@ -42,7 +42,9 @@ open FermatSweepCertificate MvPolynomial
 noncomputable def size (source : List Bool → List Bool) (c : List Bool) : ℕ :=
   (TermView.term (source c)).toData.size
 
-noncomputable def degree (source : List Bool → List Bool) (c : List Bool) : ℕ := 2 * (size source c + 1)
+noncomputable def halfDegree (source : List Bool → List Bool) (c : List Bool) : ℕ := 2 * size source c + 1
+
+noncomputable def degree (source : List Bool → List Bool) (c : List Bool) : ℕ := 2 * halfDegree source c
 
 noncomputable def mass (source : List Bool → List Bool) (dim : List Bool → ℕ) (c : List Bool) : ℕ :=
   size source c + (dim c + 3).size
@@ -57,18 +59,24 @@ noncomputable def record (source : List Bool → List Bool) (dim : List Bool →
 theorem size_unary {source : List Bool → List Bool} (ht : source ∈ FP) : UnaryFn (size source) :=
   FrozenSource.source_start_unary ht
 
+theorem halfDegree_unary {source : List Bool → List Bool} (ht : source ∈ FP) : UnaryFn (halfDegree source) :=
+  ((UnaryFn.const 2).mul (size_unary ht)).add (UnaryFn.const 1)
+
 theorem degree_unary {source : List Bool → List Bool} (ht : source ∈ FP) : UnaryFn (degree source) :=
-  (UnaryFn.const 2).mul ((size_unary ht).add (UnaryFn.const 1))
+  (UnaryFn.const 2).mul (halfDegree_unary ht)
 
 theorem mass_binary {source : List Bool → List Bool} {dim : List Bool → ℕ}
     (ht : source ∈ FP) (hd : UnaryFn dim) : BinaryFn (mass source dim) :=
   (BinaryFn.ofUnary (size_unary ht)).add (BinaryFn.ofUnary (hd.add (UnaryFn.const 3))).size
 
 theorem degree_even (source : List Bool → List Bool) (c : List Bool) : Even (degree source c) := by
-  exact ⟨size source c + 1, by simp only [degree]; omega⟩
+  exact ⟨halfDegree source c, by simp only [degree]; omega⟩
+
+theorem halfDegree_odd (source : List Bool → List Bool) (c : List Bool) : Odd (halfDegree source c) :=
+  ⟨size source c, rfl⟩
 
 theorem degree_gt_one (source : List Bool → List Bool) (c : List Bool) : 1 < degree source c := by
-  unfold degree
+  unfold degree halfDegree
   omega
 
 theorem low_degree (source : List Bool → List Bool) (dim : List Bool → ℕ) (c : List Bool) :
@@ -76,7 +84,7 @@ theorem low_degree (source : List Bool → List Bool) (dim : List Bool → ℕ) 
   have h := (Term.totalDegree_finitePolynomial (TermView.term (source c)) (dim c + 2)).trans
     (Term.degreeBound_le_dataSize _)
   change (low source dim c).totalDegree ≤ size source c at h
-  unfold degree
+  unfold degree halfDegree
   omega
 
 theorem polynomial_mass (source : List Bool → List Bool) (dim : List Bool → ℕ) (c : List Bool) :

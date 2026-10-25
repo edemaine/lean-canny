@@ -881,9 +881,28 @@ tolerance or identify connected components with path components.
 section makes the projection a quotient map. Its fibers are connected
 circles, including the radius-zero singleton, so the projection preserves
 exact components and preconnectedness, also for the empty sublevel. This
-avoids the two-point fibers of a single squared slack coordinate. Regularity,
-properness and effective stabilization for the full input reduction remain
-separate obligations.
+avoids the two-point fibers of a single squared slack coordinate.
+`CircleSublevelLevels` constructs its derivative, smoothness and properness,
+and proves that its critical values equal those of the original energy.
+`PurePowerSublevelLift` constructs odd coordinate-power homeomorphisms and
+transfers component preservation to two slack terms of degree twice an odd
+number. `PurePowerSublevelLevels` proves the corresponding derivative,
+critical-value and properness results. The encoded-term degree is now
+`2 * (2 * normalizedSize + 1)`, matching this source shape.
+
+`RegularSublevelComponents` transports the lifted regular fibers over a
+positive interval with no critical values. Compact sublevel limits then
+identify the component relation on the original zeros with that of any
+sublevel in the interval, without regularity at the zeros.
+`GeneralCriticalValueBounds` applies bounded finite-image elimination to the
+actual augmented critical-value system. It constructs bounded integer
+annihilators even for singular or positive-dimensional critical-point loci.
+`Encoding/GeneralRegularLevel` computes the resulting dyadic exponent in
+native polynomial time from unary dimension and binary degree/mass controls.
+`EffectiveSublevelComponents` gives the explicit dyadic component-preservation
+theorem for nonnegative integer polynomial energies with compact sublevels.
+It concerns connections between zeros, and supplies no path recovery for the
+original zero set or complete Boolean-input reduction.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

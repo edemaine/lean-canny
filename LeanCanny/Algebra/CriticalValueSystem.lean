@@ -76,11 +76,9 @@ theorem critical_root (φ : R →+* K) (p : MvPolynomial (Fin n) R)
   simpa only [Fin.cons_succ] using hx i
 
 omit [CommRing R] [Field K] in
-theorem coefficient_bound (p : MvPolynomial (Fin n) ℤ) (D b : ℕ)
+theorem mass_bound (p : MvPolynomial (Fin n) ℤ) (D b : ℕ)
     (hD : p.totalDegree ≤ D) (hp : MvMass.mass p ≤ 2 ^ b)
-    (j : Fin (n + 1)) (e : Fin (n + 1) →₀ ℕ) :
-    ((equations p j).coeff e).natAbs ≤ 2 ^ (b + D.size + 1) := by
-  apply (MvMass.coeff_le _ _).trans
+    (j : Fin (n + 1)) : MvMass.mass (equations p j) ≤ 2 ^ (b + D.size + 1) := by
   refine Fin.cases ?_ (fun i => ?_) j
   · apply (MvMass.sub_le _ _).trans
     have hm := (MvMass.rename_le Fin.succ p).trans hp
@@ -96,5 +94,12 @@ theorem coefficient_bound (p : MvPolynomial (Fin n) ℤ) (D b : ℕ)
         Nat.mul_le_mul (hD.trans (Nat.lt_size_self D).le) hp
       _ = 2 ^ (b + D.size) := by rw [← pow_add, Nat.add_comm]
       _ ≤ _ := Nat.pow_le_pow_right (by decide) (by omega)
+
+omit [CommRing R] [Field K] in
+theorem coefficient_bound (p : MvPolynomial (Fin n) ℤ) (D b : ℕ)
+    (hD : p.totalDegree ≤ D) (hp : MvMass.mass p ≤ 2 ^ b)
+    (j : Fin (n + 1)) (e : Fin (n + 1) →₀ ℕ) :
+    ((equations p j).coeff e).natAbs ≤ 2 ^ (b + D.size + 1) :=
+  (MvMass.coeff_le _ _).trans (mass_bound p D b hD hp j)
 
 end LeanCanny.Algebra.CriticalValueSystem

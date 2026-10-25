@@ -1435,11 +1435,11 @@ example (c : List Bool) :
   simp only [TermView.term_toBits, Term.arity, le_refl]
 
 -- Normalization also gives total metadata for malformed encoded syntax.
-example : degree (fun _ : List Bool => []) [] = 22 := by
+example : degree (fun _ : List Bool => []) [] = 42 := by
   have ht : TermView.term [] = .const 0 := by
     simp only [TermView.term]
     decide
-  simp only [degree, size, ht, Term.dataSize_const_zero]
+  simp only [degree, halfDegree, size, ht, Term.dataSize_const_zero]
 
 end EncodedSweepPreparationTests
 
@@ -1502,3 +1502,127 @@ example (e : ℝ) (x y : Base (fun t : ℝ => (t ^ 2 - 1) ^ 2) e) :
   section_component_iff _ (by fun_prop) e x y
 
 end CircleSublevelLiftTests
+
+namespace RegularPurePowerLiftTests
+open LeanCanny.Geometry LeanCanny.Encoding
+
+-- At the positive level of a constant energy, the nonzero slack makes the
+-- lifted derivative onto, even though the original derivative is zero.
+example : Function.Surjective (fderiv ℝ (CircleSublevelLift.energy (fun _ : ℝ => (0 : ℝ))) (0, 1)) :=
+  CircleSublevelLift.regular_energy _ (by fun_prop) 1 (by intro x hx; norm_num at hx) (0, 1)
+    (by norm_num [CircleSublevelLift.energy])
+
+example : Function.Surjective (fderiv ℝ (PurePowerSublevelLift.energy 3 (fun _ : ℝ => (0 : ℝ))) (0, 1)) :=
+  PurePowerSublevelLift.regular_energy 3 (by decide) _ (by fun_prop) 1
+    (by intro x hx; norm_num at hx) (0, 1)
+    (by norm_num [PurePowerSublevelLift.energy, PurePowerSublevelLift.penalty])
+
+-- Sixth-power slack fibers retain both the radius-zero singleton and the
+-- positive connected fiber. A source degree can use this same shape.
+example : IsConnected ((PurePowerSublevelLift.projection 3 (by decide) (fun _ : Unit => (0 : ℝ)) 0) ⁻¹'
+    {⟨(), by norm_num [CircleSublevelLift.Base]⟩}) :=
+  PurePowerSublevelLift.fiber_connected _ _ _ _ _
+
+example : IsConnected ((PurePowerSublevelLift.projection 3 (by decide) (fun _ : Unit => (0 : ℝ)) 1) ⁻¹'
+    {⟨(), by norm_num [CircleSublevelLift.Base]⟩}) :=
+  PurePowerSublevelLift.fiber_connected _ _ _ _ _
+
+example (source : List Bool → List Bool) (c : List Bool) :
+    Odd (FermatTermPreparation.halfDegree source c) := FermatTermPreparation.halfDegree_odd source c
+
+-- The exact general tolerance exponent is computed from binary controls;
+-- its denominator need not have polynomially many bits.
+example {dim degree mass : List Bool → ℕ} (hd : UnaryFn dim) (hD : BinaryFn degree) (hb : BinaryFn mass) :
+    BinaryFn (fun c => GeneralCriticalValueBounds.exponent (dim c) (degree c) (mass c)) :=
+  GeneralRegularLevel.exponent_binary hd hD hb
+
+end RegularPurePowerLiftTests
+
+namespace GeneralCriticalValueTests
+open LeanCanny.Geometry LeanCanny.Algebra MvPolynomial
+open scoped Classical
+
+private noncomputable def flatSquare : MvPolynomial (Fin 2) ℤ := X 0 ^ 2
+
+-- The critical points (0,t) form an infinite line. The new bound uses the
+-- finite value image, and does not require a finite critical-point locus.
+example : ∃ q : Polynomial ℤ, q ≠ 0 ∧
+    q.natDegree ≤ CoerciveCoordinateEliminant.columnBound 3 4 ∧
+    coefficientMass q < 2 ^ GeneralCriticalValueBounds.massExponent 2 2 1 ∧
+    ∀ t : ℝ, q.eval₂ (Int.castRingHom ℝ) (flatSquare.eval₂ (Int.castRingHom ℝ)
+      (Fin.cons 0 (fun _ : Fin 1 => t))) = 0 := by
+  have hd : flatSquare.totalDegree ≤ 2 := (totalDegree_pow _ _).trans (by simp)
+  have hm : MvMass.mass flatSquare ≤ 2 ^ 1 := (MvMass.pow_le _ _).trans (by norm_num)
+  obtain ⟨q, hq, hdeg, hmass, hann⟩ := GeneralCriticalValueBounds.exists_bounded flatSquare 2 1 hd (by decide) hm
+  refine ⟨q, hq, hdeg, hmass, ?_⟩
+  intro t
+  apply hann
+  apply (PolynomialCalculus.critical_iff (Int.castRingHom ℝ) flatSquare _).mpr
+  intro i
+  fin_cases i <;> norm_num [flatSquare, pderiv_pow, pderiv_X]
+
+-- In dimension zero the positive regularity interval still exists: the
+-- derivative has no nonzero directions, and positive levels are empty.
+example (e : ℝ) (he : 0 < e) (hδ : e ≤ GeneralCriticalValueBounds.level 0 1 0)
+    (x : Fin 0 → ℝ) (hx : (0 : MvPolynomial (Fin 0) ℤ).eval₂ (Int.castRingHom ℝ) x = e) :
+    Function.Surjective (fderiv ℝ (fun y : Fin 0 → ℝ => (0 : MvPolynomial (Fin 0) ℤ).eval₂ (Int.castRingHom ℝ) y) x) :=
+  GeneralCriticalValueBounds.regular_interval 0 1 0 (by simp) (by decide) (by simp) e he hδ x hx
+
+end GeneralCriticalValueTests
+
+namespace EffectiveSingularComponentTests
+open LeanCanny.Geometry LeanCanny.Algebra MvPolynomial Set
+open scoped Classical
+
+private noncomputable def doubleWell : MvPolynomial (Fin 1) ℤ := (X 0 ^ 2 - 1) ^ 2
+
+private theorem degree_bound : doubleWell.totalDegree ≤ 4 := by
+  have hi : (X 0 ^ 2 - 1 : MvPolynomial (Fin 1) ℤ).totalDegree ≤ 2 :=
+    (totalDegree_sub _ _).trans (max_le ((totalDegree_pow _ _).trans (by simp)) (by simp))
+  exact (totalDegree_pow _ _).trans (Nat.mul_le_mul_left 2 hi)
+
+private theorem mass_bound : MvMass.mass doubleWell ≤ 2 ^ 2 := by
+  have hi : MvMass.mass (X 0 ^ 2 - 1 : MvPolynomial (Fin 1) ℤ) ≤ 2 := by
+    apply (MvMass.sub_le _ _).trans
+    have hx := MvMass.pow_le (X (0 : Fin 1) : MvPolynomial (Fin 1) ℤ) 2
+    simp only [MvMass.X, one_pow, MvMass.one] at hx ⊢
+    omega
+  exact (MvMass.pow_le _ _).trans (Nat.pow_le_pow_left hi 2)
+
+private theorem compact_sublevels (e : ℝ) :
+    IsCompact {x : Fin 1 → ℝ | doubleWell.eval₂ (Int.castRingHom ℝ) x ≤ e} := by
+  have hc : IsClosed {x : Fin 1 → ℝ | doubleWell.eval₂ (Int.castRingHom ℝ) x ≤ e} :=
+    isClosed_le (ProjectionCritical.contDiff_eval (Int.castRingHom ℝ) doubleWell).continuous continuous_const
+  apply (CoercivePolynomialSampling.isCompact_sublevel (n := 1) 0 (e + 2)).of_isClosed_subset hc
+  intro x hx
+  change CoercivePolynomialSampling.penalty 0 x ≤ e + 2
+  simp only [CoercivePolynomialSampling.penalty, Fin.sum_univ_one]
+  simp only [mem_ofPred_eq, doubleWell, eval₂_pow, eval₂_sub, eval₂_X, eval₂_one] at hx
+  change x 0 ^ 2 ≤ e + 2
+  nlinarith [sq_nonneg (2 * x 0 ^ 2 - 3)]
+
+-- The exact tolerance is computed from dimension, degree and mass. It
+-- separates the two singular zeros without a supplied critical-value oracle.
+example : (fun _ : Fin 1 => (1 : ℝ)) ∉ connectedComponentIn
+    {x : Fin 1 → ℝ | doubleWell.eval₂ (Int.castRingHom ℝ) x ≤ GeneralCriticalValueBounds.level 1 4 2}
+      (fun _ : Fin 1 => (-1 : ℝ)) := by
+  have hn (x : Fin 1 → ℝ) : 0 ≤ doubleWell.eval₂ (Int.castRingHom ℝ) x := by
+    simp only [doubleWell, eval₂_pow]
+    exact sq_nonneg _
+  have hi := EffectiveSublevelComponents.zero_component_iff doubleWell 4 2 degree_bound (by decide) mass_bound
+    hn compact_sublevels (fun _ => -1) (fun _ => 1) (by norm_num [doubleWell]) (by norm_num [doubleWell])
+  intro h
+  have hz := hi.mpr h
+  have hx : (fun _ : Fin 1 => (-1 : ℝ)) ∈ {x : Fin 1 → ℝ | doubleWell.eval₂ (Int.castRingHom ℝ) x = 0} := by
+    norm_num [doubleWell]
+  have hc : IsPreconnected ((fun z : Fin 1 → ℝ => z 0) '' connectedComponentIn
+      {x : Fin 1 → ℝ | doubleWell.eval₂ (Int.castRingHom ℝ) x = 0} (fun _ => -1)) :=
+    isPreconnected_connectedComponentIn.image _ (continuous_apply 0).continuousOn
+  have hm0 : (0 : ℝ) ∈ (fun z : Fin 1 → ℝ => z 0) '' connectedComponentIn
+      {x : Fin 1 → ℝ | doubleWell.eval₂ (Int.castRingHom ℝ) x = 0} (fun _ => -1) :=
+    hc.Icc_subset ⟨_, mem_connectedComponentIn hx, rfl⟩ ⟨_, hz, rfl⟩ (by norm_num)
+  obtain ⟨z, hzc, hz0⟩ := hm0
+  have hroot := connectedComponentIn_subset _ _ hzc
+  norm_num [doubleWell, hz0] at hroot
+
+end EffectiveSingularComponentTests
