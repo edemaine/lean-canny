@@ -1068,3 +1068,53 @@ example (start : ℕ) (ops : List Operation) (hw : StraightLine.WellFormed start
   Differential.wellFormed start ops hw
 
 end SharedPowerTests
+
+namespace SourceCircuitTests
+open LeanCanny.ETR
+open LeanCanny.ETR.ComplexCircuit
+open MvPolynomial
+open scoped Classical
+
+private def squareMinusTwo : Term := .add (.mul (.var 0) (.var 0)) (.const (-2))
+
+-- The sequential native writer agrees with the independent recursive circuit.
+#guard Source.gates 3 squareMinusTwo == [.mul 3 0 0, .constant 4 (-2), .add 5 3 4]
+#guard Source.Machine.compile squareMinusTwo.toData.toBits ==
+  encode (Source.gates squareMinusTwo.toData.size squareMinusTwo)
+#guard Source.Machine.outputIndex squareMinusTwo.toData.toBits == squareMinusTwo.toData.size + 2
+#guard Source.Machine.nextIndex squareMinusTwo.toData.toBits == squareMinusTwo.toData.size + 3
+
+-- A variable-only circuit allocates no gates. Invalid syntax uses the total
+-- source view's zero term; the connectivity input validator is separate.
+#guard Source.Machine.compile (Term.var 37).toData.toBits == encode []
+#guard Source.Machine.outputIndex (Term.var 37).toData.toBits == 37
+#guard Source.Machine.compile [] == encode (Source.gates 10 (.const 0))
+
+example (t : Term) (x : ℕ → ℂ) :
+    ∃ env : ℕ → ℂ, (∀ i < t.toData.size, env i = x i) ∧
+      (∀ g ∈ Source.gates t.toData.size t, g.Holds env) ∧
+      env (Source.output t.toData.size t) = t.eval x :=
+  Source.exists_completion t.toData.size t (Term.arity_le_dataSize t) x
+
+example (x env : ℕ → ℂ)
+    (hi : ∀ i < squareMinusTwo.toData.size,
+      env (Differential.valueWire i) = x i ∧
+        env (Differential.derivativeWire i) = if i = 0 then 1 else 0)
+    (hg : ∀ g ∈ StraightLine.gates (Differential.valueWire squareMinusTwo.toData.size)
+      (Differential.program squareMinusTwo.toData.size
+        (Source.program squareMinusTwo.toData.size squareMinusTwo)), g.Holds env) :
+    env (Differential.derivativeWire (Source.output squareMinusTwo.toData.size squareMinusTwo)) = 2 * x 0 := by
+  have h := Source.derivative_sound squareMinusTwo.toData.size squareMinusTwo
+    (Term.arity_le_dataSize _) 0 x env hi hg
+  have hp : pderiv 0 squareMinusTwo.toPolynomial = X 0 + X 0 := by
+    simp only [squareMinusTwo, Term.toPolynomial, map_add, pderiv_mul, pderiv_X_self,
+      pderiv_C, one_mul, mul_one, add_zero]
+  simpa only [hp, eval₂_add, eval₂_X, two_mul] using h.2
+
+-- The source syntax, binary exponent and fresh-wire metadata all contribute
+-- to the native evaluator; no supplied polynomial evaluator is assumed.
+example : SpaceFunction (fun bits => [decide (∃ env : ℕ → ℂ,
+    (2 : ℂ) ^ Nat.fromBitsLE (pairSnd bits) * (TermView.term (pairFst bits)).eval env - 1 = 0)]) :=
+  Source.scaledTerm_evaluator pairFst_mem_FP pairSnd_mem_FP
+
+end SourceCircuitTests

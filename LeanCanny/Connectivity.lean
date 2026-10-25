@@ -30,6 +30,7 @@ import LeanCanny.ETR.ComplexCircuitPSPACE
 import LeanCanny.ETR.ComplexCircuitBuilders
 import LeanCanny.ETR.ComplexDyadicPSPACE
 import LeanCanny.ETR.ComplexDifferentialEncoding
+import LeanCanny.ETR.ComplexTermDifferential
 
 /-! # Connectivity development
 
@@ -134,8 +135,12 @@ denominator-cleared equation has an exact native PSPACE test when appended to
 an encoded source network. A shared derivative transformation preserves
 acyclicity and computes the formal partial derivatives of all source wires.
 Its native writer replaces each operation by four operations without expanding
-the source polynomials. Connecting these networks to the normalized bad-root
-charts and constructing the original source networks remain required.
+the source polynomials. Source arithmetic terms now compile to acyclic shared
+networks in native polynomial time, with bounds on all intermediate states and
+constructed fresh-wire metadata. Their denominator-cleared equations have
+native PSPACE tests, and their derivative networks compute the actual formal
+partial derivatives of the original terms. Connecting the critical-family and
+normalized bad-root networks to the sampled certificates remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices, effective direction selection, and the full recursive query
 encodings remain required.

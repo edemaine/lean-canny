@@ -192,7 +192,10 @@ The checked ingredients are:
   the denominator-cleared equation `2^E * p - 1 = 0` appended to a source
   network. A polynomial-time derivative transformation computes formal
   partial derivatives while preserving shared intermediate values. The
-  original source compiler and the full bad-root query networks remain open.
+  source-term compiler has a quadratic bound on its complete intermediate
+  state and constructs its fresh-wire metadata. Its derivative networks
+  compute the actual source partial derivatives. The full bad-root query
+  networks and their certificate equivalence remain open.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
