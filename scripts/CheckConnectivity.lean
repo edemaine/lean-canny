@@ -1019,3 +1019,52 @@ example : empty (encode (imaginaryRoot ++ [.zero 1])) = [true] := by
   rw [decide_eq_true hn]
 
 end ComplexCircuitTests
+
+namespace SharedPowerTests
+open LeanCanny.ETR
+open LeanCanny.ETR.ComplexCircuit
+open scoped Classical
+
+-- Little-endian exponents, the zero exponent, and a long binary exponent.
+#guard Nat.fromBitsLE [true, true, false, true] == 11
+#guard Power.gates 0 1 [] == [Gate.constant 1 1]
+#guard (Power.gates 0 1 (List.replicate 80 true)).length == 161
+#guard compile (encode (Power.gates 0 1 [true, false, true])) ==
+  SumSquares.listBits (equations (Power.gates 0 1 [true, false, true]))
+#guard Dyadic.gates 0 1 [] == [.constant 1 2, .constant 2 1, .mul 3 0 2,
+  .constant 4 (-1), .add 5 3 4]
+
+example (env : ℕ → ℂ) (bits : List Bool) :
+    ∃ out : ℕ → ℂ, out 0 = env 0 ∧
+      (∀ g ∈ Power.gates 0 1 bits, g.Holds out) ∧
+      out (Power.output 1 bits) = env 0 ^ Nat.fromBitsLE bits := by
+  obtain ⟨out, hp, hg, hv⟩ := Power.exists_completion 0 1 (by decide) bits env
+  exact ⟨out, hp 0 (by decide), hg, hv⟩
+
+-- Zero exponent computes p - 1, including when the source value is zero.
+example (env : ℕ → ℂ) (h : ∀ g ∈ Dyadic.gates 0 1 [], g.Holds env) :
+    env 5 = env 0 - 1 := by
+  simpa [Dyadic.output, Dyadic.productWire, Power.output, Nat.fromBitsLE, Nat.fromBits]
+    using Dyadic.sound 0 1 [] env h
+
+-- Each occurrence of the repeated input contributes to the product rule.
+#guard Differential.operation 1 (.mul 0 0) ==
+  [.mul 0 0, .mul 3 0, .mul 0 3, .add 5 6]
+
+example (env : ℕ → ℂ)
+    (h : ∀ g ∈ StraightLine.gates 4 (Differential.operation 1 (.mul 0 0)), g.Holds env) :
+    env 4 = env 0 * env 0 ∧ env 7 = env 3 * env 0 + env 0 * env 3 :=
+  Differential.operation_sound 1 (.mul 0 0) env h
+
+private def squareProgram : List Operation := [.mul 0 0, .add 0 1]
+
+#guard Transform.run Differential.gateBits (encode (StraightLine.gates 1 squareProgram)) ==
+  encode (StraightLine.gates 4 (Differential.program 1 squareProgram))
+#guard Transform.run Differential.gateBits (encode [.constant 2 (-7), .zero 1]) ==
+  encode ([.constant 2 (-7), .zero 1].flatMap Differential.gate)
+
+example (start : ℕ) (ops : List Operation) (hw : StraightLine.WellFormed start ops) :
+    StraightLine.WellFormed (4 * start) (Differential.program start ops) :=
+  Differential.wellFormed start ops hw
+
+end SharedPowerTests

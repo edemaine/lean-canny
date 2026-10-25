@@ -28,6 +28,8 @@ import LeanCanny.Encoding.CriticalRegularLevel
 import LeanCanny.Geometry.IntegerRegularSweepCertificate
 import LeanCanny.ETR.ComplexCircuitPSPACE
 import LeanCanny.ETR.ComplexCircuitBuilders
+import LeanCanny.ETR.ComplexDyadicPSPACE
+import LeanCanny.ETR.ComplexDifferentialEncoding
 
 /-! # Connectivity development
 
@@ -126,7 +128,14 @@ Complex arithmetic networks now have an explicit native polynomial-time
 compiler to real equations, preserving shared wires and integer payloads.
 The completed ETR procedure supplies native feasibility and emptiness tests
 for these compiled networks. Constructing the actual normalized bad-root
-networks, including binary powers and spatial derivatives, remains required.
+networks remains required. Binary powers now have shared networks with two
+multiplications per exponent bit and polynomial-time encoders. The resulting
+denominator-cleared equation has an exact native PSPACE test when appended to
+an encoded source network. A shared derivative transformation preserves
+acyclicity and computes the formal partial derivatives of all source wires.
+Its native writer replaces each operation by four operations without expanding
+the source polynomials. Connecting these networks to the normalized bad-root
+charts and constructing the original source networks remain required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices, effective direction selection, and the full recursive query
 encodings remain required.

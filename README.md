@@ -186,6 +186,13 @@ The checked ingredients are:
   direction now has an explicit polynomial bit-width bound and a bounded
   record with native field access. Constructing these hypotheses from general
   Boolean inputs remains required.
+- Shared complex arithmetic networks with native polynomial-time compilation
+  to real equations and native PSPACE feasibility tests. Binary powers use
+  two multiplication gates per exponent bit. These give an exact test for
+  the denominator-cleared equation `2^E * p - 1 = 0` appended to a source
+  network. A polynomial-time derivative transformation computes formal
+  partial derivatives while preserving shared intermediate values. The
+  original source compiler and the full bad-root query networks remain open.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
