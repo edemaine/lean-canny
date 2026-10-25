@@ -1,5 +1,6 @@
 import LeanCanny.Connectivity
 import Mathlib.Analysis.Real.Sqrt
+import Mathlib.Topology.Connected.TotallyDisconnected
 
 /-! Boundary cases for the implicit graph algorithm and the total input codec.
 The axiom audit covers the connectivity declarations and their dependencies.
@@ -316,3 +317,64 @@ example : ∃ r : Polynomial ℝ, r ≠ 0 ∧ r.eval 0 = 0 := by
   exact hdet rfl
 
 end CriticalProjectionTests
+
+section RegularFiberTests
+open LeanCanny.Geometry Set MvPolynomial
+
+-- A positive-dimensional, noncompact regular fiber must receive local charts.
+example : LocallyPathConnectedSpace {z : ℝ × ℝ // z.1 = 0} := by
+  apply RegularFiber.locallyPathConnected Prod.fst 0
+  · intro z
+    exact contDiff_fst.contDiffAt
+  · intro z y
+    exact ⟨(y, 0), by simp only [fderiv_fst, ContinuousLinearMap.coe_fst']⟩
+
+namespace ComponentSamplingChecks
+
+private noncomputable def p : MvPolynomial Unit ℝ := X () ^ 2
+
+private theorem finite_level : {x : Unit → ℝ | p.eval x = 1}.Finite := by
+  apply (Set.toFinite ({fun _ : Unit => (1 : ℝ), fun _ : Unit => (-1 : ℝ)})).subset
+  intro x hx
+  have hs : x () ^ 2 = 1 := by simpa [p] using hx
+  simp only [mem_insert_iff, mem_singleton_iff]
+  rcases sq_eq_one_iff.mp hs with h | h
+  · left
+    funext i
+    cases i
+    exact h
+  · right
+    funext i
+    cases i
+    exact h
+
+private theorem regular_level (x : Unit → ℝ) (hx : p.eval x = 1) :
+    Function.Surjective (fderiv ℝ (fun y => p.eval y) x) := by
+  have hne : fderiv ℝ (fun y => p.eval y) x ≠ 0 := by
+    intro hz
+    have hgrad := (PolynomialCalculus.critical_iff (RingHom.id ℝ) p x).mp hz
+    have hh := hgrad ()
+    have hs : x () ^ 2 = 1 := by simpa [p] using hx
+    simp [p] at hh
+    nlinarith
+  exact surjective_of_nonzero_of_finrank_eq_one (K := ℝ) (by simp)
+    (fun h => hne (ContinuousLinearMap.coe_injective h))
+
+-- The global maximum of the projection is +1. A component-wise sampler
+-- starting at -1 must still produce a critical point in the negative component.
+example : ∃ y : Unit → ℝ, y () = -1 ∧
+    PolynomialRootFamily.value (ProjectionCriticalBranches.equation p () (fun _ => 1)) (1, y) = 0 := by
+  obtain ⟨y, hjoined, hcrit⟩ := ComponentCriticalSampling.exists_joined_critical p ()
+    (fun _ => 1) rfl 1 finite_level.isCompact regular_level (fun _ => -1) (by simp [p])
+  obtain ⟨γ, hγ⟩ := hjoined
+  have hfinite : (range γ).Finite := finite_level.subset (by
+    rintro z ⟨t, rfl⟩
+    exact hγ t)
+  have hsub : (range γ).Subsingleton :=
+    (isPreconnected_range γ.continuous).isDiscrete_iff_subsingleton.mp hfinite.isDiscrete
+  have heq : (fun _ : Unit => (-1 : ℝ)) = y := hsub γ.source_mem_range γ.target_mem_range
+  exact ⟨y, by rw [← heq], hcrit⟩
+
+end ComponentSamplingChecks
+
+end RegularFiberTests

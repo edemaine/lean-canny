@@ -500,3 +500,22 @@ finite exceptional level set make its spatial root projection a finite-sheeted
 covering. No regularity hypothesis on the original polynomial is assumed.
 The theorem does not yet prove that these critical curves, together with
 recursive slices, preserve all components of the original semialgebraic set.
+
+`Geometry/RegularFiber` restricts implicit-function charts to actual level
+sets. These charts take values in the derivative's kernel, which may vary
+with the point. Consequently regular fibers are locally path connected;
+compact regular fibers have finitely many connected components, each also
+a path component. Compactness and connectedness are not assumptions of the
+local chart or local path-connectivity results.
+
+`Geometry/ComponentCriticalSampling` maximizes a fixed projection separately
+on each compact regular fiber component. Components are relatively open, so
+each such maximum is a local maximum on the whole fiber. Normalized Lagrange
+multipliers put it in the actual spatial critical system. Every point has a
+path to its sample inside the same fiber. The map from critical roots onto
+fiber components is surjective, so any finite bound on the root set bounds
+the number of components. Combining properness, the constructed integer
+direction, and a critical-value annihilator gives finite sample sets covering
+all components at every level outside a finite exceptional set.
+Transport of components between levels, the full recursive roadmap for general
+Boolean inputs, and its polynomial-space representation bounds remain unproved.

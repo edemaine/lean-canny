@@ -7,6 +7,7 @@ import LeanCanny.Connectivity.SlabCover
 import LeanCanny.Connectivity.BitFrontierCover
 import LeanCanny.Geometry.RootBranchCount
 import LeanCanny.Geometry.ProjectionCriticalBranches
+import LeanCanny.Geometry.ComponentCriticalSampling
 
 /-! # Connectivity development
 
@@ -20,7 +21,9 @@ arcs and accessible endpoint-slice covers preserve slab connectivity through
 their frontier graph. Effective frontier graphs have native polynomial-space
 connectivity tests. Explicit polynomial systems have the expected analytic
 Jacobian. Proper polynomial level functions give spatial critical curves with
-an integer projection direction and finitely many exceptional levels. The
+an integer projection direction and finitely many exceptional levels. Regular
+compact fibers have finitely many path components, all sampled by the critical
+equations. The
 effective semialgebraic roadmap
 construction is not yet supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
