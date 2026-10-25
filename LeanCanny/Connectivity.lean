@@ -34,6 +34,7 @@ import LeanCanny.ETR.ComplexTermDifferential
 import LeanCanny.ETR.ComplexHessianFamily
 import LeanCanny.ETR.ComplexKernelRowEncoding
 import LeanCanny.Encoding.FermatSweepKernelCertificate
+import LeanCanny.Encoding.FermatAffineKernelBridge
 import LeanCanny.Encoding.FermatInfinityQuery
 
 /-! # Connectivity development
@@ -159,8 +160,11 @@ the equations. Repeated shared differentiation computes exact Hessians of the
 original source. Initialized copies share input coordinates and use disjoint
 auxiliary ranges, with native polynomial-time encoders. Kernel-row circuits
 compute the critical equations and Hessian-vector sums. The actual affine
-chart predicate expands into these gradient and Hessian equations; connecting
-the whole sampled source and its assembled query remains required.
+chart predicate expands into these gradient and Hessian equations. Complete
+normalized critical-kernel queries now have exact shared-circuit semantics,
+native polynomial-time encoders, and native PSPACE tests for compiled source
+terms. Constructing the complete sampled Fermat source circuit and its
+polynomial identity remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices, effective direction selection, and the full recursive query
 encodings remain required.

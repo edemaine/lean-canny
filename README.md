@@ -201,8 +201,9 @@ The checked ingredients are:
   the required query writers. Infinity charts have native PSPACE tests using
   shared binary powers and actual fixed-width record readers. Affine charts
   expand into explicit gradient and Hessian kernel sums. Shared Hessian copies
-  and kernel-row arithmetic have exact semantics and native polynomial-time
-  encoders; assembling the complete sampled affine query remains required.
+  and kernel-row arithmetic form complete normalized critical-kernel queries,
+  with exact semantics and native PSPACE tests for compiled source terms.
+  Constructing the sampled Fermat source circuit remains required.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A

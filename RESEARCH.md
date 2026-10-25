@@ -823,8 +823,19 @@ point, including their native polynomial-time generation costs.
 `ComplexKernelRow` and `ComplexKernelRowEncoding` compute the required linear
 combinations of Hessian rows, kernel-vector sums, and first-derivative critical
 equations. `FermatSweepKernelCertificate.affine_bad_iff` expands the existing
-affine chart predicate into these equations. The complete sampled source and
-assembled affine query still need their circuit bridge.
+affine chart predicate into these equations.
+
+`ETR/ComplexCriticalKernelCircuit` assembles the Hessian copies, kernel rows,
+normalization, and zero constraints into one query. Its computational part is
+one acyclic program; `ComplexCriticalKernelCorrect` proves an exact normalized
+root equivalence by constructing one global completion. The encoder includes
+every source, direction, index, and loop cost. `ComplexCriticalKernelPSPACE`
+provides native feasibility and emptiness certificates for compiled source
+terms, with the in-range chart condition kept separate from the total cost
+proof. `ComplexCriticalKernelFinite` transfers values, gradients, Hessians,
+and normalized roots through one coefficient-map and variable-renaming identity.
+The complete sampled Fermat source circuit and that polynomial identity still
+need to be constructed.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

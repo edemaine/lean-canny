@@ -1256,3 +1256,55 @@ example : StraightLine.WellFormed 4 (KernelRow.program 3 4 2 1 0 1 (-2) (fun _ =
     (by decide) (by decide) (by decide)
 
 end KernelRowCircuitTests
+
+namespace CompleteKernelCircuitTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit MvPolynomial
+open scoped Classical
+
+private def square : Term := .mul (.var 0) (.var 0)
+private def twoSquares : Term := .add square (.mul (.var 1) (.var 1))
+
+-- The complete one-variable query includes the initialized derivative copy,
+-- both row outputs, and the normalized nonzero kernel coordinate.
+#guard (CriticalKernel.query 1 1 (Source.program 1 square) (Source.output 1 square) (fun _ => 0) 0).length == 43
+#guard (CriticalKernel.query 0 0 [] 0 (fun _ => 0) 0).length == 2
+#guard (CriticalKernel.query 2 2 (Source.program 2 twoSquares) (Source.output 2 twoSquares) (fun _ => 1) 1).length == 348
+
+-- The zero root of x^2 is singular, so a normalized kernel exists.
+example : Satisfiable (CriticalKernel.query 1 1 (Source.program 1 square)
+    (Source.output 1 square) (fun _ => 0) 0) := by
+  rw [CriticalKernel.source_satisfiable 1 1 square (by decide) (fun _ => 0) 0 (by decide)]
+  refine ⟨fun _ => 0, fun _ => 1, rfl, fun j hj => ?_⟩
+  have he : j = 0 := by omega
+  subst j
+  norm_num [CriticalKernel.criticalValue, CriticalKernel.kernelValue, CriticalKernel.selectedPolynomial,
+    CriticalKernel.entryPolynomial, CriticalKernel.coefficient, square, Term.toPolynomial, pderiv_mul, pderiv_X_self]
+
+-- In two coordinates, the zero root and kernel (1,1) satisfy the direction-1
+-- row: its Hessian combination is (-2,2), whose dot product is zero.
+example : Satisfiable (CriticalKernel.query 2 2 (Source.program 2 twoSquares)
+    (Source.output 2 twoSquares) (fun _ => 1) 1) := by
+  rw [CriticalKernel.source_satisfiable 2 2 twoSquares (by decide) (fun _ => 1) 1 (by decide)]
+  refine ⟨fun _ => 0, fun _ => 1, rfl, fun j hj => ?_⟩
+  interval_cases j <;>
+    norm_num [CriticalKernel.criticalValue, CriticalKernel.kernelValue, CriticalKernel.selectedPolynomial,
+      CriticalKernel.entryPolynomial, CriticalKernel.coefficient, twoSquares, square,
+      Term.toPolynomial, pderiv_X, Finset.sum_range_succ]
+
+-- A variable-only source allocates no original arithmetic gates, but its
+-- derivative is one and rules out every normalized kernel at its zero root.
+example : ¬ Satisfiable (CriticalKernel.query 1 1 (Source.program 1 (.var 0))
+    (Source.output 1 (.var 0)) (fun _ => 0) 0) := by
+  rw [CriticalKernel.source_satisfiable 1 1 (.var 0) (by decide) (fun _ => 0) 0 (by decide)]
+  rintro ⟨x, u, hu, hr⟩
+  have h := (hr 0 (by decide)).2
+  simp [CriticalKernel.kernelValue, CriticalKernel.entryPolynomial, CriticalKernel.coefficient,
+    Term.toPolynomial, hu] at h
+
+-- The native source reader and direction literal writer are charged by the
+-- evaluator, including when the supplied syntax is malformed.
+example : SpaceFunction (CriticalKernel.sourceBad pairFst (fun _ => 1) (fun _ => 0) (fun _ _ => 0)) :=
+  CriticalKernel.sourceBad_evaluator pairFst_mem_FP (UnaryFn.const 1) (UnaryFn.const 0)
+    (constFn_mem_FP (Term.const 0).toData.toBits)
+
+end CompleteKernelCircuitTests
