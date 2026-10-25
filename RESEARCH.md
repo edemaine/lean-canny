@@ -862,6 +862,11 @@ selected record has native polynomial-space computation and the original
 geometric validity guarantee; neither a validity procedure nor a direction is
 assumed. The selected record can be retained with the input for subsequent
 polynomial-time field access.
+`FermatTermPreparation` derives an even degree and a coefficient-mass allowance
+from normalized term size. The native selector then needs only the source
+reader and unary dimension. The actual arity bound implies validity and
+generic-slice regularity of its selected direction. These source-preparation
+theorems do not establish component preservation for the original formula.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

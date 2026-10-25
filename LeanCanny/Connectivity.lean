@@ -39,6 +39,7 @@ import LeanCanny.Encoding.FermatAffineKernelBridge
 import LeanCanny.Encoding.FermatFrozenSource
 import LeanCanny.Encoding.FermatInfinityQuery
 import LeanCanny.Encoding.FermatDirectionChoice
+import LeanCanny.Encoding.FermatTermPreparation
 
 /-! # Connectivity development
 
@@ -173,6 +174,10 @@ the source with the finite-coordinate Fermat certificate. The affine and
 infinity tests give a native PSPACE checker for the original Valid predicate.
 A bounded fixed-width search selects a valid direction-and-sample record for
 the constructed regular integer source, with no supplied validity algorithm.
+For an encoded low term, its normalized size supplies an even degree and
+coefficient-mass control. This gives native record preparation from the
+source reader and unary dimension, and generic-slice regularity whenever
+the term's variables fit that dimension.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

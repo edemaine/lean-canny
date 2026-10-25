@@ -1412,3 +1412,33 @@ example (c : List Bool) :
   simp
 
 end NativeSweepCertificateTests
+
+namespace EncodedSweepPreparationTests
+open LeanCanny.ETR LeanCanny.Encoding MvPolynomial
+open FermatTermPreparation FermatSweepCertificate
+
+-- Degree and mass controls come from the term; they are not supplied by a
+-- semantic oracle or as separate complexity hypotheses.
+example : SpaceFunction (FermatTermPreparation.record pairFst (fun c => (pairSnd c).length)) :=
+  FermatTermPreparation.evaluator pairFst_mem_FP (UnaryFn.length pairSnd_mem_FP)
+
+-- The one spatial variable fits the two-variable original source at dim=0.
+-- Validity therefore needs no supplied degree, mass, or regularity promise.
+example (c : List Bool) :
+    let source := fun _ : List Bool => (Term.var 1).toData.toBits
+    Valid ((LeanCanny.Geometry.IntegerRegularSource.lower (low source (fun _ => 0) c)
+        (degree source c) (mass source (fun _ => 0) c)).map (Int.castRingHom ℚ))
+      (LeanCanny.Geometry.IntegerRegularSource.leading 1 1 (degree source c) (mass source (fun _ => 0) c) : ℚ)
+      (degree source c) (FermatTermPreparation.record source (fun _ => 0) c) := by
+  dsimp only
+  apply FermatTermPreparation.record_valid
+  simp only [TermView.term_toBits, Term.arity, le_refl]
+
+-- Normalization also gives total metadata for malformed encoded syntax.
+example : degree (fun _ : List Bool => []) [] = 22 := by
+  have ht : TermView.term [] = .const 0 := by
+    simp only [TermView.term]
+    decide
+  simp only [degree, size, ht, Term.dataSize_const_zero]
+
+end EncodedSweepPreparationTests

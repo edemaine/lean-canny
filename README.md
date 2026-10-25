@@ -210,7 +210,9 @@ The checked ingredients are:
   predicate. A bounded search selects a valid direction-and-sample record for
   the constructed regular integer source; no validity or direction oracle is
   assumed. The component-preserving recursion and its query writers remain
-  required.
+  required. For encoded low terms, normalized syntax size now supplies the
+  degree and mass controls used by record selection; their variable bound
+  suffices for its geometric correctness.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
