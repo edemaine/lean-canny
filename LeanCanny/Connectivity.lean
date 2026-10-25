@@ -23,6 +23,7 @@ import LeanCanny.Geometry.SingularParameterBounds
 import LeanCanny.Geometry.UniformCriticalRegularityBounds
 import LeanCanny.Algebra.ParameterizedCriticalCoefficientSpace
 import LeanCanny.Algebra.ProjectiveDirectionGrid
+import LeanCanny.Encoding.FermatCriticalDirection
 
 /-! # Connectivity development
 
@@ -92,6 +93,14 @@ A root-free homogeneous system admits an integer specialization in a grid
 bounded by its Macaulay column count and parameter degree, with an explicit
 binary-length bound. Constructing the required root-free projective system
 for the affine critical families remains required.
+For a polynomial with a pure-power leading form, the original homogenized
+critical equations now have a constructed root-free generic system at infinity.
+Appending the spatial Jacobian gives a root-free square projective system when
+the hypersurface is regular over field extensions. The bounded grid therefore
+constructs an integer critical direction for this family, with a polynomial
+binary-width bound. Its direction has a fixed-length record with native field
+access, allowing binary source degrees. Establishing extension-field regularity
+and the required source-family shape from arbitrary inputs remains required.
 Each sweep fiber is homeomorphic to its polynomial slice in one fewer
 coordinate. Properness and regularity pass to this lower-dimensional equation.
 Dimension-zero connectivity algorithms are proved, and both connectivity

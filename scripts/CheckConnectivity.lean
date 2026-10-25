@@ -859,3 +859,57 @@ open LeanCanny.Algebra LeanCanny.Encoding
 #guard IntegerParameterCoefficientBits.spatial (fun _ => 0) id [true, false] == [true]
 
 end NativeParameterQueryTests
+
+namespace BoundedDirectionTests
+open LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+set_option backward.isDefEq.respectTransparency false
+
+-- A very large degree value is retained in binary; only its bit length
+-- determines the record block width. Short records are zero-padded.
+#guard FermatCriticalDirection.read (fun _ => 1) (fun _ => 2 ^ 80)
+  (pair (pair [] [true]) (BinaryNatCode.encode 0)) == [true]
+#guard FermatCriticalDirection.read (fun _ => 1) (fun _ => 2 ^ 80)
+  (pair (pair [] [true]) (BinaryNatCode.encode 1)) == []
+
+private noncomputable def quarticLow : MvPolynomial (Fin 2) ℚ := C (-1)
+
+private theorem quartic_regular (L : Type) [Field L] [Algebra ℚ L] (x : Fin 2 → L)
+    (hx : aeval x (FermatCriticalHomogenization.polynomial quarticLow 1 4) = 0) :
+    ∃ j, aeval x (pderiv j (FermatCriticalHomogenization.polynomial quarticLow 1 4)) ≠ 0 := by
+  let : CharZero L := charZero_of_injective_algebraMap (algebraMap ℚ L).injective
+  by_contra h
+  push Not at h
+  have hz (j : Fin 2) : x j = 0 := by
+    have hj := h j
+    have he : aeval x (pderiv j (FermatCriticalHomogenization.polynomial quarticLow 1 4)) = 4 * x j ^ 3 := by
+      simp [FermatCriticalHomogenization.pderiv_polynomial, quarticLow]
+    rw [he] at hj
+    exact (pow_eq_zero_iff (by decide : 3 ≠ 0)).mp ((mul_eq_zero.mp hj).resolve_left (by norm_num))
+  have hp : aeval x (FermatCriticalHomogenization.polynomial quarticLow 1 4) = -1 := by
+    simp [FermatCriticalHomogenization.polynomial, quarticLow, hz]
+  rw [hp] at hx
+  norm_num at hx
+
+-- The quartic is regular even over complex extensions, but the coordinate
+-- direction has a multiple critical root at (1,0). The constructed direction
+-- must therefore have a nonzero non-base entry.
+example : ∃ v : ℕ, v ≤ FermatBoundedCriticalDirection.allowance 1 4 ∧ v ≠ 0 := by
+  obtain ⟨v, hv, hgood⟩ := FermatBoundedCriticalDirection.exists_bounded quarticLow 1 one_ne_zero 4
+    (by norm_num [quarticLow, totalDegree_C]) (by decide) quartic_regular
+  refine ⟨v 0, hv 0, ?_⟩
+  intro hv0
+  have hvall (i : Fin 1) : v i = 0 := by simpa only [Subsingleton.elim i 0] using hv0
+  let x : Fin 2 → ℚ := Fin.cons 1 (fun _ => 0)
+  let φ := eval₂Hom (algebraMap ℚ ℚ) (fun i => (v i : ℚ))
+  have hψC : φ.comp C = algebraMap ℚ ℚ := by ext; simp [φ]
+  have hx (j : Fin 2) : (FermatCriticalBadSystem.equations quarticLow 1 4 j).eval₂ φ x = 0 := by
+    fin_cases j <;> norm_num [FermatCriticalBadSystem.equations, FermatCriticalHomogenization.spatial,
+      FermatCriticalHomogenization.polynomial, FermatCriticalHomogenization.pderiv_polynomial,
+      quarticLow, φ, x, hvall, Fin.sum_univ_succ, Pi.single_apply]
+  have hj : (FermatCriticalBadSystem.jacobian quarticLow 1 4).eval₂ φ x = 0 := by
+    rw [FermatCriticalGeneric.eval_jacobian φ hψC, Matrix.det_fin_two]
+    norm_num [GenericProjectionJacobian.spatial, FermatCriticalHomogenization.pderiv_polynomial,
+      FermatCriticalGeneric.direction, quarticLow, φ, x, hvall, Fin.sum_univ_succ, Pi.single_apply]
+  exact hgood ℚ x hx hj
+
+end BoundedDirectionTests

@@ -784,6 +784,33 @@ step to the original affine critical family still requires constructing the
 root-free projective system, including exclusion of roots at infinity; the
 input-size bound for that family’s chosen direction is not yet proved.
 
+`Algebra/FermatCriticalInfinity` proves root-freeness of the pure-power critical
+infinity equations, first at the coordinate direction and then under any
+injective generic coefficient map. `HomogenizationAdditive` supplies the
+additive identities for the explicit homogenization. `FermatCriticalHomogenization`
+identifies the actual affine-chart and infinity equations for an arbitrary
+lower-degree polynomial plus a pure-power leading sum.
+
+`HomogeneousBadSystem` appends the homogenized spatial Jacobian.
+`NestedTotalDegree` bounds parameter-coefficient degrees through products,
+determinants, differentiation, homogenization, and variable permutations.
+`FermatCriticalBadSystem` gives the resulting singular-critical system explicit
+spatial and direction-degree bounds. `FermatCriticalGeneric` proves it has no
+generic projective root: affine roots are nonsingular and infinity roots are
+excluded by the original critical equations.
+
+`FermatBoundedCriticalDirection` consequently constructs a bounded natural
+critical direction for a pure-power-leading hypersurface regular over field
+extensions. No exceptional-direction factor or degree allowance for such a
+factor is supplied. Its direction bit width is at most
+`(n+2)*(2*n+N.size+4)+n+1`, for `n+1` spatial coordinates and source degree `N`.
+`Encoding/FermatCriticalDirection` constructs an actual record of `n` such
+blocks and certifies native field access and polynomial record length, using a
+binary source degree. The extension-field regularity premise is explicit;
+real regularity alone does not supply it. The original input reduction still
+needs to construct this source shape, select a regular level over complex
+extensions, and supply the recursive geometric queries.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

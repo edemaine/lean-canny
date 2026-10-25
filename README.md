@@ -182,6 +182,10 @@ The checked ingredients are:
   evaluates the actual spatial critical equations from a source reader.
   Derivative guards and direction scalars retain binary encodings of large
   values; recursive records and graph query writers remain required.
+  For pure-power-leading hypersurfaces regular over field extensions, the
+  direction now has an explicit polynomial bit-width bound and a bounded
+  record with native field access. Constructing these hypotheses from general
+  Boolean inputs remains required.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
