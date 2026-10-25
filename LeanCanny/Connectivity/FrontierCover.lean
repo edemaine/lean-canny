@@ -146,6 +146,48 @@ theorem joinedIn_of_isPreconnected [Finite ι] (cover : ∀ x, ∃ i, x ∈ piec
   exact joinedIn_of_reachable piece access hi hj
     (reachable_of_isPreconnected piece cover hs hi hj hx hy)
 
+/-- Saturate a piece by its finite frontier-graph component. Keeping the
+original labels avoids choosing representatives or discarding empty records. -/
+def component (i : ι) : Set X :=
+  {x | ∃ j, Relation.ReflTransGen (Incident piece) i j ∧ x ∈ piece j}
+
+theorem component_isClopen [Finite ι] (cover : ∀ x, ∃ i, x ∈ piece i) (i : ι) :
+    IsClopen (component piece i) := cluster_isClopen piece cover i
+
+theorem component_cover (cover : ∀ x, ∃ i, x ∈ piece i) :
+    ∀ x, ∃ i, x ∈ component piece i := by
+  intro x
+  obtain ⟨i, hi⟩ := cover x
+  exact ⟨i, i, .refl, hi⟩
+
+theorem component_nonempty_iff (i : ι) : (component piece i).Nonempty ↔ (piece i).Nonempty := by
+  have hsource {u v : ι} (h : Relation.ReflTransGen (Incident piece) u v) :
+      (piece v).Nonempty → (piece u).Nonempty := by
+    induction h with
+    | refl => exact id
+    | tail _ he ih => exact fun _ => ih (he.nonempty piece).1
+  constructor
+  · rintro ⟨x, j, hj, hx⟩
+    exact hsource hj ⟨x, hx⟩
+  · rintro ⟨x, hx⟩
+    exact ⟨x, i, .refl, hx⟩
+
+theorem component_paths [Finite ι] (cover : ∀ x, ∃ i, x ∈ piece i)
+    (access : ∀ i, Accessible (piece i)) (i : ι)
+    (x : X) (hx : x ∈ component piece i) (y : X) (hy : y ∈ component piece i) :
+    JoinedIn (component piece i) x y := by
+  obtain ⟨j, hj, hxj⟩ := hx
+  obtain ⟨k, hk, hyk⟩ := hy
+  have reverse {u v : ι} (h : Relation.ReflTransGen (Incident piece) u v) :
+      Relation.ReflTransGen (Incident piece) v u := by
+    induction h with
+    | refl => exact .refl
+    | tail _ he ih => exact ih.head ((incident_symm piece).mp he)
+  obtain ⟨γ, _⟩ := joinedIn_of_reachable piece access hxj hyk ((reverse hj).trans hk)
+  have hsub := (isPreconnected_range γ.continuous).subset_isClopen
+    (component_isClopen piece cover i) ⟨x, γ.source_mem_range, j, hj, hxj⟩
+  exact ⟨γ, fun t => hsub ⟨t, rfl⟩⟩
+
 /-- An accessible finite decomposition gives the same components as its
 frontier-incidence graph, even when the pieces are not closed. -/
 theorem isPreconnected_iff_reachable [Finite ι]

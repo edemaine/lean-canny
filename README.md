@@ -149,6 +149,13 @@ The checked ingredients are:
 - Each saturated component has a compact connected limit in both endpoint
   fibers, including singular ones. A recursive finite accessible slice cover
   joins all its limit points to the extended branch through that slice.
+- Recursive slice covers yield clopen path components by finite graph
+  saturation. Attaching each interior component to its two endpoint components
+  gives a finite closed path cover of the entire original closed slab, with
+  both connectivity tests preserved. The final labels form a sum of the
+  interior and endpoint label families. Overlap and validity have descriptions
+  containing no closure queries. Component membership uses native PSPACE
+  reachability once a piece containing the queried point is located.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A

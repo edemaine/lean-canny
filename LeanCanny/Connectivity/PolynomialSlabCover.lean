@@ -9,6 +9,7 @@ public import LeanCanny.Geometry.ComponentCriticalSampling
 public import LeanCanny.Geometry.RegularComponentTransport
 public import LeanCanny.Geometry.RootBranches
 public import LeanCanny.Connectivity.RegularRootArcs
+public import LeanCanny.Connectivity.ComponentSlabCover
 
 /-! # A complete finite cover of an original polynomial regular slab
 
@@ -176,5 +177,76 @@ theorem exists_cover (p : MvPolynomial ι ℝ) (pivot : ι)
   · rw [← hedges]
     exact FiberSectionCover.isPreconnected_iff_sample_reachable (projection p a b) sections chart
       hsource hfirst hprojproper hproj hsample t₀
+
+/-- The original polynomial supplies every interior hypothesis of the
+closed-slab composition theorem, including connected limits at singular ends. -/
+theorem exists_interior_data (p : MvPolynomial ι ℝ) (pivot : ι)
+    (hp : IsProperMap (fun x : ι → ℝ => p.eval x)) :
+    ∃ u : ProjectionFiniteSpecialization.DirectionIndex pivot → ℕ,
+      ∃ r : Polynomial ℝ, r ≠ 0 ∧ {t : ℝ | r.eval t = 0}.Finite ∧
+        ∀ (a b : ℝ) (t₀ : Ioo a b), (∀ t ∈ Ioo a b, r.eval t ≠ 0) →
+          Finite (Index p pivot u a b t₀) ∧
+          Nonempty (ComponentSlabCover.InteriorData (fun x => p.eval x) a b
+            (Index p pivot u a b t₀)) := by
+  obtain ⟨u, r, hr, hfinite, h⟩ := exists_cover p pivot hp
+  refine ⟨u, r, hr, hfinite, ?_⟩
+  intro a b t₀ havoid
+  obtain ⟨hfin, arc, hc, hroot, sections, hproj, _, hmatch, hcl, hcover, hpaths, hl, hr, _⟩ :=
+    h a b t₀ havoid
+  let v := ProjectionFiniteSpecialization.normalizedDirection pivot (fun i => (u i : ℝ))
+  have hv : v pivot = 1 := by simp [v, ProjectionFiniteSpecialization.normalizedDirection]
+  have hlevel (j : Index p pivot u a b t₀) (t : ℝ) (ht : t ∈ Icc a b) :
+      p.eval (arc j t) = t :=
+    ((ProjectionCriticalBranches.value_iff p pivot v hv t (arc j t)).mp (hroot j t ht)).1
+  refine ⟨hfin, ⟨{
+    piece := FiberSectionCover.piece (projection p a b) sections
+    closed := fun j => (hcl j).isClosed
+    cover := hcover
+    paths := hpaths
+    arc := arc
+    continuous_arc := hc
+    arc_mem := ?_
+    level_left := fun j => hlevel j a ⟨le_rfl, t₀.property.1.le.trans t₀.property.2.le⟩
+    level_right := fun j => hlevel j b ⟨t₀.property.1.le.trans t₀.property.2.le, le_rfl⟩
+    limit_left := fun j => (hl j).isPreconnected
+    limit_right := fun j => (hr j).isPreconnected }⟩⟩
+  intro j t
+  exact ⟨sections j t, FiberSectionCover.section_mem_piece (projection p a b) sections hproj j t, hmatch j t⟩
+
+/-- Recursive endpoint component covers now give a finite closed path cover
+of the entire original closed polynomial slab, including its singular ends. -/
+theorem exists_closed_cover {L R : Type} [Finite L] [Finite R]
+    (p : MvPolynomial ι ℝ) (pivot : ι) (hp : IsProperMap (fun x : ι → ℝ => p.eval x)) :
+    ∃ u : ProjectionFiniteSpecialization.DirectionIndex pivot → ℕ,
+      ∃ r : Polynomial ℝ, r ≠ 0 ∧ {t : ℝ | r.eval t = 0}.Finite ∧
+        ∀ (a b : ℝ) (t₀ : Ioo a b), (∀ t ∈ Ioo a b, r.eval t ≠ 0) →
+          ∀ (_left : ClopenPathCover ((fun x => p.eval x) ⁻¹' {a}) L)
+            (_right : ClopenPathCover ((fun x => p.eval x) ⁻¹' {b}) R),
+          Finite (Index p pivot u a b t₀) ∧
+          ∃ P : ComponentSlabCover.SelectedIndex (Index p pivot u a b t₀) L R →
+              Set ((fun x => p.eval x) ⁻¹' Icc a b),
+            (∀ i, IsClosed (P i)) ∧ (∀ x, ∃ i, x ∈ P i) ∧
+            (∀ i, ∀ x ∈ P i, ∀ y ∈ P i, JoinedIn (P i) x y) ∧
+            (∀ i j x y, x ∈ P i → y ∈ P j →
+              (JoinedIn univ x y ↔ Relation.ReflTransGen (ClosedPathCover.Overlap P) i j)) ∧
+            (IsPreconnected (univ : Set ((fun x => p.eval x) ⁻¹' Icc a b)) ↔
+              ∀ i j, (P i).Nonempty → (P j).Nonempty →
+                Relation.ReflTransGen (ClosedPathCover.Overlap P) i j) := by
+  obtain ⟨u, r, hr, hfinite, h⟩ := exists_interior_data p pivot hp
+  refine ⟨u, r, hr, hfinite, ?_⟩
+  intro a b t₀ havoid left right
+  obtain ⟨hfin, ⟨D⟩⟩ := h a b t₀ havoid
+  let : Finite (Index p pivot u a b t₀) := hfin
+  have hab := t₀.property.1.trans t₀.property.2
+  obtain ⟨leftOf, rightOf, hselect⟩ := ComponentSlabCover.exists_selection D left right
+  refine ⟨hfin, ComponentSlabCover.selectedPiece D left right leftOf rightOf,
+    ComponentSlabCover.selected_closed D left right leftOf rightOf hp.continuous,
+    ComponentSlabCover.selected_cover D left right leftOf rightOf hselect,
+    ComponentSlabCover.selected_paths D left right leftOf rightOf hp.continuous hab t₀, ?_,
+    ComponentSlabCover.selected_isPreconnected_iff_reachable D left right leftOf rightOf hselect
+      hp.continuous hab t₀⟩
+  intro i j x y hx hy
+  exact ComponentSlabCover.selected_joinedIn_iff_reachable D left right leftOf rightOf hselect
+    hp.continuous hab t₀ hx hy
 
 end LeanCanny.Connectivity.PolynomialSlabCover

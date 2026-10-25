@@ -33,6 +33,12 @@ the entire regular slab, with both connectivity tests reduced to one sample
 fiber. Each saturated component has a connected limit in both endpoint fibers,
 including singular ones. A recursive accessible slice cover turns this limit
 connection into a path and attaches boundary points to a branch endpoint.
+Saturating recursive endpoint covers by finite graph reachability gives clopen
+path components. Attaching these to the interior pieces gives a closed path
+cover of the entire original closed slab. Its final label families form a sum;
+overlap and validity require no closure queries. Membership in a recursive
+clopen component is computed by the native polynomial-space graph algorithm
+given a locator for an original piece containing the queried point.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

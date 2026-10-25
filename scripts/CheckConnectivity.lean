@@ -496,3 +496,71 @@ example : JoinedIn univ ((0 : ℝ), (⟨1, by norm_num⟩ : Segment))
   exact (FiberSectionCover.paths Prod.fst sections chart hsource hfirst hp hproj ()
     _ (hm _ _) _ (hm _ _)).mono (subset_univ _)
 end SaturatedSlabTests
+
+namespace ClosedSlabTests
+open Set
+
+local instance : PathConnectedSpace ((id : ℝ → ℝ) ⁻¹' Ioo 0 1) :=
+  isPathConnected_iff_pathConnectedSpace.mp
+    (Convex.isPathConnected (convex_Ioo 0 1) ⟨1 / 2, by norm_num⟩)
+
+noncomputable def D : ComponentSlabCover.InteriorData (id : ℝ → ℝ) 0 1 Unit where
+  piece := fun _ => univ
+  closed := fun _ => isClosed_univ
+  cover := fun _ => ⟨(), mem_univ _⟩
+  paths := fun _ _ _ _ _ => joinedIn_univ.mpr (PathConnectedSpace.joined _ _)
+  arc := fun _ => id
+  continuous_arc := fun _ => continuous_id.continuousOn
+  arc_mem := fun _ t => ⟨t, mem_univ _, rfl⟩
+  level_left := fun _ => rfl
+  level_right := fun _ => rfl
+  limit_left := fun _ => Set.Subsingleton.isPreconnected (by
+    intro x hx y hy
+    exact hx.2.trans hy.2.symm)
+  limit_right := fun _ => Set.Subsingleton.isPreconnected (by
+    intro x hx y hy
+    exact hx.2.trans hy.2.symm)
+
+noncomputable def C (c : ℝ) : ClopenPathCover ((id : ℝ → ℝ) ⁻¹' {c}) Bool where
+  piece := fun b => if b then univ else ∅
+  clopen := fun b => by cases b <;> simp
+  cover := fun _ => ⟨true, by simp⟩
+  paths := by
+    intro b x hx y hy
+    have heq : x = y := Subtype.ext (x.property.trans y.property.symm)
+    subst y
+    exact JoinedIn.refl hx
+
+private theorem valid : ComponentSlabCover.Valid D (C 0) (C 1) () true true := by
+  constructor
+  · exact ⟨⟨0, rfl⟩, mem_univ _, rfl⟩
+  · exact ⟨⟨1, rfl⟩, mem_univ _, rfl⟩
+
+-- The middle closed piece contains both endpoints although its interior
+-- piece omits both. The constructed paths pass through the attached slices.
+example :
+    let P := ComponentSlabCover.piece D (C 0) (C 1)
+    JoinedIn (P (.inl ((), true, true))) ⟨0, by norm_num⟩ ⟨1, by norm_num⟩ := by
+  let i : ComponentSlabCover.Index Unit Bool Bool := .inl ((), true, true)
+  have hzero : (⟨0, by norm_num⟩ : (id : ℝ → ℝ) ⁻¹' Icc 0 1) ∈ ComponentSlabCover.piece D (C 0) (C 1) i := by
+    change 0 ∈ ComponentSlabCover.ambientPiece D (C 0) (C 1) i
+    rw [show i = .inl ((), true, true) from rfl,
+      ComponentSlabCover.ambientPiece_middle_eq D (C 0) (C 1) continuous_id (by norm_num) () true true valid]
+    exact Or.inl (Or.inr ⟨⟨0, rfl⟩, mem_univ _, rfl⟩)
+  have hone : (⟨1, by norm_num⟩ : (id : ℝ → ℝ) ⁻¹' Icc 0 1) ∈ ComponentSlabCover.piece D (C 0) (C 1) i := by
+    change 1 ∈ ComponentSlabCover.ambientPiece D (C 0) (C 1) i
+    rw [show i = .inl ((), true, true) from rfl,
+      ComponentSlabCover.ambientPiece_middle_eq D (C 0) (C 1) continuous_id (by norm_num) () true true valid]
+    exact Or.inr ⟨⟨1, rfl⟩, mem_univ _, rfl⟩
+  exact ComponentSlabCover.paths D (C 0) (C 1) continuous_id (by norm_num)
+    ⟨1 / 2, by norm_num⟩ i _ hzero _ hone
+
+-- Choosing an empty endpoint component invalidates the entire triple.
+example : ComponentSlabCover.piece D (C 0) (C 1) (.inl ((), false, true)) = ∅ := by
+  have hn : ¬ComponentSlabCover.Valid D (C 0) (C 1) () false true := by
+    rintro ⟨⟨x, hx, _⟩, _⟩
+    exact hx
+  ext x
+  simp only [ComponentSlabCover.piece, ComponentSlabCover.ambientPiece, Sum.elim_inl,
+    ite_eq_right hn, preimage_empty, mem_empty_iff_false]
+end ClosedSlabTests

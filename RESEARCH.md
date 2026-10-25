@@ -576,6 +576,29 @@ A continuous indexing-branch extension then attaches every boundary point to
 the slab component through that slice. The recursive slice cover itself is
 still an obligation, not an assumed uniform semialgebraic construction.
 
+`Connectivity/ClopenPathCover` saturates a finite accessible or closed path
+cover by its frontier-graph components. The resulting pieces are clopen and
+path connected, with the same labels and the same empty records. For native
+bit-indexed covers, `BitFrontierCover.component_membership_computable` decides
+membership using guarded native PSPACE reachability and a locator for an
+original piece containing the queried point. Closed path covers reuse their
+overlap routine as frontier incidence, so this operation composes recursively.
+
+`Connectivity/ComponentSlabCover` constructs a closed path cover of the entire
+original closed slab from its saturated interior pieces and recursively supplied
+clopen endpoint covers. Its auxiliary middle pieces are closures of interior
+pieces together with chosen endpoint components. Connected endpoint limits
+prove that these equal the union of the open interior piece and those two
+endpoint pieces. This removes closure queries from overlap and record validity.
+The continuous critical branch joins all three parts, proving path connectivity.
+The final cover keeps only one selected pair of endpoint components per interior
+label, so its index is a sum of the three label families, not a product at each
+dimension. Selectors remain query functions and still need effective endpoint
+representations. `PolynomialSlabCover.exists_closed_cover` supplies all interior
+hypotheses from the original proper polynomial, preserves both connectivity
+tests, and allows singular endpoint fibers. Recursive endpoint covers themselves
+are still inputs to this theorem.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.
