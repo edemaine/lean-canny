@@ -848,9 +848,20 @@ computed sample and the spatial coordinates. `ComplexSampledSource` joins it
 to the low source and dyadic regularization, with one acyclic program and an
 exact symbolic polynomial. Its native encoder and critical-kernel tests retain
 both binary exponent words, including the scale that is never serialized as
-an integer literal. The final coefficient-map identity with the existing
-finite-coordinate Fermat certificate still needs to be proved before composing
-the actual validity checker.
+an integer literal. `Encoding/FermatSampledIdentity` proves its coefficient-map
+identity with the existing finite-coordinate Fermat certificate, including the
+constructed regular integer source. `FermatAffineQuery` gives native bad-root
+and emptiness tests agreeing with the original affine chart predicate.
+`FermatValidity` scans these and the infinity tests over every normalized chart
+and proves exact agreement with the original `Valid` predicate.
+`Computation/SpaceFunctionQuantifiers` supplies the native bounded scan with
+arbitrary space-bounded children and caps its binary counter before unary
+conversion. `FermatDirectionChoice` searches the fixed-width records and proves
+that the constructed regular integer source supplies a valid candidate. Its
+selected record has native polynomial-space computation and the original
+geometric validity guarantee; neither a validity procedure nor a direction is
+assumed. The selected record can be retained with the input for subsequent
+polynomial-time field access.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

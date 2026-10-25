@@ -38,6 +38,7 @@ import LeanCanny.Encoding.FermatSweepKernelCertificate
 import LeanCanny.Encoding.FermatAffineKernelBridge
 import LeanCanny.Encoding.FermatFrozenSource
 import LeanCanny.Encoding.FermatInfinityQuery
+import LeanCanny.Encoding.FermatDirectionChoice
 
 /-! # Connectivity development
 
@@ -135,8 +136,7 @@ affine charts. Its native decision procedure remains to be constructed.
 Complex arithmetic networks now have an explicit native polynomial-time
 compiler to real equations, preserving shared wires and integer payloads.
 The completed ETR procedure supplies native feasibility and emptiness tests
-for these compiled networks. Constructing the actual normalized bad-root
-networks remains required. Binary powers now have shared networks with two
+for these compiled networks. Binary powers have shared networks with two
 multiplications per exponent bit and polynomial-time encoders. The resulting
 denominator-cleared equation has an exact native PSPACE test when appended to
 an encoded source network. A shared derivative transformation preserves
@@ -146,8 +146,7 @@ the source polynomials. Source arithmetic terms now compile to acyclic shared
 networks in native polynomial time, with bounds on all intermediate states and
 constructed fresh-wire metadata. Their denominator-cleared equations have
 native PSPACE tests, and their derivative networks compute the actual formal
-partial derivatives of the original terms. Connecting the critical-family and
-normalized bad-root networks to the sampled certificates remains required.
+partial derivatives of the original terms.
 The sampled validity predicate now has an exact determinant-free description:
 normalized kernel vectors detect affine singular critical roots, and explicit
 pure-power equations detect roots at infinity. The spatial Jacobian's actual
@@ -169,10 +168,13 @@ terms. The original compiler's wires can now be reindexed to freeze the actual
 record's swept coordinate, with an exact coordinate-slice polynomial identity.
 Shared pure-power sums and dyadic scaling append to this source in one acyclic
 program. Its native encoder, output metadata, and critical-kernel tests retain
-both binary exponent words. Identifying that complete source polynomial with
-the finite-coordinate Fermat certificate remains required.
+both binary exponent words. Its exact coefficient-map identity now identifies
+the source with the finite-coordinate Fermat certificate. The affine and
+infinity tests give a native PSPACE checker for the original Valid predicate.
+A bounded fixed-width search selects a valid direction-and-sample record for
+the constructed regular integer source, with no supplied validity algorithm.
 Component-preserving reduction from arbitrary Boolean inputs and singular
-endpoint slices, effective direction selection, and the full recursive query
+endpoint slices and the full recursive query
 encodings remain required.
 Each sweep fiber is homeomorphic to its polynomial slice in one fewer
 coordinate. Properness and regularity pass to this lower-dimensional equation.

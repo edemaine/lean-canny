@@ -1350,3 +1350,65 @@ example : SpaceFunction (SampledSource.kernelBad pairFst pairSnd pairSnd
     (constFn_mem_FP (Term.const 1).toData.toBits) pairSnd_mem_FP pairSnd_mem_FP (constFn_mem_FP (Term.const 0).toData.toBits)
 
 end SampledSourceCircuitTests
+
+namespace NativeSweepCertificateTests
+open LeanCanny.ETR LeanCanny.Encoding MvPolynomial
+open FermatSweepCertificate
+open scoped Classical
+
+-- The complete checker charges the actual source and record readers, as well
+-- as binary degree and regularization exponents, on arbitrary input words.
+example : SpaceFunction (FermatValidity.check pairFst pairSnd (fun _ => 1) (fun _ => 3)
+    (fun _ => 2) (fun _ => 1)) :=
+  FermatValidity.evaluator pairFst_mem_FP pairSnd_mem_FP (UnaryFn.const 1) (BinaryFn.const 3)
+    (BinaryFn.const 2) (constFn_mem_FP (Term.const 1).toData.toBits)
+
+-- Retaining the selected record with the input permits subsequent native
+-- field reads. The record search itself requires only polynomial space.
+example {source : List Bool → List Bool} {dim degree mass : List Bool → ℕ}
+    (ht : source ∈ FP) (hd : UnaryFn dim) (hN : BinaryFn degree) (hb : BinaryFn mass) :
+    SpaceFunction (fun c => pair c
+      (FermatDirectionChoice.record source dim degree (FermatDirectionChoice.regularExponent dim degree mass)
+        (fun _ => 1) c)) :=
+  (FermatDirectionChoice.regular_evaluator ht hd hN hb
+    (constFn_mem_FP (Term.const 1).toData.toBits)).withInput
+
+example (source : List Bool → List Bool) (dim degree mass : List Bool → ℕ)
+    (c : List Bool) (low : MvPolynomial (Fin (dim c + 2)) ℤ)
+    (ht : (TermView.term (source c)).toPolynomial = rename Fin.val low)
+    (hlow : low.totalDegree < degree c) (hN : 1 < degree c)
+    (hm : LeanCanny.Algebra.MvMass.mass
+      (LeanCanny.Algebra.FermatCriticalHomogenization.polynomial low 1 (degree c)) ≤ 2 ^ mass c) :
+    Valid ((LeanCanny.Geometry.IntegerRegularSource.lower low (degree c) (mass c)).map (Int.castRingHom ℚ))
+      (LeanCanny.Geometry.IntegerRegularSource.leading (dim c + 1) 1 (degree c) (mass c) : ℚ) (degree c)
+      (FermatDirectionChoice.record source dim degree (FermatDirectionChoice.regularExponent dim degree mass)
+        (fun _ => 1) c) :=
+  FermatDirectionChoice.regular_record_valid source dim degree mass (fun _ => 1) c low ht (by decide) hlow hN hm
+
+-- A truncated record still decodes direction one. Its cubic infinity root
+-- (1,-1) must make the complete checker reject, independently of affine roots.
+example (c : List Bool) :
+    FermatValidity.check (fun _ => (Term.const 0).toData.toBits) (fun _ => [true])
+      (fun _ => 1) (fun _ => 3) (fun _ => 0) (fun _ => 1) c ≠ [true] := by
+  intro h
+  have hc := FermatValidity.charts_correct (fun _ => (Term.const 0).toData.toBits) (fun _ => [true])
+    (fun _ => 1) (fun _ => 3) (fun _ => 0) (fun _ => 1) c 0 (by simp [TermView.term_toBits, Term.toPolynomial])
+    (by decide) (by decide) 0 (by decide)
+  have hall : ∀ k < 2, FermatValidity.charts (fun _ => (Term.const 0).toData.toBits) (fun _ => [true])
+      (fun _ => 1) (fun _ => 3) (fun _ => 0) (fun _ => 1) (pair c (List.replicate k true)) = [true] := by
+    simpa only [FermatValidity.check, List.cons.injEq, and_true, decide_eq_true_eq] using h
+  apply ((hc.mp (hall 0 (by decide))).2)
+  rw [infinity_bad_iff_reduced _ (dyadicLeading_ne_zero 1 (by decide) 0) 3 (by decide)]
+  have hd : direction 1 3 [true] (0 : Fin 1) = 1 := by decide
+  refine ⟨Fin.cons 1 (fun _ : Fin 1 => -1), rfl, ?_, ?_⟩
+  · norm_num [Fin.sum_univ_succ]
+  · intro j
+    fin_cases j
+    norm_num [hd]
+
+-- A zero-length bounded scan accepts even when every child rejects.
+example (c : List Bool) :
+    [decide (∀ k < 0, (fun _ : List Bool => [false]) (pair c (List.replicate k true)) = [true])] = [true] := by
+  simp
+
+end NativeSweepCertificateTests

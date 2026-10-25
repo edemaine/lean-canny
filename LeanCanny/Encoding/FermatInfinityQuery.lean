@@ -32,6 +32,13 @@ def coefficient (dim degree : List Bool → ℕ) (record : List Bool → List Bo
 def query (dim degree index : List Bool → ℕ) (record : List Bool → List Bool) (c : List Bool) : List Gate :=
   Infinity.query (dim c + 1) (degree c - 1).bits (coefficient dim degree record c) (index c)
 
+def dataQuery (record : List Bool) (n N chart : ℕ) : List Gate :=
+  Infinity.query (n + 1) (N - 1).bits
+    (fun k => (Nat.fromBitsLE ((record.drop ((k - 1) * width n N)).take (width n N)) : ℤ)) chart
+
+theorem query_eq_data (dim degree index : List Bool → ℕ) (record : List Bool → List Bool) (c : List Bool) :
+    query dim degree index record c = dataQuery (record c) (dim c) (degree c) (index c) := rfl
+
 theorem coefficientLiteral_mem_FP {dim degree : List Bool → ℕ} {record : List Bool → List Bool}
     (hd : UnaryFn dim) (hN : BinaryFn degree) (hr : record ∈ FP) :
     (fun q => (Term.const (-(coefficient dim degree record (pairFst q) (pairSnd q).length))).toData.toBits) ∈ FP := by

@@ -194,8 +194,8 @@ The checked ingredients are:
   partial derivatives while preserving shared intermediate values. The
   source-term compiler has a quadratic bound on its complete intermediate
   state and constructs its fresh-wire metadata. Its derivative networks
-  compute the actual source partial derivatives. The full bad-root query
-  networks remain open. Certificate validity is now proved equivalent to
+  compute the actual source partial derivatives. Certificate validity is
+  proved equivalent to
   excluding normalized affine Jacobian-kernel roots and roots of the explicit
   pure-power infinity system. This removes determinant homogenization from
   the required query writers. Infinity charts have native PSPACE tests using
@@ -205,7 +205,12 @@ The checked ingredients are:
   with exact semantics and native PSPACE tests for compiled source terms.
   Sampled-source circuits now compute the frozen low term, full pure-power
   sum, and dyadic regularization with native encoders and kernel tests. Their
-  finite-coordinate identity with the Fermat certificate remains required.
+  exact finite-coordinate identity identifies them with the Fermat certificate.
+  The native affine and infinity tests now check its original validity
+  predicate. A bounded search selects a valid direction-and-sample record for
+  the constructed regular integer source; no validity or direction oracle is
+  assumed. The component-preserving recursion and its query writers remain
+  required.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
