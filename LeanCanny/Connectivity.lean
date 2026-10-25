@@ -41,6 +41,7 @@ import LeanCanny.Encoding.FermatInfinityQuery
 import LeanCanny.Encoding.FermatDirectionChoice
 import LeanCanny.Encoding.FermatTermPreparation
 import LeanCanny.Geometry.CompactSublevelComponents
+import LeanCanny.Geometry.CircleSublevelLift
 
 /-! # Connectivity development
 
@@ -183,6 +184,10 @@ For compact decreasing sublevel neighborhoods, component intersections now
 recover the exact zero-set component, even at singular zeros. Distinct zero
 components separate at some positive tolerance. A finite effective tolerance
 and path recovery for arbitrary formula inputs remain required.
+Adding two squared slack coordinates gives a level equation with connected
+circle fibers over its sublevel set, including singleton fibers at radius
+zero. Its continuous section constructs a quotient projection preserving
+exact connected components and whole-space preconnectedness.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

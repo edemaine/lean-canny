@@ -876,6 +876,15 @@ components therefore separate at some positive tolerance, with no regularity
 assumption at the zeros. This limit theorem does not supply a finite effective
 tolerance or identify connected components with path components.
 
+`Geometry/CircleSublevelLift` constructs the level equation
+`g(x) + u² + v² = e` over the sublevel `g(x) ≤ e`. A continuous square-root
+section makes the projection a quotient map. Its fibers are connected
+circles, including the radius-zero singleton, so the projection preserves
+exact components and preconnectedness, also for the empty sublevel. This
+avoids the two-point fibers of a single squared slack coordinate. Regularity,
+properness and effective stabilization for the full input reduction remain
+separate obligations.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

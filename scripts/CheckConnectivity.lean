@@ -1472,3 +1472,33 @@ example : (1 : ℝ) ∉ connectedComponentIn (sublevel (Icc (-2 : ℝ) 2) energy
   norm_num [energy] at hz
 
 end CompactComponentLimitTests
+
+namespace CircleSublevelLiftTests
+open LeanCanny.Geometry.CircleSublevelLift Set
+
+-- Radius zero must retain its singleton fiber. A positive radius has the
+-- entire connected circle, rather than two disconnected signed square roots.
+example : IsConnected ((projection (fun _ : Unit => (0 : ℝ)) 0) ⁻¹' {⟨(), by norm_num [Base]⟩}) :=
+  fiber_connected _ _ _
+
+example : IsConnected ((projection (fun _ : Unit => (0 : ℝ)) 1) ⁻¹' {⟨(), by norm_num [Base]⟩}) :=
+  fiber_connected _ _ _
+
+-- A negative sublevel of zero is empty. The lift accepts the same empty-set
+-- connectivity convention as the original problem.
+example : IsPreconnected (Total (fun _ : Unit => (0 : ℝ)) (-1)) := by
+  rw [preconnected_iff _ continuous_const]
+  have he : Base (fun _ : Unit => (0 : ℝ)) (-1) = ∅ := by
+    ext x
+    norm_num [Base]
+  rw [he]
+  exact isPreconnected_empty
+
+-- The component criterion applies to a singular squared polynomial energy;
+-- it does not assume local path connectivity of the original zero set.
+example (e : ℝ) (x y : Base (fun t : ℝ => (t ^ 2 - 1) ^ 2) e) :
+    sectionMap _ e y ∈ connectedComponent (sectionMap _ e x) ↔
+      y.val ∈ connectedComponentIn (Base (fun t : ℝ => (t ^ 2 - 1) ^ 2) e) x.val :=
+  section_component_iff _ (by fun_prop) e x y
+
+end CircleSublevelLiftTests
