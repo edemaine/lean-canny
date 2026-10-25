@@ -949,3 +949,32 @@ example :
   exact he
 
 end ConstructedRegularLevelTests
+
+namespace SweepCertificateTests
+open LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+
+-- With no direction coordinates, the one retained block is still the sweep
+-- sample. The next block is outside the record's dimension.
+#guard FermatSweepCertificate.read (fun _ => 0) (fun _ => 2 ^ 80)
+  (pair (pair [] [true]) (BinaryNatCode.encode 0)) == [true]
+#guard FermatSweepCertificate.read (fun _ => 0) (fun _ => 2 ^ 80)
+  (pair (pair [] [true]) (BinaryNatCode.encode 1)) == []
+
+private noncomputable def complexOnlyRows (_ : Fin 2) : MvPolynomial (Fin 2) ℚ := X 0 ^ 2 + X 1 ^ 2
+
+-- A real-root emptiness test would accept this fiber, but it has a normalized
+-- complex root. Projective certificates must test complex roots.
+example : ∀ x : Fin 2 → ℝ, (∀ j, (complexOnlyRows j).eval₂ (algebraMap ℚ ℝ) x = 0) → x = 0 := by
+  intro x hx
+  have he : x 0 ^ 2 + x 1 ^ 2 = 0 := by simpa [complexOnlyRows] using hx 0
+  have h0 : x 0 = 0 := by nlinarith [sq_nonneg (x 1), sq_nonneg (x 0)]
+  have h1 : x 1 = 0 := by nlinarith [sq_nonneg (x 1), sq_nonneg (x 0)]
+  funext i
+  fin_cases i <;> assumption
+
+example : ∃ y : Fin 2 → ℂ, y 0 = 1 ∧ ∀ j, (complexOnlyRows j).eval₂ (algebraMap ℚ ℂ) y = 0 := by
+  refine ⟨Fin.cons 1 (fun _ => Complex.I), rfl, ?_⟩
+  intro j
+  simp [complexOnlyRows, Complex.I_sq]
+
+end SweepCertificateTests

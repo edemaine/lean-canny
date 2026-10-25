@@ -25,6 +25,7 @@ import LeanCanny.Algebra.ParameterizedCriticalCoefficientSpace
 import LeanCanny.Algebra.ProjectiveDirectionGrid
 import LeanCanny.Encoding.FermatCriticalDirection
 import LeanCanny.Encoding.CriticalRegularLevel
+import LeanCanny.Geometry.IntegerRegularSweepCertificate
 
 /-! # Connectivity development
 
@@ -112,6 +113,13 @@ with no materialized denominator. The actual coordinate-slice polynomial preserv
 and commutes with differentiation. A transcendental sweep value makes that
 slice regular over every extension field, so the bounded integer direction
 also applies to the generic slice family of the constructed dyadic source.
+That actual parameter-ring family has a root-free specialization at a bounded
+integer direction and sweep value. A short fixed-length record stores both,
+with native polynomial-time field access. Validity asks only for emptiness of
+the sampled complex projective bad-root fiber. Any valid sample certifies
+generic Jacobian regularity through maximal-minor transfer; the minor itself
+is not retained. The complex test is equivalent to finitely many normalized
+affine charts. Its native decision procedure remains to be constructed.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices, effective direction selection, and the full recursive query
 encodings remain required.

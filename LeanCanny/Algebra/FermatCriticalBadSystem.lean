@@ -22,7 +22,7 @@ open MvPolynomial FermatCriticalHomogenization
 open scoped Classical BigOperators Matrix
 set_option backward.isDefEq.respectTransparency false
 
-variable {n : ℕ} {K : Type*} [Field K]
+variable {n : ℕ} {K : Type*} [CommRing K]
 
 noncomputable def equations (low : MvPolynomial (Fin (n + 1)) K) (a : K) (N : ℕ) :
     Fin (n + 1) → MvPolynomial (Fin (n + 1)) (MvPolynomial (Fin n) K) :=
@@ -63,6 +63,8 @@ theorem degrees_pos (N : ℕ) (hN : 1 < N) (i : Option (Fin (n + 1))) : 0 < degr
 theorem homogeneous (low : MvPolynomial (Fin (n + 1)) K) (a : K) (N : ℕ) (j : Fin (n + 2)) :
     (nativeRows low a N j).IsHomogeneous (nativeDegrees n N j) :=
   (HomogeneousBadSystem.homogeneous _ _ _ _ (layout.symm j)).rename_isHomogeneous
+
+variable [Nontrivial K]
 
 theorem equations_degree (low : MvPolynomial (Fin (n + 1)) K) (a : K) (N : ℕ)
     (hlow : low.totalDegree < N) (i : Fin (n + 1)) :

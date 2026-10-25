@@ -66,4 +66,16 @@ theorem exists_bounded (low : MvPolynomial (Fin (n + 2)) K) (a : K) (ha : a ≠ 
     (fun hz => ha ((algebraMap K (GenericField K)).injective (hz.trans (map_zero _).symm)))
     N (lower_degree low a N hlow) hN (regular low a N hregular)
 
+theorem exists_bounded_root_free (low : MvPolynomial (Fin (n + 2)) K) (a : K) (ha : a ≠ 0)
+    (N : ℕ) (hlow : low.totalDegree < N) (hN : 1 < N)
+    (hregular : ∀ (L : Type u) [Field L] [Algebra K L] (x : Fin (n + 2) → L),
+      aeval x (polynomial low a N) = 0 → ∃ j, aeval x (pderiv j (polynomial low a N)) ≠ 0) :
+    ∃ v : Fin n → ℕ, (∀ i, v i ≤ FermatBoundedCriticalDirection.allowance n N) ∧
+      ∀ (L : Type u) [Field L] [Algebra (GenericField K) L] (y : Fin (n + 2) → L),
+        (∀ j, (FermatCriticalBadSystem.nativeRows (lower low a N) (algebraMap K (GenericField K) a) N j).eval₂
+          (eval₂Hom (algebraMap (GenericField K) L) (fun i => (v i : L))) y = 0) → y = 0 :=
+  FermatBoundedCriticalDirection.exists_bounded_root_free (lower low a N) (algebraMap K (GenericField K) a)
+    (fun hz => ha ((algebraMap K (GenericField K)).injective (hz.trans (map_zero _).symm)))
+    N (lower_degree low a N hlow) hN (regular low a N hregular)
+
 end LeanCanny.Algebra.FermatGenericSliceDirection

@@ -6,6 +6,7 @@ module
 
 public import LeanCanny.Algebra.FermatCriticalHomogenization
 public import LeanCanny.Algebra.CoordinateCriticalValues
+public import LeanCanny.Algebra.PolynomialCoefficientDegree
 
 /-! # Coordinate slices over polynomial coefficient rings
 
@@ -71,6 +72,30 @@ theorem degree_le [Nontrivial R] (p : MvPolynomial (Fin (n + 1)) R) :
   intro i _
   apply (totalDegree_pow _ _).trans
   refine Fin.cases (by simp) (fun i => by simp) i
+
+theorem coefficient_degree [Nontrivial R] (p : MvPolynomial (Fin (n + 1)) R) :
+    PolynomialCoefficientDegree.Bound (family p) p.totalDegree := by
+  have hvar (i : Fin (n + 1)) : PolynomialCoefficientDegree.Bound
+      ((Fin.cons (C Polynomial.X) X : Fin (n + 1) → MvPolynomial (Fin n) (Polynomial R)) i) 1 := by
+    refine Fin.cases ?_ (fun i => ?_) i
+    · exact PolynomialCoefficientDegree.C (by simp)
+    · exact PolynomialCoefficientDegree.mono (PolynomialCoefficientDegree.X i) (by decide)
+  have hmon (e : Fin (n + 1) →₀ ℕ) (r : R) :
+      PolynomialCoefficientDegree.Bound (family (monomial e r)) e.degree := by
+    change PolynomialCoefficientDegree.Bound
+      ((monomial e r).eval₂ (C.comp Polynomial.C) (Fin.cons (C Polynomial.X) X)) _
+    rw [eval₂_monomial]
+    have hprod := PolynomialCoefficientDegree.prod e.support
+      (fun i => (Fin.cons (C Polynomial.X) X : Fin (n + 1) → MvPolynomial (Fin n) (Polynomial R)) i ^ e i)
+      (fun i => e i * 1) (fun i _ => PolynomialCoefficientDegree.pow (hvar i) (e i))
+    have hm := PolynomialCoefficientDegree.mul
+      (PolynomialCoefficientDegree.C (R := R) (σ := Fin n) (show (Polynomial.C r).natDegree ≤ 0 by simp)) hprod
+    simpa only [RingHom.comp_apply, Nat.mul_one, Nat.zero_add, Finsupp.degree_apply, Finsupp.prod] using hm
+  have he : family p = ∑ e ∈ p.support, family (monomial e (p.coeff e)) := by
+    conv_lhs => rw [p.as_sum, map_sum]
+  rw [he]
+  exact PolynomialCoefficientDegree.sum _ _ _ fun e he =>
+    PolynomialCoefficientDegree.mono (hmon e _) (le_totalDegree he)
 
 theorem family_fermat (low : MvPolynomial (Fin (n + 2)) R) (a : R) (N : ℕ) :
     family (FermatCriticalHomogenization.polynomial low a N) =
