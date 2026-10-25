@@ -31,6 +31,7 @@ import LeanCanny.ETR.ComplexCircuitBuilders
 import LeanCanny.ETR.ComplexDyadicPSPACE
 import LeanCanny.ETR.ComplexDifferentialEncoding
 import LeanCanny.ETR.ComplexTermDifferential
+import LeanCanny.Encoding.FermatSweepKernelCertificate
 
 /-! # Connectivity development
 
@@ -141,6 +142,13 @@ constructed fresh-wire metadata. Their denominator-cleared equations have
 native PSPACE tests, and their derivative networks compute the actual formal
 partial derivatives of the original terms. Connecting the critical-family and
 normalized bad-root networks to the sampled certificates remains required.
+The sampled validity predicate now has an exact determinant-free description:
+normalized kernel vectors detect affine singular critical roots, and explicit
+pure-power equations detect roots at infinity. The spatial Jacobian's actual
+degree is strictly below its assigned homogenization degree, so its appended
+row vanishes at infinity. This split allows coefficient specialization maps
+with a kernel, including evaluation at the finite sweep sample. Native query
+writers for these two chart families remain required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices, effective direction selection, and the full recursive query
 encodings remain required.

@@ -1118,3 +1118,35 @@ example : SpaceFunction (fun bits => [decide (∃ env : ℕ → ℂ,
   Source.scaledTerm_evaluator pairFst_mem_FP pairSnd_mem_FP
 
 end SourceCircuitTests
+
+namespace BadRootChartTests
+open LeanCanny.Algebra
+open MvPolynomial
+open scoped Classical Matrix
+
+-- The empty square Jacobian has no normalized nonzero kernel chart.
+example : ¬ ∃ i : Fin 0, ∃ v : Fin 0 → ℂ, v i = 1 ∧ (0 : Matrix (Fin 0) (Fin 0) ℂ) *ᵥ v = 0 := by
+  simp
+
+-- Normalizing over C retains kernel vectors with nonreal entries.
+private def imaginaryMatrix : Matrix (Fin 2) (Fin 2) ℂ := !![1, Complex.I; Complex.I, -1]
+
+example : ∃ i : Fin 2, ∃ v : Fin 2 → ℂ, v i = 1 ∧ imaginaryMatrix *ᵥ v = 0 := by
+  apply (JacobianKernelCharts.det_zero_iff imaginaryMatrix).mp
+  norm_num [imaginaryMatrix, Matrix.det_fin_two, Complex.I_sq]
+
+-- A direction can have a bad root at infinity even with a nonzero constant
+-- lower term. The projective test must retain its separate infinity queries.
+example : ¬ (∀ y : Fin 3 → ℂ,
+    (∀ j, (FermatCriticalBadSpecialization.rows (C 1 : MvPolynomial (Fin 2) ℚ) 1 3
+      (fun _ : Fin 1 => 1) j).eval₂ (algebraMap ℚ ℂ) y = 0) → y = 0) := by
+  rw [FermatCriticalBadSpecialization.root_free_iff_kernel_infinity_charts
+    (algebraMap ℚ ℂ) (C 1 : MvPolynomial (Fin 2) ℚ) 1 3 (by simp) (by decide)]
+  intro h
+  apply h.2 (0 : Fin 2)
+  refine ⟨Fin.cons 1 (fun _ : Fin 1 => -1), rfl, ?_⟩
+  intro j
+  fin_cases j <;> norm_num [FermatCriticalInfinity.native, eval₂_mul, eval₂_C, eval₂_sum,
+    eval₂_pow, eval₂_X, eval₂_sub, Fin.sum_univ_succ]
+
+end BadRootChartTests

@@ -195,7 +195,10 @@ The checked ingredients are:
   source-term compiler has a quadratic bound on its complete intermediate
   state and constructs its fresh-wire metadata. Its derivative networks
   compute the actual source partial derivatives. The full bad-root query
-  networks and their certificate equivalence remain open.
+  networks remain open. Certificate validity is now proved equivalent to
+  excluding normalized affine Jacobian-kernel roots and roots of the explicit
+  pure-power infinity system. This removes determinant homogenization from
+  the required query writers.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
