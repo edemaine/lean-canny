@@ -103,6 +103,19 @@ theorem locallyPathConnected_fiber (b : B) : LocallyPathConnectedSpace (p ⁻¹'
 variable [T2Space X]
 
 include hsource hfirst in
+/-- Fiber connection remains clopen for arbitrary continuous moving endpoints. -/
+theorem isClopen_joined_along {A : Type*} [TopologicalSpace A] (hp : IsProperMap p)
+    {base : A → B} {s d : A → X} (hbase : Continuous base)
+    (hs : Continuous s) (hd : Continuous d)
+    (hps : ∀ b, p (s b) = base b) (hpd : ∀ b, p (d b) = base b) :
+    IsClopen {b | JoinedIn (p ⁻¹' {base b}) (s b) (d b)} := by
+  let : ∀ b, LocallyPathConnectedSpace (p ⁻¹' {b}) :=
+    locallyPathConnected_fiber p chart hsource hfirst
+  obtain ⟨box, hopen, hmem, hpaths⟩ := exists_slice_cover p chart hsource hfirst
+  exact FiberPathPersistence.isClopen_joined_along p box hp (isOpenMap p chart hsource hfirst)
+    hopen (fun x => ⟨x, hmem x⟩) hpaths hbase hs hd hps hpd
+
+include hsource hfirst in
 /-- Proper local product charts suffice for fiber component transport between
 continuous sections. No global product structure is required. -/
 theorem joined_sections_iff [PreconnectedSpace B] (hp : IsProperMap p)

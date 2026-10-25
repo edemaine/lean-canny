@@ -28,18 +28,19 @@ open scoped Topology
 variable {X B : Type*} [TopologicalSpace X] [TopologicalSpace B] [T2Space X]
   (p : X → B)
 
-/-- Fiber connection of continuous sections is closed for a proper map with
-locally path-connected fibers. No differentiability assumption is needed. -/
-theorem isClosed_joined_sections (hp : IsProperMap p)
+/-- Fiber connection is closed for arbitrary continuously varying endpoint
+pairs of a proper map with locally path-connected fibers. -/
+theorem isClosed_joined_along {A : Type*} [TopologicalSpace A] (hp : IsProperMap p)
     [∀ b, LocallyPathConnectedSpace (p ⁻¹' {b})]
-    {s d : B → X} (hs : Continuous s) (hd : Continuous d)
-    (hps : ∀ b, p (s b) = b) (hpd : ∀ b, p (d b) = b) :
-    IsClosed {b | JoinedIn (p ⁻¹' {b}) (s b) (d b)} := by
+    {base : A → B} {s d : A → X} (hbase : Continuous base)
+    (hs : Continuous s) (hd : Continuous d)
+    (hps : ∀ b, p (s b) = base b) (hpd : ∀ b, p (d b) = base b) :
+    IsClosed {b | JoinedIn (p ⁻¹' {base b}) (s b) (d b)} := by
   classical
   rw [← isOpen_compl_iff, isOpen_iff_mem_nhds]
   intro b hb
-  change ¬ JoinedIn (p ⁻¹' {b}) (s b) (d b) at hb
-  let K := p ⁻¹' {b}
+  change ¬ JoinedIn (p ⁻¹' {base b}) (s b) (d b) at hb
+  let K := p ⁻¹' {base b}
   let : CompactSpace K := isCompact_iff_compactSpace.mp (hp.isCompact_preimage isCompact_singleton)
   let x : K := ⟨s b, hps b⟩
   let y : K := ⟨d b, hpd b⟩
@@ -62,18 +63,18 @@ theorem isClosed_joined_sections (hp : IsProperMap p)
     (hC.image continuous_subtype_val) (hD.image continuous_subtype_val) hdis
   have hsU : s b ∈ U := hCU ⟨x, mem_connectedComponent, rfl⟩
   have hdV : d b ∈ V := hDV ⟨y, hy, rfl⟩
-  have hcover : ∀ z ∈ p ⁻¹' {b}, z ∈ U ∪ V := by
+  have hcover : ∀ z ∈ p ⁻¹' {base b}, z ∈ U ∪ V := by
     intro z hz
     let w : K := ⟨z, hz⟩
     by_cases hw : w ∈ C
     · exact Or.inl (hCU ⟨w, hw, rfl⟩)
     · exact Or.inr (hDV ⟨w, hw, rfl⟩)
-  have hfib : ∀ᶠ c in 𝓝 b, ∀ z ∈ p ⁻¹' {c}, z ∈ U ∪ V :=
-    hp.isClosedMap.eventually_nhds_fiber b (fun z hz => (hU.union hV).mem_nhds (hcover z hz))
+  have hfib : ∀ᶠ c in 𝓝 (base b), ∀ z ∈ p ⁻¹' {c}, z ∈ U ∪ V :=
+    hp.isClosedMap.eventually_nhds_fiber (base b) (fun z hz => (hU.union hV).mem_nhds (hcover z hz))
   have hsu : ∀ᶠ c in 𝓝 b, s c ∈ U := hs.continuousAt.preimage_mem_nhds (hU.mem_nhds hsU)
   have hdv : ∀ᶠ c in 𝓝 b, d c ∈ V := hd.continuousAt.preimage_mem_nhds (hV.mem_nhds hdV)
-  filter_upwards [hfib, hsu, hdv] with c hc hsc hdc
-  change ¬ JoinedIn (p ⁻¹' {c}) (s c) (d c)
+  filter_upwards [hbase.continuousAt.eventually hfib, hsu, hdv] with c hc hsc hdc
+  change ¬ JoinedIn (p ⁻¹' {base c}) (s c) (d c)
   rintro ⟨γ, hγ⟩
   have hsub : range γ ⊆ U ∪ V := by
     rintro z ⟨t, rfl⟩
@@ -81,6 +82,29 @@ theorem isClosed_joined_sections (hp : IsProperMap p)
   have hleft := (isPreconnected_range γ.continuous).subset_left_of_subset_union hU hV hUV hsub
     ⟨s c, γ.source_mem_range, hsc⟩
   exact Set.disjoint_left.mp hUV (hleft γ.target_mem_range) hdc
+
+/-- Fiber connection of continuous sections is closed for a proper map with
+locally path-connected fibers. No differentiability assumption is needed. -/
+theorem isClosed_joined_sections (hp : IsProperMap p)
+    [∀ b, LocallyPathConnectedSpace (p ⁻¹' {b})]
+    {s d : B → X} (hs : Continuous s) (hd : Continuous d)
+    (hps : ∀ b, p (s b) = b) (hpd : ∀ b, p (d b) = b) :
+    IsClosed {b | JoinedIn (p ⁻¹' {b}) (s b) (d b)} :=
+  isClosed_joined_along p hp continuous_id hs hd hps hpd
+
+/-- The general endpoint relation is clopen when local slice paths persist. -/
+theorem isClopen_joined_along {A ι : Type*} [TopologicalSpace A] (box : ι → Set X)
+    (hp : IsProperMap p) (hpo : IsOpenMap p)
+    [∀ b, LocallyPathConnectedSpace (p ⁻¹' {b})]
+    (hopen : ∀ i, IsOpen (box i)) (hcover : ∀ x, ∃ i, x ∈ box i)
+    (hpaths : ∀ b i, ∀ x ∈ box i, p x = b → ∀ y ∈ box i, p y = b →
+      JoinedIn (p ⁻¹' {b}) x y)
+    {base : A → B} {s d : A → X} (hbase : Continuous base)
+    (hs : Continuous s) (hd : Continuous d)
+    (hps : ∀ b, p (s b) = base b) (hpd : ∀ b, p (d b) = base b) :
+    IsClopen {b | JoinedIn (p ⁻¹' {base b}) (s b) (d b)} :=
+  ⟨isClosed_joined_along p hp hbase hs hd hps hpd,
+    isOpen_joined_along p box hpo hopen hcover hpaths hbase hs hd hps hpd⟩
 
 /-- The two persistence directions give a clopen fiber-connection predicate. -/
 theorem isClopen_joined_sections {ι : Type*} (box : ι → Set X)

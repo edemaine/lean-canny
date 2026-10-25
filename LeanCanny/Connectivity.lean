@@ -9,6 +9,8 @@ import LeanCanny.Geometry.RootBranchCount
 import LeanCanny.Geometry.ProjectionCriticalBranches
 import LeanCanny.Geometry.ComponentCriticalSampling
 import LeanCanny.Geometry.PolynomialComponentTransport
+import LeanCanny.Connectivity.PolynomialSlabCover
+import LeanCanny.Connectivity.EndpointAttachment
 
 /-! # Connectivity development
 
@@ -26,7 +28,12 @@ an integer projection direction and finitely many exceptional levels. Regular
 compact fibers have finitely many path components, all sampled by the critical
 equations. Fiber connection between continuous sections is constant on each
 preconnected regular-value region; the exceptional levels are constructed
-algebraically. The effective semialgebraic roadmap construction is not yet
+algebraically. Saturating the critical branches gives a finite clopen cover of
+the entire regular slab, with both connectivity tests reduced to one sample
+fiber. Each saturated component has a connected limit in both endpoint fibers,
+including singular ones. A recursive accessible slice cover turns this limit
+connection into a path and attaches boundary points to a branch endpoint.
+The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
 membership theorem here.

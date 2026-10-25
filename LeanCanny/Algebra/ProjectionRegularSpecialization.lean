@@ -142,25 +142,45 @@ theorem exists_exceptional [CharZero K] (p : MvPolynomial ι K) (base : ι) :
 the roots of one nonzero univariate level polynomial. The size bound `B`
 comes from the constructed joint exceptional polynomial; no polynomial
 input-size estimate for `B` is asserted. -/
-theorem exists_nat_regular_levels [CharZero K] (p : MvPolynomial ι K) (base : ι) :
+theorem exists_nat_regular_coordinates [CharZero K] (p : MvPolynomial ι K) (base : ι) :
     ∃ B : ℕ, ∃ u : ProjectionFiniteSpecialization.DirectionIndex base → ℕ,
       (∀ i, u i ≤ B) ∧ ∃ r : Polynomial K, r ≠ 0 ∧ r.natDegree ≤ B ∧
+        ∃ Q : Option ι → Polynomial (Polynomial K), (∀ i, Q i ≠ 0) ∧
         ∀ (L : Type u) [Field L] [Algebra K L] (a : L), Polynomial.aeval a r ≠ 0 →
           {z : Option ι → L | ∀ j, aeval z (GenericProjectionFinite.equation
             (levelPolynomial p a) base
               (ProjectionFiniteSpecialization.normalizedDirection base (fun i => (u i : L))) j) = 0}.Finite ∧
-          ∀ z : Option ι → L,
+          (∀ z : Option ι → L,
             (∀ j, aeval z (GenericProjectionFinite.equation (levelPolynomial p a) base
               (ProjectionFiniteSpecialization.normalizedDirection base (fun i => (u i : L))) j) = 0) →
             (jacobian p base).eval₂
-              (eval₂Hom (algebraMap K L) (fun i => i.elim a (fun j => (u j : L)))) z ≠ 0 := by
+              (eval₂Hom (algebraMap K L) (fun i => i.elim a (fun j => (u j : L)))) z ≠ 0) ∧
+          ∀ z : Option ι → L,
+            (∀ j, aeval z (GenericProjectionFinite.equation (levelPolynomial p a) base
+              (ProjectionFiniteSpecialization.normalizedDirection base (fun i => (u i : L))) j) = 0) →
+            ∀ i, Polynomial.aeval (z i) ((Q i).map (Polynomial.aeval a).toRingHom) = 0 := by
   classical
-  obtain ⟨df, hdf, hfinite⟩ := LevelProjectionSpecialization.exists_finite_specialization_polynomial p base
+  obtain ⟨cert⟩ := LevelProjectionSpecialization.nonempty_coordinate_certificate p base
+  let df := cert.exceptional
+  have hdf : df ≠ 0 := cert.exceptional_ne_zero
   obtain ⟨dr, hdr, hregular⟩ := exists_exceptional p base
   let d := df * dr
   obtain ⟨u, hu, hr, hdegree⟩ := ParameterLineSpecialization.exists_nat_line_nonzero d (mul_ne_zero hdf hdr)
   let r := ParameterLineSpecialization.lineHom (fun i => (u i : K)) d
-  refine ⟨d.totalDegree, u, hu, r, hr, hdegree, ?_⟩
+  let line := ParameterLineSpecialization.lineHom (fun i => (u i : K))
+  let Q := fun i => (cert.polynomial i).map line
+  have hline : line df ≠ 0 := (mul_ne_zero_iff.mp (by
+    simpa only [d, map_mul] using hr)).1
+  have hQ (i : Option ι) : Q i ≠ 0 := by
+    have hprod : ∏ j, line (cert.factor j) * line (cert.polynomial j).leadingCoeff ≠ 0 := by
+      simpa only [df, CoordinateAnnihilatorSpecialization.Certificate.exceptional,
+        map_prod, map_mul] using hline
+    have hlead := (mul_ne_zero_iff.mp (Finset.prod_ne_zero_iff.mp hprod i (Finset.mem_univ i))).2
+    intro hz
+    have he := congrArg (fun q : Polynomial (Polynomial K) => q.coeff (cert.polynomial i).natDegree) hz
+    exact hlead (by simpa only [Q, Polynomial.coeff_map, Polynomial.coeff_natDegree,
+      Polynomial.coeff_zero] using he)
+  refine ⟨d.totalDegree, u, hu, r, hr, hdegree, Q, hQ, ?_⟩
   intro L _ _ a ha
   let φ : ParameterRing K base →+* L :=
     eval₂Hom (algebraMap K L) (fun i => i.elim a (fun j => (u j : L)))
@@ -179,8 +199,49 @@ theorem exists_nat_regular_levels [CharZero K] (p : MvPolynomial ι K) (base : �
     intro j
     rw [LevelProjectionSpecialization.eval_equation]
     exact hz j
-  refine ⟨(hfinite L φ hφdf).subset (fun z hz => hroots z hz), ?_⟩
-  intro z hz
-  exact hregular L φ z hφdr (hroots z hz)
+  have hI (z : Option ι → L)
+      (hz : ∀ j, aeval z (GenericProjectionFinite.equation (levelPolynomial p a) base
+        (ProjectionFiniteSpecialization.normalizedDirection base (fun i => (u i : L))) j) = 0) :
+      ∀ q ∈ Ideal.span (Set.range (LevelProjectionSpecialization.equation p base)), q.eval₂ φ z = 0 := by
+    have hk : Ideal.span (Set.range (LevelProjectionSpecialization.equation p base)) ≤
+        RingHom.ker (eval₂Hom φ z) := by
+      apply Ideal.span_le.mpr
+      rintro _ ⟨j, rfl⟩
+      exact hroots z hz j
+    exact fun _ hq => hk hq
+  refine ⟨?_, (fun z hz => hregular L φ z hφdr (hroots z hz)), ?_⟩
+  · apply (cert.finite_solutions (E := L) φ hφdf).subset
+    intro z hz q hq
+    simpa only [Algebra.algebraMap_self, RingHom.id_comp] using hI z hz q hq
+  · intro z hz i
+    have heq : (Polynomial.aeval a).toRingHom.comp line = φ := by
+      apply RingHom.ext
+      intro q
+      change Polynomial.aeval a (ParameterLineSpecialization.lineHom (fun i => (u i : K)) q) = _
+      rw [ParameterLineSpecialization.aeval_line]
+      simp only [φ, map_natCast]
+      rfl
+    change Polynomial.aeval (z i) (((cert.polynomial i).map line).map (Polynomial.aeval a).toRingHom) = 0
+    rw [Polynomial.map_map, heq]
+    apply cert.aeval_specialized_eq_zero φ hφdf z
+    intro q hq
+    simpa only [Algebra.algebraMap_self, RingHom.id_comp] using hI z hz q hq
+
+/-- The finite regular fibers are obtained together with coordinate equations;
+this wrapper retains the original interface. -/
+theorem exists_nat_regular_levels [CharZero K] (p : MvPolynomial ι K) (base : ι) :
+    ∃ B : ℕ, ∃ u : ProjectionFiniteSpecialization.DirectionIndex base → ℕ,
+      (∀ i, u i ≤ B) ∧ ∃ r : Polynomial K, r ≠ 0 ∧ r.natDegree ≤ B ∧
+        ∀ (L : Type u) [Field L] [Algebra K L] (a : L), Polynomial.aeval a r ≠ 0 →
+          {z : Option ι → L | ∀ j, aeval z (GenericProjectionFinite.equation
+            (levelPolynomial p a) base
+              (ProjectionFiniteSpecialization.normalizedDirection base (fun i => (u i : L))) j) = 0}.Finite ∧
+          ∀ z : Option ι → L,
+            (∀ j, aeval z (GenericProjectionFinite.equation (levelPolynomial p a) base
+              (ProjectionFiniteSpecialization.normalizedDirection base (fun i => (u i : L))) j) = 0) →
+            (jacobian p base).eval₂
+              (eval₂Hom (algebraMap K L) (fun i => i.elim a (fun j => (u j : L)))) z ≠ 0 := by
+  obtain ⟨B, u, hu, r, hr, hdegree, _, _, h⟩ := exists_nat_regular_coordinates p base
+  exact ⟨B, u, hu, r, hr, hdegree, fun L _ _ a ha => ⟨(h L a ha).1, (h L a ha).2.1⟩⟩
 
 end LeanCanny.Algebra.ProjectionRegularSpecialization

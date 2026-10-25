@@ -32,7 +32,7 @@ variable {ι F : Type*} [Fintype ι]
 
 /-- An actual family of complete, disjoint root arcs with accessible boundary.
 The index is the finite fiber proved in `RootBranches.finite_index`. -/
-theorem exists_arcs (f : ℝ × (ι → ℝ) → F) (a b : ℝ) (t₀ : Ioo a b)
+theorem exists_anchored_arcs (f : ℝ × (ι → ℝ) → F) (a b : ℝ) (t₀ : Ioo a b)
     (hcont : Continuous f) (hproper : IsProperMap (RootProjection.projection f))
     (hf : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
       ContDiffAt ℝ 1 f z.val)
@@ -42,13 +42,15 @@ theorem exists_arcs (f : ℝ × (ι → ℝ) → F) (a b : ℝ) (t₀ : Ioo a b)
     (hrel : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
       ∀ i, AlgebraicBranchLimit.value (p i) z.val.1 (z.val.2 i) = 0) :
     ∃ curve : RootBranches.Index f a b t₀ → ℝ → ι → ℝ,
+      (∀ j, curve j t₀.val = j.val.val.val.2) ∧
       (∀ j, ContinuousOn (curve j) (Icc a b)) ∧
       (∀ j t, t ∈ Icc a b → f (t, curve j t) = 0) ∧
       (∀ t : Ioo a b, ∀ x, f (t.val, x) = 0 ↔ ∃! j, curve j t.val = x) ∧
       ∀ j, FrontierCover.Accessible ((fun t => (t, curve j t)) '' Ioo a b) := by
   classical
   have hab : a < b := t₀.property.1.trans t₀.property.2
-  obtain ⟨branch, hroots, hcomplete⟩ := RootBranches.exists_branches f a b t₀ hproper hf hJac
+  obtain ⟨branch, hanchor, hroots, hcomplete⟩ :=
+    RootBranches.exists_anchored_branches f a b t₀ hproper hf hJac
   let K : ι → Set ℝ := fun i =>
     (fun z : RootProjection.Space f => z.val.2 i) '' (RootProjection.projection f ⁻¹' Icc a b)
   have hK (i : ι) : IsCompact (K i) :=
@@ -90,11 +92,31 @@ theorem exists_arcs (f : ℝ × (ι → ℝ) → F) (a b : ℝ) (t₀ : Ioo a b)
       rw [hvalue j ⟨s, hs⟩]
       exact hroots j ⟨s, hs⟩
     exact (closure_minimal hsub (isClosed_eq hcont continuous_const)) hcl
-  refine ⟨curve, hc, hfullroot, ?_, ?_⟩
+  refine ⟨curve, (fun j => (hvalue j t₀).trans (hanchor j)), hc, hfullroot, ?_, ?_⟩
   · intro t x
     simpa only [hvalue] using hcomplete t x
   · intro j
     exact FrontierCover.accessible_open_arc (continuous_id.continuousOn.prodMk (hc j))
+
+/-- Complete accessible root arcs; `exists_anchored_arcs` also identifies each
+label with its actual root at the sample parameter. -/
+theorem exists_arcs (f : ℝ × (ι → ℝ) → F) (a b : ℝ) (t₀ : Ioo a b)
+    (hcont : Continuous f) (hproper : IsProperMap (RootProjection.projection f))
+    (hf : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
+      ContDiffAt ℝ 1 f z.val)
+    (hJac : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
+      (fderiv ℝ f z.val ∘L ContinuousLinearMap.inr ℝ ℝ (ι → ℝ)).IsInvertible)
+    (p : ι → Polynomial (Polynomial ℝ)) (hp : ∀ i, p i ≠ 0)
+    (hrel : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
+      ∀ i, AlgebraicBranchLimit.value (p i) z.val.1 (z.val.2 i) = 0) :
+    ∃ curve : RootBranches.Index f a b t₀ → ℝ → ι → ℝ,
+      (∀ j, ContinuousOn (curve j) (Icc a b)) ∧
+      (∀ j t, t ∈ Icc a b → f (t, curve j t) = 0) ∧
+      (∀ t : Ioo a b, ∀ x, f (t.val, x) = 0 ↔ ∃! j, curve j t.val = x) ∧
+      ∀ j, FrontierCover.Accessible ((fun t => (t, curve j t)) '' Ioo a b) := by
+  obtain ⟨curve, _, hc, hroot, hcomplete, haccess⟩ :=
+    exists_anchored_arcs f a b t₀ hcont hproper hf hJac p hp hrel
+  exact ⟨curve, hc, hroot, hcomplete, haccess⟩
 
 /-- Construct the complete accessible slab decomposition from a proper regular
 root system and covers of its endpoint fibers. Interior branches are derived

@@ -541,5 +541,41 @@ constructs the charts by the implicit function theorem for a proper smooth map
 on a regular-value region; regularity outside that region is not assumed.
 `PolynomialComponentTransport` derives all analytic hypotheses from polynomial
 evaluation and a critical-value annihilator, giving an actual finite exceptional
-set for this transport theorem. Assembling the sampled branches and transported
-fiber components into the full recursive, effective roadmap is still required.
+set for this transport theorem.
+
+`Connectivity/FiberSectionCover` saturates each continuous section by its entire
+fiber component. Generalized persistence and separation allow both endpoints
+and their common fiber parameter to vary over any parameter space. Thus each
+saturated piece is clopen in the total slab. It is path connected, as is its
+restriction to any path-connected parameter region. Complete component samples
+give a cover of every original point. Overlap reduces to connection of the two
+samples in a single fixed fiber, giving both point and whole-space graph tests.
+
+`Algebra/LevelProjectionSpecialization` now retains the coordinate-annihilator
+certificate used to prove finite fibers. `ProjectionRegularSpecialization`
+chooses one integer direction preserving this certificate and the regularity
+certificate simultaneously. `Geometry/ProjectionCriticalBranches` transfers
+the resulting nonzero bivariate coordinate equations to actual spatial roots.
+`Connectivity/RegularRootArcs` retains the sample-root anchors when extending
+the complete branches. `PolynomialSlabCover` combines these results into an
+actual finite clopen path cover of the original proper polynomial slab, with
+continuous indexing branches on the closed interval and both connectivity
+tests reduced to the critical-root graph in one sample fiber. The coordinate
+annihilators and exceptional polynomials still lack input-size bounds.
+
+`Geometry/ConnectedSlabLimit` proves that a decreasing family of compact
+preconnected sets has preconnected intersection. The limit of a slab component
+at an endpoint equals the intersection of its closed short tails. Properness
+makes these compact; path connectivity of the tails makes the entire endpoint
+limit connected and nonempty. Reflection handles the upper endpoint. This
+argument allows multiple limit points and imposes no endpoint regularity.
+`Connectivity/FiberSectionLimit` applies it to the actual saturated pieces.
+`EndpointAttachment` uses a recursively supplied finite accessible endpoint
+cover to join any two points of this connected limit in the endpoint fiber.
+A continuous indexing-branch extension then attaches every boundary point to
+the slab component through that slice. The recursive slice cover itself is
+still an obligation, not an assumed uniform semialgebraic construction.
+
+The full effective recursion for arbitrary Boolean, singular, and noncompact
+inputs, its component preservation, and its polynomial bounds remain open.
+Neither requested full connectivity PSPACE theorem has been established.

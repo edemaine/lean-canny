@@ -141,6 +141,14 @@ The checked ingredients are:
 - Fiber connection between continuous sections of a proper polynomial is
   constant on each connected region avoiding its constructed exceptional
   levels. Critical values outside the chosen region are allowed.
+- Saturating the critical branches gives a finite clopen path cover of every
+  point in an original regular polynomial slab. Point connectivity and
+  whole-slab connectivity reduce to the finite critical samples in one fiber.
+  Nonzero coordinate annihilators are constructed for the same chosen integer
+  direction, so the indexing branches extend continuously to both endpoints.
+- Each saturated component has a compact connected limit in both endpoint
+  fibers, including singular ones. A recursive finite accessible slice cover
+  joins all its limit points to the extended branch through that slice.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
@@ -150,8 +158,8 @@ The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove
 component preservation, and bound the vertex records and all graph routines.
 The regular-slab theorem does not establish this construction. Endpoint
-validation is proved separately. Endpoint
-attachment is handled by ETR when the corresponding query writers are supplied.
+validation is proved separately. Effective endpoint attachment still requires
+the recursive slice covers and bounded query writers.
 The current cover theorems state these obligations explicitly; they do not
 establish them for arbitrary semialgebraic inputs. Empty spaces are accepted
 by the whole-space connectivity convention.

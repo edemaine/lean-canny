@@ -6,6 +6,7 @@ module
 
 public import LeanCanny.Algebra.ProjectionParameterCoordinates
 public import LeanCanny.Algebra.ProjectionFiniteSpecialization
+public import LeanCanny.Algebra.CoordinateAnnihilatorSpecialization
 
 /-! # A joint exceptional polynomial for levels and projection directions
 
@@ -162,9 +163,11 @@ theorem algebraic_generic_coordinates [CharZero K] {L : Type*} [Field L]
 
 universe uL
 
-theorem exists_finite_specialization_polynomial [CharZero K] (p : MvPolynomial ι K) (base : ι) :
-    ∃ d : ParameterRing K base, d ≠ 0 ∧ ∀ (L : Type uL) [Field L] (φ : ParameterRing K base →+* L),
-      φ d ≠ 0 → {z : Option ι → L | ∀ j, (equation p base j).eval₂ φ z = 0}.Finite := by
+/-- Retain the actual coordinate equations and radical identities, rather
+than only their consequence that the generic fibers are finite. -/
+theorem nonempty_coordinate_certificate [CharZero K] (p : MvPolynomial ι K) (base : ι) :
+    Nonempty (CoordinateAnnihilatorSpecialization.Certificate
+      (Ideal.span (Set.range (equation p base)))) := by
   let A := ParameterRing K base
   let F := ParameterField K base
   let I : Ideal (MvPolynomial (Option ι) A) := Ideal.span (Set.range (equation p base))
@@ -189,16 +192,23 @@ theorem exists_finite_specialization_polynomial [CharZero K] (p : MvPolynomial �
         exact hP.le (Ideal.mem_map_of_mem _ (Ideal.subset_span (Set.mem_range_self j)))
       rw [Ideal.Quotient.eq_zero_iff_mem.mpr hmem, map_zero]
     exact algebraic_generic_coordinates p base z hz
-  obtain ⟨d, hd, hfinite⟩ := FiniteFiberSpecialization.exists_finite_specialization_certificate I hcoords
-  refine ⟨d, hd, ?_⟩
+  exact CoordinateAnnihilatorSpecialization.nonempty_certificate I hcoords
+
+theorem exists_finite_specialization_polynomial [CharZero K] (p : MvPolynomial ι K) (base : ι) :
+    ∃ d : ParameterRing K base, d ≠ 0 ∧ ∀ (L : Type uL) [Field L] (φ : ParameterRing K base →+* L),
+      φ d ≠ 0 → {z : Option ι → L | ∀ j, (equation p base j).eval₂ φ z = 0}.Finite := by
+  obtain ⟨c⟩ := nonempty_coordinate_certificate p base
+  refine ⟨c.exceptional, c.exceptional_ne_zero, ?_⟩
   intro L _ φ hφ
-  apply (hfinite L φ hφ).subset
+  apply (c.finite_solutions (E := L) φ hφ).subset
   intro z hz
-  have hI : I ≤ RingHom.ker (MvPolynomial.eval₂Hom φ z) := by
+  have hI : Ideal.span (Set.range (equation p base)) ≤ RingHom.ker (MvPolynomial.eval₂Hom φ z) := by
     apply Ideal.span_le.mpr
     rintro _ ⟨j, rfl⟩
     exact hz j
-  exact fun q hq => hI hq
+  intro q hq
+  simpa only [Algebra.algebraMap_self, RingHom.id_comp] using
+    (show q.eval₂ φ z = 0 from hI hq)
 
 theorem exists_exceptional_polynomial [CharZero K] (p : MvPolynomial ι K) (base : ι) :
     ∃ d : ParameterRing K base, d ≠ 0 ∧ ∀ (L : Type uL) [Field L] [Algebra K L]

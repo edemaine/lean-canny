@@ -56,26 +56,29 @@ theorem finite_index (f : ℝ × E → F) (a b : ℝ) (t₀ : Ioo a b)
   apply Subtype.ext
   exact congrArg (fun w : (RootProjection.projection f ⁻¹' {t₀.val}) => w.val) hij
 
-/-- Complete, disjoint continuous root branches. Their index type is proved
-finite by `finite_index`; their cardinality is not assumed as input. -/
-theorem exists_branches (f : ℝ × E → F) (a b : ℝ) (t₀ : Ioo a b)
+/-- Complete global branches retain their actual root in the indexing fiber.
+This ties a branch label to its sample coordinates without a permutation oracle. -/
+theorem exists_anchored_branches (f : ℝ × E → F) (a b : ℝ) (t₀ : Ioo a b)
     (hproper : IsProperMap (RootProjection.projection f))
     (hf : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
       ContDiffAt ℝ 1 f z.val)
     (hJac : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
       (fderiv ℝ f z.val ∘L ContinuousLinearMap.inr ℝ ℝ E).IsInvertible) :
     ∃ curve : Index f a b t₀ → C(Ioo a b, E),
+      (∀ i, curve i t₀ = i.val.val.val.2) ∧
       (∀ i t, f (t.val, curve i t) = 0) ∧
       ∀ t : Ioo a b, ∀ x : E, f (t.val, x) = 0 ↔ ∃! i, curve i t = x := by
   have hcover := (RootProjection.isCoveringMapOn f (Ioo a b) hproper hf hJac).isCoveringMap_restrictPreimage
-  obtain ⟨branch, _, hproj, hcomplete⟩ := CoveringBranches.exists_interval_branches hcover t₀
+  obtain ⟨branch, hanchor, hproj, hcomplete⟩ := CoveringBranches.exists_interval_branches hcover t₀
   let curve : Index f a b t₀ → C(Ioo a b, E) := fun i =>
     ⟨fun t => (branch i t).val.val.2,
       continuous_snd.comp (continuous_subtype_val.comp
         (continuous_subtype_val.comp (branch i).continuous))⟩
   have hparameter (i : Index f a b t₀) (t : Ioo a b) : (branch i t).val.val.1 = t.val :=
     congrArg Subtype.val (hproj i t)
-  refine ⟨curve, ?_, ?_⟩
+  refine ⟨curve, ?_, ?_, ?_⟩
+  · intro i
+    exact congrArg (fun w : IntervalSpace f a b => w.val.val.2) (hanchor i)
   · intro i t
     have hroot := (branch i t).val.property
     have hz : (branch i t).val.val = (t.val, curve i t) := Prod.ext (hparameter i t) rfl
@@ -97,5 +100,19 @@ theorem exists_branches (f : ℝ × E → F) (a b : ℝ) (t₀ : Ioo a b)
       have hroot := (branch i t).val.property
       have hz : (branch i t).val.val = (t.val, x) := Prod.ext (hparameter i t) hi
       rwa [hz] at hroot
+
+/-- Complete, disjoint continuous root branches. Their index type is proved
+finite by `finite_index`; their cardinality is not assumed as input. -/
+theorem exists_branches (f : ℝ × E → F) (a b : ℝ) (t₀ : Ioo a b)
+    (hproper : IsProperMap (RootProjection.projection f))
+    (hf : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
+      ContDiffAt ℝ 1 f z.val)
+    (hJac : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
+      (fderiv ℝ f z.val ∘L ContinuousLinearMap.inr ℝ ℝ E).IsInvertible) :
+    ∃ curve : Index f a b t₀ → C(Ioo a b, E),
+      (∀ i t, f (t.val, curve i t) = 0) ∧
+      ∀ t : Ioo a b, ∀ x : E, f (t.val, x) = 0 ↔ ∃! i, curve i t = x := by
+  obtain ⟨curve, _, hroots, hcomplete⟩ := exists_anchored_branches f a b t₀ hproper hf hJac
+  exact ⟨curve, hroots, hcomplete⟩
 
 end LeanCanny.Geometry.RootBranches

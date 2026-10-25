@@ -7,6 +7,7 @@ module
 public import LeanCanny.Geometry.PolynomialRootFamily
 public import LeanCanny.Algebra.ProjectionRegularSpecialization
 public import LeanCanny.Algebra.CriticalValueAnnihilator
+public import LeanCanny.Geometry.RootBranchCount
 
 /-! # Regular branches of spatial projection-critical equations
 
@@ -115,16 +116,24 @@ private theorem extended_root (p : MvPolynomial ι ℝ) (base : ι) (v : ι → 
 /-- The integer direction and all exceptional levels are constructed from the
 input polynomial. Outside that finite set, the spatial Jacobian is invertible;
 no regularity hypothesis on the input hypersurface is required. -/
-theorem exists_regular_direction (p : MvPolynomial ι ℝ) (base : ι) :
+theorem exists_regular_direction_coordinates (p : MvPolynomial ι ℝ) (base : ι) :
     ∃ u : ProjectionFiniteSpecialization.DirectionIndex base → ℕ,
       ∃ r : Polynomial ℝ, r ≠ 0 ∧ {t : ℝ | r.eval t = 0}.Finite ∧
+        ∃ Q : ι → Polynomial (Polynomial ℝ), (∀ i, Q i ≠ 0) ∧
         let v := ProjectionFiniteSpecialization.normalizedDirection base (fun i => (u i : ℝ))
         ∀ t x, r.eval t ≠ 0 → PolynomialRootFamily.value (equation p base v) (t, x) = 0 →
-          (PolynomialRootFamily.jacobian (equation p base v)).eval₂ (Polynomial.evalRingHom t) x ≠ 0 := by
-  obtain ⟨_, u, _, r, hr, _, hregular⟩ := ProjectionRegularSpecialization.exists_nat_regular_levels p base
+          (PolynomialRootFamily.jacobian (equation p base v)).eval₂ (Polynomial.evalRingHom t) x ≠ 0 ∧
+          ∀ i, AlgebraicBranchLimit.value (Q i) t (x i) = 0 := by
+  obtain ⟨_, u, _, r, hr, _, Q, hQ, hregular⟩ :=
+    ProjectionRegularSpecialization.exists_nat_regular_coordinates p base
   obtain ⟨c, hc, hcm⟩ := CriticalValueAnnihilator.exists_annihilator p
   refine ⟨u, r * c, mul_ne_zero hr hc,
-    Polynomial.finite_setOfPred_isRoot (mul_ne_zero hr hc), ?_⟩
+    Polynomial.finite_setOfPred_isRoot (mul_ne_zero hr hc),
+    (fun i => Polynomial.Bivariate.swap (Q (some i))), ?_, ?_⟩
+  · intro i h
+    apply hQ (some i)
+    apply Polynomial.Bivariate.swap.injective
+    simpa only [map_zero] using h
   let v := ProjectionFiniteSpecialization.normalizedDirection base (fun i => (u i : ℝ))
   have hv : v base = 1 := by simp [v, ProjectionFiniteSpecialization.normalizedDirection]
   dsimp only
@@ -144,7 +153,7 @@ theorem exists_regular_direction (p : MvPolynomial ι ℝ) (base : ι) :
   have hz := extended_root p base v t x hlevel hpartial hb
   have hrval : Polynomial.aeval t r ≠ 0 := by
     simpa only [Polynomial.aeval_def, Algebra.algebraMap_self, Polynomial.eval₂_id] using hfac.1
-  have hdet := (hregular ℝ t hrval).2 z hz
+  have hdet := (hregular ℝ t hrval).2.1 z hz
   let φ : LevelProjectionSpecialization.ParameterRing ℝ base →+* ℝ :=
     eval₂Hom (RingHom.id ℝ) (fun i => i.elim t (fun j => (u j : ℝ)))
   have hφ : φ.comp (algebraMap ℝ (LevelProjectionSpecialization.ParameterRing ℝ base)) = algebraMap ℝ ℝ := by
@@ -156,8 +165,34 @@ theorem exists_regular_direction (p : MvPolynomial ι ℝ) (base : ι) :
   change (ProjectionRegularSpecialization.jacobian p base).eval₂ φ z ≠ 0 at hdet
   rw [ProjectionRegularSpecialization.eval_jacobian p base φ hφ z,
     hdir, GenericProjectionJacobian.extended_det] at hdet
-  rw [eval_jacobian]
-  exact (mul_ne_zero_iff.mp hdet).1
+  refine ⟨?_, ?_⟩
+  · rw [eval_jacobian]
+    exact (mul_ne_zero_iff.mp hdet).1
+  · intro i
+    rw [← RootBranchCount.eval_specialize]
+    change ((Polynomial.Bivariate.swap (Polynomial.Bivariate.swap (Q (some i)))).map
+      (Polynomial.evalRingHom t)).eval (x i) = 0
+    rw [Polynomial.Bivariate.swap_swap_apply]
+    have hcoord := (hregular ℝ t hrval).2.2 z hz (some i)
+    have heval : (Polynomial.aeval t : Polynomial ℝ →ₐ[ℝ] ℝ).toRingHom = Polynomial.evalRingHom t := by
+      apply RingHom.ext
+      intro q
+      change Polynomial.aeval t q = q.eval t
+      simp only [Polynomial.aeval_def, Algebra.algebraMap_self, Polynomial.eval₂_id]
+    rw [heval] at hcoord
+    simpa only [Polynomial.aeval_def, Algebra.algebraMap_self, Polynomial.eval₂_id,
+      z, Option.elim_some] using hcoord
+
+/-- Retain the original regularity-only interface. The same construction now
+also supplies nonzero coordinate equations for every critical branch. -/
+theorem exists_regular_direction (p : MvPolynomial ι ℝ) (base : ι) :
+    ∃ u : ProjectionFiniteSpecialization.DirectionIndex base → ℕ,
+      ∃ r : Polynomial ℝ, r ≠ 0 ∧ {t : ℝ | r.eval t = 0}.Finite ∧
+        let v := ProjectionFiniteSpecialization.normalizedDirection base (fun i => (u i : ℝ))
+        ∀ t x, r.eval t ≠ 0 → PolynomialRootFamily.value (equation p base v) (t, x) = 0 →
+          (PolynomialRootFamily.jacobian (equation p base v)).eval₂ (Polynomial.evalRingHom t) x ≠ 0 := by
+  obtain ⟨u, r, hr, hfinite, _, _, h⟩ := exists_regular_direction_coordinates p base
+  exact ⟨u, r, hr, hfinite, fun t x ht hx => (h t x ht hx).1⟩
 
 /-- Proper level functions yield actual finite-sheeted coverings between the
 constructed exceptional levels. The original polynomial may be singular at

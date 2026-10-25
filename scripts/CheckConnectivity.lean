@@ -436,3 +436,63 @@ example (t : ℝ) (ht : 0 < t) :
   norm_num at heq
 
 end ComponentTransportTests
+
+namespace SaturatedSlabTests
+open LeanCanny.Geometry Set
+
+abbrev Segment := Icc (0 : ℝ) 1
+abbrev Strip := ℝ × Segment
+local instance : CompactSpace Segment := isCompact_iff_compactSpace.mp isCompact_Icc
+local instance : LocallyPathConnectedSpace Segment := (convex_Icc (0 : ℝ) 1).locallyPathConnectedSpace
+local instance : PathConnectedSpace Segment :=
+  isPathConnected_iff_pathConnectedSpace.mp ((convex_Icc (0 : ℝ) 1).isPathConnected ⟨0, by norm_num⟩)
+
+def band : Set Strip := Ioo (0 : ℝ) 1 ×ˢ univ
+
+theorem tails (c : Ioo (0 : ℝ) 1) :
+    IsConnected (ConnectedSlabLimit.tail (Prod.fst : Strip → ℝ) (a := 0) band c.val) := by
+  have he : ConnectedSlabLimit.tail (Prod.fst : Strip → ℝ) (a := 0) band c.val = Ioo 0 c.val ×ˢ univ := by
+    ext x
+    constructor
+    · rintro ⟨_, hx⟩
+      exact ⟨hx, mem_univ _⟩
+    · rintro ⟨hx, _⟩
+      exact ⟨⟨⟨hx.1, hx.2.trans c.property.2⟩, mem_univ _⟩, hx⟩
+  rw [he]
+  exact (((convex_Ioo (0 : ℝ) c.val).isPathConnected
+    ⟨c.val / 2, by constructor <;> linarith [c.property.1]⟩).prod isPathConnected_univ).isConnected
+
+example :
+    let L := closure band ∩ (Prod.fst : Strip → ℝ) ⁻¹' {0}
+    IsConnected L ∧ (0, ⟨0, by norm_num⟩) ∈ L ∧ (0, ⟨1, by norm_num⟩) ∈ L := by
+  have hc := ConnectedSlabLimit.isConnected_endpoint (Prod.fst : Strip → ℝ)
+    isProperMap_fst_of_compactSpace (by norm_num : (0 : ℝ) < 1) (fun x (h : x ∈ band) => h.1) tails
+  refine ⟨hc, ?_, ?_⟩ <;> change _ ∈ closure band ∧ _
+  all_goals
+    constructor
+    · simp [band, closure_prod_eq, closure_Ioo (by norm_num : (0 : ℝ) ≠ 1)]
+    · rfl
+
+noncomputable def sections : Unit → C(ℝ, Strip) := fun _ =>
+  ⟨fun t => (t, ⟨0, by norm_num⟩), continuous_id.prodMk continuous_const⟩
+noncomputable def chart (_ : Strip) : OpenPartialHomeomorph Strip (ℝ × Segment) :=
+  (Homeomorph.refl Strip).toOpenPartialHomeomorph
+
+-- The sample section sits at height zero, but its saturated component also
+-- contains height one. Paths may change both the level and the fiber coordinate.
+example : JoinedIn univ ((0 : ℝ), (⟨1, by norm_num⟩ : Segment))
+    (1, (⟨0, by norm_num⟩ : Segment)) := by
+  have hp : IsProperMap (Prod.fst : Strip → ℝ) := isProperMap_fst_of_compactSpace
+  have hsource (x : Strip) : x ∈ (chart x).source := mem_univ _
+  have hfirst (z x : Strip) (_ : x ∈ (chart z).source) :
+      (chart z x).1 = Prod.fst x := rfl
+  have hproj (j : Unit) (t : ℝ) : Prod.fst (sections j t) = t := rfl
+  have hm (t : ℝ) (v : Segment) : (t, v) ∈ FiberSectionCover.piece Prod.fst sections () := by
+    change JoinedIn (Prod.fst ⁻¹' {t}) (t, (⟨0, by norm_num⟩ : Segment)) (t, v)
+    apply ((joinedIn_univ.mpr (PathConnectedSpace.joined (⟨0, by norm_num⟩ : Segment) v)).map
+      (continuous_const.prodMk continuous_id).continuousOn).mono
+    rintro z ⟨_, _, rfl⟩
+    rfl
+  exact (FiberSectionCover.paths Prod.fst sections chart hsource hfirst hp hproj ()
+    _ (hm _ _) _ (hm _ _)).mono (subset_univ _)
+end SaturatedSlabTests

@@ -136,6 +136,16 @@ theorem joinedIn_iff_reachable [Finite ι] (cover : ∀ x, ∃ i, x ∈ piece i)
     JoinedIn univ x y ↔ Relation.ReflTransGen (Incident piece) i j :=
   ⟨reachable_of_joinedIn piece cover hx hy, joinedIn_of_reachable piece access hx hy⟩
 
+/-- A recursively supplied accessible cover converts connection inside any
+preconnected subset into an actual path in the original ambient space. -/
+theorem joinedIn_of_isPreconnected [Finite ι] (cover : ∀ x, ∃ i, x ∈ piece i)
+    (access : ∀ i, Accessible (piece i)) {s : Set X} (hs : IsPreconnected s)
+    {x y : X} (hx : x ∈ s) (hy : y ∈ s) : JoinedIn univ x y := by
+  obtain ⟨i, hi⟩ := cover x
+  obtain ⟨j, hj⟩ := cover y
+  exact joinedIn_of_reachable piece access hi hj
+    (reachable_of_isPreconnected piece cover hs hi hj hx hy)
+
 /-- An accessible finite decomposition gives the same components as its
 frontier-incidence graph, even when the pieces are not closed. -/
 theorem isPreconnected_iff_reachable [Finite ι]

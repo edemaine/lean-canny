@@ -89,6 +89,28 @@ theorem eventually_walk (hp : IsOpenMap p) (hopen : ∀ i, IsOpen (box i))
     filter_upwards [ih, (isOpen_edge p box hp hopen j k).mem_nhds he] with c hc he
     exact hc.tail he
 
+/-- Fiber connection is open for any continuous family of pairs of endpoints,
+including when the parameter is a moving point of the total space. -/
+theorem isOpen_joined_along {A : Type*} [TopologicalSpace A]
+    (hp : IsOpenMap p) (hopen : ∀ i, IsOpen (box i))
+    (hcover : ∀ x, ∃ i, x ∈ box i)
+    (hpaths : ∀ b i, ∀ x ∈ box i, p x = b → ∀ y ∈ box i, p y = b →
+      JoinedIn (p ⁻¹' {b}) x y)
+    {base : A → B} {s d : A → X} (hbase : Continuous base)
+    (hs : Continuous s) (hd : Continuous d)
+    (hps : ∀ b, p (s b) = base b) (hpd : ∀ b, p (d b) = base b) :
+    IsOpen {b | JoinedIn (p ⁻¹' {base b}) (s b) (d b)} := by
+  rw [isOpen_iff_mem_nhds]
+  intro b hb
+  obtain ⟨i, hi⟩ := hcover (s b)
+  obtain ⟨j, hj⟩ := hcover (d b)
+  have hwalk := walk_of_joinedIn p box hopen hcover hi hj hb
+  have hsi : ∀ᶠ c in 𝓝 b, s c ∈ box i := hs.continuousAt.preimage_mem_nhds ((hopen i).mem_nhds hi)
+  have hdj : ∀ᶠ c in 𝓝 b, d c ∈ box j := hd.continuousAt.preimage_mem_nhds ((hopen j).mem_nhds hj)
+  have hwalk' := hbase.continuousAt.eventually (eventually_walk p box hp hopen hwalk)
+  filter_upwards [hwalk', hsi, hdj] with c hc hsc hdc
+  exact joinedIn_of_walk p box hpaths hsc (hps c) hdc (hpd c) hc
+
 /-- Connection of continuous sections within their fibers is open in the
 parameter. The cover and its slice paths must be established geometrically. -/
 theorem isOpen_joined_sections (hp : IsOpenMap p) (hopen : ∀ i, IsOpen (box i))
@@ -97,15 +119,7 @@ theorem isOpen_joined_sections (hp : IsOpenMap p) (hopen : ∀ i, IsOpen (box i)
       JoinedIn (p ⁻¹' {b}) x y)
     {s d : B → X} (hs : Continuous s) (hd : Continuous d)
     (hps : ∀ b, p (s b) = b) (hpd : ∀ b, p (d b) = b) :
-    IsOpen {b | JoinedIn (p ⁻¹' {b}) (s b) (d b)} := by
-  rw [isOpen_iff_mem_nhds]
-  intro b hb
-  obtain ⟨i, hi⟩ := hcover (s b)
-  obtain ⟨j, hj⟩ := hcover (d b)
-  have hwalk := walk_of_joinedIn p box hopen hcover hi hj hb
-  have hsi : ∀ᶠ c in 𝓝 b, s c ∈ box i := hs.continuousAt.preimage_mem_nhds ((hopen i).mem_nhds hi)
-  have hdj : ∀ᶠ c in 𝓝 b, d c ∈ box j := hd.continuousAt.preimage_mem_nhds ((hopen j).mem_nhds hj)
-  filter_upwards [eventually_walk p box hp hopen hwalk, hsi, hdj] with c hc hsc hdc
-  exact joinedIn_of_walk p box hpaths hsc (hps c) hdc (hpd c) hc
+    IsOpen {b | JoinedIn (p ⁻¹' {b}) (s b) (d b)} :=
+  isOpen_joined_along p box hp hopen hcover hpaths continuous_id hs hd hps hpd
 
 end LeanCanny.Geometry.FiberPathPersistence
