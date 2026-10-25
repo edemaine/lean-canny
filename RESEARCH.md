@@ -377,6 +377,27 @@ algebraic representations.
 `Connectivity/Problem` and `Connectivity/Encoding` specify the two geometric
 languages. Endpoint formulas must denote unique points; arbitrary real
 constants and a rational-point sampling assumption are absent. No membership
-theorem for either language is claimed: effective cover construction,
-endpoint validation, and the total encoded decision procedure
-remain to be supplied.
+theorem for either connectivity language is claimed: effective cover
+construction and the total encoded connectivity decision procedure remain
+to be supplied.
+
+`Connectivity/InputFP` proves polynomial-time recognition of the complete
+canonical encodings. `Connectivity/EndpointValidation` proves
+`validEndpoints_mem_PSPACE` unconditionally on all bitstrings. It rejects
+malformed inputs and inconsistent, nonunique, or out-of-dimension endpoint
+descriptions. Two copies of an endpoint formula use even and odd variables;
+a polynomial-space coordinate scan asks ETR whether two solutions can differ.
+`ETR/InterleaveFP` certifies the copying transformation without modifying
+integer payloads, and `ETR/FormulaArityFP` supplies the exact syntax bound.
+This validation result does not test membership in the described space or
+path reachability.
+
+The report's Theorem 3.5 invokes the roadmap algorithm of the cited 1987
+paper; it does not prove the geometric roadmap construction within the report.
+The present target includes arbitrary Boolean formulas and singular,
+noncompact sets. Existing tube and critical-sampling lemmas do not establish
+component-preserving roadmaps for these inputs. Canny's later
+[general semialgebraic roadmap paper](https://doi.org/10.1093/comjnl/36.5.504)
+provides a separate generalization beyond the earlier compact, regular case.
+That geometric construction and its quantitative representation bounds remain
+substantial missing formalization work.

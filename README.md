@@ -111,7 +111,11 @@ semialgebraic sets. **Neither geometric language has a PSPACE theorem yet.**
 The checked ingredients are:
 
 - Formula-based inputs with unary dimension and unique-solution endpoint
-  descriptions, including irrational algebraic endpoints.
+  descriptions, including irrational algebraic endpoints. Canonical point and
+  whole-space encodings have polynomial-time recognizers.
+- An unconditional native PSPACE theorem for singleton endpoint validation on
+  canonical point inputs. Inconsistent, nonunique, and out-of-dimension endpoint
+  descriptions are rejected, as are malformed bitstrings.
 - Native polynomial-space implicit-graph reachability and whole-graph
   connectivity, allowing polynomial-space adjacency and invalid records.
 - A finite closed path-cover theorem identifying topological connectivity with
@@ -123,7 +127,7 @@ The checked ingredients are:
 
 The missing construction must produce suitable covers uniformly from input
 formulas, prove closedness, path connectivity and coverage, bound the vertex
-width and query writers, and validate the described endpoints. Endpoint
+width and query writers. Endpoint validation is proved separately. Endpoint
 attachment is handled by ETR when the corresponding query writers are supplied.
 The current cover theorems state these obligations explicitly; they do not
 establish them for arbitrary semialgebraic inputs. Empty spaces are accepted
