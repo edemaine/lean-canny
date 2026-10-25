@@ -757,6 +757,33 @@ the new construction bounds its exceptional factor independently of both
 qualitative witnesses. Its mass budget still uses the existential direction
 allowance; bounding that allowance from the input remains open.
 
+`Algebra/IntegerParameterCoefficient` proves the exact scalar coefficient
+identity for integer parameter substitution. `IntegerParameterCoefficientSpace`
+implements it by splitting a fixed-width binary exponent word into the
+parameter block and spatial tail, making one native source coefficient call.
+The adapter retains its literal behavior on short words and at width zero.
+
+`Encoding/FixedWidthQueryBinary` certifies exponent guards with binary degree
+allowances. `FixedWidthDerivativeBinarySpace` extends the existing exact
+derivative reader to those allowances, avoiding a unary conversion of recursive
+degree values. `FixedWidthCriticalSpace` evaluates the base polynomial row or
+the difference of two derivative coefficients scaled by a binary direction
+entry. `ParameterizedCriticalCoefficientSpace` connects this native program to
+the actual critical equations over `ℤ[T]`, with the parameter variable kept
+separate from the spatial partials. These are native coefficient routines from
+a supplied source reader; the recursive records and geometric graph queries
+still need to be constructed.
+
+`Algebra/ProjectiveDirectionGrid` supplies a quantitative direction-selection
+step for homogeneous systems. One root-free specialization selects a nonzero
+maximal Macaulay minor, whose parameter degree is bounded by the column count
+times the source parameter degree. A grid with this allowance contains an
+integer specialization retaining root-freeness over every coefficient-field
+extension. The allowance has an explicit binary-length bound. Applying this
+step to the original affine critical family still requires constructing the
+root-free projective system, including exclusion of roots at infinity; the
+input-size bound for that family’s chosen direction is not yet proved.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

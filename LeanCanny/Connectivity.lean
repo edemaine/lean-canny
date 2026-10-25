@@ -21,6 +21,8 @@ import LeanCanny.Geometry.RegularCoordinateRootCount
 import LeanCanny.Geometry.CoordinateSweepBounds
 import LeanCanny.Geometry.SingularParameterBounds
 import LeanCanny.Geometry.UniformCriticalRegularityBounds
+import LeanCanny.Algebra.ParameterizedCriticalCoefficientSpace
+import LeanCanny.Algebra.ProjectiveDirectionGrid
 
 /-! # Connectivity development
 
@@ -83,6 +85,13 @@ by bounded factors for those same parameter-ring equations.
 The generic field direction and regular-slice certificate now construct one
 such bounded factor for the uniform spatial critical system. Its mass bound
 still depends on the chosen direction allowance, which lacks an input bound.
+Native coefficient programs now split the integer parameter block and evaluate
+the actual spatial critical equations from a supplied source reader. Binary
+degree guards and direction scalars avoid unary conversion of large values.
+A root-free homogeneous system admits an integer specialization in a grid
+bounded by its Macaulay column count and parameter degree, with an explicit
+binary-length bound. Constructing the required root-free projective system
+for the affine critical families remains required.
 Each sweep fiber is homeomorphic to its polynomial slice in one fewer
 coordinate. Properness and regularity pass to this lower-dimensional equation.
 Dimension-zero connectivity algorithms are proved, and both connectivity

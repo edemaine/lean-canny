@@ -176,8 +176,12 @@ The checked ingredients are:
   Integer parameter substitution preserves evaluation and spatial Jacobians
   with bounded degree and mass. The chosen direction now has a constructed
   bounded regularity factor for its actual parameter-ring critical equations.
-  Input bounds for that direction and native coefficient and recursive query
-  encodings remain open.
+  Input bounds for that direction and the full recursive query encodings
+  remain open.
+  Native coefficient access now splits the parameter exponent block and
+  evaluates the actual spatial critical equations from a source reader.
+  Derivative guards and direction scalars retain binary encodings of large
+  values; recursive records and graph query writers remain required.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A

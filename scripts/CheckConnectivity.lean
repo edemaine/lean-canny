@@ -844,3 +844,18 @@ example : ∃ r : Polynomial ℤ, r ≠ 0 ∧
   exact h rfl
 
 end SingularParameterTests
+
+namespace NativeParameterQueryTests
+open LeanCanny.Algebra LeanCanny.Encoding
+
+-- Short target words retain their literal blocks. Parameter extraction must
+-- not exchange the parameter and spatial positions.
+#guard IntegerParameterCoefficientBits.parameter (fun _ => 2) id [false, true, true, false] == [false, true]
+#guard IntegerParameterCoefficientBits.spatial (fun _ => 2) id [false, true, true, false] == [true]
+
+-- Width zero has parameter exponent zero, and the spatial word still uses
+-- canonical binary normalization. This case includes dimension-zero readers.
+#guard IntegerParameterCoefficientBits.parameter (fun _ => 0) id [true, false] == []
+#guard IntegerParameterCoefficientBits.spatial (fun _ => 0) id [true, false] == [true]
+
+end NativeParameterQueryTests
