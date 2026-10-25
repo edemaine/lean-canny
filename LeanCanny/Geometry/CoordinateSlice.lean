@@ -170,4 +170,25 @@ noncomputable def fiberHomeomorph (p : MvPolynomial ι R) (φ : R →+* ℝ) (ba
 theorem card_index_add_one [Finite ι] (base : ι) : Nat.card (Index base) + 1 = Nat.card ι := by
   simpa only [Finite.card_option] using Nat.card_congr (Equiv.optionSubtypeNe base)
 
+/-- Fiber paths are exactly paths in the lower-dimensional polynomial slice. -/
+theorem joinedIn_fiber_iff (p : MvPolynomial ι R) (φ : R →+* ℝ) (base : ι) (c t : ℝ)
+    (x y : HypersurfaceSweep.Level (fun z => p.eval₂ φ z) c)
+    (hx : x.val base = t) (hy : y.val base = t) :
+    JoinedIn ((HypersurfaceSweep.projection (fun z => p.eval₂ φ z) (fun z => z base) c) ⁻¹' {t}) x y ↔
+      JoinedIn {z : Index base → ℝ | (family base p).eval₂ (Polynomial.eval₂RingHom φ t) z = c}
+        (fun j => x.val j.val) (fun j => y.val j.val) := by
+  let e := fiberHomeomorph p φ base c t
+  let x' : (HypersurfaceSweep.projection (fun z => p.eval₂ φ z) (fun z => z base) c) ⁻¹' {t} := ⟨x, hx⟩
+  let y' : (HypersurfaceSweep.projection (fun z => p.eval₂ φ z) (fun z => z base) c) ⁻¹' {t} := ⟨y, hy⟩
+  change JoinedIn _ x y ↔ JoinedIn _ (e x').val (e y').val
+  constructor
+  · intro h
+    exact (joinedIn_iff_joined (e x').property (e y').property).mpr
+      ((show Joined x' y' from h.joined_subtype).map e.continuous)
+  · intro h
+    have hh : Joined (e x') (e y') := h.joined_subtype
+    have hj : Joined x' y' := by
+      simpa only [Homeomorph.symm_apply_apply] using hh.map e.symm.continuous
+    exact (joinedIn_iff_joined hx hy).mpr hj
+
 end LeanCanny.Geometry.CoordinateSlice

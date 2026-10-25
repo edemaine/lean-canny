@@ -27,6 +27,21 @@ structure ClopenPathCover (X I : Type*) [TopologicalSpace X] where
 namespace ClopenPathCover
 variable {X I : Type*} [TopologicalSpace X]
 
+/-- Transfer a recursive cover along an explicit homeomorphism, retaining
+the same labels and membership queries. -/
+def comap {Y : Type*} [TopologicalSpace Y] (C : ClopenPathCover Y I)
+    (e : X ≃ₜ Y) : ClopenPathCover X I where
+  piece := fun i => e ⁻¹' C.piece i
+  clopen := fun i => (C.clopen i).preimage e.continuous
+  cover := fun x => C.cover (e x)
+  paths := by
+    intro i x hx y hy
+    have hj := (C.paths i (e x) hx (e y) hy).map e.symm.continuous.continuousOn
+    have hsub : e.symm '' C.piece i ⊆ e ⁻¹' C.piece i := by
+      rintro z ⟨w, hw, rfl⟩
+      simpa only [mem_preimage, Homeomorph.apply_symm_apply] using hw
+    simpa only [Homeomorph.symm_apply_apply] using hj.mono hsub
+
 /-- Recursive accessible slice covers supply the clopen pieces required for
 attaching adjacent slabs. No connected-component oracle is an input. -/
 def ofAccessible [Finite I] (piece : I → Set X) (cover : ∀ x, ∃ i, x ∈ piece i)

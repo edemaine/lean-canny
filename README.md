@@ -161,12 +161,21 @@ The checked ingredients are:
   intervals. Their fibers are homeomorphic to proper polynomial slices in one
   fewer coordinate, and regularity passes to those slices. Generic critical
   projections on a fixed level have finite simple roots and coordinate
-  annihilators for one integer direction. Uniform specialization of these
-  critical families in the sweep parameter is still required.
+  annihilators for one integer direction. Uniform specialization constructs
+  one integer direction and a finite exceptional set for the whole slice
+  family. Its complete spatial critical arcs extend to both endpoints.
+  Saturation gives a clopen path cover of the original coordinate slab;
+  overlap tests are connections in one lower-dimensional slice. Recursive
+  endpoint component covers complete the closed slab. Effective encoding
+  bounds remain open.
 - Transfers from bit-indexed covers to the graph algorithms. For
   formula-defined pieces, the completed ETR theorem supplies nonemptiness and
   overlap tests, given polynomial-time writers for the queries. A
   polynomial-space scan locates pieces containing the described endpoints.
+- Native recursion base cases: both connectivity tests in dimensions zero
+  and one. On the real line, an ETR query detects a missing point between
+  two points. Point queries include singleton validation and endpoint
+  membership, retaining irrational endpoints and rejecting invalid descriptions.
 
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove

@@ -14,6 +14,8 @@ import LeanCanny.Connectivity.EndpointAttachment
 import LeanCanny.Geometry.PolynomialHypersurfaceSweep
 import LeanCanny.Algebra.FixedLevelRegularSpecialization
 import LeanCanny.Geometry.CoordinateSlice
+import LeanCanny.Connectivity.CoordinateSlabCover
+import LeanCanny.Connectivity.OneDimensionPoint
 
 /-! # Connectivity development
 
@@ -46,10 +48,20 @@ Coordinate sweeps on fixed proper polynomial hypersurfaces have constructed
 finite exceptional value sets, proper projections, and actual regular product
 charts. Fixed-level generic critical projections also retain finite simple
 roots and coordinate annihilators over coefficient fields containing a sweep
-parameter. Specializing those families uniformly and bounding their encodings
-remain required.
+parameter. Uniform specialization now constructs one integer direction and one
+exceptional parameter factor for the entire polynomial slice family. Its
+spatial root system is proper on a fixed compact hypersurface; complete critical
+arcs extend continuously to exceptional endpoints. Their saturated components
+give the original coordinate slab a finite clopen path cover. Overlap tests are
+connections in an actual polynomial slice in one fewer coordinate. Recursive
+endpoint component covers give a finite closed path cover of the whole closed
+coordinate slab, with both connectivity tests preserved. Effective encoding
+bounds remain required.
 Each sweep fiber is homeomorphic to its polynomial slice in one fewer
 coordinate. Properness and regularity pass to this lower-dimensional equation.
+Dimension-zero connectivity algorithms are proved, and both connectivity
+tests for arbitrary Boolean formulas in one coordinate have native
+polynomial-space algorithms, including singleton endpoint validation.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

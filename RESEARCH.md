@@ -636,8 +636,46 @@ identifies each hypersurface sweep fiber with this equation in the remaining
 coordinates, including irrational values and empty fibers. The coordinate
 count drops by one. Closed embedding of coordinate insertion transfers
 properness, and its derivative transfers combined-map regularity to the slice
-equation. Uniform critical families for these slices, their specialization
-factors, and their actual finite global branches are the next construction.
+equation. Fiber paths correspond exactly under this homeomorphism.
+
+`Algebra/ProjectionCriticalFamily` defines the critical equations over an
+arbitrary parameter coefficient ring and proves that coefficient maps commute
+with the equations and their formal Jacobians. `UniformCriticalSpecialization`
+chooses one integer direction over its fraction field, clears the coordinate
+annihilators and the generic nonsingularity certificate to the original ring,
+and constructs a single nonzero factor retaining all these certificates under
+every accepted field specialization. These certificates have no input-size
+bound yet.
+
+`Geometry/ParameterizedCriticalBranches` transfers the certificates to the
+spatial system at regular slice roots. The reciprocal variable is used only
+inside the proof; its potential divergence at endpoints does not affect the
+spatial family. Every component of each compact regular specialized slice
+has a sample in precisely this system. `Connectivity/CoordinateCriticalArcs`
+uses compactness of the original fixed hypersurface to prove properness and
+construct complete anchored critical arcs with continuous endpoint limits.
+
+`Connectivity/CoordinateSlabCover` saturates these branches into a finite
+clopen path cover of the entire original regular coordinate slab. Its overlap
+graph is defined by connection of the critical samples in the actual
+lower-dimensional polynomial slice. Connected endpoint limits and continuous
+critical branches give the closed-slab composition data. Recursive clopen
+endpoint covers complete the whole closed coordinate slab, preserving point
+and whole-space connectivity. Endpoint covers transfer along an explicit
+slice homeomorphism with unchanged labels. This still assumes recursive
+endpoint covers; it does not supply the general effective recursion.
+
+`Connectivity/ZeroDimension` supplies uniform native algorithms for the
+empty-tuple base case, retaining well-formedness and singleton endpoint
+validation. `OneDimension` reduces whole-space connectivity of an arbitrary
+Boolean real-line description to the absence of an existential gap witness.
+Its polynomial-time query writer uses three disjoint copies of the input.
+`OneDimensionPoint` proves that real-line paths exist precisely when all
+intermediate points are present, then constructs the separating-point query
+for formula-described endpoints. Its native polynomial-space algorithm
+combines singleton validation, both endpoint membership tests, and absence
+of a separator. These base cases include empty, singular, and unbounded sets;
+they do not settle the varying-dimensional languages.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

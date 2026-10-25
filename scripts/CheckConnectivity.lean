@@ -617,3 +617,104 @@ example : Nat.card (CoordinateSlice.Index (0 : Fin 2)) = 1 := by
   rw [he] at h
   omega
 end HypersurfaceSweepTests
+
+namespace UniformSliceTests
+open LeanCanny.Geometry LeanCanny.Algebra MvPolynomial Set
+open ProjectionFiniteSpecialization
+
+-- A circle sliced by its first coordinate has two spatial roots that merge
+-- at the singular endpoint. The spatial equations keep that endpoint root.
+private noncomputable def q : MvPolynomial Unit (Polynomial ℝ) :=
+  X () ^ 2 + C (Polynomial.X ^ 2 - 1)
+
+private def direction : DirectionIndex () → ℕ := fun _ => 0
+
+example (t y : ℝ) :
+    ParameterizedCriticalBranches.system q () direction (t, fun _ => y) = 0 ↔
+      y ^ 2 + t ^ 2 = 1 := by
+  rw [ParameterizedCriticalBranches.system_iff]
+  constructor
+  · intro h
+    have he := h.1
+    norm_num [q] at he
+    linarith
+  · intro h
+    refine ⟨?_, ?_⟩
+    · norm_num [q]
+      linarith
+    · intro i
+      cases i
+      simp [normalizedDirection]
+
+example : ParameterizedCriticalBranches.system q () direction (1, fun _ => 0) = 0 := by
+  apply (ParameterizedCriticalBranches.system_iff q () direction 1 (fun _ => 0)).mpr
+  constructor
+  · norm_num [q]
+  · intro i
+    cases i
+    simp [normalizedDirection]
+
+-- Simplicity is deliberately absent at the endpoint: the new spatial
+-- family has a root there, but its spatial Jacobian vanishes.
+example : (ProjectionCriticalFamily.spatialJacobian q ()
+    (normalizedDirection () (fun i => (direction i : Polynomial ℝ)))).eval₂
+      (Polynomial.evalRingHom 1) (fun _ => 0) = 0 := by
+  simp [ProjectionCriticalFamily.spatialJacobian, ProjectionCriticalFamily.spatialEquation,
+    q, Matrix.det_unique]
+
+-- A recursively supplied component cover transfers to the actual endpoint
+-- fiber without introducing labels or changing membership queries.
+noncomputable example {ι I : Type} [Fintype ι] [DecidableEq ι]
+    (p : MvPolynomial ι ℝ) (base : ι) (c t : ℝ)
+    (C : ClopenPathCover {z : CoordinateSlice.Index base → ℝ |
+      (CoordinateCriticalArcs.equation p base c).eval₂ (Polynomial.evalRingHom t) z = 0} I) :
+    ClopenPathCover (CoordinateSlabCover.sweep p base c ⁻¹' {t}) I :=
+  C.comap (CoordinateSlabCover.sliceHomeomorph p base c t)
+
+end UniformSliceTests
+
+namespace LowDimensionTests
+open LeanCanny.Geometry LeanCanny.Algebra ETR Set Turing.MultiTapeTM
+
+-- The zero-dimensional empty space is connected, but has no valid point query.
+example : (Description.mk 0 .falsum).Connected := (ZeroDimension.connected_iff _).mpr (by decide)
+
+example : ¬ (PointQuery.mk ⟨0, .falsum⟩ (.not .falsum) (.not .falsum)).Reachable := by
+  rw [ZeroDimension.reachable_iff]
+  rintro ⟨_, _, _, env, henv⟩
+  exact henv
+
+private def puncturedLine : Formula := .not (.eqZero (.var 0))
+
+-- A missing point disconnects an unbounded Boolean realization.
+example : ¬ (Description.mk 1 puncturedLine).Connected := by
+  rw [OneDimension.connected_iff]
+  rintro ⟨hw, hgap⟩
+  apply hgap
+  apply (OneDimension.gap_satisfiable puncturedLine hw).mpr
+  refine ⟨-1, 1, 0, ?_⟩
+  norm_num [OneDimension.realSet, puncturedLine, Formula.Holds, Formula.extend, Term.eval]
+
+private def minusOne : Formula := .eqZero (.add (.var 0) (.const 1))
+private def plusOne : Formula := .eqZero (.add (.var 0) (.const (-1)))
+
+example : ¬ (PointQuery.mk ⟨1, puncturedLine⟩ minusOne plusOne).Reachable := by
+  rw [OneDimension.point_iff]
+  rintro ⟨_, _, _, _, _, hsep⟩
+  apply hsep
+  let env : ℕ → ℝ := fun k => if k = 0 then -1 else if k = 1 then 1 else 0
+  refine ⟨env, (OneDimension.separation_holds puncturedLine minusOne plusOne
+    (by decide) (by decide) (by decide) env).mpr ?_⟩
+  norm_num [env, OneDimension.realSet, puncturedLine, minusOne, plusOne,
+    Formula.Holds, Formula.extend, Term.eval]
+
+-- Both low-dimensional algorithms are uniform native machine certificates.
+example {α : Type} [Inhabited α] {enc : α ↪ List Bool} {p s t : α → Formula}
+    (hp : ComputableTidilyInPolyTime (fun a => (p a).encode) enc encBits)
+    (hs : ComputableTidilyInPolyTime (fun a => (s a).encode) enc encBits)
+    (ht : ComputableTidilyInPolyTime (fun a => (t a).encode) enc encBits) :
+    ComputableTidilyInPolySpace
+      (fun a => @decide (PointQuery.mk ⟨1, p a⟩ (s a) (t a)).Reachable (Classical.propDecidable _))
+      enc encBool := OneDimension.point_computable hp hs ht
+
+end LowDimensionTests
