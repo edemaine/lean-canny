@@ -2581,3 +2581,46 @@ example (P : BoundedFullWriter.Readers) (lower upper word : List Bool → List B
   exact isEmptyElim x
 
 end SampleLabelCertificateTests
+
+namespace ProjectionRootSeparationTests
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR
+open Polynomial
+
+private noncomputable def repeated : ℤ[X] := (X ^ 2 - 1) ^ 2
+private theorem repeated_ne_zero : repeated ≠ 0 := by
+  intro hz
+  have he := congrArg (Polynomial.eval (0 : ℤ)) hz
+  norm_num [repeated] at he
+
+-- Neither the source nor the root-difference polynomial needs to be square-free.
+example : (repeated.derivative).eval (1 : ℤ) = 0 := by
+  norm_num [repeated, Polynomial.derivative_pow]
+example : IntegerRootSeparation.difference repeated ≠ 0 :=
+  IntegerRootSeparation.ne_zero repeated repeated_ne_zero
+example : (IntegerRootSeparation.difference repeated).eval₂ (Int.castRingHom ℝ) ((-1 : ℝ) - 1) = 0 :=
+  IntegerRootSeparation.eval_difference repeated repeated_ne_zero (-1) 1
+    (by norm_num [repeated, Polynomial.eval₂_pow, Polynomial.eval₂_sub, Polynomial.eval₂_X, Polynomial.eval₂_one])
+    (by norm_num [repeated, Polynomial.eval₂_pow, Polynomial.eval₂_sub, Polynomial.eval₂_X, Polynomial.eval₂_one])
+example : IntegerRootSeparation.difference (C (7 : ℤ)) ≠ 0 :=
+  IntegerRootSeparation.ne_zero _ (by simp)
+
+-- Negative grid indices use floor, so -3/2 lies in [-2,-1) at precision zero.
+example : (DyadicIsolatingInterval.lower (-2) 0 : ℝ) ≤ -3 / 2 ∧
+    (-3 / 2 : ℝ) < DyadicIsolatingInterval.upper (-2) 0 := by
+  norm_num [DyadicIsolatingInterval.lower, DyadicIsolatingInterval.upper]
+example : (Int.natAbs (-2)).size ≤ 0 + 1 + 1 :=
+  DyadicIsolatingInterval.index_size (-2) 0 1 (-3 / 2)
+    (by norm_num [DyadicIsolatingInterval.lower])
+    (by norm_num [DyadicIsolatingInterval.upper]) (by norm_num)
+
+-- An inadequately fine grid can contain two roots: separation is essential.
+example : (({0, 1 / 2} : Finset ℝ).filter
+    (fun t => t < (DyadicIsolatingInterval.upper 0 0 : ℝ))).card = 2 := by
+  norm_num [DyadicIsolatingInterval.upper, Finset.filter_insert, Finset.filter_singleton]
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) :
+    BinaryFn (BoundedProjectionRootSeparation.precision P) ∧
+      BinaryFn (BoundedProjectionRootSeparation.indexBits P) :=
+  ⟨BoundedProjectionRootSeparation.precision_binary h, BoundedProjectionRootSeparation.indexBits_binary h⟩
+
+end ProjectionRootSeparationTests

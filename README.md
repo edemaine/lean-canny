@@ -274,8 +274,11 @@ The checked ingredients are:
   rational isolating certificates now identifies the requested genuine sample
   and tests additional formula witnesses, rejecting extraneous roots. Every
   matching sample has such a certificate, and acceptance identifies a unique
-  sample. Space-bounded certificate construction and recursive connection
-  tests remain required.
+  sample. Explicit separation bounds fix a common dyadic isolating grid, even
+  with repeated roots. Its precision and grid-index bit allowance have native
+  binary controls, and every matching sample has an accepted grid certificate.
+  Computing its endpoint digits in polynomial space and the recursive
+  connection tests remain required.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

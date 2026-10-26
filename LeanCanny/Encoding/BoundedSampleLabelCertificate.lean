@@ -149,14 +149,19 @@ theorem accepted_unique (P : Readers) (lower upper word : List Bool → List Boo
   intro y hy
   exact BoundedCriticalLabels.label_injective P c (hy.1.trans hx.symm)
 
-theorem exists_certificate (P : Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
-    (p : Formula) (hp : BoundedCriticalSampleQuery.Matches P c p x) :
-    ∃ lower upper : List Bool, Certified P (fun _ => lower) (fun _ => upper)
+theorem of_isolating_cuts (P : Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (p : Formula) (hp : BoundedCriticalSampleQuery.Matches P c p x) (a b : ℚ)
+    (hL : (BoundedCriticalLabels.rootSet P c).filter (fun t => t < (a : ℝ)) =
+      (BoundedCriticalLabels.rootSet P c).filter (fun t => t <
+        BoundedCriticalSeparator.value P (BoundedCriticalSeparator.record P) c x.val))
+    (hU : (BoundedCriticalLabels.rootSet P c).filter (fun t => t < (b : ℝ)) =
+      insert (BoundedCriticalSeparator.value P (BoundedCriticalSeparator.record P) c x.val)
+        ((BoundedCriticalLabels.rootSet P c).filter (fun t => t <
+          BoundedCriticalSeparator.value P (BoundedCriticalSeparator.record P) c x.val))) :
+    Certified P (fun _ => RationalCutBits.payload a) (fun _ => RationalCutBits.payload b)
       (fun _ => BoundedCriticalLabels.label P c x) (fun _ => p) c := by
   let s := BoundedCriticalLabels.rootSet P c
   let v := BoundedCriticalSeparator.value P (BoundedCriticalSeparator.record P) c x.val
-  have hv : v ∈ s := (BoundedCriticalLabels.projectedRoot P c x).property
-  obtain ⟨a, b, _, _, hL, hU⟩ := RationalCutBits.exists_isolating_cuts s v hv
   have hr : BoundedCriticalLabels.rank P c x = (s.filter (fun t => t < v)).card :=
     BoundedProjectionRootCount.rank_eq_card_below P c x
   have hl : cutCount P (fun _ => RationalCutBits.payload a) c = BoundedCriticalLabels.rank P c x := by
@@ -171,8 +176,17 @@ theorem exists_certificate (P : Readers) (c : List Bool) (x : BoundedFullCritica
       (fun _ => BoundedCriticalLabels.label P c x) c := by
     refine ⟨BoundedCriticalLabels.label_length P c x, ?_, ?_⟩ <;>
       simp only [BoundedCriticalLabels.label_value] <;> assumption
-  refine ⟨RationalCutBits.payload a, RationalCutBits.payload b, hI, x, ?_, hp⟩
+  refine ⟨hI, x, ?_, hp⟩
   exact (interval_iff_label P _ _ _ c hI x).mpr rfl
+
+theorem exists_certificate (P : Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (p : Formula) (hp : BoundedCriticalSampleQuery.Matches P c p x) :
+    ∃ lower upper : List Bool, Certified P (fun _ => lower) (fun _ => upper)
+      (fun _ => BoundedCriticalLabels.label P c x) (fun _ => p) c := by
+  obtain ⟨a, b, _, _, hL, hU⟩ := RationalCutBits.exists_isolating_cuts (BoundedCriticalLabels.rootSet P c)
+    (BoundedCriticalSeparator.value P (BoundedCriticalSeparator.record P) c x.val)
+    (BoundedCriticalLabels.projectedRoot P c x).property
+  exact ⟨RationalCutBits.payload a, RationalCutBits.payload b, of_isolating_cuts P c x p hp a b hL hU⟩
 
 /-- Exact semantic completeness of the certificate scheme. No bound on the
 two rational payload lengths is asserted here. -/

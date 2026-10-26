@@ -65,6 +65,7 @@ import LeanCanny.Encoding.BoundedCriticalCoefficient
 import LeanCanny.Encoding.BoundedProjectionCoefficient
 import LeanCanny.Encoding.BoundedProjectionRationalCount
 import LeanCanny.Encoding.BoundedSampleLabelCertificate
+import LeanCanny.Encoding.BoundedProjectionRootSeparation
 
 /-! # Connectivity development
 
@@ -330,8 +331,11 @@ selected samples' projections, including the polynomial's extraneous roots.
 Rational isolating certificates now identify an actual sample with the requested
 label and additional formula witnesses, rejecting extraneous roots. Their checker
 has a native space bound, every matching sample has a certificate, and acceptance
-identifies a unique sample. A suitably space-bounded construction of isolating
-certificates and the recursive connection tests still need to be constructed.
+identifies a unique sample. An explicit separation bound now fixes a common
+dyadic isolating grid, including repeated projection roots. Its precision and
+grid-index bit allowance have native binary controls, and every matching sample
+has an accepted certificate on that grid. Constructing the required endpoint
+digits within polynomial space and the recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
