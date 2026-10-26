@@ -904,6 +904,32 @@ theorem for nonnegative integer polynomial energies with compact sublevels.
 It concerns connections between zeros, and supplies no path recovery for the
 original zero set or complete Boolean-input reduction.
 
+`BoundedPositivePerturbation` preserves that zero-component relation for every
+set between the zero set and its safe sublevel. A bounded nonnegative penalty
+gets an explicit dyadic coefficient, retaining the relation at every level in
+the upper half of the safe interval. A coordinate radius gives a pure-power
+penalty bound with derived exponent.
+`BoundedZeroSource` constructs the integer energy
+`q(x)² + (sum(wᵢ²) - 2^(2R))²` in two extra variables. Its sublevels are compact,
+and its degree, coefficient mass and zero-coordinate radius have explicit
+bounds. `BoundedZeroComponents` constructs its circle quotient onto the
+original zeros in that closed ball, preserving exact components and
+preconnectedness. `BoundedZeroPerturbation` then constructs the positive
+pure-power perturbation preserving connections between lifted original zeros.
+`BoundedRegularSource` shifts by the safe interval's lower endpoint before
+applying the existing integer regularization. The tiny regular level stays
+inside the component-preserving interval. `BoundedRegularComponents` proves
+exact polynomial and level semantics, properness, and the component relation
+between original bounded zeros and their constructed lifts to this regular
+pure-power hypersurface. Regularity holds over rational field extensions.
+`Encoding/BoundedZeroControls` and `BoundedRegularControls` compute the exact
+scalar controls in native polynomial time from unary dimension and binary
+degree, mass and radius allowances. They do not serialize the enormous
+coefficients or provide their shared source-circuit writer.
+The regular-source theorem compares lifted original points; it does not claim
+that every regular-source component meets their image or recover paths in
+the original singular set.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

@@ -45,6 +45,8 @@ import LeanCanny.Geometry.CircleSublevelLift
 import LeanCanny.Geometry.PurePowerSublevelLevels
 import LeanCanny.Geometry.EffectiveSublevelComponents
 import LeanCanny.Encoding.GeneralRegularLevel
+import LeanCanny.Geometry.BoundedRegularComponents
+import LeanCanny.Encoding.BoundedRegularControls
 
 /-! # Connectivity development
 
@@ -200,6 +202,16 @@ connections between zeros; path recovery for the original zero set remains
 required. Two even pure-power slack coordinates retain the same critical
 values and properness. When the degree is twice an odd number, a constructed
 coordinate homeomorphism transfers the circle lift's component preservation.
+For bounded polynomial zeros, an explicit sphere equation gives a nonnegative
+energy with compact sublevels and derived degree, mass and radius controls.
+Its circle projection preserves components and preconnectedness. A bounded
+positive pure-power perturbation preserves connections between original zeros
+throughout the safe level window. Shifting before the existing integer
+regularization keeps the resulting level inside that window. The constructed
+proper pure-power hypersurface is regular over rational field extensions and
+preserves the component relation between lifted original points. Its scalar
+controls have native polynomial-time computation; the source-circuit writer
+for these large coefficients remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

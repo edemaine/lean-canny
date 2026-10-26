@@ -223,6 +223,10 @@ The checked ingredients are:
   tolerance exponent has native polynomial-time computation. Two pure-power
   slack coordinates preserve sublevel components and regularity. Original
   zero-set path recovery and the full Boolean reduction remain required.
+  Within a supplied radius, polynomial zeros now have a constructed compact
+  energy and a proper regular pure-power source preserving components between
+  lifted original points. All scalar controls are native polynomial time;
+  their shared source-circuit writer remains required.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

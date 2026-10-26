@@ -1626,3 +1626,70 @@ example : (fun _ : Fin 1 => (1 : ℝ)) ∉ connectedComponentIn
   norm_num [doubleWell, hz0] at hroot
 
 end EffectiveSingularComponentTests
+
+namespace BoundedRegularSourceTests
+open LeanCanny.Geometry LeanCanny.Algebra LeanCanny.Encoding MvPolynomial Set
+open scoped Classical
+
+private noncomputable def boundaryPolynomial : MvPolynomial (Fin 1) ℤ := X 0 - 1
+private noncomputable def boundaryPoint : BoundedZeroSource.Bounded boundaryPolynomial 0 :=
+  ⟨fun _ => 1, by norm_num [BoundedZeroSource.Bounded, boundaryPolynomial, BoundedZeroSource.radial,
+    BoundedZeroSource.radiusSquared]⟩
+
+-- Adding an unscaled positive penalty and then taking a tiny level can lose
+-- the original zero at one. The shifted source must retain it.
+example : ¬ ∃ x : ℝ, (x - 1) ^ 2 + x ^ 2 = 1 / 4 := by
+  rintro ⟨x, hx⟩
+  nlinarith [sq_nonneg (2 * x - 1)]
+
+example : ∃ w : Fin 5 → ℝ, (BoundedRegularSource.polynomial boundaryPolynomial 1 1 0).eval₂
+    (Int.castRingHom ℝ) w = 0 ∧ ∃ j, (pderiv j (BoundedRegularSource.polynomial boundaryPolynomial 1 1 0)).eval₂
+      (Int.castRingHom ℝ) w ≠ 0 := by
+  have hd : boundaryPolynomial.totalDegree ≤ 1 := (totalDegree_sub _ _).trans (by simp)
+  have hm : MvMass.mass boundaryPolynomial ≤ 2 ^ 1 := (MvMass.sub_le _ _).trans (by simp)
+  let w := BoundedRegularSource.lift boundaryPolynomial 1 1 0 boundaryPoint
+  exact ⟨w.val, w.property, BoundedRegularSource.regular boundaryPolynomial 1 1 0 hd hm w.val w.property⟩
+
+-- With no original coordinates, the compact zero source is a circle and
+-- preserves the original singleton's preconnectedness.
+example (R : ℕ) : IsPreconnected (BoundedZeroSource.Zeros (0 : MvPolynomial (Fin 0) ℤ) R) := by
+  rw [BoundedZeroSource.preconnected_iff]
+  exact Set.Subsingleton.isPreconnected (fun x _ y _ => Subsingleton.elim x y)
+
+-- Radius and mass controls stay binary throughout both regularizations.
+example {dim degree mass radius : List Bool → ℕ} (hd : UnaryFn dim) (hD : BinaryFn degree)
+    (hb : BinaryFn mass) (hR : BinaryFn radius) :
+    BinaryFn (fun c => BoundedRegularSource.regularizationExponent (dim c) (degree c) (mass c) (radius c)) :=
+  BoundedRegularControls.regularizationExponent_binary hd hD hb hR
+
+private noncomputable def twoRoots : MvPolynomial (Fin 1) ℤ := X 0 ^ 2 - 1
+private noncomputable def leftRoot : BoundedZeroSource.Bounded twoRoots 0 :=
+  ⟨fun _ => -1, by norm_num [BoundedZeroSource.Bounded, twoRoots, BoundedZeroSource.radial, BoundedZeroSource.radiusSquared]⟩
+private noncomputable def rightRoot : BoundedZeroSource.Bounded twoRoots 0 :=
+  ⟨fun _ => 1, by norm_num [BoundedZeroSource.Bounded, twoRoots, BoundedZeroSource.radial, BoundedZeroSource.radiusSquared]⟩
+
+-- The complete constructed regular hypersurface cannot connect lifts of
+-- the distinct bounded roots. All compactness and radius hypotheses are
+-- supplied by the constructed sphere energy, not by a semantic promise.
+example : BoundedRegularSource.lift twoRoots 2 1 0 rightRoot ∉
+    connectedComponent (BoundedRegularSource.lift twoRoots 2 1 0 leftRoot) := by
+  have hd : twoRoots.totalDegree ≤ 2 :=
+    (totalDegree_sub _ _).trans (max_le ((totalDegree_pow _ _).trans (by simp)) (by simp))
+  have hm : MvMass.mass twoRoots ≤ 2 ^ 1 := by
+    apply (MvMass.sub_le _ _).trans
+    have hx := MvMass.pow_le (X (0 : Fin 1) : MvPolynomial (Fin 1) ℤ) 2
+    simp only [MvMass.X, one_pow, MvMass.one] at hx ⊢
+    omega
+  intro h
+  have hc := (BoundedRegularSource.component_iff_lift twoRoots 2 1 0 hd hm leftRoot rightRoot).mpr h
+  have hp : IsPreconnected ((fun z : Fin 1 → ℝ => z 0) ''
+      connectedComponentIn (BoundedZeroSource.Bounded twoRoots 0) leftRoot.val) :=
+    isPreconnected_connectedComponentIn.image _ (continuous_apply 0).continuousOn
+  have hz : (0 : ℝ) ∈ (fun z : Fin 1 → ℝ => z 0) ''
+      connectedComponentIn (BoundedZeroSource.Bounded twoRoots 0) leftRoot.val :=
+    hp.Icc_subset ⟨_, mem_connectedComponentIn leftRoot.property, rfl⟩ ⟨_, hc, rfl⟩ (by norm_num [leftRoot, rightRoot])
+  obtain ⟨z, hz, hz0⟩ := hz
+  have hzero := (connectedComponentIn_subset _ _ hz).1
+  norm_num [twoRoots, hz0] at hzero
+
+end BoundedRegularSourceTests
