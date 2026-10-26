@@ -29,12 +29,27 @@ structure Readers.PolyTime (P : Readers) : Prop where
   dim : UnaryFn P.dim
   radius : BinaryFn P.radius
 
+def Readers.comp (P : Readers) (f : List Bool → List Bool) : Readers :=
+  ⟨P.source ∘ f, P.dim ∘ f, P.radius ∘ f⟩
+
+theorem Readers.PolyTime.comp {P : Readers} (h : P.PolyTime) {f : List Bool → List Bool} (hf : f ∈ FP) :
+    (P.comp f).PolyTime := by
+  refine ⟨?_, ?_, ?_⟩
+  · change (P.source ∘ f) ∈ FP
+    exact mem_FP_comp (f := f) (g := P.source) hf h.source
+  · exact h.dim.comp hf
+  · exact h.radius.comp hf
+
 def controls (P : Readers) : BoundedSourceWriter.Readers := ⟨P.source, fun _ => [], P.dim, P.radius⟩
 theorem controls_polyTime {P : Readers} (h : P.PolyTime) : (controls P).PolyTime :=
   ⟨h.source, constFn_mem_FP [], h.dim, h.radius⟩
 
 noncomputable def size (P : Readers) : List Bool → ℕ := BoundedSourceWriter.size (controls P)
 noncomputable def original (P : Readers) (c : List Bool) : MvPolynomial (Fin (P.dim c)) ℤ := BoundedSourceWriter.original (controls P) c
+
+theorem size_comp (P : Readers) (f : List Bool → List Bool) (c : List Bool) : size (P.comp f) c = size P (f c) := rfl
+theorem original_comp (P : Readers) (f : List Bool → List Bool) (c : List Bool) :
+    original (P.comp f) c = original P (f c) := rfl
 def parameter (P : Readers) (c : List Bool) : ℕ := P.dim c + 3
 noncomputable def start (P : Readers) (c : List Bool) : ℕ := max (size P c) (P.dim c + 4)
 noncomputable def degree (P : Readers) : List Bool → ℕ := BoundedSourceWriter.degree (controls P)

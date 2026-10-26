@@ -54,6 +54,7 @@ import LeanCanny.ETR.ComplexCircuitFreezeSlice
 import LeanCanny.Encoding.BoundedFullGeometry
 import LeanCanny.Encoding.BoundedConstrainedQuery
 import LeanCanny.Encoding.BoundedWitnessQuery
+import LeanCanny.Connectivity.BoundedEndpointLocator
 
 /-! # Connectivity development
 
@@ -264,6 +265,13 @@ layout, preserving arbitrary existential formula witnesses. The full source
 and marked-source tests therefore also have native polynomial-space evaluators
 when the formula uses variables beyond the spatial coordinates and initial
 circuit inputs. Constructing the recursive formulas remains required.
+Explicit input-link ports now restore the original coordinate order in those
+queries. The marked projection retains the original coordinates, so singleton
+endpoint formulas describe its exact fibers. Native marked-piece tests and
+bounded label search locate a piece meeting an endpoint fiber whenever the
+pieces cover it. The algorithm charges the actual source and formula writers;
+coverage and singleton validity are correctness conditions. The recursive
+piece family itself remains to be constructed.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

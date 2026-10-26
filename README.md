@@ -237,6 +237,9 @@ The checked ingredients are:
   polynomial-space certificates charge the actual shared-circuit writers.
   A disjoint wire layout also permits arbitrary existential formula witnesses
   without collisions with circuit auxiliaries.
+  Input-link ports restore the original coordinate order. Singleton endpoint
+  formulas describe exact marked projection fibers, and native bounded search
+  locates a piece meeting such a fiber when the pieces cover it.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

@@ -1974,3 +1974,40 @@ example {P : LeanCanny.Encoding.BoundedFullWriter.Readers} {p : List Bool → Fo
   LeanCanny.Encoding.BoundedWitnessQuery.marked_evaluator h ht hp
 
 end InterleavedWitnessTests
+
+namespace OriginalCoordinateTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit RealQuery LeanCanny.Encoding
+open scoped Classical
+
+private def firstElevenSecondSeven : Formula :=
+  .and (.eqZero (.add (.var 0) (.const (-11))))
+    (.eqZero (.add (.var 1) (.const (-7))))
+
+-- The source stores original coordinate zero on wire four. Logical
+-- coordinate one is linked to wire zero, whose value is deliberately different.
+example : WithConstraints 10
+    (Interleaved.portGates 5 5 (BoundedOriginalQuery.port 1) [.constant 4 11, .constant 0 7])
+    (firstElevenSecondSeven.rename Interleaved.even) := by
+  apply (Interleaved.port_correct 5 5 5 (BoundedOriginalQuery.port 1) _ _ (by decide) (by decide)
+    (BoundedOriginalQuery.port_bound 1) (by simp [Gate.arity])).mpr
+  refine ⟨fun i => if i = 0 then 11 else if i = 1 then 7 else 0,
+    fun i => if i = 4 then 11 else if i = 0 then 7 else 0, ?_, ?_, ?_, ?_⟩
+  · intro g hg
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hg
+    rcases hg with rfl | rfl <;> norm_num [Gate.Holds]
+  · intro i _
+    dsimp only
+    split_ifs <;> norm_num
+  · intro i hi
+    interval_cases i <;> norm_num [BoundedOriginalQuery.port]
+  · norm_num [firstElevenSecondSeven, Formula.Holds, Term.eval]
+
+-- Original-coordinate source queries retain arbitrary formula witnesses
+-- and native varying-dimension/binary-radius costs.
+example {P : BoundedFullWriter.Readers} {p : List Bool → Formula} (h : P.PolyTime)
+    (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) (hp : (fun c => (p c).encode) ∈ FP) :
+    SpaceFunction (fun c => [decide (∃ x : ℕ → ℝ,
+      BoundedOriginalQuery.MarkedPoint P c (fun i => x i.val) ∧ (p c).Holds x)]) :=
+  BoundedOriginalQuery.marked_evaluator h ht hp
+
+end OriginalCoordinateTests
