@@ -1926,3 +1926,51 @@ example {P : LeanCanny.Encoding.BoundedFullWriter.Readers} (h : P.PolyTime)
   LeanCanny.Encoding.BoundedRealQuery.marked_evaluator h ht
 
 end RealCircuitQueryTests
+
+namespace InterleavedWitnessTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit RealQuery
+open scoped Classical
+
+private def witnessZero : Formula := .eqZero (.var 1)
+
+-- Logical variable one is an independent witness although the original
+-- circuit uses auxiliary wire one to store seven.
+example : WithConstraints 2 (Interleaved.gates 1 2 [.constant 1 7])
+    (witnessZero.rename Interleaved.even) := by
+  apply (Interleaved.correct 1 1 2 [.constant 1 7] witnessZero (by decide) (by decide)
+    (by simp [Gate.arity])).mpr
+  refine ⟨fun _ => 0, fun i => if i = 1 then 7 else 0, ?_, ?_, ?_, ?_⟩
+  · intro g hg
+    obtain rfl := List.mem_singleton.mp hg
+    norm_num [Gate.Holds]
+  · intro i hi
+    have he : i = 0 := by omega
+    simp [he]
+  · intro i hi
+    have he : i = 0 := by omega
+    simp [he]
+  · simp [witnessZero, Formula.Holds, Term.eval]
+
+-- Reusing the auxiliary wire for the same logical witness would reject it.
+example : ¬ WithConstraints 1 [.constant 1 7] witnessZero := by
+  rintro ⟨env, hg, _, hp⟩
+  have he : env 1 = (7 : ℂ) := hg (.constant 1 7) (by simp)
+  change (env 1).re = 0 at hp
+  rw [he] at hp
+  norm_num at hp
+
+-- Even dimension zero leaves logical witness zero independent of the
+-- added odd-wire zero constant.
+example : WithConstraints 0 (Interleaved.gates 0 0 [])
+    ((Formula.eqZero (.var 0)).rename Interleaved.even) := by
+  apply (Interleaved.correct 0 0 0 [] _ (by decide) (by decide) (by simp)).mpr
+  exact ⟨fun _ => 0, fun _ => 0, by simp, by simp, by simp, rfl⟩
+
+example {P : LeanCanny.Encoding.BoundedFullWriter.Readers} {p : List Bool → Formula}
+    (h : P.PolyTime) (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c)
+    (hp : (fun c => (p c).encode) ∈ FP) :
+    SpaceFunction (fun c => [decide (∃ x : ℕ → ℝ,
+      LeanCanny.Encoding.BoundedRealQuery.MarkedPoint P c (fun i => x i.val) ∧ (p c).Holds x)]) :=
+  LeanCanny.Encoding.BoundedWitnessQuery.marked_evaluator h ht hp
+
+end InterleavedWitnessTests

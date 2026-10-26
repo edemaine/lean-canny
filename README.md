@@ -235,6 +235,8 @@ The checked ingredients are:
   Native real-input circuit tests now characterize source and marked points,
   including Boolean coordinate constraints in the same assignment. Their
   polynomial-space certificates charge the actual shared-circuit writers.
+  A disjoint wire layout also permits arbitrary existential formula witnesses
+  without collisions with circuit auxiliaries.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

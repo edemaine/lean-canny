@@ -53,6 +53,7 @@ import LeanCanny.Connectivity.BoundedMarkedCover
 import LeanCanny.ETR.ComplexCircuitFreezeSlice
 import LeanCanny.Encoding.BoundedFullGeometry
 import LeanCanny.Encoding.BoundedConstrainedQuery
+import LeanCanny.Encoding.BoundedWitnessQuery
 
 /-! # Connectivity development
 
@@ -257,6 +258,12 @@ constraints share that same real assignment, including inequalities and singleto
 endpoint formulas. The finite-coordinate bridge proves constrained source and
 marking correctness without expanding the source polynomials. Actual recursive
 piece formulas and critical-parameter selection remain required.
+Formula witnesses now occupy a wire family disjoint from the entire source
+program. Native parity reindexing and explicit input-link gates implement this
+layout, preserving arbitrary existential formula witnesses. The full source
+and marked-source tests therefore also have native polynomial-space evaluators
+when the formula uses variables beyond the spatial coordinates and initial
+circuit inputs. Constructing the recursive formulas remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.
