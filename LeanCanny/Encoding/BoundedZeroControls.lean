@@ -40,10 +40,15 @@ theorem toleranceExponent_binary {dim degree mass radius : List Bool → ℕ}
       (degreeAllowance (degree c)) (massExponent (dim c) (mass c) (radius c))) :=
   GeneralRegularLevel.exponent_binary (hd.add (UnaryFn.const 2)) (degree_binary hD) (massExponent_binary hd hb hR)
 
+theorem penaltyExponent_binary {dim degree radius : List Bool → ℕ}
+    (hd : UnaryFn dim) (hD : BinaryFn degree) (hR : BinaryFn radius) :
+    BinaryFn (fun c => penaltyExponent (dim c) (degree c) (radius c)) :=
+  (hR.mul (powerDegree_binary hD)).add ((BinaryFn.ofUnary (hd.add (UnaryFn.const 2))).size)
+
 theorem perturbationExponent_binary {dim degree mass radius : List Bool → ℕ}
     (hd : UnaryFn dim) (hD : BinaryFn degree) (hb : BinaryFn mass) (hR : BinaryFn radius) :
     BinaryFn (fun c => perturbationExponent (dim c) (degree c) (mass c) (radius c)) := by
-  have hp := (hR.mul (powerDegree_binary hD)).add ((BinaryFn.ofUnary (hd.add (UnaryFn.const 2))).size)
+  have hp := penaltyExponent_binary hd hD hR
   exact ((toleranceExponent_binary hd hD hb hR).add hp).add (BinaryFn.const 1)
 
 end LeanCanny.Encoding.BoundedZeroControls

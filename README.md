@@ -225,8 +225,10 @@ The checked ingredients are:
   zero-set path recovery and the full Boolean reduction remain required.
   Within a supplied radius, polynomial zeros now have a constructed compact
   energy and a proper regular pure-power source preserving components between
-  lifted original points. All scalar controls are native polynomial time;
-  their shared source-circuit writer remains required.
+  lifted original points. A shared source writer computes its coefficients
+  from binary exponents. Its exact sampled polynomial identity supports
+  native affine/infinity validation and bounded record selection; the selected
+  source is serialized in native polynomial space.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

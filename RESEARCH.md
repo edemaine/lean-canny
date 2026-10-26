@@ -924,8 +924,26 @@ between original bounded zeros and their constructed lifts to this regular
 pure-power hypersurface. Regularity holds over rational field extensions.
 `Encoding/BoundedZeroControls` and `BoundedRegularControls` compute the exact
 scalar controls in native polynomial time from unary dimension and binary
-degree, mass and radius allowances. They do not serialize the enormous
-coefficients or provide their shared source-circuit writer.
+degree, mass and radius allowances.
+`ETR/ComplexBinaryScale`, `ComplexZeroEnergy`, `ComplexScaleShift`, and
+`ComplexBoundedLow` compute the enormous radius, scale and shift on shared
+wires. `ComplexBoundedSource` joins these to the frozen original term,
+sampled radial and pure-power sums, and outer regularization in an acyclic
+program. Its output is proved equal to the intended integer polynomial.
+`ComplexBoundedEncoding` proves native polynomial-time source encoding and
+unary wire/operation bounds in the original source and binary exponent words.
+`ComplexBoundedPSPACE` gives native critical-kernel tests for this circuit.
+`Encoding/BoundedSampledIdentity` identifies its complex coefficient image
+with the coordinate slice of the actual geometric regular source, including
+dimension zero. `BoundedSourceWriter` derives degree and mass allowances from
+the original encoded term, computes all exponent words and reads the actual
+sample field. Its native writer requires only original source, dimension,
+radius and record reader cost certificates. `BoundedAffineQuery` and
+`BoundedValidity` connect the resulting affine/infinity tests to this source's
+existing finite `Valid` predicate. `BoundedDirectionChoice` selects a valid
+record by bounded native polynomial-space search, with geometric existence
+proved from the derived controls. Record selection and actual source
+serialization compose in native polynomial space.
 The regular-source theorem compares lifted original points; it does not claim
 that every regular-source component meets their image or recover paths in
 the original singular set.

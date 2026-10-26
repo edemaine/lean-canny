@@ -47,6 +47,7 @@ import LeanCanny.Geometry.EffectiveSublevelComponents
 import LeanCanny.Encoding.GeneralRegularLevel
 import LeanCanny.Geometry.BoundedRegularComponents
 import LeanCanny.Encoding.BoundedRegularControls
+import LeanCanny.Encoding.BoundedDirectionChoice
 
 /-! # Connectivity development
 
@@ -209,9 +210,13 @@ positive pure-power perturbation preserves connections between original zeros
 throughout the safe level window. Shifting before the existing integer
 regularization keeps the resulting level inside that window. The constructed
 proper pure-power hypersurface is regular over rational field extensions and
-preserves the component relation between lifted original points. Its scalar
-controls have native polynomial-time computation; the source-circuit writer
-for these large coefficients remains required.
+preserves the component relation between lifted original points. A shared
+source-circuit writer computes all large coefficients from binary exponent
+words, with exact finite-coordinate slice semantics. The original encoded
+term supplies degree and mass allowances. Native affine and infinity tests
+validate the constructed source's record, and bounded search selects one in
+polynomial space. Selection and actual source serialization compose in
+polynomial space.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

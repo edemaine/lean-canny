@@ -1693,3 +1693,52 @@ example : BoundedRegularSource.lift twoRoots 2 1 0 rightRoot ∉
   norm_num [twoRoots, hz0] at hzero
 
 end BoundedRegularSourceTests
+
+namespace BoundedSourceWriterTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit LeanCanny.Encoding LeanCanny.Geometry MvPolynomial
+open scoped Classical
+
+private def rootsTerm : Term := .add (.mul (.var 0) (.var 0)) (.const (-1))
+private def readers : BoundedSourceWriter.Readers :=
+  BoundedDirectionChoice.fromSource (fun _ => rootsTerm.toData.toBits) (fun _ => 1) (fun _ => 0)
+
+private theorem native : readers.PolyTime :=
+  BoundedDirectionChoice.fromSource_polyTime (constFn_mem_FP rootsTerm.toData.toBits) (UnaryFn.const 1) (BinaryFn.const 0)
+
+private theorem fits (c : List Bool) : (TermView.term (readers.source c)).arity ≤ readers.dim c := by
+  simp only [readers, BoundedDirectionChoice.fromSource, TermView.term_toBits, rootsTerm, Term.arity]
+  decide
+
+-- The record is selected by a native space machine from the original term,
+-- without serializing any of its constructed giant coefficients.
+example : SpaceFunction (BoundedDirectionChoice.record readers) := BoundedDirectionChoice.evaluator native
+example : SpaceFunction (fun c => encode (StraightLine.gates
+    (BoundedSourceWriter.start (BoundedDirectionChoice.selected readers) c)
+    (BoundedSourceWriter.program (BoundedDirectionChoice.selected readers) c))) :=
+  BoundedDirectionChoice.selected_encode_evaluator native
+
+-- The selected record validates the exact source constructed from this term.
+example (c : List Bool) : FermatSweepCertificate.Valid
+    ((BoundedSourceWriter.lower readers c).map (Int.castRingHom ℚ))
+    (BoundedSourceWriter.leading readers c : ℚ) (BoundedSourceWriter.degree readers c)
+    (BoundedDirectionChoice.record readers c) := BoundedDirectionChoice.record_valid readers c (fits c)
+
+-- Radius exponents remain binary even when supplied by an arbitrary reader.
+example {source : List Bool → List Bool} {dim radius : List Bool → ℕ}
+    (ht : source ∈ FP) (hd : UnaryFn dim) (hR : BinaryFn radius) :
+    SpaceFunction (BoundedDirectionChoice.record (BoundedDirectionChoice.fromSource source dim radius)) :=
+  BoundedDirectionChoice.fromSource_evaluator ht hd hR
+
+-- A zero-dimensional original source also receives a constructed record;
+-- neither the writer nor the validity proof requires a positive dimension.
+private def pointReaders : BoundedSourceWriter.Readers :=
+  BoundedDirectionChoice.fromSource (fun _ => (Term.const 0).toData.toBits) (fun _ => 0) (fun _ => 0)
+
+example (c : List Bool) : FermatSweepCertificate.Valid
+    ((BoundedSourceWriter.lower pointReaders c).map (Int.castRingHom ℚ))
+    (BoundedSourceWriter.leading pointReaders c : ℚ) (BoundedSourceWriter.degree pointReaders c)
+    (BoundedDirectionChoice.record pointReaders c) := by
+  apply BoundedDirectionChoice.record_valid
+  simp only [pointReaders, BoundedDirectionChoice.fromSource, TermView.term_toBits, Term.arity, le_refl]
+
+end BoundedSourceWriterTests
