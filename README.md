@@ -232,6 +232,9 @@ The checked ingredients are:
   The full varying-coordinate source and its marking polynomial now also
   have native polynomial-time shared-circuit writers, with exact geometric
   identities, regularity and properness in their actual coordinate order.
+  Native real-input circuit tests now characterize source and marked points,
+  including Boolean coordinate constraints in the same assignment. Their
+  polynomial-space certificates charge the actual shared-circuit writers.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

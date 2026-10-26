@@ -1876,3 +1876,53 @@ example {source : List Bool → List Bool} {radius : List Bool → ℕ} (ht : so
   BoundedFullWriter.encode_mem_FP ⟨ht, UnaryFn.const 0, hR⟩
 
 end FullSourceWireTests
+
+namespace RealCircuitQueryTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit MvPolynomial
+open scoped Classical
+
+private def noRealRoot : List Operation := [.mul 0 0, .constant 1, .add 1 2]
+private def sqrtTwo : List Operation := [.mul 0 0, .constant (-2), .add 1 2]
+
+-- The unrestricted complex query accepts x^2 + 1 = 0.
+example : Satisfiable (StraightLine.gates 1 noRealRoot ++ [.zero 3]) := by
+  refine ⟨fun i => if i = 0 then Complex.I else if i = 1 then -1 else if i = 2 then 1 else 0, ?_⟩
+  intro g hg
+  simp only [StraightLine.gates, noRealRoot, List.cons_append, List.nil_append,
+    List.mem_cons, List.not_mem_nil, or_false] at hg
+  rcases hg with rfl | rfl | rfl | rfl <;>
+    norm_num [Operation.gate, Gate.Holds, Complex.I_mul_I]
+
+-- The real-input query rejects the same circuit, despite its complex root.
+example : ¬ RealQuery.Satisfiable 1 (StraightLine.gates 1 noRealRoot ++ [.zero 3]) := by
+  intro h
+  obtain ⟨x, hx⟩ := (RealQuery.zero_constraints_iff 1 noRealRoot [3]
+    (by norm_num [StraightLine.WellFormed, Operation.InputsBelow, noRealRoot])
+    (by simp [noRealRoot])).mp h
+  have hz := hx 3 (by simp)
+  norm_num [noRealRoot, Differential.symbolicRun, Differential.polynomial] at hz
+  nlinarith [sq_nonneg (x 0)]
+
+-- The Boolean constraint chooses the positive irrational root in the same
+-- assignment as the source circuit; no rational approximation is substituted.
+example : RealQuery.WithConstraints 1 (StraightLine.gates 1 sqrtTwo ++ [.zero 3]) positiveSqrtTwo := by
+  apply (RealQuery.zero_constraints_with_iff 1 sqrtTwo [3] positiveSqrtTwo
+    (by norm_num [StraightLine.WellFormed, Operation.InputsBelow, sqrtTwo])
+    (by simp [sqrtTwo]) (by decide)).mpr
+  refine ⟨fun _ => Real.sqrt 2, ?_, ?_⟩
+  · intro out hout
+    obtain rfl := List.mem_singleton.mp hout
+    norm_num [sqrtTwo, Differential.symbolicRun, Differential.polynomial]
+  · have hpos : (0 : ℝ) < Real.sqrt 2 := Real.sqrt_pos.mpr (by norm_num)
+    have hsq := Real.sq_sqrt (show (0 : ℝ) ≤ 2 by norm_num)
+    simp only [positiveSqrtTwo, Formula.Holds, Term.eval, Int.cast_neg, Int.cast_ofNat, Int.cast_one]
+    constructor <;> nlinarith
+
+-- Native source/marking costs retain the original writer, unary varying
+-- dimension, and binary radius; no geometric decision routine is assumed.
+example {P : LeanCanny.Encoding.BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun c => [decide (∃ x, LeanCanny.Encoding.BoundedRealQuery.MarkedPoint P c x)]) :=
+  LeanCanny.Encoding.BoundedRealQuery.marked_evaluator h ht
+
+end RealCircuitQueryTests

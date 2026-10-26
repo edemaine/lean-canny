@@ -52,6 +52,7 @@ import LeanCanny.Geometry.LiftPaths
 import LeanCanny.Connectivity.BoundedMarkedCover
 import LeanCanny.ETR.ComplexCircuitFreezeSlice
 import LeanCanny.Encoding.BoundedFullGeometry
+import LeanCanny.Encoding.BoundedConstrainedQuery
 
 /-! # Connectivity development
 
@@ -248,6 +249,14 @@ finite coordinate order; the permutation preserves the pure-power leading
 shape, extension-field regularity and properness. This supplies the source
 family for recursive queries; selecting critical parameters and constructing
 the actual covers remain required.
+Real-input shared-circuit queries now force zero imaginary parts on all input
+wires. Acyclic gate assignments have the exact integer polynomial interpretation,
+so the full source and marking tests characterize real points, with native
+polynomial-time encoders and polynomial-space evaluators. Boolean coordinate
+constraints share that same real assignment, including inequalities and singleton
+endpoint formulas. The finite-coordinate bridge proves constrained source and
+marking correctness without expanding the source polynomials. Actual recursive
+piece formulas and critical-parameter selection remain required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.
