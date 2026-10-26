@@ -63,6 +63,7 @@ import LeanCanny.Encoding.BoundedCriticalSeparator
 import LeanCanny.Encoding.BoundedCriticalLabels
 import LeanCanny.Encoding.BoundedCriticalCoefficient
 import LeanCanny.Encoding.BoundedProjectionCoefficient
+import LeanCanny.Encoding.BoundedProjectionRationalCount
 
 /-! # Connectivity development
 
@@ -321,8 +322,11 @@ selected critical equations, including direction selection. The complete
 homogeneous projection system now supplies an implicit integer Macaulay matrix.
 Native determinant coefficients and binary bounded zero tests select its first
 nonzero characteristic coefficient, giving modular access to the actual
-projection polynomial with both record searches charged in space. Label-query
-evaluation and recursive connection tests still need to be constructed.
+projection polynomial with both record searches charged in space. Distinct real
+root counts and counts below signed rational cuts now have native space bounds.
+Fixed-width root-label comparisons with these cuts agree exactly with the
+selected samples' projections, including the polynomial's extraneous roots.
+Actual sample-label validation and recursive connection tests still need to be constructed.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query

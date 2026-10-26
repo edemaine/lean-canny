@@ -2486,3 +2486,43 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
   BoundedProjectionCoefficient.evaluator h ha
 
 end NativeProjectionCoefficientTests
+
+namespace ProjectionRationalCutTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation LeanCanny.ETR
+
+-- The cut (3 - 1)/(3 + 1) = 1/2 gives 4 X - 2. Negative constants,
+-- the denominator's successor, modulus one, and absent coefficients matter.
+private def halfCut : List Bool := LeanCanny.pair []
+  (LeanCanny.pair (BinaryNatCode.encode 3) (LeanCanny.pair (BinaryNatCode.encode 1) (BinaryNatCode.encode 3)))
+private def modularCut (c : List Bool) (k m : ℕ) : List Bool :=
+  LeanCanny.pair (LeanCanny.pair c (BinaryNatCode.encode k)) (BinaryNatCode.encode m)
+
+#guard RationalCutBits.coefficient (modularCut halfCut 0 4) == BinaryNatCode.encode 3
+#guard RationalCutBits.coefficient (modularCut halfCut 1 4) == BinaryNatCode.encode 4
+#guard RationalCutBits.coefficient (modularCut halfCut 2 4) == []
+#guard RationalCutBits.coefficient (modularCut halfCut 0 0) == []
+#guard RationalCutBits.coefficient (modularCut halfCut 1 0) == []
+
+-- An empty denominator predecessor gives denominator one, including
+-- a negative threshold: (1 - 3)/(0 + 1) = -2, whose query is X + 2.
+private def negativeCut : List Bool := LeanCanny.pair []
+  (LeanCanny.pair (BinaryNatCode.encode 1) (LeanCanny.pair (BinaryNatCode.encode 3) []))
+#guard RationalCutBits.coefficient (modularCut negativeCut 0 4) == BinaryNatCode.encode 2
+#guard RationalCutBits.coefficient (modularCut negativeCut 1 4) == BinaryNatCode.encode 1
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceDecider (BoundedProjectionRationalCount.belowLanguage P) :=
+  BoundedProjectionRationalCount.belowDecider h ha
+
+-- Equality with the cut must not be counted as lying strictly below it.
+example (P : BoundedFullWriter.Readers) (c : List Bool)
+    (x : BoundedFullCriticalSamples.Samples P (LeanCanny.pairFst c))
+    (he : BoundedCriticalSeparator.value P (BoundedCriticalSeparator.record P) (LeanCanny.pairFst c) x.val =
+      RationalCutBits.threshold c) :
+    LeanCanny.pair c (BoundedCriticalLabels.label P (LeanCanny.pairFst c) x) ∉
+      BoundedProjectionRationalCount.belowLanguage P := by
+  rw [BoundedProjectionRationalCount.label_below_iff, he]
+  exact lt_irrefl _
+
+end ProjectionRationalCutTests
