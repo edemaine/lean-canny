@@ -1742,3 +1742,39 @@ example (c : List Bool) : FermatSweepCertificate.Valid
   simp only [pointReaders, BoundedDirectionChoice.fromSource, TermView.term_toBits, Term.arity, le_refl]
 
 end BoundedSourceWriterTests
+
+namespace SlackPathTests
+open LeanCanny.Geometry MvPolynomial Set
+
+private def upper : CircleSublevelLift.Total (fun _ : Unit => (0 : ℝ)) 1 :=
+  ⟨((), Complex.I), by norm_num [CircleSublevelLift.Total, Complex.normSq_apply]⟩
+private def lower : CircleSublevelLift.Total (fun _ : Unit => (0 : ℝ)) 1 :=
+  ⟨((), -Complex.I), by norm_num [CircleSublevelLift.Total, Complex.normSq_apply]⟩
+
+-- Distinct opposite points of a nonzero slack circle are joined in its
+-- actual total space; fiber connectedness alone would not prove this.
+example : Joined upper lower :=
+  (CircleSublevelLift.joined_iff _ continuous_const 1 upper lower).mpr (Joined.refl _)
+
+-- Degenerate circle fibers are included as well.
+example : IsPathConnected ((CircleSublevelLift.projection (fun _ : Unit => (0 : ℝ)) 0) ⁻¹'
+    {(⟨(), by change (0 : ℝ) ≤ 0; exact le_refl 0⟩ : CircleSublevelLift.Base (fun _ : Unit => (0 : ℝ)) 0)}) :=
+  CircleSublevelLift.fiber_pathConnected _ _ _
+
+private def powerUpper : PurePowerSublevelLift.Total 3 (fun _ : Unit => (0 : ℝ)) 1 :=
+  ⟨((), Complex.I), by norm_num [PurePowerSublevelLift.Total, PurePowerSublevelLift.penalty]⟩
+private def powerLower : PurePowerSublevelLift.Total 3 (fun _ : Unit => (0 : ℝ)) 1 :=
+  ⟨((), -Complex.I), by norm_num [PurePowerSublevelLift.Total, PurePowerSublevelLift.penalty]⟩
+
+example : Joined powerUpper powerLower :=
+  (PurePowerSublevelLift.joined_iff 3 (by decide) _ continuous_const 1 powerUpper powerLower).mpr (Joined.refl _)
+
+-- An original zero-dimensional singleton lifts to an entire circle, and
+-- every pair of points in that exact polynomial zero source is joined.
+example (R : ℕ) (u v : BoundedZeroSource.Zeros (0 : MvPolynomial (Fin 0) ℤ) R) : Joined u v := by
+  apply (BoundedZeroSource.joined_iff _ R u v).mpr
+  have he : BoundedZeroSource.projection _ R u = BoundedZeroSource.projection _ R v :=
+    Subtype.ext (Subsingleton.elim _ _)
+  rw [he]
+
+end SlackPathTests

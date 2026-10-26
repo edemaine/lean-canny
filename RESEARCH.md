@@ -948,6 +948,15 @@ The regular-source theorem compares lifted original points; it does not claim
 that every regular-source component meets their image or recover paths in
 the original singular set.
 
+`CircleSublevelPaths` proves path connectedness of every circle fiber,
+including radius zero, and exact path-component preimages under projection.
+`LiftPaths` transfers this to the pure-power and bounded sphere zero sources
+through their actual coordinate homeomorphisms. Arbitrary points in the
+same lifted fiber can be joined, and paths between chosen section points
+correspond exactly to paths in the original sublevel or bounded zero set.
+These results do not transfer paths from a positive perturbed sublevel to
+its singular zero set.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

@@ -48,6 +48,7 @@ import LeanCanny.Encoding.GeneralRegularLevel
 import LeanCanny.Geometry.BoundedRegularComponents
 import LeanCanny.Encoding.BoundedRegularControls
 import LeanCanny.Encoding.BoundedDirectionChoice
+import LeanCanny.Geometry.LiftPaths
 
 /-! # Connectivity development
 
@@ -217,6 +218,10 @@ term supplies degree and mass allowances. Native affine and infinity tests
 validate the constructed source's record, and bounded search selects one in
 polynomial space. Selection and actual source serialization compose in
 polynomial space.
+Circle fibers, including singleton fibers, also preserve exact paths. The
+coordinate homeomorphisms transfer this to pure-power slack variables and
+the bounded sphere zero source. This path correspondence concerns the set
+being lifted; recovery from a positive perturbed sublevel remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.
