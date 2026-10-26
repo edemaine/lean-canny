@@ -2420,3 +2420,47 @@ example (P : BoundedFullWriter.Readers) (c : List Bool)
   simp only [BoundedCriticalLabels.decode, dite_eq_right hn]
 
 end CriticalProjectionLabelTests
+
+namespace NativeCriticalCoefficientTests
+open LeanCanny.ETR LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation
+open scoped Classical
+
+-- The binary exponent is enormous, but modular exponentiation processes
+-- only its 101 digits. Modulus one must also return the zero residue.
+#guard BinaryNat.powMod (LeanCanny.pair (BinaryNatCode.encode 2)
+  (LeanCanny.pair (BinaryNatCode.encode (2 ^ 100)) (BinaryNatCode.encode 6))) == BinaryNatCode.encode 2
+#guard BinaryNat.powMod (LeanCanny.pair (BinaryNatCode.encode 2)
+  (LeanCanny.pair (BinaryNatCode.encode (2 ^ 100)) [])) == []
+
+-- Rotation must move the first old coordinate to the last new coordinate.
+private def vector : List Bool := FixedWidthNatVector.encode 3 3 (fun i => if i = 0 then 1 else if i = 1 then 2 else 5)
+#guard FixedWidthRotate.word (fun _ => 3) (fun _ => 3) (fun _ => vector) [] ==
+  FixedWidthNatVector.encode 3 3 (fun i => if i = 0 then 5 else if i = 1 then 1 else 2)
+#guard FixedWidthRotate.word (fun _ => 0) (fun _ => 3) (fun _ => vector) [] == []
+#guard FixedWidthRotate.word (fun _ => 3) (fun _ => 0) (fun _ => vector) [] == []
+
+-- In dimension zero every exponent query refers to the constant coefficient,
+-- even with an unrelated input word and a zero-width exponent block.
+example : SizedCollectedCoefficient.value (fun _ => 0) (fun _ => 0)
+    (fun _ => (Term.const 7).toData.toBits) id (fun _ => BinaryNatCode.encode 4) [true, false] = BinaryNatCode.encode 2 := by
+  unfold SizedCollectedCoefficient.value
+  rw [TermView.term_toBits]
+  have he : RationalSubstitution.Indexed.exponentVector 0
+      (FixedWidthQuery.coordinate (fun _ => 0) id [true, false]) = 0 := Subsingleton.elim _ _
+  rw [he]
+  simp only [Term.finitePolynomial, MvPolynomial.coeff_C, ite_true]
+  rfl
+
+-- At the native binary degree width no extra exponent-fit certificate is
+-- assumed by the caller. The selected direction is included in this reader.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    {row : (c : List Bool) → Fin (P.dim c + 4)} (hi : UnaryFn (fun c => (row c).val))
+    {target modulus : List Bool → List Bool} (ht : target ∈ FP) (hm : modulus ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalCoefficient.value P (BoundedFullDirectionChoice.record P) row
+      (fun c => (BoundedFullWriter.degree P c).size) target modulus) :=
+  BoundedCriticalCoefficient.selected_evaluator h hi
+    ((UnaryFn.length (BoundedFullWriter.degree_binary h).bits_mem_FP).of_eq
+      (fun _ => BinaryNatCode.length_encode _)) ht hm ha (fun _ => Nat.lt_size_self _)
+
+end NativeCriticalCoefficientTests

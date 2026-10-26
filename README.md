@@ -262,8 +262,10 @@ The checked ingredients are:
   A concrete nonzero integer polynomial annihilates every selected projection,
   with native degree and coefficient-bit allowances. Its ordered real roots
   give unique bounded sample labels and exact mathematical decoding. Native
-  coefficient access, label-query evaluation, and recursive connection tests
-  remain required.
+  access to source and critical-equation coefficients now uses modular
+  specialization and polynomial-sized terms, with the actual direction
+  selector charged in space. Projection-polynomial coefficient access,
+  label-query evaluation, and recursive connection tests remain required.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

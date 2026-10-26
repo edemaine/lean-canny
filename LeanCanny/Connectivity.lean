@@ -61,6 +61,7 @@ import LeanCanny.Encoding.BoundedFullCriticalSamples
 import LeanCanny.Encoding.BoundedCriticalSampleQuery
 import LeanCanny.Encoding.BoundedCriticalSeparator
 import LeanCanny.Encoding.BoundedCriticalLabels
+import LeanCanny.Encoding.BoundedCriticalCoefficient
 
 /-! # Connectivity development
 
@@ -311,9 +312,13 @@ the exact pair queries charge both direction and separator selection.
 A concrete nonzero integer Macaulay polynomial now annihilates every selected
 sample projection. Its degree and coefficient-bit bounds have native binary
 controls. Ordered real roots give unique fixed-width sample labels with exact
-mathematical decoding. Native access to the projection polynomial coefficients,
-label-query evaluation, and recursive connection tests still need to be
-constructed.
+mathematical decoding. Modular specialization of the large powers of two now
+gives a polynomial-sized term for the exact integer regular source modulo each
+queried modulus. Collected coefficients, coordinate rotation, and derivative
+readers give native polynomial-space access to the full source and its actual
+selected critical equations, including direction selection. The projection
+polynomial's Macaulay coefficient access, label-query evaluation, and recursive
+connection tests still need to be constructed.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
