@@ -128,23 +128,26 @@ theorem polynomial_degree (P : Readers) (c : List Bool) :
     LinearProjectionEliminant.degree_le (BoundedFullCriticalSamples.equations P c)
       (fun _ => degree P c) (weights P c) (systemWidth P c)
 
+theorem projection_mass_bound (P : Readers) (c : List Bool) :
+    2 ^ equationBits P c + 1 + (P.dim c + 4) * 2 ^ BoundedCriticalSeparator.width P c ≤
+      2 ^ projectionBits P c := by
+  let a := equationBits P c + BoundedCriticalSeparator.width P c + (P.dim c + 4)
+  have h₁ : 2 ^ equationBits P c ≤ 2 ^ a := Nat.pow_le_pow_right (by decide) (by dsimp [a]; omega)
+  have h₂ : 1 ≤ 2 ^ a := Nat.one_le_two_pow
+  have h₃ : (P.dim c + 4) * 2 ^ BoundedCriticalSeparator.width P c ≤ 2 ^ a := by
+    calc
+      _ ≤ 2 ^ (P.dim c + 4) * 2 ^ BoundedCriticalSeparator.width P c :=
+        Nat.mul_le_mul_right _ (show P.dim c + 4 < 2 ^ (P.dim c + 4) from Nat.lt_two_pow_self).le
+      _ = 2 ^ (P.dim c + 4 + BoundedCriticalSeparator.width P c) := (pow_add _ _ _).symm
+      _ ≤ 2 ^ a := Nat.pow_le_pow_right (by decide) (by dsimp [a]; omega)
+  change _ ≤ 2 ^ (a + 2)
+  rw [pow_add]
+  norm_num
+  omega
+
 theorem polynomial_coefficient_bits (P : Readers) (c : List Bool) (k : ℕ) :
     ((polynomial P c).coeff k).natAbs.size ≤ coefficientBits P c := by
-  have hB : 2 ^ equationBits P c + 1 + (P.dim c + 4) * 2 ^ BoundedCriticalSeparator.width P c ≤
-      2 ^ projectionBits P c := by
-    let a := equationBits P c + BoundedCriticalSeparator.width P c + (P.dim c + 4)
-    have h₁ : 2 ^ equationBits P c ≤ 2 ^ a := Nat.pow_le_pow_right (by decide) (by dsimp [a]; omega)
-    have h₂ : 1 ≤ 2 ^ a := Nat.one_le_two_pow
-    have h₃ : (P.dim c + 4) * 2 ^ BoundedCriticalSeparator.width P c ≤ 2 ^ a := by
-      calc
-        _ ≤ 2 ^ (P.dim c + 4) * 2 ^ BoundedCriticalSeparator.width P c :=
-          Nat.mul_le_mul_right _ (show P.dim c + 4 < 2 ^ (P.dim c + 4) from Nat.lt_two_pow_self).le
-        _ = 2 ^ (P.dim c + 4 + BoundedCriticalSeparator.width P c) := (pow_add _ _ _).symm
-        _ ≤ 2 ^ a := Nat.pow_le_pow_right (by decide) (by dsimp [a]; omega)
-    change _ ≤ 2 ^ (a + 2)
-    rw [pow_add]
-    norm_num
-    omega
+  have hB := projection_mass_bound P c
   have he := LinearProjectionEliminant.coefficient_size_le (BoundedFullCriticalSamples.equations P c)
     (fun _ => degree P c) (weights P c) (systemWidth P c) (projectionBits P c) (equationBits P c)
     (BoundedCriticalSeparator.width P c)

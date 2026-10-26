@@ -2464,3 +2464,25 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
       (fun _ => BinaryNatCode.length_encode _)) ht hm ha (fun _ => Nat.lt_size_self _)
 
 end NativeCriticalCoefficientTests
+
+namespace NativeProjectionCoefficientTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation LeanCanny.ETR
+open SubtractiveCharacteristicBits
+
+-- The identity correction is negative, is confined to the constant retained
+-- coefficient, and vanishes off the diagonal and modulo one.
+#guard finish (LeanCanny.pair (packet [] (BinaryNatCode.encode 4) 2 2 0 1) []) ==
+  BinaryNatCode.encode 4
+#guard finish (LeanCanny.pair (packet [] (BinaryNatCode.encode 4) 2 2 1 1) []) == []
+#guard finish (LeanCanny.pair (packet [] (BinaryNatCode.encode 4) 2 3 0 1) []) == []
+#guard finish (LeanCanny.pair (packet [] [] 2 2 0 1) []) == []
+#guard finish (LeanCanny.pair (packet [] (BinaryNatCode.encode 4) 2 2 0 2) []) == []
+
+-- The public reader includes direction selection, separator selection, the
+-- determinant and the search for the first nonzero characteristic coefficient.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedProjectionCoefficient.value P) :=
+  BoundedProjectionCoefficient.evaluator h ha
+
+end NativeProjectionCoefficientTests
