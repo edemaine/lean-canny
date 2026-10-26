@@ -56,6 +56,7 @@ import LeanCanny.Encoding.BoundedConstrainedQuery
 import LeanCanny.Encoding.BoundedWitnessQuery
 import LeanCanny.Connectivity.BoundedEndpointLocator
 import LeanCanny.Connectivity.BoundedPieceQueries
+import LeanCanny.Encoding.BoundedFullDirectionChoice
 
 /-! # Connectivity development
 
@@ -280,6 +281,17 @@ The links remain correct when their count exceeds the initial source frame.
 Exact geometric nonemptiness, marking, adjacency and marked-adjacency tests
 therefore have native polynomial-space certificates from the source and piece
 writers. The actual recursive pieces and their formula writers remain required.
+Shared Hessian programs now also differentiate the full varying-coordinate
+source directly. Their normalized complex critical-kernel charts have native
+polynomial-time writers and polynomial-space feasibility and emptiness tests.
+Direction scalars come from actual fixed-width binary records with a width
+derived from the source controls. Exact polynomial identities identify the
+finite-coordinate critical systems, independently of unused input-frame slots.
+Native bounded search now selects a fixed-length full-source direction record
+whose normalized complex critical-kernel charts are all empty. Existence uses
+the constructed source's regular pure-power form, and both selection and
+subsequent critical-query serialization have native polynomial-space bounds.
+Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

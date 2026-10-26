@@ -2092,3 +2092,95 @@ example : WithConstraints 0 (portGates 0 0 (Duplicated.port id) [])
   norm_num [Formula.Holds, Term.eval]
 
 end IndependentPieceWitnessTests
+
+namespace FullCriticalDirectionTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit LeanCanny.Encoding
+open scoped Classical
+
+-- Short records are zero padded. Their first bit changes exactly the first
+-- direction scalar; the width is positive even at original dimension zero.
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    BoundedFullDirectionQueries.direction P (fun _ => [true]) c 0 = 1 := by
+  have hw : ([true] : List Bool).length ≤ BoundedFullDirectionQueries.width P c :=
+    BoundedFullDirectionQueries.width_pos P c
+  unfold BoundedFullDirectionQueries.direction FixedWidthQuery.coordinate
+  simp only [Nat.zero_mul, List.drop_zero, List.take_of_length_le hw]
+  decide
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    BoundedFullDirectionQueries.direction P (fun _ => [true]) c 1 = 0 := by
+  have hw : ([true] : List Bool).length ≤ BoundedFullDirectionQueries.width P c :=
+    BoundedFullDirectionQueries.width_pos P c
+  unfold BoundedFullDirectionQueries.direction FixedWidthQuery.coordinate
+  simp only [Nat.one_mul, List.drop_eq_nil_iff.mpr hw, List.take_nil]
+  decide
+
+-- Complex critical roots use unrestricted complex input wires. These tests
+-- are distinct from the real source/marking feasibility tests.
+example {P : BoundedFullWriter.Readers} {record : List Bool → List Bool}
+    (h : P.PolyTime) (hr : record ∈ FP)
+    (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun c => [decide (¬ CriticalKernel.FiniteBad (BoundedFullCriticalKernel.polynomial P c)
+      (BoundedFullDirectionQueries.direction P record c) (0 : Fin (P.dim c + 4)))]) :=
+  BoundedFullDirectionQueries.empty_evaluator h hr (UnaryFn.const 0) ht
+
+end FullCriticalDirectionTests
+
+namespace FullDirectionChoiceTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit LeanCanny.Encoding MvPolynomial
+open scoped Classical
+
+-- A nonempty family of four charts remains at original dimension zero.
+private def pointReaders : BoundedFullWriter.Readers :=
+  ⟨fun _ => (Term.const 0).toData.toBits, fun _ => 0, fun _ => 0⟩
+
+private theorem pointNative : pointReaders.PolyTime :=
+  ⟨constFn_mem_FP _, UnaryFn.const 0, BinaryFn.const 0⟩
+
+private theorem pointFits (c : List Bool) :
+    (TermView.term (pointReaders.source c)).arity ≤ pointReaders.dim c := by
+  simp only [pointReaders, TermView.term_toBits, Term.arity, le_refl]
+
+example : SpaceFunction (BoundedFullDirectionChoice.record pointReaders) :=
+  BoundedFullDirectionChoice.evaluator pointNative pointFits
+
+example (c : List Bool) : BoundedFullDirectionChoice.Good pointReaders c
+    (BoundedFullDirectionChoice.record pointReaders c) :=
+  BoundedFullDirectionChoice.record_good pointReaders c
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    (BoundedFullDirectionChoice.record P c).length =
+      (P.dim c + 3) * BoundedFullDirectionQueries.width P c :=
+  BoundedFullDirectionChoice.record_length P c
+
+-- Selection is space bounded; query serialization must compose with it
+-- without assuming that the selected record is polynomial-time computable.
+example : SpaceFunction (fun c => encode (BoundedFullCriticalKernel.query pointReaders
+    (BoundedFullDirectionQueries.direction pointReaders (BoundedFullDirectionChoice.record pointReaders) c) 0 c)) :=
+  BoundedFullDirectionChoice.selected_encode_evaluator pointNative (UnaryFn.const 0) pointFits
+
+private noncomputable def cubic : MvPolynomial (Fin 2) ℂ := X 0 + X 1 ^ 3
+
+-- At its sole critical point, the Jacobian kernel lies entirely in chart 1.
+-- Scanning only chart 0 would miss this singular critical point.
+example : CriticalKernel.FiniteBad cubic (fun _ => 0) 1 := by
+  refine ⟨fun _ => 0, fun i => if i = 1 then 1 else 0, by norm_num, ?_⟩
+  intro j
+  fin_cases j <;>
+    norm_num [CriticalKernel.finiteCriticalValue, CriticalKernel.finiteKernelValue,
+      CriticalKernel.finiteSelected, CriticalKernel.finiteEntry, CriticalKernel.coefficient,
+      cubic, Fin.sum_univ_two]
+
+example : ¬ CriticalKernel.FiniteBad cubic (fun _ => 0) 0 := by
+  rintro ⟨x, u, hu, h⟩
+  have hc := (h 1).1
+  have hk := (h 0).2
+  norm_num [CriticalKernel.finiteCriticalValue, CriticalKernel.finiteSelected,
+    CriticalKernel.coefficient, cubic] at hc
+  have hy : x 1 = 0 := hc
+  norm_num [CriticalKernel.finiteKernelValue, CriticalKernel.finiteEntry,
+    CriticalKernel.coefficient, cubic, Fin.sum_univ_two, hy] at hk
+  norm_num [Fin.sum_univ_two, Pi.single_apply] at hk
+  exact one_ne_zero (hu.symm.trans hk)
+
+end FullDirectionChoiceTests

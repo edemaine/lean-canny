@@ -243,6 +243,11 @@ The checked ingredients are:
   Piece intersections now share the full source point while retaining separate
   formula witnesses. Validity, marking and adjacency have native space
   certificates from the actual source and formula writers.
+  Full-source critical-kernel charts also have native writers and space tests,
+  reading direction scalars from fixed-width binary records.
+  Native bounded search selects a full-source direction with no singular
+  complex critical points. Both selection and serialization of its critical
+  queries have polynomial-space certificates from the actual writers.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint
