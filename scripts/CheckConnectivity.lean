@@ -2526,3 +2526,58 @@ example (P : BoundedFullWriter.Readers) (c : List Bool)
   exact lt_irrefl _
 
 end ProjectionRationalCutTests
+
+namespace SampleLabelCertificateTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation LeanCanny.ETR
+
+-- Signed rational payloads retain zero numerators and denominator one.
+#guard RationalCutBits.payload (0 : ℚ) == LeanCanny.pair [] (LeanCanny.pair [] [])
+#guard RationalCutBits.payload (-1 / 2 : ℚ) ==
+  LeanCanny.pair [] (LeanCanny.pair (BinaryNatCode.encode 1) (BinaryNatCode.encode 1))
+#guard RationalCutBits.payload (3 / 2 : ℚ) ==
+  LeanCanny.pair (BinaryNatCode.encode 3) (LeanCanny.pair [] (BinaryNatCode.encode 1))
+
+example : (WeightedProjection.term 0 (fun _ => 37)).eval (fun _ => (9 : ℝ)) = 0 := by
+  simp only [WeightedProjection.eval_term, ProjectionCollision.projection, Finset.range_zero, Finset.sum_empty]
+
+-- At projection 1/2 the cut expression 4 theta + 1 - 3 vanishes.
+example : (WeightedProjection.cut 1 (fun _ => 2) 3 1 4).eval (fun _ => (1 / 4 : ℝ)) = 0 := by
+  norm_num [WeightedProjection.eval_cut, ProjectionCollision.projection, Finset.sum_range_succ]
+
+-- A root at the upper endpoint is excluded by the half-open convention.
+example (P : BoundedFullWriter.Readers) (record lower upper : List Bool → List Bool)
+    (c : List Bool) (x : ℕ → ℝ)
+    (he : ProjectionCollision.projection (P.dim c + 4) (BoundedCriticalSeparator.weight P record c) x =
+      RationalCutBits.threshold (upper c)) :
+    ¬ (BoundedSampleInterval.formula P record lower upper c).Holds x := by
+  rw [BoundedSampleInterval.formula_holds, he]
+  exact fun h => lt_irrefl _ h.2
+
+example (P : BoundedFullWriter.Readers) (record lower upper : List Bool → List Bool)
+    (c : List Bool) (x : ℕ → ℝ)
+    (he : ProjectionCollision.projection (P.dim c + 4) (BoundedCriticalSeparator.weight P record c) x =
+      RationalCutBits.threshold (lower c))
+    (hh : RationalCutBits.threshold (lower c) < RationalCutBits.threshold (upper c)) :
+    (BoundedSampleInterval.formula P record lower upper c).Holds x := by
+  rw [BoundedSampleInterval.formula_holds, he]
+  exact ⟨le_rfl, hh⟩
+
+-- The public verifier charges both root counts and the actual selected
+-- sample query; no coefficient or label-validation oracle is supplied.
+example {P : BoundedFullWriter.Readers} {lower upper word : List Bool → List Bool} {p : List Bool → Formula}
+    (h : P.PolyTime) (hl : lower ∈ FP) (hu : upper ∈ FP) (hw : word ∈ FP)
+    (hp : (fun c => (p c).encode) ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceDecider {c | BoundedSampleLabelCertificate.Certified P lower upper word p c} :=
+  BoundedSampleLabelCertificate.decider h hl hu hw hp ha
+
+-- Even if the projection polynomial has extraneous roots, no certificate
+-- can manufacture a sample when the actual critical set is empty.
+example (P : BoundedFullWriter.Readers) (lower upper word : List Bool → List Bool) (p : List Bool → Formula)
+    (c : List Bool) [IsEmpty (BoundedFullCriticalSamples.Samples P c)] :
+    ¬ BoundedSampleLabelCertificate.Certified P lower upper word p c := by
+  intro hC
+  obtain ⟨x, _, _⟩ := BoundedSampleLabelCertificate.accepted_unique P lower upper word p c hC
+  exact isEmptyElim x
+
+end SampleLabelCertificateTests

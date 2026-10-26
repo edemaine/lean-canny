@@ -64,6 +64,7 @@ import LeanCanny.Encoding.BoundedCriticalLabels
 import LeanCanny.Encoding.BoundedCriticalCoefficient
 import LeanCanny.Encoding.BoundedProjectionCoefficient
 import LeanCanny.Encoding.BoundedProjectionRationalCount
+import LeanCanny.Encoding.BoundedSampleLabelCertificate
 
 /-! # Connectivity development
 
@@ -326,7 +327,11 @@ projection polynomial with both record searches charged in space. Distinct real
 root counts and counts below signed rational cuts now have native space bounds.
 Fixed-width root-label comparisons with these cuts agree exactly with the
 selected samples' projections, including the polynomial's extraneous roots.
-Actual sample-label validation and recursive connection tests still need to be constructed.
+Rational isolating certificates now identify an actual sample with the requested
+label and additional formula witnesses, rejecting extraneous roots. Their checker
+has a native space bound, every matching sample has a certificate, and acceptance
+identifies a unique sample. A suitably space-bounded construction of isolating
+certificates and the recursive connection tests still need to be constructed.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query

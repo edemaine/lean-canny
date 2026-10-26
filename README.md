@@ -270,8 +270,12 @@ The checked ingredients are:
   giving modular access to the actual projection polynomial with both record
   searches charged in space. Native counts of distinct real roots and roots
   below signed rational cuts now evaluate ordered root-label comparisons,
-  consistently including extraneous projection roots. Actual sample-label
-  validation and recursive connection tests remain required.
+  consistently including extraneous projection roots. A native checker for
+  rational isolating certificates now identifies the requested genuine sample
+  and tests additional formula witnesses, rejecting extraneous roots. Every
+  matching sample has such a certificate, and acceptance identifies a unique
+  sample. Space-bounded certificate construction and recursive connection
+  tests remain required.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint
