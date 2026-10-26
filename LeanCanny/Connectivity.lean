@@ -66,6 +66,8 @@ import LeanCanny.Encoding.BoundedProjectionCoefficient
 import LeanCanny.Encoding.BoundedProjectionRationalCount
 import LeanCanny.Encoding.BoundedSampleLabelCertificate
 import LeanCanny.Encoding.BoundedProjectionRootSeparation
+import LeanCanny.Encoding.BoundedProjectionThom
+import LeanCanny.Encoding.BoundedProjectionDerivativeSigns
 
 /-! # Connectivity development
 
@@ -335,7 +337,15 @@ identifies a unique sample. An explicit separation bound now fixes a common
 dyadic isolating grid, including repeated projection roots. Its precision and
 grid-index bit allowance have native binary controls, and every matching sample
 has an accepted certificate on that grid. Constructing the required endpoint
-digits within polynomial space and the recursive connection tests remain open.
+digits within polynomial space remains open. As a symbolic alternative,
+derivative-sign signatures uniquely identify the actual samples, including
+repeated projection roots. Binary-indexed iterated derivatives have native
+modular coefficient readers and uniform degree and mass bounds. Sign patterns
+of polynomially many chosen derivative features have native
+root-count and realizability tests, including extraneous projection roots.
+The complete signature is an indexed function; a polynomial-space representation and
+enumeration of its realizable values still require a streamed sign-determination
+algorithm. The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query

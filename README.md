@@ -277,8 +277,15 @@ The checked ingredients are:
   sample. Explicit separation bounds fix a common dyadic isolating grid, even
   with repeated roots. Its precision and grid-index bit allowance have native
   binary controls, and every matching sample has an accepted grid certificate.
-  Computing its endpoint digits in polynomial space and the recursive
-  connection tests remain required.
+  Computing its endpoint digits in polynomial space remains required.
+  Symbolically, derivative-sign signatures now uniquely identify actual
+  samples, including repeated projection roots. Their binary-indexed derivative
+  polynomials have native modular coefficient access and uniform bounds.
+  Native tests count roots and decide realizability for polynomially many
+  chosen derivative signs, consistently retaining extraneous projection roots.
+  Full signatures are indexed functions; representing and enumerating their
+  realizable values in polynomial space remains open, as do the recursive
+  connection tests.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

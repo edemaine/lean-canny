@@ -2624,3 +2624,78 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) :
   ⟨BoundedProjectionRootSeparation.precision_binary h, BoundedProjectionRootSeparation.indexBits_binary h⟩
 
 end ProjectionRootSeparationTests
+
+namespace ProjectionThomTests
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+
+private noncomputable def repeated : ℝ[X] := (X ^ 2 - 1) ^ 2
+private theorem repeated_ne_zero : repeated ≠ 0 := by
+  intro hz
+  have he := congrArg (Polynomial.eval (0 : ℝ)) hz
+  norm_num [repeated] at he
+
+-- The first derivative vanishes at both roots; square-freeness is unnecessary.
+example : repeated.derivative.eval (-1 : ℝ) = 0 ∧ repeated.derivative.eval (1 : ℝ) = 0 := by
+  norm_num [repeated, Polynomial.derivative_pow]
+
+example : ThomEncoding.signature repeated 4 (-1) ≠ ThomEncoding.signature repeated 4 1 := by
+  intro he
+  have hr := ThomEncoding.root_eq repeated repeated_ne_zero 4
+    (by unfold repeated; compute_degree) (-1) 1 (by norm_num [repeated]) (by norm_num [repeated])
+    (fun k hk => congrFun he ⟨k, by omega⟩)
+  norm_num at hr
+
+-- Padding the degree bound preserves identification; constants have no roots.
+example (a b : ℝ) (ha : (X ^ 2 - 2 : ℝ[X]).eval a = 0)
+    (hb : (X ^ 2 - 2 : ℝ[X]).eval b = 0)
+    (he : ThomEncoding.signature (X ^ 2 - 2) 37 a = ThomEncoding.signature (X ^ 2 - 2) 37 b) : a = b :=
+  ThomEncoding.root_eq _ (by intro hz; have h := congrArg (Polynomial.eval (0 : ℝ)) hz; norm_num at h)
+    37 (by compute_degree; norm_num) a b ha hb (fun k hk => congrFun he ⟨k, by omega⟩)
+example : Function.Injective (fun x : {x : ℝ // (C (7 : ℝ)).IsRoot x} =>
+    ThomEncoding.signature (C 7) 0 x.val) :=
+  ThomEncoding.signature_injective _ (by simp) 0 (by simp)
+
+-- Omitting the nonzero hypothesis would make root identification false.
+example : ThomEncoding.signature (0 : ℝ[X]) 7 (-1) = ThomEncoding.signature 0 7 1 := by
+  funext k
+  simp [ThomEncoding.signature, ThomEncoding.sign]
+
+-- Binary derivative orders are unrestricted, including zero and far above degree.
+example (p : ℤ[X]) (i : ℕ) : (Polynomial.derivative^[0] p).coeff i = p.coeff i := rfl
+example : (Polynomial.derivative^[1000000] (X ^ 2 + C (7 : ℤ))).coeff 0 = 0 := by
+  rw [Polynomial.coeff_iterate_derivative, Polynomial.coeff_eq_zero_of_natDegree_lt (by compute_degree; norm_num)]
+  exact smul_zero _
+example : (Polynomial.derivative^[2] (X ^ 3 + C (7 : ℤ))).coeff 1 = 6 := by
+  norm_num [Polynomial.coeff_iterate_derivative, Nat.descFactorial_succ]
+
+-- Modular products reduce large factors and retain the modulus-one boundary.
+#guard IteratedDerivativeBits.factor (fun _ => BinaryNatCode.encode 5)
+  (fun _ => BinaryNatCode.encode 1000000) (fun _ => BinaryNatCode.encode 7)
+  (LeanCanny.pair [] (BinaryNatCode.encode 999999)) == BinaryNatCode.encode 6
+#guard IteratedDerivativeBits.factor (fun _ => BinaryNatCode.encode 5)
+  (fun _ => BinaryNatCode.encode 1000000) (fun _ => BinaryNatCode.encode 1)
+  (LeanCanny.pair [] (BinaryNatCode.encode 0)) == []
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedProjectionThom.value P) := BoundedProjectionThom.evaluator h ha
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    Function.Injective (BoundedProjectionThom.signature P c) := BoundedProjectionThom.signature_injective P c
+
+-- Feature orders are normalized, but an arbitrary raw modulus predecessor is retained.
+#guard BoundedProjectionDerivativeSigns.query (fun _ => [true, true, false])
+  (LeanCanny.pair (LeanCanny.pair [] (LeanCanny.pair (BinaryNatCode.encode 7) (BinaryNatCode.encode 1)))
+    [true, false]) ==
+  LeanCanny.pair (LeanCanny.pair [] (LeanCanny.pair (BinaryNatCode.encode 3) (BinaryNatCode.encode 1))) [true, false]
+
+-- Query count is unary; derivative orders remain binary. This is not a claim
+-- that the complete derivative signature has a polynomial-length encoding.
+example {P : BoundedFullWriter.Readers} {features : List Bool → ℕ} {orders patternBits : List Bool → List Bool}
+    {pattern : List Bool → ℕ → SignType} (h : P.PolyTime) (hc : UnaryFn features)
+    (ho : orders ∈ FP) (hp : patternBits ∈ FP)
+    (hs : ∀ c i, patternBits (LeanCanny.pair c (BinaryNatCode.encode i)) = InfinitesimalSign.encode (pattern c i))
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceDecider (BoundedProjectionDerivativeSigns.language P features orders pattern) :=
+  BoundedProjectionDerivativeSigns.decider h hc ho hp hs ha
+
+end ProjectionThomTests
