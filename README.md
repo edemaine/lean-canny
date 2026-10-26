@@ -252,8 +252,11 @@ The checked ingredients are:
   meeting every source component. Concrete coordinate eliminants bound the
   sample and component counts by an exponential in a polynomial label width,
   computed natively from unary dimension and binary degree. Source connectivity
-  is equivalent to pairwise path connectivity of these samples. Effective
-  sample descriptions and their recursive connection tests remain required.
+  is equivalent to pairwise path connectivity of these samples. Their exact
+  real critical equations now have native shared-circuit queries with
+  independent formula witnesses. Selected sample serialization and constrained
+  feasibility compose with direction selection in polynomial space. Effective
+  individual sample labels and recursive connection tests remain required.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

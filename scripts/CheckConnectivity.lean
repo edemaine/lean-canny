@@ -2227,3 +2227,70 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) :
   BoundedFullCriticalSamples.componentMap_surjective P c
 
 end FullCriticalSampleTests
+
+namespace CriticalSampleQueryTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit LeanCanny.Computation MvPolynomial
+open RealQuery.Interleaved
+open scoped Classical
+
+private def rows : List Operation := CriticalKernel.program 1 1 [] 0 (fun _ => 0)
+private noncomputable def models : List (ℕ × MvPolynomial (Fin 1) ℤ) := [(CriticalSamples.output 1 1 [] 0, X 0)]
+private def witness : Formula := .eqZero (.add (.var 2) (.const (-7)))
+
+private theorem wf : StraightLine.WellFormed 2 rows :=
+  CriticalKernel.wellFormed 1 1 [] 0 (fun _ => 0) (by trivial) (by decide)
+
+private theorem bound : ∀ z ∈ models, z.1 < 2 + rows.length := by
+  intro z hz
+  obtain rfl := List.mem_singleton.mp hz
+  exact CriticalSamples.output_lt 1 1 [] 0 (fun _ => 0) 0 (by decide)
+
+private theorem model : ∀ z ∈ models, Differential.symbolicRun
+    (fun i => (X i : MvPolynomial ℕ ℤ)) 2 rows z.1 = rename Fin.val z.2 := by
+  intro z hz
+  obtain rfl := List.mem_singleton.mp hz
+  rw [show Differential.symbolicRun (fun i => (X i : MvPolynomial ℕ ℤ)) 2 rows
+      (CriticalSamples.output 1 1 [] 0) = CriticalSamples.criticalPolynomial (X 0) (fun _ => 0) 0 from
+    CriticalSamples.symbolic_output (fun i => X i) 1 1 [] 0 (fun _ => 0)
+      (by trivial) (by trivial) (fun _ _ => rfl) (by decide) 0 (by decide)]
+  simp only [CriticalSamples.criticalPolynomial, CriticalKernel.selectedPolynomial,
+    CriticalKernel.coefficient, ite_true, C_0, zero_mul, add_zero, rename_X, Fin.val_zero]
+
+-- The formula's logical variable 2 is independent of the circuit's zero
+-- wire 2. Both the sample and this witness are realized simultaneously.
+example : InputSatisfiable 1 2 (CriticalSamples.query 1 1 [] 0 (fun _ => 0)) witness := by
+  change InputSatisfiable 1 2 (zeroGates 2 rows models) witness
+  rw [finite_correct 2 rows models witness (by decide) wf bound model]
+  refine ⟨fun i => if i = 2 then 7 else 0, ?_, ?_⟩
+  · intro z hz
+    obtain rfl := List.mem_singleton.mp hz
+    norm_num
+  · norm_num [witness, Formula.Holds, Term.eval]
+
+-- A critical sample need not be singular. The kernel query for this source
+-- is empty although the critical-sample query above is feasible.
+example : ¬ Satisfiable (CriticalKernel.query 1 1 [] 0 (fun _ => 0) 0) := by
+  rw [CriticalKernel.query_satisfiable (fun i => X i) 1 1 [] 0 (fun _ => 0) 0
+    (by decide) (by trivial) (by trivial) (fun _ _ => rfl) (by decide)]
+  rintro ⟨x, u, hn, h⟩
+  have hk := (h 0 (by decide)).2
+  norm_num [CriticalKernel.kernelValue, CriticalKernel.entryPolynomial, CriticalKernel.coefficient,
+    Pi.single_apply] at hk
+  exact one_ne_zero (hn.symm.trans hk)
+
+private def readers : LeanCanny.Encoding.BoundedFullWriter.Readers :=
+  ⟨fun _ => (Term.const 0).toData.toBits, fun _ => 0, fun _ => 0⟩
+
+private theorem native : readers.PolyTime := ⟨constFn_mem_FP _, UnaryFn.const 0, BinaryFn.const 0⟩
+private theorem fits (c : List Bool) : (TermView.term (readers.source c)).arity ≤ readers.dim c := by
+  simp only [readers, TermView.term_toBits, Term.arity, le_refl]
+
+example : SpaceFunction (fun c => encode (LeanCanny.Encoding.BoundedCriticalSampleQuery.query readers
+    (LeanCanny.Encoding.BoundedFullDirectionChoice.record readers) c)) :=
+  LeanCanny.Encoding.BoundedCriticalSampleQuery.selected_encode_evaluator native fits
+
+example : SpaceFunction (fun c => [decide (∃ y : LeanCanny.Encoding.BoundedFullCriticalSamples.Samples readers c,
+    LeanCanny.Encoding.BoundedCriticalSampleQuery.Matches readers c witness y)]) :=
+  LeanCanny.Encoding.BoundedCriticalSampleQuery.samples_evaluator native (constFn_mem_FP witness.encode) fits
+
+end CriticalSampleQueryTests
