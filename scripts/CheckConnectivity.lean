@@ -2184,3 +2184,46 @@ example : ¬ CriticalKernel.FiniteBad cubic (fun _ => 0) 0 := by
   exact one_ne_zero (hu.symm.trans hk)
 
 end FullDirectionChoiceTests
+
+namespace FullCriticalSampleTests
+open LeanCanny.ETR LeanCanny.Encoding LeanCanny.Geometry MvPolynomial
+open scoped Classical
+
+-- The empty square system has one root: the unique empty coordinate tuple.
+example : Finite (RegularAffineRootCount.Roots (fun i : Fin 0 => Fin.elim0 i)) ∧
+    Nat.card (RegularAffineRootCount.Roots (fun i : Fin 0 => Fin.elim0 i)) ≤ 1 := by
+  simpa only [RegularAffineRootCount.labelWidth, Nat.zero_mul, pow_zero] using
+    RegularAffineRootCount.finite_card_le_uniform (fun i : Fin 0 => Fin.elim0 i) 1
+      (fun i => Fin.elim0 i) (by decide) (fun _ => by
+        apply (PolynomialSystemRegularity.isInvertible_iff (Int.castRingHom ℝ) _ _).mpr
+        rw [Matrix.det_isEmpty]
+        exact one_ne_zero)
+
+-- A singular root cannot satisfy the regularity hypothesis used by the
+-- finite-root bound, even when its actual zero set happens to be finite.
+example : ¬ (fderiv ℝ (fun x : Fin 1 → ℝ => fun _ : Fin 1 =>
+    (X (0 : Fin 1) ^ 2 : MvPolynomial (Fin 1) ℤ).eval₂ (Int.castRingHom ℝ) x) (fun _ => 0)).IsInvertible := by
+  rw [PolynomialSystemRegularity.isInvertible_iff]
+  intro h
+  apply h
+  rw [Matrix.det_fin_one]
+  norm_num [PolynomialSystemRegularity.matrix]
+
+-- Binary degrees must remain binary when computing the unary label width.
+#guard RegularAffineRootCount.labelWidth 0 (2 ^ 100) == 0
+#guard RegularAffineRootCount.labelWidth 1 (2 ^ 100) == 202
+
+example {dim degree : List Bool → ℕ} (hn : UnaryFn dim) (hD : BinaryFn degree) :
+    UnaryFn (fun c => RegularAffineRootCount.labelWidth (dim c) (degree c)) :=
+  RegularRootLabels.width_unary hn hD
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    Finite (BoundedFullCriticalSamples.Samples P c) ∧
+      Nat.card (BoundedFullCriticalSamples.Samples P c) ≤ 2 ^ BoundedFullCriticalSamples.labelWidth P c :=
+  BoundedFullCriticalSamples.finite_samples P c
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    Function.Surjective (BoundedFullCriticalSamples.componentMap P c) :=
+  BoundedFullCriticalSamples.componentMap_surjective P c
+
+end FullCriticalSampleTests

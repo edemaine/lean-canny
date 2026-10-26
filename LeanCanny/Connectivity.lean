@@ -57,6 +57,7 @@ import LeanCanny.Encoding.BoundedWitnessQuery
 import LeanCanny.Connectivity.BoundedEndpointLocator
 import LeanCanny.Connectivity.BoundedPieceQueries
 import LeanCanny.Encoding.BoundedFullDirectionChoice
+import LeanCanny.Encoding.BoundedFullCriticalSamples
 
 /-! # Connectivity development
 
@@ -291,6 +292,14 @@ Native bounded search now selects a fixed-length full-source direction record
 whose normalized complex critical-kernel charts are all empty. Existence uses
 the constructed source's regular pure-power form, and both selection and
 subsequent critical-query serialization have native polynomial-space bounds.
+The selected direction now also gives analytically simple real critical
+samples of this exact source. Concrete coordinate eliminants bound their
+number by an exponential in a natively computed polynomial label width.
+Every source point is joined to one of these samples in its own component;
+the source is preconnected exactly when every pair of samples is joined.
+The same bound therefore counts its connected components, without a supplied
+root-finiteness assumption. Effective sample descriptions and recursive
+connection tests still need to be constructed.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query

@@ -248,6 +248,12 @@ The checked ingredients are:
   Native bounded search selects a full-source direction with no singular
   complex critical points. Both selection and serialization of its critical
   queries have polynomial-space certificates from the actual writers.
+  This selected direction has finitely many simple real critical samples,
+  meeting every source component. Concrete coordinate eliminants bound the
+  sample and component counts by an exponential in a polynomial label width,
+  computed natively from unary dimension and binary degree. Source connectivity
+  is equivalent to pairwise path connectivity of these samples. Effective
+  sample descriptions and their recursive connection tests remain required.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint
