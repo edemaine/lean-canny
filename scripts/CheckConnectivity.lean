@@ -1778,3 +1778,33 @@ example (R : ℕ) (u v : BoundedZeroSource.Zeros (0 : MvPolynomial (Fin 0) ℤ) 
   rw [he]
 
 end SlackPathTests
+
+namespace MarkedComponentTests
+open LeanCanny.Geometry LeanCanny.Algebra MvPolynomial Set
+
+private def left : List Bool := [false, false]
+private def middle : List Bool := [false, true]
+private def right : List Bool := [true, false]
+private def marks (u : List Bool) : Bool := u == left || u == right
+private def chain (u v : List Bool) : Bool :=
+  (u == left && v == middle) || (u == middle && v == left) ||
+    (u == middle && v == right) || (u == right && v == middle)
+
+-- Both marked endpoints are connected through an unmarked valid vertex.
+-- The fourth vertex is an irrelevant isolated valid component.
+#guard ImplicitGraph.markedConnected chain (fun _ => true) marks 2
+#guard !ImplicitGraph.markedConnected chain marks marks 2
+#guard !ImplicitGraph.markedConnected chain (fun _ => true) (fun _ => true) 2
+#guard ImplicitGraph.markedConnected chain (fun _ => false) (fun _ => false) 2
+-- Marked invalid endpoints are rejected, even at width zero.
+#guard !ImplicitGraph.markedConnected chain (fun _ => false) (fun _ => true) 0
+
+-- All marked points over the original zero-dimensional singleton belong
+-- together, rather than only the selected section points.
+example (D b R : ℕ) (u v : BoundedRegularSource.Marked (0 : MvPolynomial (Fin 0) ℤ) D b R) :
+    v.val ∈ connectedComponent u.val := by
+  apply (BoundedRegularSource.preconnected_iff_marked (0 : MvPolynomial (Fin 0) ℤ) D b R
+    (by simp) (by simp)).mp
+  exact Set.Subsingleton.isPreconnected (fun x _ y _ => Subsingleton.elim x y)
+
+end MarkedComponentTests

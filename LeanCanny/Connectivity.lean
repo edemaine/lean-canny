@@ -49,6 +49,7 @@ import LeanCanny.Geometry.BoundedRegularComponents
 import LeanCanny.Encoding.BoundedRegularControls
 import LeanCanny.Encoding.BoundedDirectionChoice
 import LeanCanny.Geometry.LiftPaths
+import LeanCanny.Connectivity.BoundedMarkedCover
 
 /-! # Connectivity development
 
@@ -222,6 +223,14 @@ Circle fibers, including singleton fibers, also preserve exact paths. The
 coordinate homeomorphisms transfer this to pure-power slack variables and
 the bounded sphere zero source. This path correspondence concerns the set
 being lifted; recovery from a positive perturbed sublevel remains required.
+A single polynomial marks the source points representing original zeros.
+Every marked point is joined to the lift of its original projection. Bounded
+original connectedness is therefore equivalent to connectivity between marked
+source points. The native graph test quantifies over marked endpoint pieces
+while retaining every valid piece for traversal, so additional source
+components need not be proved absent. The transfer through an accessible
+cover is proved; the actual recursive cover and its query writers remain
+required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

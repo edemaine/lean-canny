@@ -957,6 +957,21 @@ correspond exactly to paths in the original sublevel or bounded zero set.
 These results do not transfer paths from a positive perturbed sublevel to
 its singular zero set.
 
+`BoundedMarkedComponents` describes the relevant regular-source subset by
+the single polynomial obtained by renaming the old sphere zero energy.
+Every marked point is joined to the constructed lift of its original
+projection. Marked source component membership is equivalent to original
+bounded zero component membership; original preconnectedness means that all
+marked points lie in one source component, including the empty case.
+`Computation/MarkedGraphPSPACE` proves a native polynomial-space test with
+separate flags for marked endpoints and valid traversable vertices. Paths
+can use unmarked valid intermediates. `Connectivity/BitMarkedCover` transfers
+this test through a finite accessible cover and charges edge, validity and
+marking routines independently. `BoundedMarkedCover` specializes this to the
+constructed regular source. This removes the need to prove every source
+component meets the original zero image. It does not construct the actual
+recursive cover or its native adjacency and marking query writers.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.
