@@ -55,6 +55,7 @@ import LeanCanny.Encoding.BoundedFullGeometry
 import LeanCanny.Encoding.BoundedConstrainedQuery
 import LeanCanny.Encoding.BoundedWitnessQuery
 import LeanCanny.Connectivity.BoundedEndpointLocator
+import LeanCanny.Connectivity.BoundedPieceQueries
 
 /-! # Connectivity development
 
@@ -272,6 +273,13 @@ bounded label search locate a piece meeting an endpoint fiber whenever the
 pieces cover it. The algorithm charges the actual source and formula writers;
 coverage and singleton validity are correctness conditions. The recursive
 piece family itself remains to be constructed.
+Witness-defined piece intersections now use independent parity copies of the
+two formulas. Duplicate input links identify their entire spatial tuples with
+one actual source circuit, while leaving all further witnesses independent.
+The links remain correct when their count exceeds the initial source frame.
+Exact geometric nonemptiness, marking, adjacency and marked-adjacency tests
+therefore have native polynomial-space certificates from the source and piece
+writers. The actual recursive pieces and their formula writers remain required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

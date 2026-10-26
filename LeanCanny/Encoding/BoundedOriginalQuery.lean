@@ -106,6 +106,34 @@ private theorem marked_models (P : BoundedFullWriter.Readers) (c : List Bool)
   · obtain rfl := List.mem_singleton.mp hz
     exact BoundedFullGeometry.mark_identity P c ht
 
+theorem source_arity (P : BoundedFullWriter.Readers) (c : List Bool) :
+    ∀ g ∈ sourceGates P c, g.arity ≤ BoundedFullWriter.start P c + (BoundedFullWriter.program P c).length :=
+  zeroGates_arity (BoundedFullWriter.start P c) (BoundedFullWriter.program P c) (sourceModels P c)
+    (BoundedFullWriter.wellFormed P c) (source_bound P c)
+
+theorem marked_arity (P : BoundedFullWriter.Readers) (c : List Bool) :
+    ∀ g ∈ markedGates P c, g.arity ≤ BoundedFullWriter.start P c + (BoundedFullWriter.program P c).length :=
+  zeroGates_arity (BoundedFullWriter.start P c) (BoundedFullWriter.program P c) (markedModels P c)
+    (BoundedFullWriter.wellFormed P c) (marked_bound P c)
+
+theorem source_realizes (P : BoundedFullWriter.Readers) (c : List Bool) (x : ℕ → ℝ)
+    (ht : (TermView.term (P.source c)).arity ≤ P.dim c) :
+    PortRealizes (P.dim c + 4) (BoundedFullWriter.start P c) (port (P.dim c)) (sourceGates P c) x ↔
+      SourcePoint P c (fun i => x i.val) := by
+  simpa [sourceModels, zeroGates, sourceGates, SourcePoint]
+    using port_finite_realizes (BoundedFullWriter.start P c) (BoundedFullWriter.program P c) (sourceModels P c) x
+      (port (P.dim c)) (BoundedFullGeometry.inputEquiv (P.dim c + 3)) (Nat.le_max_right ..) (port_fin _)
+      (BoundedFullWriter.wellFormed P c) (source_bound P c) (source_models P c ht)
+
+theorem marked_realizes (P : BoundedFullWriter.Readers) (c : List Bool) (x : ℕ → ℝ)
+    (ht : (TermView.term (P.source c)).arity ≤ P.dim c) :
+    PortRealizes (P.dim c + 4) (BoundedFullWriter.start P c) (port (P.dim c)) (markedGates P c) x ↔
+      MarkedPoint P c (fun i => x i.val) := by
+  simpa [markedModels, sourceModels, zeroGates, markedGates, MarkedPoint, SourcePoint]
+    using port_finite_realizes (BoundedFullWriter.start P c) (BoundedFullWriter.program P c) (markedModels P c) x
+      (port (P.dim c)) (BoundedFullGeometry.inputEquiv (P.dim c + 3)) (Nat.le_max_right ..) (port_fin _)
+      (BoundedFullWriter.wellFormed P c) (marked_bound P c) (marked_models P c ht)
+
 theorem source_correct (P : BoundedFullWriter.Readers) (c : List Bool) (p : Formula)
     (ht : (TermView.term (P.source c)).arity ≤ P.dim c) :
     PortSatisfiable (P.dim c + 4) (BoundedFullWriter.start P c) (port (P.dim c)) (sourceGates P c) p ↔

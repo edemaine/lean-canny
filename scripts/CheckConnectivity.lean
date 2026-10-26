@@ -2011,3 +2011,84 @@ example {P : BoundedFullWriter.Readers} {p : List Bool → Formula} (h : P.PolyT
   BoundedOriginalQuery.marked_evaluator h ht hp
 
 end OriginalCoordinateTests
+
+namespace IndependentPieceWitnessTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit RealQuery Interleaved
+open LeanCanny.Connectivity.BoundedEndpointQuery
+open scoped Classical
+
+private def leftPiece : Formula :=
+  .and (.eqZero (.add (.var 0) (.const (-5)))) (.eqZero (.var 1))
+private def rightPiece : Formula :=
+  .and (.eqZero (.add (.var 0) (.const (-5)))) (.eqZero (.add (.var 1) (.const (-1))))
+private def differentPoint : Formula := .eqZero (.add (.var 0) (.const (-6)))
+private def leftAssignment (i : ℕ) : ℝ := if i = 0 then 5 else 0
+private def rightAssignment (i : ℕ) : ℝ := if i = 0 then 5 else 1
+
+-- Both pieces contain the same point, with witness values zero and one.
+-- Direct conjunction would incorrectly identify those witnesses.
+example : witnessPiece leftPiece (fun _ : Fin 1 => 5) ∧ witnessPiece rightPiece (fun _ : Fin 1 => 5) := by
+  constructor
+  · refine ⟨leftAssignment, ?_, ?_⟩
+    · intro i
+      have he : i = 0 := Subsingleton.elim _ _
+      simp [he, leftAssignment]
+    · norm_num [leftPiece, Formula.Holds, Term.eval, leftAssignment]
+  · refine ⟨rightAssignment, ?_, ?_⟩
+    · intro i
+      have he : i = 0 := Subsingleton.elim _ _
+      simp [he, rightAssignment]
+    · norm_num [rightPiece, Formula.Holds, Term.eval, rightAssignment]
+
+example : ¬ (Formula.and leftPiece rightPiece).Satisfiable := by
+  rintro ⟨x, ⟨_, hzero⟩, ⟨_, hone⟩⟩
+  change x 1 = 0 at hzero
+  norm_num [Formula.Holds, Term.eval] at hone
+  linarith
+
+-- Two links share the source's sole spatial wire, even though the source
+-- input frame has length one. Formula witnesses remain independent.
+example : WithConstraints 2
+    (portGates 2 1 (Duplicated.port id) [.constant 0 5])
+    ((Duplicated.combine leftPiece rightPiece).rename even) := by
+  apply (port_correct_of_real 2 1 1 (Duplicated.port id) _ _
+    (by intro i hi; right; simp only [Duplicated.port, id_eq]; omega) (by decide)
+    (by intro i hi; simp only [Duplicated.port, id_eq]; omega) (by simp [Gate.arity])).mpr
+  apply (Duplicated.satisfiable_iff 1 1 id _ _ _).mpr
+  refine ⟨leftAssignment, rightAssignment, ⟨fun _ => 5, ?_, ?_, ?_⟩, ?_, ?_, ?_⟩
+  · intro g hg
+    obtain rfl := List.mem_singleton.mp hg
+    norm_num [Gate.Holds]
+  · intro i _
+    norm_num
+  · intro i hi
+    have he : i = 0 := by omega
+    simp [he, leftAssignment]
+  · intro i hi
+    have he : i = 0 := by omega
+    simp [he, leftAssignment, rightAssignment]
+  · norm_num [leftPiece, Formula.Holds, Term.eval, leftAssignment]
+  · norm_num [rightPiece, Formula.Holds, Term.eval, rightAssignment]
+
+-- Independent witnesses cannot make two different spatial points intersect.
+example : ¬ WithConstraints 2
+    (portGates 2 1 (Duplicated.port id) [.constant 0 5])
+    ((Duplicated.combine leftPiece differentPoint).rename even) := by
+  intro h
+  have hs := (port_correct_of_real 2 1 1 (Duplicated.port id) _ _
+    (by intro i hi; right; simp only [Duplicated.port, id_eq]; omega) (by decide)
+    (by intro i hi; simp only [Duplicated.port, id_eq]; omega) (by simp [Gate.arity])).mp h
+  obtain ⟨a, b, _, he, hp, hq⟩ := (Duplicated.satisfiable_iff 1 1 id _ _ _).mp hs
+  have hab := he 0 (by decide)
+  norm_num [leftPiece, differentPoint, Formula.Holds, Term.eval] at hp hq
+  linarith [hp.1]
+
+-- At spatial dimension zero, both variables are independent witnesses.
+example : WithConstraints 0 (portGates 0 0 (Duplicated.port id) [])
+    ((Duplicated.combine (.eqZero (.var 0)) (.eqZero (.add (.var 0) (.const (-1))))).rename even) := by
+  apply (port_correct_of_real 0 0 0 (Duplicated.port id) _ _ (by simp) (by decide) (by simp) (by simp)).mpr
+  apply (Duplicated.satisfiable_iff 0 0 id _ _ _).mpr
+  refine ⟨fun _ => 0, fun _ => 1, ⟨fun _ => 0, by simp, by simp, by simp⟩, by simp, rfl, ?_⟩
+  norm_num [Formula.Holds, Term.eval]
+
+end IndependentPieceWitnessTests

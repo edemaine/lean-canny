@@ -79,17 +79,17 @@ theorem finite_correct {n : ℕ} (start : ℕ) (ops : List Operation)
       rw [hin i hi]
       exact Complex.ofReal_im _
 
-theorem port_finite_correct {n : ℕ} (start : ℕ) (ops : List Operation)
-    (models : List (ℕ × MvPolynomial (Fin n) ℤ)) (p : Formula) (port : ℕ → ℕ) (e : Fin n ≃ Fin n)
+theorem port_finite_realizes {n : ℕ} (start : ℕ) (ops : List Operation)
+    (models : List (ℕ × MvPolynomial (Fin n) ℤ)) (x : ℕ → ℝ) (port : ℕ → ℕ) (e : Fin n ≃ Fin n)
     (hn : n ≤ start) (he : ∀ i : Fin n, port i.val = (e i).val)
     (hw : StraightLine.WellFormed start ops) (ho : ∀ z ∈ models, z.1 < start + ops.length)
     (hmodel : ∀ z ∈ models,
       Differential.symbolicRun (fun i => (X i : MvPolynomial ℕ ℤ)) start ops z.1 =
         rename Fin.val (rename e z.2)) :
-    PortSatisfiable n start port (zeroGates start ops models) p ↔
-      ∃ x : ℕ → ℝ, (∀ z ∈ models, z.2.eval₂ (Int.castRingHom ℝ) (fun i => x i.val) = 0) ∧ p.Holds x := by
+    PortRealizes n start port (zeroGates start ops models) x ↔
+      ∀ z ∈ models, z.2.eval₂ (Int.castRingHom ℝ) (fun i => x i.val) = 0 := by
   constructor
-  · rintro ⟨x, env, hg, hr, hinput, hp⟩
+  · rintro ⟨env, hg, hr, hinput⟩
     let y : ℕ → ℝ := fun i => (env i).re
     have hprogram : ∀ g ∈ StraightLine.gates start ops, g.Holds env :=
       fun g h => hg g (List.mem_append_left _ h)
@@ -103,14 +103,13 @@ theorem port_finite_correct {n : ℕ} (start : ℕ) (ops : List Operation)
       have hv := congrArg Complex.re (hinput i.val i.isLt)
       rw [he i] at hv
       exact hv
-    refine ⟨x, ?_, hp⟩
     intro z hz
     have hv := StraightLine.symbolic_value env start ops hw hprogram (fun i => (y i : ℂ)) hin z.1 (ho z hz)
     have hzero : env z.1 = 0 := hg (.zero z.1) (List.mem_append_right _ (List.mem_map.mpr ⟨z, hz, rfl⟩))
     rw [hmodel z hz, polynomial_eval_ofReal, eval₂_rename, eval₂_rename, hev] at hv
     have hvzero : Complex.ofReal (z.2.eval₂ (Int.castRingHom ℝ) (fun i => x i.val)) = 0 := hv.symm.trans hzero
     exact_mod_cast hvzero
-  · rintro ⟨x, hx, hp⟩
+  · intro hx
     let y : ℕ → ℝ := fun i => if h : i < n then x (e.symm ⟨i, h⟩).val else 0
     have hy : ∀ i : Fin n, y (e i).val = x i.val := by
       intro i
@@ -120,7 +119,7 @@ theorem port_finite_correct {n : ℕ} (start : ℕ) (ops : List Operation)
     have hprogram : ∀ g ∈ StraightLine.gates start ops, g.Holds env := StraightLine.run_satisfies _ _ _ hw
     have hin : ∀ i < start, env i = (y i : ℂ) :=
       fun i hi => StraightLine.run_preserves_before _ _ _ i hi
-    refine ⟨x, env, ?_, ?_, ?_, hp⟩
+    refine ⟨env, ?_, ?_, ?_⟩
     · intro g hg
       rcases List.mem_append.mp hg with hg | hg
       · exact hprogram g hg
@@ -133,5 +132,19 @@ theorem port_finite_correct {n : ℕ} (start : ℕ) (ops : List Operation)
       exact Complex.ofReal_im _
     · intro i hi
       rw [he ⟨i, hi⟩, hin _ ((e ⟨i, hi⟩).isLt.trans_le hn), hy]
+
+theorem port_finite_correct {n : ℕ} (start : ℕ) (ops : List Operation)
+    (models : List (ℕ × MvPolynomial (Fin n) ℤ)) (p : Formula) (port : ℕ → ℕ) (e : Fin n ≃ Fin n)
+    (hn : n ≤ start) (he : ∀ i : Fin n, port i.val = (e i).val)
+    (hw : StraightLine.WellFormed start ops) (ho : ∀ z ∈ models, z.1 < start + ops.length)
+    (hmodel : ∀ z ∈ models,
+      Differential.symbolicRun (fun i => (X i : MvPolynomial ℕ ℤ)) start ops z.1 =
+        rename Fin.val (rename e z.2)) :
+    PortSatisfiable n start port (zeroGates start ops models) p ↔
+      ∃ x : ℕ → ℝ, (∀ z ∈ models, z.2.eval₂ (Int.castRingHom ℝ) (fun i => x i.val) = 0) ∧ p.Holds x := by
+  rw [portSatisfiable_iff]
+  apply exists_congr
+  intro x
+  exact and_congr (port_finite_realizes start ops models x port e hn he hw ho hmodel) Iff.rfl
 
 end LeanCanny.ETR.ComplexCircuit.RealQuery.Interleaved

@@ -240,6 +240,9 @@ The checked ingredients are:
   Input-link ports restore the original coordinate order. Singleton endpoint
   formulas describe exact marked projection fibers, and native bounded search
   locates a piece meeting such a fiber when the pieces cover it.
+  Piece intersections now share the full source point while retaining separate
+  formula witnesses. Validity, marking and adjacency have native space
+  certificates from the actual source and formula writers.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

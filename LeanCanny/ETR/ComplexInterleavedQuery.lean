@@ -33,6 +33,18 @@ def PortSatisfiable (inputs start : ℕ) (port : ℕ → ℕ) (prior : List Gate
   ∃ x : ℕ → ℝ, ∃ env : ℕ → ℂ, (∀ g ∈ prior, g.Holds env) ∧
     (∀ i < start, (env i).im = 0) ∧ (∀ i < inputs, env (port i) = (x i : ℂ)) ∧ p.Holds x
 
+def PortRealizes (inputs start : ℕ) (port : ℕ → ℕ) (prior : List Gate) (x : ℕ → ℝ) : Prop :=
+  ∃ env : ℕ → ℂ, (∀ g ∈ prior, g.Holds env) ∧
+    (∀ i < start, (env i).im = 0) ∧ ∀ i < inputs, env (port i) = (x i : ℂ)
+
+theorem portSatisfiable_iff (inputs start : ℕ) (port : ℕ → ℕ) (prior : List Gate) (p : Formula) :
+    PortSatisfiable inputs start port prior p ↔ ∃ x, PortRealizes inputs start port prior x ∧ p.Holds x := by
+  constructor
+  · rintro ⟨x, env, hg, hr, hi, hp⟩
+    exact ⟨x, ⟨env, hg, hr, hi⟩, hp⟩
+  · rintro ⟨x, ⟨env, hg, hr, hi⟩, hp⟩
+    exact ⟨x, env, hg, hr, hi, hp⟩
+
 def links (inputs fresh : ℕ) : List Gate := portLinks inputs fresh id
 def gates (inputs fresh : ℕ) (prior : List Gate) : List Gate := portGates inputs fresh id prior
 def InputSatisfiable (inputs start : ℕ) (prior : List Gate) (p : Formula) : Prop :=
@@ -49,8 +61,8 @@ private theorem merge_odd (fresh : ℕ) (x : ℕ → ℝ) (env : ℕ → ℂ) (i
   have hd : (2 * i + 1) / 2 = i := by omega
   simp only [merge, odd, hm, one_ne_zero, ite_false, hd]
 
-theorem port_correct (inputs start fresh : ℕ) (port : ℕ → ℕ) (prior : List Gate) (p : Formula)
-    (hn : inputs ≤ start) (hs : start ≤ fresh) (hb : ∀ i < inputs, port i < fresh)
+theorem port_correct_of_real (inputs start fresh : ℕ) (port : ℕ → ℕ) (prior : List Gate) (p : Formula)
+    (hn : ∀ i < inputs, i < start ∨ port i < start) (hs : start ≤ fresh) (hb : ∀ i < inputs, port i < fresh)
     (hg : ∀ g ∈ prior, g.arity ≤ fresh) :
     WithConstraints (2 * start) (portGates inputs fresh port prior) (p.rename even) ↔
       PortSatisfiable inputs start port prior p := by
@@ -74,8 +86,10 @@ theorem port_correct (inputs start fresh : ℕ) (port : ℕ → ℕ) (prior : Li
       change env (odd (port i)) = Complex.ofReal ((env (even i)).re)
       apply Complex.ext
       · simpa only [Complex.ofReal_re] using congrArg Complex.re he
-      · simpa only [Complex.ofReal_im] using
-          (congrArg Complex.im he).trans (hr (even i) (by unfold even; omega))
+      · rcases hn i hi with hi | hi
+        · simpa only [Complex.ofReal_im] using
+            (congrArg Complex.im he).trans (hr (even i) (by unfold even; omega))
+        · simpa only [Complex.ofReal_im] using hr (odd (port i)) (by unfold odd; omega)
     · exact (Formula.holds_rename _ _ p).mp hp
   · rintro ⟨x, env, hprior, hr, hinput, hp⟩
     let env' : ℕ → ℂ := merge fresh x env
@@ -107,6 +121,13 @@ theorem port_correct (inputs start fresh : ℕ) (port : ℕ → ℕ) (prior : Li
     · apply (Formula.holds_rename _ _ p).mpr
       simpa only [Function.comp_def, heven, Complex.ofReal_re] using hp
 
+theorem port_correct (inputs start fresh : ℕ) (port : ℕ → ℕ) (prior : List Gate) (p : Formula)
+    (hn : inputs ≤ start) (hs : start ≤ fresh) (hb : ∀ i < inputs, port i < fresh)
+    (hg : ∀ g ∈ prior, g.arity ≤ fresh) :
+    WithConstraints (2 * start) (portGates inputs fresh port prior) (p.rename even) ↔
+      PortSatisfiable inputs start port prior p :=
+  port_correct_of_real inputs start fresh port prior p (fun _ hi => Or.inl (hi.trans_le hn)) hs hb hg
+
 theorem port_encode_mem_FP {inputs fresh : List Bool → ℕ} {prior : List Bool → List Gate}
     {port : List Bool → ℕ → ℕ} (hn : UnaryFn inputs) (hf : UnaryFn fresh)
     (hport : UnaryFn (fun z => port (pairFst z) (pairSnd z).length))
@@ -131,12 +152,12 @@ theorem port_encode_mem_FP {inputs fresh : List Bool → ℕ} {prior : List Bool
     Function.comp_def, id_eq, even, odd]
   rfl
 
-theorem port_evaluator {inputs start fresh : List Bool → ℕ} {prior : List Bool → List Gate} {p : List Bool → Formula}
+theorem port_evaluator_of_real {inputs start fresh : List Bool → ℕ} {prior : List Bool → List Gate} {p : List Bool → Formula}
     {port : List Bool → ℕ → ℕ}
     (hn : UnaryFn inputs) (hs : UnaryFn start) (hf : UnaryFn fresh)
     (hport : UnaryFn (fun z => port (pairFst z) (pairSnd z).length))
     (hprior : (fun c => encode (prior c)) ∈ FP) (hp : (fun c => (p c).encode) ∈ FP)
-    (hns : ∀ c, inputs c ≤ start c) (hsf : ∀ c, start c ≤ fresh c)
+    (hns : ∀ c i, i < inputs c → i < start c ∨ port c i < start c) (hsf : ∀ c, start c ≤ fresh c)
     (hb : ∀ c i, i < inputs c → port c i < fresh c)
     (ha : ∀ c g, g ∈ prior c → g.arity ≤ fresh c) :
     SpaceFunction (fun c => [decide (PortSatisfiable (inputs c) (start c) (port c) (prior c) (p c))]) := by
@@ -145,7 +166,18 @@ theorem port_evaluator {inputs start fresh : List Bool → ℕ} {prior : List Bo
       rw [Function.comp_apply, Interleave.renameBits_encode]; rfl)
   apply (constraint_evaluator ((UnaryFn.const 2).mul hs) (port_encode_mem_FP hn hf hport hprior) hp').congr
   funext c
-  rw [port_correct _ _ _ _ _ _ (hns c) (hsf c) (hb c) (ha c)]
+  rw [port_correct_of_real _ _ _ _ _ _ (hns c) (hsf c) (hb c) (ha c)]
+
+theorem port_evaluator {inputs start fresh : List Bool → ℕ} {prior : List Bool → List Gate} {p : List Bool → Formula}
+    {port : List Bool → ℕ → ℕ}
+    (hn : UnaryFn inputs) (hs : UnaryFn start) (hf : UnaryFn fresh)
+    (hport : UnaryFn (fun z => port (pairFst z) (pairSnd z).length))
+    (hprior : (fun c => encode (prior c)) ∈ FP) (hp : (fun c => (p c).encode) ∈ FP)
+    (hns : ∀ c, inputs c ≤ start c) (hsf : ∀ c, start c ≤ fresh c)
+    (hb : ∀ c i, i < inputs c → port c i < fresh c)
+    (ha : ∀ c g, g ∈ prior c → g.arity ≤ fresh c) :
+    SpaceFunction (fun c => [decide (PortSatisfiable (inputs c) (start c) (port c) (prior c) (p c))]) :=
+  port_evaluator_of_real hn hs hf hport hprior hp (fun c _ hi => Or.inl (hi.trans_le (hns c))) hsf hb ha
 
 theorem correct (inputs start fresh : ℕ) (prior : List Gate) (p : Formula)
     (hn : inputs ≤ start) (hs : start ≤ fresh) (hg : ∀ g ∈ prior, g.arity ≤ fresh) :
