@@ -972,6 +972,18 @@ constructed regular source. This removes the need to prove every source
 component meets the original zero image. It does not construct the actual
 recursive cover or its native adjacency and marking query writers.
 
+`ETR/ComplexCircuitFreeze` redirects the swept coordinate of an arbitrary
+shared source program to an existing parameter wire, shifts the remaining
+input coordinates, and translates auxiliary outputs. Well-formedness and
+exact polynomial substitution are proved without expanding source terms.
+`ComplexCircuitFreezeEncoding` proves native polynomial-time gate generation,
+unary output addresses and unchanged operation count. Its cost theorem uses
+the original source encoder, with no literal encoding of the parameter value.
+`ComplexCircuitFreezeSlice` identifies evaluation with the actual coordinate
+slice over any commutative ring, including irrational real parameter values.
+The formulas selecting critical parameters and the full recursive query
+writers are still required.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

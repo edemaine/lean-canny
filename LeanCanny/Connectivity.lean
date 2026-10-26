@@ -50,6 +50,7 @@ import LeanCanny.Encoding.BoundedRegularControls
 import LeanCanny.Encoding.BoundedDirectionChoice
 import LeanCanny.Geometry.LiftPaths
 import LeanCanny.Connectivity.BoundedMarkedCover
+import LeanCanny.ETR.ComplexCircuitFreezeSlice
 
 /-! # Connectivity development
 
@@ -231,6 +232,12 @@ while retaining every valid piece for traversal, so additional source
 components need not be proved absent. The transfer through an accessible
 cover is proved; the actual recursive cover and its query writers remain
 required.
+Shared source circuits can also freeze a coordinate at an existing parameter
+wire. Reindexing preserves their operation count, and the writer has native
+polynomial-time bounds. Its polynomial interpretation is the exact coordinate
+slice at the parameter value in any commutative ring, including irrational
+real values. The critical-level formulas selecting those values and the full
+recursive query construction remain required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

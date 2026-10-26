@@ -1808,3 +1808,31 @@ example (D b R : ℕ) (u v : BoundedRegularSource.Marked (0 : MvPolynomial (Fin 
   exact Set.Subsingleton.isPreconnected (fun x _ y _ => Subsingleton.elim x y)
 
 end MarkedComponentTests
+
+namespace ParameterCircuitTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit MvPolynomial
+
+private def testTerm : Term := .add (.mul (.var 0) (.var 1)) (.const (-2))
+private noncomputable def parameterValues (i : ℕ) : ℝ := if i = 0 ∨ i = 5 then Real.sqrt 2 else 17
+
+-- The parameter occupies wire five and holds sqrt(2). Spatial wire zero
+-- also holds sqrt(2); all unrelated inputs deliberately hold another value.
+-- The original x0*x1-2 vanishes after the actual source circuit is frozen.
+example : (Differential.symbolicRun (fun i => (X i : MvPolynomial ℕ ℤ)) 6
+    (CircuitFreeze.program 2 5 6 (Source.program 2 testTerm))
+    (CircuitFreeze.output 2 5 6 (Source.output 2 testTerm))).eval₂ (Int.castRingHom ℝ) parameterValues = 0 := by
+  have ha : testTerm.arity ≤ 2 := by decide
+  have ho : Source.output 2 testTerm < 2 + (Source.program 2 testTerm).length := by
+    simpa only [Source.program_length] using Source.output_lt 2 testTerm ha
+  rw [CircuitFreeze.symbolic_output 2 5 6 _ _ (Source.wellFormed 2 testTerm ha) (by decide) (by decide) ho,
+    Source.symbolicRun_output 2 testTerm ha, CircuitFreeze.eval_substitution, Term.eval₂_toPolynomial]
+  simp [testTerm, Term.eval, parameterValues]
+
+-- The second operation reads the first operation's relocated output twice.
+-- The generic shared-program writer must preserve this dependency.
+example : Differential.symbolicRun (fun i => (X i : MvPolynomial ℕ ℤ)) 6
+    (CircuitFreeze.program 2 5 6 [.mul 0 1, .mul 2 2]) 7 = (X 5 * X 0) ^ 2 := by
+  simp [CircuitFreeze.program, CircuitFreeze.index, Operation.reindex, Differential.symbolicRun,
+    Differential.polynomial, pow_two]
+
+end ParameterCircuitTests
