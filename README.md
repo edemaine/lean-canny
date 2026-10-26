@@ -229,6 +229,9 @@ The checked ingredients are:
   from binary exponents. Its exact sampled polynomial identity supports
   native affine/infinity validation and bounded record selection; the selected
   sampled source is serialized in native polynomial space.
+  The full varying-coordinate source and its marking polynomial now also
+  have native polynomial-time shared-circuit writers, with exact geometric
+  identities, regularity and properness in their actual coordinate order.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

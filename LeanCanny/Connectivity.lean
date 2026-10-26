@@ -51,6 +51,7 @@ import LeanCanny.Encoding.BoundedDirectionChoice
 import LeanCanny.Geometry.LiftPaths
 import LeanCanny.Connectivity.BoundedMarkedCover
 import LeanCanny.ETR.ComplexCircuitFreezeSlice
+import LeanCanny.Encoding.BoundedFullGeometry
 
 /-! # Connectivity development
 
@@ -238,6 +239,15 @@ polynomial-time bounds. Its polynomial interpretation is the exact coordinate
 slice at the parameter value in any commutative ring, including irrational
 real values. The critical-level formulas selecting those values and the full
 recursive query construction remain required.
+The full varying-coordinate bounded regular source now has its own shared
+writer from original term, unary dimension and binary radius. It requires no
+sample or record reader. Both the source polynomial and the marking energy
+are computed on explicit wires with native polynomial-time encoders and
+unary address bounds. Exact integer polynomial identities identify their
+finite coordinate order; the permutation preserves the pure-power leading
+shape, extension-field regularity and properness. This supplies the source
+family for recursive queries; selecting critical parameters and constructing
+the actual covers remain required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
 encodings remain required.

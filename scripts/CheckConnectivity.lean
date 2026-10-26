@@ -1836,3 +1836,43 @@ example : Differential.symbolicRun (fun i => (X i : MvPolynomial ℕ ℤ)) 6
     Differential.polynomial, pow_two]
 
 end ParameterCircuitTests
+
+namespace FullSourceWireTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit LeanCanny.Encoding MvPolynomial
+
+private def testTerm : Term := .add (.var 0) (.const (-1))
+private def atParameter (a : ℝ) (i : ℕ) : ℝ := if i = 4 then a else 0
+private noncomputable def model : ℕ → MvPolynomial ℕ ℤ :=
+  Differential.symbolicRun (fun i => X i) 5 (BoundedFullSource.program 1 4 5 2 testTerm [] [true] [] [true] [true])
+
+-- Small exponents isolate the full-program wiring. Changing the parameter
+-- input must change the source value; freezing it to a literal would fail.
+example : (model (BoundedFullSource.output 5 2 testTerm [] [true] [] [true] [true])).eval₂
+    (Int.castRingHom ℝ) (atParameter 0) = 5 ∧
+    (model (BoundedFullSource.output 5 2 testTerm [] [true] [] [true] [true])).eval₂
+      (Int.castRingHom ℝ) (atParameter 1) = -1 := by
+  have hs := BoundedFullSource.symbolic_output 1 4 5 2 testTerm [] [true] [] [true] [true]
+    (by decide) (by decide) (by decide) (by decide)
+  simp only [model, hs, BoundedFullSource.polynomial, BoundedTail.polynomial, BoundedLow.polynomial,
+    eval₂_sub, eval₂_add, eval₂_mul, eval₂_C, eval₂_one, eval₂_pow, eval₂_sum, eval₂_X,
+    CircuitFreeze.eval_substitution, Term.eval₂_toPolynomial]
+  norm_num [testTerm, Term.eval, atParameter, Finset.sum_range_succ, Nat.fromBitsLE, Nat.fromBits]
+
+-- The marking wire computes the unscaled old zero energy, independently
+-- of both regularization scales and the full-source output wire.
+example : (model (BoundedFullSource.energyOutput 5 2 testTerm [])).eval₂ (Int.castRingHom ℝ) (atParameter 0) = 2 ∧
+    (model (BoundedFullSource.energyOutput 5 2 testTerm [])).eval₂ (Int.castRingHom ℝ) (atParameter 1) = 0 := by
+  have hs := BoundedFullSource.symbolic_energy 1 4 5 2 testTerm [] [true] [] [true] [true]
+    (by decide) (by decide) (by decide) (by decide)
+  simp only [model, hs, BoundedFullSource.energy, BoundedTail.energy, eval₂_add, eval₂_pow, eval₂_sub,
+    eval₂_C, eval₂_sum, eval₂_X, CircuitFreeze.eval_substitution, Term.eval₂_toPolynomial]
+  norm_num [testTerm, Term.eval, atParameter, Finset.sum_range_succ, Nat.fromBitsLE, Nat.fromBits]
+
+-- Full source generation remains native polynomial time at original
+-- dimension zero and with an arbitrary binary radius reader.
+example {source : List Bool → List Bool} {radius : List Bool → ℕ} (ht : source ∈ FP) (hR : BinaryFn radius) :
+    let P : BoundedFullWriter.Readers := ⟨source, fun _ => 0, radius⟩
+    (fun c => encode (StraightLine.gates (BoundedFullWriter.start P c) (BoundedFullWriter.program P c))) ∈ FP :=
+  BoundedFullWriter.encode_mem_FP ⟨ht, UnaryFn.const 0, hR⟩
+
+end FullSourceWireTests

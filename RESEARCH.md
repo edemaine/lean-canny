@@ -984,6 +984,23 @@ slice over any commutative ring, including irrational real parameter values.
 The formulas selecting critical parameters and the full recursive query
 writers are still required.
 
+`ETR/ComplexBoundedTail` isolates the sphere, perturbation and regularization
+calculation after the original polynomial and swept coordinate have been
+computed on existing wires. It accepts a variable swept coordinate and
+exposes the old zero-energy wire for marking. `ComplexBoundedTailEncoding`
+proves native polynomial-time encoding and unary address/length bounds.
+`ComplexBoundedFullSource` compiles the original term with a parameter input
+and appends this tail. Its source and marking outputs have exact polynomial
+interpretations; `ComplexBoundedFullEncoding` supplies native cost proofs.
+`Encoding/BoundedFullIdentity` identifies these with the actual geometric
+regular source and mark polynomial before choosing a sample, over any
+commutative evaluation ring. `BoundedFullWriter` derives all controls from
+original syntax, unary dimension and binary radius; it needs no record or
+sample reader. `BoundedFullGeometry` identifies the exact finite variable
+permutation, preserves the pure-power leading form, and transfers properness
+and regularity over rational field extensions. The full recursive cover and
+critical-parameter query writers remain required.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.
