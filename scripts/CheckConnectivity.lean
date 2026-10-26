@@ -2294,3 +2294,69 @@ example : SpaceFunction (fun c => [decide (∃ y : LeanCanny.Encoding.BoundedFul
   LeanCanny.Encoding.BoundedCriticalSampleQuery.samples_evaluator native (constFn_mem_FP witness.encode) fits
 
 end CriticalSampleQueryTests
+
+namespace CriticalSeparatorTests
+open LeanCanny.ETR LeanCanny.ETR.ComplexCircuit LeanCanny.Encoding
+open RealQuery.Interleaved
+open scoped Classical
+
+-- Independent copies may constrain the same original wire to different
+-- values. The outer formula observes both values simultaneously.
+example : InputSatisfiable 2 2 (RealQuery.Paired.gates [.constant 0 0] [.constant 0 1])
+    (.and (.eqZero (.var 0)) (.eqZero (.add (.var 1) (.const (-1))))) := by
+  rw [RealQuery.Paired.satisfiable_iff 1 1]
+  let x : ℕ → ℝ := RealQuery.Paired.merge (fun _ => 0) (fun _ => 1)
+  refine ⟨x, ⟨?_, ?_⟩, ?_⟩
+  · refine ⟨fun _ => 0, ?_, fun _ _ => rfl, ?_⟩
+    · intro g hg
+      obtain rfl := List.mem_singleton.mp hg
+      simp only [Gate.Holds, Int.cast_zero]
+    · intro i _
+      simp only [Function.comp_apply, x, RealQuery.Paired.merge_even, Complex.ofReal_zero]
+  · refine ⟨fun _ => 1, ?_, fun _ _ => rfl, ?_⟩
+    · intro g hg
+      obtain rfl := List.mem_singleton.mp hg
+      simp only [Gate.Holds, Int.cast_one]
+    · intro i _
+      simp only [Function.comp_apply, x, RealQuery.Paired.merge_odd, Complex.ofReal_one]
+  · norm_num [Formula.Holds, Term.eval, x, RealQuery.Paired.merge, even, odd]
+
+-- Zero weights collide on the distinct tuples (0,0) and (1,0).
+example : (ProjectionCollision.formula 2 (fun _ => 0) 0).Holds
+    (RealQuery.Paired.merge (fun _ : ℕ => (0 : ℝ)) (fun i => if i = 0 then 1 else 0)) := by
+  rw [ProjectionCollision.formula_holds]
+  norm_num [ProjectionCollision.projection, RealQuery.Paired.merge_even, RealQuery.Paired.merge_odd]
+
+-- Giving their first coordinate positive weight detects the difference.
+example : ¬ (ProjectionCollision.formula 2 (fun _ => 2 ^ 100) 0).Holds
+    (RealQuery.Paired.merge (fun _ : ℕ => (0 : ℝ)) (fun i => if i = 0 then 1 else 0)) := by
+  rw [ProjectionCollision.formula_holds]
+  norm_num [ProjectionCollision.projection, Finset.sum_range_succ,
+    RealQuery.Paired.merge_even, RealQuery.Paired.merge_odd]
+
+example (P : BoundedFullWriter.Readers) (c : List Bool)
+    (a b : BoundedFullCriticalSamples.Samples P c)
+    (he : BoundedCriticalSeparator.value P (BoundedCriticalSeparator.record P) c a.val =
+      BoundedCriticalSeparator.value P (BoundedCriticalSeparator.record P) c b.val) : a = b :=
+  BoundedCriticalSeparator.value_injective P c he
+
+-- A separating projection requires no witness when the sample set is empty.
+example (P : BoundedFullWriter.Readers) (c : List Bool)
+    [IsEmpty (BoundedFullCriticalSamples.Samples P c)] : BoundedCriticalSeparator.Good P c [] := by
+  intro a
+  exact isEmptyElim a
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalSeparator.record P) :=
+  BoundedCriticalSeparator.evaluator h ht
+
+example (P : BoundedFullWriter.Readers) (f : List Bool → List Bool) (c : List Bool) :
+    BoundedFullDirectionChoice.record (P.comp f) c = BoundedFullDirectionChoice.record P (f c) :=
+  BoundedFullDirectionChoice.record_comp P f c
+
+example (P : BoundedFullWriter.Readers) (f : List Bool → List Bool) (c : List Bool) :
+    BoundedCriticalSeparator.record (P.comp f) c = BoundedCriticalSeparator.record P (f c) :=
+  BoundedCriticalSeparator.record_comp P f c
+
+end CriticalSeparatorTests

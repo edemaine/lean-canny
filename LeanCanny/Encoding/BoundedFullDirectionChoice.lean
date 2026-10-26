@@ -170,6 +170,17 @@ theorem test_correct (P : Readers) (c r : List Bool) : test P (c, r) = true ↔ 
   simp only [test, decide_eq_true_eq, check_correct, goodData_eq]
   simp only [Readers.comp, Function.comp_apply, pairFst_pair, pairSnd_pair]
 
+@[simp] theorem record_comp (P : Readers) (f : List Bool → List Bool) (c : List Bool) :
+    record (P.comp f) c = record P (f c) := by
+  unfold record
+  apply ImplicitGraph.findWord_congr (c := c) (c' := f c)
+    (width := fun z => ((P.comp f).dim z + 3) * BoundedFullDirectionQueries.width (P.comp f) z)
+    (width' := fun z => (P.dim z + 3) * BoundedFullDirectionQueries.width P z) rfl
+  intro r
+  apply Bool.eq_iff_iff.mpr
+  rw [test_correct, test_correct, goodData_eq, goodData_eq]
+  rfl
+
 theorem record_good (P : Readers) (c : List Bool) : Good P c (record P c) := by
   apply (test_correct P c _).mp
   apply ImplicitGraph.findWord_correct

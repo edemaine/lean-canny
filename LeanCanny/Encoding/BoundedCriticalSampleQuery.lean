@@ -105,6 +105,25 @@ noncomputable def Condition (P : Readers) (record : List Bool → List Bool) (c 
 theorem condition_iff (P : Readers) (record : List Bool → List Bool) (c : List Bool) (x : ℕ → ℝ) :
     Condition P record c x ↔ ∀ j, (equations P record c j).eval₂ (Int.castRingHom ℝ) (fun i => x i.val) = 0 := Iff.rfl
 
+theorem realizes_correct (P : Readers) (record : List Bool → List Bool) (c : List Bool) (x : ℕ → ℝ)
+    (ht : (TermView.term (P.source c)).arity ≤ P.dim c) :
+    PortRealizes (P.dim c + 4) (frame P c) id (query P record c) x ↔ Condition P record c x := by
+  rw [query_eq_models]
+  have hm := models_identity P record c ht
+  have he := port_finite_realizes (frame P c) (program P record c) (models P record c) x id (Equiv.refl _)
+    (by unfold frame CriticalKernel.zeroWire; omega) (fun _ => rfl)
+    (wellFormed P record c) (models_bound P record c) (fun z hz => by
+      change _ = rename Fin.val (rename id z.2)
+      rw [rename_id_apply]
+      exact hm z hz)
+  rw [he, condition_iff]
+  constructor
+  · intro h j
+    exact h _ (List.mem_ofFn.mpr ⟨j, rfl⟩)
+  · intro h z hz
+    obtain ⟨j, rfl⟩ := List.mem_ofFn.mp hz
+    exact h j
+
 theorem correct (P : Readers) (record : List Bool → List Bool) (c : List Bool) (p : Formula)
     (ht : (TermView.term (P.source c)).arity ≤ P.dim c) :
     InputSatisfiable (P.dim c + 4) (frame P c) (query P record c) p ↔

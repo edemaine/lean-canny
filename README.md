@@ -255,8 +255,12 @@ The checked ingredients are:
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
   independent formula witnesses. Selected sample serialization and constrained
-  feasibility compose with direction selection in polynomial space. Effective
-  individual sample labels and recursive connection tests remain required.
+  feasibility compose with direction selection in polynomial space. Independent
+  paired sample circuits detect projection collisions. Native bounded search
+  selects binary weights giving every critical sample a distinct projection;
+  the record length and the entire search have polynomial-space certificates.
+  Effective individual sample labels and recursive connection tests remain
+  required.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

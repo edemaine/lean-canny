@@ -59,6 +59,7 @@ import LeanCanny.Connectivity.BoundedPieceQueries
 import LeanCanny.Encoding.BoundedFullDirectionChoice
 import LeanCanny.Encoding.BoundedFullCriticalSamples
 import LeanCanny.Encoding.BoundedCriticalSampleQuery
+import LeanCanny.Encoding.BoundedCriticalSeparator
 
 /-! # Connectivity development
 
@@ -302,8 +303,12 @@ The same bound therefore counts its connected components, without a supplied
 root-finiteness assumption. Native real critical-sample queries now test these
 exact equations with arbitrary independent formula witnesses. Both selected
 sample-circuit serialization and constrained sample feasibility compose with
-the native direction selector in polynomial space. Effective individual
-sample labels and recursive connection tests still need to be constructed.
+the native direction selector in polynomial space. Two independently varying
+sample circuits detect collisions of a weighted projection. Native bounded
+search selects polynomial-length binary weights separating every sample;
+the exact pair queries charge both direction and separator selection.
+Effective individual sample labels and recursive connection tests still need
+to be constructed.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query

@@ -172,6 +172,20 @@ passes, the returned word still has the specified width. -/
 def findWord {α : Type} (test : α × List Bool → Bool) (width : α → ℕ) (c : α) : List Bool :=
   selectBelow test width c (2 ^ width c)
 
+/-- Fixed-width search depends only on the width and tests at this input. -/
+theorem findWord_congr {α β : Type} {test : α × List Bool → Bool}
+    {test' : β × List Bool → Bool} {width : α → ℕ} {width' : β → ℕ}
+    {c : α} {c' : β} (hw : width c = width' c')
+    (ht : ∀ r, test (c, r) = test' (c', r)) :
+    findWord test width c = findWord test' width' c' := by
+  have hs (k) : selectBelow test width c k = selectBelow test' width' c' k := by
+    induction k with
+    | zero => simp only [selectBelow, hw]
+    | succ k ih => simp only [selectBelow, ih, ht, hw]
+  unfold findWord
+  rw [hw]
+  exact hs _
+
 @[simp] theorem findWord_length {α : Type} (test : α × List Bool → Bool)
     (width : α → ℕ) (c : α) : (findWord test width c).length = width c :=
   selectBelow_length _ _ _ _
