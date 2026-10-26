@@ -259,8 +259,11 @@ The checked ingredients are:
   paired sample circuits detect projection collisions. Native bounded search
   selects binary weights giving every critical sample a distinct projection;
   the record length and the entire search have polynomial-space certificates.
-  Effective individual sample labels and recursive connection tests remain
-  required.
+  A concrete nonzero integer polynomial annihilates every selected projection,
+  with native degree and coefficient-bit allowances. Its ordered real roots
+  give unique bounded sample labels and exact mathematical decoding. Native
+  coefficient access, label-query evaluation, and recursive connection tests
+  remain required.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

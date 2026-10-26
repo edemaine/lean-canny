@@ -2360,3 +2360,63 @@ example (P : BoundedFullWriter.Readers) (f : List Bool → List Bool) (c : List 
   BoundedCriticalSeparator.record_comp P f c
 
 end CriticalSeparatorTests
+
+namespace CriticalProjectionLabelTests
+open LeanCanny.ETR LeanCanny.Geometry LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+
+-- The retained parameter has coefficient degree one even for signed weights.
+example (e : Fin 2 →₀ ℕ) :
+    ((LinearProjectionSystem.rows (fun _ : Fin 1 => (X 0 : MvPolynomial (Fin 1) ℤ) - 1)
+      (fun _ => 1) (fun _ => -3) 0).coeff e).natDegree ≤ 1 :=
+  LinearProjectionSystem.coefficient_degree _ _ _ _ _
+
+-- A negative projection is retained with its sign; regularity belongs to
+-- the original equation and does not require a nonzero projection weight.
+example (v : ℤ) :
+    (LinearProjectionEliminant.polynomial
+      (fun _ : Fin 1 => (X 0 : MvPolynomial (Fin 1) ℤ) - 1) (fun _ => 1) (fun _ => v) 2).eval₂
+      (Int.castRingHom ℝ) (v : ℝ) = 0 := by
+  have he := LinearProjectionEliminant.eval_eq_zero (Int.castRingHom ℝ)
+    (fun _ : Fin 1 => (X 0 : MvPolynomial (Fin 1) ℤ) - 1) (fun _ => 1)
+    (fun _ => (totalDegree_sub _ _).trans (by simp)) (fun _ => by decide)
+    (fun _ => v) 2 (by norm_num [Macaulay.level, AffineCoordinateSystem.degrees, Fin.sum_univ_succ])
+    (fun _ => (1 : ℝ)) (by intro j; simp)
+    (by
+      rw [PolynomialSystemRegularity.isInvertible_iff, Matrix.det_fin_one]
+      norm_num [PolynomialSystemRegularity.matrix])
+  simpa using he
+
+-- The empty square system has one root, whose linear projection is zero.
+example : (LinearProjectionEliminant.polynomial
+    (fun i : Fin 0 => Fin.elim0 i) (fun _ => 1) (fun i => Fin.elim0 i) 1 : Polynomial ℤ).eval₂
+      (Int.castRingHom ℝ) 0 = 0 := by
+  have he := LinearProjectionEliminant.eval_eq_zero (Int.castRingHom ℝ)
+    (fun i : Fin 0 => Fin.elim0 i) (fun _ => 1) (fun i => Fin.elim0 i) (fun _ => by decide)
+    (fun i => Fin.elim0 i) 1
+    (by norm_num [Macaulay.level, AffineCoordinateSystem.degrees, Fin.sum_univ_succ])
+    (fun i => Fin.elim0 i) (fun i => Fin.elim0 i)
+    (by
+      apply (PolynomialSystemRegularity.isInvertible_iff _ _ _).mpr
+      rw [Matrix.det_isEmpty]
+      exact one_ne_zero)
+  simpa using he
+
+-- Width is part of label validity: appending a bit destroys representation
+-- even though the underlying natural index might have been unchanged.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    ¬ BoundedCriticalLabels.Valid P c (BoundedCriticalLabels.label P c x ++ [false]) := by
+  intro hr
+  have h := BoundedCriticalLabels.valid_length P c _ hr
+  simp only [List.length_append, BoundedCriticalLabels.label_length, List.length_singleton] at h
+  omega
+
+example (P : BoundedFullWriter.Readers) (c : List Bool)
+    [IsEmpty (BoundedFullCriticalSamples.Samples P c)] (r : List Bool) :
+    BoundedCriticalLabels.decode P c r = none := by
+  have hn : ¬ BoundedCriticalLabels.Valid P c r := by
+    rintro ⟨x, _⟩
+    exact isEmptyElim x
+  simp only [BoundedCriticalLabels.decode, dite_eq_right hn]
+
+end CriticalProjectionLabelTests

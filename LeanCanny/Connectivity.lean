@@ -60,6 +60,7 @@ import LeanCanny.Encoding.BoundedFullDirectionChoice
 import LeanCanny.Encoding.BoundedFullCriticalSamples
 import LeanCanny.Encoding.BoundedCriticalSampleQuery
 import LeanCanny.Encoding.BoundedCriticalSeparator
+import LeanCanny.Encoding.BoundedCriticalLabels
 
 /-! # Connectivity development
 
@@ -307,8 +308,12 @@ the native direction selector in polynomial space. Two independently varying
 sample circuits detect collisions of a weighted projection. Native bounded
 search selects polynomial-length binary weights separating every sample;
 the exact pair queries charge both direction and separator selection.
-Effective individual sample labels and recursive connection tests still need
-to be constructed.
+A concrete nonzero integer Macaulay polynomial now annihilates every selected
+sample projection. Its degree and coefficient-bit bounds have native binary
+controls. Ordered real roots give unique fixed-width sample labels with exact
+mathematical decoding. Native access to the projection polynomial coefficients,
+label-query evaluation, and recursive connection tests still need to be
+constructed.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query
