@@ -318,9 +318,12 @@ The checked ingredients are:
   sample and original record. The Gram rank equals the distinct child-root
   count. Native prefix-rank scans now select short records forming a basis
   on the child roots. Selected Gram, triple, and derivative-weighted moments
-  are native too, with no supplied basis table or rank oracle. Reading signs
-  at child labels, recursive sample construction, and the complete cover
-  remain required.
+  are native too, with no supplied basis table or rank oracle. Native short
+  hashes now label every distinct child root. A streamed derivative-sign
+  reader computes one signature entry at a hash-order ordinal; its PSPACE
+  sign languages reject invalid bases and ordinals, including for sign zero.
+  General test signs at child labels, recursive sample construction, and the
+  complete cover remain required.
   Source connectivity is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
   independent formula witnesses. Selected sample serialization and constrained

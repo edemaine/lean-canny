@@ -1109,8 +1109,30 @@ search without storing a basis table.
 `BoundedCriticalSampleFiberFeatureMoments` adds native derivative-sign-weighted
 moments with binary orders clamped to the supplied degree. All keep the same
 actual sample descriptor and original query record, including on invalid raw
-queries. Reading signs at individual child labels still needs construction
-before recursive sample bases can be assembled.
+queries.
+`BoundedCriticalSampleFiberRootHash` constructs bounded separating labels
+from selected record signs. `BoundedCriticalSampleFiberBasisPencil` identifies
+distinct values with distinct roots of the weighted Gram determinant.
+`BoundedCriticalSampleFiberWeightedMoments` supplies native weighted entries;
+the `PencilEntries`, `PencilCoefficient`, `PencilBounds`, and `PencilSource`
+modules derive native determinant access and uniform bounds on all raw count
+and modulus words. Their correctness packet uses the actual child-root count.
+`BoundedCriticalSampleFiberPencilRootCount` tests separation natively, and
+`BoundedCriticalSampleFiberHashChoice` computes that count and selects bounded
+separating parameters without a supplied hash or rank oracle.
+The `PencilCuts`, `HashRoots`, `HashCuts`, and `HashEnumeration` modules identify
+the exact integer hash values and enumerate every distinct child root exactly
+once in hash order, retaining its original actual-sample base word.
+`BoundedCriticalSampleFiberSignatureProbe` proves recovery from two determinant
+coefficients, with a nonzero denominator at every valid root. The `ProbeEntries`,
+`ProbeBounds`, `ProbeCoefficient`, and `ProbeSource` modules compute those
+coefficients natively from the constructed moments.
+`BoundedCriticalSampleFiberSignatureRead` streams any binary-indexed derivative
+sign at a hash-order child ordinal. Orders beyond the degree return zero.
+Its native PSPACE sign languages also validate the child ordinal, rejecting
+invalid actual-sample descriptors and out-of-range ordinals even for sign zero.
+These signatures are complete and distinguish all the child roots. General
+test signs at child labels and recursive sample-base construction remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

@@ -110,6 +110,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleBlockTerm
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
+import LeanCanny.Encoding.BoundedCriticalSampleFiberSignatureRead
 
 /-! # Connectivity development
 
@@ -423,9 +424,12 @@ preserve both the actual sample descriptor and its original record, and the
 Gram rank equals the distinct child-root count. Native prefix-rank scans now
 select short records forming a basis on those roots. Selected Gram, triple,
 and derivative-weighted moments include the native row searches in their
-space bounds, with no supplied basis table. Signs at child labels,
-constructing new sample bases recursively, and assembling the complete cover
-remain required. Native real critical-sample queries test these
+space bounds, with no supplied basis table. Native short separating hashes
+now enumerate every distinct child root in hash order. Two native determinant
+signs recover each binary-indexed derivative sign at those roots, with guarded
+PSPACE sign languages rejecting invalid bases and ordinals. General test
+signs at child labels, constructing new sample bases recursively, and assembling
+the complete cover remain required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
 sample-circuit serialization and constrained sample feasibility compose with
 the native direction selector in polynomial space. Two independently varying
