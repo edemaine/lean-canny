@@ -73,6 +73,8 @@ import LeanCanny.Encoding.BoundedProjectionRecordSpan
 import LeanCanny.Encoding.BoundedProjectionBasisGram
 import LeanCanny.Encoding.BoundedProjectionBasisPencil
 import LeanCanny.Encoding.BoundedProjectionHashChoice
+import LeanCanny.Encoding.BoundedProjectionSignatureProbe
+import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
 
@@ -370,7 +372,12 @@ moments and streamed weighted entries supply its coefficients, with uniform
 degree and coefficient budgets. A native real-root counter tests separation;
 bounded search computes separating parameters after computing the actual
 root count. The resulting integer hash is injective and has polynomial bit
-length. Individual hash and signature queries remain required.
+length. Native rational-cut queries test an individual hash and count hashes
+below it. A native signed-value enumerator covers every projection root
+bijectively for valid ordinals. Moments weighted by one derivative sign
+have native readers. Two determinant coefficients recover that sign at an
+enumerated hash, with a proved nonzero denominator; native evaluation and
+sign extraction for these probe determinants remain required.
 The complete signature is an indexed function; a polynomial-space representation and
 enumeration of its realizable values still require a streamed sign-determination
 algorithm. The recursive connection tests remain open.

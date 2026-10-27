@@ -303,8 +303,12 @@ The checked ingredients are:
   coefficients of that pencil, with explicit degree and coefficient bounds.
   A native real-root counter tests separation, and bounded search computes
   separating parameters after computing the actual root count. These give an
-  injective integer hash of polynomial bit length. Individual hash and
-  signature queries remain open.
+  injective integer hash of polynomial bit length. Native rational cuts now
+  test individual hash values and count the values below a threshold. An
+  ordered native hash enumerator labels every projection root bijectively.
+  Native moments weighted by one derivative sign and a determinant identity
+  recover that sign at an enumerated hash. Evaluating the two resulting
+  probe determinant coefficients and extracting their signs remains open.
   Full signatures are indexed functions; representing and enumerating their
   realizable values in polynomial space remains open, as do the recursive
   connection tests.

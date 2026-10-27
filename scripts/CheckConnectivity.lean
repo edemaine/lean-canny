@@ -3025,3 +3025,95 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) : UnaryFn (BoundedProje
   BoundedProjectionHashChoice.hashBits_unary h
 
 end WeightedProjectionTests
+
+namespace ProjectionEnumerationTests
+open LeanCanny.Algebra LeanCanny.Encoding
+
+-- Equality at a rational cut uses the positive denominator, including fractions.
+def halfCut : List Bool := pair [] (pair (BinaryNatCode.encode 1) (pair [] (BinaryNatCode.encode 1)))
+example : SignType.sign (((RationalCutBits.polynomial halfCut).map (algebraMap ℤ ℝ)).eval (1 / 2)) = 0 := by
+  apply (BoundedProjectionPencilCuts.cut_sign_zero_iff halfCut (1 / 2)).mpr
+  norm_num [halfCut, RationalCutBits.threshold, RationalCutBits.numerator, RationalCutBits.divisor,
+    RationalCutBits.positive, RationalCutBits.negative, RationalCutBits.denominatorMinusOne,
+    BinaryNatCode.encode, show Nat.fromBitsLE ([] : List Bool) = 0 from rfl,
+    show Nat.fromBitsLE [true] = 1 from rfl]
+
+example (c : List Bool) : RationalCutBits.threshold (BoundedProjectionHashCuts.integerQuery c (-5)) = (-5 : ℝ) := by
+  simpa using BoundedProjectionHashCuts.integer_threshold c (-5)
+
+-- Every accepted integer value denotes exactly one original projection root.
+example (P : BoundedFullWriter.Readers) (q : List Bool) (hq : q ∈ BoundedProjectionHashCuts.language P) :
+    ∃! x : BoundedProjectionRecordSpan.Root P (pairFst q),
+      (BoundedProjectionHashChoice.hash P (pairFst q) x : ℝ) = RationalCutBits.threshold q :=
+  BoundedProjectionHashCuts.unique_root P q hq
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceDecider (BoundedProjectionHashCuts.language P) := BoundedProjectionHashCuts.decider h ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun u => SignStatisticBits.integerCode (BoundedProjectionHashEnumeration.value P u)) :=
+  BoundedProjectionHashEnumeration.evaluator h ha
+
+-- Ordinal correctness requires the actual root count; the reader is total otherwise.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : ℕ) (hr : r < BoundedProjectionRootCount.count P c) :
+    BoundedProjectionHashEnumeration.value P (pair c (BinaryNatCode.encode r)) ∈ BoundedProjectionHashRoots.values P c ∧
+      BoundedProjectionHashRoots.rank P c (BoundedProjectionHashEnumeration.value P (pair c (BinaryNatCode.encode r))) = r :=
+  BoundedProjectionHashEnumeration.value_spec P c r hr
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    Function.Bijective (BoundedProjectionHashEnumeration.root P c) :=
+  ⟨BoundedProjectionHashEnumeration.root_injective P c, BoundedProjectionHashEnumeration.root_surjective P c⟩
+
+def weights (i : Fin 2) : ℚ := if i = 0 then -2 else 5
+def feature (i : Fin 2) : ℚ := if i = 0 then -1 else 0
+private theorem weights_injective : Function.Injective weights := by
+  decide
+
+-- Negative and zero features use the same nonzero denominator.
+example : (FunctionBasisProbe.matrix (1 : Matrix (Fin 2) (Fin 2) ℚ) weights feature (weights 0)).det.coeff 1 = 7 := by
+  rw [FunctionBasisProbe.coefficient_one]
+  norm_num [FunctionBasisPencil.gram, weights, feature, Finset.univ_fin2]
+
+example : (FunctionBasisProbe.matrix (1 : Matrix (Fin 2) (Fin 2) ℚ) weights (fun _ => 1) (weights 0)).det.coeff 1 = -7 := by
+  rw [FunctionBasisProbe.coefficient_one]
+  norm_num [FunctionBasisPencil.gram, weights, Finset.univ_fin2]
+
+example : (FunctionBasisProbe.matrix (1 : Matrix (Fin 2) (Fin 2) ℚ) weights feature (weights 1)).det.coeff 1 = 0 := by
+  rw [FunctionBasisProbe.coefficient_one]
+  norm_num [FunctionBasisPencil.gram, weights, feature, Finset.univ_fin2]
+
+example : SignType.sign ((FunctionBasisProbe.matrix (1 : Matrix (Fin 2) (Fin 2) ℚ) weights feature (weights 0)).det.coeff 1) *
+    SignType.sign ((FunctionBasisProbe.matrix (1 : Matrix (Fin 2) (Fin 2) ℚ) weights (fun _ => 1) (weights 0)).det.coeff 1) = -1 := by
+  have H := FunctionBasisProbe.sign_ratio (1 : Matrix (Fin 2) (Fin 2) ℚ) weights feature 0 (by simp) weights_injective
+  simpa [feature] using H
+
+-- Without separation, the denominator can vanish even for a nonsingular basis.
+example : (FunctionBasisProbe.matrix (1 : Matrix (Fin 2) (Fin 2) ℚ) (fun _ => 4) (fun _ => 1) 4).det.coeff 1 = 0 := by
+  have H := FunctionBasisProbe.coefficient_one (1 : Matrix (Fin 2) (Fin 2) ℚ) (fun _ => 4) (fun _ => 1) 0
+  simpa [FunctionBasisPencil.gram, Finset.univ_fin2] using H
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => SignStatisticBits.integerCode (BoundedProjectionFeatureMoments.moment P q)) :=
+  BoundedProjectionFeatureMoments.evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (i j : Fin (BoundedProjectionRootCount.count P c))
+    (d : BoundedProjectionMoments.Feature P c) :
+    (BoundedProjectionFeatureMoments.moment P (pair c (pair (BinaryNatCode.encode i.val)
+      (pair (BinaryNatCode.encode j.val) (BinaryNatCode.encode d.val)))) : ℚ) =
+      ∑ x : BoundedProjectionRecordSpan.Root P c, BoundedProjectionRankBasis.selected P c i x *
+        BoundedProjectionRankBasis.selected P c j x * (BoundedProjectionMoments.signature P c x d : ℚ) :=
+  BoundedProjectionFeatureMoments.moment_packet P c i j d
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c))
+    (d : BoundedProjectionMoments.Feature P c) :
+    SignType.sign ((BoundedProjectionSignatureProbe.matrix P c (fun x => (BoundedProjectionMoments.signature P c x d : ℚ))
+      (BoundedProjectionHashEnumeration.value P (pair c (BinaryNatCode.encode r.val)))).det.coeff 1) *
+      SignType.sign ((BoundedProjectionSignatureProbe.matrix P c (fun _ => 1)
+        (BoundedProjectionHashEnumeration.value P (pair c (BinaryNatCode.encode r.val)))).det.coeff 1) =
+      BoundedProjectionMoments.signature P c (BoundedProjectionHashEnumeration.root P c r) d :=
+  BoundedProjectionSignatureProbe.signature_at_ordinal P c r d
+
+end ProjectionEnumerationTests
