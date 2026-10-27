@@ -279,8 +279,11 @@ The checked ingredients are:
   samples, and monomials with support bounded by the short label width span
   their rational-valued functions. Short binary records realize these monomials.
   Native Gram entries and prefix-rank queries select a basis, with native access
-  to each short record. Native queries at an individual ordered sample label
-  remain required.
+  to each short record. Native weighted moments and Gram determinants select
+  injective integer descriptors for the actual samples. Their serialized words
+  have a unary polynomial length bound, native validity, and native ordered
+  enumeration naming exactly one full sample per ordinal below the actual
+  count. Native polynomial-sign queries at these descriptors remain required.
   Assembling recursive coordinate families remains required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with

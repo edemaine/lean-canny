@@ -100,6 +100,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleCount
 import LeanCanny.Encoding.BoundedCriticalSampleIsolation
 import LeanCanny.Encoding.BoundedCriticalSampleMoments
 import LeanCanny.Encoding.BoundedCriticalSampleRankBasis
+import LeanCanny.Encoding.BoundedCriticalSampleDescriptors
 
 /-! # Connectivity development
 
@@ -370,8 +371,12 @@ Their full Thom signatures separate the samples, and monomials with support
 bounded by the existing short label width span all rational-valued functions
 on them. Short binary records realize every spanning monomial. Their native
 Gram entries sum over the filtered samples, and prefix-rank queries select a
-basis with native access to each short record. Native queries at an individual
-ordered sample label remain required.
+basis with native access to each short record. Native weighted moments and
+Gram determinants now
+select injective integer descriptors for the actual samples. Their serialized
+words have a unary polynomial length bound, native validity, and native ordered
+enumeration covering exactly one full sample per ordinal below the actual
+count. Native polynomial-sign queries at these descriptors remain required.
 Assembling the recursive coordinate families remains
 required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected

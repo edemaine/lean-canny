@@ -5536,3 +5536,92 @@ example (P : BoundedFullWriter.Readers) (c : List Bool)
   exact h (congrArg (BoundedCriticalSampleLabels.label P c) hx)
 
 end CriticalSampleRecordTests
+
+namespace CriticalSampleDescriptorTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR
+open scoped Classical
+
+-- Modulus predecessors remain binary and may contain redundant high zeros.
+#guard BoundedCriticalSampleWeightedMoments.weight (pair
+  (pair (BoundedCriticalSampleWeightedMoments.context [true] 3 [false, true, true, false, false] 3) (pair [] []))
+  (BinaryNatCode.encode 4)) == BinaryNatCode.encode 4
+
+example (P : BoundedFullWriter.Readers) (c m indices : List Bool) (t : ℕ) :
+    BoundedCriticalSampleWeightedMoments.entry P
+      (pair (BoundedCriticalSampleWeightedMoments.context c 0 m t) indices) = 0 := by
+  simp only [BoundedCriticalSampleWeightedMoments.entry, BoundedCriticalSampleWeightedMoments.count,
+    BoundedCriticalSampleWeightedMoments.context, pairFst_pair, pairSnd_pair, BinaryNatCode.encode,
+    Nat.fromBitsLE_bits, Finset.range_zero, Finset.sum_empty]
+
+example (P : BoundedFullWriter.Readers) (q : List Bool) :
+    BoundedCriticalSamplePencilEntries.coefficient P (pair q [false, true, false, false]) = 0 := by
+  simp [BoundedCriticalSamplePencilEntries.coefficient,
+    show Nat.fromBitsLE [false, true, false, false] = 2 from rfl]
+
+-- A zero-dimensional determinant is the unit polynomial, not zero.
+example (P : BoundedFullWriter.Readers) (c m : List Bool) (t : ℕ) :
+    (BoundedCriticalSamplePencilEntries.matrix P (BoundedCriticalSampleWeightedMoments.context c 0 m t)).det = 1 := by
+  let : IsEmpty (Fin (BoundedCriticalSamplePencilEntries.dimension
+      (BoundedCriticalSampleWeightedMoments.context c 0 m t))) := by
+    rw [BoundedCriticalSamplePencilSource.dimension_context]
+    infer_instance
+  exact Matrix.det_isEmpty
+
+-- Modulus one cannot separate two distinct actual samples.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (t : ℕ)
+    (x y : BoundedCriticalSampleRecordSpan.Root P c) (hne : x ≠ y) :
+    BoundedCriticalSampleWeightedMoments.context c (BoundedCriticalSampleCount.count P c) [] t ∉
+      BoundedCriticalSamplePencilRootCount.language P := by
+  rw [BoundedCriticalSamplePencilRootCount.language_packet]
+  intro h
+  apply hne
+  apply h
+  simp only [BoundedCriticalSampleRootHash.integerValue,
+    show Nat.fromBitsLE ([] : List Bool) = 0 from rfl, Nat.zero_add, Nat.mod_one,
+    Nat.cast_zero, mul_zero, Finset.sum_const_zero]
+
+-- The signed pair 2 - 1 represents one but is not its canonical word.
+example : ¬BoundedCriticalSampleDescriptors.Canonical
+    (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) := by
+  change IntegerSumBits.difference (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) ≠
+    pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)
+  decide
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    pair c (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) ∉
+      BoundedCriticalSampleDescriptors.language P := by
+  rw [BoundedCriticalSampleDescriptors.language_iff, pairSnd_pair]
+  intro hm
+  have hc : ¬BoundedCriticalSampleDescriptors.Canonical
+      (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) := by
+    change IntegerSumBits.difference (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) ≠
+      pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)
+    decide
+  exact hc hm.1
+
+example (P : BoundedFullWriter.Readers) (c w : List Bool) (h : BoundedCriticalSampleCount.count P c = 0) :
+    pair c w ∉ BoundedCriticalSampleDescriptors.language P := by
+  have hz : BoundedCriticalSampleHashRoots.values P c = ∅ :=
+    Finset.card_eq_zero.mp ((BoundedCriticalSampleHashRoots.values_card P c).trans h)
+  rw [BoundedCriticalSampleDescriptors.language_iff, pairFst_pair, pairSnd_pair]
+  rintro ⟨_, hw⟩
+  rw [hz] at hw
+  exact Finset.notMem_empty _ hw
+
+-- All descriptor stages use only the original native readers.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalSampleHashChoice.value P) ∧
+      SpaceFunction (fun q => SignStatisticBits.integerCode (BoundedCriticalSampleHashEnumeration.value P q)) ∧
+      BoundedCriticalSampleDescriptors.language P ∈ PSPACE ∧
+      UnaryFn (BoundedCriticalSampleHashChoice.descriptorWidth P) :=
+  ⟨BoundedCriticalSampleHashChoice.evaluator h ha, BoundedCriticalSampleHashEnumeration.evaluator h ha,
+    BoundedCriticalSampleDescriptors.mem_PSPACE h ha, BoundedCriticalSampleHashChoice.descriptorWidth_unary h⟩
+
+-- Every valid ordinal produces exactly one actual sample descriptor.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : ℕ) (hr : r < BoundedCriticalSampleCount.count P c) :
+    ∃! x : BoundedFullCriticalSamples.Samples P c, BoundedCriticalSampleHashChoice.descriptor P c x =
+      SignStatisticBits.integerCode (BoundedCriticalSampleHashEnumeration.value P (pair c (BinaryNatCode.encode r))) :=
+  BoundedCriticalSampleHashEnumeration.unique_sample_descriptor P c r hr
+
+end CriticalSampleDescriptorTests
