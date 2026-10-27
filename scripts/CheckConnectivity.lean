@@ -4130,3 +4130,58 @@ example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool)
 
 end
 end AlgebraicFiberOrderTests
+
+namespace AlgebraicFiberTestSignTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice
+open scoped Classical
+
+-- The only leaves are the original source and the two bivariate readers.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedAlgebraicFiberTestSign.value P F G) :=
+  BoundedAlgebraicFiberTestSign.evaluator h A B ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    BoundedAlgebraicFiberTestSign.language P F G s ∈ PSPACE :=
+  BoundedAlgebraicFiberTestSign.language_mem_PSPACE h A B ha s
+
+example (P : BoundedFullWriter.Readers) (F G : Family) (u : List Bool) (r : Fin (RootCount.count P F u)) :
+    BoundedAlgebraicFiberTestSign.value P F G (pair u (BinaryNatCode.encode r.val)) =
+      InfinitesimalSign.encode (SignType.sign ((specialized P G u).eval (BoundedAlgebraicFiberRoot.root P F u r).val)) :=
+  BoundedAlgebraicFiberTestSign.value_original P F G u r
+
+-- A vanishing test must return zero, although the probe denominator is nonzero.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) (r : Fin (RootCount.count P F u)) :
+    BoundedAlgebraicFiberTestSign.value P F F (pair u (BinaryNatCode.encode r.val)) = [] := by
+  rw [BoundedAlgebraicFiberTestSign.value_original, BoundedAlgebraicFiberRoot.root_eval_zero]
+  simp only [sign_zero, InfinitesimalSign.encode]
+
+-- Unit weighting preserves the raw moment, on invalid base queries as well.
+example (P : BoundedFullWriter.Readers) (F : Family) (u record : List Bool) :
+    BoundedAlgebraicFiberTestMoments.rawMoment P F unit (pair u record) =
+      BoundedAlgebraicFiberRecordMoments.moment P F (pair u record) := by
+  by_cases hu : u ∈ valid P
+  · rw [BoundedAlgebraicFiberTestMoments.raw_valid P F unit u record hu,
+      BoundedAlgebraicFiberRecordMoments.moment_valid P F u record hu, unit_specialized P u hu, mul_one]
+  · rw [BoundedAlgebraicFiberTestMoments.raw_invalid P F unit u record hu,
+      BoundedAlgebraicFiberRecordMoments.moment_invalid P F u record hu]
+
+example (P : BoundedFullWriter.Readers) (F G : Family) (u ordinal : List Bool)
+    (hu : u ∉ valid P) (s : SignType) :
+    pair u ordinal ∉ BoundedAlgebraicFiberTestSign.language P F G s := by
+  apply BoundedAlgebraicFiberTestSign.language_invalid
+  simp only [pairFst_pair, RootCount.count, RootCount.roots, specialized, ite_eq_right hu,
+    Polynomial.roots_zero, Multiset.toFinset_zero, Finset.card_empty, Nat.zero_le]
+
+-- Canonical and padded invalid fiber ordinals are rejected before testing the sign tag.
+example (P : BoundedFullWriter.Readers) (F G : Family) (u ordinal : List Bool)
+    (hi : F.degree (pairFst u) ≤ Nat.fromBitsLE ordinal) (s : SignType) :
+    pair u ordinal ∉ BoundedAlgebraicFiberTestSign.language P F G s := by
+  apply BoundedAlgebraicFiberTestSign.language_invalid
+  simpa only [pairFst_pair, pairSnd_pair] using (BoundedAlgebraicFiberRoot.count_le_degree P F u).trans hi
+
+end
+end AlgebraicFiberTestSignTests

@@ -87,7 +87,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberThom
 import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
-import LeanCanny.Encoding.BoundedAlgebraicFiberOrderedRoot
+import LeanCanny.Encoding.BoundedAlgebraicFiberTestSign
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -444,6 +444,9 @@ fiber root. Every realizable signature receives a short ordinal, without storing
 the full signature. Streamed Thom comparisons compute real-order ranks; native
 bounded search converts each geometric root ordinal into its hash ordinal and
 reads derivative signs at exactly the original ordered fiber root.
+The same determinant probes now read arbitrary bivariate polynomial signs at
+these roots from the original coefficient readers. Their native sign languages
+reject invalid fiber ordinals.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

@@ -363,6 +363,9 @@ The checked ingredients are:
   Streamed Thom comparisons compute real-order ranks, and bounded native search
   converts geometric ordinals to hash ordinals. Derivative-sign queries therefore
   refer to exactly the original ordered fiber roots.
+  Native determinant probes also read arbitrary bivariate polynomial signs at
+  these roots from the original coefficient readers, rejecting invalid fiber
+  ordinals in the sign languages.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
