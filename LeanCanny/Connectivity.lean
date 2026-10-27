@@ -104,6 +104,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleDescriptors
 import LeanCanny.Encoding.BoundedCriticalSampleTestSign
 import LeanCanny.Encoding.BoundedCriticalSampleCoordinateSign
 import LeanCanny.Encoding.BoundedCriticalSampleFormula
+import LeanCanny.Encoding.BoundedCriticalSampleSliceRootCount
 
 /-! # Connectivity development
 
@@ -394,6 +395,12 @@ terms at these samples, using zero beyond the actual tuple dimension.
 Boolean circuits evaluate arbitrary supplied formulas with these native atom
 decisions. Their guarded descriptor and ordinal languages give native PSPACE
 formula-marking queries on the actual sample set.
+Actual sample descriptors now also serve as algebraic bases for bivariate
+slices. Native coefficient signs, actual degrees, signed principal tests,
+pseudo-remainder seeds, and Tarski queries preserve the descriptor while
+attaching query records. Unit and squared moments give native distinct-root
+and prescribed-sign counts in these fibers. This backend retains exactly
+the selected actual sample, with no assumed degree stability.
 Assembling the recursive coordinate families remains
 required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected

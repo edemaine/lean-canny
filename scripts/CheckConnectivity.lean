@@ -5894,3 +5894,146 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (read : List Bool → L
     BoundedCriticalSampleFormula.ordinal_marking_evaluator h read hr ha⟩
 
 end CriticalSampleFormulaTests
+
+namespace CriticalSampleSliceTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR Polynomial
+open BoundedAlgebraicSlice (Family)
+open BoundedCriticalSampleSlice
+open scoped Classical
+attribute [local irreducible] BoundedCriticalRationalCoordinates.parameter
+  BoundedCriticalRationalCoordinates.parameterDegree BoundedCriticalRationalCoordinates.baseHeight
+
+#guard context (attach (pair (pair [true] [false]) [true, true]) [false, true]) == pair [true] (pair [true, true] [false, true])
+
+private theorem sample_valid (P : BoundedFullWriter.Readers) (c r : List Bool)
+    (x : BoundedFullCriticalSamples.Samples P c) :
+    pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r ∈ valid P := by
+  change pairFst _ ∈ BoundedCriticalSampleDescriptors.language P
+  rw [pairFst_pair]
+  change ∃ y : BoundedFullCriticalSamples.Samples P
+    (pairFst (pair c (BoundedCriticalSampleHashChoice.descriptor P c x))),
+      BoundedCriticalSampleHashChoice.descriptor P _ y = pairSnd (pair c (BoundedCriticalSampleHashChoice.descriptor P c x))
+  rw [pairFst_pair, pairSnd_pair]
+  exact ⟨x, rfl⟩
+
+-- Attaching a principal or seed record preserves the exact specialized head.
+example (P : BoundedFullWriter.Readers) (F : Family) (u r : List Bool) :
+    specialized P (F.comp dropRecord) (attach u r) = specialized P F u := specialized_attach P F u r
+
+private noncomputable def zeroFamily : Family where
+  polynomial _ := 0
+  degree _ := 0
+  parameterDegree _ := 0
+  mass _ := 0
+  polynomial_degree _ := by simp
+  coefficient_degree _ _ := by simp
+  coefficient_mass _ _ := by simp
+
+private theorem zero_specialized (P : BoundedFullWriter.Readers) (u : List Bool) : specialized P zeroFamily u = 0 := by
+  simp only [specialized, Family.slice, zeroFamily, Polynomial.map_zero, ite_self]
+
+-- The equal-bound principal terminal is the empty determinant, even for
+-- two zero inputs. It is positive at valid points and rejected at invalid ones.
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    Principal.value P zeroFamily zeroFamily
+      (pair (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r) (BinaryNatCode.encode 0)) = [false, true] := by
+  rw [Principal.value_packet P _ _ _ (sample_valid P c r x) 0]
+  simp only [BoundedCriticalSampleSlice.degree, zero_specialized, natDegree_zero]
+  rw [PrincipalSubresultant.signedPsc_left_bound]
+  simp only [le_refl, ite_true, Nat.sub_self, pow_zero, sign_one, InfinitesimalSign.encode]
+
+example (P : BoundedFullWriter.Readers) (F G : Family) (u : List Bool) (j : ℕ) (hu : u ∉ valid P) :
+    Principal.value P F G (pair u (BinaryNatCode.encode j)) = [] :=
+  Principal.value_invalid P F G _ (by simpa only [pairFst_pair] using hu)
+
+example (P : BoundedFullWriter.Readers) (G : Family) (u : List Bool) :
+    Tarski.value P zeroFamily G u = SignStatisticBits.integerCode 0 := by
+  rw [Tarski.value, Tarski.zero_query P zeroFamily G u (by rw [BoundedCriticalSampleSlice.degree, zero_specialized, natDegree_zero])]
+
+example (P : BoundedFullWriter.Readers) (F G : Family) (u : List Bool) (hu : u ∉ valid P) :
+    Tarski.value P F G u = SignStatisticBits.integerCode 0 := by
+  have hd : degree P F u = 0 := by rw [BoundedCriticalSampleSlice.degree, specialized, ite_eq_right hu, natDegree_zero]
+  rw [Tarski.value, Tarski.zero_query P F G u hd]
+
+private theorem dropping_coefficient (P : BoundedFullWriter.Readers) (u : List Bool) (i : ℕ) :
+    ((C (BoundedCriticalRationalCoordinates.parameter P (pairFst u)) * X + 1 : (ℤ[X])[X]).coeff i) =
+      if i = 0 then 1 else if i = 1 then BoundedCriticalRationalCoordinates.parameter P (pairFst u) else 0 := by
+  by_cases h0 : i = 0
+  · subst i; simp
+  · by_cases h1 : i = 1
+    · subst i; simp [Polynomial.coeff_one]
+    · simp [coeff_add, coeff_C_mul, coeff_X, coeff_one, h0, h1, Ne.symm h1]
+
+-- The parameter polynomial vanishes at every actual sample parameter.
+-- Thus the symbolic degree-one head becomes the nonzero constant one.
+private noncomputable def droppingFamily (P : BoundedFullWriter.Readers) : Family where
+  polynomial u := C (BoundedCriticalRationalCoordinates.parameter P (pairFst u)) * X + 1
+  degree _ := 1
+  parameterDegree u := BoundedCriticalRationalCoordinates.parameterDegree P (pairFst u)
+  mass u := BoundedCriticalRationalCoordinates.baseHeight P (pairFst u) + 1
+  polynomial_degree u := by
+    have h : (C (BoundedCriticalRationalCoordinates.parameter P (pairFst u)) * X : (ℤ[X])[X]).natDegree ≤ 1 :=
+      Polynomial.natDegree_mul_le.trans (by simp)
+    exact (Polynomial.natDegree_add_le _ _).trans (max_le h (by simp))
+  coefficient_degree u i := by
+    rw [dropping_coefficient]
+    split_ifs
+    · simp only [natDegree_one, Nat.zero_le]
+    · exact (BoundedCriticalRationalCoordinates.parameter_bounds P (pairFst u)).1
+    · simp only [natDegree_zero, Nat.zero_le]
+  coefficient_mass u i := by
+    rw [dropping_coefficient]
+    split_ifs
+    · simpa only [← Polynomial.C_1, coefficientMass_C, Int.natAbs_one] using
+        (Nat.one_le_two_pow : 1 ≤ 2 ^ (BoundedCriticalRationalCoordinates.baseHeight P (pairFst u) + 1))
+    · exact (BoundedCriticalRationalCoordinates.parameter_bounds P (pairFst u)).2.trans
+        (Nat.pow_le_pow_right (by decide) (Nat.le_succ _))
+    · simp only [coefficientMass_zero, Nat.zero_le]
+
+private theorem dropping_slice (P : BoundedFullWriter.Readers) (c r : List Bool)
+    (x : BoundedFullCriticalSamples.Samples P c) :
+    (droppingFamily P).slice (pair c r) (BoundedCriticalSampleLabels.parameter P c x).val = 1 := by
+  have hr := ((BoundedCriticalSampleLabels.mem_rootSet P c _).mp (BoundedCriticalSampleLabels.parameter P c x).property).1
+  simp only [Family.slice, droppingFamily, pairFst_pair, Polynomial.map_add, Polynomial.map_mul,
+    Polynomial.map_C, Polynomial.map_X, Polynomial.map_one, ParameterTarski.evalHom,
+    Polynomial.coe_eval₂RingHom, hr, Polynomial.C_0, zero_mul, zero_add]
+
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    ((droppingFamily P).polynomial (pair c r)).natDegree = 1 ∧
+      degree P (droppingFamily P) (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r) = 0 ∧
+      offset P (droppingFamily P) (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r) = 1 := by
+  have hs : specialized P (droppingFamily P) (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r) = 1 := by
+    rw [specialized_sample, dropping_slice]
+  refine ⟨le_antisymm ((droppingFamily P).polynomial_degree _) ?_, ?_, ?_⟩
+  · apply le_natDegree_of_ne_zero
+    change ((C (BoundedCriticalRationalCoordinates.parameter P (pairFst (pair c r))) * X + 1 : (ℤ[X])[X]).coeff 1) ≠ 0
+    rw [dropping_coefficient]
+    simpa only [one_ne_zero, ite_false, ite_true, pairFst_pair] using BoundedCriticalRationalCoordinates.parameter_ne_zero P c
+  · rw [BoundedCriticalSampleSlice.degree, hs, natDegree_one]
+  · rw [BoundedCriticalSampleSlice.offset, hs, ite_eq_right (by exact one_ne_zero), BoundedCriticalSampleSlice.degree, hs, natDegree_one]
+
+private noncomputable def xTest : BoundedProjectionTestMoments.Test where
+  polynomial _ := X
+  degree _ := 1
+  mass _ := 0
+  polynomial_degree _ := by simp
+  polynomial_mass _ := by simpa only [pow_one, pow_zero] using (coefficientMass_X_pow 1).le
+
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    RootCount.count P (BoundedAlgebraicSlice.square (BoundedAlgebraicSlice.ofTest xTest))
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r) = 1 := by
+  rw [RootCount.count, RootCount.roots, RootCount.square_specialized, specialized_sample, BoundedAlgebraicSlice.ofTest_slice]
+  simp [xTest]
+
+-- Native fiber arithmetic requires only the original sample-source readers
+-- and the bivariate coefficient readers, without a supplied base-point sign.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {F G : Family} (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    SpaceFunction (coefficientSign P F) ∧ SpaceFunction (fun u => BinaryNatCode.encode (degree P F u)) ∧
+      SpaceFunction (Principal.value P F G) ∧ SpaceFunction (Tarski.value P F G) ∧
+      SpaceFunction (fun u => BinaryNatCode.encode (RootCount.count P F u)) ∧
+      RootCount.realizable P F G s ∈ PSPACE :=
+  ⟨coefficientSign_evaluator h A ha, degree_evaluator h A ha, Principal.evaluator h A B ha,
+    Tarski.evaluator h A B ha, RootCount.count_evaluator h A ha, RootCount.realizable_mem_PSPACE h A B ha s⟩
+
+end CriticalSampleSliceTests

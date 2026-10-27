@@ -1028,6 +1028,22 @@ decide exactly formula truth on the actual samples and provide native marking
 flags. Invalid descriptors and out-of-range ordinals are rejected even when
 the formula is true. These are sample predicates; the recursive cover and its
 adjacency routines are still required.
+`BoundedCriticalSampleSliceSource` supplies a second algebraic-slice backend
+whose base is an actual sample descriptor. Each query separates that point
+word from its auxiliary record. The original sample source, filtered basis
+and selected hash remain unchanged when records are attached. Native
+bivariate coefficient readers give coefficient signs and actual-degree scans
+through `BoundedCriticalSampleSliceDegree`.
+`BoundedCriticalSampleSlicePrincipal` computes both actual degrees before
+testing a signed principal coefficient. `BoundedCriticalSampleSliceTarski`
+reuses the existing native bivariate pseudo-remainder seed construction,
+specializes it at the same sample parameter, and computes the exact Tarski
+query. No symbolic-degree stability hypothesis is used.
+`BoundedCriticalSampleSliceRootCount` derives native distinct-root and
+prescribed-sign counts from three moments, together with native PSPACE sign
+realizability. The zero polynomial has an empty polynomial root list. This
+provides the fiber arithmetic for actual sample bases; the full recursive
+coordinate families and cover still need construction.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

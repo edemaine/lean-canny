@@ -297,6 +297,11 @@ The checked ingredients are:
   same samples. Boolean circuits decide arbitrary supplied formulas from these
   atom signs, with native PSPACE marking flags at validated descriptors and
   ordinals. Variables beyond the actual sample tuple are interpreted as zero.
+  Bivariate slices can now use these actual sample descriptors as algebraic
+  bases. Native actual-degree scans, principal signs, pseudo-remainder seeds,
+  and Tarski queries preserve the same sample while attaching query records.
+  Distinct-root and prescribed-sign counts in these fibers are native, including
+  degree drops and repeated roots.
   Assembling recursive coordinate families remains required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
