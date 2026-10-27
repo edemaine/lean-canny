@@ -116,6 +116,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleFiberLineTest
 import LeanCanny.Connectivity.CriticalSampleSliceBooleanReachability
 import LeanCanny.Connectivity.CriticalSampleSliceCellSignLanguage
 import LeanCanny.Connectivity.FormulaCriticalSampleLineGeometry
+import LeanCanny.Connectivity.FormulaCriticalSampleLinePoint
 
 /-! # Connectivity development
 
@@ -451,6 +452,12 @@ lines, the denominators never vanish and the queries concern exactly the
 original formula on the updated sample tuple. A coordinate-line embedding
 transfers both connectivity and paths to the formula's intersection with
 that line in tuple space. The free coordinate is validated as well.
+Native root-sign counts now locate arithmetic endpoint values in the same
+cell cover. Fresh-variable comparison polynomials are constructed from the
+endpoint terms and original sample readers. Point path queries compute both
+endpoint labels internally and reject endpoints outside the solution set,
+including excluded endpoints queried against themselves. Their correctness
+packets give paths in the actual formula line in tuple space.
 Constructing new sample bases
 recursively and assembling the full higher-dimensional cover remain required.
 Native real critical-sample queries test these

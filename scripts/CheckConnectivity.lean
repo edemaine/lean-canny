@@ -7283,3 +7283,98 @@ example {P : Readers} (h : P.PolyTime) {f : List Bool → ℕ} (hf : BinaryFn f)
 
 end
 end ActualSampleFormulaLineTests
+
+namespace ActualSamplePointLocationTests
+noncomputable section
+open Set Polynomial LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR
+open BoundedFullWriter BoundedCriticalSampleSlice
+open scoped Classical
+
+-- Strict counts distinguish equality from the two exterior gaps.
+example : Geometry.OrderedRealCells.lowerCount ({(-1 : ℝ), 0, 1} : Finset ℝ) 0 = 1 := by
+  norm_num [Geometry.OrderedRealCells.lowerCount, Finset.filter_insert]
+example : Geometry.OrderedRealCells.lowerCount ({(-1 : ℝ), 0, 1} : Finset ℝ) (-2) = 0 := by
+  norm_num [Geometry.OrderedRealCells.lowerCount]
+example : Geometry.OrderedRealCells.lowerCount ({(-1 : ℝ), 0, 1} : Finset ℝ) 2 = 3 := by
+  norm_num [Geometry.OrderedRealCells.lowerCount, Finset.filter_insert, Finset.filter_singleton]
+example (a : ℝ) : Geometry.OrderedRealCells.lowerCount ∅ a = 0 := by
+  simp only [Geometry.OrderedRealCells.lowerCount, Finset.filter_empty, Finset.card_empty]
+
+-- An endpoint variable is read at the original sample, even when freed on the line.
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    BoundedCriticalSampleTermCut.value P (fun _ => (Term.var 0).toData.toBits) c r x = x.val ⟨0, by omega⟩ := by
+  simp only [BoundedCriticalSampleTermCut.value, TermView.term_toBits, Term.eval, Formula.extend, show 0 < P.dim c + 4 by omega, dite_true]
+
+-- Closed endpoint terms give their values independently of the sample or query record.
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) (z : ℤ) :
+    BoundedCriticalSampleTermCut.value P (fun _ => (Term.const z).toData.toBits) c r x = (z : ℝ) := by
+  simp only [BoundedCriticalSampleTermCut.value, TermView.term_toBits, Term.eval]
+
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) (i : ℕ)
+    (hi : P.dim c + 4 ≤ i) :
+    BoundedCriticalSampleTermCut.value P (fun _ => (Term.var i).toData.toBits) c r x = 0 := by
+  simp only [BoundedCriticalSampleTermCut.value, TermView.term_toBits, Term.eval, Formula.extend,
+    Nat.not_lt.mpr hi, dite_false]
+
+example (read : List Bool → List Bool) (u : List Bool) (h : Grammar.recognizeTerm (read u) = false) :
+    TermView.term (read u) = .const 0 := by
+  simp only [TermView.term, h, Bool.false_eq_true, ↓reduceDIte]
+
+-- Empty root sets have one cell; every endpoint receives its zero code.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (F : BoundedAlgebraicSlice.Family)
+    (u : List Bool) (a : ℝ) (hroot : CriticalSampleSliceCellCover.roots P Q u = ∅)
+    (hF : ∀ t : ℝ, SignType.sign ((specialized P F u).eval t) = SignType.sign (t - a)) :
+    CriticalSampleSlicePointLocation.code P Q F u = 0 := by
+  have H := CriticalSampleSlicePointLocation.counts_packet P Q F u a hF
+  have hn : BoundedCriticalSampleSliceRootProduct.count P Q u = 0 := by
+    change (CriticalSampleSliceCellCover.roots P Q u).card = 0
+    rw [hroot, Finset.card_empty]
+  simp only [CriticalSampleSlicePointLocation.code, H.1, H.2, hroot,
+    Finset.notMem_empty, ite_false, Geometry.OrderedRealCells.lowerCount, Finset.filter_empty, Finset.card_empty, hn, Nat.add_zero]
+
+-- Native point paths reject an excluded endpoint even against itself.
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    FormulaCriticalSampleLine.sampleWord P c r x ∉
+      FormulaCriticalSampleLinePoint.language P (fun _ => 0)
+        (fun _ => (Formula.not (.eqZero (.var 0))).encode)
+        (fun _ => (Term.const 0).toData.toBits) (fun _ => (Term.const 0).toData.toBits) := by
+  rw [FormulaCriticalSampleLinePoint.sample_packet P (fun _ => 0) _ _ _ c r x (by omega),
+    FormulaCriticalSampleLine.solutionSet_sample]
+  simp only [BoundedCriticalSampleTermCut.value, TermView.term_toBits, Term.eval, Int.cast_zero,
+    FormulaView.formula_encode, Formula.Holds, Function.update_self]
+  intro h
+  exact h.source_mem rfl
+
+-- Opposite rays remain disconnected after both endpoint labels are constructed.
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    FormulaCriticalSampleLine.sampleWord P c r x ∉
+      FormulaCriticalSampleLinePoint.language P (fun _ => 0)
+        (fun _ => (Formula.not (.eqZero (.var 0))).encode)
+        (fun _ => (Term.const (-1)).toData.toBits) (fun _ => (Term.const 1).toData.toBits) := by
+  rw [FormulaCriticalSampleLinePoint.sample_packet P (fun _ => 0) _ _ _ c r x (by omega),
+    FormulaCriticalSampleLine.solutionSet_sample]
+  simp only [BoundedCriticalSampleTermCut.value, TermView.term_toBits, Term.eval, Int.cast_neg, Int.cast_one,
+    FormulaView.formula_encode, Formula.Holds, Function.update_self]
+  intro h
+  have hz := ((OneDimension.joinedIn_real_iff (-1) 1).mp h).2.2 0 (by norm_num)
+  exact hz rfl
+
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    FormulaCriticalSampleLine.sampleWord P c r x ∈
+      FormulaCriticalSampleLinePoint.language P (fun _ => 0)
+        (fun _ => (Formula.not (.eqZero (.var 0))).encode)
+        (fun _ => (Term.const 1).toData.toBits) (fun _ => (Term.const 1).toData.toBits) := by
+  rw [FormulaCriticalSampleLinePoint.sample_packet P (fun _ => 0) _ _ _ c r x (by omega),
+    FormulaCriticalSampleLine.solutionSet_sample]
+  simp only [BoundedCriticalSampleTermCut.value, TermView.term_toBits, Term.eval, Int.cast_one,
+    FormulaView.formula_encode, Formula.Holds, Function.update_self]
+  exact JoinedIn.refl (by norm_num)
+
+example {P : Readers} (h : P.PolyTime) {f : List Bool → ℕ} (hf : BinaryFn f)
+    (read left right : List Bool → List Bool) (hr : read ∈ FP) (hl : left ∈ FP) (hd : right ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    FormulaCriticalSampleLinePoint.language P f read left right ∈ PSPACE :=
+  FormulaCriticalSampleLinePoint.mem_PSPACE h hf read left right hr hl hd ha
+
+end
+end ActualSamplePointLocationTests

@@ -337,6 +337,10 @@ The checked ingredients are:
   decide connectivity of the original formula on the updated sample tuple.
   The coordinate-line embedding preserves paths and connectivity in tuple
   space, with descriptor, coordinate, and endpoint validation.
+  Native root-sign counts also locate arithmetic endpoint values at the
+  actual sample. Constructed comparison polynomials let point path queries
+  compute both cell labels internally. Endpoints outside the formula's
+  solution set are rejected, including for zero-length paths.
   Recursive sample construction
   and the full higher-dimensional cover remain required.
   Source connectivity is equivalent to pairwise path connectivity of these samples. Their exact

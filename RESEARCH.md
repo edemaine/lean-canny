@@ -1190,6 +1190,23 @@ coordinate. `Geometry.CoordinateLine` proves that updating one coordinate
 embeds the real line, preserving preconnectedness and paths in any restricted
 set. `FormulaCriticalSampleLineGeometry` transfers the native query packets
 to the formula's intersection with this line in the actual tuple space.
+`OrderedRealCellLocation` identifies cell codes from the number of roots
+strictly below an endpoint and a root-equality test, including exterior rays
+and rootless fibers. `CriticalSampleSlicePointLocation` computes both counts
+natively from an implicit comparison polynomial and the existing root product.
+`BoundedCriticalSampleTermCut` constructs such a comparison polynomial for
+any encoded arithmetic endpoint term evaluated at the actual sample. A fresh
+variable beyond the term's arity gives exactly the signs of `t - endpoint`,
+with native readers derived from the original sample and term readers.
+`CriticalSampleSlicePointReachability` constructs both endpoint labels and
+proves native point path decisions in the Boolean solution set, rejecting
+endpoints outside that set even when both endpoint values coincide.
+`FormulaCriticalSampleLinePoint` composes these routines with the original
+formula line. Its native PSPACE endpoint language needs only the original
+sample readers, an FP formula reader, an FP reader for each endpoint term,
+and the binary free-coordinate control. Its correctness packet is exact
+path connection in the formula's intersection with that coordinate line in
+the actual sample's tuple space. No endpoint labels are supplied.
 Recursive sample-base construction and the complete
 higher-dimensional cover remain open.
 
