@@ -3393,3 +3393,87 @@ example (P : BoundedFullWriter.Readers) (T : Test) (q : List Bool) :
   moment_bound P T q
 
 end ProjectionTestSignTests
+
+namespace AlgebraicSliceTests
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open scoped Classical
+
+example (p q : (ℤ[X])[X]) (m n j D : ℕ)
+    (hp : ∀ i, (p.coeff i).natDegree ≤ D) (hq : ∀ i, (q.coeff i).natDegree ≤ D) :
+    (PrincipalSubresultant.signedPsc p q m n j).natDegree ≤ (m + n + 1) * D :=
+  PrincipalSubresultant.signedPsc_parameter_degree p q m n j D hp hq
+
+-- The native degree scanner needs coefficient-zero tests, not integer coefficients.
+example : SpaceFunction (fun _ : List Bool => BinaryNatCode.encode 0) := by
+  have E := PolynomialDegreeBits.offsetEvaluator (SpaceFunction.ofFP (fun _ => []) (constFn_mem_FP []))
+    (fun _ => BinaryNatCode.encode 0) (constFn_mem_FP _) (fun _ => (0 : ℝ[X]))
+    (by intro c; simp only [Polynomial.natDegree_zero, BinaryNatCode.encode, Nat.fromBitsLE_bits, le_refl])
+    (by intro c i; simp)
+  exact E.congr (funext fun c => by simp only [ite_true])
+
+example : PolynomialDegreeBits.scan (fun i => (Polynomial.C (1 : ℝ)).coeff i) 3 = 1 := by
+  rw [PolynomialDegreeBits.scan_eq_degree _ _ (by simp)]
+  simp
+
+-- Symbolic leading coefficients can vanish at an algebraic parameter.
+example (t : ℝ) (ht : t ^ 2 = 2) :
+    (((Polynomial.C ((Polynomial.X ^ 2 - 2 : ℤ[X]))) * Polynomial.X + 1 : (ℤ[X])[X]).map
+      (ParameterTarski.evalHom t)) = (1 : ℝ[X]) := by
+  simp [ParameterTarski.evalHom]
+  rw [← Polynomial.C_pow, ht]
+  simp
+
+example : (((Polynomial.C (Polynomial.X : ℤ[X])) * Polynomial.X : (ℤ[X])[X]).map
+    (ParameterTarski.evalHom 0)) = (0 : ℝ[X]) := by
+  simp [ParameterTarski.evalHom]
+
+-- Existing certified bivariate readers are accepted directly.
+example (F : DyadicPolynomialBits.Family) (hF : DyadicPolynomialBits.ControlsPolyTime F)
+    (A : CertifiedPolynomial.BivariateReader F.polynomial) : BoundedAlgebraicSlice.Family.Access (BoundedAlgebraicSlice.Family.ofDyadic F) :=
+  BoundedAlgebraicSlice.Family.accessOfDyadic F hF A
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : BoundedAlgebraicSlice.Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedAlgebraicSlice.coefficientSign P F) := BoundedAlgebraicSlice.coefficientSign_evaluator h A ha
+
+example (P : BoundedFullWriter.Readers) (F : BoundedAlgebraicSlice.Family) (u : List Bool) (k : ℕ) :
+    BoundedAlgebraicSlice.coefficientSign P F (pair u (BinaryNatCode.encode k)) = [] ↔
+      (BoundedAlgebraicSlice.specialized P F u).coeff k = 0 := BoundedAlgebraicSlice.coefficient_zero P F u k
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : BoundedAlgebraicSlice.Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun u => BinaryNatCode.encode (BoundedAlgebraicSlice.offset P F u)) :=
+  BoundedAlgebraicSlice.offset_evaluator h A ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : BoundedAlgebraicSlice.Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun u => BinaryNatCode.encode (BoundedAlgebraicSlice.degree P F u)) :=
+  BoundedAlgebraicSlice.degree_evaluator h A ha
+
+example (P : BoundedFullWriter.Readers) (F : BoundedAlgebraicSlice.Family) (c : List Bool)
+    (r : Fin (BoundedProjectionRootCount.count P c)) :
+    BoundedAlgebraicSlice.degree P F (pair c (BinaryNatCode.encode r.val)) =
+      (F.slice c (BoundedProjectionOrderedRoot.root P c r).val).natDegree :=
+  BoundedAlgebraicSlice.degree_packet P F c r
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : BoundedAlgebraicSlice.Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedAlgebraicSlice.leading P F) := BoundedAlgebraicSlice.leading_evaluator h A ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : BoundedAlgebraicSlice.Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceDecider (BoundedAlgebraicSlice.nonzeroLanguage P F) := BoundedAlgebraicSlice.nonzero_decider h A ha
+
+example (P : BoundedFullWriter.Readers) (F : BoundedAlgebraicSlice.Family) (u : List Bool)
+    (hu : u ∉ BoundedAlgebraicSlice.valid P) : u ∉ BoundedAlgebraicSlice.nonzeroLanguage P F := by
+  simp only [BoundedAlgebraicSlice.nonzeroLanguage, Set.mem_ofPred_eq,
+    BoundedAlgebraicSlice.specialized, hu, ite_false, ne_self_iff_false, not_false_eq_true]
+
+-- Reindexing may recompute hash parameters, but preserves the real-order root.
+example (P : BoundedFullWriter.Readers) (f : List Bool → List Bool) (c : List Bool)
+    (r : Fin (BoundedProjectionRootCount.count (P.comp f) c)) (s : Fin (BoundedProjectionRootCount.count P (f c)))
+    (hrs : r.val = s.val) :
+    (BoundedProjectionOrderedRoot.root (P.comp f) c r).val = (BoundedProjectionOrderedRoot.root P (f c) s).val :=
+  BoundedProjectionOrderedRoot.root_value_comp P f c r s hrs
+
+end AlgebraicSliceTests

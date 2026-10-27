@@ -77,6 +77,7 @@ import LeanCanny.Encoding.BoundedProjectionSignatureProbe
 import LeanCanny.Encoding.BoundedProjectionSignatureRead
 import LeanCanny.Encoding.BoundedProjectionOrderedRoot
 import LeanCanny.Encoding.BoundedProjectionTestSign
+import LeanCanny.Encoding.BoundedAlgebraicSliceDegree
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -391,6 +392,11 @@ Arbitrary implicit integer-polynomial tests have native sign queries at those
 roots, using only their original modular coefficient readers and binary degree
 and mass bounds. Selected-basis moments and determinant probes are computed
 internally; rational-cut comparisons are a concrete instance.
+Implicit bivariate polynomials also have native coefficient signs, actual
+degrees, zero-polynomial flags, and leading signs after specialization at an
+ordered algebraic root. These queries permit degree drops and reuse the
+original bivariate modular readers. Algebraic-slice principal and Tarski
+queries remain required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

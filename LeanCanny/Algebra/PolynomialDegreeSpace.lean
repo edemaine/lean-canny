@@ -23,21 +23,21 @@ open LeanCanny.Encoding
 open LeanCanny.Encoding.Brackets
 open LeanCanny.Computation
 
-def scan (a : ℕ → ℤ) : ℕ → ℕ
+def scan {R : Type*} [Zero R] [DecidableEq R] (a : ℕ → R) : ℕ → ℕ
   | 0 => 0
   | k + 1 => if a k = 0 then scan a k else k + 1
 
-theorem scan_le (a : ℕ → ℤ) (k : ℕ) : scan a k ≤ k := by
+theorem scan_le {R : Type*} [Zero R] [DecidableEq R] (a : ℕ → R) (k : ℕ) : scan a k ≤ k := by
   induction k with
   | zero => rfl
   | succ k ih => rw [scan]; split_ifs <;> omega
 
-theorem scan_zero (k : ℕ) : scan (fun _ => 0) k = 0 := by
+theorem scan_zero {R : Type*} [Zero R] [DecidableEq R] (k : ℕ) : scan (fun _ => (0 : R)) k = 0 := by
   induction k with
   | zero => rfl
   | succ k ih => simp [scan, ih]
 
-theorem scan_of_last (a : ℕ → ℤ) (n k : ℕ) (hn : n < k) (ha : a n ≠ 0)
+theorem scan_of_last {R : Type*} [Zero R] [DecidableEq R] (a : ℕ → R) (n k : ℕ) (hn : n < k) (ha : a n ≠ 0)
     (hz : ∀ i, n < i → i < k → a i = 0) : scan a k = n + 1 := by
   induction k with
   | zero => omega
@@ -49,13 +49,13 @@ theorem scan_of_last (a : ℕ → ℤ) (n k : ℕ) (hn : n < k) (ha : a n ≠ 0)
       rw [scan, ite_eq_left (hz k (by omega) (by omega))]
       exact ih hnk (fun i hi hik => hz i hi (by omega))
 
-theorem scan_eq_degree (p : ℤ[X]) (k : ℕ) (hk : p.natDegree < k) :
+theorem scan_eq_degree {R : Type*} [Semiring R] [DecidableEq R] (p : R[X]) (k : ℕ) (hk : p.natDegree < k) :
     scan p.coeff k = if p = 0 then 0 else p.natDegree + 1 := by
   by_cases hp : p = 0
   · subst p
     simp only [ite_true]
-    have hz : (fun i => (0 : ℤ[X]).coeff i) = (fun _ => 0) := by funext i; exact coeff_zero i
-    change scan (fun i => (0 : ℤ[X]).coeff i) k = 0
+    have hz : (fun i => (0 : R[X]).coeff i) = (fun _ => 0) := by funext i; exact coeff_zero i
+    change scan (fun i => (0 : R[X]).coeff i) k = 0
     rw [hz]
     exact scan_zero k
   · rw [ite_eq_right hp]
@@ -85,7 +85,7 @@ theorem updateEvaluator {f : List Bool → List Bool} (E : SpaceFunction f) :
     SpaceFunction (update f) := by
   exact BoundedFold.updateEvaluator E finish finish_mem_FP
 
-theorem fold_eq_scan (f : List Bool → List Bool) (c : List Bool) (a : ℕ → ℤ)
+theorem fold_eq_scan {R : Type*} [Zero R] [DecidableEq R] (f : List Bool → List Bool) (c : List Bool) (a : ℕ → R)
     (hf : ∀ i, f (pair c (BinaryNatCode.encode i)) = [] ↔ a i = 0) (k : ℕ) :
     BoundedFold.fold (update f) (fun _ => []) c k = BinaryNatCode.encode (scan a k) := by
   induction k with
@@ -99,8 +99,8 @@ theorem fold_eq_scan (f : List Bool → List Bool) (c : List Bool) (a : ℕ → 
     · rw [ite_eq_right (fun hz => ha ((hf k).mp hz)), scan, ite_eq_right ha]
       simp only [BinaryNat.succ_eq_bits, BinaryNatCode.encode, Nat.fromBitsLE_bits]
 
-theorem offsetEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
-    (degree : List Bool → List Bool) (hd : degree ∈ FP) (p : List Bool → ℤ[X])
+theorem offsetEvaluator {R : Type*} [Semiring R] [DecidableEq R] {f : List Bool → List Bool} (E : SpaceFunction f)
+    (degree : List Bool → List Bool) (hd : degree ∈ FP) (p : List Bool → R[X])
     (hdegree : ∀ c, (p c).natDegree ≤ Nat.fromBitsLE (degree c))
     (hzero : ∀ c i, f (pair c (BinaryNatCode.encode i)) = [] ↔ (p c).coeff i = 0) :
     SpaceFunction (fun c => BinaryNatCode.encode (if p c = 0 then 0 else (p c).natDegree + 1)) := by
@@ -124,8 +124,8 @@ theorem offsetEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
   rw [scan_eq_degree _ _ hk]
 
 /-- The natural degree, with Mathlib's value zero for the zero polynomial. -/
-theorem degreeEvaluator {f : List Bool → List Bool} (E : SpaceFunction f)
-    (degree : List Bool → List Bool) (hd : degree ∈ FP) (p : List Bool → ℤ[X])
+theorem degreeEvaluator {R : Type*} [Semiring R] [DecidableEq R] {f : List Bool → List Bool} (E : SpaceFunction f)
+    (degree : List Bool → List Bool) (hd : degree ∈ FP) (p : List Bool → R[X])
     (hdegree : ∀ c, (p c).natDegree ≤ Nat.fromBitsLE (degree c))
     (hzero : ∀ c i, f (pair c (BinaryNatCode.encode i)) = [] ↔ (p c).coeff i = 0) :
     SpaceFunction (fun c => BinaryNatCode.encode (p c).natDegree) := by

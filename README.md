@@ -319,6 +319,11 @@ The checked ingredients are:
   sign queries at these roots, given their modular coefficient readers and
   binary degree and mass bounds. The weighted moments and determinant probes
   are computed internally; rational-cut comparison is a concrete instance.
+  After specialization at an ordered algebraic root, implicit bivariate
+  polynomials have native coefficient-sign, actual-degree, zero-polynomial,
+  and leading-sign queries, including degree drops. They reuse the original
+  modular coefficient readers. Algebraic-slice principal and Tarski queries
+  remain open.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
