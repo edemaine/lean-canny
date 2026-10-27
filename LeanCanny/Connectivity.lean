@@ -70,6 +70,7 @@ import LeanCanny.Encoding.BoundedProjectionThom
 import LeanCanny.Encoding.BoundedProjectionDerivativeSigns
 import LeanCanny.Encoding.BoundedProjectionMoments
 import LeanCanny.Encoding.BoundedProjectionRecordSpan
+import LeanCanny.Encoding.BoundedProjectionBasisGram
 
 /-! # Connectivity development
 
@@ -352,7 +353,13 @@ Fixed-width, unit-padded factor records now represent every required sparse
 monomial. All records form a canonical spanning matrix; its Gram matrix has
 rank equal to the number of distinct projection roots. Its integer entries
 have native polynomial-space evaluators and explicit magnitude bounds, and its
-dimension has a native binary control. No selected basis is supplied.
+dimension has a native binary control. Native characteristic-coefficient zero
+scans compute every row-prefix rank. Symmetry identifies the characteristic
+trailing degree with nullity, including empty and singular matrices. Bounded
+rank searches select exactly one row for each rank number; these rows form a
+basis of all rational root functions and distinguish every projection root.
+Their Gram entries have native polynomial-space evaluators that include the
+row-selection searches.
 The complete signature is an indexed function; a polynomial-space representation and
 enumeration of its realizable values still require a streamed sign-determination
 algorithm. The recursive connection tests remain open.

@@ -289,7 +289,12 @@ The checked ingredients are:
   Polynomial-length factor records represent these monomials, including unit
   padding. The resulting canonical Gram matrix has rank equal to the number of
   distinct projection roots, with native integer-entry readers, a binary
-  dimension control, and explicit entry bounds. Basis selection remains open.
+  dimension control, and explicit entry bounds. Native modular characteristic
+  coefficient scans now compute every row-prefix rank. Bounded rank searches
+  select a basis of all rational root functions, one row per rank number,
+  without storing the row table. The basis distinguishes every projection
+  root, and its Gram entries have native polynomial-space readers, including
+  the row-selection computations.
   Full signatures are indexed functions; representing and enumerating their
   realizable values in polynomial space remains open, as do the recursive
   connection tests.

@@ -2793,3 +2793,95 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) (i j : BoundedProjection
         BoundedProjectionRecordSpan.gram P c i j := BoundedProjectionRecordSpan.entry_packet P c i j
 
 end ProjectionRecordTests
+
+namespace ProjectionRankTests
+open LeanCanny.Algebra LeanCanny.Encoding
+
+-- Signed output conversion includes negative integers, padded moduli, and modulus one.
+#guard SignedIntegerResidue.value (pair (BinaryNatCode.encode 6) (SignStatisticBits.integerCode (-5))) ==
+  BinaryNatCode.encode 2
+#guard SignedIntegerResidue.value (pair [false, true, true, false, false] (SignStatisticBits.integerCode 19)) ==
+  BinaryNatCode.encode 5
+#guard SignedIntegerResidue.value (pair [] (SignStatisticBits.integerCode (-5))) == []
+#guard SignedIntegerResidue.value (pair [false, false] (SignStatisticBits.integerCode 5)) == []
+
+-- The rank formula covers empty, zero, singular, and indefinite symmetric matrices.
+example (A : Matrix (Fin 0) (Fin 0) ℚ) : A.charpoly.natTrailingDegree = 0 := by
+  have h := SymmetricRankTrailing.rank_add_trailing A (by ext i; exact Fin.elim0 i)
+  simp only [Fintype.card_fin] at h
+  omega
+
+example : (0 : Matrix (Fin 3) (Fin 3) ℚ).charpoly.natTrailingDegree = 3 := by
+  have h := SymmetricRankTrailing.rank_add_trailing (0 : Matrix (Fin 3) (Fin 3) ℚ) (by rfl)
+  simpa only [Matrix.rank_zero, zero_add, Fintype.card_fin] using h
+
+def indefinite : Matrix (Fin 2) (Fin 2) ℚ := !![0, 1; 1, 0]
+example : indefinite.charpoly.natTrailingDegree = 0 := by
+  have hs : indefinite.IsSymm := by decide
+  have hr : indefinite.rank = 2 := Matrix.rank_of_det_ne_zero (by norm_num [indefinite, Matrix.det_fin_two])
+  have h := SymmetricRankTrailing.rank_add_trailing indefinite hs
+  rw [hr, Fintype.card_fin] at h
+  omega
+
+def singular : Matrix (Fin 2) (Fin 2) ℚ := !![1, 1; 1, 1]
+example : singular.charpoly.natTrailingDegree = Module.finrank ℚ (LinearMap.ker singular.mulVecLin) :=
+  SymmetricRankTrailing.trailing_eq_nullity singular (by decide)
+
+example {n : ℕ} (A : Matrix (Fin n) (Fin n) ℤ) (B k : ℕ)
+    (h : ∀ i j, (A i j).natAbs ≤ 2 ^ B) :
+    (A.charpoly.coeff k).natAbs.size ≤ CharacteristicIntegerBounds.budget n B :=
+  CharacteristicIntegerBounds.coefficient_bits A B h k
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    BoundedProjectionPrefixRank.prefixRank P c 0 = 0 := BoundedProjectionPrefixRank.prefixRank_zero P c
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    BoundedProjectionPrefixRank.prefixRank P c (2 ^ BoundedProjectionRecords.length P c) =
+      BoundedProjectionRootCount.count P c := BoundedProjectionPrefixRank.prefixRank_full P c _ le_rfl
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (k : ℕ) :
+    BoundedProjectionPrefixRank.prefixRank P c (k + 1) ≤
+      BoundedProjectionPrefixRank.prefixRank P c k + 1 := BoundedProjectionRankChoice.prefixRank_step P c k
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => BinaryNatCode.encode (BoundedProjectionPrefixRank.rank P q)) :=
+  BoundedProjectionPrefixRank.evaluator h ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceDecider (BoundedProjectionPrefixRank.gainLanguage P) := BoundedProjectionPrefixRank.gainDecider h ha
+
+-- Selection's validity requires a rank below the actual root count.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : ℕ)
+    (hr : r < BoundedProjectionRootCount.count P c) :
+    BoundedProjectionRankBasis.chosen P c r < 2 ^ BoundedProjectionRecords.length P c :=
+  (BoundedProjectionRankBasis.chosen_spec P c r hr).1
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    LinearIndependent ℚ (BoundedProjectionRankBasis.selected P c) := BoundedProjectionRankBasis.independent P c
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    Submodule.span ℚ (Set.range (BoundedProjectionRankBasis.selected P c)) = ⊤ :=
+  BoundedProjectionRankBasis.span_selected P c
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) {x y : BoundedProjectionRecordSpan.Root P c}
+    (h : ∀ r, BoundedProjectionRankBasis.selected P c r x = BoundedProjectionRankBasis.selected P c r y) : x = y :=
+  BoundedProjectionRankBasis.selected_separates P c h
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => SignStatisticBits.integerCode (BoundedProjectionBasisGram.entry P q)) :=
+  BoundedProjectionBasisGram.entry_evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (c : List Bool)
+    (i j : Fin (BoundedProjectionRootCount.count P c)) :
+    (BoundedProjectionBasisGram.entry P (pair c
+      (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val))) : ℚ) =
+        BoundedProjectionBasisGram.gram P c i j := BoundedProjectionBasisGram.entry_packet P c i j
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    (BoundedProjectionBasisGram.gram P c).rank = BoundedProjectionRootCount.count P c :=
+  BoundedProjectionBasisGram.rank_gram P c
+
+end ProjectionRankTests
