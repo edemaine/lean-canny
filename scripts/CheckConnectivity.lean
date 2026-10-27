@@ -4769,3 +4769,85 @@ example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : AlgebraicSlice
   exact hc (by simpa only [pairFst_pair, pairSnd_pair] using H.1.2.1)
 
 end BooleanCellSelectionTests
+
+namespace BooleanSliceEndpointTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity
+open BoundedFullWriter BoundedAlgebraicSlice AlgebraicSliceCellCover AlgebraicSliceBooleanAtoms
+open scoped Classical
+
+-- This circuit denotes the complement of the first factor's zero set.
+private def notZeroSource : Source where
+  circuit := ⟨fun _ => 2, fun q => if Nat.fromBitsLE (pairSnd q) = 0 then 2 else 3, fun _ => 0, fun _ => 0⟩
+  factor _ := 0
+  sign _ := 0
+
+private theorem notZeroAccess : Access notZeroSource := by
+  have ht := BinaryFn.ite ((BinaryFn.fromBits pairSnd_mem_FP).eq (BinaryFn.const 0)) (BinaryFn.const 2) (BinaryFn.const 3)
+  exact ⟨⟨UnaryFn.const 2, ht, BinaryFn.const 0, BinaryFn.const 0⟩, BinaryFn.const 0, constFn_mem_FP []⟩
+
+example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family} (A : BivariateQueryProductBits.Access Q)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    AlgebraicSliceBooleanPSPACE.connectedLanguage P Q notZeroSource ∈ PSPACE :=
+  AlgebraicSliceBooleanPSPACE.connected_mem_PSPACE h A ha notZeroSource notZeroAccess
+
+-- Excluding a root must disconnect the two rays, even with a negated atom.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool)
+    (hn : 0 < Q.count (pairFst u)) (hp : BoundedAlgebraicSliceIndexed.value P Q u 0 = Polynomial.X) :
+    u ∉ AlgebraicSliceBooleanPSPACE.connectedLanguage P Q notZeroSource := by
+  have hS : solutionSet P Q u (AlgebraicSliceBooleanCells.truth notZeroSource (pairFst u)) = {x : ℝ | x ≠ 0} := by
+    ext x
+    simp [solutionSet, AlgebraicSliceBooleanCells.truth, notZeroSource, BooleanCircuitSpace.value,
+      BooleanCircuitSpace.values, BooleanCircuitSpace.operation, semanticAtom, pairSnd_pair,
+      BinaryNatCode.encode, Nat.fromBitsLE, Nat.fromBits, hn, signVector, hp, sign_eq_zero_iff]
+  intro H
+  have hc : IsPreconnected (solutionSet P Q u (AlgebraicSliceBooleanCells.truth notZeroSource (pairFst u))) :=
+    isPreconnected_iff_preconnectedSpace.mpr ⟨H.2⟩
+  rw [hS] at hc
+  have hz : (0 : ℝ) ∈ {x : ℝ | x ≠ 0} := hc.ordConnected.out (x := -1) (by norm_num) (y := 1) (by norm_num) (by norm_num)
+  exact hz rfl
+
+-- The public endpoints require only original readers and circuit metadata.
+example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family} (A : BivariateQueryProductBits.Access Q)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (S : Source) (B : Access S) :
+    AlgebraicSliceBooleanPSPACE.connectedLanguage P Q S ∈ PSPACE ∧ AlgebraicSliceBooleanReachability.language P Q S ∈ PSPACE :=
+  ⟨AlgebraicSliceBooleanPSPACE.connected_mem_PSPACE h A ha S B, AlgebraicSliceBooleanReachability.mem_PSPACE h A ha S B⟩
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u : List Bool) (hu : u ∉ valid P) :
+    u ∉ AlgebraicSliceBooleanPSPACE.connectedLanguage P Q S := fun H => hu H.1
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u a b : List Bool) (hu : u ∉ valid P) :
+    pair u (pair a b) ∉ AlgebraicSliceBooleanReachability.language P Q S :=
+  AlgebraicSliceBooleanReachability.invalid_base P Q S u a b hu
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u a b : List Bool)
+    (ha : a.length ≠ labelWidth Q u) : pair u (pair a b) ∉ AlgebraicSliceBooleanReachability.language P Q S := by
+  intro H
+  exact ha (by simpa only [AlgebraicSliceBooleanReachability.leftWord, pairFst_pair, pairSnd_pair] using H.2.1)
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u a b : List Bool)
+    (hb : b.length ≠ labelWidth Q u) : pair u (pair a b) ∉ AlgebraicSliceBooleanReachability.language P Q S := by
+  intro H
+  exact hb (by simpa only [AlgebraicSliceBooleanReachability.rightWord, pairFst_pair, pairSnd_pair] using H.2.2.1)
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u a b : List Bool)
+    (ha : 2 * BoundedAlgebraicSliceRootProduct.count P Q u + 1 ≤ Nat.fromBitsLE a) :
+    pair u (pair a b) ∉ AlgebraicSliceBooleanReachability.language P Q S := by
+  intro H
+  have hv := H.2.2.2.1
+  simp only [AlgebraicSliceBooleanPSPACE.vertex, AlgebraicSliceBooleanReachability.leftWord,
+    pairFst_pair, pairSnd_pair, decide_eq_true_eq] at hv
+  have hb := hv.1.2.2
+  simp only [pairFst_pair, pairSnd_pair] at hb
+  exact (Nat.not_lt_of_ge ha) hb
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u : List Bool) (hu : u ∈ valid P)
+    (c d : Index P Q u) {x y : solutionSet P Q u (AlgebraicSliceBooleanCells.truth S (pairFst u))}
+    (hx : x ∈ AlgebraicSliceBooleanCells.restrictedPiece P Q S u c)
+    (hy : y ∈ AlgebraicSliceBooleanCells.restrictedPiece P Q S u d) :
+    pair u (pair (AlgebraicSliceCellLabels.label P Q u c) (AlgebraicSliceCellLabels.label P Q u d)) ∈
+      AlgebraicSliceBooleanReachability.language P Q S ↔ JoinedIn Set.univ x y :=
+  AlgebraicSliceBooleanReachability.packet P Q S u hu c d hx hy
+
+end
+end BooleanSliceEndpointTests

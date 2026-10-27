@@ -394,9 +394,9 @@ The checked ingredients are:
   paths between labeled cells of these actual solution sets, with base-root and
   endpoint-width validation. Native Boolean circuits also select cells by
   arbitrary combinations of factor signs, with selection exactly nonemptiness
-  in the actual circuit-defined solution set. Original input formulas still
-  need compilation to these circuits, and Boolean subsets still need the
-  native graph endpoints.
+  in the actual circuit-defined solution set. Constructed native incidence
+  graphs give PSPACE connectivity and cell-label path queries for these Boolean
+  subsets. Original input formulas still need compilation to the circuits.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
