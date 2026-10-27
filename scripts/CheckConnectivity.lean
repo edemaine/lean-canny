@@ -6345,3 +6345,131 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {f : List Bool → ℕ}
     BoundedCriticalSampleFiberRecordGram.evaluator h A ha⟩
 
 end CriticalSampleFiberTests
+
+namespace CriticalSampleFiberBasisTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR Polynomial
+open BoundedAlgebraicSlice (Family ofTest square)
+open BoundedCriticalSampleSlice
+open scoped Classical BigOperators
+
+-- Rank and selected-record query preparation retain the entire base word,
+-- including the actual sample descriptor and original record.
+#guard BoundedCriticalSampleFiberPrefixRank.query
+  (pair (pair (pair (pair [true] [false, true]) [false]) [true]) (pair [] [true])) ==
+    pair (pair (pair [true] [false, true]) [false]) (pair [] [true])
+#guard BoundedCriticalSampleFiberBasisMoments.thirdQuery
+  (pair (pair (pair [true] [false, true]) [false]) (pair [] (pair [true] [false, true]))) ==
+    pair (pair (pair [true] [false, true]) [false]) [false, true]
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    BoundedCriticalSampleFiberPrefixRank.rank P F (pair u (BinaryNatCode.encode 0)) = 0 := by
+  rw [BoundedCriticalSampleFiberPrefixRank.rank_packet, BoundedCriticalSampleFiberPrefixRank.prefixRank_zero]
+
+-- Prefixes beyond the candidate dimension saturate at the distinct-root count.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    BoundedCriticalSampleFiberPrefixRank.prefixRank P F u
+      (2 ^ BoundedAlgebraicFiberRecords.length F (context u) + 17) = RootCount.count P F u :=
+  BoundedCriticalSampleFiberPrefixRank.prefixRank_full P F u _ (by omega)
+
+-- A zero head has rank zero at every prefix, even when the source's degree
+-- allowance gives a large, nonempty candidate matrix.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) (hz : specialized P F u = 0) (k : ℕ) :
+    BoundedCriticalSampleFiberPrefixRank.prefixRank P F u k = 0 := by
+  have hn : RootCount.count P F u = 0 := by
+    simp only [RootCount.count, RootCount.roots, hz, Polynomial.roots_zero, Multiset.toFinset_zero, Finset.card_empty]
+  have hc := BoundedCriticalSampleFiberPrefixRank.prefixRank_le_count P F u k
+  omega
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u rank row : List Bool) (hu : u ∉ valid P) :
+    pair (pair u rank) row ∉ BoundedCriticalSampleFiberRankChoice.language P F ∧
+      BoundedCriticalSampleFiberRankChoice.index P F (pair u rank) = 0 := by
+  have hn : RootCount.count P F u = 0 := by
+    simp only [RootCount.count, RootCount.roots, specialized, ite_eq_right hu, Polynomial.roots_zero,
+      Multiset.toFinset_zero, Finset.card_empty]
+  have hr : RootCount.count P F (pairFst (pair u rank)) ≤ Nat.fromBitsLE (pairSnd (pair u rank)) := by
+    simp only [pairFst_pair, hn, Nat.zero_le]
+  exact ⟨BoundedCriticalSampleFiberRankChoice.language_invalid_rank P F _ row hr,
+    BoundedCriticalSampleFiberRankChoice.index_invalid_rank P F _ hr⟩
+
+-- The exact end rank is already out of range, even on a valid base.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    BoundedCriticalSampleFiberRankChoice.index P F (pair u (BinaryNatCode.encode (RootCount.count P F u))) = 0 := by
+  apply BoundedCriticalSampleFiberRankChoice.index_invalid_rank
+  simp only [pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, le_refl]
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) (r s : Fin (RootCount.count P F u)) (hrs : r < s) :
+    (BoundedCriticalSampleFiberRankBasis.selectedIndex P F u r).val <
+      (BoundedCriticalSampleFiberRankBasis.selectedIndex P F u s).val :=
+  BoundedCriticalSampleFiberRankBasis.chosen_strictMono P F u hrs
+
+-- Native selected words separate every pair of distinct child roots.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool)
+    (x y : BoundedCriticalSampleFiberRecordSpan.Root P F u) (hxy : x ≠ y) :
+    ∃ r : Fin (RootCount.count P F u),
+      BoundedCriticalSampleFiberRecordSpan.row P F u
+        (BoundedCriticalSampleFiberRankBasis.record P F (pair u (BinaryNatCode.encode r.val))) x ≠
+      BoundedCriticalSampleFiberRecordSpan.row P F u
+        (BoundedCriticalSampleFiberRankBasis.record P F (pair u (BinaryNatCode.encode r.val))) y := by
+  by_contra! he
+  simp only [BoundedCriticalSampleFiberRankBasis.record_row] at he
+  exact hxy (BoundedCriticalSampleFiberRankBasis.selected_separates P F u he)
+
+private noncomputable def xTest : BoundedProjectionTestMoments.Test where
+  polynomial _ := X
+  degree _ := 1
+  mass _ := 0
+  polynomial_degree _ := by simp
+  polynomial_mass _ := by simpa only [pow_one, pow_zero] using (coefficientMass_X_pow 1).le
+
+-- Multiplicity does not create extra selected basis rows.
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    (BoundedCriticalSampleFiberBasisGram.gram P (square (ofTest xTest))
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r)).rank = 1 := by
+  rw [BoundedCriticalSampleFiberBasisGram.rank_gram, RootCount.count, RootCount.roots,
+    RootCount.square_specialized, specialized_sample, BoundedAlgebraicSlice.ofTest_slice]
+  simp [xTest]
+
+-- Invalid bases contribute no selected triple or derivative-weighted moments,
+-- on arbitrary raw indices as well as canonical basis indices.
+example (P : BoundedFullWriter.Readers) (F : Family) (u indices : List Bool) (hu : u ∉ valid P) :
+    BoundedCriticalSampleFiberBasisMoments.moment P F (pair u indices) = 0 ∧
+      BoundedCriticalSampleFiberFeatureMoments.moment P F (pair u indices) = 0 := by
+  constructor
+  · unfold BoundedCriticalSampleFiberBasisMoments.moment BoundedCriticalSampleFiberBasisMoments.source
+    rw [pairFst_pair]
+    exact BoundedCriticalSampleFiberRecordMoments.moment_invalid P F u _ hu
+  · unfold BoundedCriticalSampleFiberFeatureMoments.moment BoundedCriticalSampleFiberFeatureMoments.source
+    rw [pairFst_pair]
+    exact BoundedCriticalSampleFiberRecordMoments.moment_invalid P F u _ hu
+
+-- Huge raw derivative indices are clamped before their short feature block
+-- is written, so they cannot cause an unbounded unary allocation.
+example (F : Family) (u : List Bool) :
+    BoundedCriticalSampleFiberFeatureMoments.order F
+      (pair u (BinaryNatCode.encode (F.degree (context u) + 100))) = F.degree (context u) := by
+  have hle : F.degree (context u) ≤ F.degree (context u) + 100 := by omega
+  simp only [BoundedCriticalSampleFiberFeatureMoments.order, pairFst_pair, pairSnd_pair,
+    BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.min_eq_right hle]
+
+-- Every native reader composes with the original constructed coordinate
+-- line, without a supplied basis table, rank test, or moment oracle.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {f : List Bool → ℕ} (hf : BinaryFn f)
+    (read : List Bool → List Bool) (hr : read ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => BinaryNatCode.encode
+      (BoundedCriticalSampleFiberPrefixRank.rank P (BoundedCriticalSampleLineTerm.family P f read) q)) ∧
+      SpaceFunction (BoundedCriticalSampleFiberRankBasis.record P (BoundedCriticalSampleLineTerm.family P f read)) ∧
+      SpaceFunction (fun q => SignStatisticBits.integerCode
+        (BoundedCriticalSampleFiberBasisGram.entry P (BoundedCriticalSampleLineTerm.family P f read) q)) ∧
+      SpaceFunction (fun q => SignStatisticBits.integerCode
+        (BoundedCriticalSampleFiberBasisMoments.moment P (BoundedCriticalSampleLineTerm.family P f read) q)) ∧
+      SpaceFunction (fun q => SignStatisticBits.integerCode
+        (BoundedCriticalSampleFiberFeatureMoments.moment P (BoundedCriticalSampleLineTerm.family P f read) q)) := by
+  let A := BoundedCriticalSampleLineTerm.access h hf read hr ha
+  exact ⟨BoundedCriticalSampleFiberPrefixRank.evaluator h A ha,
+    BoundedCriticalSampleFiberRankBasis.record_evaluator h A ha,
+    BoundedCriticalSampleFiberBasisGram.entry_evaluator h A ha,
+    BoundedCriticalSampleFiberBasisMoments.evaluator h A ha,
+    BoundedCriticalSampleFiberFeatureMoments.evaluator h A ha⟩
+
+end CriticalSampleFiberBasisTests

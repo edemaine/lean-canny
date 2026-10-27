@@ -108,6 +108,8 @@ import LeanCanny.Encoding.BoundedCriticalSampleSliceRootCount
 import LeanCanny.Encoding.BoundedCriticalSampleLineZero
 import LeanCanny.Encoding.BoundedCriticalSampleBlockTerm
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
+import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
+import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
 
 /-! # Connectivity development
 
@@ -418,9 +420,12 @@ Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries
 preserve both the actual sample descriptor and its original record, and the
-Gram rank equals the distinct child-root count. Native child-basis selection
-and signs at child labels, constructing new sample bases recursively, and
-assembling the complete cover remain required. Native real critical-sample queries test these
+Gram rank equals the distinct child-root count. Native prefix-rank scans now
+select short records forming a basis on those roots. Selected Gram, triple,
+and derivative-weighted moments include the native row searches in their
+space bounds, with no supplied basis table. Signs at child labels,
+constructing new sample bases recursively, and assembling the complete cover
+remain required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
 sample-circuit serialization and constrained sample feasibility compose with
 the native direction selector in polynomial space. Two independently varying

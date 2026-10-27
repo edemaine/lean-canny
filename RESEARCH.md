@@ -1093,10 +1093,24 @@ moments while preserving both the sample descriptor and original record.
 It proves the exact sum over the child roots on every raw query, including
 concatenated records and invalid descriptors.
 `BoundedCriticalSampleFiberRecordGram` derives native integer Gram entries
-from these moments, with a degree bound on their magnitude. This prepares
-child-root basis selection over actual samples; native selection and signs
-at child labels still need construction before recursive sample bases can
-be assembled.
+from these moments, with a degree bound on their magnitude.
+`BoundedCriticalSampleFiberPrefixRank` masks unused Gram rows and computes
+prefix ranks with native characteristic-coefficient scans. The candidate
+dimension and all coefficient budgets have native binary controls.
+`BoundedCriticalSampleFiberRankChoice` selects the unique rank-increasing
+row for each requested rank by native bounded search. Out-of-range ranks
+have no witness and return the total reader's default index zero.
+`BoundedCriticalSampleFiberRankBasis` proves that these increasing selected
+rows form a basis on the actual child roots and separate distinct roots.
+Its native reader returns one short selected record, recomputing the row
+search without storing a basis table.
+`BoundedCriticalSampleFiberBasisGram` gives native selected Gram entries;
+`BoundedCriticalSampleFiberBasisMoments` gives native selected triple moments.
+`BoundedCriticalSampleFiberFeatureMoments` adds native derivative-sign-weighted
+moments with binary orders clamped to the supplied degree. All keep the same
+actual sample descriptor and original query record, including on invalid raw
+queries. Reading signs at individual child labels still needs construction
+before recursive sample bases can be assembled.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
