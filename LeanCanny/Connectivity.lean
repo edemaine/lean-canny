@@ -86,6 +86,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberSignCut
 import LeanCanny.Encoding.BoundedAlgebraicFiberThom
 import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
+import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -431,7 +432,10 @@ binary; the computed integer is the exact sign-monomial sum over distinct
 fiber roots. Fixed-width records of polynomial length span every rational
 fiber-root function. Their full Gram matrix has rank equal to the distinct-root
 count; concatenated record moments give native entries on all raw base queries.
-Selected bases and individual fiber-root signature readout remain required.
+Native prefix-rank scans select one basis record at a time. The selected rows
+span all fiber-root functions and distinguish every pair of roots; native
+selected-Gram entries recompute both row searches. Individual fiber-root
+signature readout remains required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

@@ -3927,3 +3927,55 @@ example (P : BoundedFullWriter.Readers) (F : Family) (u indices : List Bool) (hu
 
 end
 end AlgebraicFiberRecordTests
+
+namespace AlgebraicFiberBasisTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice
+open scoped Classical
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => BinaryNatCode.encode (BoundedAlgebraicFiberPrefixRank.rank P F q)) :=
+  BoundedAlgebraicFiberPrefixRank.evaluator h A ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedAlgebraicFiberRankBasis.record P F) := BoundedAlgebraicFiberRankBasis.record_evaluator h A ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => SignStatisticBits.integerCode (BoundedAlgebraicFiberBasisGram.entry P F q)) :=
+  BoundedAlgebraicFiberBasisGram.entry_evaluator h A ha
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    BoundedAlgebraicFiberPrefixRank.rank P F (pair u (BinaryNatCode.encode 0)) = 0 := by
+  rw [BoundedAlgebraicFiberPrefixRank.rank_packet, BoundedAlgebraicFiberPrefixRank.prefixRank_zero]
+
+-- Every prefix rank is zero for an invalid base ordinal, even past the matrix dimension.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) (hu : u ∉ valid P) (k : ℕ) :
+    BoundedAlgebraicFiberPrefixRank.prefixRank P F u k = 0 := by
+  have hn : RootCount.count P F u = 0 := by
+    simp only [RootCount.count, RootCount.roots, specialized, ite_eq_right hu, Polynomial.roots_zero,
+      Multiset.toFinset_zero, Finset.card_empty]
+  have H := BoundedAlgebraicFiberPrefixRank.prefixRank_le_count P F u k
+  omega
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) (r : Fin (RootCount.count P F u)) :
+    BoundedAlgebraicFiberRecordSpan.row P F u
+      (BoundedAlgebraicFiberRankBasis.record P F (pair u (BinaryNatCode.encode r.val))) =
+        BoundedAlgebraicFiberRankBasis.basis P F u r := by
+  rw [BoundedAlgebraicFiberRankBasis.basis_apply, BoundedAlgebraicFiberRankBasis.record_row]
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    (BoundedAlgebraicFiberBasisGram.gram P F u).rank = RootCount.count P F u :=
+  BoundedAlgebraicFiberBasisGram.rank_gram P F u
+
+-- Equality on the selected records forces equality of actual fiber roots.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool)
+    (x y : BoundedAlgebraicFiberRecordSpan.Root P F u)
+    (h : ∀ r, BoundedAlgebraicFiberRankBasis.selected P F u r x = BoundedAlgebraicFiberRankBasis.selected P F u r y) : x = y :=
+  BoundedAlgebraicFiberRankBasis.selected_separates P F u h
+
+end
+end AlgebraicFiberBasisTests

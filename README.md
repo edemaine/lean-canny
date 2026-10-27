@@ -351,8 +351,11 @@ The checked ingredients are:
   fiber roots. Fixed-width records of polynomial length span every rational
   fiber-root function. Their full Gram matrix has rank equal to the
   distinct-root count, with native entries computed by concatenated record
-  moments on all raw base queries. Selected bases and individual fiber-root
-  signature readout remain required.
+  moments on all raw base queries. Native prefix-rank scans select a basis
+  one record at a time. The selected rows span all fiber-root functions and
+  distinguish every pair of roots; selected-Gram entry queries recompute
+  both searches in native polynomial space. Individual fiber-root signature
+  readout remains required.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
