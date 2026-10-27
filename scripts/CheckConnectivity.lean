@@ -7378,3 +7378,86 @@ example {P : Readers} (h : P.PolyTime) {f : List Bool → ℕ} (hf : BinaryFn f)
 
 end
 end ActualSamplePointLocationTests
+
+namespace ActualSampleBlockCriticalTests
+noncomputable section
+open MvPolynomial LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR
+open BoundedFullWriter
+open scoped Classical
+
+-- The spatial derivative retains the parameter coefficient; it does not
+-- differentiate the parameter variable as though it were a free coordinate.
+example (v : Fin 2 → ℤ) :
+    ParameterSpatialSpecialization.equation
+      (X (0 : Fin 3) * X (1 : Fin 3) + X (2 : Fin 3)) (0 : Fin 2) v (1 : Fin 2) =
+        1 - C (v 1) * X (0 : Fin 3) := by
+  norm_num [ParameterSpatialSpecialization.equation, pderiv_mul, Pi.single_apply]
+
+-- Specialization can collapse every spatial coefficient. No fixed-degree or
+-- finite-critical-set promise is built into the coefficient reader.
+example : ParameterSpatialSpecialization.specialize (Int.castRingHom ℝ) 0
+    (X (0 : Fin 2) * X (1 : Fin 2) ^ 2) = 0 := by
+  simp [ParameterSpatialSpecialization.specialize]
+
+example (t : ℝ) :
+    ParameterSpatialSpecialization.specialize (Int.castRingHom ℝ) t
+      (pderiv (1 : Fin 2) (X (0 : Fin 2) * X (1 : Fin 2))) = C t := by
+  simp [ParameterSpatialSpecialization.specialize]
+
+-- The direction and modulus child queries normalize redundant high zeros.
+#guard BoundedCriticalSampleBlockCritical.directionQuery
+  (pair (pair [true] (pair [true, false, false] [false, true])) [false, false]) = pair [true] [true]
+#guard BoundedCriticalSampleBlockCritical.modulus
+  (pair (pair [true] (pair [] [])) [false, false]) = [true]
+#guard BoundedCriticalSampleBlockCritical.sourceQuery
+  (pair (pair (pair [true] (pair [] [])) [false, false]) [true, false, false]) = pair (pair [true] [true]) []
+
+example (P : Readers) (read : List Bool → List Bool) (o w b : List Bool → ℕ)
+    (bits : List Bool → List Bool) (q : List Bool) :
+    BoundedCriticalSampleBlockCritical.value P read o (fun _ => 0) w b bits q = [] := by
+  apply BoundedCriticalSampleBlockCritical.invalid
+  simp only [BoundedCriticalSampleBlockCritical.valid]
+  omega
+
+example (P : Readers) (read : List Bool → List Bool) (o k w b : List Bool → ℕ)
+    (bits : List Bool → List Bool) (q : List Bool)
+    (hi : k (BoundedCriticalSampleBlockCritical.origin q) ≤ Nat.fromBitsLE (BoundedCriticalSampleBlockCritical.row q)) :
+    BoundedCriticalSampleBlockCritical.value P read o k w b bits q = [] :=
+  BoundedCriticalSampleBlockCritical.invalid P read o k w b bits q (fun h => (Nat.not_lt.mpr hi) h.2)
+
+example (P : Readers) (read : List Bool → List Bool) (o k w b : List Bool → ℕ)
+    (bits : List Bool → List Bool) (q : List Bool)
+    (hi : k (BoundedCriticalSampleBlockCritical.origin q) ≤ b (BoundedCriticalSampleBlockCritical.origin q)) :
+    BoundedCriticalSampleBlockCritical.value P read o k w b bits q = [] :=
+  BoundedCriticalSampleBlockCritical.invalid P read o k w b bits q (fun h => (Nat.not_lt.mpr hi) h.1)
+
+example (k : List Bool → ℕ) (bits : List Bool → List Bool) (u : List Bool) (i : Fin (k u)) :
+    BoundedCriticalSampleBlockCriticalSource.direction k (fun _ => 0) bits u i = 0 := by
+  have H := BoundedCriticalSampleBlockCriticalSource.direction_lt k (fun _ => 0) bits u i
+  simpa only [pow_zero, Nat.lt_one_iff] using H
+
+-- Modulus one returns the canonical zero residue, including the original
+-- source row and arbitrary binary monomial indices.
+example (P : Readers) (read : List Bool → List Bool) (o k w b : List Bool → ℕ)
+    (bits : List Bool → List Bool) (u : List Bool) (pivot i : Fin (k u)) (hb : b u = pivot.val) (r : ℕ) :
+    BoundedCriticalSampleBlockCritical.value P read o k w b bits
+      (pair (pair u (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode r))) []) = [] := by
+  have H := BoundedCriticalSampleBlockCritical.packet P read o k w b bits u pivot i hb r 0
+  have hz (z : ZMod 1) : MatrixPower.residueBits z = [] := by
+    have he : z = 0 := Subsingleton.elim _ _
+    rw [he]
+    rfl
+  simpa only [Nat.zero_add, hz, BinaryNatCode.encode, show Nat.bits 0 = [] from rfl] using H
+
+-- There is no supplied critical-equation or derivative coefficient oracle.
+example {P : Readers} (h : P.PolyTime) (read : List Bool → List Bool) (hr : read ∈ FP)
+    {o k w b : List Bool → ℕ} (ho : BinaryFn o) (hk : UnaryFn k) (hw : UnaryFn w) (hb : BinaryFn b)
+    {bits : List Bool → List Bool} (hbits : bits ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalSampleBlockCritical.value P read o k w b bits) ∧
+      BinaryFn (BoundedCriticalSampleBlockCriticalSource.massExponent P read k w) :=
+  ⟨BoundedCriticalSampleBlockCritical.evaluator h read hr ho hk hw hb hbits ha,
+    BoundedCriticalSampleBlockCriticalSource.massExponent_binary h read hr hk hw⟩
+
+end
+end ActualSampleBlockCriticalTests

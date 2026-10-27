@@ -1207,6 +1207,23 @@ sample readers, an FP formula reader, an FP reader for each endpoint term,
 and the binary free-coordinate control. Its correctness packet is exact
 path connection in the formula's intersection with that coordinate line in
 the actual sample's tuple space. No endpoint labels are supplied.
+`BoundedCriticalSampleBlockCoefficient` gives total native coefficient queries
+by arbitrary binary exponent words, repacking exactly the declared variable
+blocks. `ParameterSpatialSpecialization` proves that specialization of variable
+zero commutes with every spatial derivative and critical equation.
+`BoundedCriticalSampleBlockCriticalSource` constructs the actual block critical
+rows for a fixed-width candidate direction. Their degree and coefficient-mass
+allowances are derived from the original term, block controls, and direction
+width; no stability of the specialized degree is assumed.
+`BoundedCriticalSampleBlockCritical` supplies their native modular coefficient
+reader from the original sample and term readers. Pivot and row indices stay
+binary and are clamped only for bounded internal queries. Invalid pivots and
+rows return zero, including empty spatial blocks. Modulus and row words are
+normalized before child calls. `BlockCriticalGeometry` identifies specialization
+with the actual lower-dimensional critical equations and identifies the
+specialized source's zero set with the original term on the updated actual
+sample block. Selecting directions yielding finite regular child samples,
+constructing their descriptors, and assembling the recursive cover remain open.
 Recursive sample-base construction and the complete
 higher-dimensional cover remain open.
 

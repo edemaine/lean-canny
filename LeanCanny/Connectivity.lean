@@ -107,6 +107,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleFormula
 import LeanCanny.Encoding.BoundedCriticalSampleSliceRootCount
 import LeanCanny.Encoding.BoundedCriticalSampleLineZero
 import LeanCanny.Encoding.BoundedCriticalSampleBlockTerm
+import LeanCanny.Encoding.BoundedCriticalSampleBlockCriticalGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -423,6 +424,13 @@ collected-coefficient readers. Derived exponent widths prevent collisions
 between free variables, and degree and coefficient-mass bounds have native
 binary controls. Signs and zeros agree with the term throughout the block;
 freezing its first variable at the sample value agrees with the smaller block.
+Native modular readers now construct the spatial critical equations of these
+block polynomials, with degree and coefficient-mass controls derived from the
+original term and candidate direction width. Only spatial variables are
+differentiated; the actual sample parameter stays fixed. Specialization gives
+the exact critical equations of the actual lower-dimensional polynomial slice.
+Invalid pivots and rows, including empty blocks, return zero. Finite regular
+child-sample construction and the recursive cover remain required.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries
