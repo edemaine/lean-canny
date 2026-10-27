@@ -82,6 +82,7 @@ import LeanCanny.Encoding.BoundedAlgebraicSlicePrincipal
 import LeanCanny.Algebra.PolynomialPseudoRemainderReader
 import LeanCanny.Encoding.BoundedAlgebraicSliceTarskiPSPACE
 import LeanCanny.Encoding.BoundedAlgebraicFiberRoot
+import LeanCanny.Encoding.BoundedAlgebraicFiberSignCut
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -413,6 +414,9 @@ in algebraic fibers. Their roots have ordered binary labels bounded by the
 original outer degree, with native validity and rational-cut comparison
 deciders. The comparisons preserve the chosen base root and count repeated
 fiber roots once.
+Nine internally computed product moments also count two simultaneous sign
+constraints. In particular, native queries count roots of a slice equation
+below a rational cut where another slice polynomial has a prescribed sign.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

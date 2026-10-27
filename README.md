@@ -336,6 +336,10 @@ The checked ingredients are:
   by the original outer degree; their validity and comparison with an
   encoded rational cut have native polynomial-space deciders. Repeated
   roots count once, and invalid base or fiber ordinals are rejected.
+  Nine native product moments also count two simultaneous sign constraints,
+  including roots below a rational cut satisfying a prescribed polynomial
+  sign. Product readers and all degree and mass bounds are constructed
+  from the original bivariate readers.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between

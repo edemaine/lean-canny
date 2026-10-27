@@ -3701,3 +3701,52 @@ example (P : BoundedFullWriter.Readers) (F : Family) (c : List Bool) (r : Fin (B
 
 end
 end AlgebraicFiberTests
+
+namespace AlgebraicJointSignTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice
+open scoped Classical
+
+-- Two sign indicators contribute an exact factor four, including a repeated head root.
+example : RootSignQueries.scaledRootCount ((X - C 1 : ℝ[X]) ^ 2)
+    (fun b : Bool => if b then -X else X) (fun b => if b then .neg else .pos) = 4 := by
+  rw [RootSignQueries.scaledRootCount_eq, Fintype.card_bool, RootSignQueries.signCount,
+    Polynomial.roots_pow, Polynomial.roots_X_sub_C]
+  norm_num [two_nsmul, Finset.filter_singleton, Bool.forall_bool]
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G H : Family)
+    (A : F.Access) (B : G.Access) (C : H.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s t : SignType) :
+    SpaceFunction (fun u => BinaryNatCode.encode (JointCount.count P F G H s t u)) := JointCount.evaluator h A B C ha s t
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G H : Family)
+    (A : F.Access) (B : G.Access) (C : H.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s t : SignType) :
+    JointCount.realizable P F G H s t ∈ PSPACE := JointCount.realizable_mem_PSPACE h A B C ha s t
+
+example (P : BoundedFullWriter.Readers) (F G : Family) (s : SignType) (u : List Bool) :
+    JointCount.count P F G G s s u = RootCount.signCount P F G s u := JointCount.diagonal_count P F G s u
+
+-- Contradictory signs of the same test cannot produce a realizable branch.
+example (P : BoundedFullWriter.Readers) (F G : Family) (u : List Bool) :
+    JointCount.count P F G G .neg .pos u = 0 := by
+  rw [JointCount.count_eq_filter, Finset.filter_false_of_mem (fun y _ hsign => by cases hsign.1.symm.trans hsign.2),
+    Finset.card_empty]
+
+example (P : BoundedFullWriter.Readers) (F G H : Family) (s t : SignType) (u : List Bool) (hu : u ∉ valid P) :
+    JointCount.count P F G H s t u = 0 := JointCount.invalid_base P F G H s t u hu
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    BoundedAlgebraicFiberSignCut.language P F G s ∈ PSPACE := BoundedAlgebraicFiberSignCut.mem_PSPACE h A B ha s
+
+-- The cut condition must not discard the requested polynomial sign.
+example (P : BoundedFullWriter.Readers) (F : Family) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c))
+    (cut : List Bool) : pair (pair c (BinaryNatCode.encode r.val)) cut ∉
+      BoundedAlgebraicFiberSignCut.language P F unit .neg := by
+  rw [BoundedAlgebraicFiberSignCut.language_packet]
+  simp [unit, ofTest_slice, unitTest]
+
+end
+end AlgebraicJointSignTests
