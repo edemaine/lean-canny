@@ -76,6 +76,7 @@ import LeanCanny.Encoding.BoundedProjectionHashChoice
 import LeanCanny.Encoding.BoundedProjectionSignatureProbe
 import LeanCanny.Encoding.BoundedProjectionSignatureRead
 import LeanCanny.Encoding.BoundedProjectionOrderedRoot
+import LeanCanny.Encoding.BoundedProjectionTestSign
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -386,6 +387,10 @@ An ascending one-bit Thom-sign scan compares two labels in real order. Native
 comparison counts compute their geometric root ranks, and bounded search
 inverts those ranks. Derivative signs can therefore be read directly at each
 real-order root index, consistently retaining extraneous projection roots.
+Arbitrary implicit integer-polynomial tests have native sign queries at those
+roots, using only their original modular coefficient readers and binary degree
+and mass bounds. Selected-basis moments and determinant probes are computed
+internally; rational-cut comparisons are a concrete instance.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

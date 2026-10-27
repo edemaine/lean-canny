@@ -315,6 +315,10 @@ The checked ingredients are:
   comparison counts compute their geometric ranks, and bounded search inverts
   those ranks. Derivative signs can now be read at any real-order root index,
   consistently retaining extraneous projection roots.
+  Arbitrary implicit univariate integer-polynomial tests now have native
+  sign queries at these roots, given their modular coefficient readers and
+  binary degree and mass bounds. The weighted moments and determinant probes
+  are computed internally; rational-cut comparison is a concrete instance.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between

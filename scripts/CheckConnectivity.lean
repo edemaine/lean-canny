@@ -3301,3 +3301,95 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedProject
   BoundedProjectionOrderedRoot.sign_packet P c r k
 
 end ProjectionRootOrderTests
+
+namespace ProjectionTestSignTests
+open LeanCanny.Algebra LeanCanny.Encoding
+open BoundedProjectionTestMoments
+
+private theorem empty_first (c : List Bool) :
+    IntegerPolynomialMatrixBits.firstCoefficient ProjectionSignatureReadTests.emptyFamily c = 0 := by
+  change (0 : Matrix (Fin 0) (Fin 0) (Polynomial ℤ)).det.coeff 1 = 0
+  rw [Matrix.det_isEmpty]
+  simp only [Polynomial.coeff_one, one_ne_zero, ite_false]
+
+-- The empty determinant is one, but its first coefficient and extracted sign are zero.
+example : SpaceFunction (fun _ : List Bool => ([] : List Bool)) := by
+  have hc : IntegerPolynomialMatrixBits.EntryCorrect ProjectionSignatureReadTests.emptyFamily (fun _ => []) := by
+    intro c i
+    exact Fin.elim0 i
+  have E := IntegerPolynomialMatrixBits.firstSign_evaluator ProjectionSignatureReadTests.emptyFamily
+    (SpaceFunction.ofFP (fun _ => []) (constFn_mem_FP [])) hc (BinaryFn.const 0) (fun _ => 0) (BinaryFn.const 0)
+    (by intro c; simp only [empty_first, Int.natAbs_zero, Nat.size_zero, le_refl])
+  exact E.congr (funext fun c => by simp only [empty_first, sign_zero, InfinitesimalSign.encode])
+
+noncomputable def zeroTest : Test where
+  polynomial _ := 0
+  degree _ := 0
+  mass _ := 0
+  polynomial_degree _ := by simp
+  polynomial_mass _ := by simp
+
+noncomputable def zeroAccess : zeroTest.Access where
+  degree_binary := BinaryFn.const 0
+  mass_binary := BinaryFn.const 0
+  coefficient _ := []
+  coefficient_eq c k m _ := by
+    simp [zeroTest, IntegerTarskiSeedBits.integerResidue, MatrixPower.residueBits, BinaryNatCode.encode]
+  evaluator := SpaceFunction.ofFP _ (constFn_mem_FP [])
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedProjectionTestSign.value P zeroTest) := BoundedProjectionTestSign.evaluator h zeroAccess ha
+
+-- The identically zero test is allowed, even at repeated or extraneous roots.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c)) :
+    BoundedProjectionTestSign.value P zeroTest (pair c (BinaryNatCode.encode r.val)) = [] := by
+  rw [BoundedProjectionTestSign.value_packet]
+  simp only [sign, zeroTest, Polynomial.map_zero, Polynomial.eval_zero, sign_zero, InfinitesimalSign.encode]
+
+noncomputable def negativeTest : Test where
+  polynomial _ := Polynomial.C (-3)
+  degree _ := 0
+  mass _ := 2
+  polynomial_degree _ := by simp
+  polynomial_mass _ := by rw [coefficientMass_C]; norm_num
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c)) :
+    BoundedProjectionTestSign.value P negativeTest (pair c (BinaryNatCode.encode r.val)) = [true] := by
+  rw [BoundedProjectionTestSign.value_packet]
+  norm_num [sign, negativeTest, InfinitesimalSign.encode]
+
+-- Only ordinary modular polynomial coefficients are leaves of the generic query.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (T : Test) (A : T.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedProjectionTestSign.value P T) := BoundedProjectionTestSign.evaluator h A ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (T : Test) (A : T.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    SpaceDecider (BoundedProjectionTestSign.language P T s) := BoundedProjectionTestSign.decider h A ha s
+
+-- Invalid root ordinals are rejected, rather than querying the total fallback label.
+example (P : BoundedFullWriter.Readers) (T : Test) (s : SignType) (u : List Bool)
+    (hu : BoundedProjectionRootCount.count P (pairFst u) ≤ Nat.fromBitsLE (pairSnd u)) :
+    u ∉ BoundedProjectionTestSign.language P T s := BoundedProjectionTestSign.language_invalid P T s u hu
+
+example (P : BoundedFullWriter.Readers) (T : Test) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c)) :
+    BoundedProjectionTestSign.value P T (pair c (BinaryNatCode.encode r.val)) =
+      InfinitesimalSign.encode (sign T c (BoundedProjectionOrderedRoot.root P c r).val) :=
+  BoundedProjectionTestSign.value_packet P T c r
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceDecider (BoundedProjectionTestSign.language P BoundedProjectionTestSign.rationalCut .neg) :=
+  BoundedProjectionTestSign.decider h BoundedProjectionTestSign.rationalCutAccess ha .neg
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c)) :
+    pair c (BinaryNatCode.encode r.val) ∈ BoundedProjectionTestSign.language P BoundedProjectionTestSign.rationalCut .neg ↔
+      (BoundedProjectionOrderedRoot.root P c r).val < RationalCutBits.threshold c :=
+  BoundedProjectionTestSign.rationalCut_below P c r
+
+example (P : BoundedFullWriter.Readers) (T : Test) (q : List Bool) :
+    (moment P T q).natAbs ≤ 2 ^ BoundedCriticalProjection.labelWidth P (pairFst q) :=
+  moment_bound P T q
+
+end ProjectionTestSignTests
