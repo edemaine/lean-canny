@@ -88,6 +88,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
 import LeanCanny.Connectivity.AlgebraicSliceSystemReachability
+import LeanCanny.Connectivity.AlgebraicSliceBooleanCells
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -476,7 +477,12 @@ set. Unused words denote empty pieces in a constructed bit frontier cover.
 The native graph algorithm decides whole-set connectivity and paths between
 labeled cells in these actual solution sets, including empty systems and
 singular roots. Endpoint widths and algebraic base validity are checked.
-General Boolean truth evaluation remains required.
+Native Boolean circuits also select cells by arbitrary combinations of factor
+signs. Gate metadata is read from the original source; atom decisions use the
+native cell-sign routine. Selection is exactly nonemptiness of the restricted
+cell in the circuit-defined solution set. Compiling original input formulas
+to these circuits and extending the native graph endpoints to Boolean subsets
+remain required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

@@ -4706,3 +4706,66 @@ example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu
 
 end
 end AlgebraicSystemPSPACETests
+
+namespace BooleanCellSelectionTests
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity
+open BoundedFullWriter BoundedAlgebraicSlice AlgebraicSliceCellCover
+open BooleanCircuitSpace
+
+-- Shared wires compute (A ∧ ¬A) ∨ (A ∨ ¬A), independently of the atom.
+private def shared : BooleanCircuitSpace.Family where
+  count _ := 5
+  tag q := match Nat.fromBitsLE (pairSnd q) with | 0 => 2 | 1 => 3 | 2 => 4 | _ => 5
+  left q := if Nat.fromBitsLE (pairSnd q) = 4 then 2 else 0
+  right q := if Nat.fromBitsLE (pairSnd q) = 4 then 3 else 1
+
+#guard value shared (fun _ => false) []
+#guard value shared (fun _ => true) []
+#guard (values shared (fun _ => false) [] 5).length = 5
+
+private def noGates : BooleanCircuitSpace.Family := ⟨fun _ => 0, fun _ => 1, fun _ => 0, fun _ => 0⟩
+#guard !(value noGates (fun _ => true) [])
+
+-- Binary references outside the prefix read false without unary expansion.
+private def future : BooleanCircuitSpace.Family := ⟨fun _ => 1, fun _ => 3, fun _ => 2 ^ 100, fun _ => 0⟩
+#guard value future (fun _ => false) []
+
+private def constantSource (tag : ℕ) : AlgebraicSliceBooleanAtoms.Source where
+  circuit := ⟨fun _ => 1, fun _ => tag, fun _ => 0, fun _ => 0⟩
+  factor _ := 0
+  sign _ := 0
+
+-- Constants define the actual empty set and whole line, regardless of factor count.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) :
+    solutionSet P Q u (AlgebraicSliceBooleanCells.truth (constantSource 0) (pairFst u)) = ∅ := by
+  ext x
+  simp [solutionSet, AlgebraicSliceBooleanCells.truth, constantSource, value, values, operation]
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) :
+    solutionSet P Q u (AlgebraicSliceBooleanCells.truth (constantSource 1) (pairFst u)) = Set.univ := by
+  ext x
+  simp [solutionSet, AlgebraicSliceBooleanCells.truth, constantSource, value, values, operation]
+
+example (F : BooleanCircuitSpace.Family) (A : BooleanCircuitSpace.Access F) (atom : List Bool → Bool) (R : SpaceFunction (fun q => [atom q])) :
+    SpaceFunction (fun c => [value F atom c]) := evaluator F A atom R
+
+example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family} (A : BivariateQueryProductBits.Access Q)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c)
+    (S : AlgebraicSliceBooleanAtoms.Source) (B : AlgebraicSliceBooleanAtoms.Access S) :
+    AlgebraicSliceBooleanCells.language P Q S ∈ PSPACE := AlgebraicSliceBooleanCells.mem_PSPACE h A ha S B
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : AlgebraicSliceBooleanAtoms.Source)
+    (u : List Bool) (hu : u ∈ valid P) (c : Index P Q u) :
+    pair u (AlgebraicSliceCellLabels.label P Q u c) ∈ AlgebraicSliceBooleanCells.language P Q S ↔
+      (AlgebraicSliceBooleanCells.restrictedPiece P Q S u c).Nonempty := AlgebraicSliceBooleanCells.packet P Q S u hu c
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : AlgebraicSliceBooleanAtoms.Source)
+    (u c : List Bool) (hu : u ∉ valid P) : pair u c ∉ AlgebraicSliceBooleanCells.language P Q S :=
+  AlgebraicSliceBooleanCells.invalid_base P Q S u c hu
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : AlgebraicSliceBooleanAtoms.Source)
+    (u c : List Bool) (hc : c.length ≠ labelWidth Q u) : pair u c ∉ AlgebraicSliceBooleanCells.language P Q S := by
+  intro H
+  exact hc (by simpa only [pairFst_pair, pairSnd_pair] using H.1.2.1)
+
+end BooleanCellSelectionTests
