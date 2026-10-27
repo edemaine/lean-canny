@@ -1016,6 +1016,18 @@ coordinate indices while retaining the original point descriptor. Its guarded
 descriptor and ordinal languages decide actual coordinate signs in native
 PSPACE without a supplied coordinate-sign oracle, and reject out-of-range
 coordinates and ordinals.
+`BoundedCriticalSampleTermCoordinates` extends the rational sample tuple by
+zero over one beyond its dimension. Native coefficient branches and uniform
+degree/mass bounds apply to every coordinate index. `BoundedCriticalSampleTermTest`
+clears denominators in any supplied encoded arithmetic term, with derived
+binary bounds and native modular readers. At an actual sample parameter its
+sign is the original term's sign on that sample, extended by zero.
+`BoundedCriticalSampleFormula` uses these signs in the native Boolean circuit
+of an original formula reader. Its guarded descriptor and ordinal languages
+decide exactly formula truth on the actual samples and provide native marking
+flags. Invalid descriptors and out-of-range ordinals are rejected even when
+the formula is true. These are sample predicates; the recursive cover and its
+adjacency routines are still required.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

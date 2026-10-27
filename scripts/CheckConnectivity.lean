@@ -5800,3 +5800,97 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
     BoundedCriticalSampleCoordinateSign.ordinal_mem_PSPACE h ha s⟩
 
 end CriticalSampleCoordinateSignTests
+
+namespace CriticalSampleFormulaTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR Polynomial
+open scoped Classical
+
+-- Padding uses zero over one, even at the first unused coordinate.
+example (P : BoundedFullWriter.Readers) (c d : List Bool) :
+    BoundedCriticalSampleTermCoordinates.numerator P (pair c d) (P.dim c + 4) = 0 ∧
+      BoundedCriticalSampleTermCoordinates.denominator P (pair c d) (P.dim c + 4) = 1 := by
+  simp only [BoundedCriticalSampleTermCoordinates.numerator, BoundedCriticalSampleTermCoordinates.denominator,
+    pairFst_pair, lt_self_iff_false, ite_false, and_self]
+
+-- All padded denominators stay nonzero at an actual sample parameter.
+example (P : BoundedFullWriter.Readers) (c d : List Bool) (x : BoundedFullCriticalSamples.Samples P c) (i : ℕ) :
+    (BoundedCriticalSampleTermCoordinates.denominator P (pair c d) i).eval₂ (Int.castRingHom ℝ)
+      (BoundedCriticalSampleLabels.parameter P c x).val ≠ 0 :=
+  BoundedCriticalSampleTermCoordinates.denominator_nonzero P c d x i
+
+private def arithmetic : Term := .add (.mul (.var 0) (.var 1)) (.const (-2))
+
+example (P : BoundedFullWriter.Readers) (c d : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    BoundedCriticalSampleIndexedSign.value P
+      (BoundedCriticalSampleTermTest.test P (fun _ => arithmetic.toData.toBits))
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) d) =
+        InfinitesimalSign.encode (SignType.sign (x.val ⟨0, by omega⟩ * x.val ⟨1, by omega⟩ - 2)) := by
+  rw [BoundedCriticalSampleTermTest.value_sample, TermView.term_toBits]
+  simp only [arithmetic, Term.eval, Formula.extend, show 0 < P.dim c + 4 by omega,
+    show 1 < P.dim c + 4 by omega, dite_true, Int.cast_neg, Int.cast_ofNat, sub_eq_add_neg]
+
+-- An unused variable is zero, without a syntactic arity precondition.
+example (P : BoundedFullWriter.Readers) (c d : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    BoundedCriticalSampleIndexedSign.value P
+      (BoundedCriticalSampleTermTest.test P (fun u => (Term.var (P.dim (pairFst u) + 4)).toData.toBits))
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) d) = [] := by
+  rw [BoundedCriticalSampleTermTest.value_sample]
+  simp only [pairFst_pair, TermView.term_toBits, Term.eval, Formula.extend, lt_self_iff_false,
+    dite_false, sign_zero, InfinitesimalSign.encode]
+
+private def predicate : Formula := .or (.ltZero arithmetic) (.not (.eqZero (.var 2)))
+
+-- Nonlinear atoms, strict inequalities, negation, and disjunction retain
+-- their original formula semantics at the same actual sample descriptor.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    pair c (BoundedCriticalSampleHashChoice.descriptor P c x) ∈
+      BoundedCriticalSampleFormula.language P (fun _ => predicate.encode) ↔
+        predicate.Holds (Formula.extend x.val) := by
+  rw [BoundedCriticalSampleFormula.language_sample, FormulaView.formula_encode]
+
+-- Malformed formula words use the falsum view, including at valid points.
+example (P : BoundedFullWriter.Readers) (q : List Bool) :
+    q ∉ BoundedCriticalSampleFormula.language P (fun _ => []) := by
+  rw [BoundedCriticalSampleFormula.language_iff]
+  rintro ⟨_, _, h⟩
+  change False at h
+  exact h
+
+-- Even a true formula cannot validate a noncanonical descriptor.
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    pair c (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) ∉
+      BoundedCriticalSampleFormula.language P (fun _ => (Formula.not .falsum).encode) := by
+  apply BoundedCriticalSampleFormula.language_invalid
+  rw [BoundedCriticalSampleDescriptors.language_iff, pairSnd_pair]
+  rintro ⟨hc, _⟩
+  have hn : ¬BoundedCriticalSampleDescriptors.Canonical
+      (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) := by
+    change IntegerSumBits.difference (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) ≠
+      pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)
+    decide
+  exact hn hc
+
+example (P : BoundedFullWriter.Readers) (read : List Bool → List Bool) (c : List Bool) (r : ℕ)
+    (h : BoundedCriticalSampleCount.count P c = 0) :
+    pair c (BinaryNatCode.encode r) ∉ BoundedCriticalSampleFormula.ordinalLanguage P read := by
+  apply BoundedCriticalSampleFormula.ordinal_language_invalid
+  simp only [pairFst_pair, pairSnd_pair, h, Nat.zero_le]
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedCriticalSampleCount.count P c)) :
+    pair c (BinaryNatCode.encode r.val) ∈ BoundedCriticalSampleFormula.ordinalLanguage P (fun _ => predicate.encode) ↔
+      predicate.Holds (Formula.extend (BoundedCriticalSampleHashEnumeration.sampleEquiv P c r).val) := by
+  rw [BoundedCriticalSampleFormula.ordinal_language_packet, FormulaView.formula_encode]
+
+-- Formula truth and validated marking require only original native readers.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (read : List Bool → List Bool) (hr : read ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    BoundedCriticalSampleFormula.language P read ∈ PSPACE ∧
+      BoundedCriticalSampleFormula.ordinalLanguage P read ∈ PSPACE ∧
+      SpaceFunction (fun q => [decide (q ∈ BoundedCriticalSampleFormula.language P read)]) ∧
+      SpaceFunction (fun q => [decide (q ∈ BoundedCriticalSampleFormula.ordinalLanguage P read)]) :=
+  ⟨BoundedCriticalSampleFormula.mem_PSPACE h read hr ha,
+    BoundedCriticalSampleFormula.ordinal_mem_PSPACE h read hr ha,
+    BoundedCriticalSampleFormula.marking_evaluator h read hr ha,
+    BoundedCriticalSampleFormula.ordinal_marking_evaluator h read hr ha⟩
+
+end CriticalSampleFormulaTests

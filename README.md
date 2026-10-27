@@ -293,6 +293,10 @@ The checked ingredients are:
   coordinate signs at descriptors and hash-order ordinals. Guarded coordinate
   languages reject invalid descriptors and out-of-range ordinals or indices.
   Redundant high zeroes in binary coordinate indices are normalized.
+  Native rational substitution now evaluates encoded arithmetic terms on the
+  same samples. Boolean circuits decide arbitrary supplied formulas from these
+  atom signs, with native PSPACE marking flags at validated descriptors and
+  ordinals. Variables beyond the actual sample tuple are interpreted as zero.
   Assembling recursive coordinate families remains required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with

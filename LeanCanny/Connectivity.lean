@@ -103,6 +103,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleRankBasis
 import LeanCanny.Encoding.BoundedCriticalSampleDescriptors
 import LeanCanny.Encoding.BoundedCriticalSampleTestSign
 import LeanCanny.Encoding.BoundedCriticalSampleCoordinateSign
+import LeanCanny.Encoding.BoundedCriticalSampleFormula
 
 /-! # Connectivity development
 
@@ -388,6 +389,11 @@ polynomial. Native numerator and denominator readers recover the signs of
 every actual sample coordinate, with guarded descriptor and coordinate-index
 languages and a hash-order ordinal reader. Coordinate index words are
 normalized before selecting the rational coordinate polynomial.
+Native rational substitution now also evaluates supplied encoded arithmetic
+terms at these samples, using zero beyond the actual tuple dimension.
+Boolean circuits evaluate arbitrary supplied formulas with these native atom
+decisions. Their guarded descriptor and ordinal languages give native PSPACE
+formula-marking queries on the actual sample set.
 Assembling the recursive coordinate families remains
 required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
