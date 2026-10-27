@@ -302,8 +302,13 @@ The checked ingredients are:
   and Tarski queries preserve the same sample while attaching query records.
   Distinct-root and prescribed-sign counts in these fibers are native, including
   degree drops and repeated roots.
-  Assembling recursive coordinate families remains required. Source connectivity
-  is equivalent to pairwise path connectivity of these samples. Their exact
+  Constructed rational coordinate families now free one actual sample
+  coordinate while retaining the others. Native term substitution gives line
+  polynomials with exact sign semantics and no poles. Native PSPACE queries
+  decide whether a term vanishes anywhere on the line, including identically
+  zero terms, with descriptor and coordinate validation.
+  Assembling higher-dimensional recursive coordinate families remains required.
+  Source connectivity is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
   independent formula witnesses. Selected sample serialization and constrained
   feasibility compose with direction selection in polynomial space. Independent

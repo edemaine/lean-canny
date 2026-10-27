@@ -1044,6 +1044,21 @@ prescribed-sign counts from three moments, together with native PSPACE sign
 realizability. The zero polynomial has an empty polynomial root list. This
 provides the fiber arithmetic for actual sample bases; the full recursive
 coordinate families and cover still need construction.
+`BoundedCriticalSampleLineCoordinates` now constructs concrete rational
+bivariate coordinate families from the original sample readers. One binary
+index frees a coordinate; all others remain at the same sample parameter.
+Raw coordinate and modulus words are normalized before existing native
+readers are called. `BoundedCriticalSampleLineCorrect` proves nonvanishing
+denominators and identifies the environment with a finite coordinate update
+of the actual sample.
+`BoundedCriticalSampleLineTerm` substitutes a supplied encoded arithmetic
+term in these families, with native coefficient readers and derived bounds.
+Specialized signs agree with the term on the actual coordinate line.
+`BoundedCriticalSampleLineZero` combines the native zero-polynomial flag and
+distinct-root count to decide zero existence in native PSPACE, also for a
+term vanishing on the entire line. The language validates the descriptor and
+the free coordinate. This constructs one free coordinate; higher-dimensional
+recursive families and the complete cover remain required.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

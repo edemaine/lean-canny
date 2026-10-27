@@ -105,6 +105,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleTestSign
 import LeanCanny.Encoding.BoundedCriticalSampleCoordinateSign
 import LeanCanny.Encoding.BoundedCriticalSampleFormula
 import LeanCanny.Encoding.BoundedCriticalSampleSliceRootCount
+import LeanCanny.Encoding.BoundedCriticalSampleLineZero
 
 /-! # Connectivity development
 
@@ -401,7 +402,12 @@ pseudo-remainder seeds, and Tarski queries preserve the descriptor while
 attaching query records. Unit and squared moments give native distinct-root
 and prescribed-sign counts in these fibers. This backend retains exactly
 the selected actual sample, with no assumed degree stability.
-Assembling the recursive coordinate families remains
+Native rational-coordinate families now free one coordinate of an actual
+sample while keeping all the others fixed. Native term substitution gives
+their line polynomials with derived bounds; all coordinate denominators stay
+nonzero. Native PSPACE zero-existence queries validate the descriptor and
+free coordinate, including terms vanishing on the entire line.
+Assembling the higher-dimensional recursive coordinate families remains
 required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
 sample-circuit serialization and constrained sample feasibility compose with

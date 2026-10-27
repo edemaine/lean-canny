@@ -6037,3 +6037,118 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {F G : Family} (A : F.A
     Tarski.evaluator h A B ha, RootCount.count_evaluator h A ha, RootCount.realizable_mem_PSPACE h A B ha s⟩
 
 end CriticalSampleSliceTests
+
+namespace CriticalSampleLineTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR Polynomial
+open scoped Classical
+
+#guard BoundedCriticalSampleLineCoordinates.baseQuery
+  (pair (pair (pair (pair [true] [false]) [true, false, false]) [false, false]) (pair [] [])) ==
+    pair (pair (pair [true] [false]) (pair [true] [])) []
+
+-- Free coordinates still use residues modulo one, rather than literal one.
+example (P : BoundedFullWriter.Readers) (u : List Bool) :
+    BoundedCriticalSampleLineCoordinates.coefficient P (fun _ => 0) true
+      (pair (pair (pair u []) []) (pair [] [true])) = [] := by
+  simp only [BoundedCriticalSampleLineCoordinates.coefficient, BoundedCriticalSampleLineCoordinates.index,
+    BoundedCriticalSampleLineCoordinates.outerWord,
+    pairFst_pair, pairSnd_pair, show Nat.fromBitsLE ([] : List Bool) = 0 from rfl,
+    show Nat.fromBitsLE ([true] : List Bool) = 1 from rfl, ite_true]
+  have hm : RationalSubstitution.IntegerBits.mValue (BoundedCriticalSampleLineCoordinates.oneQuery
+      (pair (pair (pair u []) []) (pair [] [true]))) = 1 := by
+    simp only [RationalSubstitution.IntegerBits.mValue, BoundedCriticalSampleLineCoordinates.oneQuery,
+      BoundedCriticalSampleLineCoordinates.modulusWord, pairSnd_pair, pairFst_pair, BinaryNat.normalize]
+    rfl
+  rw [PrimitivePairBits.coefficient, hm, RationalSubstitution.IntegerBits.coefficientResidue]
+  apply Eq.trans ?_ (show MatrixPower.residueBits (0 : ZMod 1) = [] from rfl)
+  exact congrArg (fun z : ZMod 1 => MatrixPower.residueBits z) (Subsingleton.elim _ _)
+
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (j : Fin (P.dim c + 4)) (t : ℝ) :
+    BivariateRationalTermReader.environment (BoundedCriticalSampleLineCoordinates.family P (fun _ => j.val) true)
+      (BoundedCriticalSampleLineCoordinates.family P (fun _ => j.val) false) (pair c r)
+        (BoundedCriticalSampleLabels.parameter P c x).val t = Formula.extend (Function.update x.val j t) :=
+  BoundedCriticalSampleLineCoordinates.environment_finite_sample P (fun _ => j.val) c r x t j.isLt
+
+-- An identically zero term has zeros on the line despite its empty root list.
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r ∈
+      BoundedCriticalSampleLineTerm.language P (fun _ => 0) (fun _ => (Term.const 0).toData.toBits) := by
+  rw [BoundedCriticalSampleLineTerm.language_sample P _ _ c r x (by omega)]
+  refine ⟨0, ?_⟩
+  simp only [TermView.term_toBits, Term.eval, Int.cast_zero]
+
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r ∉
+      BoundedCriticalSampleLineTerm.language P (fun _ => 0) (fun _ => (Term.const 1).toData.toBits) := by
+  rw [BoundedCriticalSampleLineTerm.language_sample P _ _ c r x (by omega)]
+  rintro ⟨_, h⟩
+  exact one_ne_zero (by simpa only [TermView.term_toBits, Term.eval, Int.cast_one] using h : (1 : ℝ) = 0)
+
+-- Frozen coordinates retain their actual values on the entire line.
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r ∈
+      BoundedCriticalSampleLineTerm.language P (fun _ => 0) (fun _ => (Term.var 1).toData.toBits) ↔
+        x.val ⟨1, by omega⟩ = 0 := by
+  rw [BoundedCriticalSampleLineTerm.language_sample P _ _ c r x (by omega)]
+  simp only [TermView.term_toBits, Term.eval, Function.update_of_ne (by decide : 1 ≠ 0),
+    Formula.extend, show 1 < P.dim c + 4 by omega, dite_true, exists_const]
+
+private def positive : Term := .add (.mul (.var 0) (.var 0)) (.const 1)
+
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r ∉
+      BoundedCriticalSampleLineTerm.language P (fun _ => 0) (fun _ => positive.toData.toBits) := by
+  rw [BoundedCriticalSampleLineTerm.language_sample P _ _ c r x (by omega)]
+  rintro ⟨t, h⟩
+  simp only [TermView.term_toBits, positive, Term.eval, Function.update_self, Int.cast_one] at h
+  nlinarith [sq_nonneg t]
+
+private def squareTerm : Term := .mul (.var 0) (.var 0)
+
+-- The constructed term family, with its actual rational coordinates,
+-- counts the repeated root of the square once.
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    BoundedCriticalSampleSlice.RootCount.count P
+      (BoundedCriticalSampleLineTerm.family P (fun _ => 0) (fun _ => squareTerm.toData.toBits))
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r) = 1 := by
+  let p := BoundedCriticalSampleSlice.specialized P
+    (BoundedCriticalSampleLineTerm.family P (fun _ => 0) (fun _ => squareTerm.toData.toBits))
+    (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r)
+  have hs (t : ℝ) : p.eval t = 0 ↔ t * t = 0 := by
+    dsimp only [p]
+    rw [BoundedCriticalSampleSlice.specialized_sample, BoundedCriticalSampleLineTerm.zero_sample]
+    simp only [TermView.term_toBits, squareTerm, Term.eval, Function.update_self]
+  have hp : p ≠ 0 := by
+    intro h
+    have hh := (hs 1).mp (by rw [h, Polynomial.eval_zero])
+    norm_num at hh
+  have hz : p.roots.toFinset = {0} := by
+    ext t
+    rw [Multiset.mem_toFinset, Polynomial.mem_roots hp, Polynomial.IsRoot.def, hs, Finset.mem_singleton]
+    exact mul_self_eq_zero
+  change p.roots.toFinset.card = 1
+  rw [hz, Finset.card_singleton]
+
+-- Guards reject bad coordinates even when the term is identically zero.
+example (P : BoundedFullWriter.Readers) (u : List Bool) :
+    u ∉ BoundedCriticalSampleLineTerm.language P (fun w => P.dim (pairFst w) + 4)
+      (fun _ => (Term.const 0).toData.toBits) := by
+  apply BoundedCriticalSampleLineTerm.language_invalid_coordinate
+  simp only [BoundedCriticalSampleSlice.context, pairFst_pair, le_refl]
+
+example (P : BoundedFullWriter.Readers) (u : List Bool) (hu : u ∉ BoundedCriticalSampleSlice.valid P) :
+    u ∉ BoundedCriticalSampleLineTerm.language P (fun _ => 0) (fun _ => (Term.const 0).toData.toBits) :=
+  BoundedCriticalSampleLineTerm.language_invalid P _ _ u hu
+
+-- All readers and decisions come from the original source and small query
+-- controls; no coordinate or term coefficient oracle is supplied.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {f : List Bool → ℕ} (hf : BinaryFn f)
+    (read : List Bool → List Bool) (hr : read ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalSampleSlice.coefficientSign P (BoundedCriticalSampleLineTerm.family P f read)) ∧
+      BoundedCriticalSampleLineTerm.language P f read ∈ PSPACE :=
+  ⟨(BoundedCriticalSampleLineTerm.native_readers h hf read hr ha).1,
+    BoundedCriticalSampleLineTerm.mem_PSPACE h hf read hr ha⟩
+
+end CriticalSampleLineTests
