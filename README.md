@@ -277,8 +277,10 @@ The checked ingredients are:
   Selected derivative-sign moments now have native polynomial-space evaluators
   over exactly these filtered sample roots. Full Thom signatures separate the
   samples, and monomials with support bounded by the short label width span
-  their rational-valued functions. Native queries at an individual ordered
-  sample label remain required.
+  their rational-valued functions. Short binary records realize these monomials.
+  Native Gram entries and prefix-rank queries select a basis, with native access
+  to each short record. Native queries at an individual ordered sample label
+  remain required.
   Assembling recursive coordinate families remains required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with

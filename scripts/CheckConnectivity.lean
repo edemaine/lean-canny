@@ -5459,3 +5459,80 @@ example (P : BoundedFullWriter.Readers) (c : List Bool)
   exact h (congrArg (BoundedCriticalSampleLabels.label P c) hx)
 
 end CriticalSampleMomentTests
+
+namespace CriticalSampleRecordTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR
+open BoundedCriticalSampleRecords
+open scoped Classical BigOperators
+
+#guard Ternary.ones (BinaryNatCode.encode 0) == []
+#guard Ternary.ones (BinaryNatCode.encode 4) == BinaryNatCode.encode 40
+
+-- A complete zero slot is a unit, even though the zeroth derivative
+-- vanishes at every accepted parameter root.
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    (moment P (pair c (List.replicate (width P c) false)) : ℚ) =
+      (BoundedCriticalSampleCount.count P c : ℚ) := by
+  have hz (n : ℕ) : Nat.fromBitsLE (List.replicate n false) = 0 := by
+    induction n with
+    | zero => rfl
+    | succ n ih => simp only [List.replicate_succ, Nat.fromBitsLE_cons, Bool.false_eq_true, ite_false, ih]
+  have hc : recordSlots P (pair c (List.replicate (width P c) false)) = 1 := by
+    simp only [recordSlots, pairFst_pair, pairSnd_pair, List.length_replicate]
+    exact Nat.div_self (width_pos P c)
+  have hcoord : SparseFeatureRecords.coordinate (width P c) (List.replicate (width P c) false) 0 = 0 := by
+    simp only [SparseFeatureRecords.coordinate, Nat.zero_mul, List.drop_zero, List.take_replicate, Nat.min_self]
+    exact hz _
+  rw [BoundedCriticalSampleRecordSpan.moment_eq_sum_values, hc]
+  simp only [SparseFeatureRecords.value, Finset.prod_range_succ, Finset.prod_range_zero,
+    hcoord, SparseFeatureRecords.factor_zero, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one,
+    Fintype.card_coe, BoundedCriticalSampleLabels.rootSet_card]
+
+-- No samples means rank zero for every prefix, including prefixes past
+-- the fixed candidate matrix dimension.
+example (P : BoundedFullWriter.Readers) (c : List Bool)
+    (h : BoundedCriticalSampleCount.count P c = 0) (k : ℕ) :
+    BoundedCriticalSamplePrefixRank.prefixRank P c k = 0 := by
+  have H := BoundedCriticalSamplePrefixRank.prefixRank_le_count P c k
+  omega
+
+-- Gram diagonal entries are sums of squares over the filtered samples.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (i : BoundedCriticalSampleRecordSpan.Index P c) :
+    0 ≤ (BoundedCriticalSampleRecordSpan.entry P
+      (pair c (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode i.val))) : ℚ) := by
+  rw [BoundedCriticalSampleRecordSpan.entry_packet]
+  change 0 ≤ ∑ x : BoundedCriticalSampleRecordSpan.Root P c,
+    BoundedCriticalSampleRecordSpan.matrix P c i x * BoundedCriticalSampleRecordSpan.matrix P c i x
+  exact Finset.sum_nonneg (fun x _ => mul_self_nonneg (BoundedCriticalSampleRecordSpan.matrix P c i x))
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    UnaryFn (length P) ∧ SpaceFunction (BoundedCriticalSampleRankBasis.record P) ∧
+      SpaceFunction (fun q => BinaryNatCode.encode (BoundedCriticalSamplePrefixRank.rank P q)) :=
+  ⟨length_unary h, BoundedCriticalSampleRankBasis.record_evaluator h ha,
+    BoundedCriticalSamplePrefixRank.evaluator h ha⟩
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedCriticalSampleCount.count P c)) :
+    BoundedCriticalSampleRecordSpan.row P c
+      (BoundedCriticalSampleRankBasis.record P (pair c (BinaryNatCode.encode r.val))) =
+        BoundedCriticalSampleRankBasis.basis P c r := by
+  rw [BoundedCriticalSampleRankBasis.basis_apply, BoundedCriticalSampleRankBasis.record_selected]
+
+-- The natively selected short records distinguish distinct actual samples.
+example (P : BoundedFullWriter.Readers) (c : List Bool)
+    (x y : BoundedFullCriticalSamples.Samples P c)
+    (h : BoundedCriticalSampleLabels.label P c x ≠ BoundedCriticalSampleLabels.label P c y) :
+    ∃ r : Fin (BoundedCriticalSampleCount.count P c),
+      BoundedCriticalSampleRecordSpan.row P c
+        (BoundedCriticalSampleRankBasis.record P (pair c (BinaryNatCode.encode r.val)))
+          (BoundedCriticalSampleLabels.parameter P c x) ≠
+      BoundedCriticalSampleRecordSpan.row P c
+        (BoundedCriticalSampleRankBasis.record P (pair c (BinaryNatCode.encode r.val)))
+          (BoundedCriticalSampleLabels.parameter P c y) := by
+  by_contra! he
+  simp only [BoundedCriticalSampleRankBasis.record_selected] at he
+  have hp := BoundedCriticalSampleRankBasis.selected_separates P c he
+  have hx := (BoundedCriticalSampleLabels.rootEquiv P c).symm.injective hp
+  exact h (congrArg (BoundedCriticalSampleLabels.label P c) hx)
+
+end CriticalSampleRecordTests

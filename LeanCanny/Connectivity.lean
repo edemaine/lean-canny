@@ -99,6 +99,7 @@ import LeanCanny.Encoding.BoundedCriticalRationalCoordinates
 import LeanCanny.Encoding.BoundedCriticalSampleCount
 import LeanCanny.Encoding.BoundedCriticalSampleIsolation
 import LeanCanny.Encoding.BoundedCriticalSampleMoments
+import LeanCanny.Encoding.BoundedCriticalSampleRankBasis
 
 /-! # Connectivity development
 
@@ -367,7 +368,10 @@ Selected derivative-sign moments now sum over exactly these filtered sample
 roots, using native coefficient readers and streamed sign-pattern counts.
 Their full Thom signatures separate the samples, and monomials with support
 bounded by the existing short label width span all rational-valued functions
-on them. Native queries at an individual ordered sample label remain required.
+on them. Short binary records realize every spanning monomial. Their native
+Gram entries sum over the filtered samples, and prefix-rank queries select a
+basis with native access to each short record. Native queries at an individual
+ordered sample label remain required.
 Assembling the recursive coordinate families remains
 required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
