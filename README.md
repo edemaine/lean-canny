@@ -377,6 +377,13 @@ The checked ingredients are:
   Its coefficients and distinct-root count have native readers and explicit
   binary bounds. Uniform indexed queries compute each factor's sign on
   intervening cells and validate both factor and product-root indices.
+  Its ordered roots construct a complete finite cell cover, including root
+  singletons, exterior rays, and the whole line for an empty root set. Every
+  factor sign is constant on each cell. Any Boolean combination of these signs
+  therefore has a constructed accessible cover of its actual solution set,
+  with both connectivity tests transferred to its relative frontier graph.
+  Short cell labels have native validity checks, including base-root validation.
+  Native truth and incidence routines for the complete cell graph remain required.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between

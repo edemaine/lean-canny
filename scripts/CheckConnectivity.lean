@@ -4357,3 +4357,92 @@ example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (
 
 end
 end AlgebraicRootProductTests
+
+namespace CompleteRealCellTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity
+open LeanCanny.Geometry.OrderedRealCells
+open BoundedAlgebraicSlice BoundedFullWriter
+open scoped Classical
+
+-- No roots means one cell, covering all real points without an endpoint convention.
+example : Fintype.card (Index (∅ : Finset ℝ)) = 1 := by
+  simpa only [Finset.card_empty, Nat.mul_zero, Nat.zero_add] using card_index (∅ : Finset ℝ)
+
+example (x : ℝ) : x ∈ piece (∅ : Finset ℝ) (.inr ⟨0, by simp⟩) := by
+  change x ∈ gap ∅ _
+  rw [gap_empty]
+  exact Set.mem_univ _
+
+private theorem root_singleton (a : ℝ) (i : Fin ({a} : Finset ℝ).card) : root {a} i = a :=
+  Finset.mem_singleton.mp (root_mem {a} i)
+
+example (a : ℝ) : gap ({a} : Finset ℝ) ⟨0, by simp⟩ = Set.Iio a := by
+  rw [gap_zero (by simp), root_singleton]
+
+example (a : ℝ) : gap ({a} : Finset ℝ) ⟨1, by simp⟩ = Set.Ioi a := by
+  have H := gap_last (s := ({a} : Finset ℝ)) (by simp)
+  rw [root_singleton] at H
+  simpa only [Finset.card_singleton] using H
+
+-- Root points belong to point cells and never to a gap.
+example (s : Finset ℝ) (j : Fin s.card) (k : Fin (s.card + 1)) : root s j ∉ gap s k :=
+  fun h => gap_no_root s k h (root_mem s j)
+
+-- Removing a boundary point leaves its restricted point cell empty.
+example (i : Fin ({0} : Finset ℝ).card) :
+    OrderedRealCellCover.restrictedPiece {0} {x : ℝ | x ≠ 0} (.inl i) = ∅ := by
+  apply Set.eq_empty_iff_forall_notMem.mpr
+  intro x hx
+  change x.val = root {0} i at hx
+  exact x.property (hx.trans (root_singleton 0 i))
+
+example (s : Finset ℝ) (k : Fin (s.card + 1)) : FrontierCover.Accessible (gap s k) :=
+  OrderedRealCellCover.gap_accessible s k
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) :
+    AlgebraicSliceCellCover.solutionSet P Q u (fun _ => False) = ∅ := rfl
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) :
+    AlgebraicSliceCellCover.solutionSet P Q u (fun _ => True) = Set.univ := rfl
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (truth : (Fin (Q.count (pairFst u)) → SignType) → Prop) (i : AlgebraicSliceCellCover.Index P Q u) :
+    FrontierCover.Accessible (AlgebraicSliceCellCover.restrictedPiece P Q u truth i) :=
+  AlgebraicSliceCellCover.accessible P Q u hu truth i
+
+-- Native label validity charges both the actual root count and base-root validation.
+example {P : Readers} (h : P.PolyTime) (Q : BivariateQueryProductBits.Family) (A : BivariateQueryProductBits.Access Q)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    AlgebraicSliceCellLabels.language P Q ∈ PSPACE := AlgebraicSliceCellLabels.mem_PSPACE h A ha
+
+example (Q : BivariateQueryProductBits.Family) (A : BivariateQueryProductBits.Access Q) :
+    UnaryFn (AlgebraicSliceCellCover.labelWidth Q) := AlgebraicSliceCellCover.labelWidth_unary A
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (i : AlgebraicSliceCellCover.Index P Q u) :
+    pair u (AlgebraicSliceCellLabels.label P Q u i) ∈ AlgebraicSliceCellLabels.language P Q :=
+  AlgebraicSliceCellLabels.label_valid P Q u hu i
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u word : List Bool)
+    (hw : pair u word ∈ AlgebraicSliceCellLabels.language P Q) :
+    ∃! i : AlgebraicSliceCellCover.Index P Q u, AlgebraicSliceCellLabels.label P Q u i = word :=
+  AlgebraicSliceCellLabels.exists_unique_label P Q u word hw
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u word : List Bool) (hu : u ∉ valid P) :
+    pair u word ∉ AlgebraicSliceCellLabels.language P Q := AlgebraicSliceCellLabels.invalid_base P Q u word hu
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u word : List Bool)
+    (hw : word.length ≠ AlgebraicSliceCellCover.labelWidth Q u) :
+    pair u word ∉ AlgebraicSliceCellLabels.language P Q := by
+  intro H
+  exact hw (by simpa only [pairFst_pair, pairSnd_pair] using H.2.1)
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u word : List Bool)
+    (hw : 2 * BoundedAlgebraicSliceRootProduct.count P Q u + 1 ≤ Nat.fromBitsLE word) :
+    pair u word ∉ AlgebraicSliceCellLabels.language P Q := by
+  intro H
+  exact (Nat.not_lt_of_ge hw) (by simpa only [pairFst_pair, pairSnd_pair] using H.2.2)
+
+end
+end CompleteRealCellTests

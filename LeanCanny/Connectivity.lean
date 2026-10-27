@@ -87,7 +87,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberThom
 import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
-import LeanCanny.Encoding.BoundedAlgebraicSliceRootProductCellLanguage
+import LeanCanny.Connectivity.AlgebraicSliceCellLabels
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -459,6 +459,14 @@ real roots are exactly the union of the factor roots. Its coefficients and
 distinct-root count are native, with explicit binary bounds. Uniform indexed
 queries compute each test's sign on intervening cells; their native languages
 validate both factor indices and product-root ordinals.
+The product roots now construct a complete finite real-cell cover: root
+singletons, all intervening gaps, both exterior rays, and the whole line when
+there are no roots. Every factor sign is constant on every cell. Restricting
+these cells to any predicate of the factor signs gives an accessible cover of
+the actual solution set, with both connectivity tests transferred to its
+relative frontier graph. Explicit short cell labels have native validity
+checking, including base-root validation. Native truth and incidence routines
+for the complete cell graph remain required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
