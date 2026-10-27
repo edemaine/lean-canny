@@ -87,7 +87,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberThom
 import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
-import LeanCanny.Connectivity.AlgebraicSliceSystemCellGraph
+import LeanCanny.Connectivity.AlgebraicSliceSystemReachability
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -472,9 +472,11 @@ Native factor-sign readers now cover point cells, both rays, every interior
 gap, and the whole line in rootless fibers. Their validated languages reject
 invalid base roots, factors, and cell labels. Binary-counted native scans select
 the cells where every factor has a requested sign, including the common zero
-set. Both connectivity tests for these sets transfer to the resulting native
-vertex and relative-incidence languages. General Boolean truth evaluation and
-the full recursive graph construction remain required.
+set. Unused words denote empty pieces in a constructed bit frontier cover.
+The native graph algorithm decides whole-set connectivity and paths between
+labeled cells in these actual solution sets, including empty systems and
+singular roots. Endpoint widths and algebraic base validity are checked.
+General Boolean truth evaluation remains required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

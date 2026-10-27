@@ -4619,3 +4619,90 @@ example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu
 
 end
 end CompleteCellSignTests
+
+namespace AlgebraicSystemPSPACETests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity
+open BoundedFullWriter BoundedAlgebraicSlice AlgebraicSliceCellCover
+open scoped Classical
+
+-- Unused words carry empty pieces and cannot create frontier edges.
+example {ι X : Type*} [TopologicalSpace X] (label : ι → List Bool) (pieces : ι → Set X)
+    (word : List Bool) (hw : ¬ ∃ i, label i = word) :
+    FiniteLabelCover.piece label pieces word = ∅ := FiniteLabelCover.piece_empty label pieces word hw
+
+example {ι X : Type*} [TopologicalSpace X] (label : ι → List Bool) (pieces : ι → Set X)
+    (u v : List Bool) (hu : ¬ ∃ i, label i = u) :
+    ¬ FrontierCover.Incident (FiniteLabelCover.piece label pieces) u v := by
+  intro H
+  have hn := (H.nonempty _).1
+  rw [FiniteLabelCover.piece_empty label pieces u hu] at hn
+  exact Set.not_nonempty_empty hn
+
+-- Whole-set connectivity now uses the actual constructed cover, with no graph oracle.
+example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family} (A : BivariateQueryProductBits.Access Q)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    AlgebraicSliceSystemPSPACE.connectedLanguage P Q s ∈ PSPACE :=
+  AlgebraicSliceSystemPSPACE.connected_mem_PSPACE h A ha s
+
+example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family} (A : BivariateQueryProductBits.Access Q)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    AlgebraicSliceSystemReachability.language P Q s ∈ PSPACE := AlgebraicSliceSystemReachability.mem_PSPACE h A ha s
+
+-- Invalid base queries are rejected even if the corresponding graph is empty.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (s : SignType) (hu : u ∉ valid P) :
+    u ∉ AlgebraicSliceSystemPSPACE.connectedLanguage P Q s := fun H => hu H.1
+
+-- An empty system defines the whole line and is connected at every valid base.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (s : SignType) (hn : Q.count (pairFst u) = 0) :
+    u ∈ AlgebraicSliceSystemPSPACE.connectedLanguage P Q s := by
+  have hS : solutionSet P Q u (fun v => ∀ i, v i = s) = Set.univ := by
+    ext x
+    simp only [solutionSet, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
+    intro i
+    have := i.isLt
+    omega
+  have hp : IsPreconnected (solutionSet P Q u (fun v => ∀ i, v i = s)) := by
+    rw [hS]
+    exact isPreconnected_univ
+  let : PreconnectedSpace (solutionSet P Q u (fun v => ∀ i, v i = s)) := Subtype.preconnectedSpace hp
+  exact ⟨hu, isPreconnected_univ⟩
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u a b : List Bool) (s : SignType) (hu : u ∉ valid P) :
+    pair u (pair a b) ∉ AlgebraicSliceSystemReachability.language P Q s :=
+  AlgebraicSliceSystemReachability.invalid_base P Q u a b s hu
+
+-- A truncated endpoint must not be normalized into a valid path query.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u a b : List Bool) (s : SignType)
+    (ha : a.length ≠ labelWidth Q u) : pair u (pair a b) ∉ AlgebraicSliceSystemReachability.language P Q s := by
+  intro H
+  exact ha (by simpa only [AlgebraicSliceSystemReachability.leftWord, pairFst_pair, pairSnd_pair] using H.2.1)
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u a b : List Bool) (s : SignType)
+    (hb : b.length ≠ labelWidth Q u) : pair u (pair a b) ∉ AlgebraicSliceSystemReachability.language P Q s := by
+  intro H
+  exact hb (by simpa only [AlgebraicSliceSystemReachability.rightWord, pairFst_pair, pairSnd_pair] using H.2.2.1)
+
+-- Correct width alone cannot make an unused numerical label reachable.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u a b : List Bool) (s : SignType)
+    (ha : 2 * BoundedAlgebraicSliceRootProduct.count P Q u + 1 ≤ Nat.fromBitsLE a) :
+    pair u (pair a b) ∉ AlgebraicSliceSystemReachability.language P Q s := by
+  intro H
+  have hv := H.2.2.2.1
+  simp only [AlgebraicSliceSystemPSPACE.vertex, AlgebraicSliceSystemReachability.leftWord,
+    pairFst_pair, pairSnd_pair, decide_eq_true_eq] at hv
+  have hb := hv.1.2.2
+  simp only [pairFst_pair, pairSnd_pair] at hb
+  exact (Nat.not_lt_of_ge ha) hb
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (s : SignType) (c d : Index P Q u) {x y : solutionSet P Q u (fun v => ∀ i, v i = s)}
+    (hx : x ∈ AlgebraicSliceSystemCellGraph.restrictedPiece P Q u s c)
+    (hy : y ∈ AlgebraicSliceSystemCellGraph.restrictedPiece P Q u s d) :
+    pair u (pair (AlgebraicSliceCellLabels.label P Q u c) (AlgebraicSliceCellLabels.label P Q u d)) ∈
+      AlgebraicSliceSystemReachability.language P Q s ↔ JoinedIn Set.univ x y :=
+  AlgebraicSliceSystemReachability.packet P Q u hu s c d hx hy
+
+end
+end AlgebraicSystemPSPACETests
