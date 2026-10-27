@@ -113,6 +113,8 @@ import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
 import LeanCanny.Encoding.BoundedCriticalSampleFiberSignatureRead
 import LeanCanny.Encoding.BoundedCriticalSampleFiberCellQueries
 import LeanCanny.Encoding.BoundedCriticalSampleFiberLineTest
+import LeanCanny.Connectivity.CriticalSampleSliceBooleanReachability
+import LeanCanny.Connectivity.CriticalSampleSliceCellSignLanguage
 
 /-! # Connectivity development
 
@@ -435,8 +437,14 @@ bivariate tests and their binary-indexed derivatives now have native signs
 at these ordered roots. Native one-sided signs agree throughout intervening
 cells for zero or factor tests. Constructed coordinate-line term queries
 evaluate the original term on the actual sample tuple with its free coordinate
-updated, with native coordinate and child-label validation. Constructing new
-sample bases recursively and assembling the complete cover remain required.
+updated, with native coordinate and child-label validation. Indexed factors
+now construct a zero-aware root product at that same sample. Its ordered
+point cells and gaps, including exterior rays and rootless fibers, give an
+accessible sign-invariant cover with native labels, signs, and incidence.
+Boolean sign circuits select the actual solution-set cells; native graph
+queries decide fiber connectivity and cell-label paths, with validation of
+the parent descriptor and endpoint widths. Constructing new sample bases
+recursively and assembling the full higher-dimensional cover remain required.
 Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
 sample-circuit serialization and constrained sample feasibility compose with

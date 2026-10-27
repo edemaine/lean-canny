@@ -6932,3 +6932,244 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {f : List Bool → ℕ}
     BoundedCriticalSampleFiberLineTest.language_mem_PSPACE h hf head test hh ht ha s⟩
 
 end CriticalSampleFiberLineTests
+
+namespace ActualSampleRootProductTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice (Family)
+open BoundedCriticalSampleSlice BoundedCriticalSampleSliceRootProduct
+open scoped Classical BigOperators
+
+-- An empty family has product one, including when the declared degree bounds are zero.
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool)
+    (hu : u ∈ valid P) (hn : Q.count (context u) = 0) : polynomial P Q u = 1 := by
+  let : IsEmpty (Fin (Q.count (context u))) := ⟨fun i => by have H := i.isLt; omega⟩
+  rw [product_valid P Q u hu]
+  simp only [Finset.univ_eq_empty, Finset.prod_empty]
+
+-- All zero factors are removed rather than annihilating the root product.
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool)
+    (hu : u ∈ valid P) (hz : ∀ i : Fin (Q.count (context u)), BoundedCriticalSampleSliceIndexed.value P Q u i.val = 0) :
+    polynomial P Q u = 1 := by
+  rw [product_valid P Q u hu]
+  simp only [hz, ite_true, Finset.prod_const_one]
+
+-- A symbolically nonzero factor C(X) collapses at parameter zero and must become one.
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (i : ℕ)
+    (hu : u ∈ valid P) (hp : point P (pairFst u) = 0) (hq : Q.polynomial (context u) i = Polynomial.C Polynomial.X) :
+    BoundedCriticalSampleSliceRootProductSource.factor P Q (pair (context u) u) i = 1 := by
+  have hz : BoundedCriticalSampleSliceIndexed.value P Q u i = 0 := by
+    rw [BoundedCriticalSampleSliceIndexed.value_valid P Q u i hu, hq, hp, Polynomial.map_C]
+    simp only [ParameterTarski.evalHom, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X, Polynomial.C_0]
+  simp only [BoundedCriticalSampleSliceRootProductSource.factor, pairSnd_pair, hz, ite_true]
+
+-- Repetition of the same nonzero factor and additional zero factors do not add distinct roots.
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool)
+    (hu : u ∈ valid P) (p : ℝ[X])
+    (hv : ∀ i : Fin (Q.count (context u)), BoundedCriticalSampleSliceIndexed.value P Q u i.val = 0 ∨
+      BoundedCriticalSampleSliceIndexed.value P Q u i.val = p)
+    (hi : ∃ i : Fin (Q.count (context u)), BoundedCriticalSampleSliceIndexed.value P Q u i.val = p) :
+    (polynomial P Q u).roots.toFinset = p.roots.toFinset := by
+  ext y
+  rw [root_iff P Q u hu]
+  constructor
+  · rintro ⟨i, hy⟩
+    rcases hv i with hz | he
+    · simp only [hz, Polynomial.roots_zero, Multiset.toFinset_zero, Finset.notMem_empty] at hy
+    · simpa only [he] using hy
+  · intro hy
+    obtain ⟨i, he⟩ := hi
+    exact ⟨i, by simpa only [he] using hy⟩
+
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∉ valid P) :
+    count P Q u = 0 := by
+  change (polynomial P Q u).roots.toFinset.card = 0
+  rw [polynomial_invalid P Q u hu]
+  simp only [Polynomial.roots_zero, Multiset.toFinset_zero, Finset.card_empty]
+
+-- The product count and uniform factor queries use the original readers only.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (Q : BivariateQueryProductBits.Family)
+    (A : BivariateQueryProductBits.Access Q) (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun u => BinaryNatCode.encode (count P Q u)) := count_evaluator h A ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (Q : BivariateQueryProductBits.Family)
+    (A : BivariateQueryProductBits.Access Q) (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c)
+    (fromLeft : Bool) (s : SignType) :
+    BoundedCriticalSampleSliceRootProductCellLanguage.language P Q fromLeft s ∈ PSPACE :=
+  BoundedCriticalSampleSliceRootProductCellLanguage.mem_PSPACE h A ha fromLeft s
+
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u index ordinal : List Bool)
+    (hi : Q.count (context u) ≤ Nat.fromBitsLE index) (fromLeft : Bool) (s : SignType) :
+    pair u (pair index ordinal) ∉ BoundedCriticalSampleSliceRootProductCellLanguage.language P Q fromLeft s := by
+  apply BoundedCriticalSampleSliceRootProductCellLanguage.invalid_index
+  simpa only [pairFst_pair, pairSnd_pair] using hi
+
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u index ordinal : List Bool)
+    (hr : count P Q u ≤ Nat.fromBitsLE ordinal) (fromLeft : Bool) (s : SignType) :
+    pair u (pair index ordinal) ∉ BoundedCriticalSampleSliceRootProductCellLanguage.language P Q fromLeft s := by
+  apply BoundedCriticalSampleSliceRootProductCellLanguage.invalid_root
+  simpa only [pairFst_pair, pairSnd_pair] using hr
+
+-- The indexed cell theorem derives its zero-or-factor condition from the constructed product.
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (i : Fin (Q.count (context u))) (r t : Fin (count P Q u)) (hrt : t.val = r.val + 1) (s : SignType)
+    (y : ℝ) (hy : y ∈ Set.Ioo (BoundedCriticalSampleSliceRootProductQueries.root P Q u r).val
+      (BoundedCriticalSampleSliceRootProductQueries.root P Q u t).val) :
+    pair u (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode r.val)) ∈
+      BoundedCriticalSampleSliceRootProductCellLanguage.language P Q false s ↔
+      SignType.sign ((BoundedCriticalSampleSliceIndexed.value P Q u i.val).eval y) = s :=
+  BoundedCriticalSampleSliceRootProductCellLanguage.interval_packet P Q u hu i r t hrt s y hy
+
+end
+end ActualSampleRootProductTests
+
+
+namespace ActualSampleBooleanSliceEndpointTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity
+open BoundedFullWriter
+open BoundedAlgebraicSlice (Family)
+open BoundedCriticalSampleSlice CriticalSampleSliceCellCover CriticalSampleSliceBooleanAtoms
+open scoped Classical
+
+-- This circuit denotes the complement of the first factor's zero set.
+private def notZeroSource : Source where
+  circuit := ⟨fun _ => 2, fun q => if Nat.fromBitsLE (pairSnd q) = 0 then 2 else 3, fun _ => 0, fun _ => 0⟩
+  factor _ := 0
+  sign _ := 0
+
+private theorem notZeroAccess : Access notZeroSource := by
+  have ht := BinaryFn.ite ((BinaryFn.fromBits pairSnd_mem_FP).eq (BinaryFn.const 0)) (BinaryFn.const 2) (BinaryFn.const 3)
+  exact ⟨⟨UnaryFn.const 2, ht, BinaryFn.const 0, BinaryFn.const 0⟩, BinaryFn.const 0, constFn_mem_FP []⟩
+
+example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family} (A : BivariateQueryProductBits.Access Q)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    CriticalSampleSliceBooleanPSPACE.connectedLanguage P Q notZeroSource ∈ PSPACE :=
+  CriticalSampleSliceBooleanPSPACE.connected_mem_PSPACE h A ha notZeroSource notZeroAccess
+
+-- Excluding a root must disconnect the two rays, even with a negated atom.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool)
+    (hn : 0 < Q.count (context u)) (hp : BoundedCriticalSampleSliceIndexed.value P Q u 0 = Polynomial.X) :
+    u ∉ CriticalSampleSliceBooleanPSPACE.connectedLanguage P Q notZeroSource := by
+  have hS : solutionSet P Q u (CriticalSampleSliceBooleanCells.truth notZeroSource (context u)) = {x : ℝ | x ≠ 0} := by
+    ext x
+    simp [solutionSet, CriticalSampleSliceBooleanCells.truth, notZeroSource, BooleanCircuitSpace.value,
+      BooleanCircuitSpace.values, BooleanCircuitSpace.operation, semanticAtom, pairSnd_pair,
+      BinaryNatCode.encode, Nat.fromBitsLE, Nat.fromBits, hn, signVector, hp, sign_eq_zero_iff]
+  intro H
+  have hc : IsPreconnected (solutionSet P Q u (CriticalSampleSliceBooleanCells.truth notZeroSource (context u))) :=
+    isPreconnected_iff_preconnectedSpace.mpr ⟨H.2⟩
+  rw [hS] at hc
+  have hz : (0 : ℝ) ∈ {x : ℝ | x ≠ 0} := hc.ordConnected.out (x := -1) (by norm_num) (y := 1) (by norm_num) (by norm_num)
+  exact hz rfl
+
+-- The public endpoints require only original readers and circuit metadata.
+example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family} (A : BivariateQueryProductBits.Access Q)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (S : Source) (B : Access S) :
+    CriticalSampleSliceBooleanPSPACE.connectedLanguage P Q S ∈ PSPACE ∧ CriticalSampleSliceBooleanReachability.language P Q S ∈ PSPACE :=
+  ⟨CriticalSampleSliceBooleanPSPACE.connected_mem_PSPACE h A ha S B, CriticalSampleSliceBooleanReachability.mem_PSPACE h A ha S B⟩
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u : List Bool) (hu : u ∉ valid P) :
+    u ∉ CriticalSampleSliceBooleanPSPACE.connectedLanguage P Q S := fun H => hu H.1
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u a b : List Bool) (hu : u ∉ valid P) :
+    pair u (pair a b) ∉ CriticalSampleSliceBooleanReachability.language P Q S :=
+  CriticalSampleSliceBooleanReachability.invalid_base P Q S u a b hu
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u a b : List Bool)
+    (ha : a.length ≠ labelWidth Q u) : pair u (pair a b) ∉ CriticalSampleSliceBooleanReachability.language P Q S := by
+  intro H
+  exact ha (by simpa only [CriticalSampleSliceBooleanReachability.leftWord, pairFst_pair, pairSnd_pair] using H.2.1)
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u a b : List Bool)
+    (hb : b.length ≠ labelWidth Q u) : pair u (pair a b) ∉ CriticalSampleSliceBooleanReachability.language P Q S := by
+  intro H
+  exact hb (by simpa only [CriticalSampleSliceBooleanReachability.rightWord, pairFst_pair, pairSnd_pair] using H.2.2.1)
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u a b : List Bool)
+    (ha : 2 * BoundedCriticalSampleSliceRootProduct.count P Q u + 1 ≤ Nat.fromBitsLE a) :
+    pair u (pair a b) ∉ CriticalSampleSliceBooleanReachability.language P Q S := by
+  intro H
+  have hv := H.2.2.2.1
+  simp only [CriticalSampleSliceBooleanPSPACE.vertex, CriticalSampleSliceBooleanReachability.leftWord,
+    pairFst_pair, pairSnd_pair, decide_eq_true_eq] at hv
+  have hb := hv.1.2.2
+  simp only [pairFst_pair, pairSnd_pair] at hb
+  exact (Nat.not_lt_of_ge ha) hb
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u : List Bool) (hu : u ∈ valid P)
+    (c d : Index P Q u) {x y : solutionSet P Q u (CriticalSampleSliceBooleanCells.truth S (context u))}
+    (hx : x ∈ CriticalSampleSliceBooleanCells.restrictedPiece P Q S u c)
+    (hy : y ∈ CriticalSampleSliceBooleanCells.restrictedPiece P Q S u d) :
+    pair u (pair (CriticalSampleSliceCellLabels.label P Q u c) (CriticalSampleSliceCellLabels.label P Q u d)) ∈
+      CriticalSampleSliceBooleanReachability.language P Q S ↔ JoinedIn Set.univ x y :=
+  CriticalSampleSliceBooleanReachability.packet P Q S u hu c d hx hy
+
+end
+end ActualSampleBooleanSliceEndpointTests
+
+namespace ActualSampleCellCoverTests
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity
+open BoundedFullWriter BoundedCriticalSampleSlice
+open scoped Classical
+
+-- Product and factor records preserve the actual descriptor. Circuit
+-- metadata still sees the original source and auxiliary record.
+#guard BoundedCriticalSampleSliceIndexed.sourceContext
+  (context (attach (pair (pair [true] [false, true]) [false]) [true, false])) ==
+    pair (pair [true] [false]) [true, false]
+#guard CriticalSampleSliceBooleanAtoms.originalGate
+  (pair (pair (pair (pair [true] [false, true]) [false]) [true]) [false, true]) ==
+    pair (pair [true] [false]) [false, true]
+
+-- No roots means precisely one gap covering the whole real line, also
+-- when the family has nonzero size but every factor specializes to zero.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (hz : ∀ i : Fin (Q.count (context u)), BoundedCriticalSampleSliceIndexed.value P Q u i.val = 0) :
+    Fintype.card (CriticalSampleSliceCellCover.Index P Q u) = 1 := by
+  have hp : BoundedCriticalSampleSliceRootProduct.polynomial P Q u = 1 := by
+    rw [BoundedCriticalSampleSliceRootProduct.product_valid P Q u hu]
+    simp only [hz, ite_true, Finset.prod_const_one]
+  rw [CriticalSampleSliceCellCover.card_index]
+  change 2 * (BoundedCriticalSampleSliceRootProduct.polynomial P Q u).roots.toFinset.card + 1 = 1
+  simp [hp]
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (i : Fin (Q.count (context u))) (c : CriticalSampleSliceCellCover.Index P Q u)
+    (hz : BoundedCriticalSampleSliceIndexed.value P Q u i.val = 0) :
+    CriticalSampleSliceCellSigns.value P Q
+      (pair u (pair (BinaryNatCode.encode i.val) (CriticalSampleSliceCellLabels.label P Q u c))) = [] := by
+  obtain ⟨y, hy⟩ := Geometry.OrderedRealCells.piece_nonempty (CriticalSampleSliceCellCover.roots P Q u) c
+  rw [CriticalSampleSliceCellSigns.packet P Q u hu i c y hy, hz]
+  simp only [Polynomial.eval_zero, sign_zero, InfinitesimalSign.encode]
+
+-- Padded or truncated labels must not become different valid graph nodes.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u word : List Bool)
+    (hw : word.length ≠ CriticalSampleSliceCellCover.labelWidth Q u) :
+    pair u word ∉ CriticalSampleSliceCellLabels.language P Q := by
+  intro H
+  exact hw (by simpa only [pairFst_pair, pairSnd_pair] using H.2.1)
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (i j : CriticalSampleSliceCellCover.Index P Q u) :
+    pair u (pair (CriticalSampleSliceCellLabels.label P Q u i) (CriticalSampleSliceCellLabels.label P Q u j)) ∈
+      CriticalSampleSliceCellAdjacency.language P Q ↔
+        FrontierCover.Incident (CriticalSampleSliceCellCover.piece P Q u) i j :=
+  CriticalSampleSliceCellAdjacency.packet P Q u hu i j
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (truth : (Fin (Q.count (context u)) → SignType) → Prop) (i : CriticalSampleSliceCellCover.Index P Q u) :
+    FrontierCover.Accessible (CriticalSampleSliceCellCover.restrictedPiece P Q u truth i) :=
+  CriticalSampleSliceCellCover.accessible P Q u hu truth i
+
+-- All native label, sign, and edge queries use the original sample and
+-- indexed coefficient readers; no real representative of a cell is supplied.
+example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family}
+    (A : BivariateQueryProductBits.Access Q) (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    CriticalSampleSliceCellLabels.language P Q ∈ PSPACE ∧
+      CriticalSampleSliceCellSignLanguage.language P Q s ∈ PSPACE ∧
+      CriticalSampleSliceCellAdjacency.language P Q ∈ PSPACE :=
+  ⟨CriticalSampleSliceCellLabels.mem_PSPACE h A ha, CriticalSampleSliceCellSignLanguage.mem_PSPACE h A ha s,
+    CriticalSampleSliceCellAdjacency.mem_PSPACE h A ha⟩
+
+end ActualSampleCellCoverTests

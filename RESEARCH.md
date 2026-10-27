@@ -1154,7 +1154,30 @@ the actual constructed coordinate-line families. It reads encoded term
 signs at ordered zeros of an encoded head term, with no extra coefficient
 oracle. Correctness uses the actual sample tuple updated at the free
 coordinate; guarded sign languages also validate that coordinate.
-Constructing recursive sample bases and the complete cover remains open.
+`BoundedCriticalSampleSliceIndexed` attaches factor indices without changing
+the actual sample. Its native specialized nonzero test drives
+`BoundedCriticalSampleSliceRootProductSource`, replacing identically zero
+factors by one before the product. `RootProduct` constructs a nonzero
+polynomial at every valid sample, with roots exactly the union of the
+specialized factors' roots and native product coefficients and root counts.
+`RootProductQueries`, `RootProductPointSign`, and `RootProductCellLanguage`
+compute indexed point and one-sided signs while preserving the original
+descriptor and query record. Every nonzero factor divides the constructed
+product, so interval-sign correctness needs no supplied divisibility oracle.
+`CriticalSampleSliceCellCover` constructs the finite accessible cover of
+every sign-defined subset of the actual fiber, including point cells, gaps,
+both exterior rays, and the rootless case. `CellLabels` and `CellAdjacency`
+provide native label validation and exact frontier incidence with polynomial
+label width. `CellSignGeometry`, `CellSigns`, and `CellSignLanguage` recover
+each factor's sign on the entire cell, including zero factors.
+`CriticalSampleSliceBooleanAtoms` and `BooleanCells` evaluate the original
+Boolean sign circuit at the source-and-record context while retaining the
+actual sample descriptor. `BooleanPSPACE` constructs the restricted cell
+graph and proves native PSPACE connectivity of its actual real solution set.
+`BooleanReachability` proves that guarded cell-label reachability is exactly
+path connection in that solution set. Invalid base descriptors and endpoint
+widths are rejected. Recursive sample-base construction and the complete
+higher-dimensional cover remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

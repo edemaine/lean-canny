@@ -327,8 +327,12 @@ The checked ingredients are:
   roots are native. One-sided signs also give signs throughout intervening
   cells for zero or factor tests. Constructed coordinate-line queries read
   original term signs on the updated sample tuple, with coordinate and child
-  validity guards. Recursive sample construction and the complete cover remain
-  required.
+  validity guards. Indexed factors now construct a zero-aware root product
+  at the same actual sample. Its point cells, gaps, and exterior rays form
+  a finite sign-invariant cover, with native labels, signs, and incidence.
+  Boolean sign circuits select cells; native graph queries decide connectivity
+  and cell-label paths in that actual fiber. Recursive sample construction
+  and the full higher-dimensional cover remain required.
   Source connectivity is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
   independent formula witnesses. Selected sample serialization and constrained

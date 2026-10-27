@@ -56,4 +56,14 @@ theorem degree_valid (P : Readers) (F : Family) (u : List Bool) (hu : 0 < degree
   have hz : degree P F u = 0 := by rw [degree, specialized, ite_eq_right hv, natDegree_zero]
   omega
 
+noncomputable def nonzeroLanguage (P : Readers) (F : Family) : Language := {u | specialized P F u ≠ 0}
+theorem nonzero_decider {P : Readers} (h : P.PolyTime) {F : Family} (A : F.Access)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) : SpaceDecider (nonzeroLanguage P F) := by
+  apply (offset_evaluator h A ha).decider (fun z => decide (z ≠ []))
+    (Brackets.stringEq_fppred id_mem_FP (constFn_mem_FP [])).not.flag_mem_FP
+  intro u
+  simp only [nonzeroLanguage, Set.mem_ofPred_eq, decide_eq_true_eq, BinaryNatCode.encode,
+    ne_eq, BinaryNat.bits_eq_nil_iff, offset]
+  split_ifs <;> simp_all
+
 end LeanCanny.Encoding.BoundedCriticalSampleSlice
