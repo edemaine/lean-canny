@@ -87,6 +87,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberThom
 import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
+import LeanCanny.Encoding.BoundedAlgebraicFiberOrderedRoot
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -434,8 +435,15 @@ fiber-root function. Their full Gram matrix has rank equal to the distinct-root
 count; concatenated record moments give native entries on all raw base queries.
 Native prefix-rank scans select one basis record at a time. The selected rows
 span all fiber-root functions and distinguish every pair of roots; native
-selected-Gram entries recompute both row searches. Individual fiber-root
-signature readout remains required.
+selected-Gram entries recompute both row searches. Triple and derivative-weighted
+moments supply native integer Gram pencils and pointwise probes. Bounded native
+search chooses short separating integer labels, with the actual root count
+computed internally. Native cut queries enumerate these labels in hash order;
+two determinant-coefficient signs recover one derivative sign at the denoted
+fiber root. Every realizable signature receives a short ordinal, without storing
+the full signature. Streamed Thom comparisons compute real-order ranks; native
+bounded search converts each geometric root ordinal into its hash ordinal and
+reads derivative signs at exactly the original ordered fiber root.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

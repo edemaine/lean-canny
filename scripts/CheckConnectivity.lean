@@ -3979,3 +3979,154 @@ example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool)
 
 end
 end AlgebraicFiberBasisTests
+
+namespace AlgebraicFiberSignatureTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice
+open scoped Classical BigOperators
+
+-- Zero parameters retain the zeroth power; modulus one erases every weight.
+#guard BoundedAlgebraicFiberWeightedMoments.weight (pair
+  (pair (BoundedAlgebraicFiberWeightedMoments.context [] 3 [true] 0) (pair [] [])) []) == [true]
+#guard BoundedAlgebraicFiberWeightedMoments.weight (pair
+  (pair (BoundedAlgebraicFiberWeightedMoments.context [] 3 [true] 0) (pair [] [])) [true]) == []
+#guard BoundedAlgebraicFiberWeightedMoments.weight (pair
+  (pair (BoundedAlgebraicFiberWeightedMoments.context [] 3 [] 19) (pair [] [])) []) == []
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u m indices : List Bool) (t : ℕ) :
+    BoundedAlgebraicFiberWeightedMoments.entry P F
+      (pair (BoundedAlgebraicFiberWeightedMoments.context u 0 m t) indices) = 0 := by
+  simp only [BoundedAlgebraicFiberWeightedMoments.entry, BoundedAlgebraicFiberWeightedMoments.count,
+    BoundedAlgebraicFiberWeightedMoments.context, pairFst_pair, pairSnd_pair, BinaryNatCode.encode,
+    Nat.fromBitsLE_bits, Finset.range_zero, Finset.sum_empty]
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u indices : List Bool) (n t : ℕ) :
+    BoundedAlgebraicFiberWeightedMoments.entry P F
+      (pair (BoundedAlgebraicFiberWeightedMoments.context u n [] t) indices) = 0 := by
+  simp only [BoundedAlgebraicFiberWeightedMoments.entry, BoundedAlgebraicFiberWeightedMoments.term,
+    BoundedAlgebraicFiberWeightedMoments.base, BoundedAlgebraicFiberWeightedMoments.context,
+    BoundedAlgebraicFiberWeightedMoments.modulus, pairFst_pair, pairSnd_pair,
+    show Nat.fromBitsLE ([] : List Bool) = 0 from rfl, Nat.zero_add, Nat.mod_one, Nat.cast_zero, mul_zero,
+    Finset.sum_const_zero]
+
+-- Invalid base ordinals yield no fiber roots, hence no triple moments or hash values.
+example (P : BoundedFullWriter.Readers) (F : Family) (u indices : List Bool) (hu : u ∉ valid P) :
+    BoundedAlgebraicFiberBasisMoments.moment P F (pair u indices) = 0 := by
+  unfold BoundedAlgebraicFiberBasisMoments.moment BoundedAlgebraicFiberBasisMoments.source
+  rw [pairFst_pair]
+  exact BoundedAlgebraicFiberRecordMoments.moment_invalid P F u _ hu
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) (hu : u ∉ valid P) :
+    BoundedAlgebraicFiberHashRoots.values P F u = ∅ := by
+  apply Finset.card_eq_zero.mp
+  rw [BoundedAlgebraicFiberHashRoots.values_card]
+  simp only [RootCount.count, RootCount.roots, specialized, ite_eq_right hu, Polynomial.roots_zero,
+    Multiset.toFinset_zero, Finset.card_empty]
+
+-- A feature block clamps raw indices; the public signature reader instead returns zero.
+example (F : Family) (u : List Bool) (k : ℕ) (hk : F.degree (pairFst u) < k) :
+    BoundedAlgebraicFiberFeatureMoments.order F (pair u (BinaryNatCode.encode k)) = F.degree (pairFst u) := by
+  simp only [BoundedAlgebraicFiberFeatureMoments.order, pairFst_pair, pairSnd_pair,
+    BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.min_eq_right hk.le]
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u ordinal : List Bool) (k : ℕ)
+    (hk : F.degree (pairFst u) < k) :
+    BoundedAlgebraicFiberSignatureRead.value P F (pair (pair u ordinal) (BinaryNatCode.encode k)) = [] := by
+  simp only [BoundedAlgebraicFiberSignatureRead.value, BoundedAlgebraicFiberSignatureRead.inRange,
+    BoundedAlgebraicFiberSignatureRead.original, pairFst_pair, pairSnd_pair, BinaryNatCode.encode,
+    Nat.fromBitsLE_bits, Nat.not_le.mpr hk, decide_false, Bool.false_eq_true, ↓reduceIte]
+
+example (P : BoundedFullWriter.Readers) (F : Family) (q : List Bool) :
+    BoundedAlgebraicFiberPencilEntries.coefficient P F (pair q [false, true, false, false]) = 0 := by
+  simp [BoundedAlgebraicFiberPencilEntries.coefficient,
+    show Nat.fromBitsLE [false, true, false, false] = 2 from rfl]
+
+-- The native endpoints require only the original source and bivariate coefficient readers.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedAlgebraicFiberHashChoice.value P F) :=
+  BoundedAlgebraicFiberHashChoice.evaluator h A ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun u => SignStatisticBits.integerCode (BoundedAlgebraicFiberHashEnumeration.value P F u)) :=
+  BoundedAlgebraicFiberHashEnumeration.evaluator h A ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedAlgebraicFiberSignatureRead.value P F) :=
+  BoundedAlgebraicFiberSignatureRead.evaluator h A ha
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u m : List Bool) (t : ℕ) :
+    BoundedAlgebraicFiberWeightedMoments.context u (RootCount.count P F u) m t ∈
+      BoundedAlgebraicFiberPencilRootCount.language P F ↔
+        Function.Injective (BoundedAlgebraicFiberRootHash.integerValue P F u (Nat.fromBitsLE m + 1) t) :=
+  BoundedAlgebraicFiberPencilRootCount.language_packet P F u m t
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    Function.Injective (BoundedAlgebraicFiberHashChoice.hash P F u) :=
+  BoundedAlgebraicFiberHashChoice.hash_injective P F u
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool)
+    (x : BoundedAlgebraicFiberRecordSpan.Root P F u) :
+    (BoundedAlgebraicFiberHashChoice.hash P F u x).natAbs.size ≤ BoundedAlgebraicFiberHashChoice.hashBits F u :=
+  BoundedAlgebraicFiberHashChoice.hash_bits P F u x
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    Function.Bijective (BoundedAlgebraicFiberHashEnumeration.root P F u) :=
+  ⟨BoundedAlgebraicFiberHashEnumeration.root_injective P F u,
+    BoundedAlgebraicFiberHashEnumeration.root_surjective P F u⟩
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) (r : Fin (RootCount.count P F u)) (k : ℕ) :
+    BoundedAlgebraicFiberSignatureRead.value P F (pair (pair u (BinaryNatCode.encode r.val)) (BinaryNatCode.encode k)) =
+      InfinitesimalSign.encode (SignType.sign (((Polynomial.derivative^[k]) (specialized P F u)).eval
+        (BoundedAlgebraicFiberHashEnumeration.root P F u r).val)) :=
+  BoundedAlgebraicFiberSignatureRead.derivative_packet P F u r k
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    Function.Injective (BoundedAlgebraicFiberSignatureRead.signature P F u) :=
+  BoundedAlgebraicFiberSignatureRead.signature_injective P F u
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    Set.range (BoundedAlgebraicFiberSignatureRead.signature P F u) = Set.range (BoundedAlgebraicFiberThom.signature P F u) :=
+  BoundedAlgebraicFiberSignatureRead.signature_range P F u
+
+end
+end AlgebraicFiberSignatureTests
+
+namespace AlgebraicFiberOrderTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice
+open scoped Classical
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedAlgebraicFiberOrderedRoot.sign P F) :=
+  BoundedAlgebraicFiberOrderedRoot.sign_evaluator h A ha
+
+-- Comparisons use real coordinates even when hash order is different.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool)
+    (a b : Fin (RootCount.count P F u)) :
+    BoundedAlgebraicFiberRootOrder.value P F
+      (pair u (pair (BinaryNatCode.encode a.val) (BinaryNatCode.encode b.val))) =
+      [decide ((BoundedAlgebraicFiberHashEnumeration.root P F u a).val <
+        (BoundedAlgebraicFiberHashEnumeration.root P F u b).val)] :=
+  BoundedAlgebraicFiberRootOrder.value_packet P F u a b
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool)
+    (r : Fin (RootCount.count P F u)) :
+    BoundedAlgebraicFiberOrderedRoot.root P F u r = BoundedAlgebraicFiberRoot.root P F u r :=
+  BoundedAlgebraicFiberOrderedRoot.root_eq_original P F u r
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool)
+    (r : Fin (RootCount.count P F u)) (k : ℕ) :
+    BoundedAlgebraicFiberOrderedRoot.sign P F
+      (pair (pair u (BinaryNatCode.encode r.val)) (BinaryNatCode.encode k)) =
+      InfinitesimalSign.encode (SignType.sign (((Polynomial.derivative^[k]) (specialized P F u)).eval
+        (BoundedAlgebraicFiberRoot.root P F u r).val)) := by
+  rw [BoundedAlgebraicFiberOrderedRoot.sign_packet, BoundedAlgebraicFiberOrderedRoot.root_eq_original]
+
+end
+end AlgebraicFiberOrderTests

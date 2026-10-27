@@ -354,8 +354,15 @@ The checked ingredients are:
   moments on all raw base queries. Native prefix-rank scans select a basis
   one record at a time. The selected rows span all fiber-root functions and
   distinguish every pair of roots; selected-Gram entry queries recompute
-  both searches in native polynomial space. Individual fiber-root signature
-  readout remains required.
+  both searches in native polynomial space. Native triple and derivative-weighted
+  moments supply integer Gram pencils and pointwise probes. Bounded native search
+  chooses short separating integer labels, computing the actual root count
+  internally. Native cuts enumerate these labels in hash order. Two
+  determinant-coefficient signs recover one derivative sign at the denoted root;
+  short ordinals label every realizable signature without storing it in full.
+  Streamed Thom comparisons compute real-order ranks, and bounded native search
+  converts geometric ordinals to hash ordinals. Derivative-sign queries therefore
+  refer to exactly the original ordered fiber roots.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
