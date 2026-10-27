@@ -322,8 +322,13 @@ The checked ingredients are:
   hashes now label every distinct child root. A streamed derivative-sign
   reader computes one signature entry at a hash-order ordinal; its PSPACE
   sign languages reject invalid bases and ordinals, including for sign zero.
-  General test signs at child labels, recursive sample construction, and the
-  complete cover remain required.
+  Native rank conversion now orders those labels by their real coordinates.
+  General polynomial-test signs and binary-indexed test derivatives at child
+  roots are native. One-sided signs also give signs throughout intervening
+  cells for zero or factor tests. Constructed coordinate-line queries read
+  original term signs on the updated sample tuple, with coordinate and child
+  validity guards. Recursive sample construction and the complete cover remain
+  required.
   Source connectivity is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
   independent formula witnesses. Selected sample serialization and constrained

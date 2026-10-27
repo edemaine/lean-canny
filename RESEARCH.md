@@ -1131,8 +1131,30 @@ coefficients natively from the constructed moments.
 sign at a hash-order child ordinal. Orders beyond the degree return zero.
 Its native PSPACE sign languages also validate the child ordinal, rejecting
 invalid actual-sample descriptors and out-of-range ordinals even for sign zero.
-These signatures are complete and distinguish all the child roots. General
-test signs at child labels and recursive sample-base construction remain open.
+These signatures are complete and distinguish all the child roots.
+`BoundedCriticalSampleFiberRootOrder`, `RootRank`, and `OrderedRoot` convert
+the hash labels to real-order ordinals with native streamed comparisons and
+bounded searches. The resulting roots equal the original mathematical ordered
+roots, including multiplicities counted only once.
+`BoundedCriticalSampleFiberTestMoments` multiplies an arbitrary bivariate
+test with the sparse-record product before specialization at the actual
+sample. Its native weighted moments use the same parent descriptor and
+original query record. `TestProbe`, `TestProbeSource`, and `TestSign` recover
+general test signs at ordered child roots, with native PSPACE sign languages
+rejecting invalid bases and ordinals even for sign zero.
+`BoundedCriticalSampleFiberRootReindex` proves that attaching metadata
+preserves the ordered child coordinate. `TestDerivatives` uses this to read
+arbitrary binary-indexed test derivatives at that same root.
+`BoundedCriticalSampleFiberLocalSign` computes one-sided signs by scanning
+for the first nonzero derivative and proves their neighborhood semantics.
+`RootCells` and `CellQueries` identify these signs throughout cells between
+consecutive roots when the specialized test is zero or divides the head.
+`BoundedCriticalSampleFiberLineTest` composes the general test reader with
+the actual constructed coordinate-line families. It reads encoded term
+signs at ordered zeros of an encoded head term, with no extra coefficient
+oracle. Correctness uses the actual sample tuple updated at the free
+coordinate; guarded sign languages also validate that coordinate.
+Constructing recursive sample bases and the complete cover remains open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

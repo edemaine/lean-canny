@@ -6681,3 +6681,254 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {f : List Bool → ℕ}
 
 end
 end CriticalSampleFiberSignatureTests
+
+namespace CriticalSampleFiberOrderTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice (Family)
+open BoundedCriticalSampleSlice
+open scoped Classical
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalSampleFiberOrderedRoot.sign P F) :=
+  BoundedCriticalSampleFiberOrderedRoot.sign_evaluator h A ha
+
+-- Comparisons use real coordinates even when hash order is different.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool)
+    (a b : Fin (RootCount.count P F u)) :
+    BoundedCriticalSampleFiberRootOrder.value P F
+      (pair u (pair (BinaryNatCode.encode a.val) (BinaryNatCode.encode b.val))) =
+      [decide ((BoundedCriticalSampleFiberHashEnumeration.root P F u a).val <
+        (BoundedCriticalSampleFiberHashEnumeration.root P F u b).val)] :=
+  BoundedCriticalSampleFiberRootOrder.value_packet P F u a b
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool)
+    (r : Fin (RootCount.count P F u)) :
+    BoundedCriticalSampleFiberOrderedRoot.root P F u r = BoundedCriticalSampleFiberRoot.root P F u r :=
+  BoundedCriticalSampleFiberOrderedRoot.root_eq_original P F u r
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool)
+    (r : Fin (RootCount.count P F u)) (k : ℕ) :
+    BoundedCriticalSampleFiberOrderedRoot.sign P F
+      (pair (pair u (BinaryNatCode.encode r.val)) (BinaryNatCode.encode k)) =
+      InfinitesimalSign.encode (SignType.sign (((Polynomial.derivative^[k]) (specialized P F u)).eval
+        (BoundedCriticalSampleFiberRoot.root P F u r).val)) := by
+  rw [BoundedCriticalSampleFiberOrderedRoot.sign_packet, BoundedCriticalSampleFiberOrderedRoot.root_eq_original]
+
+end
+end CriticalSampleFiberOrderTests
+
+namespace CriticalSampleFiberTestSignTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice (Family unit)
+open BoundedCriticalSampleSlice
+open scoped Classical
+
+-- The only leaves are the original source and the two bivariate readers.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalSampleFiberTestSign.value P F G) :=
+  BoundedCriticalSampleFiberTestSign.evaluator h A B ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    BoundedCriticalSampleFiberTestSign.language P F G s ∈ PSPACE :=
+  BoundedCriticalSampleFiberTestSign.language_mem_PSPACE h A B ha s
+
+example (P : BoundedFullWriter.Readers) (F G : Family) (u : List Bool) (r : Fin (RootCount.count P F u)) :
+    BoundedCriticalSampleFiberTestSign.value P F G (pair u (BinaryNatCode.encode r.val)) =
+      InfinitesimalSign.encode (SignType.sign ((specialized P G u).eval (BoundedCriticalSampleFiberRoot.root P F u r).val)) :=
+  BoundedCriticalSampleFiberTestSign.value_original P F G u r
+
+-- A vanishing test must return zero, although the probe denominator is nonzero.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) (r : Fin (RootCount.count P F u)) :
+    BoundedCriticalSampleFiberTestSign.value P F F (pair u (BinaryNatCode.encode r.val)) = [] := by
+  rw [BoundedCriticalSampleFiberTestSign.value_original, BoundedCriticalSampleFiberRoot.root_eval_zero]
+  simp only [sign_zero, InfinitesimalSign.encode]
+
+-- Unit weighting preserves the raw moment, on invalid base queries as well.
+example (P : BoundedFullWriter.Readers) (F : Family) (u record : List Bool) :
+    BoundedCriticalSampleFiberTestMoments.rawMoment P F unit (pair u record) =
+      BoundedCriticalSampleFiberRecordMoments.moment P F (pair u record) := by
+  by_cases hu : u ∈ valid P
+  · rw [BoundedCriticalSampleFiberTestMoments.raw_valid P F unit u record hu,
+      BoundedCriticalSampleFiberRecordMoments.moment_valid P F u record hu, RootCount.unit_specialized P u hu, mul_one]
+  · rw [BoundedCriticalSampleFiberTestMoments.raw_invalid P F unit u record hu,
+      BoundedCriticalSampleFiberRecordMoments.moment_invalid P F u record hu]
+
+example (P : BoundedFullWriter.Readers) (F G : Family) (u ordinal : List Bool)
+    (hu : u ∉ valid P) (s : SignType) :
+    pair u ordinal ∉ BoundedCriticalSampleFiberTestSign.language P F G s := by
+  apply BoundedCriticalSampleFiberTestSign.language_invalid
+  simp only [pairFst_pair, RootCount.count, RootCount.roots, specialized, ite_eq_right hu,
+    Polynomial.roots_zero, Multiset.toFinset_zero, Finset.card_empty, Nat.zero_le]
+
+-- Canonical and padded invalid fiber ordinals are rejected before testing the sign tag.
+example (P : BoundedFullWriter.Readers) (F G : Family) (u ordinal : List Bool)
+    (hi : F.degree (context u) ≤ Nat.fromBitsLE ordinal) (s : SignType) :
+    pair u ordinal ∉ BoundedCriticalSampleFiberTestSign.language P F G s := by
+  apply BoundedCriticalSampleFiberTestSign.language_invalid
+  simpa only [pairFst_pair, pairSnd_pair] using (BoundedCriticalSampleFiberRoot.count_le_degree P F u).trans hi
+
+end
+end CriticalSampleFiberTestSignTests
+
+namespace CriticalSampleFiberLocalSignTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice (Family)
+open BoundedCriticalSampleSlice
+open scoped Classical
+
+private theorem power_taylor (a : ℝ) (n : ℕ) : ((X - C a) ^ n).taylor a = (X ^ n : ℝ[X]) := by
+  rw [Polynomial.taylor_pow]
+  simp only [Polynomial.taylor_apply, Polynomial.sub_comp, Polynomial.X_comp, Polynomial.C_comp,
+    add_sub_cancel_right]
+
+-- Odd multiplicity reverses the sign; even multiplicity retains it on both sides.
+example (a : ℝ) : PolynomialLocalSign.right ((X - C a) ^ 3) a = 1 := by
+  rw [PolynomialLocalSign.right, power_taylor]
+  norm_num [Polynomial.trailingCoeff, Polynomial.natTrailingDegree_X_pow]
+
+example (a : ℝ) : PolynomialLocalSign.left ((X - C a) ^ 3) a = -1 := by
+  rw [PolynomialLocalSign.left, power_taylor, (PolynomialSignedReflection.preserves_lowest (X ^ 3 : ℝ[X])).2]
+  norm_num [Polynomial.trailingCoeff, Polynomial.natTrailingDegree_X_pow, Left.sign_neg]
+
+example (a : ℝ) : PolynomialLocalSign.left ((X - C a) ^ 2) a = 1 := by
+  rw [PolynomialLocalSign.left, power_taylor, (PolynomialSignedReflection.preserves_lowest (X ^ 2 : ℝ[X])).2]
+  norm_num [Polynomial.trailingCoeff, Polynomial.natTrailingDegree_X_pow]
+
+example (a : ℝ) : PolynomialLocalSign.right ((X - C a) ^ 2) a = 1 := by
+  rw [PolynomialLocalSign.right, power_taylor]
+  norm_num [Polynomial.trailingCoeff, Polynomial.natTrailingDegree_X_pow]
+
+example (a : ℝ) : PolynomialLocalSign.left 0 a = 0 ∧ PolynomialLocalSign.right 0 a = 0 := by
+  simp only [PolynomialLocalSign.left, PolynomialLocalSign.right, map_zero, Polynomial.zero_comp,
+    Polynomial.trailingCoeff_zero, sign_zero, and_self]
+
+-- Padded derivative words keep their parity and the zero-th derivative stays positive-oriented.
+#guard BoundedCriticalSampleFiberLocalSign.parityTag (pair [] [true, false, false]) == [true]
+#guard BoundedCriticalSampleFiberLocalSign.parityTag (pair [] [false, true, false]) == [false, true]
+#guard BoundedCriticalSampleFiberLocalSign.parityTag (pair [] []) == [false, true]
+
+def signStream (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (pairSnd q) < 2 then []
+  else if Nat.fromBitsLE (pairSnd q) = 2 then [true] else [false, true]
+
+-- The scan keeps the first nonzero tag, even when a later sign differs.
+#guard PolynomialLocalSignBits.value signStream (fun _ => BinaryNatCode.encode 5) [] == [true]
+#guard PolynomialLocalSignBits.value signStream (fun _ => []) [] == []
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (fromLeft : Bool) :
+    SpaceFunction (BoundedCriticalSampleFiberLocalSign.value P F G fromLeft) :=
+  BoundedCriticalSampleFiberLocalSign.evaluator h A B ha fromLeft
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (fromLeft : Bool) (s : SignType) :
+    BoundedCriticalSampleFiberCellQueries.language P F G fromLeft s ∈ PSPACE :=
+  BoundedCriticalSampleFiberCellQueries.mem_PSPACE h A B ha fromLeft s
+
+-- Derivative orders above the declared degree are zero at every valid fiber root.
+example (P : BoundedFullWriter.Readers) (F G : Family) (u : List Bool) (r : Fin (RootCount.count P F u))
+    (k : ℕ) (hk : G.degree (context u) < k) :
+    BoundedCriticalSampleFiberTestDerivatives.value P F G
+      (pair (pair u (BinaryNatCode.encode r.val)) (BinaryNatCode.encode k)) = [] := by
+  rw [BoundedCriticalSampleFiberTestDerivatives.packet,
+    Polynomial.iterate_derivative_eq_zero ((specialized_degree P G u).trans_lt hk)]
+  simp only [Polynomial.eval_zero, sign_zero, InfinitesimalSign.encode]
+
+example (P : BoundedFullWriter.Readers) (F G : Family) (u ordinal : List Bool)
+    (hu : u ∉ valid P) (fromLeft : Bool) (s : SignType) :
+    pair u ordinal ∉ BoundedCriticalSampleFiberCellQueries.language P F G fromLeft s := by
+  apply BoundedCriticalSampleFiberCellQueries.invalid
+  simp only [pairFst_pair, RootCount.count, RootCount.roots, specialized, ite_eq_right hu,
+    Polynomial.roots_zero, Multiset.toFinset_zero, Finset.card_empty, Nat.zero_le]
+
+-- The query computes the sign everywhere in the open cell, rather than at an assumed sample point.
+example (P : BoundedFullWriter.Readers) (F G : Family) (u : List Bool)
+    (r t : Fin (RootCount.count P F u)) (hrt : t.val = r.val + 1)
+    (hG : specialized P G u = 0 ∨ specialized P G u ∣ specialized P F u) (s : SignType)
+    (y : ℝ) (hy : y ∈ Set.Ioo (BoundedCriticalSampleFiberRoot.root P F u r).val (BoundedCriticalSampleFiberRoot.root P F u t).val) :
+    pair u (BinaryNatCode.encode r.val) ∈ BoundedCriticalSampleFiberCellQueries.language P F G false s ↔
+      SignType.sign ((specialized P G u).eval y) = s :=
+  BoundedCriticalSampleFiberCellQueries.interval_packet P F G u r t hrt hG s y hy
+
+end
+end CriticalSampleFiberLocalSignTests
+
+namespace CriticalSampleFiberLineTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR Polynomial
+open BoundedCriticalSampleSlice
+open scoped Classical
+
+-- Derivative queries attach their order inside the original record while
+-- retaining the same sample descriptor and child ordinal.
+#guard BoundedCriticalSampleFiberTestDerivatives.query
+  (pair (pair (pair (pair [true] [false, true]) [false]) [true]) [false, true]) ==
+    pair (pair (pair [true] [false, true]) (pair [false] [false, true])) [true]
+
+-- The selected zero of coordinate zero really updates that coordinate to
+-- zero; the same query reads a frozen coordinate of the actual sample.
+example (P : BoundedFullWriter.Readers) (c d : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (r : Fin (RootCount.count P
+      (BoundedCriticalSampleLineTerm.family P (fun _ => 0) (fun _ => (Term.var 0).toData.toBits))
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) d))) :
+    (BoundedCriticalSampleFiberRoot.root P
+      (BoundedCriticalSampleLineTerm.family P (fun _ => 0) (fun _ => (Term.var 0).toData.toBits))
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) d) r).val = 0 ∧
+    BoundedCriticalSampleFiberLineTest.value P (fun _ => 0)
+      (fun _ => (Term.var 0).toData.toBits) (fun _ => (Term.var 1).toData.toBits)
+      (pair (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) d) (BinaryNatCode.encode r.val)) =
+        InfinitesimalSign.encode (SignType.sign (x.val ⟨1, by omega⟩)) := by
+  constructor
+  · have hr := BoundedCriticalSampleFiberLineTest.root_sample P (fun _ => 0)
+      (fun _ => (Term.var 0).toData.toBits) c d x r
+    simpa only [TermView.term_toBits, Term.eval, Function.update_self] using hr
+  · rw [BoundedCriticalSampleFiberLineTest.value_sample]
+    simp only [TermView.term_toBits, Term.eval, Function.update_of_ne (by decide : 1 ≠ 0),
+      Formula.extend, show 1 < P.dim c + 4 by omega, dite_true]
+
+-- A constant negative test stays negative at every valid child root,
+-- including a root with multiplicity greater than one.
+example (P : BoundedFullWriter.Readers) (f : List Bool → ℕ) (head : List Bool → List Bool)
+    (c d : List Bool) (x : BoundedFullCriticalSamples.Samples P c) (hi : f (pair c d) < P.dim c + 4)
+    (r : Fin (RootCount.count P (BoundedCriticalSampleLineTerm.family P f head)
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) d))) :
+    pair (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) d) (BinaryNatCode.encode r.val) ∈
+      BoundedCriticalSampleFiberLineTest.language P f head (fun _ => (Term.const (-1)).toData.toBits) (-1) := by
+  rw [BoundedCriticalSampleFiberLineTest.language_sample P f head _ c d x hi r]
+  simp only [TermView.term_toBits, Term.eval, Int.cast_neg, Int.cast_one, Left.sign_neg, sign_one]
+
+example (P : BoundedFullWriter.Readers) (f : List Bool → ℕ) (head test : List Bool → List Bool)
+    (c d : List Bool) (x : BoundedFullCriticalSamples.Samples P c) (hi : f (pair c d) < P.dim c + 4)
+    (r : Fin (RootCount.count P (BoundedCriticalSampleLineTerm.family P f head)
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) d))) :
+    BoundedCriticalSampleFiberLineTest.value P f head test
+      (pair (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) d) (BinaryNatCode.encode r.val)) =
+        InfinitesimalSign.encode (SignType.sign ((TermView.term (test (pair c d))).eval
+          (Formula.extend (Function.update x.val ⟨f (pair c d), hi⟩
+            (BoundedCriticalSampleFiberRoot.root P (BoundedCriticalSampleLineTerm.family P f head)
+              (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) d) r).val)))) :=
+  BoundedCriticalSampleFiberLineTest.value_finite_sample P f head test c d x hi r
+
+-- Sign zero must not bypass the coordinate range guard.
+example (P : BoundedFullWriter.Readers) (head : List Bool → List Bool) (u : List Bool) :
+    u ∉ BoundedCriticalSampleFiberLineTest.language P
+      (fun w => P.dim (pairFst w) + 4) head (fun _ => (Term.const 0).toData.toBits) 0 := by
+  apply BoundedCriticalSampleFiberLineTest.language_invalid_coordinate
+  simp only [context, pairFst_pair, le_refl]
+
+-- The only computational leaves are the original sample source and two
+-- small arithmetic-term writers, with the free coordinate given in binary.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {f : List Bool → ℕ} (hf : BinaryFn f)
+    (head test : List Bool → List Bool) (hh : head ∈ FP) (ht : test ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    SpaceFunction (BoundedCriticalSampleFiberLineTest.value P f head test) ∧
+      BoundedCriticalSampleFiberLineTest.language P f head test s ∈ PSPACE :=
+  ⟨BoundedCriticalSampleFiberLineTest.evaluator h hf head test hh ht ha,
+    BoundedCriticalSampleFiberLineTest.language_mem_PSPACE h hf head test hh ht ha s⟩
+
+end CriticalSampleFiberLineTests

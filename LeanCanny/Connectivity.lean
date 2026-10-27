@@ -111,6 +111,8 @@ import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
 import LeanCanny.Encoding.BoundedCriticalSampleFiberSignatureRead
+import LeanCanny.Encoding.BoundedCriticalSampleFiberCellQueries
+import LeanCanny.Encoding.BoundedCriticalSampleFiberLineTest
 
 /-! # Connectivity development
 
@@ -427,9 +429,15 @@ and derivative-weighted moments include the native row searches in their
 space bounds, with no supplied basis table. Native short separating hashes
 now enumerate every distinct child root in hash order. Two native determinant
 signs recover each binary-indexed derivative sign at those roots, with guarded
-PSPACE sign languages rejecting invalid bases and ordinals. General test
-signs at child labels, constructing new sample bases recursively, and assembling
-the complete cover remain required. Native real critical-sample queries test these
+PSPACE sign languages rejecting invalid bases and ordinals. Native rank
+conversion orders the child labels by their real coordinates. Arbitrary
+bivariate tests and their binary-indexed derivatives now have native signs
+at these ordered roots. Native one-sided signs agree throughout intervening
+cells for zero or factor tests. Constructed coordinate-line term queries
+evaluate the original term on the actual sample tuple with its free coordinate
+updated, with native coordinate and child-label validation. Constructing new
+sample bases recursively and assembling the complete cover remain required.
+Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
 sample-circuit serialization and constrained sample feasibility compose with
 the native direction selector in polynomial space. Two independently varying
