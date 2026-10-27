@@ -1001,6 +1001,22 @@ permutation, preserves the pure-power leading form, and transfers properness
 and regularity over rational field extensions. The full recursive cover and
 critical-parameter query writers remain required.
 
+`Encoding/BoundedCriticalSampleIndexedMoments` and the indexed determinant
+probes let a test polynomial depend on a separate binary query index while
+keeping the actual sample filter, selected basis, hash and descriptor at the
+original source. `BoundedCriticalSampleIndexedSign` proves native polynomial
+sign access at these fixed descriptors and hash-order ordinals. Its guarded
+descriptor languages are in native PSPACE.
+`BoundedCriticalSampleCoordinateTests` supplies the rational-coordinate
+numerator and denominator tests from the existing native modular readers and
+binary degree/mass controls. Their quotient at an actual sample parameter is
+the original sample coordinate, and its denominator is nonzero.
+`BoundedCriticalSampleCoordinateSign` combines both signs, normalizing binary
+coordinate indices while retaining the original point descriptor. Its guarded
+descriptor and ordinal languages decide actual coordinate signs in native
+PSPACE without a supplied coordinate-sign oracle, and reject out-of-range
+coordinates and ordinals.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.

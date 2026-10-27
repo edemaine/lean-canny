@@ -5705,3 +5705,98 @@ example (P : BoundedFullWriter.Readers) (T : Test) (c : List Bool)
   BoundedCriticalSampleTestSign.ordinal_language_packet P T c r s
 
 end CriticalSamplePointSignTests
+
+namespace CriticalSampleCoordinateSignTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR
+open scoped Classical
+
+#guard BoundedCriticalSampleCoordinateSign.normalizeQuery (pair (pair [true] [false]) [true, false, false]) ==
+  pair (pair [true] [false]) [true]
+
+-- Query indices do not change the original sample count or descriptor frame.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (h : ℤ) (d : List Bool) :
+    BoundedCriticalSampleProbeEntries.dimension (BoundedCriticalSampleIndexedProbeFrame.context P c h d) =
+      BoundedCriticalSampleCount.count P c :=
+  BoundedCriticalSampleIndexedProbeFrame.dimension_context P c h d
+
+example (P : BoundedFullWriter.Readers) (c d : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    BoundedCriticalSampleIndexedSign.value P BoundedCriticalSampleTestMoments.unit
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) d) = [false, true] := by
+  rw [BoundedCriticalSampleIndexedSign.value_sample, BoundedCriticalSampleTestMoments.sign_unit]
+  rfl
+
+-- Coordinates are recovered from the actual sample, with no zero denominator.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (i : Fin (P.dim c + 4)) :
+    (BoundedCriticalRationalCoordinates.coordinate P (pair c (BinaryNatCode.encode i.val))).denominator.eval₂
+      (Int.castRingHom ℝ) (BoundedCriticalSampleLabels.parameter P c x).val ≠ 0 :=
+  BoundedCriticalSampleCoordinateTests.denominator_nonzero P c x i
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (i : Fin (P.dim c + 4)) :
+    BoundedCriticalSampleCoordinateSign.value P
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) (BinaryNatCode.encode i.val)) =
+      InfinitesimalSign.encode (SignType.sign (x.val i)) :=
+  BoundedCriticalSampleCoordinateSign.value_sample P c x i
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (i : Fin (P.dim c + 4)) (hi : x.val i = 0) :
+    BoundedCriticalSampleCoordinateSign.value P
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) (BinaryNatCode.encode i.val)) = [] := by
+  rw [BoundedCriticalSampleCoordinateSign.value_sample, hi, sign_zero]
+  rfl
+
+-- Redundant high zeroes do not select a different coordinate polynomial.
+example (P : BoundedFullWriter.Readers) (c w : List Bool) :
+    BoundedCriticalSampleCoordinateSign.value P (pair (pair c w) [true, false, false]) =
+      BoundedCriticalSampleCoordinateSign.value P (pair (pair c w) [true]) :=
+  BoundedCriticalSampleCoordinateSign.value_index_word P c w [true, false, false]
+
+example (P : BoundedFullWriter.Readers) (c w : List Bool) (s : SignType) :
+    pair (pair c w) (BinaryNatCode.encode (P.dim c + 4)) ∉ BoundedCriticalSampleCoordinateSign.language P s := by
+  apply BoundedCriticalSampleCoordinateSign.language_invalid_coordinate
+  simp only [BoundedCriticalSampleCoordinateSign.origin, pairFst_pair, pairSnd_pair,
+    BinaryNatCode.encode, Nat.fromBitsLE_bits, le_refl]
+
+-- Signed descriptor words must be canonical, independently of the index.
+example (P : BoundedFullWriter.Readers) (c d : List Bool) (s : SignType) :
+    pair (pair c (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1))) d ∉
+      BoundedCriticalSampleCoordinateSign.language P s := by
+  apply BoundedCriticalSampleCoordinateSign.language_invalid_descriptor
+  rw [pairFst_pair, BoundedCriticalSampleDescriptors.language_iff, pairSnd_pair]
+  rintro ⟨hc, _⟩
+  have hn : ¬BoundedCriticalSampleDescriptors.Canonical
+      (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) := by
+    change IntegerSumBits.difference (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) ≠
+      pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)
+    decide
+  exact hn hc
+
+-- Empty actual sample sets reject every ordinal coordinate query.
+example (P : BoundedFullWriter.Readers) (c d : List Bool) (r : ℕ) (s : SignType)
+    (h : BoundedCriticalSampleCount.count P c = 0) :
+    pair (pair c (BinaryNatCode.encode r)) d ∉ BoundedCriticalSampleCoordinateSign.ordinalLanguage P s := by
+  apply BoundedCriticalSampleCoordinateSign.ordinal_language_invalid
+  simp only [BoundedCriticalSampleCoordinateSign.origin, pairFst_pair, pairSnd_pair,
+    BinaryNatCode.encode, Nat.fromBitsLE_bits, h, Nat.zero_le]
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedCriticalSampleCount.count P c))
+    (i : Fin (P.dim c + 4)) (s : SignType) :
+    pair (pair c (BinaryNatCode.encode r.val)) (BinaryNatCode.encode i.val) ∈
+      BoundedCriticalSampleCoordinateSign.ordinalLanguage P s ↔
+        SignType.sign ((BoundedCriticalSampleHashEnumeration.sampleEquiv P c r).val i) = s :=
+  BoundedCriticalSampleCoordinateSign.ordinal_language_packet P c r i s
+
+-- All costs come from the original source readers; no coordinate oracle.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    SpaceFunction (BoundedCriticalSampleCoordinateSign.value P) ∧
+      SpaceFunction (BoundedCriticalSampleCoordinateSign.atOrdinal P) ∧
+      BoundedCriticalSampleCoordinateSign.language P s ∈ PSPACE ∧
+      BoundedCriticalSampleCoordinateSign.ordinalLanguage P s ∈ PSPACE :=
+  ⟨BoundedCriticalSampleCoordinateSign.evaluator h ha,
+    BoundedCriticalSampleCoordinateSign.ordinal_evaluator h ha,
+    BoundedCriticalSampleCoordinateSign.mem_PSPACE h ha s,
+    BoundedCriticalSampleCoordinateSign.ordinal_mem_PSPACE h ha s⟩
+
+end CriticalSampleCoordinateSignTests

@@ -102,6 +102,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleMoments
 import LeanCanny.Encoding.BoundedCriticalSampleRankBasis
 import LeanCanny.Encoding.BoundedCriticalSampleDescriptors
 import LeanCanny.Encoding.BoundedCriticalSampleTestSign
+import LeanCanny.Encoding.BoundedCriticalSampleCoordinateSign
 
 /-! # Connectivity development
 
@@ -382,6 +383,11 @@ parameter-polynomial signs at an actual-sample descriptor or hash-order ordinal.
 Descriptor validity and the exact sample count guard the native PSPACE sign
 languages. Test polynomials supply native modular readers and binary degree
 and mass bounds; no point-sign or moment oracle is assumed.
+Indexed tests preserve this same descriptor frame while varying the test
+polynomial. Native numerator and denominator readers recover the signs of
+every actual sample coordinate, with guarded descriptor and coordinate-index
+languages and a hash-order ordinal reader. Coordinate index words are
+normalized before selecting the rational coordinate polynomial.
 Assembling the recursive coordinate families remains
 required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected

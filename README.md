@@ -288,6 +288,11 @@ The checked ingredients are:
   sign languages reject invalid descriptors and out-of-range ordinals. Test
   polynomials supply native modular readers and binary degree and mass bounds,
   with no point-sign or moment oracle.
+  Indexed tests now keep the same sample descriptors while varying the queried
+  polynomial. Native numerator and denominator readers recover actual sample
+  coordinate signs at descriptors and hash-order ordinals. Guarded coordinate
+  languages reject invalid descriptors and out-of-range ordinals or indices.
+  Redundant high zeroes in binary coordinate indices are normalized.
   Assembling recursive coordinate families remains required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
