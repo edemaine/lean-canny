@@ -1078,6 +1078,25 @@ block, with no coordinate-sign or coefficient oracle. The sign semantics also
 commute with freezing the first free coordinate. These families keep the
 original sample base fixed; recursive construction of new sample bases and
 the complete cover remain required.
+`BoundedCriticalSampleFiberRoot` gives distinct roots of an actual-sample
+fiber short ordered binary labels, with native PSPACE validity. Invalid
+descriptors and zero heads have no valid child labels.
+`BoundedCriticalSampleFiberThom` proves that derivative signatures separate
+these roots and that sparse sign monomials span all rational-valued root
+functions. Individual derivative moments and sign counts are native, with
+binary orders and no symbolic-degree stability assumption.
+`BoundedCriticalSampleFiberRecordSpan` reuses the existing short sparse-record
+encoding at the actual sample's source and original record. Its row matrix
+and Gram matrix have rank equal to the distinct child-root count.
+`BoundedCriticalSampleFiberRecordMoments` constructs native sparse product
+moments while preserving both the sample descriptor and original record.
+It proves the exact sum over the child roots on every raw query, including
+concatenated records and invalid descriptors.
+`BoundedCriticalSampleFiberRecordGram` derives native integer Gram entries
+from these moments, with a degree bound on their magnitude. This prepares
+child-root basis selection over actual samples; native selection and signs
+at child labels still need construction before recursive sample bases can
+be assembled.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

@@ -6245,3 +6245,103 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (read : List Bool → L
     BoundedCriticalSampleBlockTerm.polynomial_mass_binary h read hr hk⟩
 
 end CriticalSampleBlockTests
+
+namespace CriticalSampleFiberTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR Polynomial
+open BoundedAlgebraicSlice (Family ofTest square)
+open BoundedCriticalSampleSlice
+open scoped Classical BigOperators
+
+-- Both the original record and the sample descriptor survive an attached
+-- derivative or sparse-record query; the product source sees the right base.
+#guard BoundedCriticalSampleFiberRecordMoments.recordContext
+  (context (BoundedCriticalSampleFiberThom.query
+    (pair (pair (pair [true] [false, true]) [false]) [true, false]))) ==
+      pair (pair [true] [false]) [true, false]
+#guard pairFst (BoundedCriticalSampleFiberThom.query
+  (pair (pair (pair [true] [false, true]) [false]) [true, false])) == pair [true] [false, true]
+
+private noncomputable def xTest : BoundedProjectionTestMoments.Test where
+  polynomial _ := X
+  degree _ := 1
+  mass _ := 0
+  polynomial_degree _ := by simp
+  polynomial_mass _ := by simpa only [pow_one, pow_zero] using (coefficientMass_X_pow 1).le
+
+private theorem square_sample (P : BoundedFullWriter.Readers) (c r : List Bool)
+    (x : BoundedFullCriticalSamples.Samples P c) :
+    specialized P (square (ofTest xTest))
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r) = (X : ℝ[X]) ^ 2 := by
+  rw [RootCount.square_specialized, specialized_sample, BoundedAlgebraicSlice.ofTest_slice]
+  simp only [xTest, Polynomial.map_X]
+
+-- A repeated root has exactly one child ordinal, regardless of multiplicity.
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    pair (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r) [] ∈
+      BoundedCriticalSampleFiberRoot.valid P (square (ofTest xTest)) ∧
+    pair (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r) [true] ∉
+      BoundedCriticalSampleFiberRoot.valid P (square (ofTest xTest)) := by
+  simp only [BoundedCriticalSampleFiberRoot.valid, Set.mem_ofPred_eq, pairFst_pair, pairSnd_pair,
+    RootCount.count, RootCount.roots, square_sample]
+  simp
+  decide
+
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    (BoundedCriticalSampleFiberRecordSpan.gram P (square (ofTest xTest))
+      (pair (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) r)).rank = 1 := by
+  rw [BoundedCriticalSampleFiberRecordSpan.rank_gram, RootCount.count, RootCount.roots, square_sample]
+  simp
+
+-- No symbolic-degree stability is needed: every derivative above the
+-- supplied degree has zero moment, including on invalid raw descriptors.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    BoundedCriticalSampleFiberThom.moment P F
+      (pair u (BinaryNatCode.encode (F.degree (context u) + 1))) = SignStatisticBits.integerCode 0 := by
+  rw [BoundedCriticalSampleFiberThom.moment_packet,
+    Polynomial.iterate_derivative_eq_zero ((specialized_degree P F u).trans_lt (Nat.lt_succ_self _))]
+  simp only [RootSignQueries.tarskiQuery, RootSignQueries.signSum, Polynomial.eval_zero, sign_zero,
+    SignType.coe_zero, Finset.sum_const_zero]
+
+-- Empty sparse records select the unit query, so they count roots rather
+-- than silently dropping the entire query.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    BoundedCriticalSampleFiberRecordMoments.moment P F (pair u []) = (RootCount.count P F u : ℤ) := by
+  by_cases hu : u ∈ valid P
+  · rw [BoundedCriticalSampleFiberRecordMoments.moment_valid P F u [] hu]
+    have hc : BoundedAlgebraicFiberRecords.recordSlots F (pair (context u) []) = 0 := by
+      simp only [BoundedAlgebraicFiberRecords.recordSlots, pairSnd_pair, List.length_nil, Nat.zero_div]
+    have : IsEmpty (Fin (BoundedAlgebraicFiberRecords.recordSlots F (pair (context u) []))) :=
+      ⟨fun i => by have := i.isLt; omega⟩
+    simp only [RootSignQueries.queryPolynomial, Finset.univ_eq_empty, Finset.prod_empty, RootSignQueries.tarskiQuery_one]
+    rfl
+  · rw [BoundedCriticalSampleFiberRecordMoments.moment_invalid P F u [] hu]
+    simp only [RootCount.count, RootCount.roots, specialized, ite_eq_right hu,
+      Polynomial.roots_zero, Multiset.toFinset_zero, Finset.card_empty, Nat.cast_zero]
+
+-- Zero heads have no children even though the real equation 0 = 0 holds
+-- everywhere. Invalid bases likewise contribute neither roots nor moments.
+example (P : BoundedFullWriter.Readers) (F : Family) (u i : List Bool) (hz : specialized P F u = 0) :
+    pair u i ∉ BoundedCriticalSampleFiberRoot.valid P F :=
+  BoundedCriticalSampleFiberRoot.zero_head P F u hz i
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u r i : List Bool) (hu : u ∉ valid P) :
+    pair u i ∉ BoundedCriticalSampleFiberRoot.valid P F ∧
+      BoundedCriticalSampleFiberRecordMoments.moment P F (pair u r) = 0 :=
+  ⟨BoundedCriticalSampleFiberRoot.invalid_base P F u hu i,
+    BoundedCriticalSampleFiberRecordMoments.moment_invalid P F u r hu⟩
+
+-- Native child-root access composes with the constructed line source;
+-- neither a child-root sign reader nor a moment oracle is assumed.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {f : List Bool → ℕ} (hf : BinaryFn f)
+    (read : List Bool → List Bool) (hr : read ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    BoundedCriticalSampleFiberRoot.valid P (BoundedCriticalSampleLineTerm.family P f read) ∈ PSPACE ∧
+      SpaceFunction (BoundedCriticalSampleFiberThom.moment P (BoundedCriticalSampleLineTerm.family P f read)) ∧
+      SpaceFunction (fun q => SignStatisticBits.integerCode
+        (BoundedCriticalSampleFiberRecordGram.entry P (BoundedCriticalSampleLineTerm.family P f read) q)) := by
+  let A := BoundedCriticalSampleLineTerm.access h hf read hr ha
+  exact ⟨BoundedCriticalSampleFiberRoot.valid_mem_PSPACE h A ha,
+    BoundedCriticalSampleFiberThom.moment_evaluator h A ha,
+    BoundedCriticalSampleFiberRecordGram.evaluator h A ha⟩
+
+end CriticalSampleFiberTests

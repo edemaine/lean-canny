@@ -312,7 +312,12 @@ The checked ingredients are:
   encoding preserves independent free variables, with derived degree and
   coefficient-mass bounds and exact sign semantics at the same sample.
   Freezing the first variable at its sample value agrees with the smaller
-  block. Recursive sample construction and the complete cover remain required.
+  block. Bivariate fibers over actual samples now have short ordered root labels
+  with native validity. Their separating derivative signatures have short
+  spanning records; native sparse moments and Gram entries retain the same
+  sample and original record. The Gram rank equals the distinct child-root
+  count. Selecting a native child-root basis, reading signs at those labels,
+  recursive sample construction, and the complete cover remain required.
   Source connectivity is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
   independent formula witnesses. Selected sample serialization and constrained
