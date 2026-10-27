@@ -5354,3 +5354,57 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
   BoundedCriticalSampleCount.evaluator h ha
 
 end CriticalSampleFilterTests
+
+namespace CriticalSampleLabelTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR
+open scoped Classical
+
+private def controls : BoundedFullWriter.Readers := ⟨fun _ => [], fun _ => 0, fun _ => 1⟩
+
+-- Concatenation retains the four source equations and appends one rational cut.
+example : Nat.fromBitsLE (((BoundedCriticalSampleCount.family controls).comp pairFst).count (pair [] [])) = 4 := rfl
+example : Nat.fromBitsLE ((BoundedCriticalSampleCuts.family controls).count []) = 5 := rfl
+example : (BoundedCriticalSampleCuts.family controls).pattern [] 3 = 0 := rfl
+example : (BoundedCriticalSampleCuts.family controls).pattern [] 4 = .neg := rfl
+example : SignPatternBits.shiftPattern (BoundedCriticalSampleCount.family controls)
+    (pair [] (BinaryNatCode.encode 7)) = pair [] (BinaryNatCode.encode 3) := rfl
+
+-- Every canonical ordinal below the actual count names one and only one sample.
+example (P : BoundedFullWriter.Readers) (c w : List Bool)
+    (hl : w.length = BoundedFullCriticalSamples.labelWidth P c)
+    (hv : Nat.fromBitsLE w < BoundedCriticalSampleCount.count P c) :
+    ∃! x : BoundedFullCriticalSamples.Samples P c, BoundedCriticalSampleLabels.label P c x = w := by
+  obtain ⟨x, hx⟩ := (BoundedCriticalSampleLabels.valid_iff P c w).mpr ⟨hl, hv⟩
+  exact ⟨x, hx, fun y hy => BoundedCriticalSampleLabels.label_injective P c (hy.trans hx.symm)⟩
+
+example (P : BoundedFullWriter.Readers) (c w : List Bool) (hc : BoundedCriticalSampleCount.count P c = 0) :
+    pair c w ∉ BoundedCriticalSampleLabels.validLanguage P := by
+  simp only [BoundedCriticalSampleLabels.validLanguage, Set.mem_ofPred_eq, pairFst_pair, pairSnd_pair,
+    BoundedCriticalSampleLabels.valid_iff, hc, Nat.not_lt_zero, and_false, not_false_eq_true]
+
+-- A root at the threshold is excluded by the strict lower-cut convention.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P (pairFst c))
+    (he : (BoundedCriticalSampleLabels.parameter P (pairFst c) x).val = RationalCutBits.threshold c) :
+    pair c (BoundedCriticalSampleLabels.label P (pairFst c) x) ∉ BoundedCriticalSampleCuts.belowLanguage P := by
+  rw [BoundedCriticalSampleCuts.label_below_iff, he]
+  exact lt_irrefl _
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    BoundedCriticalSampleLabels.validLanguage P ∈ PSPACE ∧ BoundedCriticalSampleCuts.belowLanguage P ∈ PSPACE :=
+  ⟨BoundedCriticalSampleLabels.valid_mem_PSPACE h ha, BoundedCriticalSampleCuts.below_mem_PSPACE h ha⟩
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) :
+    BinaryFn (BoundedCriticalSampleIsolation.precision P) ∧ BinaryFn (BoundedCriticalSampleIsolation.indexBits P) :=
+  ⟨BoundedCriticalSampleIsolation.precision_binary h, BoundedCriticalSampleIsolation.indexBits_binary h⟩
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    ∃ k : ℤ, k.natAbs.size ≤ BoundedCriticalSampleIsolation.indexBits P c ∧
+      BoundedCriticalSampleCuts.count P (pair c (RationalCutBits.payload
+        (DyadicIsolatingInterval.lower k (BoundedCriticalSampleIsolation.precision P c)))) =
+        BoundedCriticalSampleLabels.rank P c x ∧
+      BoundedCriticalSampleCuts.count P (pair c (RationalCutBits.payload
+        (DyadicIsolatingInterval.upper k (BoundedCriticalSampleIsolation.precision P c)))) =
+        BoundedCriticalSampleLabels.rank P c x + 1 := BoundedCriticalSampleIsolation.sample_certificate P c x
+
+end CriticalSampleLabelTests

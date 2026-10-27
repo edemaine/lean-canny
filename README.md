@@ -269,8 +269,12 @@ The checked ingredients are:
   clear the original critical equations, with native readers and explicit bounds.
   Filtering parameter roots by these equations gives a bijection with the actual
   real and complex critical samples. Native zero sign-pattern counting computes
-  the exact number of real samples. Assembling recursive coordinate families
-  remains required. Source connectivity
+  the exact number of real samples. Dense binary ordinal labels cover exactly
+  these samples, with native validity and rational-cut comparisons on the common
+  parameter. Source-derived dyadic cells have lower and upper cut counts equal
+  to rank and rank plus one. Their precision and numerator-size allowances have
+  native binary writers; potentially long numerators are not serialized.
+  Assembling recursive coordinate families remains required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
   independent formula witnesses. Selected sample serialization and constrained

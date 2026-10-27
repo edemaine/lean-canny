@@ -97,6 +97,7 @@ import LeanCanny.Encoding.BoundedComplexSeparator
 import LeanCanny.Encoding.BoundedCriticalCoordinate
 import LeanCanny.Encoding.BoundedCriticalRationalCoordinates
 import LeanCanny.Encoding.BoundedCriticalSampleCount
+import LeanCanny.Encoding.BoundedCriticalSampleIsolation
 
 /-! # Connectivity development
 
@@ -356,7 +357,12 @@ Even denominator powers now clear the original critical equations on these
 coordinates, with native readers and explicit bounds. Their simultaneous zeros
 at parameter roots correspond bijectively to the actual real and complex
 critical samples. Native zero sign-pattern counting computes the exact number
-of real critical samples. Assembling the recursive coordinate families remains
+of real critical samples. Dense binary ordinal labels now cover exactly these
+samples, with native validity and rational-cut comparisons on their common
+parameter. Source-derived dyadic cells have cut counts equal to the sample rank
+and rank plus one; their precision and numerator-size allowances have native
+binary writers. The potentially long dyadic numerators are not serialized.
+Assembling the recursive coordinate families remains
 required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
 sample-circuit serialization and constrained sample feasibility compose with
