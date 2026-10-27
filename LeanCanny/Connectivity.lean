@@ -106,6 +106,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleCoordinateSign
 import LeanCanny.Encoding.BoundedCriticalSampleFormula
 import LeanCanny.Encoding.BoundedCriticalSampleSliceRootCount
 import LeanCanny.Encoding.BoundedCriticalSampleLineZero
+import LeanCanny.Encoding.BoundedCriticalSampleBlockTerm
 
 /-! # Connectivity development
 
@@ -407,8 +408,13 @@ sample while keeping all the others fixed. Native term substitution gives
 their line polynomials with derived bounds; all coordinate denominators stay
 nonzero. Native PSPACE zero-existence queries validate the descriptor and
 free coordinate, including terms vanishing on the entire line.
-Assembling the higher-dimensional recursive coordinate families remains
-required. Native real critical-sample queries test these
+Arbitrary contiguous blocks now have multivariate term families with native
+collected-coefficient readers. Derived exponent widths prevent collisions
+between free variables, and degree and coefficient-mass bounds have native
+binary controls. Signs and zeros agree with the term throughout the block;
+freezing its first variable at the sample value agrees with the smaller block.
+Constructing new sample bases recursively and assembling the complete cover
+remain required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
 sample-circuit serialization and constrained sample feasibility compose with
 the native direction selector in polynomial space. Two independently varying

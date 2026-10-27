@@ -307,7 +307,12 @@ The checked ingredients are:
   polynomials with exact sign semantics and no poles. Native PSPACE queries
   decide whether a term vanishes anywhere on the line, including identically
   zero terms, with descriptor and coordinate validation.
-  Assembling higher-dimensional recursive coordinate families remains required.
+  Arbitrary contiguous coordinate blocks now have constructed multivariate
+  term families with native collected-coefficient readers. Fixed-width
+  encoding preserves independent free variables, with derived degree and
+  coefficient-mass bounds and exact sign semantics at the same sample.
+  Freezing the first variable at its sample value agrees with the smaller
+  block. Recursive sample construction and the complete cover remain required.
   Source connectivity is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
   independent formula witnesses. Selected sample serialization and constrained

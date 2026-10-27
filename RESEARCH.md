@@ -1057,8 +1057,27 @@ Specialized signs agree with the term on the actual coordinate line.
 `BoundedCriticalSampleLineZero` combines the native zero-polynomial flag and
 distinct-root count to decide zero existence in native PSPACE, also for a
 term vanishing on the entire line. The language validates the descriptor and
-the free coordinate. This constructs one free coordinate; higher-dimensional
-recursive families and the complete cover remain required.
+the free coordinate.
+`IndexedMultivariateRational` now clears indexed rational substitutions in
+several variables and proves that fixed-width encoding commutes with clearing.
+`BoundedCriticalSampleBlockSource` frees an arbitrary contiguous block of
+coordinates while retaining the same actual sample parameter and frozen
+complement. Denominators stay nonzero throughout the block. Empty blocks
+recover the original tuple; freezing the first free coordinate at its sample
+value gives the next smaller block.
+`BoundedCriticalSampleBlockEncoding` derives a uniform exponent width that
+prevents collisions between the independent free variables.
+`BoundedCriticalSampleBlockReaders` constructs native modular coordinate
+readers, including uniform binary exponent bounds on malformed large indices.
+The block offset is binary and its size is unary.
+`BoundedCriticalSampleBlockTerm` constructs multivariate term polynomials
+with native collected-coefficient access and binary controls for degree,
+coefficient mass, and the monomial grid count. At every actual sample parameter
+their signs and zeros agree exactly with the term on the corresponding free
+block, with no coordinate-sign or coefficient oracle. The sign semantics also
+commute with freezing the first free coordinate. These families keep the
+original sample base fixed; recursive construction of new sample bases and
+the complete cover remain required.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

@@ -6152,3 +6152,96 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {f : List Bool → ℕ}
     BoundedCriticalSampleLineTerm.mem_PSPACE h hf read hr ha⟩
 
 end CriticalSampleLineTests
+
+namespace CriticalSampleBlockTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR
+open BoundedCriticalSampleBlockSource
+open scoped Classical
+
+private def difference : Term := .add (.var 1) (.mul (.const (-1)) (.var 2))
+
+-- Distinct free coordinates must remain independent after encoding. The
+-- offset leaves both the preceding and following coordinates frozen.
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (y : Fin 2 → ℝ) :
+    (BoundedCriticalSampleBlockTerm.polynomial P (fun _ => difference.toData.toBits)
+      (fun _ => 1) (fun _ => 2) (pair c r)).eval₂ (Int.castRingHom ℝ)
+        (environment 2 (BoundedCriticalSampleLabels.parameter P c x).val y) = 0 ↔ y 0 = y 1 := by
+  rw [BoundedCriticalSampleBlockTerm.zero_sample P _ (fun _ => 1) (fun _ => 2) c r x y]
+  simp only [TermView.term_toBits, difference, Term.eval]
+  simp [assignment, InBlock]
+  exact sub_eq_zero
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (y : Fin 2 → ℝ) :
+    assignment x.val 1 2 y 0 = x.val ⟨0, by omega⟩ ∧
+      assignment x.val 1 2 y 3 = x.val ⟨3, by omega⟩ := by
+  simp [assignment, InBlock, Formula.extend, show 0 < P.dim c + 4 by omega,
+    show 3 < P.dim c + 4 by omega]
+
+-- The empty block recovers the entire original tuple, independently of
+-- its offset; a block within the tuple still uses the zero extension.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (o : ℕ) (y : Fin 0 → ℝ) : assignment x.val o 0 y = Formula.extend x.val :=
+  assignment_empty x.val o y
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (y : Fin 2 → ℝ) : assignment x.val 1 2 y (P.dim c + 4) = 0 := by
+  rw [assignment_finite x.val 1 2 y (by omega)]
+  simp only [Formula.extend, lt_self_iff_false, dite_false]
+
+-- Freezing the first free coordinate does not change the common sample
+-- parameter or the remaining variables.
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (y : Fin 1 → ℝ) :
+    SignType.sign ((BoundedCriticalSampleBlockTerm.polynomial P (fun _ => difference.toData.toBits)
+      (fun _ => 1) (fun _ => 2) (pair c r)).eval₂ (Int.castRingHom ℝ)
+        (environment 2 (BoundedCriticalSampleLabels.parameter P c x).val
+          (environment 1 (Formula.extend x.val 1) y))) =
+      SignType.sign ((BoundedCriticalSampleBlockTerm.polynomial P (fun _ => difference.toData.toBits)
+        (fun _ => 2) (fun _ => 1) (pair c r)).eval₂ (Int.castRingHom ℝ)
+          (environment 1 (BoundedCriticalSampleLabels.parameter P c x).val y)) :=
+  BoundedCriticalSampleBlockTerm.sign_drop_first_sample P _ (fun _ => 1) (fun _ => 1) c r x y
+
+-- No denominator can acquire a pole as the whole block varies.
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c)
+    (o k : List Bool → ℕ) (y : Fin (k (pair c r)) → ℝ) (i : ℕ) :
+    (coordinate P o k false (pair c r) i).eval₂ (Int.castRingHom ℝ)
+      (environment _ (BoundedCriticalSampleLabels.parameter P c x).val y) ≠ 0 :=
+  denominator_nonzero P o k c r x y i
+
+-- The binary exponent length stays bounded even for malformed coordinate
+-- indices much larger than the block. Only the block size is unary.
+example (P : BoundedFullWriter.Readers) (read : List Bool → List Bool) (o k : List Bool → ℕ)
+    (u : List Bool) (i : ℕ) :
+    BoundedCriticalSampleBlockEncoding.power P read o k u i ≤
+      2 ^ BoundedCriticalSampleBlockEncoding.span P read k u := by
+  unfold BoundedCriticalSampleBlockEncoding.power
+  apply Nat.pow_le_pow_right (by decide)
+  unfold BoundedCriticalSampleBlockEncoding.span
+  nlinarith [Nat.min_le_right (i - o u) (k u)]
+
+-- The native reader returns a collected multivariate coefficient, rather
+-- than the coefficient of a possibly colliding encoding.
+example (P : BoundedFullWriter.Readers) (read : List Bool → List Bool) (o k : List Bool → ℕ)
+    (u : List Bool) (r : Fin (FixedWidthPolynomial.count (k u + 1) (BoundedCriticalSampleBlockEncoding.width P read u)))
+    (m : ℕ) (hm : 0 < m) :
+    BoundedCriticalSampleBlockTerm.coefficient P read o k
+      (pair (pair u (BinaryNatCode.encode r.val)) (BinaryNatCode.encode (m - 1))) =
+        MatrixPower.residueBits (((BoundedCriticalSampleBlockTerm.polynomial P read o k u).coeff
+          (FixedWidthPolynomial.vector _ _ r) : ℤ) : ZMod m) :=
+  BoundedCriticalSampleBlockTerm.coefficient_packet P read o k u r m hm
+
+-- All native access and size controls derive from the original sample
+-- readers and the small term/block writers, without a coordinate oracle.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (read : List Bool → List Bool) (hr : read ∈ FP)
+    {o k : List Bool → ℕ} (ho : BinaryFn o) (hk : UnaryFn k)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalSampleBlockTerm.coefficient P read o k) ∧
+      BinaryFn (fun u => FixedWidthPolynomial.count (k u + 1) (BoundedCriticalSampleBlockEncoding.width P read u)) ∧
+      BinaryFn (fun u => BoundedCriticalSampleBlockEncoding.span P read k u + BoundedCriticalSampleBlockTerm.mass P read u) :=
+  ⟨BoundedCriticalSampleBlockTerm.evaluator h read hr ho hk ha,
+    BoundedCriticalSampleBlockTerm.index_count_binary h read hr hk,
+    BoundedCriticalSampleBlockTerm.polynomial_mass_binary h read hr hk⟩
+
+end CriticalSampleBlockTests
