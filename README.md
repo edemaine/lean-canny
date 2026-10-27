@@ -253,10 +253,11 @@ The checked ingredients are:
   sample and component counts by an exponential in a polynomial label width,
   computed natively from unary dimension and binary degree. The complete complex
   sample set now has the same bound, proved using algebraic finiteness of regular
-  square-system roots. Bounded integer projection records separate all complex
-  samples and their embedded real subset. Native Boolean queries expose both
-  real and imaginary coordinates and charge the selected direction. Native
-  selection of a complex separating record and recursive rational coordinate
+  square-system roots. Native bounded search now selects an integer projection
+  record separating all complex samples and their embedded real subset.
+  Collision tests use two independent complex sample circuits and compare both
+  components. Native Boolean queries expose both real and imaginary coordinates
+  and charge the selected direction and separator. Recursive rational coordinate
   records remain required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with

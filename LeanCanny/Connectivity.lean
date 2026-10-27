@@ -93,6 +93,7 @@ import LeanCanny.Connectivity.FormulaAlgebraicSlice
 import LeanCanny.Connectivity.FormulaRationalSlice
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 import LeanCanny.Encoding.BoundedComplexSampleQuery
+import LeanCanny.Encoding.BoundedComplexSeparator
 
 /-! # Connectivity development
 
@@ -336,11 +337,12 @@ The same bound therefore counts its connected components, without a supplied
 root-finiteness assumption. The complete complex critical sample set now has
 the same explicit count bound. Finiteness follows algebraically by adjoining
 the inverse Jacobian determinant; singular components elsewhere are allowed.
-Bounded integer projection records separate all complex samples and also
-their embedded real subset. Native Boolean queries now expose both real and
-imaginary spatial coordinates, charging the actual selected direction.
-Selecting a complex separating record and constructing the recursive rational
-coordinate records remain required. Native real critical-sample queries test these
+Native bounded search now selects an integer projection record separating all
+complex samples and also their embedded real subset. Its collision tests use
+two independent complex sample circuits and compare both components. Native
+Boolean queries expose both real and imaginary spatial coordinates, charging
+the actual selected direction and separator. Constructing the recursive
+rational coordinate records remains required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
 sample-circuit serialization and constrained sample feasibility compose with
 the native direction selector in polynomial space. Two independently varying

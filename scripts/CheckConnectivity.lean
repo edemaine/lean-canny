@@ -5148,3 +5148,66 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) (p : Formula) (hp : p.ar
 
 end
 end ComplexCriticalSampleTests
+
+namespace ComplexSeparatorTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR LeanCanny.ETR.ComplexCircuit
+open RealQuery.Interleaved
+open scoped Classical
+
+private def imaginaryPair (i : ℕ) : ℂ := if i = 0 then Complex.I else if i = 1 then -Complex.I else 0
+private def crossedPair (i : ℕ) : ℂ := if i = 1 ∨ i = 2 then Complex.I else 0
+
+-- Equal real parts alone are insufficient: the unit projection separates i and -i.
+example : ¬ (ComplexProjectionCollision.formula 1 (fun _ => 1) 0).Holds (realEnv imaginaryPair) := by
+  rw [ComplexProjectionCollision.formula_holds]
+  norm_num [ComplexProjectionCollision.projection, imaginaryPair, even, odd, Complex.ext_iff]
+
+-- A collision whose unequal coordinates differ only in imaginary part must be found.
+example : (ComplexProjectionCollision.formula 1 (fun _ => 0) 0).Holds (realEnv imaginaryPair) := by
+  rw [ComplexProjectionCollision.formula_holds]
+  norm_num [ComplexProjectionCollision.projection, imaginaryPair, even, odd, Complex.ext_iff]
+
+-- Two different complex tuples may have the same nonzero weighted projection.
+example : (ComplexProjectionCollision.formula 2 (fun _ => 1) 0).Holds (realEnv crossedPair) := by
+  rw [ComplexProjectionCollision.formula_holds]
+  norm_num [ComplexProjectionCollision.projection, crossedPair, even, odd, Finset.sum_range_succ, Complex.ext_iff]
+
+#guard (ComplexProjectionCollision.formula 2 (fun _ => 2 ^ 100) 1).arity = 8
+
+private def controls : BoundedFullWriter.Readers := ⟨fun _ => [], fun _ => 0, fun _ => 1⟩
+#guard BoundedComplexSeparator.selected controls (pair [] (List.replicate 100 true)) = 3
+#guard BoundedComplexSeparator.selected controls (pair [] []) = 0
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    (BoundedComplexSeparator.record P c).length = (P.dim c + 4) * BoundedCriticalSeparator.width P c :=
+  BoundedComplexSeparator.record_length P c
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    BoundedFullComplexSamples.Good P c (BoundedComplexSeparator.record P c) ∧
+      BoundedCriticalSeparator.Good P c (BoundedComplexSeparator.record P c) :=
+  ⟨BoundedComplexSeparator.record_good P c, BoundedComplexSeparator.record_good_real P c⟩
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (i : Fin (P.dim c + 4)) :
+    ¬ BoundedComplexSeparator.collision P (BoundedComplexSeparator.record P) c i.val := by
+  have H := (BoundedComplexSeparator.check_correct P (BoundedComplexSeparator.record P) c).mpr
+    (BoundedComplexSeparator.record_good P c)
+  have hall : ∀ j < P.dim c + 4, ¬ BoundedComplexSeparator.collision P (BoundedComplexSeparator.record P) c j := by
+    simpa only [BoundedComplexSeparator.check, List.cons.injEq, and_true, decide_eq_true_eq] using H
+  exact hall i.val i.isLt
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedComplexSeparator.record P) := BoundedComplexSeparator.evaluator h ht
+
+-- Both native searches are charged before a query reads the selected binary weights.
+example {P : BoundedFullWriter.Readers} {p : List Bool → Formula} (h : P.PolyTime)
+    (hp : (fun c => (p c).encode) ∈ FP) (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c)
+    (hs : ∀ z, (p z).arity ≤ 4 * (P.dim (pairFst z) + 4)) :
+    SpaceFunction (fun c => [decide (∃ x : ℕ → ℂ,
+      BoundedComplexSampleQuery.Condition P (BoundedFullDirectionChoice.record P) c (x ∘ even) ∧
+        BoundedComplexSampleQuery.Condition P (BoundedFullDirectionChoice.record P) c (x ∘ odd) ∧
+          (p (pair c (BoundedComplexSeparator.record P c))).Holds (realEnv x))]) :=
+  BoundedComplexSeparator.selected_pair_evaluator h hp ht hs
+
+end
+end ComplexSeparatorTests
