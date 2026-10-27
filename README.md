@@ -265,9 +265,12 @@ The checked ingredients are:
   computed and checked degree table feeds these equations into a balanced
   primitive tree. Its common parameter and rational coordinates recover every
   real and complex critical sample, with nonzero denominators, native coefficient
-  readers, and explicit degree and mass bounds. Filtering coordinate-root tuples
-  by the critical equations and assembling recursive coordinate families remain
-  required. Source connectivity
+  readers, and explicit degree and mass bounds. Even denominator powers now
+  clear the original critical equations, with native readers and explicit bounds.
+  Filtering parameter roots by these equations gives a bijection with the actual
+  real and complex critical samples. Native zero sign-pattern counting computes
+  the exact number of real samples. Assembling recursive coordinate families
+  remains required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
   independent formula witnesses. Selected sample serialization and constrained

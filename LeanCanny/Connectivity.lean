@@ -96,6 +96,7 @@ import LeanCanny.Encoding.BoundedComplexSampleQuery
 import LeanCanny.Encoding.BoundedComplexSeparator
 import LeanCanny.Encoding.BoundedCriticalCoordinate
 import LeanCanny.Encoding.BoundedCriticalRationalCoordinates
+import LeanCanny.Encoding.BoundedCriticalSampleCount
 
 /-! # Connectivity development
 
@@ -351,8 +352,12 @@ projection uses the same native backend. A native checked degree table feeds
 these equations into a balanced primitive tree. Its common parameter and rational
 coordinates recover every complex sample and every real sample, with nonzero
 denominators, native coefficient readers, and explicit degree and mass bounds.
-Filtering the coordinate-root tuples by the critical equations and assembling
-the recursive coordinate families remain required. Native real critical-sample queries test these
+Even denominator powers now clear the original critical equations on these
+coordinates, with native readers and explicit bounds. Their simultaneous zeros
+at parameter roots correspond bijectively to the actual real and complex
+critical samples. Native zero sign-pattern counting computes the exact number
+of real critical samples. Assembling the recursive coordinate families remains
+required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
 sample-circuit serialization and constrained sample feasibility compose with
 the native direction selector in polynomial space. Two independently varying

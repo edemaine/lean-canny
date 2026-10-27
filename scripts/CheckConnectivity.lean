@@ -5308,3 +5308,49 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCritical
   BoundedCriticalRationalCoordinates.real_sample_complete P c x
 
 end CriticalRationalCoordinateTests
+
+namespace CriticalSampleFilterTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR
+
+-- Independent coordinate equations admit tuples that violate a source equation.
+private def crossed (i : Fin 2) : ℝ := if i.val = 0 then 1 else -1
+
+example (i : Fin 2) : (((Polynomial.X : Polynomial ℝ) ^ 2 - 1).eval (crossed i)) = 0 := by
+  fin_cases i <;> norm_num [crossed]
+
+example : (MvPolynomial.X (0 : Fin 2) - MvPolynomial.X (1 : Fin 2) : MvPolynomial (Fin 2) ℤ).eval₂
+    (Int.castRingHom ℝ) crossed ≠ 0 := by norm_num [crossed]
+
+-- Every native parameter root has nonzero denominators, before source filtering.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (theta : ℂ)
+    (ht : (BoundedCriticalRationalCoordinates.parameter P c).eval₂ (Int.castRingHom ℂ) theta = 0)
+    (i : Fin (P.dim c + 4)) :
+    (BoundedCriticalRationalCoordinates.coordinate P (pair c (BinaryNatCode.encode i.val))).denominator.eval₂
+      (Int.castRingHom ℂ) theta ≠ 0 := BoundedCriticalParameterRoots.denominator_ne_zero P c theta ht i
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (theta : ℝ) :
+    BoundedCriticalFilters.Valid P c theta ↔
+      (BoundedCriticalRationalCoordinates.parameter P c).eval₂ (Int.castRingHom ℝ) theta = 0 ∧
+        ∀ j : Fin (P.dim c + 4), (BoundedCriticalFilters.polynomial P (pair c (BinaryNatCode.encode j.val))).eval₂
+          (Int.castRingHom ℝ) theta = 0 := BoundedCriticalFilters.valid_iff_filters P c theta
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    Nat.card (BoundedCriticalFilters.Roots P c ℂ) = Nat.card (BoundedFullComplexSamples.Samples P c) :=
+  Nat.card_congr (BoundedCriticalFilters.complexEquiv P c)
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    Nat.card (BoundedCriticalFilters.Roots P c ℝ) = Nat.card (BoundedFullCriticalSamples.Samples P c) :=
+  Nat.card_congr (BoundedCriticalFilters.realEquiv P c)
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (PrimitivePairBits.coefficient (BoundedCriticalFilters.polynomial P)) :=
+  BoundedCriticalFilterCoefficients.evaluator h ha
+
+-- The native count is the actual sample cardinality, including the empty case.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun c => BinaryNatCode.encode (Nat.card (BoundedFullCriticalSamples.Samples P c))) :=
+  BoundedCriticalSampleCount.evaluator h ha
+
+end CriticalSampleFilterTests
