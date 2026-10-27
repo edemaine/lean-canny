@@ -71,6 +71,7 @@ import LeanCanny.Encoding.BoundedProjectionDerivativeSigns
 import LeanCanny.Encoding.BoundedProjectionMoments
 import LeanCanny.Encoding.BoundedProjectionRecordSpan
 import LeanCanny.Encoding.BoundedProjectionBasisGram
+import LeanCanny.Encoding.BoundedProjectionBasisPencil
 
 /-! # Connectivity development
 
@@ -360,6 +361,11 @@ rank searches select exactly one row for each rank number; these rows form a
 basis of all rational root functions and distinguish every projection root.
 Their Gram entries have native polynomial-space evaluators that include the
 row-selection searches.
+One bounded prime and parameter give separating residue labels with a native
+polynomial width control. The corresponding integer weighted sums also have
+polynomial bit bounds. Their weighted Gram pencil has the full distinct-root
+count exactly when the sums separate all projection roots. Native weighted
+entry readers, parameter selection, and individual label queries remain required.
 The complete signature is an indexed function; a polynomial-space representation and
 enumeration of its realizable values still require a streamed sign-determination
 algorithm. The recursive connection tests remain open.

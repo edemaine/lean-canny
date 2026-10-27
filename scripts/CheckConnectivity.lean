@@ -2885,3 +2885,49 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) :
   BoundedProjectionBasisGram.rank_gram P c
 
 end ProjectionRankTests
+
+namespace ProjectionHashTests
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+
+-- A small characteristic can merge distinct signs; the separator chooses a larger prime.
+#guard ((-1 : ℤ) : ZMod 2) = (1 : ZMod 2)
+#guard ((-1 : ℤ) : ZMod 3) ≠ (1 : ZMod 3)
+
+-- Zero features still allow separation of a singleton family.
+example : ∃ t : ZMod 2, Function.Injective (fun _x : Unit => ∑ i : Fin 0, (0 : ZMod 2) * t ^ i.val) := by
+  exact FiniteFeatureSeparator.exists_parameter (fun _x : Unit => fun _i : Fin 0 => (0 : ZMod 2))
+    (fun _ _ _ => Subsingleton.elim _ _) (by decide)
+
+-- Repeated values remain repeated roots of the Gram pencil.
+example : (FunctionBasisPencil.pencil (1 : Matrix (Fin 2) (Fin 2) ℚ) (fun _ => 3)).det.roots.toFinset.card = 1 := by
+  rw [FunctionBasisPencil.rootSet _ _ (by simp)]
+  rw [Finset.image_const (by exact ⟨0, Finset.mem_univ 0⟩), Finset.card_singleton]
+
+-- A singular matrix cannot satisfy the nonzero-determinant hypothesis.
+example : (FunctionBasisPencil.pencil (0 : Matrix (Fin 1) (Fin 1) ℚ) (fun _ => 3)).det = 0 := by
+  simp [FunctionBasisPencil.pencil, FunctionBasisPencil.gram, FunctionBasisPencil.weighted]
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    ∃ p t : ℕ, p.Prime ∧ p < 2 ^ BoundedProjectionRootHash.bitWidth P c ∧ t < p ∧
+      Function.Injective (BoundedProjectionRootHash.label P c p (t : ZMod p)) :=
+  BoundedProjectionRootHash.exists_short_labels P c
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) :
+    UnaryFn (BoundedProjectionRootHash.bitWidth P) := BoundedProjectionRootHash.bitWidth_unary h
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) {p : ℕ} (hp : 0 < p)
+    (hs : p < 2 ^ BoundedProjectionRootHash.bitWidth P c) (t : ℕ) (x : BoundedProjectionRecordSpan.Root P c) :
+    (BoundedProjectionRootHash.integerValue P c p t x).natAbs.size ≤ BoundedProjectionRootHash.valueBits P c :=
+  BoundedProjectionRootHash.integerValue_bits P c hp hs t x
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (v : BoundedProjectionRecordSpan.Root P c → ℚ) :
+    (BoundedProjectionBasisPencil.pencil P c v).det.roots.toFinset.card = BoundedProjectionRootCount.count P c ↔
+      Function.Injective v := BoundedProjectionBasisPencil.rootCount_eq_count_iff P c v
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    ∃ p t : ℕ, p.Prime ∧ p < 2 ^ BoundedProjectionRootHash.bitWidth P c ∧ t < p ∧
+      (BoundedProjectionBasisPencil.pencil P c
+        (fun x => (BoundedProjectionRootHash.integerValue P c p t x : ℚ))).det.roots.toFinset.card =
+          BoundedProjectionRootCount.count P c := BoundedProjectionBasisPencil.exists_hash_parameters P c
+
+end ProjectionHashTests
