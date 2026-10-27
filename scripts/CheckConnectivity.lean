@@ -4851,3 +4851,68 @@ example (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) (u : L
 
 end
 end BooleanSliceEndpointTests
+
+namespace FormulaCircuitCompilerTests
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.ETR
+open FormulaBooleanCircuitSource
+
+private def sample : Formula := .or
+  (.and (.eqZero (.var 0)) (.not (.ltZero (.var 1))))
+  (.ltZero (.mul (.const (-1)) (.var 0)))
+
+private def rootQuery (p : Formula) : List Bool := pair p.encode (BinaryNatCode.encode (p.encode.length - 1))
+
+-- The root is the last reverse-position wire, with the original Boolean tag.
+#guard gateTag (rootQuery sample) = 5
+#guard circuit.count sample.encode = sample.encode.length
+
+-- Parent references skip the entire encoded child, including arithmetic payloads.
+#guard left (rootQuery (.not sample)) = sample.encode.length
+#guard left (rootQuery (.and sample (.eqZero (.const 1)))) = sample.encode.length + (Formula.eqZero (.const 1)).encode.length
+#guard right (rootQuery (.and sample (.eqZero (.const 1)))) = (Formula.eqZero (.const 1)).encode.length
+
+#guard termCode (rootQuery (.eqZero (.add (.var 257) (.const (-19))))) = (Term.add (.var 257) (.const (-19))).toData.toBits
+#guard requested (rootQuery (.eqZero (.var 0))) = (0 : SignType)
+#guard requested (rootQuery (.ltZero (.var 0))) = (-1 : SignType)
+
+-- Malformed source words use the existing total falsum view.
+#guard circuit.count [] = Formula.falsum.encode.length
+#guard gateTag (pair [] (BinaryNatCode.encode (Formula.falsum.encode.length - 1))) = 0
+
+-- Extracting the formula from a larger query retains its gate count.
+#guard ((ofReader pairFst).circuit.count (pair sample.encode [true, false])) = sample.encode.length
+
+example : AlgebraicSliceBooleanAtoms.Access source := access
+
+example (read : List Bool → List Bool) (hr : read ∈ FP) : AlgebraicSliceBooleanAtoms.Access (ofReader read) :=
+  accessOfReader read hr
+
+example (env : ℕ → ℝ) (p : Formula) :
+    BooleanCircuitSpace.value circuit (atom (fun t => SignType.sign (t.eval env))) p.encode = true ↔ p.Holds env := by
+  simpa only [FormulaView.formula_encode] using value_holds env p.encode
+
+-- A mixed nested formula accepts zero and rejects the constant negative assignment.
+example : BooleanCircuitSpace.value circuit (atom (fun t => SignType.sign (t.eval (fun _ => (0 : ℝ))))) sample.encode = true := by
+  apply (value_holds _ _).mpr
+  simp [FormulaView.formula_encode, sample, Formula.Holds, Term.eval]
+
+example : BooleanCircuitSpace.value circuit (atom (fun t => SignType.sign (t.eval (fun _ => (-1 : ℝ))))) sample.encode = false := by
+  apply Bool.eq_false_iff.mpr
+  intro H
+  have ht := (value_holds (fun _ => (-1 : ℝ)) sample.encode).mp H
+  simp [FormulaView.formula_encode, sample, Formula.Holds, Term.eval] at ht
+  norm_num at ht
+
+-- The finite factor signature supplies exactly the original term signs.
+example (env : ℕ → ℝ) (p : Formula) :
+    AlgebraicSliceBooleanCells.truth source p.encode
+      (fun i : Fin (circuit.count p.encode) => SignType.sign ((term (pair p.encode (BinaryNatCode.encode i.val))).eval env)) ↔
+        p.Holds env := signature_encode _ env p le_rfl (fun _ _ => rfl)
+
+-- No circuit-reader assumptions remain after compiling the original syntax.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family}
+    (A : BivariateQueryProductBits.Access Q) (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    AlgebraicSliceBooleanPSPACE.connectedLanguage P Q source ∈ PSPACE ∧ AlgebraicSliceBooleanReachability.language P Q source ∈ PSPACE :=
+  ⟨connected_mem_PSPACE h A ha, reachable_mem_PSPACE h A ha⟩
+
+end FormulaCircuitCompilerTests

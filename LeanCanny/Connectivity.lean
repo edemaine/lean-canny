@@ -88,7 +88,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
 import LeanCanny.Connectivity.AlgebraicSliceSystemReachability
-import LeanCanny.Connectivity.AlgebraicSliceBooleanReachability
+import LeanCanny.ETR.FormulaBooleanCircuitBridge
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -482,8 +482,12 @@ signs. Gate metadata is read from the original source; atom decisions use the
 native cell-sign routine. Selection is exactly nonemptiness of the restricted
 cell in the circuit-defined solution set. Its constructed native incidence
 graph now gives PSPACE decisions for whole-set connectivity and paths between
-labeled cells, with base and endpoint validation. Compiling original input
-formulas to these circuits remains required.
+labeled cells, with base and endpoint validation. Original formula syntax now
+has native indexed gate readers, using reverse bracket positions. Atomic terms
+and requested signs are preserved, and root-gate truth is proved equivalent to
+the original formula. Malformed inputs use the falsum view. Native formula
+extractors also support larger source records. Constructing the matching atom
+polynomial families for the full recursive queries remains required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

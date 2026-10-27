@@ -396,7 +396,11 @@ The checked ingredients are:
   arbitrary combinations of factor signs, with selection exactly nonemptiness
   in the actual circuit-defined solution set. Constructed native incidence
   graphs give PSPACE connectivity and cell-label path queries for these Boolean
-  subsets. Original input formulas still need compilation to the circuits.
+  subsets. Original formula syntax now has native indexed gate readers and
+  proved truth preservation, including nested negations and strict inequalities.
+  Malformed words normalize to falsum; FP formula extractors support larger
+  source records. Matching atom polynomial families for recursive queries
+  remain required.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
