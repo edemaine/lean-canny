@@ -3872,3 +3872,58 @@ example (P : BoundedFullWriter.Readers) (F : Family) (features : List Bool → �
 
 end
 end AlgebraicSparseMomentTests
+
+namespace AlgebraicFiberRecordTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice BoundedAlgebraicFiberRecords
+open scoped Classical BigOperators
+
+example (F : Family) (A : F.Access) : UnaryFn (length F) := length_unary A
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => SignStatisticBits.integerCode (BoundedAlgebraicFiberRecordGram.entry P F q)) :=
+  BoundedAlgebraicFiberRecordGram.evaluator h A ha
+
+-- A complete zero slot denotes one, rather than the zeroth derivative sign.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    (BoundedAlgebraicFiberRecordMoments.moment P F (pair u (List.replicate (width F (pairFst u)) false)) : ℚ) =
+      (RootCount.count P F u : ℚ) := by
+  have hz (n : ℕ) : Nat.fromBitsLE (List.replicate n false) = 0 := by
+    induction n with
+    | zero => rfl
+    | succ n ih => simp only [List.replicate_succ, Nat.fromBitsLE_cons, Bool.false_eq_true, ite_false, ih]
+  have hc : recordSlots F (pair (pairFst u) (List.replicate (width F (pairFst u)) false)) = 1 := by
+    simp only [recordSlots, pairFst_pair, pairSnd_pair, List.length_replicate]
+    exact Nat.div_self (width_pos F (pairFst u))
+  have hcoord : SparseFeatureRecords.coordinate (width F (pairFst u))
+      (List.replicate (width F (pairFst u)) false) 0 = 0 := by
+    simp only [SparseFeatureRecords.coordinate, Nat.zero_mul, List.drop_zero, List.take_replicate, Nat.min_self]
+    exact hz _
+  rw [BoundedAlgebraicFiberRecordMoments.moment_eq_sum_values, hc]
+  simp only [SparseFeatureRecords.value, Finset.prod_range_succ, Finset.prod_range_zero,
+    hcoord, SparseFeatureRecords.factor_zero, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one,
+    Fintype.card_coe, RootCount.count]
+
+-- The one candidate at degree zero still has rank zero.
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) (hd : F.degree (pairFst u) = 0) :
+    (BoundedAlgebraicFiberRecordSpan.gram P F u).rank = 0 := by
+  rw [BoundedAlgebraicFiberRecordSpan.rank_gram]
+  have H := BoundedAlgebraicFiberRoot.count_le_degree P F u
+  omega
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) (i : BoundedAlgebraicFiberRecordSpan.Index F u) :
+    0 ≤ (BoundedAlgebraicFiberRecordGram.entry P F (pair u (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode i.val))) : ℚ) := by
+  rw [BoundedAlgebraicFiberRecordGram.entry_packet]
+  change 0 ≤ ∑ x : BoundedAlgebraicFiberRecordSpan.Root P F u,
+    BoundedAlgebraicFiberRecordSpan.matrix P F u i x * BoundedAlgebraicFiberRecordSpan.matrix P F u i x
+  exact Finset.sum_nonneg (fun x _ => mul_self_nonneg (BoundedAlgebraicFiberRecordSpan.matrix P F u i x))
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u indices : List Bool) (hu : u ∉ valid P) :
+    BoundedAlgebraicFiberRecordGram.entry P F (pair u indices) = 0 := by
+  rw [BoundedAlgebraicFiberRecordGram.entry, BoundedAlgebraicFiberRecordGram.gramQuery, pairFst_pair, pairSnd_pair]
+  exact BoundedAlgebraicFiberRecordMoments.moment_invalid P F u _ hu
+
+end
+end AlgebraicFiberRecordTests

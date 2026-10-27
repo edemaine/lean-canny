@@ -85,6 +85,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberRoot
 import LeanCanny.Encoding.BoundedAlgebraicFiberSignCut
 import LeanCanny.Encoding.BoundedAlgebraicFiberThom
 import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
+import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -427,8 +428,10 @@ every rational-valued root function. Native indexed bivariate product readers
 now supply sparse derivative-product moments from the original coefficients.
 The feature count is polynomially bounded, while derivative orders remain
 binary; the computed integer is the exact sign-monomial sum over distinct
-fiber roots. Selected bases and individual fiber-root signature readout remain
-required.
+fiber roots. Fixed-width records of polynomial length span every rational
+fiber-root function. Their full Gram matrix has rank equal to the distinct-root
+count; concatenated record moments give native entries on all raw base queries.
+Selected bases and individual fiber-root signature readout remain required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

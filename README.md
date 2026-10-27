@@ -348,8 +348,11 @@ The checked ingredients are:
   product readers now compute sparse derivative-product moments from the
   original coefficients. Polynomially many selected derivative tests retain
   binary orders; the answer is their exact sign-monomial sum over distinct
-  fiber roots. Selected bases and individual fiber-root signature readout
-  remain required.
+  fiber roots. Fixed-width records of polynomial length span every rational
+  fiber-root function. Their full Gram matrix has rank equal to the
+  distinct-root count, with native entries computed by concatenated record
+  moments on all raw base queries. Selected bases and individual fiber-root
+  signature readout remain required.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
