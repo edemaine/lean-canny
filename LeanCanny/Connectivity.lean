@@ -90,6 +90,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
 import LeanCanny.Connectivity.AlgebraicSliceSystemReachability
 import LeanCanny.ETR.FormulaBooleanCircuitBridge
 import LeanCanny.Connectivity.FormulaAlgebraicSlice
+import LeanCanny.Connectivity.FormulaRationalSlice
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -491,8 +492,11 @@ extractors also support larger source records. Matching atom polynomial
 families now evaluate the preserved terms in indexed bivariate coordinates,
 with derived degree and mass bounds and native coefficient readers.
 Specialization identifies their Boolean-selected cells with the original
-formula's actual solution set. Whole-set connectivity in those coordinates
-has a native PSPACE algorithm. Constructing the full recursive coordinate
+formula's actual solution set. Rational-coordinate atoms now use fixed even
+denominator powers, with native readers and derived bivariate bounds.
+Denominator roots refine the cells, and a native guard circuit excludes every
+pole. Whole-set connectivity in these guarded rational coordinates has a
+native PSPACE algorithm. Constructing the full recursive coordinate
 families and query records remains required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.

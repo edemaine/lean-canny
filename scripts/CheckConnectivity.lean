@@ -5006,3 +5006,77 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {F : BivariateQueryProd
 
 end
 end FormulaAtomPolynomialTests
+
+namespace FormulaRationalSliceTests
+noncomputable section
+open Polynomial LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.ETR
+open BooleanCircuitSpace
+open scoped Classical
+
+private def yes : Family where
+  count _ := 1
+  tag _ := 1
+  left _ := 0
+  right _ := 0
+
+-- Zero guards leave the original output intact; either pole guard can reject.
+#guard value (BooleanCircuitGuards.extend yes (fun _ => 0)) (fun _ => true) [] = true
+#guard value (BooleanCircuitGuards.extend yes (fun _ => 2)) (fun _ => false) [] = true
+#guard value (BooleanCircuitGuards.extend yes (fun _ => 2))
+  (fun q => decide (Nat.fromBitsLE (pairSnd q) = 1)) [] = false
+#guard value (BooleanCircuitGuards.extend yes (fun _ => 2))
+  (fun q => decide (Nat.fromBitsLE (pairSnd q) = 4)) [] = false
+#guard (BooleanCircuitGuards.extend yes (fun _ => 2)).left (pair [] (BinaryNatCode.encode 6)) = 3
+#guard (BooleanCircuitGuards.extend yes (fun _ => 2)).right (pair [] (BinaryNatCode.encode 6)) = 5
+
+-- Clearing 1/(-x) with width two retains its negative sign for x > 0.
+example : RationalSubstitution.IndexedBivariate.cleared 1 1 2 (fun _ => 1) (fun _ _ => 1)
+    (fun _ => 1) (fun _ => -(Polynomial.X : (ℤ[X])[X])) = -Polynomial.X := by
+  simp [RationalSubstitution.IndexedBivariate.cleared, RationalSubstitution.Indexed.cleared]
+
+-- The boundary address is the first appended factor, including empty first families.
+example (F G : BivariateQueryProductBits.Family) (c : List Bool) :
+    (F.append G).polynomial c (F.count c) = G.polynomial c 0 := by
+  simp [BivariateQueryProductBits.Family.append]
+
+example (read : List Bool → List Bool) (hr : read ∈ FP) {N D : BivariateQueryProductBits.Family}
+    (A : BivariateQueryProductBits.Access N) (B : BivariateQueryProductBits.Access D) :
+    Nonempty (BivariateQueryProductBits.Access (FormulaRationalSource.family read N D)) ∧
+      AlgebraicSliceBooleanAtoms.Access (FormulaRationalSource.source read) :=
+  ⟨⟨FormulaRationalSource.family_access read hr A B⟩, FormulaRationalSource.source_access read hr⟩
+
+-- A tautological equation still leaves a hole at an outer-coordinate denominator root.
+example (P : BoundedFullWriter.Readers) (N D : BivariateQueryProductBits.Family) (u : List Bool)
+    (hD : ∀ i, D.polynomial (pairFst u) i = Polynomial.X) :
+    FormulaRationalSlice.solutionSet P (fun _ => (Formula.eqZero (.const 0)).encode) N D u = {x | x ≠ 0} := by
+  ext x
+  simp only [FormulaRationalSlice.solutionSet, Set.mem_ofPred_eq, FormulaView.formula_encode, Formula.Holds,
+    Term.eval, Int.cast_zero, and_true]
+  constructor
+  · intro h
+    have h0 := h 0 (by unfold FormulaAtomPolynomials.budget; omega)
+    simpa only [hD 0, Polynomial.map_X, Polynomial.eval_X] using h0
+  · intro hx i _
+    simpa only [hD i, Polynomial.map_X, Polynomial.eval_X] using hx
+
+example : ¬ JoinedIn {x : ℝ | x ≠ 0} (-1) 1 := by
+  intro h
+  have hz := ((OneDimension.joinedIn_real_iff (-1) 1).mp h).2.2 0 (by norm_num)
+  exact hz rfl
+
+-- Nonvanishing is enforced even when numerator cancellation makes a cleared atom zero.
+example (P : BoundedFullWriter.Readers) (read : List Bool → List Bool) (N D : BivariateQueryProductBits.Family)
+    (u : List Bool) (x : ℝ) (hx : x ∈ FormulaRationalSlice.solutionSet P read N D u) (i : ℕ)
+    (hi : i < FormulaAtomPolynomials.budget read (pairFst u)) :
+    ((D.polynomial (pairFst u) i).map (ParameterTarski.evalHom (BoundedAlgebraicSlice.point P u))).eval x ≠ 0 :=
+  hx.1 i hi
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (read : List Bool → List Bool) (hr : read ∈ FP)
+    {N D : BivariateQueryProductBits.Family} (A : BivariateQueryProductBits.Access N) (B : BivariateQueryProductBits.Access D)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    FormulaRationalSlice.connectedLanguage P read N D ∈ PSPACE ∧
+      AlgebraicSliceBooleanReachability.language P (FormulaRationalSource.family read N D) (FormulaRationalSource.source read) ∈ PSPACE :=
+  ⟨FormulaRationalSlice.connected_mem_PSPACE h read hr A B ha, FormulaRationalSlice.reachable_mem_PSPACE h read hr A B ha⟩
+
+end
+end FormulaRationalSliceTests

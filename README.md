@@ -402,8 +402,11 @@ The checked ingredients are:
   source records. Matching atom polynomial families now substitute indexed
   bivariate coordinates into the preserved arithmetic terms, with derived
   degree and mass bounds and native coefficient readers. Their specialized
-  signs evaluate the original formula, giving native PSPACE connectivity in
-  those coordinates. Full recursive coordinate families and query records
+  signs evaluate the original formula. Rational-coordinate atoms also have
+  native coefficient readers and derived bounds. Fixed even denominator powers
+  preserve their signs, and a native guard circuit excludes poles, whose roots
+  refine the cells. This gives native PSPACE connectivity in the guarded
+  rational coordinates. Full recursive coordinate families and query records
   remain required.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
