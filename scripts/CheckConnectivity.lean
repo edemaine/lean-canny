@@ -3643,3 +3643,61 @@ example (P : BoundedFullWriter.Readers) (F G : BoundedAlgebraicSlice.Family) (u 
 
 end
 end AlgebraicTarskiTests
+
+namespace AlgebraicFiberTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice
+open scoped Classical
+
+-- Multiplicity must not duplicate a root, and the zero test must count it.
+example : RootSignQueries.singleSignCount ((X - C 1 : ℝ[X]) ^ 2) X .pos = 1 := by
+  rw [RootSignQueries.singleSignCount, Polynomial.roots_pow, Polynomial.roots_X_sub_C]
+  norm_num [two_nsmul, Finset.filter_singleton]
+
+example : RootSignQueries.singleSignCount (X ^ 3 : ℝ[X]) X .zero = 1 := by
+  norm_num [RootSignQueries.singleSignCount, Polynomial.roots_X_pow, show (3 : ℕ) = 2 + 1 from rfl,
+    add_nsmul, two_nsmul, Finset.filter_singleton]
+
+example (q : ℝ[X]) (s : SignType) : RootSignQueries.singleSignCount 0 q s = 0 := by
+  simp [RootSignQueries.singleSignCount]
+
+-- Positive and negative moments may cancel before exact halving.
+example : RootCount.halfDifference
+    (pair (SignStatisticBits.integerCode 3) (SignStatisticBits.integerCode (-1))) = BinaryNatCode.encode 2 :=
+  RootCount.halfDifference_packet 3 (-1) 2 (by norm_num)
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun u => BinaryNatCode.encode (RootCount.count P F u)) := RootCount.count_evaluator h A ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    SpaceFunction (fun u => BinaryNatCode.encode (RootCount.signCount P F G s u)) :=
+  RootCount.signCount_evaluator h A B ha s
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    BoundedAlgebraicFiberRoot.valid P F ∈ PSPACE := BoundedAlgebraicFiberRoot.valid_mem_PSPACE h A ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    BoundedAlgebraicFiberRoot.below P F ∈ PSPACE := BoundedAlgebraicFiberRoot.below_mem_PSPACE h A ha
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u i : List Bool) (hu : u ∉ valid P) :
+    pair u i ∉ BoundedAlgebraicFiberRoot.valid P F := BoundedAlgebraicFiberRoot.invalid_base P F u hu i
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) (i : Fin (RootCount.count P F u)) :
+    (BinaryNatCode.encode i.val).length ≤ (F.degree (pairFst u)).size := BoundedAlgebraicFiberRoot.label_length_le P F u i
+
+-- A cut equal to the labeled root must be rejected by the strict comparison.
+example (P : BoundedFullWriter.Readers) (F : Family) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c))
+    (i : Fin (RootCount.count P F (pair c (BinaryNatCode.encode r.val)))) (cut : List Bool)
+    (he : (BoundedAlgebraicFiberRoot.root P F (pair c (BinaryNatCode.encode r.val)) i).val =
+      RationalCutBits.threshold (pair c cut)) :
+    pair (pair (pair c (BinaryNatCode.encode r.val)) (BinaryNatCode.encode i.val)) cut ∉ BoundedAlgebraicFiberRoot.below P F := by
+  rw [BoundedAlgebraicFiberRoot.below_packet, he]
+  exact lt_irrefl _
+
+end
+end AlgebraicFiberTests

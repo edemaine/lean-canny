@@ -81,6 +81,7 @@ import LeanCanny.Encoding.BoundedAlgebraicSliceDegree
 import LeanCanny.Encoding.BoundedAlgebraicSlicePrincipal
 import LeanCanny.Algebra.PolynomialPseudoRemainderReader
 import LeanCanny.Encoding.BoundedAlgebraicSliceTarskiPSPACE
+import LeanCanny.Encoding.BoundedAlgebraicFiberRoot
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -407,6 +408,11 @@ Algebraic-slice Tarski queries and their zero, positive, and negative decisions
 are native. Actual degrees, derivative products, bounded seeds, principal
 signs, and descending statistics are computed from the original modular
 bivariate coefficient readers, without a symbolic-degree stability assumption.
+Three scalar Tarski moments give native distinct-root and single-sign counts
+in algebraic fibers. Their roots have ordered binary labels bounded by the
+original outer degree, with native validity and rational-cut comparison
+deciders. The comparisons preserve the chosen base root and count repeated
+fiber roots once.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

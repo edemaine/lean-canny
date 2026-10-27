@@ -331,6 +331,11 @@ The checked ingredients are:
   are native. Actual degrees, derivative products, bounded seeds, principal
   signs, and descending statistics are computed from the original modular
   bivariate readers, including degree drops and zero heads.
+  Three scalar Tarski moments give native distinct-root and single-sign
+  counts in those algebraic fibers. Ordered fiber-root labels are bounded
+  by the original outer degree; their validity and comparison with an
+  encoded rational cut have native polynomial-space deciders. Repeated
+  roots count once, and invalid base or fiber ordinals are rejected.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
