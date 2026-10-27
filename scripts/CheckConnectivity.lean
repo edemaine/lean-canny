@@ -4520,3 +4520,102 @@ example (P : Readers) (Q : BivariateQueryProductBits.Family) (u a b : List Bool)
 
 end
 end RealCellIncidenceTests
+
+namespace CompleteCellSignTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity
+open BoundedAlgebraicSlice BoundedFullWriter
+open scoped Classical
+
+-- Rootless fibers use evaluation at zero, also for identically zero factors.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (i : ℕ)
+    (hn : (AlgebraicSliceCellCover.roots P Q u).card = 0)
+    (k : Fin ((AlgebraicSliceCellCover.roots P Q u).card + 1)) :
+    AlgebraicSliceCellSignGeometry.sign P Q u i (.inr k) =
+      SignType.sign ((BoundedAlgebraicSliceIndexed.value P Q u i).eval 0) := by
+  simp only [AlgebraicSliceCellSignGeometry.sign, hn, dite_eq_left]
+
+-- Every cell, including exterior rays, has the sign returned by the native query.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (i : Fin (Q.count (pairFst u))) (c : AlgebraicSliceCellCover.Index P Q u) (y : ℝ)
+    (hy : y ∈ AlgebraicSliceCellCover.piece P Q u c) :
+    AlgebraicSliceCellSigns.value P Q (pair u
+      (pair (BinaryNatCode.encode i.val) (AlgebraicSliceCellLabels.label P Q u c))) =
+        InfinitesimalSign.encode (SignType.sign ((BoundedAlgebraicSliceIndexed.value P Q u i.val).eval y)) :=
+  AlgebraicSliceCellSigns.packet P Q u hu i c y hy
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (i : Fin (Q.count (pairFst u))) (c : AlgebraicSliceCellCover.Index P Q u)
+    (hz : BoundedAlgebraicSliceIndexed.value P Q u i.val = 0) :
+    AlgebraicSliceCellSigns.value P Q (pair u
+      (pair (BinaryNatCode.encode i.val) (AlgebraicSliceCellLabels.label P Q u c))) = [] := by
+  obtain ⟨y, hy⟩ := Geometry.OrderedRealCells.piece_nonempty (AlgebraicSliceCellCover.roots P Q u) c
+  rw [AlgebraicSliceCellSigns.packet P Q u hu i c y hy, hz]
+  simp only [Polynomial.eval_zero, sign_zero, InfinitesimalSign.encode]
+
+example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family} (A : BivariateQueryProductBits.Access Q)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    AlgebraicSliceCellSignLanguage.language P Q s ∈ PSPACE := AlgebraicSliceCellSignLanguage.mem_PSPACE h A ha s
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u i c : List Bool) (s : SignType) (hu : u ∉ valid P) :
+    pair u (pair i c) ∉ AlgebraicSliceCellSignLanguage.language P Q s :=
+  AlgebraicSliceCellSignLanguage.invalid_base P Q u i c s hu
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (q : List Bool) (s : SignType)
+    (hi : Q.count (pairFst (pairFst q)) ≤ Nat.fromBitsLE (pairFst (pairSnd q))) :
+    q ∉ AlgebraicSliceCellSignLanguage.language P Q s := AlgebraicSliceCellSignLanguage.invalid_factor P Q q s hi
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u i c : List Bool) (s : SignType)
+    (hc : c.length ≠ AlgebraicSliceCellCover.labelWidth Q u) :
+    pair u (pair i c) ∉ AlgebraicSliceCellSignLanguage.language P Q s := by
+  intro H
+  exact hc (by simpa only [AlgebraicSliceCellSignLanguage.cellQuery, pairFst_pair, pairSnd_pair] using H.1.2.1)
+
+-- No factors means the whole real line; selection must not rely on a nonempty scan.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (s : SignType)
+    (hn : Q.count (pairFst u) = 0) :
+    AlgebraicSliceCellCover.solutionSet P Q u (fun v => ∀ i, v i = s) = Set.univ := by
+  ext x
+  simp only [AlgebraicSliceCellCover.solutionSet, Set.mem_ofPred_eq, Set.mem_univ, iff_true]
+  intro i
+  have := i.isLt
+  omega
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (s : SignType) (c : AlgebraicSliceCellCover.Index P Q u) (hn : Q.count (pairFst u) = 0) :
+    pair u (AlgebraicSliceCellLabels.label P Q u c) ∈ AlgebraicSliceSystemCellGraph.vertexLanguage P Q s := by
+  apply (AlgebraicSliceSystemCellGraph.vertex_packet P Q u hu s c).mpr
+  apply (AlgebraicSliceSystemCellGraph.nonempty_iff P Q u hu s c).mpr
+  intro i
+  have := i.isLt
+  omega
+
+-- Even an empty factor scan must retain base-root validation.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u c : List Bool) (s : SignType) (hu : u ∉ valid P) :
+    pair u c ∉ AlgebraicSliceSystemCellGraph.vertexLanguage P Q s := by
+  intro H
+  exact AlgebraicSliceCellLabels.invalid_base P Q u c hu H.1
+
+-- A factor with the wrong sign excludes its entire cell from the actual solution set.
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (s : SignType) (c : AlgebraicSliceCellCover.Index P Q u) (i : Fin (Q.count (pairFst u)))
+    (hi : AlgebraicSliceCellSignGeometry.sign P Q u i.val c ≠ s) :
+    pair u (AlgebraicSliceCellLabels.label P Q u c) ∉ AlgebraicSliceSystemCellGraph.vertexLanguage P Q s := by
+  intro H
+  exact hi ((AlgebraicSliceSystemCellGraph.nonempty_iff P Q u hu s c).mp
+    ((AlgebraicSliceSystemCellGraph.vertex_packet P Q u hu s c).mp H) i)
+
+example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family} (A : BivariateQueryProductBits.Access Q)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    AlgebraicSliceSystemCellGraph.vertexLanguage P Q s ∈ PSPACE ∧ AlgebraicSliceSystemCellGraph.edgeLanguage P Q s ∈ PSPACE :=
+  ⟨AlgebraicSliceSystemCellGraph.vertex_mem_PSPACE h A ha s, AlgebraicSliceSystemCellGraph.edge_mem_PSPACE h A ha s⟩
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (c d : AlgebraicSliceCellCover.Index P Q u) :
+    pair u (pair (AlgebraicSliceCellLabels.label P Q u c) (AlgebraicSliceCellLabels.label P Q u d)) ∈
+      AlgebraicSliceSystemCellGraph.edgeLanguage P Q 0 ↔
+        FrontierCover.Incident (AlgebraicSliceSystemCellGraph.restrictedPiece P Q u 0) c d :=
+  AlgebraicSliceSystemCellGraph.edge_packet P Q u hu 0 c d
+
+end
+end CompleteCellSignTests

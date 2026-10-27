@@ -87,7 +87,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberThom
 import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
-import LeanCanny.Connectivity.AlgebraicSliceCellAdjacency
+import LeanCanny.Connectivity.AlgebraicSliceSystemCellGraph
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -468,7 +468,13 @@ relative frontier graph. Explicit short cell labels have native validity
 checking, including base-root validation. Native incidence tests validate both
 labels and compute the exact point-gap neighbor relation. Relative incidence
 retains precisely those edges whose two cells are present in the solution set.
-Native truth evaluation for selecting these cells remains required.
+Native factor-sign readers now cover point cells, both rays, every interior
+gap, and the whole line in rootless fibers. Their validated languages reject
+invalid base roots, factors, and cell labels. Binary-counted native scans select
+the cells where every factor has a requested sign, including the common zero
+set. Both connectivity tests for these sets transfer to the resulting native
+vertex and relative-incidence languages. General Boolean truth evaluation and
+the full recursive graph construction remain required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

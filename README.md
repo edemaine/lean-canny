@@ -386,7 +386,12 @@ The checked ingredients are:
   Native incidence tests compute the exact point-gap neighbor relation and
   validate both labels. Relative incidence retains the edges whose two cells
   are present in the solution set, so excluded endpoints cannot join gaps.
-  Native truth evaluation for selecting these cells remains required.
+  Native factor-sign readers cover every cell, including both rays and rootless
+  fibers, and reject invalid factor indices and cell labels. A binary-counted
+  native scan selects cells where every factor has the requested sign, including
+  the common zero set. These solution sets have native vertex and relative-edge
+  languages, with both connectivity tests transferred to that graph. General
+  Boolean truth evaluation remains required.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
