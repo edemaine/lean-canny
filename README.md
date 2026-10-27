@@ -257,8 +257,17 @@ The checked ingredients are:
   record separating all complex samples and their embedded real subset.
   Collision tests use two independent complex sample circuits and compare both
   components. Native Boolean queries expose both real and imaginary coordinates
-  and charge the selected direction and separator. Recursive rational coordinate
-  records remain required. Source connectivity
+  and charge the selected direction and separator. Arbitrary bounded weight
+  records now have nonzero integer projection equations vanishing at every
+  complex sample, with native modular coefficient readers and uniform degree
+  and coefficient bounds. Unit records give individual coordinate equations;
+  the complex separating projection shares this native backend. A natively
+  computed and checked degree table feeds these equations into a balanced
+  primitive tree. Its common parameter and rational coordinates recover every
+  real and complex critical sample, with nonzero denominators, native coefficient
+  readers, and explicit degree and mass bounds. Filtering coordinate-root tuples
+  by the critical equations and assembling recursive coordinate families remain
+  required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
   independent formula witnesses. Selected sample serialization and constrained

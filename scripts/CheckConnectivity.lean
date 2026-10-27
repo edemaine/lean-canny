@@ -5211,3 +5211,100 @@ example {P : BoundedFullWriter.Readers} {p : List Bool → Formula} (h : P.PolyT
 
 end
 end ComplexSeparatorTests
+
+namespace CriticalCoordinateTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Geometry LeanCanny.ETR
+open scoped Classical
+attribute [local irreducible] LinearProjectionEliminant.polynomial
+
+-- Coordinate records handle arbitrary binary indices, including padding and overflow.
+example (P : BoundedFullWriter.Readers) (q : List Bool) (i : Fin (P.dim (pairFst q) + 4)) :
+    BoundedCriticalSeparator.weight (P.comp pairFst) (BoundedCriticalCoordinate.record P) q i.val =
+      if i.val = Nat.fromBitsLE (pairSnd q) then 1 else 0 :=
+  BoundedCriticalCoordinate.weight P q i
+
+example (P : BoundedFullWriter.Readers) (q : List Bool) (i : Fin (P.dim (pairFst q) + 4))
+    (hi : P.dim (pairFst q) + 4 ≤ Nat.fromBitsLE (pairSnd q)) :
+    BoundedCriticalSeparator.weight (P.comp pairFst) (BoundedCriticalCoordinate.record P) q i.val = 0 := by
+  rw [BoundedCriticalCoordinate.weight, ite_eq_right (by have := i.isLt; omega)]
+
+example (P : BoundedFullWriter.Readers) (q : List Bool) (i : Fin (P.dim (pairFst q) + 4))
+    (hi : Nat.fromBitsLE (pairSnd q) = i.val) (x : BoundedFullComplexSamples.Samples (P.comp pairFst) q) :
+    (BoundedCriticalCoordinate.polynomial P q).eval₂ (Int.castRingHom ℂ) (x.val i) = 0 :=
+  BoundedCriticalCoordinate.eval_sample P q i hi x
+
+example (P : BoundedFullWriter.Readers) (q m : List Bool) (k : ℕ) :
+    BoundedCriticalCoordinate.coefficient P (pair (pair q m) (BinaryNatCode.encode k)) =
+      MatrixPower.residueBits (((BoundedCriticalCoordinate.polynomial P q).coeff k : ℤ) :
+        ZMod (Nat.fromBitsLE m + 1)) := BoundedCriticalCoordinate.coefficient_packet P q m k
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalCoordinate.coefficient P) ∧
+      SpaceFunction (BoundedProjectionFamilyCoefficient.value P (BoundedComplexSeparator.record P)) :=
+  ⟨BoundedCriticalCoordinate.coefficient_evaluator h ha,
+    BoundedCriticalCoordinate.separating_coefficient_evaluator h ha⟩
+
+-- A singular finite fiber and a zero projection need no regularity or separation assumption.
+private noncomputable def singular : Fin 1 → MvPolynomial (Fin 1) ℤ := fun _ => MvPolynomial.X 0 ^ 2
+
+private theorem singular_finite : {x : Fin 1 → ℂ | ∀ j, (singular j).eval₂ (Int.castRingHom ℂ) x = 0}.Finite := by
+  apply (Set.finite_singleton (fun _ : Fin 1 => (0 : ℂ))).subset
+  intro x hx
+  have hz : x 0 = 0 := by
+    have h := hx 0
+    simp only [singular, MvPolynomial.eval₂_pow, MvPolynomial.eval₂_X] at h
+    exact (sq_eq_zero_iff).mp h
+  apply Set.mem_singleton_iff.mpr
+  funext i
+  have hi : i = 0 := Subsingleton.elim _ _
+  simpa only [hi] using hz
+
+example : (LinearProjectionEliminant.polynomial singular (fun _ => 2) (fun _ => 0) 2).eval₂
+    (Int.castRingHom ℂ) 0 = 0 := by
+  simpa only [map_zero, zero_mul, Finset.sum_const_zero] using
+    LinearProjectionEliminant.eval_eq_zero_of_finite (Int.castRingHom ℂ)
+    singular (fun _ => 2) (fun _ => by simp [singular, MvPolynomial.totalDegree_X_pow])
+    (fun _ => by decide) (fun _ => 0) 2
+    (by norm_num [Macaulay.level, AffineCoordinateSystem.degrees, Fin.sum_univ_succ])
+    singular_finite (fun _ => 0) (fun _ => by simp [singular])
+
+end CriticalCoordinateTests
+
+namespace CriticalRationalCoordinateTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (i : ℕ)
+    (hi : i < BoundedCriticalLeafSource.count P c) :
+    (BoundedCriticalLeafSource.family P).polynomial
+      (pair (BoundedCriticalLeafSource.prepare P c) (BinaryNatCode.encode i)) =
+        BoundedCriticalCoordinate.polynomial P (pair c (BinaryNatCode.encode i)) :=
+  BoundedCriticalLeafSource.prepared_polynomial P c i hi
+
+-- Exact degrees are read from a natively computed, checked table.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalLeafSource.prepare P) ∧
+      Nonempty (SeparableBits.Readers (BoundedCriticalLeafSource.family P)) :=
+  ⟨BoundedCriticalLeafSource.prepare_evaluator h ha, ⟨BoundedCriticalLeafSource.readers h ha⟩⟩
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (PrimitivePairBits.coefficient (BoundedCriticalRationalCoordinates.parameter P)) ∧
+      SpaceFunction (PrimitivePairBits.coefficient
+        (fun u => (BoundedCriticalRationalCoordinates.coordinate P u).numerator)) ∧
+      SpaceFunction (PrimitivePairBits.coefficient
+        (fun u => (BoundedCriticalRationalCoordinates.coordinate P u).denominator)) :=
+  ⟨BoundedCriticalRationalCoordinates.parameter_coefficient_evaluator h ha,
+    BoundedCriticalRationalCoordinates.coefficient_evaluators h ha⟩
+
+-- The parameter is real for real samples and recovers every actual coordinate.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    ∃ theta : ℝ, (BoundedCriticalRationalCoordinates.parameter P c).eval₂ (Int.castRingHom ℝ) theta = 0 ∧
+      ∀ i : Fin (P.dim c + 4),
+        (BoundedCriticalRationalCoordinates.coordinate P (pair c (BinaryNatCode.encode i.val))).denominator.eval₂
+          (Int.castRingHom ℝ) theta ≠ 0 ∧
+        (BoundedCriticalRationalCoordinates.coordinate P (pair c (BinaryNatCode.encode i.val))).eval theta = x.val i :=
+  BoundedCriticalRationalCoordinates.real_sample_complete P c x
+
+end CriticalRationalCoordinateTests

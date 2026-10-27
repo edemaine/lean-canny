@@ -114,6 +114,29 @@ theorem answer_evaluator {P : Readers} {direction separator : List Bool → List
     congrArg (fun p => (row p).val) (pairFst_pair c (target c))
   simp only [value_data, answer, Function.comp_apply, pairFst_pair, pairSnd_pair, hi']
 
+/-- Charge a native weight record together with the selected critical direction. -/
+theorem record_evaluator {P : Readers} {record : List Bool → List Bool} {row : (c : List Bool) → Fin (P.dim c + 5)}
+    {W : List Bool → ℕ} {target k modulus : List Bool → List Bool}
+    (h : P.PolyTime) (hr : SpaceFunction record) (hi : UnaryFn (fun c => (row c).val)) (hW : UnaryFn W)
+    (ht : target ∈ FP) (hk : k ∈ FP) (hm : modulus ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c)
+    (hfit : ∀ c, degree P c < 2 ^ W c) (hpos : ∀ c, 0 < W c) :
+    SpaceFunction (answer P (BoundedFullDirectionChoice.record P) record
+      row W target k modulus) := by
+  have hc := answer_evaluator (row := fun p => row (pairFst p)) (h.comp pairFst_mem_FP)
+    (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP) (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP)
+    (hi.comp pairFst_mem_FP) (hW.comp pairFst_mem_FP) (mem_FP_comp pairFst_mem_FP ht)
+    (mem_FP_comp pairFst_mem_FP hk) (mem_FP_comp pairFst_mem_FP hm)
+    (fun p => ha (pairFst p)) (fun p => hfit (pairFst p)) (fun p => hpos (pairFst p))
+  have hp := ((BoundedFullDirectionChoice.evaluator h ha).pairOutputs hr).withInput
+  have he : SpaceFunction _ := ⟨hc.computable.comp hp.computable⟩
+  apply he.congr
+  funext c
+  have hi' : (row (pairFst (pair c (pair (BoundedFullDirectionChoice.record P c)
+      (record c))))).val = (row c).val :=
+    congrArg (fun p => (row p).val) (pairFst_pair c _)
+  simp only [answer, Readers.comp, Function.comp_apply, pairFst_pair, pairSnd_pair, hi']
+
 /-- Both actual record searches are included in the workspace bound. -/
 theorem selected_evaluator {P : Readers} {row : (c : List Bool) → Fin (P.dim c + 5)}
     {W : List Bool → ℕ} {target k modulus : List Bool → List Bool}
@@ -122,19 +145,7 @@ theorem selected_evaluator {P : Readers} {row : (c : List Bool) → Fin (P.dim c
     (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c)
     (hfit : ∀ c, degree P c < 2 ^ W c) (hpos : ∀ c, 0 < W c) :
     SpaceFunction (answer P (BoundedFullDirectionChoice.record P) (BoundedCriticalSeparator.record P)
-      row W target k modulus) := by
-  have hc := answer_evaluator (row := fun p => row (pairFst p)) (h.comp pairFst_mem_FP)
-    (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP) (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP)
-    (hi.comp pairFst_mem_FP) (hW.comp pairFst_mem_FP) (mem_FP_comp pairFst_mem_FP ht)
-    (mem_FP_comp pairFst_mem_FP hk) (mem_FP_comp pairFst_mem_FP hm)
-    (fun p => ha (pairFst p)) (fun p => hfit (pairFst p)) (fun p => hpos (pairFst p))
-  have hp := ((BoundedFullDirectionChoice.evaluator h ha).pairOutputs (BoundedCriticalSeparator.evaluator h ha)).withInput
-  have he : SpaceFunction _ := ⟨hc.computable.comp hp.computable⟩
-  apply he.congr
-  funext c
-  have hi' : (row (pairFst (pair c (pair (BoundedFullDirectionChoice.record P c)
-      (BoundedCriticalSeparator.record P c))))).val = (row c).val :=
-    congrArg (fun p => (row p).val) (pairFst_pair c _)
-  simp only [answer, Readers.comp, Function.comp_apply, pairFst_pair, pairSnd_pair, hi']
+      row W target k modulus) :=
+  record_evaluator h (BoundedCriticalSeparator.evaluator h ha) hi hW ht hk hm ha hfit hpos
 
 end LeanCanny.Encoding.BoundedProjectionRowsCoefficient

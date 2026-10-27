@@ -94,6 +94,8 @@ import LeanCanny.Connectivity.FormulaRationalSlice
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 import LeanCanny.Encoding.BoundedComplexSampleQuery
 import LeanCanny.Encoding.BoundedComplexSeparator
+import LeanCanny.Encoding.BoundedCriticalCoordinate
+import LeanCanny.Encoding.BoundedCriticalRationalCoordinates
 
 /-! # Connectivity development
 
@@ -341,8 +343,16 @@ Native bounded search now selects an integer projection record separating all
 complex samples and also their embedded real subset. Its collision tests use
 two independent complex sample circuits and compare both components. Native
 Boolean queries expose both real and imaginary spatial coordinates, charging
-the actual selected direction and separator. Constructing the recursive
-rational coordinate records remains required. Native real critical-sample queries test these
+the actual selected direction and separator. Arbitrary bounded weight records
+now give nonzero integer projection equations annihilating every complex sample,
+with native modular coefficient readers and uniform degree and coefficient bounds.
+Unit records supply individual coordinate equations, and the complex separating
+projection uses the same native backend. A native checked degree table feeds
+these equations into a balanced primitive tree. Its common parameter and rational
+coordinates recover every complex sample and every real sample, with nonzero
+denominators, native coefficient readers, and explicit degree and mass bounds.
+Filtering the coordinate-root tuples by the critical equations and assembling
+the recursive coordinate families remain required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
 sample-circuit serialization and constrained sample feasibility compose with
 the native direction selector in polynomial space. Two independently varying
