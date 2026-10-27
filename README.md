@@ -324,7 +324,11 @@ The checked ingredients are:
   and leading-sign queries, including degree drops. They reuse the original
   modular coefficient readers. Signed principal-subresultant queries compute
   the actual slice degrees internally and evaluate parameter-polynomial
-  determinants at the same root. Algebraic-slice Tarski queries remain open.
+  determinants at the same root. Fixed even pseudo-remainder iterates over
+  parameter polynomials have native bivariate coefficient readers, allowing
+  the symbolic head degree to exceed the declared reduction degree.
+  Algebraic-slice Tarski queries still need the derivative-product source
+  and sign-statistic composition.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between

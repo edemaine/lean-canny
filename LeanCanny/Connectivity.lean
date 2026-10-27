@@ -79,6 +79,7 @@ import LeanCanny.Encoding.BoundedProjectionOrderedRoot
 import LeanCanny.Encoding.BoundedProjectionTestSign
 import LeanCanny.Encoding.BoundedAlgebraicSliceDegree
 import LeanCanny.Encoding.BoundedAlgebraicSlicePrincipal
+import LeanCanny.Algebra.PolynomialPseudoRemainderReader
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -398,8 +399,11 @@ degrees, zero-polynomial flags, and leading signs after specialization at an
 ordered algebraic root. These queries permit degree drops and reuse the
 original bivariate modular readers. Signed principal-subresultant queries
 compute both actual degrees internally and specialize parameter-polynomial
-determinants at the same ordered root. Algebraic-slice Tarski queries remain
-required.
+determinants at the same ordered root. Fixed even pseudo-remainder iterates
+over parameter polynomials also have native bivariate coefficient readers.
+The symbolic head degree may exceed the declared reduction degree.
+Algebraic-slice Tarski queries still require the derivative-product source
+and sign-statistic composition.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

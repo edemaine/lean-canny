@@ -3521,3 +3521,60 @@ example (P : BoundedFullWriter.Readers) (F G : BoundedAlgebraicSlice.Family) (q 
   BoundedAlgebraicSlice.Principal.value_invalid P F G q hq
 
 end AlgebraicPrincipalTests
+
+namespace PolynomialReductionTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open scoped Classical
+
+-- Higher symbolic head coefficients are ignored by the declared reduction step.
+example : PseudoRemainder.matrix (Polynomial.X ^ 3 + 2 * Polynomial.X + 3 : ℤ[X]) 1 3 0 0 = 2 := by
+  rw [PseudoRemainder.matrix_apply_sparse_unbounded]
+  norm_num
+
+example : PseudoRemainder.matrix (Polynomial.X ^ 3 + 2 * Polynomial.X + 3 : ℤ[X]) 1 3 0 1 = -3 := by
+  rw [PseudoRemainder.matrix_apply_sparse_unbounded]
+  norm_num
+
+example : PseudoRemainder.matrix (Polynomial.X ^ 3 + 2 * Polynomial.X + 3 : ℤ[X]) 1 3 2 2 = 0 := by
+  rw [PseudoRemainder.matrix_apply_sparse_unbounded]
+  norm_num
+
+-- Parameter coefficients are streamed individually, including nonconstant entries.
+example : ((PseudoRemainder.matrix
+    (Polynomial.C (Polynomial.X : ℤ[X]) * Polynomial.X + 1 + Polynomial.X ^ 3 : (ℤ[X])[X]) 1 2 0 0).coeff 1) = 1 := by
+  rw [PseudoRemainder.matrix_apply_sparse_unbounded]
+  norm_num [Polynomial.coeff_one]
+
+noncomputable def unstableHead : PolynomialPseudoRemainderBits.Family where
+  head _ := Polynomial.X ^ 3
+  input _ := 0
+  degree _ := 1
+  bound _ := 1
+  degree_pos _ := by decide
+  degree_le _ := by decide
+  input_degree _ := by simp
+
+example : (unstableHead.head []).natDegree > unstableHead.degree [] := by norm_num [unstableHead]
+
+example (F : PolynomialPseudoRemainderBits.Family) (A : PolynomialPseudoRemainderBits.Access F) :
+    CertifiedPolynomial.BivariateReader F.reduced := PolynomialPseudoRemainderBits.reader A
+
+example (F : PolynomialPseudoRemainderBits.Family) (A : PolynomialPseudoRemainderBits.Access F) :
+    SpaceFunction (PolynomialPseudoRemainderBits.value F) := PolynomialPseudoRemainderBits.evaluator A
+
+example (F : PolynomialPseudoRemainderBits.Family) (q : List Bool) :
+    PolynomialPseudoRemainderBits.value F q = MatrixPower.residueBits
+      ((((F.reduced (PolynomialPseudoRemainderBits.origin q)).coeff (PolynomialPseudoRemainderBits.index q)).coeff
+        (PolynomialPseudoRemainderBits.parameter q) : ℤ) : ZMod (PolynomialPseudoRemainderBits.modulus q)) :=
+  PolynomialPseudoRemainderBits.value_eq F q
+
+example (F : PolynomialPseudoRemainderBits.Family) (q : List Bool)
+    (hq : F.bound (PolynomialPseudoRemainderBits.origin q) < PolynomialPseudoRemainderBits.index q) :
+    PolynomialPseudoRemainderBits.value F q = [] := by
+  rw [PolynomialPseudoRemainderBits.value, ite_eq_right]
+  unfold PolynomialPseudoRemainderBits.valid
+  omega
+
+end
+end PolynomialReductionTests
