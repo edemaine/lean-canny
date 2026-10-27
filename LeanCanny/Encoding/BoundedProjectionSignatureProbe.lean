@@ -13,7 +13,8 @@ Two weighted Gram determinant coefficients determine a feature's sign at
 one root. The denominator is nonzero because the selected hash separates
 the roots. This is the correctness identity for a native signature reader;
 native feature-weighted entries are supplied by `BoundedProjectionFeatureMoments`.
-Evaluating the probe determinant coefficients and their signs remains required.
+`BoundedProjectionSignatureRead` supplies native determinant-coefficient sign
+evaluation and the resulting streamed derivative-sign reader.
 -/
 
 @[expose] public section

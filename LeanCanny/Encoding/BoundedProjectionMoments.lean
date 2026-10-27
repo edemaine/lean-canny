@@ -13,7 +13,9 @@ public import LeanCanny.Algebra.SignQueryMoments
 Sparse derivative-sign monomials span every rational-valued function on the distinct
 real projection roots, with support bounded by the existing polynomial label
 width. Product Tarski queries compute their moments in native polynomial space.
-This does not yet select a basis or enumerate individual signatures.
+`BoundedProjectionRankBasis` selects a basis, and
+`BoundedProjectionSignatureRead` enumerates individual signatures with native
+access to each derivative sign.
 -/
 
 @[expose] public section

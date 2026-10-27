@@ -3117,3 +3117,102 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedProject
   BoundedProjectionSignatureProbe.signature_at_ordinal P c r d
 
 end ProjectionEnumerationTests
+
+namespace ProjectionSignatureReadTests
+open LeanCanny.Algebra LeanCanny.Encoding
+open scoped Classical
+
+-- Signed operands may have redundant high zero bits or nonzero parts on both sides.
+#guard SignedIntegerArithmetic.canonical (pair [true, false, false] [true, true, false]) ==
+  SignStatisticBits.integerCode (-2)
+#guard SignedIntegerArithmetic.canonical (pair [true, false] [true]) == SignStatisticBits.integerCode 0
+#guard SignedIntegerArithmetic.subtract (pair (SignStatisticBits.integerCode (-3)) (SignStatisticBits.integerCode 5)) ==
+  SignStatisticBits.integerCode (-8)
+#guard SignedIntegerArithmetic.subtract (pair (SignStatisticBits.integerCode 5) (SignStatisticBits.integerCode (-3))) ==
+  SignStatisticBits.integerCode 8
+#guard SignedIntegerArithmetic.subtract (pair (SignStatisticBits.integerCode (-3)) (SignStatisticBits.integerCode (-3))) ==
+  SignStatisticBits.integerCode 0
+
+-- All nine pairs, including zero denominators, have total sign-tag semantics.
+example (a b : SignType) :
+    BoundedProjectionSignatureRead.multiplyTags (pair (InfinitesimalSign.encode a) (InfinitesimalSign.encode b)) =
+      InfinitesimalSign.encode (a * b) := BoundedProjectionSignatureRead.multiplyTags_packet a b
+#guard BoundedProjectionSignatureRead.multiplyTags (pair [true] [false, true]) == [true]
+#guard BoundedProjectionSignatureRead.multiplyTags (pair [true] [true]) == [false, true]
+#guard BoundedProjectionSignatureRead.multiplyTags (pair [] [true]) == []
+
+-- Entry degrees use decoded values, so padded zero and one remain valid.
+example (P : BoundedFullWriter.Readers) (unit : Bool) (e : List Bool) :
+    BoundedProjectionProbeEntries.coefficient P unit (pair e [false, false]) = BoundedProjectionProbeEntries.constant P e := by
+  simp only [BoundedProjectionProbeEntries.coefficient, pairFst_pair, pairSnd_pair,
+    show Nat.fromBitsLE [false, false] = 0 from rfl, ↓reduceIte]
+
+example (P : BoundedFullWriter.Readers) (unit : Bool) (e : List Bool) :
+    BoundedProjectionProbeEntries.coefficient P unit (pair e [true, false]) = BoundedProjectionProbeEntries.linear P unit e := by
+  simp only [BoundedProjectionProbeEntries.coefficient, pairFst_pair, pairSnd_pair,
+    show Nat.fromBitsLE [true, false] = 1 from rfl, one_ne_zero, ↓reduceIte]
+
+example (P : BoundedFullWriter.Readers) (unit : Bool) (e : List Bool) :
+    BoundedProjectionProbeEntries.coefficient P unit (pair e [false, true, false]) = 0 := by
+  simp only [BoundedProjectionProbeEntries.coefficient, pairSnd_pair,
+    show Nat.fromBitsLE [false, true, false] = 2 from rfl,
+    show ¬(2 : ℕ) = 0 from by decide, show ¬(2 : ℕ) = 1 from by decide, ↓reduceIte]
+
+noncomputable def emptyFamily : IntegerPolynomialMatrixBits.Family where
+  dimension _ := 0
+  matrix _ := 0
+
+-- Empty determinant is one; all its positive coefficients are zero, at raw padded moduli too.
+example (c m : List Bool) :
+    IntegerPolynomialMatrixBits.value emptyFamily (pair (pair c (BinaryNatCode.encode 0)) m) =
+      MatrixPower.residueBits (1 : ZMod (Nat.fromBitsLE m + 1)) := by
+  rw [IntegerPolynomialMatrixBits.value_packet]
+  change MatrixPower.residueBits (((0 : Matrix (Fin 0) (Fin 0) (Polynomial ℤ)).det.coeff 0 : ℤ) : ZMod (Nat.fromBitsLE m + 1)) = _
+  rw [Matrix.det_isEmpty, Polynomial.coeff_one_zero, Int.cast_one]
+
+example (c : List Bool) :
+    IntegerPolynomialMatrixBits.value emptyFamily (pair (pair c (BinaryNatCode.encode 1)) [false, false]) =
+      MatrixPower.residueBits (0 : ZMod (Nat.fromBitsLE [false, false] + 1)) := by
+  rw [IntegerPolynomialMatrixBits.value_packet]
+  change MatrixPower.residueBits (((0 : Matrix (Fin 0) (Fin 0) (Polynomial ℤ)).det.coeff 1 : ℤ) : ZMod (Nat.fromBitsLE [false, false] + 1)) = _
+  rw [Matrix.det_isEmpty, Polynomial.coeff_one, ite_eq_right one_ne_zero, Int.cast_zero]
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (unit : Bool) :
+    SpaceFunction (BoundedProjectionProbeCoefficient.value P unit) :=
+  BoundedProjectionProbeCoefficient.evaluator h ha unit
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (unit : Bool) :
+    SpaceFunction (fun z => InfinitesimalSign.encode
+      (SignType.sign (BoundedProjectionProbeCoefficient.firstCoefficient P unit z))) :=
+  BoundedProjectionProbeCoefficient.sign_evaluator h ha unit
+
+-- Both the ordinal label and the separating parameters are computed internally.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedProjectionSignatureRead.value P) := BoundedProjectionSignatureRead.evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c))
+    (d : BoundedProjectionMoments.Feature P c) :
+    BoundedProjectionSignatureRead.value P (pair (pair c (BinaryNatCode.encode r.val)) (BinaryNatCode.encode d.val)) =
+      InfinitesimalSign.encode (BoundedProjectionMoments.signature P c (BoundedProjectionHashEnumeration.root P c r) d) :=
+  BoundedProjectionSignatureRead.signature_packet P c r d
+
+-- This contract includes every natural order, not only the finite feature range.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c)) (k : ℕ) :
+    BoundedProjectionSignatureRead.value P (pair (pair c (BinaryNatCode.encode r.val)) (BinaryNatCode.encode k)) =
+      InfinitesimalSign.encode (SignType.sign
+        (((BoundedProjectionThom.polynomial P c k).map (Int.castRingHom ℝ)).eval
+          (BoundedProjectionHashEnumeration.root P c r).val)) :=
+  BoundedProjectionSignatureRead.derivative_packet P c r k
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    Function.Injective (BoundedProjectionSignatureRead.signature P c) :=
+  BoundedProjectionSignatureRead.signature_injective P c
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    Set.range (BoundedProjectionSignatureRead.signature P c) = Set.range (BoundedProjectionMoments.signature P c) :=
+  BoundedProjectionSignatureRead.signature_range P c
+
+end ProjectionSignatureReadTests

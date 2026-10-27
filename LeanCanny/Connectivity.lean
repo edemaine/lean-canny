@@ -74,6 +74,7 @@ import LeanCanny.Encoding.BoundedProjectionBasisGram
 import LeanCanny.Encoding.BoundedProjectionBasisPencil
 import LeanCanny.Encoding.BoundedProjectionHashChoice
 import LeanCanny.Encoding.BoundedProjectionSignatureProbe
+import LeanCanny.Encoding.BoundedProjectionSignatureRead
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -375,12 +376,12 @@ root count. The resulting integer hash is injective and has polynomial bit
 length. Native rational-cut queries test an individual hash and count hashes
 below it. A native signed-value enumerator covers every projection root
 bijectively for valid ordinals. Moments weighted by one derivative sign
-have native readers. Two determinant coefficients recover that sign at an
-enumerated hash, with a proved nonzero denominator; native evaluation and
-sign extraction for these probe determinants remain required.
-The complete signature is an indexed function; a polynomial-space representation and
-enumeration of its realizable values still require a streamed sign-determination
-algorithm. The recursive connection tests remain open.
+have native readers. Native modular determinant coefficients and bounded CRT
+sign extraction recover that sign at an enumerated hash, with a proved nonzero
+denominator. Short root ordinals enumerate all distinct realizable signatures;
+a native polynomial-space reader returns any indexed derivative sign without
+storing the complete signature. Orders above the degree bound return zero.
+The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
 endpoint slices and the full recursive query

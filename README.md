@@ -306,12 +306,12 @@ The checked ingredients are:
   injective integer hash of polynomial bit length. Native rational cuts now
   test individual hash values and count the values below a threshold. An
   ordered native hash enumerator labels every projection root bijectively.
-  Native moments weighted by one derivative sign and a determinant identity
-  recover that sign at an enumerated hash. Evaluating the two resulting
-  probe determinant coefficients and extracting their signs remains open.
-  Full signatures are indexed functions; representing and enumerating their
-  realizable values in polynomial space remains open, as do the recursive
-  connection tests.
+  Native moments weighted by one derivative sign, modular determinant
+  coefficients, and CRT sign extraction recover that sign at an enumerated
+  hash. Short root ordinals enumerate every distinct realizable signature;
+  a native polynomial-space reader returns any derivative sign without
+  storing the complete signature. Orders above the degree bound return zero.
+  The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
   two points. Point queries include singleton validation and endpoint

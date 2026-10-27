@@ -13,7 +13,8 @@ public import LeanCanny.Algebra.IteratedDerivativeSpace
 The full derivative-sign signature uniquely identifies every actual sample.
 It is an indexed function, not a polynomial-sized output word. Native modular
 access and uniform binary bounds prepare its features for sign determination;
-native enumeration of the distinct signatures remains to be constructed.
+`BoundedProjectionSignatureRead` enumerates the distinct signatures using short
+root ordinals and reads their individual derivative signs in native space.
 -/
 
 @[expose] public section

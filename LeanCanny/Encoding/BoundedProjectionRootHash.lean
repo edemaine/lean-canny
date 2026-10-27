@@ -15,7 +15,8 @@ basis sums distinguish all projection roots. The label is one residue, not
 the full derivative-sign vector. These are existence and size theorems;
 native selection of parameters for an injective integer hash is supplied by
 `BoundedProjectionHashChoice`. `BoundedProjectionHashEnumeration` computes
-those integer hash values; derivative-sign queries remain required.
+those integer hash values. `BoundedProjectionSignatureRead` supplies native
+derivative-sign queries at their enumerated values.
 -/
 
 @[expose] public section
