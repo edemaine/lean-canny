@@ -83,6 +83,7 @@ import LeanCanny.Algebra.PolynomialPseudoRemainderReader
 import LeanCanny.Encoding.BoundedAlgebraicSliceTarskiPSPACE
 import LeanCanny.Encoding.BoundedAlgebraicFiberRoot
 import LeanCanny.Encoding.BoundedAlgebraicFiberSignCut
+import LeanCanny.Encoding.BoundedAlgebraicFiberThom
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -417,6 +418,12 @@ fiber roots once.
 Nine internally computed product moments also count two simultaneous sign
 constraints. In particular, native queries count roots of a slice equation
 below a rational cut where another slice polynomial has a prescribed sign.
+Binary-indexed outer derivatives have native bivariate coefficient readers
+with uniform parameter-degree and mass bounds. Their algebraic-slice moments
+and single-sign counts are native. Derivative signatures distinguish all
+distinct fiber roots, and sparse sign monomials of logarithmic support span
+every rational-valued root function. Individual fiber-root signature readout
+still requires the corresponding effective sparse-moment construction.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

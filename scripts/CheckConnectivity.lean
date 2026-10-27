@@ -3750,3 +3750,69 @@ example (P : BoundedFullWriter.Readers) (F : Family) (c : List Bool) (r : Fin (B
 
 end
 end AlgebraicJointSignTests
+
+namespace AlgebraicDerivativeTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice
+open scoped Classical
+
+example {p : List Bool → (ℤ[X])[X]} (A : CertifiedPolynomial.BivariateReader p)
+    (k : List Bool → List Bool) (hk : k ∈ FP) :
+    CertifiedPolynomial.BivariateReader (fun c => (Polynomial.derivative^[Nat.fromBitsLE (k c)]) (p c)) :=
+  CertifiedPolynomial.BivariateIteratedDerivative.reader A k hk
+
+-- Only the outer exponent is differentiated; the parameter exponent survives.
+example : ((((Polynomial.derivative^[3])
+    (Polynomial.C (Polynomial.X ^ 2 + 3 * Polynomial.X + 2 : ℤ[X]) * Polynomial.X ^ 5)).coeff 2).coeff 2) = 60 := by
+  rw [Polynomial.coeff_iterate_derivative, nsmul_eq_mul, Polynomial.coeff_natCast_mul, Polynomial.coeff_C_mul]
+  norm_num [Polynomial.coeff_one, Polynomial.coeff_X]
+
+example : ((((Polynomial.derivative^[3])
+    (Polynomial.C (Polynomial.X ^ 2 + 3 * Polynomial.X + 2 : ℤ[X]) * Polynomial.X ^ 5)).coeff 2).coeff 1) = 180 := by
+  rw [Polynomial.coeff_iterate_derivative, nsmul_eq_mul, Polynomial.coeff_natCast_mul, Polynomial.coeff_C_mul]
+  norm_num [Polynomial.coeff_one, Polynomial.coeff_X]
+
+example (F : Family) (A : F.Access) (k : List Bool → List Bool) (hk : k ∈ FP) :
+    (iterateDerivative F k).Access := iterateDerivativeAccess A k hk
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    specialized P (iterateDerivative F (fun _ => BinaryNatCode.encode 0)) u = specialized P F u := by
+  simp only [iterateDerivative_specialized, BinaryNatCode.encode, Nat.fromBitsLE_bits, Function.iterate_zero_apply]
+
+example (P : BoundedFullWriter.Readers) (F : Family) (k : List Bool → List Bool) (u : List Bool)
+    (hk : F.degree (pairFst u) < Nat.fromBitsLE (k (pairFst u))) :
+    specialized P (iterateDerivative F k) u = 0 := iterateDerivative_above_degree P F k u hk
+
+-- The zeroth derivative has zero sign at every root, including repeated roots.
+example (p : ℝ[X]) : RootSignQueries.singleSignCount p p 0 = p.roots.toFinset.card := by
+  unfold RootSignQueries.singleSignCount
+  apply congrArg Finset.card
+  apply Finset.filter_true_of_mem
+  intro y hy
+  rw [show p.eval y = 0 from Polynomial.isRoot_of_mem_roots (Multiset.mem_toFinset.mp hy), sign_zero]
+
+example (P : BoundedFullWriter.Readers) (F : Family) (u : List Bool) :
+    Function.Injective (BoundedAlgebraicFiberThom.signature P F u) := BoundedAlgebraicFiberThom.signature_injective P F u
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (s : SignType) :
+    SpaceFunction (BoundedAlgebraicFiberThom.count P F s) := BoundedAlgebraicFiberThom.count_evaluator h A ha s
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedAlgebraicFiberThom.moment P F) := BoundedAlgebraicFiberThom.moment_evaluator h A ha
+
+example (P : BoundedFullWriter.Readers) (F : Family) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c))
+    (j : ℕ) (hj : F.degree c < j) :
+    BoundedAlgebraicFiberThom.count P F .pos (pair (pair c (BinaryNatCode.encode r.val)) (BinaryNatCode.encode j)) =
+      BinaryNatCode.encode 0 := by
+  have hd : (F.slice c (BoundedProjectionOrderedRoot.root P c r).val).natDegree ≤ F.degree c := by
+    unfold Family.slice
+    exact Polynomial.natDegree_map_le.trans (F.polynomial_degree c)
+  have hz := Polynomial.iterate_derivative_eq_zero (hd.trans_lt hj)
+  rw [BoundedAlgebraicFiberThom.count_packet, hz]
+  simp [RootSignQueries.singleSignCount]
+
+end
+end AlgebraicDerivativeTests
