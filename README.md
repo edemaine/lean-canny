@@ -366,6 +366,11 @@ The checked ingredients are:
   Native determinant probes also read arbitrary bivariate polynomial signs at
   these roots from the original coefficient readers, rejecting invalid fiber
   ordinals in the sign languages.
+  Native derivative scans compute both one-sided signs, including at singular
+  endpoints. For a zero or factor test, a right-sided query gives its sign
+  throughout the cell between consecutive fiber roots. These validated cell-sign
+  languages are in native PSPACE, without constructing nearby rational samples
+  or full Taylor expansions.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between

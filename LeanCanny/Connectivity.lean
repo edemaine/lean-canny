@@ -87,7 +87,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberThom
 import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
-import LeanCanny.Encoding.BoundedAlgebraicFiberTestSign
+import LeanCanny.Encoding.BoundedAlgebraicFiberCellQueries
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -447,6 +447,11 @@ reads derivative signs at exactly the original ordered fiber root.
 The same determinant probes now read arbitrary bivariate polynomial signs at
 these roots from the original coefficient readers. Their native sign languages
 reject invalid fiber ordinals.
+Native derivative scans also compute either one-sided sign at these roots,
+including singular endpoints. A right-sided query gives the sign on the entire
+interval between consecutive roots when the test is zero or divides the
+specialized root polynomial. The validated cell-sign languages are in native
+PSPACE and require no nearby rational sample or full Taylor expansion.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

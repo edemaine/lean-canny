@@ -4185,3 +4185,86 @@ example (P : BoundedFullWriter.Readers) (F G : Family) (u ordinal : List Bool)
 
 end
 end AlgebraicFiberTestSignTests
+
+namespace AlgebraicFiberLocalSignTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice
+open scoped Classical
+
+private theorem power_taylor (a : ℝ) (n : ℕ) : ((X - C a) ^ n).taylor a = (X ^ n : ℝ[X]) := by
+  rw [Polynomial.taylor_pow]
+  simp only [Polynomial.taylor_apply, Polynomial.sub_comp, Polynomial.X_comp, Polynomial.C_comp,
+    add_sub_cancel_right]
+
+-- Odd multiplicity reverses the sign; even multiplicity retains it on both sides.
+example (a : ℝ) : PolynomialLocalSign.right ((X - C a) ^ 3) a = 1 := by
+  rw [PolynomialLocalSign.right, power_taylor]
+  norm_num [Polynomial.trailingCoeff, Polynomial.natTrailingDegree_X_pow]
+
+example (a : ℝ) : PolynomialLocalSign.left ((X - C a) ^ 3) a = -1 := by
+  rw [PolynomialLocalSign.left, power_taylor, (PolynomialSignedReflection.preserves_lowest (X ^ 3 : ℝ[X])).2]
+  norm_num [Polynomial.trailingCoeff, Polynomial.natTrailingDegree_X_pow, Left.sign_neg]
+
+example (a : ℝ) : PolynomialLocalSign.left ((X - C a) ^ 2) a = 1 := by
+  rw [PolynomialLocalSign.left, power_taylor, (PolynomialSignedReflection.preserves_lowest (X ^ 2 : ℝ[X])).2]
+  norm_num [Polynomial.trailingCoeff, Polynomial.natTrailingDegree_X_pow]
+
+example (a : ℝ) : PolynomialLocalSign.right ((X - C a) ^ 2) a = 1 := by
+  rw [PolynomialLocalSign.right, power_taylor]
+  norm_num [Polynomial.trailingCoeff, Polynomial.natTrailingDegree_X_pow]
+
+example (a : ℝ) : PolynomialLocalSign.left 0 a = 0 ∧ PolynomialLocalSign.right 0 a = 0 := by
+  simp only [PolynomialLocalSign.left, PolynomialLocalSign.right, map_zero, Polynomial.zero_comp,
+    Polynomial.trailingCoeff_zero, sign_zero, and_self]
+
+-- Padded derivative words keep their parity and the zero-th derivative stays positive-oriented.
+#guard BoundedAlgebraicFiberLocalSign.parityTag (pair [] [true, false, false]) == [true]
+#guard BoundedAlgebraicFiberLocalSign.parityTag (pair [] [false, true, false]) == [false, true]
+#guard BoundedAlgebraicFiberLocalSign.parityTag (pair [] []) == [false, true]
+
+def signStream (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (pairSnd q) < 2 then []
+  else if Nat.fromBitsLE (pairSnd q) = 2 then [true] else [false, true]
+
+-- The scan keeps the first nonzero tag, even when a later sign differs.
+#guard PolynomialLocalSignBits.value signStream (fun _ => BinaryNatCode.encode 5) [] == [true]
+#guard PolynomialLocalSignBits.value signStream (fun _ => []) [] == []
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (fromLeft : Bool) :
+    SpaceFunction (BoundedAlgebraicFiberLocalSign.value P F G fromLeft) :=
+  BoundedAlgebraicFiberLocalSign.evaluator h A B ha fromLeft
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (fromLeft : Bool) (s : SignType) :
+    BoundedAlgebraicFiberCellQueries.language P F G fromLeft s ∈ PSPACE :=
+  BoundedAlgebraicFiberCellQueries.mem_PSPACE h A B ha fromLeft s
+
+-- Derivative orders above the declared degree are zero at every valid fiber root.
+example (P : BoundedFullWriter.Readers) (F G : Family) (u : List Bool) (r : Fin (RootCount.count P F u))
+    (k : ℕ) (hk : G.degree (pairFst u) < k) :
+    BoundedAlgebraicFiberTestDerivatives.value P F G
+      (pair (pair u (BinaryNatCode.encode r.val)) (BinaryNatCode.encode k)) = [] := by
+  rw [BoundedAlgebraicFiberTestDerivatives.packet,
+    Polynomial.iterate_derivative_eq_zero ((specialized_degree P G u).trans_lt hk)]
+  simp only [Polynomial.eval_zero, sign_zero, InfinitesimalSign.encode]
+
+example (P : BoundedFullWriter.Readers) (F G : Family) (u ordinal : List Bool)
+    (hu : u ∉ valid P) (fromLeft : Bool) (s : SignType) :
+    pair u ordinal ∉ BoundedAlgebraicFiberCellQueries.language P F G fromLeft s := by
+  apply BoundedAlgebraicFiberCellQueries.invalid
+  simp only [pairFst_pair, RootCount.count, RootCount.roots, specialized, ite_eq_right hu,
+    Polynomial.roots_zero, Multiset.toFinset_zero, Finset.card_empty, Nat.zero_le]
+
+-- The query computes the sign everywhere in the open cell, rather than at an assumed sample point.
+example (P : BoundedFullWriter.Readers) (F G : Family) (u : List Bool)
+    (r t : Fin (RootCount.count P F u)) (hrt : t.val = r.val + 1)
+    (hG : specialized P G u = 0 ∨ specialized P G u ∣ specialized P F u) (s : SignType)
+    (y : ℝ) (hy : y ∈ Set.Ioo (BoundedAlgebraicFiberRoot.root P F u r).val (BoundedAlgebraicFiberRoot.root P F u t).val) :
+    pair u (BinaryNatCode.encode r.val) ∈ BoundedAlgebraicFiberCellQueries.language P F G false s ↔
+      SignType.sign ((specialized P G u).eval y) = s :=
+  BoundedAlgebraicFiberCellQueries.interval_packet P F G u r t hrt hG s y hy
+
+end
+end AlgebraicFiberLocalSignTests
