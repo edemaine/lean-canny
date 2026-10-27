@@ -344,8 +344,12 @@ The checked ingredients are:
   uniform parameter-degree and mass bounds. After algebraic specialization,
   their Tarski moments and single-sign counts are native. Derivative signs
   distinguish all distinct fiber roots; sparse monomials with logarithmic
-  support span every rational-valued root function. Native readout of each
-  fiber-root signature still needs the effective sparse-moment construction.
+  support span every rational-valued root function. Native indexed bivariate
+  product readers now compute sparse derivative-product moments from the
+  original coefficients. Polynomially many selected derivative tests retain
+  binary orders; the answer is their exact sign-monomial sum over distinct
+  fiber roots. Selected bases and individual fiber-root signature readout
+  remain required.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between

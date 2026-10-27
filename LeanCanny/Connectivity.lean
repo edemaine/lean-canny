@@ -84,6 +84,7 @@ import LeanCanny.Encoding.BoundedAlgebraicSliceTarskiPSPACE
 import LeanCanny.Encoding.BoundedAlgebraicFiberRoot
 import LeanCanny.Encoding.BoundedAlgebraicFiberSignCut
 import LeanCanny.Encoding.BoundedAlgebraicFiberThom
+import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -422,8 +423,12 @@ Binary-indexed outer derivatives have native bivariate coefficient readers
 with uniform parameter-degree and mass bounds. Their algebraic-slice moments
 and single-sign counts are native. Derivative signatures distinguish all
 distinct fiber roots, and sparse sign monomials of logarithmic support span
-every rational-valued root function. Individual fiber-root signature readout
-still requires the corresponding effective sparse-moment construction.
+every rational-valued root function. Native indexed bivariate product readers
+now supply sparse derivative-product moments from the original coefficients.
+The feature count is polynomially bounded, while derivative orders remain
+binary; the computed integer is the exact sign-monomial sum over distinct
+fiber roots. Selected bases and individual fiber-root signature readout remain
+required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

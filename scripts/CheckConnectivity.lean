@@ -3816,3 +3816,59 @@ example (P : BoundedFullWriter.Readers) (F : Family) (c : List Bool) (r : Fin (B
 
 end
 end AlgebraicDerivativeTests
+
+namespace AlgebraicSparseMomentTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice
+open scoped Classical BigOperators
+
+-- An inner index outside the radix can alias an outer coefficient.
+example : (PolynomialKronecker.encode 2 (X + C (X : ℤ[X]) : (ℤ[X])[X])).coeff 2 = 1 ∧
+    (((X + C (X : ℤ[X]) : (ℤ[X])[X]).coeff 0).coeff 2) = 0 := by
+  norm_num [map_add, PolynomialKronecker.encode_X, PolynomialKronecker.encode_C, Polynomial.coeff_X]
+
+example (Q : BivariateQueryProductBits.Family) (A : BivariateQueryProductBits.Access Q) :
+    CertifiedPolynomial.BivariateReader Q.product := BivariateQueryProductBits.reader A
+
+example (Q : BivariateQueryProductBits.Family) (c : List Bool) (hc : Q.count c = 0) : Q.product c = 1 := by
+  simp [BivariateQueryProductBits.Family.product, RootSignQueries.queryPolynomial, hc]
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F : Family) (A : F.Access)
+    {features : List Bool → ℕ} {orders : List Bool → List Bool} (hc : UnaryFn features) (ho : orders ∈ FP)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedAlgebraicFiberMoments.value P F features orders) := BoundedAlgebraicFiberMoments.evaluator h A hc ho ha
+
+-- All-zero exponents give the unit moment even for a nonempty feature list.
+example (P : BoundedFullWriter.Readers) (F : Family) (features : List Bool → ℕ) (orders : List Bool → List Bool)
+    (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c)) :
+    BoundedAlgebraicFiberMoments.moment P F features orders
+      (pair (pair c (BinaryNatCode.encode r.val)) (BinaryNatCode.encode 0)) =
+        ((F.slice c (BoundedProjectionOrderedRoot.root P c r).val).roots.toFinset.card : ℤ) := by
+  rw [BoundedAlgebraicFiberMoments.moment_eq_sum]
+  have he (i : Fin (features c)) : (Ternary.exponent (features c) 0 i.val).val = 0 := by
+    simp only [Ternary.exponent, i.isLt, ↓reduceIte, Nat.zero_div, Nat.zero_mod]
+  simp only [show Nat.fromBitsLE (BinaryNatCode.encode 0) = 0 from rfl, he, pow_zero,
+    Finset.prod_const_one, Finset.sum_const, nsmul_eq_mul, mul_one]
+
+-- A positive exponent on the zeroth derivative vanishes at every head root.
+example (P : BoundedFullWriter.Readers) (F : Family) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c)) :
+    BoundedAlgebraicFiberMoments.moment P F (fun _ => 1) (fun _ => BinaryNatCode.encode 0)
+      (pair (pair c (BinaryNatCode.encode r.val)) (BinaryNatCode.encode 2)) = 0 := by
+  rw [BoundedAlgebraicFiberMoments.moment_eq_sum]
+  apply Finset.sum_eq_zero
+  intro x hx
+  apply Finset.prod_eq_zero (Finset.mem_univ (0 : Fin 1))
+  have hx0 := Polynomial.isRoot_of_mem_roots (Multiset.mem_toFinset.mp hx)
+  change (SignType.sign ((F.slice c (BoundedProjectionOrderedRoot.root P c r).val).eval x) : ℤ) ^
+    (Ternary.exponent 1 (Nat.fromBitsLE (BinaryNatCode.encode 2)) 0).val = 0
+  rw [hx0, sign_zero]
+  norm_num [Ternary.exponent, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+
+example (P : BoundedFullWriter.Readers) (F : Family) (features : List Bool → ℕ) (orders : List Bool → List Bool)
+    (u record : List Bool) (hu : u ∉ valid P) :
+    BoundedAlgebraicFiberMoments.value P F features orders (pair u record) = SignStatisticBits.integerCode 0 := by
+  rw [BoundedAlgebraicFiberMoments.value, BoundedAlgebraicFiberMoments.invalid_base P F features orders u record hu]
+
+end
+end AlgebraicSparseMomentTests
