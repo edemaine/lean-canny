@@ -72,6 +72,7 @@ import LeanCanny.Encoding.BoundedProjectionMoments
 import LeanCanny.Encoding.BoundedProjectionRecordSpan
 import LeanCanny.Encoding.BoundedProjectionBasisGram
 import LeanCanny.Encoding.BoundedProjectionBasisPencil
+import LeanCanny.Encoding.BoundedProjectionHashChoice
 
 /-! # Connectivity development
 
@@ -364,8 +365,12 @@ row-selection searches.
 One bounded prime and parameter give separating residue labels with a native
 polynomial width control. The corresponding integer weighted sums also have
 polynomial bit bounds. Their weighted Gram pencil has the full distinct-root
-count exactly when the sums separate all projection roots. Native weighted
-entry readers, parameter selection, and individual label queries remain required.
+count exactly when the sums separate all projection roots. Native triple
+moments and streamed weighted entries supply its coefficients, with uniform
+degree and coefficient budgets. A native real-root counter tests separation;
+bounded search computes separating parameters after computing the actual
+root count. The resulting integer hash is injective and has polynomial bit
+length. Individual hash and signature queries remain required.
 The complete signature is an indexed function; a polynomial-space representation and
 enumeration of its realizable values still require a streamed sign-determination
 algorithm. The recursive connection tests remain open.

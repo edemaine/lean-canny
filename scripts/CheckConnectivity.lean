@@ -2931,3 +2931,97 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) :
           BoundedProjectionRootCount.count P c := BoundedProjectionBasisPencil.exists_hash_parameters P c
 
 end ProjectionHashTests
+
+namespace WeightedProjectionTests
+open LeanCanny.Algebra LeanCanny.Encoding
+
+-- The modulus field is a predecessor, including when its word is padded.
+#guard BoundedProjectionWeightedMoments.weight (pair
+  (pair (BoundedProjectionWeightedMoments.context [true] 3 [false, true, true, false, false] 3) (pair [] []))
+  (BinaryNatCode.encode 4)) == BinaryNatCode.encode 4
+#guard BoundedProjectionWeightedMoments.weight (pair
+  (pair (BoundedProjectionWeightedMoments.context [] 7 [] 19) (pair [] [])) []) == []
+#guard BoundedProjectionPencilEntries.negateCode (SignStatisticBits.integerCode (-5)) == SignStatisticBits.integerCode 5
+#guard BoundedProjectionPencilEntries.negateCode (SignStatisticBits.integerCode 0) == SignStatisticBits.integerCode 0
+
+-- Zero summands and modulus one are valid on arbitrary source contexts.
+example (P : BoundedFullWriter.Readers) (c m indices : List Bool) (t : ℕ) :
+    BoundedProjectionWeightedMoments.entry P (pair (BoundedProjectionWeightedMoments.context c 0 m t) indices) = 0 := by
+  simp only [BoundedProjectionWeightedMoments.entry, BoundedProjectionWeightedMoments.count,
+    BoundedProjectionWeightedMoments.context, pairFst_pair, pairSnd_pair, BinaryNatCode.encode,
+    Nat.fromBitsLE_bits, Finset.range_zero, Finset.sum_empty]
+
+example (P : BoundedFullWriter.Readers) (c indices : List Bool) (n t : ℕ) :
+    BoundedProjectionWeightedMoments.entry P (pair (BoundedProjectionWeightedMoments.context c n [] t) indices) = 0 := by
+  simp only [BoundedProjectionWeightedMoments.entry, BoundedProjectionWeightedMoments.term,
+    BoundedProjectionWeightedMoments.base, BoundedProjectionWeightedMoments.context,
+    BoundedProjectionWeightedMoments.modulus, pairFst_pair, pairSnd_pair,
+    show Nat.fromBitsLE ([] : List Bool) = 0 from rfl, Nat.zero_add, Nat.mod_one, Nat.cast_zero, mul_zero,
+    Finset.sum_const_zero]
+
+-- A padded out-of-range degree does not alias the constant or linear coefficient.
+example (P : BoundedFullWriter.Readers) (q : List Bool) :
+    BoundedProjectionPencilEntries.coefficient P (pair q [false, true, false, false]) = 0 := by
+  simp [BoundedProjectionPencilEntries.coefficient,
+    show Nat.fromBitsLE [false, true, false, false] = 2 from rfl]
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => SignStatisticBits.integerCode (BoundedProjectionBasisMoments.moment P q)) :=
+  BoundedProjectionBasisMoments.evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (i j k : Fin (BoundedProjectionRootCount.count P c)) :
+    (BoundedProjectionBasisMoments.moment P (pair c (pair (BinaryNatCode.encode i.val)
+      (pair (BinaryNatCode.encode j.val) (BinaryNatCode.encode k.val)))) : ℚ) =
+      ∑ x : BoundedProjectionRecordSpan.Root P c, BoundedProjectionRankBasis.selected P c i x *
+        BoundedProjectionRankBasis.selected P c j x * BoundedProjectionRankBasis.selected P c k x :=
+  BoundedProjectionBasisMoments.moment_packet P c i j k
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => SignStatisticBits.integerCode (BoundedProjectionWeightedMoments.entry P q)) :=
+  BoundedProjectionWeightedMoments.evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (q : List Bool) :
+    (BoundedProjectionWeightedMoments.entry P q).natAbs.size ≤ BoundedProjectionWeightedMoments.entryBits P q :=
+  BoundedProjectionWeightedMoments.entry_bits P q
+
+example (P : BoundedFullWriter.Readers) (b : List Bool) (k : ℕ) :
+    ((BoundedProjectionPencilEntries.matrix P b).det.coeff k).natAbs.size ≤ BoundedProjectionPencilBounds.budget P b :=
+  BoundedProjectionPencilBounds.determinant_bits P b k
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedProjectionPencilCoefficient.value P) := BoundedProjectionPencilCoefficient.evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (b m : List Bool) (k : ℕ) :
+    BoundedProjectionPencilCoefficient.value P (pair (pair b (BinaryNatCode.encode k)) m) =
+      MatrixPower.residueBits ((((BoundedProjectionPencilEntries.matrix P b).det.coeff k : ℤ)) :
+        ZMod (Nat.fromBitsLE m + 1)) := BoundedProjectionPencilCoefficient.value_packet P b k m
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceDecider (BoundedProjectionPencilRootCount.language P) := BoundedProjectionPencilRootCount.decider h ha
+
+example (P : BoundedFullWriter.Readers) (c m : List Bool) (t : ℕ) :
+    BoundedProjectionWeightedMoments.context c (BoundedProjectionRootCount.count P c) m t ∈
+        BoundedProjectionPencilRootCount.language P ↔
+      Function.Injective (BoundedProjectionRootHash.integerValue P c (Nat.fromBitsLE m + 1) t) :=
+  BoundedProjectionPencilRootCount.language_packet P c m t
+
+-- The selected count and parameters are computed internally by native machines.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedProjectionHashChoice.value P) := BoundedProjectionHashChoice.evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    Function.Injective (BoundedProjectionHashChoice.hash P c) := BoundedProjectionHashChoice.hash_injective P c
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedProjectionRecordSpan.Root P c) :
+    (BoundedProjectionHashChoice.hash P c x).natAbs.size ≤ BoundedProjectionHashChoice.hashBits P c :=
+  BoundedProjectionHashChoice.hash_bits P c x
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) : UnaryFn (BoundedProjectionHashChoice.hashBits P) :=
+  BoundedProjectionHashChoice.hashBits_unary h
+
+end WeightedProjectionTests

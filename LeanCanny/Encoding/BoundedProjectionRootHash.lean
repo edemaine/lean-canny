@@ -13,7 +13,8 @@ Every selected sparse monomial is a sign. A prime of size at most twice the
 cube of the root count plus four admits a single parameter whose weighted
 basis sums distinguish all projection roots. The label is one residue, not
 the full derivative-sign vector. These are existence and size theorems;
-native parameter selection and individual label queries remain required.
+native parameter selection is supplied by `BoundedProjectionHashChoice`.
+Individual label queries remain required.
 -/
 
 @[expose] public section

@@ -299,8 +299,12 @@ The checked ingredients are:
   modulus and one parameter determine all weights. The associated integer
   weighted sums also have polynomial bit bounds. A weighted Gram pencil has
   the full distinct-root count exactly when these sums separate the roots.
-  Native weighted entries, parameter selection, and individual label queries
-  remain open.
+  Native selected triple moments and streamed weighted entries now supply all
+  coefficients of that pencil, with explicit degree and coefficient bounds.
+  A native real-root counter tests separation, and bounded search computes
+  separating parameters after computing the actual root count. These give an
+  injective integer hash of polynomial bit length. Individual hash and
+  signature queries remain open.
   Full signatures are indexed functions; representing and enumerating their
   realizable values in polynomial space remains open, as do the recursive
   connection tests.
