@@ -69,6 +69,7 @@ import LeanCanny.Encoding.BoundedProjectionRootSeparation
 import LeanCanny.Encoding.BoundedProjectionThom
 import LeanCanny.Encoding.BoundedProjectionDerivativeSigns
 import LeanCanny.Encoding.BoundedProjectionMoments
+import LeanCanny.Encoding.BoundedProjectionRecordSpan
 
 /-! # Connectivity development
 
@@ -347,6 +348,11 @@ root-count and realizability tests, including extraneous projection roots.
 Sparse sign monomials span all rational-valued functions on the projection roots;
 their support is bounded by the polynomial label width and their exponents
 by two. Product Tarski queries compute their moments in native polynomial space.
+Fixed-width, unit-padded factor records now represent every required sparse
+monomial. All records form a canonical spanning matrix; its Gram matrix has
+rank equal to the number of distinct projection roots. Its integer entries
+have native polynomial-space evaluators and explicit magnitude bounds, and its
+dimension has a native binary control. No selected basis is supplied.
 The complete signature is an indexed function; a polynomial-space representation and
 enumeration of its realizable values still require a streamed sign-determination
 algorithm. The recursive connection tests remain open.

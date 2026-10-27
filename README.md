@@ -286,6 +286,10 @@ The checked ingredients are:
   Sparse sign monomials now span all rational-valued functions on the projection roots,
   using at most the polynomial label width in distinct features, each to power
   at most two. Their product Tarski moments have native polynomial-space readers.
+  Polynomial-length factor records represent these monomials, including unit
+  padding. The resulting canonical Gram matrix has rank equal to the number of
+  distinct projection roots, with native integer-entry readers, a binary
+  dimension control, and explicit entry bounds. Basis selection remains open.
   Full signatures are indexed functions; representing and enumerating their
   realizable values in polynomial space remains open, as do the recursive
   connection tests.

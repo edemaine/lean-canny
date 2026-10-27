@@ -2748,3 +2748,48 @@ example {P : BoundedFullWriter.Readers} {features : List Bool → ℕ} {orders :
   BoundedProjectionMoments.evaluator h hc ho ha
 
 end SparseProjectionMomentTests
+
+namespace ProjectionRecordTests
+open LeanCanny.Algebra LeanCanny.Encoding
+
+private def squaredNegative : List Bool := FixedWidthNatVector.encode 3 2 (fun i => if i < 2 then 1 else 0)
+-- Repeated feature codes give powers; the final zero slot contributes one.
+#guard SparseFeatureRecords.value (n := 3) (by decide) 3 2
+  (fun i : Fin 3 => if i.val = 0 then (-1 : ℤ) else 7) squaredNegative == 1
+#guard SparseFeatureRecords.value (n := 3) (by decide) 3 0
+  (fun _ : Fin 3 => (0 : ℤ)) [] == 1
+-- Arbitrary oversized slot codes are clamped, so the reader is total.
+#guard SparseFeatureRecords.factor (n := 3) (by decide) (fun i : Fin 3 => (i.val : ℤ) + 2) 99 == 4
+
+example (v : Fin 3 → ℤ) :
+    SparseFeatureRecords.value (by decide) 6 2 v (squaredNegative ++ squaredNegative) =
+      SparseFeatureRecords.value (by decide) 3 2 v squaredNegative *
+        SparseFeatureRecords.value (by decide) 3 2 v squaredNegative :=
+  SparseFeatureRecords.value_append (by decide) 3 3 2 v _ _ (by decide)
+
+-- Unit polynomial coefficients preserve arbitrary raw moduli and zero padding.
+#guard BoundedProjectionRecords.unit (LeanCanny.pair
+  (LeanCanny.pair [] (LeanCanny.pair [] [])) (BinaryNatCode.encode 6)) == BinaryNatCode.encode 1
+#guard BoundedProjectionRecords.unit (LeanCanny.pair
+  (LeanCanny.pair [] (LeanCanny.pair [] (BinaryNatCode.encode 2))) (BinaryNatCode.encode 6)) == []
+#guard BoundedProjectionRecords.unit (LeanCanny.pair
+  (LeanCanny.pair [] (LeanCanny.pair [] [false, false])) (BinaryNatCode.encode 6)) == BinaryNatCode.encode 1
+#guard BoundedProjectionRecords.unit (LeanCanny.pair
+  (LeanCanny.pair [] (LeanCanny.pair [] [])) [false, false]) == []
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    (BoundedProjectionRecordSpan.gram P c).rank = BoundedProjectionRootCount.count P c :=
+  BoundedProjectionRecordSpan.rank_gram P c
+
+-- The matrix entry reader takes only the actual source and its native controls.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (LeanCanny.ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => SignStatisticBits.integerCode (BoundedProjectionRecordSpan.entry P q)) :=
+  BoundedProjectionRecordSpan.entry_evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (i j : BoundedProjectionRecordSpan.Index P c) :
+    (BoundedProjectionRecordSpan.entry P (LeanCanny.pair c
+      (LeanCanny.pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val))) : ℚ) =
+        BoundedProjectionRecordSpan.gram P c i j := BoundedProjectionRecordSpan.entry_packet P c i j
+
+end ProjectionRecordTests
