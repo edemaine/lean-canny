@@ -5625,3 +5625,83 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) (r : ℕ) (hr : r < Boun
   BoundedCriticalSampleHashEnumeration.unique_sample_descriptor P c r hr
 
 end CriticalSampleDescriptorTests
+
+namespace CriticalSamplePointSignTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR Polynomial
+open BoundedCriticalSampleTestMoments
+open scoped Classical
+
+#guard BoundedCriticalSampleTestSign.multiplyTags (pair [true] [true]) == [false, true]
+#guard BoundedCriticalSampleTestSign.multiplyTags (pair [true] [false, true]) == [true]
+#guard BoundedCriticalSampleTestSign.multiplyTags (pair [false, true] []) == []
+
+-- The unit test is positive at every actual sample, even though its
+-- normalization coefficient can have either sign before multiplication.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    BoundedCriticalSampleTestSign.value P unit (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) =
+      [false, true] := by
+  rw [BoundedCriticalSampleTestSign.value_sample, sign_unit]
+  rfl
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedCriticalSampleRecordSpan.Root P c) :
+    BoundedCriticalSampleTestProbe.firstCoefficient P unit
+      (BoundedCriticalSampleProbeSource.context P c (BoundedCriticalSampleHashChoice.hash P c x) 0) ≠ 0 :=
+  BoundedCriticalSampleTestProbeSource.unit_nonzero P c x
+
+-- This concrete test uses the native parameter reader, not a sign oracle.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    BoundedCriticalSampleTestSign.value P (BoundedCriticalSampleTestSign.parameterTest P)
+      (pair c (BoundedCriticalSampleHashChoice.descriptor P c x)) = [] :=
+  BoundedCriticalSampleTestSign.parameter_value P c x
+
+private noncomputable def zeroTest : Test where
+  polynomial _ := 0
+  degree _ := 0
+  mass _ := 0
+  polynomial_degree _ := by simp only [natDegree_zero, Nat.zero_le]
+  polynomial_mass _ := by simp only [coefficientMass_zero, Nat.zero_le]
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedCriticalSampleCount.count P c)) :
+    BoundedCriticalSampleTestSign.atOrdinal P zeroTest (pair c (BinaryNatCode.encode r.val)) = [] := by
+  rw [BoundedCriticalSampleTestSign.ordinal_packet]
+  simp only [sign, zeroTest, Polynomial.map_zero, Polynomial.eval_zero, sign_zero, InfinitesimalSign.encode]
+
+-- Noncanonical words are rejected even if their decoded integer is a hash.
+example (P : BoundedFullWriter.Readers) (T : Test) (c : List Bool) (s : SignType) :
+    pair c (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) ∉
+      BoundedCriticalSampleTestSign.language P T s := by
+  apply BoundedCriticalSampleTestSign.language_invalid
+  intro h
+  have hc : ¬BoundedCriticalSampleDescriptors.Canonical
+      (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) := by
+    change IntegerSumBits.difference (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)) ≠
+      pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 1)
+    decide
+  apply hc
+  simpa only [pairSnd_pair] using ((BoundedCriticalSampleDescriptors.language_iff P _).mp h).1
+
+-- An empty actual sample set admits no ordinal sign query.
+example (P : BoundedFullWriter.Readers) (T : Test) (c : List Bool) (r : ℕ) (s : SignType)
+    (h : BoundedCriticalSampleCount.count P c = 0) :
+    pair c (BinaryNatCode.encode r) ∉ BoundedCriticalSampleTestSign.ordinalLanguage P T s := by
+  apply BoundedCriticalSampleTestSign.ordinal_language_invalid
+  simpa only [pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, h] using Nat.zero_le r
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalSampleTestSign.value P (BoundedCriticalSampleTestSign.parameterTest P)) ∧
+      SpaceFunction (BoundedCriticalSampleTestSign.atOrdinal P unit) ∧
+      BoundedCriticalSampleTestSign.language P (BoundedCriticalSampleTestSign.parameterTest P) 0 ∈ PSPACE ∧
+      BoundedCriticalSampleTestSign.ordinalLanguage P unit .pos ∈ PSPACE :=
+  ⟨BoundedCriticalSampleTestSign.evaluator h (BoundedCriticalSampleTestSign.parameterAccess h ha) ha,
+    BoundedCriticalSampleTestSign.ordinal_evaluator h unitAccess ha,
+    BoundedCriticalSampleTestSign.mem_PSPACE h (BoundedCriticalSampleTestSign.parameterAccess h ha) ha 0,
+    BoundedCriticalSampleTestSign.ordinal_mem_PSPACE h unitAccess ha .pos⟩
+
+example (P : BoundedFullWriter.Readers) (T : Test) (c : List Bool)
+    (r : Fin (BoundedCriticalSampleCount.count P c)) (s : SignType) :
+    pair c (BinaryNatCode.encode r.val) ∈ BoundedCriticalSampleTestSign.ordinalLanguage P T s ↔
+      sign T c (BoundedCriticalSampleHashEnumeration.root P c r).val = s :=
+  BoundedCriticalSampleTestSign.ordinal_language_packet P T c r s
+
+end CriticalSamplePointSignTests

@@ -15,7 +15,8 @@ basis sums distinguish all actual sample roots. The label is one residue, not
 the full derivative-sign vector. These are existence and size theorems;
 native selection of parameters for an injective integer hash is supplied by
 `BoundedCriticalSampleHashChoice`. `BoundedCriticalSampleHashEnumeration`
-enumerates those integer values; individual sample sign queries remain required.
+enumerates those integer values, and `BoundedCriticalSampleTestSign` reads
+supplied polynomial signs at the resulting descriptors.
 -/
 
 @[expose] public section

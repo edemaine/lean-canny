@@ -101,6 +101,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleIsolation
 import LeanCanny.Encoding.BoundedCriticalSampleMoments
 import LeanCanny.Encoding.BoundedCriticalSampleRankBasis
 import LeanCanny.Encoding.BoundedCriticalSampleDescriptors
+import LeanCanny.Encoding.BoundedCriticalSampleTestSign
 
 /-! # Connectivity development
 
@@ -376,7 +377,11 @@ Gram determinants now
 select injective integer descriptors for the actual samples. Their serialized
 words have a unary polynomial length bound, native validity, and native ordered
 enumeration covering exactly one full sample per ordinal below the actual
-count. Native polynomial-sign queries at these descriptors remain required.
+count. Two native determinant-coefficient signs now recover arbitrary supplied
+parameter-polynomial signs at an actual-sample descriptor or hash-order ordinal.
+Descriptor validity and the exact sample count guard the native PSPACE sign
+languages. Test polynomials supply native modular readers and binary degree
+and mass bounds; no point-sign or moment oracle is assumed.
 Assembling the recursive coordinate families remains
 required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected

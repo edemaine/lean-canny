@@ -11,8 +11,8 @@ public import LeanCanny.Encoding.BoundedCriticalSampleHashEnumeration
 Canonical signed integer words name the selected injective hash values.
 Validity charges parameter selection and the determinant cut reader. Each
 valid descriptor names one actual full critical sample, and every ordinal
-below the native sample count produces such a word. Individual polynomial
-sign queries at these labels remain required.
+below the native sample count produces such a word. Polynomial signs at
+these labels are read by `BoundedCriticalSampleTestSign`.
 -/
 
 @[expose] public section

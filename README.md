@@ -283,7 +283,11 @@ The checked ingredients are:
   injective integer descriptors for the actual samples. Their serialized words
   have a unary polynomial length bound, native validity, and native ordered
   enumeration naming exactly one full sample per ordinal below the actual
-  count. Native polynomial-sign queries at these descriptors remain required.
+  count. Two native determinant-coefficient signs now recover supplied parameter-
+  polynomial signs at these descriptors and hash-order ordinals. Native PSPACE
+  sign languages reject invalid descriptors and out-of-range ordinals. Test
+  polynomials supply native modular readers and binary degree and mass bounds,
+  with no point-sign or moment oracle.
   Assembling recursive coordinate families remains required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
