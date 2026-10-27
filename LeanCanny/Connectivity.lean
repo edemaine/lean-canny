@@ -87,7 +87,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberThom
 import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
-import LeanCanny.Connectivity.AlgebraicSliceCellLabels
+import LeanCanny.Connectivity.AlgebraicSliceCellAdjacency
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -465,8 +465,10 @@ there are no roots. Every factor sign is constant on every cell. Restricting
 these cells to any predicate of the factor signs gives an accessible cover of
 the actual solution set, with both connectivity tests transferred to its
 relative frontier graph. Explicit short cell labels have native validity
-checking, including base-root validation. Native truth and incidence routines
-for the complete cell graph remain required.
+checking, including base-root validation. Native incidence tests validate both
+labels and compute the exact point-gap neighbor relation. Relative incidence
+retains precisely those edges whose two cells are present in the solution set.
+Native truth evaluation for selecting these cells remains required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

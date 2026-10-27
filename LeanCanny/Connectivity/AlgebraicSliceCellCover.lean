@@ -13,7 +13,8 @@ The native root product determines every point cell and gap, including rays
 and the empty-root case. All original factor signs are constant on every
 cell. Any predicate of their sign vector therefore has a finite accessible
 cover of its actual real solution set, with an explicit label-size bound.
-The graph transfer is proved here; native incidence routines remain required.
+The graph transfer is proved here; native incidence is constructed in
+`AlgebraicSliceCellAdjacency`.
 -/
 
 @[expose] public section

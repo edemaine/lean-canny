@@ -383,7 +383,10 @@ The checked ingredients are:
   therefore has a constructed accessible cover of its actual solution set,
   with both connectivity tests transferred to its relative frontier graph.
   Short cell labels have native validity checks, including base-root validation.
-  Native truth and incidence routines for the complete cell graph remain required.
+  Native incidence tests compute the exact point-gap neighbor relation and
+  validate both labels. Relative incidence retains the edges whose two cells
+  are present in the solution set, so excluded endpoints cannot join gaps.
+  Native truth evaluation for selecting these cells remains required.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between

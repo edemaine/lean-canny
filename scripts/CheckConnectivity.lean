@@ -4446,3 +4446,77 @@ example (P : Readers) (Q : BivariateQueryProductBits.Family) (u word : List Bool
 
 end
 end CompleteRealCellTests
+
+namespace RealCellIncidenceTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity
+open LeanCanny.Geometry.OrderedRealCells OrderedRealCellIncidence
+open BoundedAlgebraicSlice BoundedFullWriter
+open scoped Classical
+
+-- A single root attaches to both exterior rays, but the rays have no direct edge.
+example (a : ℝ) : FrontierCover.Incident (piece ({a} : Finset ℝ))
+    (.inl ⟨0, by simp⟩) (.inr ⟨0, by simp⟩) := by
+  apply (point_gap {a} _ _).mpr
+  exact Or.inl rfl
+
+example (a : ℝ) : FrontierCover.Incident (piece ({a} : Finset ℝ))
+    (.inl ⟨0, by simp⟩) (.inr ⟨1, by simp⟩) := by
+  apply (point_gap {a} _ _).mpr
+  exact Or.inr rfl
+
+example (a : ℝ) : ¬ FrontierCover.Incident (piece ({a} : Finset ℝ))
+    (.inr ⟨0, by simp⟩) (.inr ⟨1, by simp⟩) := by
+  rw [gap_gap]
+  intro H
+  have he : (0 : ℕ) = 1 := congrArg Fin.val H
+  omega
+
+-- Nonneighboring root-gap pairs must be rejected even though their closures are nonempty.
+example (s : Finset ℝ) (i : Fin s.card) (k : Fin (s.card + 1))
+    (hk : k.val ≠ i.val) (hk' : k.val ≠ i.val + 1) :
+    ¬ FrontierCover.Incident (piece s) (.inl i) (.inr k) := by
+  rw [point_gap]
+  exact not_or.mpr ⟨hk, hk'⟩
+
+-- Removing a root removes its incident edges in the relative topology.
+example (s : Finset ℝ) (S : Set ℝ) (hS : OrderedRealCellCover.Stable s S)
+    (i : Fin s.card) (hi : root s i ∉ S) (k : Fin (s.card + 1)) :
+    ¬ FrontierCover.Incident (OrderedRealCellCover.restrictedPiece s S) (.inl i) (.inr k) := by
+  intro H
+  obtain ⟨x, hx⟩ := ((OrderedRealCellRestrictedIncidence.incident_iff s S hS _ _).mp H).1
+  change x.val = root s i at hx
+  exact hi (hx ▸ x.property)
+
+-- The native edge query uses only the original access interface.
+example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family}
+    (A : BivariateQueryProductBits.Access Q)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    AlgebraicSliceCellAdjacency.language P Q ∈ PSPACE := AlgebraicSliceCellAdjacency.mem_PSPACE h A ha
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (i j : AlgebraicSliceCellCover.Index P Q u) :
+    pair u (pair (AlgebraicSliceCellLabels.label P Q u i) (AlgebraicSliceCellLabels.label P Q u j)) ∈
+      AlgebraicSliceCellAdjacency.language P Q ↔ FrontierCover.Incident (AlgebraicSliceCellCover.piece P Q u) i j :=
+  AlgebraicSliceCellAdjacency.packet P Q u hu i j
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u a b : List Bool) (hu : u ∉ valid P) :
+    pair u (pair a b) ∉ AlgebraicSliceCellAdjacency.language P Q :=
+  AlgebraicSliceCellAdjacency.invalid_base P Q u a b hu
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u a b : List Bool)
+    (ha : 2 * BoundedAlgebraicSliceRootProduct.count P Q u + 1 ≤ Nat.fromBitsLE a) :
+    pair u (pair a b) ∉ AlgebraicSliceCellAdjacency.language P Q := by
+  intro H
+  have H' := H.1.2.2
+  simp only [AlgebraicSliceCellAdjacency.leftQuery, pairFst_pair, pairSnd_pair] at H'
+  exact (Nat.not_lt_of_ge ha) H'
+
+example (P : Readers) (Q : BivariateQueryProductBits.Family) (u a b : List Bool)
+    (hb : b.length ≠ AlgebraicSliceCellCover.labelWidth Q u) :
+    pair u (pair a b) ∉ AlgebraicSliceCellAdjacency.language P Q := by
+  intro H
+  exact hb (by simpa only [AlgebraicSliceCellAdjacency.rightQuery, pairFst_pair, pairSnd_pair] using H.2.1.2.1)
+
+end
+end RealCellIncidenceTests
