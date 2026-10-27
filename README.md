@@ -371,6 +371,12 @@ The checked ingredients are:
   throughout the cell between consecutive fiber roots. These validated cell-sign
   languages are in native PSPACE, without constructing nearby rational samples
   or full Taylor expansions.
+  An indexed bivariate family now supplies its common root polynomial natively:
+  factors specializing to zero are replaced by one. The product is nonzero at
+  valid base roots, and its real roots are exactly the union of all factor roots.
+  Its coefficients and distinct-root count have native readers and explicit
+  binary bounds. Uniform indexed queries compute each factor's sign on
+  intervening cells and validate both factor and product-root indices.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between

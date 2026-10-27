@@ -4268,3 +4268,92 @@ example (P : BoundedFullWriter.Readers) (F G : Family) (u : List Bool)
 
 end
 end AlgebraicFiberLocalSignTests
+
+namespace AlgebraicRootProductTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open BoundedAlgebraicSlice BoundedAlgebraicSliceRootProduct
+open scoped Classical BigOperators
+
+-- An empty family has product one, including when the declared degree bounds are zero.
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool)
+    (hu : u ∈ valid P) (hn : Q.count (pairFst u) = 0) : polynomial P Q u = 1 := by
+  let : IsEmpty (Fin (Q.count (pairFst u))) := ⟨fun i => by have H := i.isLt; omega⟩
+  rw [product_valid P Q u hu]
+  simp only [Finset.univ_eq_empty, Finset.prod_empty]
+
+-- All zero factors are removed rather than annihilating the root product.
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool)
+    (hu : u ∈ valid P) (hz : ∀ i : Fin (Q.count (pairFst u)), BoundedAlgebraicSliceIndexed.value P Q u i.val = 0) :
+    polynomial P Q u = 1 := by
+  rw [product_valid P Q u hu]
+  simp only [hz, ite_true, Finset.prod_const_one]
+
+-- A symbolically nonzero factor C(X) collapses at parameter zero and must become one.
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (i : ℕ)
+    (hu : u ∈ valid P) (hp : point P u = 0) (hq : Q.polynomial (pairFst u) i = Polynomial.C Polynomial.X) :
+    BoundedAlgebraicSliceRootProductSource.factor P Q (pair (pairFst u) u) i = 1 := by
+  have hz : BoundedAlgebraicSliceIndexed.value P Q u i = 0 := by
+    rw [BoundedAlgebraicSliceIndexed.value_valid P Q u i hu, hq, hp, Polynomial.map_C]
+    simp only [ParameterTarski.evalHom, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X, Polynomial.C_0]
+  simp only [BoundedAlgebraicSliceRootProductSource.factor, pairSnd_pair, hz, ite_true]
+
+-- Repetition of the same nonzero factor and additional zero factors do not add distinct roots.
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool)
+    (hu : u ∈ valid P) (p : ℝ[X])
+    (hv : ∀ i : Fin (Q.count (pairFst u)), BoundedAlgebraicSliceIndexed.value P Q u i.val = 0 ∨
+      BoundedAlgebraicSliceIndexed.value P Q u i.val = p)
+    (hi : ∃ i : Fin (Q.count (pairFst u)), BoundedAlgebraicSliceIndexed.value P Q u i.val = p) :
+    (polynomial P Q u).roots.toFinset = p.roots.toFinset := by
+  ext y
+  rw [root_iff P Q u hu]
+  constructor
+  · rintro ⟨i, hy⟩
+    rcases hv i with hz | he
+    · simp only [hz, Polynomial.roots_zero, Multiset.toFinset_zero, Finset.notMem_empty] at hy
+    · simpa only [he] using hy
+  · intro hy
+    obtain ⟨i, he⟩ := hi
+    exact ⟨i, by simpa only [he] using hy⟩
+
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∉ valid P) :
+    count P Q u = 0 := by
+  change (polynomial P Q u).roots.toFinset.card = 0
+  rw [polynomial_invalid P Q u hu]
+  simp only [Polynomial.roots_zero, Multiset.toFinset_zero, Finset.card_empty]
+
+-- The product count and uniform factor queries use the original readers only.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (Q : BivariateQueryProductBits.Family)
+    (A : BivariateQueryProductBits.Access Q) (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun u => BinaryNatCode.encode (count P Q u)) := count_evaluator h A ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (Q : BivariateQueryProductBits.Family)
+    (A : BivariateQueryProductBits.Access Q) (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c)
+    (fromLeft : Bool) (s : SignType) :
+    BoundedAlgebraicSliceRootProductCellLanguage.language P Q fromLeft s ∈ PSPACE :=
+  BoundedAlgebraicSliceRootProductCellLanguage.mem_PSPACE h A ha fromLeft s
+
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u index ordinal : List Bool)
+    (hi : Q.count (pairFst u) ≤ Nat.fromBitsLE index) (fromLeft : Bool) (s : SignType) :
+    pair u (pair index ordinal) ∉ BoundedAlgebraicSliceRootProductCellLanguage.language P Q fromLeft s := by
+  apply BoundedAlgebraicSliceRootProductCellLanguage.invalid_index
+  simpa only [pairFst_pair, pairSnd_pair] using hi
+
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u index ordinal : List Bool)
+    (hr : count P Q u ≤ Nat.fromBitsLE ordinal) (fromLeft : Bool) (s : SignType) :
+    pair u (pair index ordinal) ∉ BoundedAlgebraicSliceRootProductCellLanguage.language P Q fromLeft s := by
+  apply BoundedAlgebraicSliceRootProductCellLanguage.invalid_root
+  simpa only [pairFst_pair, pairSnd_pair] using hr
+
+-- The indexed cell theorem derives its zero-or-factor condition from the constructed product.
+example (P : BoundedFullWriter.Readers) (Q : BivariateQueryProductBits.Family) (u : List Bool) (hu : u ∈ valid P)
+    (i : Fin (Q.count (pairFst u))) (r t : Fin (count P Q u)) (hrt : t.val = r.val + 1) (s : SignType)
+    (y : ℝ) (hy : y ∈ Set.Ioo (BoundedAlgebraicSliceRootProductQueries.root P Q u r).val
+      (BoundedAlgebraicSliceRootProductQueries.root P Q u t).val) :
+    pair u (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode r.val)) ∈
+      BoundedAlgebraicSliceRootProductCellLanguage.language P Q false s ↔
+      SignType.sign ((BoundedAlgebraicSliceIndexed.value P Q u i.val).eval y) = s :=
+  BoundedAlgebraicSliceRootProductCellLanguage.interval_packet P Q u hu i r t hrt s y hy
+
+end
+end AlgebraicRootProductTests

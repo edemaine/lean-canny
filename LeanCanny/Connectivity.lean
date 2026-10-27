@@ -87,7 +87,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberThom
 import LeanCanny.Encoding.BoundedAlgebraicFiberMoments
 import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
-import LeanCanny.Encoding.BoundedAlgebraicFiberCellQueries
+import LeanCanny.Encoding.BoundedAlgebraicSliceRootProductCellLanguage
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -452,6 +452,13 @@ including singular endpoints. A right-sided query gives the sign on the entire
 interval between consecutive roots when the test is zero or divides the
 specialized root polynomial. The validated cell-sign languages are in native
 PSPACE and require no nearby rational sample or full Taylor expansion.
+For indexed bivariate tests, a native zero-aware product now constructs their
+common root polynomial. Factors becoming zero at the selected algebraic base
+point are replaced by one. At valid base roots the product is nonzero and its
+real roots are exactly the union of the factor roots. Its coefficients and
+distinct-root count are native, with explicit binary bounds. Uniform indexed
+queries compute each test's sign on intervening cells; their native languages
+validate both factor indices and product-root ordinals.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
