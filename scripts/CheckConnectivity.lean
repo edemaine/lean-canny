@@ -5408,3 +5408,54 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) (x : BoundedFullCritical
         BoundedCriticalSampleLabels.rank P c x + 1 := BoundedCriticalSampleIsolation.sample_certificate P c x
 
 end CriticalSampleLabelTests
+
+namespace CriticalSampleMomentTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR Polynomial
+open scoped Classical
+
+-- A sign filter removes both the zero root and the opposite-sign root.
+example : RootSignQueries.filteredMoment {(-1 : ℝ), 0, 1}
+    (fun _ : Unit => (X : ℝ[X])) (fun _ => .neg)
+    (fun x => (SignType.sign x : ℤ)) = -1 := by
+  norm_num [RootSignQueries.filteredMoment, Finset.filter_insert, Finset.filter_singleton]
+
+-- Signed moments retain cancellation; their values need not be counts.
+example : RootSignQueries.filteredMoment {(-1 : ℝ), 0, 1}
+    (fun i : Empty => nomatch i) (fun i => nomatch i)
+    (fun x => (SignType.sign x : ℤ)) = 0 := by
+  norm_num [RootSignQueries.filteredMoment]
+
+-- An empty feature list computes the exact filtered count, including zero.
+example (F G : SignPatternBits.Family) (q : List Bool)
+    (h : Nat.fromBitsLE (G.count (pairFst q)) = 0) :
+    FilteredSignMomentBits.moment F G q = (SignPatternBits.rootCount F (pairFst q) : ℤ) :=
+  FilteredSignMomentBits.moment_no_features F G q h
+
+example (P : BoundedFullWriter.Readers) (orders : List Bool → List Bool) (q : List Bool) :
+    BoundedCriticalSampleMoments.moment P (fun _ => 0) orders q =
+      (Nat.card (BoundedFullCriticalSamples.Samples P (pairFst q)) : ℤ) := by
+  rw [BoundedCriticalSampleMoments.moment,
+    FilteredSignMomentBits.moment_no_features _ _ q (Nat.fromBitsLE_bits 0),
+    BoundedCriticalSampleCount.rootCount_eq_count]
+  rfl
+
+-- The native evaluator assumes only the original readers, a short selected
+-- feature list, and binary derivative orders; no sign or coefficient oracle.
+example {P : BoundedFullWriter.Readers} {features : List Bool → ℕ} {orders : List Bool → List Bool}
+    (h : P.PolyTime) (hc : UnaryFn features) (ho : orders ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => SignStatisticBits.integerCode (BoundedCriticalSampleMoments.moment P features orders q)) :=
+  BoundedCriticalSampleMoments.evaluator h hc ho ha
+
+-- Distinct actual samples have distinct signatures for the new parameter.
+example (P : BoundedFullWriter.Readers) (c : List Bool)
+    (x y : BoundedFullCriticalSamples.Samples P c)
+    (h : BoundedCriticalSampleLabels.label P c x ≠ BoundedCriticalSampleLabels.label P c y) :
+    BoundedCriticalSampleThom.signature P c (BoundedCriticalSampleLabels.parameter P c x) ≠
+      BoundedCriticalSampleThom.signature P c (BoundedCriticalSampleLabels.parameter P c y) := by
+  intro he
+  have hp := BoundedCriticalSampleThom.signature_injective P c he
+  have hx := (BoundedCriticalSampleLabels.rootEquiv P c).symm.injective hp
+  exact h (congrArg (BoundedCriticalSampleLabels.label P c) hx)
+
+end CriticalSampleMomentTests

@@ -98,6 +98,7 @@ import LeanCanny.Encoding.BoundedCriticalCoordinate
 import LeanCanny.Encoding.BoundedCriticalRationalCoordinates
 import LeanCanny.Encoding.BoundedCriticalSampleCount
 import LeanCanny.Encoding.BoundedCriticalSampleIsolation
+import LeanCanny.Encoding.BoundedCriticalSampleMoments
 
 /-! # Connectivity development
 
@@ -362,6 +363,11 @@ samples, with native validity and rational-cut comparisons on their common
 parameter. Source-derived dyadic cells have cut counts equal to the sample rank
 and rank plus one; their precision and numerator-size allowances have native
 binary writers. The potentially long dyadic numerators are not serialized.
+Selected derivative-sign moments now sum over exactly these filtered sample
+roots, using native coefficient readers and streamed sign-pattern counts.
+Their full Thom signatures separate the samples, and monomials with support
+bounded by the existing short label width span all rational-valued functions
+on them. Native queries at an individual ordered sample label remain required.
 Assembling the recursive coordinate families remains
 required. Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected

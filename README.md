@@ -274,6 +274,11 @@ The checked ingredients are:
   parameter. Source-derived dyadic cells have lower and upper cut counts equal
   to rank and rank plus one. Their precision and numerator-size allowances have
   native binary writers; potentially long numerators are not serialized.
+  Selected derivative-sign moments now have native polynomial-space evaluators
+  over exactly these filtered sample roots. Full Thom signatures separate the
+  samples, and monomials with support bounded by the short label width span
+  their rational-valued functions. Native queries at an individual ordered
+  sample label remain required.
   Assembling recursive coordinate families remains required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
