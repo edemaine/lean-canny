@@ -251,7 +251,13 @@ The checked ingredients are:
   This selected direction has finitely many simple real critical samples,
   meeting every source component. Concrete coordinate eliminants bound the
   sample and component counts by an exponential in a polynomial label width,
-  computed natively from unary dimension and binary degree. Source connectivity
+  computed natively from unary dimension and binary degree. The complete complex
+  sample set now has the same bound, proved using algebraic finiteness of regular
+  square-system roots. Bounded integer projection records separate all complex
+  samples and their embedded real subset. Native Boolean queries expose both
+  real and imaginary coordinates and charge the selected direction. Native
+  selection of a complex separating record and recursive rational coordinate
+  records remain required. Source connectivity
   is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with
   independent formula witnesses. Selected sample serialization and constrained

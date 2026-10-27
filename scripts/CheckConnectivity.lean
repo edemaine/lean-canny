@@ -5080,3 +5080,71 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (read : List Bool → L
 
 end
 end FormulaRationalSliceTests
+
+namespace ComplexCriticalSampleTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry LeanCanny.ETR LeanCanny.ETR.ComplexCircuit
+open MvPolynomial
+open scoped Classical Matrix
+
+-- The empty square system has a single empty tuple, including over the complex field.
+example : Finite (RegularAlgebraicRootCount.Roots (K := ℂ) (fun i : Fin 0 => Fin.elim0 i)) ∧
+    Nat.card (RegularAlgebraicRootCount.Roots (K := ℂ) (fun i : Fin 0 => Fin.elim0 i)) ≤ 1 := by
+  simpa only [RegularAffineRootCount.labelWidth, Nat.zero_mul, pow_zero] using
+    RegularAlgebraicRootCount.finite_card_le_uniform (K := ℂ) (fun i : Fin 0 => Fin.elim0 i) 1
+      (fun i => Fin.elim0 i) (by decide) (fun _ => by simp [JacobianKernelCharts.jacobian])
+
+private noncomputable def mixedSystem (j : Fin 2) : MvPolynomial (Fin 2) ℂ :=
+  if j = 0 then X 0 * (X 0 - 1) else X 0 * X 1
+
+-- An entire singular line is allowed outside the finite regular locus.
+example (t : ℂ) : ∀ j, aeval ![0, t] (mixedSystem j) = 0 := by
+  intro j
+  fin_cases j <;> simp [mixedSystem]
+
+example : {x : Fin 2 → ℂ | (∀ j, aeval x (mixedSystem j) = 0) ∧
+    aeval x (JacobianKernelCharts.jacobian mixedSystem) ≠ 0}.Finite :=
+  SquareSystemFinite.finite_regular_roots mixedSystem
+
+private def imaginaryRoot : List Gate := [.mul 1 0 0, .constant 2 1, .add 3 1 2, .zero 3]
+private def imaginaryOne : Formula := .eqZero (.add (.var 1) (.const (-1)))
+private def imaginaryAssignment (i : ℕ) : ℂ := if i = 0 then Complex.I else if i = 1 then -1 else if i = 2 then 1 else 0
+
+-- This query constrains the imaginary part of wire zero and admits the nonreal root i.
+private theorem imaginary_feasible : RealifiedQuery.WithConstraints imaginaryRoot imaginaryOne := by
+  refine ⟨imaginaryAssignment, ?_, ?_⟩
+  · simp [imaginaryRoot, Gate.Holds, imaginaryAssignment, Complex.I_mul_I]
+  · simp [imaginaryOne, Formula.Holds, Term.eval, realEnv, imaginaryAssignment]
+
+example : (RealifiedQuery.formula imaginaryRoot imaginaryOne).Satisfiable :=
+  (RealifiedQuery.correct imaginaryRoot imaginaryOne).mpr imaginary_feasible
+
+#guard RealifiedQuery.bits (encode imaginaryRoot) imaginaryOne.encode = (RealifiedQuery.formula imaginaryRoot imaginaryOne).encode
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    Finite (BoundedFullComplexSamples.Samples P c) ∧
+      Nat.card (BoundedFullComplexSamples.Samples P c) ≤ 2 ^ BoundedFullCriticalSamples.labelWidth P c :=
+  BoundedFullComplexSamples.finite_samples P c
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    ∃ r : List Bool, r.length = (P.dim c + 4) * BoundedCriticalSeparator.width P c ∧ BoundedFullComplexSamples.Good P c r :=
+  BoundedFullComplexSamples.exists_record P c
+
+example (P : BoundedFullWriter.Readers) (c r : List Bool) (h : BoundedFullComplexSamples.Good P c r) :
+    BoundedCriticalSeparator.Good P c r := BoundedFullComplexSamples.good_real P c r h
+
+-- The source direction is computed in space; no FP direction or complex-root reader is assumed.
+example {P : BoundedFullWriter.Readers} {p : List Bool → Formula} (h : P.PolyTime)
+    (hp : (fun c => (p c).encode) ∈ FP) (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c)
+    (hs : ∀ c, (p c).arity ≤ 2 * (P.dim c + 4)) :
+    SpaceFunction (fun c => [decide (∃ x : ℕ → ℂ,
+      BoundedComplexSampleQuery.Condition P (BoundedFullDirectionChoice.record P) c x ∧ (p c).Holds (realEnv x))]) :=
+  BoundedComplexSampleQuery.selected_evaluator h hp ht hs
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (p : Formula) (hp : p.arity ≤ 2 * (P.dim c + 4)) :
+    (∃ x : ℕ → ℂ, BoundedComplexSampleQuery.Condition P (BoundedFullDirectionChoice.record P) c x ∧ p.Holds (realEnv x)) ↔
+      ∃ x : BoundedFullComplexSamples.Samples P c, p.Holds (realEnv (BoundedComplexSampleQuery.extend x.val)) :=
+  BoundedComplexSampleQuery.selected_iff_samples P c p hp
+
+end
+end ComplexCriticalSampleTests
