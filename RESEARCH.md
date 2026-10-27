@@ -1176,7 +1176,21 @@ actual sample descriptor. `BooleanPSPACE` constructs the restricted cell
 graph and proves native PSPACE connectivity of its actual real solution set.
 `BooleanReachability` proves that guarded cell-label reachability is exactly
 path connection in that solution set. Invalid base descriptors and endpoint
-widths are rejected. Recursive sample-base construction and the complete
+widths are rejected.
+`FormulaCriticalSampleRationalSlice` identifies the Boolean-selected cells
+with the original formula in rational coordinates at the actual sample's
+parameter. Native guards exclude every denominator pole, including when
+clearing denominators makes an atom vanish identically. Its whole-set
+connectivity and cell-label path languages are in native PSPACE.
+`FormulaCriticalSampleLine` constructs both coordinate families from the
+original readers. Their denominators are nonzero on the entire line, so the
+solution set is exactly the formula evaluated on the updated actual sample
+tuple. Its native connectivity and path deciders also validate the free
+coordinate. `Geometry.CoordinateLine` proves that updating one coordinate
+embeds the real line, preserving preconnectedness and paths in any restricted
+set. `FormulaCriticalSampleLineGeometry` transfers the native query packets
+to the formula's intersection with this line in the actual tuple space.
+Recursive sample-base construction and the complete
 higher-dimensional cover remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact

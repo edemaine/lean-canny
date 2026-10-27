@@ -331,7 +331,13 @@ The checked ingredients are:
   at the same actual sample. Its point cells, gaps, and exterior rays form
   a finite sign-invariant cover, with native labels, signs, and incidence.
   Boolean sign circuits select cells; native graph queries decide connectivity
-  and cell-label paths in that actual fiber. Recursive sample construction
+  and cell-label paths in that actual fiber. Formula syntax now gives native
+  connectivity and cell-label paths in guarded rational coordinates at these
+  same samples. Constructed coordinate lines have no poles; their queries
+  decide connectivity of the original formula on the updated sample tuple.
+  The coordinate-line embedding preserves paths and connectivity in tuple
+  space, with descriptor, coordinate, and endpoint validation.
+  Recursive sample construction
   and the full higher-dimensional cover remain required.
   Source connectivity is equivalent to pairwise path connectivity of these samples. Their exact
   real critical equations now have native shared-circuit queries with

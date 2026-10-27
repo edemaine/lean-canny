@@ -7173,3 +7173,113 @@ example {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family}
     CriticalSampleSliceCellAdjacency.mem_PSPACE h A ha⟩
 
 end ActualSampleCellCoverTests
+
+namespace ActualSampleFormulaLineTests
+noncomputable section
+open Set Polynomial LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR
+open BoundedFullWriter BoundedCriticalSampleSlice
+open scoped Classical
+
+-- A tautology still excludes denominator poles at the actual sample.
+example (P : Readers) (N D : BivariateQueryProductBits.Family) (u : List Bool)
+    (hD : ∀ i, D.polynomial (context u) i = Polynomial.X) :
+    FormulaCriticalSampleRationalSlice.solutionSet P (fun _ => (Formula.eqZero (.const 0)).encode) N D u =
+      {x | x ≠ 0} := by
+  ext x
+  simp only [FormulaCriticalSampleRationalSlice.solutionSet, Set.mem_ofPred_eq, FormulaView.formula_encode,
+    Formula.Holds, Term.eval, Int.cast_zero, and_true]
+  constructor
+  · intro h
+    have h0 := h 0 (by unfold FormulaAtomPolynomials.budget; omega)
+    simpa only [hD 0, Polynomial.map_X, Polynomial.eval_X] using h0
+  · intro hx i _
+    simpa only [hD i, Polynomial.map_X, Polynomial.eval_X] using hx
+
+-- On the constructed line, a true equation gives the whole line, not holes.
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    FormulaCriticalSampleLine.solutionSet P (fun _ => 0) (fun _ => (Formula.eqZero (.const 0)).encode)
+      (FormulaCriticalSampleLine.sampleWord P c r x) = univ := by
+  rw [FormulaCriticalSampleLine.solutionSet_sample]
+  ext t
+  simp only [Set.mem_ofPred_eq, FormulaView.formula_encode, Formula.Holds, Term.eval, Int.cast_zero,
+    Set.mem_univ]
+
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    FormulaCriticalSampleLine.sampleWord P c r x ∈
+      FormulaCriticalSampleLine.connectedLanguage P (fun _ => 0) (fun _ => (Formula.eqZero (.const 0)).encode) := by
+  rw [FormulaCriticalSampleLine.connected_sample P (fun _ => 0) _ c r x (by omega)]
+  simpa only [FormulaView.formula_encode, Formula.Holds, Term.eval, Int.cast_zero, eq_self,
+    Set.ofPred_true] using (isPreconnected_univ : IsPreconnected (univ : Set ℝ))
+
+-- Empty sets remain preconnected; malformed formula words use falsum.
+example (P : Readers) (f : List Bool → ℕ) (read : List Bool → List Bool) (c r : List Bool)
+    (x : BoundedFullCriticalSamples.Samples P c) (hr : Grammar.recognizeFormula (read (pair c r)) = false) :
+    FormulaCriticalSampleLine.solutionSet P f read (FormulaCriticalSampleLine.sampleWord P c r x) = ∅ := by
+  rw [FormulaCriticalSampleLine.solutionSet_sample]
+  simp only [FormulaView.formula, hr, Bool.false_eq_true, ↓reduceDIte, Formula.Holds, Set.ofPred_false]
+
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    FormulaCriticalSampleLine.sampleWord P c r x ∈
+      FormulaCriticalSampleLine.connectedLanguage P (fun _ => 0) (fun _ => Formula.falsum.encode) := by
+  rw [FormulaCriticalSampleLine.connected_sample P (fun _ => 0) _ c r x (by omega)]
+  simpa only [FormulaView.formula_encode, Formula.Holds, Set.ofPred_false] using (isPreconnected_empty : IsPreconnected (∅ : Set ℝ))
+
+-- Negated equality removes a singular root and separates the two rays.
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    FormulaCriticalSampleLine.solutionSet P (fun _ => 0) (fun _ => (Formula.not (.eqZero (.var 0))).encode)
+      (FormulaCriticalSampleLine.sampleWord P c r x) = {t : ℝ | t ≠ 0} := by
+  rw [FormulaCriticalSampleLine.solutionSet_sample]
+  ext t
+  simp only [Set.mem_ofPred_eq, FormulaView.formula_encode, Formula.Holds, Term.eval, Function.update_self]
+
+example : ¬ IsPreconnected {t : ℝ | t ≠ 0} := by
+  intro h
+  have hz := h.Icc_subset (show (-1 : ℝ) ∈ {t : ℝ | t ≠ 0} by norm_num)
+    (show (1 : ℝ) ∈ {t : ℝ | t ≠ 0} by norm_num) (show (0 : ℝ) ∈ Icc (-1 : ℝ) 1 by norm_num)
+  exact hz rfl
+
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    FormulaCriticalSampleLine.sampleWord P c r x ∉
+      FormulaCriticalSampleLine.connectedLanguage P (fun _ => 0) (fun _ => (Formula.not (.eqZero (.var 0))).encode) := by
+  rw [FormulaCriticalSampleLine.connected_sample P (fun _ => 0) _ c r x (by omega)]
+  simp only [FormulaView.formula_encode, Formula.Holds, Term.eval, Formula.extend, Function.update_self]
+  intro h
+  have hz := h.Icc_subset (show (-1 : ℝ) ∈ {t : ℝ | t ≠ 0} by norm_num)
+    (show (1 : ℝ) ∈ {t : ℝ | t ≠ 0} by norm_num) (show (0 : ℝ) ∈ Icc (-1 : ℝ) 1 by norm_num)
+  exact hz rfl
+
+-- Keeping the original record also keeps the formula and free-coordinate readers.
+example (P : Readers) (c r : List Bool) (x : BoundedFullCriticalSamples.Samples P c) :
+    context (FormulaCriticalSampleLine.sampleWord P c r x) = pair c r :=
+  FormulaCriticalSampleLine.context_sampleWord P c r x
+
+example (P : Readers) (f : List Bool → ℕ) (read : List Bool → List Bool) (u a b : List Bool)
+    (hi : P.dim (pairFst (pairFst u)) + 4 ≤ f (context u)) :
+    u ∉ FormulaCriticalSampleLine.connectedLanguage P f read ∧
+      pair u (pair a b) ∉ FormulaCriticalSampleLine.reachableLanguage P f read :=
+  ⟨FormulaCriticalSampleLine.connected_invalid_coordinate P f read u (by exact Nat.not_lt.mpr hi),
+    FormulaCriticalSampleLine.reachable_invalid_coordinate P f read u a b (by exact Nat.not_lt.mpr hi)⟩
+
+example (P : Readers) (f : List Bool → ℕ) (read : List Bool → List Bool) (u a b : List Bool)
+    (hu : u ∉ valid P) : pair u (pair a b) ∉ FormulaCriticalSampleLine.reachableLanguage P f read := by
+  intro h
+  exact CriticalSampleSliceBooleanReachability.invalid_base P _ _ u a b hu h.2
+
+example (P : Readers) (f : List Bool → ℕ) (read : List Bool → List Bool) (u a b : List Bool)
+    (ha : a.length ≠ CriticalSampleSliceCellCover.labelWidth (FormulaCriticalSampleLine.family P f read) u) :
+    pair u (pair a b) ∉ FormulaCriticalSampleLine.reachableLanguage P f read := by
+  intro h
+  exact ha (by simpa only [CriticalSampleSliceBooleanReachability.language, Set.mem_ofPred_eq,
+    CriticalSampleSliceBooleanReachability.leftWord, pairFst_pair, pairSnd_pair] using h.2.2.1)
+
+-- The final native endpoints use only the original readers and FP syntax.
+example {P : Readers} (h : P.PolyTime) {f : List Bool → ℕ} (hf : BinaryFn f)
+    (read : List Bool → List Bool) (hr : read ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    FormulaCriticalSampleLine.connectedLanguage P f read ∈ PSPACE ∧
+      FormulaCriticalSampleLine.reachableLanguage P f read ∈ PSPACE :=
+  ⟨FormulaCriticalSampleLine.connected_mem_PSPACE h hf read hr ha,
+    FormulaCriticalSampleLine.reachable_mem_PSPACE h hf read hr ha⟩
+
+end
+end ActualSampleFormulaLineTests

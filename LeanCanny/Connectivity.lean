@@ -115,6 +115,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleFiberCellQueries
 import LeanCanny.Encoding.BoundedCriticalSampleFiberLineTest
 import LeanCanny.Connectivity.CriticalSampleSliceBooleanReachability
 import LeanCanny.Connectivity.CriticalSampleSliceCellSignLanguage
+import LeanCanny.Connectivity.FormulaCriticalSampleLineGeometry
 
 /-! # Connectivity development
 
@@ -443,7 +444,14 @@ point cells and gaps, including exterior rays and rootless fibers, give an
 accessible sign-invariant cover with native labels, signs, and incidence.
 Boolean sign circuits select the actual solution-set cells; native graph
 queries decide fiber connectivity and cell-label paths, with validation of
-the parent descriptor and endpoint widths. Constructing new sample bases
+the parent descriptor and endpoint widths. Original formulas in rational
+coordinates now have these native connectivity and path queries over actual
+samples, with denominator guards excluding poles. For constructed coordinate
+lines, the denominators never vanish and the queries concern exactly the
+original formula on the updated sample tuple. A coordinate-line embedding
+transfers both connectivity and paths to the formula's intersection with
+that line in tuple space. The free coordinate is validated as well.
+Constructing new sample bases
 recursively and assembling the full higher-dimensional cover remain required.
 Native real critical-sample queries test these
 exact equations with arbitrary independent formula witnesses. Both selected
