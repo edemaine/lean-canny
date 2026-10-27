@@ -327,8 +327,10 @@ The checked ingredients are:
   determinants at the same root. Fixed even pseudo-remainder iterates over
   parameter polynomials have native bivariate coefficient readers, allowing
   the symbolic head degree to exceed the declared reduction degree.
-  Algebraic-slice Tarski queries still need the derivative-product source
-  and sign-statistic composition.
+  Algebraic-slice Tarski evaluation and zero, positive, and negative decisions
+  are native. Actual degrees, derivative products, bounded seeds, principal
+  signs, and descending statistics are computed from the original modular
+  bivariate readers, including degree drops and zero heads.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between

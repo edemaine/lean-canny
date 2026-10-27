@@ -80,6 +80,7 @@ import LeanCanny.Encoding.BoundedProjectionTestSign
 import LeanCanny.Encoding.BoundedAlgebraicSliceDegree
 import LeanCanny.Encoding.BoundedAlgebraicSlicePrincipal
 import LeanCanny.Algebra.PolynomialPseudoRemainderReader
+import LeanCanny.Encoding.BoundedAlgebraicSliceTarskiPSPACE
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -402,8 +403,10 @@ compute both actual degrees internally and specialize parameter-polynomial
 determinants at the same ordered root. Fixed even pseudo-remainder iterates
 over parameter polynomials also have native bivariate coefficient readers.
 The symbolic head degree may exceed the declared reduction degree.
-Algebraic-slice Tarski queries still require the derivative-product source
-and sign-statistic composition.
+Algebraic-slice Tarski queries and their zero, positive, and negative decisions
+are native. Actual degrees, derivative products, bounded seeds, principal
+signs, and descending statistics are computed from the original modular
+bivariate coefficient readers, without a symbolic-degree stability assumption.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

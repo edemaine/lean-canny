@@ -3578,3 +3578,68 @@ example (F : PolynomialPseudoRemainderBits.Family) (q : List Bool)
 
 end
 end PolynomialReductionTests
+
+namespace AlgebraicTarskiTests
+noncomputable section
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open scoped Classical
+
+example {p : List Bool → (ℤ[X])[X]} (A : CertifiedPolynomial.BivariateReader p) :
+    CertifiedPolynomial.BivariateReader (fun c => (p c).derivative) := CertifiedPolynomial.BivariateDerivative.reader A
+
+example {p q : List Bool → (ℤ[X])[X]} (A : CertifiedPolynomial.BivariateReader p) (B : CertifiedPolynomial.BivariateReader q) :
+    CertifiedPolynomial.BivariateReader (fun c => p c * q c) := CertifiedPolynomial.BivariateProduct.reader A B
+
+-- The two independent indices must survive derivative and product formation.
+example : (((Polynomial.C (Polynomial.X : ℤ[X]) * Polynomial.X ^ 3 : (ℤ[X])[X]).derivative.coeff 2).coeff 1) = 3 := by
+  norm_num [Polynomial.coeff_derivative, Polynomial.coeff_one]
+
+example : ((((Polynomial.C (Polynomial.X + 1 : ℤ[X]) * Polynomial.X + 1) *
+    (Polynomial.C (Polynomial.X : ℤ[X]) * Polynomial.X + 2) : (ℤ[X])[X]).coeff 1).coeff 1) = 3 := by
+  rw [CertifiedPolynomial.BivariateProduct.product_coefficient]
+  norm_num [Finset.sum_range_succ, Polynomial.coeff_one]
+
+-- Fixed seed bounds do not assume that the symbolic degree equals d.
+example (p q : (ℤ[X])[X]) (d D P Q j : ℕ)
+    (hp : ∀ i, (p.coeff i).natDegree ≤ P) (hq : ∀ i, (q.coeff i).natDegree ≤ Q) :
+    ((PseudoRemainder.seed p q d D).coeff j).natDegree ≤ 2 * (D + 1) * P + (Q + P) :=
+  PseudoRemainder.seed_parameter_degree p q d D P Q hp hq j
+
+example (p q : (ℤ[X])[X]) (d D dp bp bq : ℕ) (hdp : p.natDegree ≤ dp)
+    (hp : NestedMass.mass p ≤ 2 ^ bp) (hq : NestedMass.mass q ≤ 2 ^ bq) :
+    NestedMass.mass (PseudoRemainder.seed p q d D) ≤ 2 ^ PseudoRemainder.fixedSeedMassBound D dp bp bq :=
+  PseudoRemainder.seed_mass_le_pow p q d D dp bp bq hdp hp hq
+
+example (F : BivariateTarskiSeedBits.Family) (A : BivariateTarskiSeedBits.Access F) :
+    CertifiedPolynomial.BivariateReader F.seed := BivariateTarskiSeedBits.reader A
+
+-- The complete query takes only the two original bivariate readers and their bounds.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : BoundedAlgebraicSlice.Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedAlgebraicSlice.Tarski.value P F G) := BoundedAlgebraicSlice.Tarski.evaluator h A B ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : BoundedAlgebraicSlice.Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceDecider (BoundedAlgebraicSlice.Tarski.zeroLanguage P F G) := BoundedAlgebraicSlice.Tarski.zero_decider h A B ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : BoundedAlgebraicSlice.Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceDecider (BoundedAlgebraicSlice.Tarski.positiveLanguage P F G) := BoundedAlgebraicSlice.Tarski.positive_decider h A B ha
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : BoundedAlgebraicSlice.Family) (A : F.Access) (B : G.Access)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    BoundedAlgebraicSlice.Tarski.negativeLanguage P F G ∈ PSPACE := BoundedAlgebraicSlice.Tarski.negative_mem_PSPACE h A B ha
+
+example (P : BoundedFullWriter.Readers) (F G : BoundedAlgebraicSlice.Family) (c : List Bool)
+    (r : Fin (BoundedProjectionRootCount.count P c)) :
+    BoundedAlgebraicSlice.Tarski.value P F G (pair c (BinaryNatCode.encode r.val)) = SignStatisticBits.integerCode
+      (RootSignQueries.tarskiQuery (F.slice c (BoundedProjectionOrderedRoot.root P c r).val)
+        (G.slice c (BoundedProjectionOrderedRoot.root P c r).val)) := BoundedAlgebraicSlice.Tarski.value_packet P F G c r
+
+example (P : BoundedFullWriter.Readers) (F G : BoundedAlgebraicSlice.Family) (u : List Bool)
+    (hu : u ∉ BoundedAlgebraicSlice.valid P) : BoundedAlgebraicSlice.Tarski.value P F G u = SignStatisticBits.integerCode 0 := by
+  rw [BoundedAlgebraicSlice.Tarski.value, BoundedAlgebraicSlice.Tarski.zero_query P F G u]
+  rw [BoundedAlgebraicSlice.degree, BoundedAlgebraicSlice.specialized, ite_eq_right hu, Polynomial.natDegree_zero]
+
+end
+end AlgebraicTarskiTests
