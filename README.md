@@ -283,6 +283,9 @@ The checked ingredients are:
   polynomials have native modular coefficient access and uniform bounds.
   Native tests count roots and decide realizability for polynomially many
   chosen derivative signs, consistently retaining extraneous projection roots.
+  Sparse sign monomials now span all rational-valued functions on the projection roots,
+  using at most the polynomial label width in distinct features, each to power
+  at most two. Their product Tarski moments have native polynomial-space readers.
   Full signatures are indexed functions; representing and enumerating their
   realizable values in polynomial space remains open, as do the recursive
   connection tests.

@@ -2699,3 +2699,52 @@ example {P : BoundedFullWriter.Readers} {features : List Bool → ℕ} {orders p
   BoundedProjectionDerivativeSigns.decider h hc ho hp hs ha
 
 end ProjectionThomTests
+
+namespace SparseProjectionMomentTests
+open LeanCanny.Algebra LeanCanny.Encoding
+
+-- An exponentially long feature list need not be enumerated in the spanning
+-- theorem. Only its last feature distinguishes these two signatures.
+private def delayed (b : Bool) (i : Fin 1000000) : SignType :=
+  if i.val = 999999 then if b then .pos else .zero else .zero
+private theorem delayed_injective : Function.Injective delayed := by
+  intro a b he
+  have h := congrFun he ⟨999999, by decide⟩
+  cases a <;> cases b <;> simp_all [delayed]
+
+example : Submodule.span ℚ (MonomialEvaluationBasis.vector
+    (MvPolynomial.aeval (R := ℚ) (fun i b => (delayed b i : ℚ))) ''
+      {d | d.support.card ≤ 1 ∧ ∀ i, d i ≤ 2}) = ⊤ :=
+  SparseSignSpanning.signatures_span (MonomialOrder.degLex (σ := Fin 1000000)) delayed delayed_injective 1 (by decide)
+
+-- Zero, negative, and positive signs all remain distinct. Squared features
+-- are necessary to span arbitrary functions of a three-valued sign.
+example : Submodule.span ℚ (MonomialEvaluationBasis.vector
+    (MvPolynomial.aeval (R := ℚ) (fun _ : Fin 1 => fun s : SignType => (s : ℚ))) ''
+      {d | d.support.card ≤ 2 ∧ ∀ i, d i ≤ 2}) = ⊤ :=
+  SparseSignSpanning.signatures_span (MonomialOrder.degLex (σ := Fin 1)) (fun s _ => s)
+    (fun _ _ h => congrFun h 0) 2 (by decide)
+
+example : Submodule.span ℚ (MonomialEvaluationBasis.vector
+    (MvPolynomial.aeval (R := ℚ) (fun (i : Fin 0) (_x : Fin 0) => (Fin.elim0 i : ℚ))) ''
+      {d | d.support.card ≤ 0 ∧ ∀ i, d i ≤ 2}) = ⊤ := by
+  apply SparseSignSpanning.sparse_span_eq_top (α := Fin 0) (K := ℚ)
+    (MonomialOrder.degLex (σ := Fin 0)) (fun (i : Fin 0) (_x : Fin 0) => Fin.elim0 i) 0 (by decide)
+  · intro x; exact Fin.elim0 x
+  · intro i; exact Fin.elim0 i
+
+-- Empty products count distinct roots, regardless of unused order fields.
+example (P : BoundedFullWriter.Readers) (orders : List Bool → List Bool) (c e : List Bool) :
+    BoundedProjectionMoments.moment P (fun _ => 0) orders (LeanCanny.pair c e) =
+      (BoundedProjectionRootCount.count P c : ℤ) := by
+  rw [BoundedProjectionMoments.moment_eq_sum]
+  simp only [LeanCanny.pairFst_pair, Finset.range_zero, Finset.prod_empty,
+    Finset.sum_const, nsmul_eq_mul, mul_one, BoundedProjectionRootCount.count]
+
+example {P : BoundedFullWriter.Readers} {features : List Bool → ℕ} {orders : List Bool → List Bool}
+    (h : P.PolyTime) (hc : UnaryFn features) (ho : orders ∈ FP)
+    (ha : ∀ c, (LeanCanny.ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun q => SignStatisticBits.integerCode (BoundedProjectionMoments.moment P features orders q)) :=
+  BoundedProjectionMoments.evaluator h hc ho ha
+
+end SparseProjectionMomentTests

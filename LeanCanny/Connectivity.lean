@@ -68,6 +68,7 @@ import LeanCanny.Encoding.BoundedSampleLabelCertificate
 import LeanCanny.Encoding.BoundedProjectionRootSeparation
 import LeanCanny.Encoding.BoundedProjectionThom
 import LeanCanny.Encoding.BoundedProjectionDerivativeSigns
+import LeanCanny.Encoding.BoundedProjectionMoments
 
 /-! # Connectivity development
 
@@ -343,6 +344,9 @@ repeated projection roots. Binary-indexed iterated derivatives have native
 modular coefficient readers and uniform degree and mass bounds. Sign patterns
 of polynomially many chosen derivative features have native
 root-count and realizability tests, including extraneous projection roots.
+Sparse sign monomials span all rational-valued functions on the projection roots;
+their support is bounded by the polynomial label width and their exponents
+by two. Product Tarski queries compute their moments in native polynomial space.
 The complete signature is an indexed function; a polynomial-space representation and
 enumeration of its realizable values still require a streamed sign-determination
 algorithm. The recursive connection tests remain open.
