@@ -4916,3 +4916,93 @@ example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {Q : BivariateQueryProd
   ⟨connected_mem_PSPACE h A ha, reachable_mem_PSPACE h A ha⟩
 
 end FormulaCircuitCompilerTests
+
+namespace FormulaAtomPolynomialTests
+noncomputable section
+open Polynomial LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.ETR
+open scoped Classical
+
+-- Quotient and remainder preserve both independent coefficient indices.
+#guard IndexedKroneckerReader.query (fun _ => 4)
+    (pair (pair [] (pair (BinaryNatCode.encode 7) (BinaryNatCode.encode 23))) (BinaryNatCode.encode 10)) =
+  pair (pair (pair [] (BinaryNatCode.encode 7)) (BinaryNatCode.encode 10))
+    (pair (BinaryNatCode.encode 3) (BinaryNatCode.encode 5))
+
+-- Unit denominators handle modulus one and nonconstant coefficient queries.
+#guard IndexedKroneckerReader.unitValue
+  (pair (pair [] (pair [] [])) []) = []
+#guard IndexedKroneckerReader.unitValue
+  (pair (pair [] (pair [] (BinaryNatCode.encode 1))) (BinaryNatCode.encode 4)) = []
+#guard IndexedKroneckerReader.unitValue
+  (pair (pair [] (pair [] [])) (BinaryNatCode.encode 4)) = BinaryNatCode.encode 1
+
+private def mixed : Term := .add (.mul (.var 0) (.var 1)) (.const (-3))
+private def cancelled : Term := .add mixed (.mul (.const (-1)) mixed)
+private def coordinates (i : ℕ) : (ℤ[X])[X] := if i = 0 then Polynomial.C Polynomial.X else Polynomial.X
+
+-- The two variables specialize independently to beta and x.
+example (β x : ℝ) :
+    ((mixed.eval coordinates).map (ParameterTarski.evalHom β)).eval x = β * x - 3 := by
+  simp [mixed, coordinates, Term.eval, ParameterTarski.evalHom]
+  ring
+
+private noncomputable def cancelledSource : RationalSubstitutionBits.Source :=
+  RationalSubstitutionBits.Source.ofTerm (fun _ => cancelled.toData.toBits)
+
+-- The streamed reader returns zero after cancellation, at every index and modulus.
+example {F : BivariateQueryProductBits.Family} (A : BivariateQueryProductBits.Access F)
+    (q : List Bool) (u v : ℕ) : BivariateTermReader.coefficient cancelledSource A
+      (pair q (pair (BinaryNatCode.encode u) (BinaryNatCode.encode v))) = [] := by
+  rw [BivariateTermReader.coefficient_eq]
+  have hz : BivariateTermReader.polynomial cancelledSource F (pairFst q) = 0 := by
+    change (TermView.term cancelled.toData.toBits).eval (F.polynomial (pairFst q)) = 0
+    rw [TermView.term_toBits]
+    simp only [cancelled, Term.eval]
+    ring
+  simp [hz, MatrixPower.residueBits, BinaryNatCode.encode]
+
+-- Coefficient indices beyond the radix are zero, rather than aliases in the next outer degree.
+example (S : RationalSubstitutionBits.Source) (F : BivariateQueryProductBits.Family)
+    (c : List Bool) (u v : ℕ) (hu : BivariateTermReader.radix S F c ≤ u) :
+    ((BivariateTermReader.polynomial S F c).coeff v).coeff u = 0 :=
+  Polynomial.coeff_eq_zero_of_natDegree_lt ((BivariateTermReader.inner_lt S F c v).trans_le hu)
+
+example (read : List Bool → List Bool) (hr : read ∈ FP) {F : BivariateQueryProductBits.Family}
+    (A : BivariateQueryProductBits.Access F) : BivariateQueryProductBits.Access (FormulaAtomPolynomials.family read F) :=
+  FormulaAtomPolynomials.access read hr A
+
+-- No sign agreement or atom polynomial oracle is supplied by the caller.
+example (P : BoundedFullWriter.Readers) (F : BivariateQueryProductBits.Family) (read : List Bool → List Bool)
+    (u : List Bool) (hu : u ∈ BoundedAlgebraicSlice.valid P) (x : ℝ) :
+    AlgebraicSliceBooleanCells.truth (FormulaBooleanCircuitSource.ofReader read) (pairFst u)
+      (AlgebraicSliceCellCover.signVector P (FormulaAtomPolynomials.family read F) u x) ↔
+        (FormulaView.formula (read (pairFst u))).Holds
+          (FormulaAlgebraicSlice.environment F (pairFst u) (BoundedAlgebraicSlice.point P u) x) :=
+  FormulaAlgebraicSlice.truth_iff P F read u hu x
+
+example (P : BoundedFullWriter.Readers) (F : BivariateQueryProductBits.Family) (read : List Bool → List Bool)
+    (u : List Bool) (hu : u ∈ BoundedAlgebraicSlice.valid P) :
+    AlgebraicSliceCellCover.solutionSet P (FormulaAtomPolynomials.family read F) u
+      (AlgebraicSliceBooleanCells.truth (FormulaBooleanCircuitSource.ofReader read) (pairFst u)) =
+        FormulaAlgebraicSlice.solutionSet P F read u :=
+  FormulaAlgebraicSlice.solutionSet_eq P F read u hu
+
+-- An empty formula-defined slice is preconnected; its base must still be valid.
+example (P : BoundedFullWriter.Readers) (F : BivariateQueryProductBits.Family) (u : List Bool) :
+    u ∈ FormulaAlgebraicSlice.connectedLanguage P F (fun _ => Formula.falsum.encode) ↔
+      u ∈ BoundedAlgebraicSlice.valid P := by
+  simp [FormulaAlgebraicSlice.connectedLanguage, FormulaAlgebraicSlice.solutionSet,
+    FormulaView.formula_encode, Formula.Holds, isPreconnected_empty]
+
+-- Both native connectivity tests take only the original coordinate access.
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) {F : BivariateQueryProductBits.Family}
+    (A : BivariateQueryProductBits.Access F) (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c)
+    (read : List Bool → List Bool) (hr : read ∈ FP) :
+    FormulaAlgebraicSlice.connectedLanguage P F read ∈ PSPACE ∧
+      AlgebraicSliceBooleanReachability.language P (FormulaAtomPolynomials.family read F)
+        (FormulaBooleanCircuitSource.ofReader read) ∈ PSPACE :=
+  ⟨FormulaAlgebraicSlice.connected_mem_PSPACE h A ha read hr,
+    FormulaAlgebraicSlice.reachable_mem_PSPACE h A ha read hr⟩
+
+end
+end FormulaAtomPolynomialTests

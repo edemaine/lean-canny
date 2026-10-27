@@ -89,6 +89,7 @@ import LeanCanny.Encoding.BoundedAlgebraicFiberRecordGram
 import LeanCanny.Encoding.BoundedAlgebraicFiberBasisGram
 import LeanCanny.Connectivity.AlgebraicSliceSystemReachability
 import LeanCanny.ETR.FormulaBooleanCircuitBridge
+import LeanCanny.Connectivity.FormulaAlgebraicSlice
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -486,8 +487,13 @@ labeled cells, with base and endpoint validation. Original formula syntax now
 has native indexed gate readers, using reverse bracket positions. Atomic terms
 and requested signs are preserved, and root-gate truth is proved equivalent to
 the original formula. Malformed inputs use the falsum view. Native formula
-extractors also support larger source records. Constructing the matching atom
-polynomial families for the full recursive queries remains required.
+extractors also support larger source records. Matching atom polynomial
+families now evaluate the preserved terms in indexed bivariate coordinates,
+with derived degree and mass bounds and native coefficient readers.
+Specialization identifies their Boolean-selected cells with the original
+formula's actual solution set. Whole-set connectivity in those coordinates
+has a native PSPACE algorithm. Constructing the full recursive coordinate
+families and query records remains required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

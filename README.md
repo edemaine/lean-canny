@@ -399,7 +399,11 @@ The checked ingredients are:
   subsets. Original formula syntax now has native indexed gate readers and
   proved truth preservation, including nested negations and strict inequalities.
   Malformed words normalize to falsum; FP formula extractors support larger
-  source records. Matching atom polynomial families for recursive queries
+  source records. Matching atom polynomial families now substitute indexed
+  bivariate coordinates into the preserved arithmetic terms, with derived
+  degree and mass bounds and native coefficient readers. Their specialized
+  signs evaluate the original formula, giving native PSPACE connectivity in
+  those coordinates. Full recursive coordinate families and query records
   remain required.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
