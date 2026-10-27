@@ -3477,3 +3477,47 @@ example (P : BoundedFullWriter.Readers) (f : List Bool → List Bool) (c : List 
   BoundedProjectionOrderedRoot.root_value_comp P f c r s hrs
 
 end AlgebraicSliceTests
+
+namespace AlgebraicPrincipalTests
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open scoped Classical
+
+-- The parameter-polynomial determinant reader needs no symbolic degree equality.
+example (F : PolynomialPrincipalMinorBits.Family) (A : PolynomialPrincipalMinorBits.Access F) :
+    SpaceFunction (PolynomialPrincipalMinorBits.modular F).value := PolynomialPrincipalMinorBits.evaluator A
+
+example (F : PolynomialPrincipalCoefficientBits.Family) (A : PolynomialPrincipalCoefficientBits.Access F)
+    (z : List Bool) :
+    PolynomialPrincipalCoefficientBits.residueValue A z = MatrixPower.residueBits
+      (((PolynomialPrincipalCoefficientBits.polynomial F (PolynomialPrincipalMinorBits.origin z)).coeff
+        (PolynomialPrincipalCoefficientBits.parameter z) : ℤ) : ZMod (PolynomialPrincipalMinorBits.modulus z)) :=
+  PolynomialPrincipalCoefficientBits.residueValue_eq A z
+
+-- Specialization commutes with principal coefficients at retained formal bounds.
+example (p q : (ℤ[X])[X]) (m n j : ℕ) (t : ℝ) :
+    PrincipalSubresultant.signedPsc (p.map (ParameterTarski.evalHom t)) (q.map (ParameterTarski.evalHom t)) m n j =
+      (ParameterTarski.evalHom t) (PrincipalSubresultant.signedPsc p q m n j) :=
+  PrincipalSubresultant.signedPsc_map_map _ _ _ _ _ _
+
+-- Empty minors and the retained coefficient above the principal range are included.
+example (p q : (ℤ[X])[X]) : PrincipalSubresultant.signedPsc p q 0 0 0 = 1 := by simp
+
+example (p q : (ℤ[X])[X]) : PrincipalSubresultant.signedPsc p q 0 2 2 = q.coeff 2 := by simp
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime) (F G : BoundedAlgebraicSlice.Family)
+    (A : F.Access) (B : G.Access) (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedAlgebraicSlice.Principal.value P F G) := BoundedAlgebraicSlice.Principal.evaluator h A B ha
+
+example (P : BoundedFullWriter.Readers) (F G : BoundedAlgebraicSlice.Family) (u : List Bool)
+    (hu : u ∈ BoundedAlgebraicSlice.valid P) (j : ℕ) :
+    BoundedAlgebraicSlice.Principal.value P F G (pair u (BinaryNatCode.encode j)) = InfinitesimalSign.encode
+      (SignType.sign (PrincipalSubresultant.signedPsc
+        (BoundedAlgebraicSlice.specialized P F u) (BoundedAlgebraicSlice.specialized P G u)
+        (BoundedAlgebraicSlice.degree P F u) (BoundedAlgebraicSlice.degree P G u) j)) :=
+  BoundedAlgebraicSlice.Principal.value_packet P F G u hu j
+
+example (P : BoundedFullWriter.Readers) (F G : BoundedAlgebraicSlice.Family) (q : List Bool)
+    (hq : pairFst q ∉ BoundedAlgebraicSlice.valid P) : BoundedAlgebraicSlice.Principal.value P F G q = [] :=
+  BoundedAlgebraicSlice.Principal.value_invalid P F G q hq
+
+end AlgebraicPrincipalTests

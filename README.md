@@ -322,8 +322,9 @@ The checked ingredients are:
   After specialization at an ordered algebraic root, implicit bivariate
   polynomials have native coefficient-sign, actual-degree, zero-polynomial,
   and leading-sign queries, including degree drops. They reuse the original
-  modular coefficient readers. Algebraic-slice principal and Tarski queries
-  remain open.
+  modular coefficient readers. Signed principal-subresultant queries compute
+  the actual slice degrees internally and evaluate parameter-polynomial
+  determinants at the same root. Algebraic-slice Tarski queries remain open.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between

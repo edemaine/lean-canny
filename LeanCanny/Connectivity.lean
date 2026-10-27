@@ -78,6 +78,7 @@ import LeanCanny.Encoding.BoundedProjectionSignatureRead
 import LeanCanny.Encoding.BoundedProjectionOrderedRoot
 import LeanCanny.Encoding.BoundedProjectionTestSign
 import LeanCanny.Encoding.BoundedAlgebraicSliceDegree
+import LeanCanny.Encoding.BoundedAlgebraicSlicePrincipal
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -395,8 +396,10 @@ internally; rational-cut comparisons are a concrete instance.
 Implicit bivariate polynomials also have native coefficient signs, actual
 degrees, zero-polynomial flags, and leading signs after specialization at an
 ordered algebraic root. These queries permit degree drops and reuse the
-original bivariate modular readers. Algebraic-slice principal and Tarski
-queries remain required.
+original bivariate modular readers. Signed principal-subresultant queries
+compute both actual degrees internally and specialize parameter-polynomial
+determinants at the same ordered root. Algebraic-slice Tarski queries remain
+required.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
