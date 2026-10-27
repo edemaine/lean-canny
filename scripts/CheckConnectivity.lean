@@ -3216,3 +3216,88 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) :
   BoundedProjectionSignatureRead.signature_range P c
 
 end ProjectionSignatureReadTests
+
+namespace ProjectionRootOrderTests
+open LeanCanny.Algebra LeanCanny.Encoding
+
+def leftSigns (k : ℕ) : SignType := if k = 1 then .neg else if k = 2 then .pos else .zero
+def rightSigns (k : ℕ) : SignType := if k = 1 then .pos else if k = 2 then .pos else .zero
+#guard ThomEncoding.orderScan leftSigns rightSigns 3
+#guard !ThomEncoding.orderScan rightSigns leftSigns 3
+#guard !ThomEncoding.orderScan leftSigns leftSigns 3
+#guard !ThomEncoding.orderScan leftSigns rightSigns 0
+
+-- A negative common next derivative reverses the local sign order.
+#guard ThomEncoding.direction .pos .neg .neg
+#guard !ThomEncoding.direction .pos .neg .pos
+#guard !ThomEncoding.direction .neg .pos .zero
+#guard ThomOrderBits.orient (pair (pair [false, true] [true]) [true])
+#guard !ThomOrderBits.orient (pair (pair [false, true] [true]) [])
+
+def delayedLeft (k : ℕ) : SignType := if k = 100 then .neg else .pos
+def delayedRight (k : ℕ) : SignType := if k = 0 then .neg else .pos
+-- The later difference replaces the earlier comparison; truncating early is wrong.
+#guard !ThomEncoding.orderScan delayedLeft delayedRight 100
+#guard ThomEncoding.orderScan delayedLeft delayedRight 102
+
+noncomputable def repeatedPolynomial : Polynomial ℝ := (Polynomial.X ^ 2 - 1) ^ 2
+private theorem repeatedPolynomial_ne_zero : repeatedPolynomial ≠ 0 := by
+  intro h
+  have H := congrArg (fun p : Polynomial ℝ => p.eval 0) h
+  norm_num [repeatedPolynomial] at H
+
+-- Repeated roots require later derivatives but obey the same comparison theorem.
+example : ThomEncoding.orderScan (ThomEncoding.sign repeatedPolynomial (-1)) (ThomEncoding.sign repeatedPolynomial 1)
+    (repeatedPolynomial.natDegree + 1) = true := by
+  rw [ThomEncoding.orderScan_roots repeatedPolynomial repeatedPolynomial_ne_zero _ le_rfl _ _
+    (by norm_num [Polynomial.IsRoot, repeatedPolynomial]) (by norm_num [Polynomial.IsRoot, repeatedPolynomial])]
+  norm_num
+
+example (p : Polynomial ℝ) (hp : p ≠ 0) (D : ℕ) (hD : p.natDegree ≤ D)
+    (a b : ℝ) (ha : p.IsRoot a) (hb : p.IsRoot b) :
+    ThomEncoding.orderScan (ThomEncoding.sign p a) (ThomEncoding.sign p b) (D + 1) = decide (a < b) :=
+  ThomEncoding.orderScan_roots p hp D hD a b ha hb
+
+-- The native scan remains one bit on arbitrary or malformed child replies.
+example (f : List Bool → List Bool) (q : List Bool) (n : ℕ) :
+    (BoundedFold.fold (ThomOrderBits.update f) (fun _ => [false]) q n).length = 1 :=
+  ThomOrderBits.fold_length f q n
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedProjectionRootOrder.value P) := BoundedProjectionRootOrder.evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (a b : Fin (BoundedProjectionRootCount.count P c)) :
+    BoundedProjectionRootOrder.value P (pair c (pair (BinaryNatCode.encode a.val) (BinaryNatCode.encode b.val))) =
+      [decide ((BoundedProjectionHashEnumeration.root P c a).val < (BoundedProjectionHashEnumeration.root P c b).val)] :=
+  BoundedProjectionRootOrder.value_packet P c a b
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun u => BinaryNatCode.encode (BoundedProjectionRootRank.value P u)) :=
+  BoundedProjectionRootRank.evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (a : Fin (BoundedProjectionRootCount.count P c)) :
+    BoundedProjectionRootRank.value P (pair c (BinaryNatCode.encode a.val)) = BoundedProjectionRootOrder.rank P c a :=
+  BoundedProjectionRootRank.value_packet P c a
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (fun u => BinaryNatCode.encode (BoundedProjectionOrderedRoot.index P u)) :=
+  BoundedProjectionOrderedRoot.evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    StrictMono (fun r => (BoundedProjectionOrderedRoot.root P c r).val) :=
+  BoundedProjectionOrderedRoot.root_strictMono P c
+
+example {P : BoundedFullWriter.Readers} (h : P.PolyTime)
+    (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedProjectionOrderedRoot.sign P) := BoundedProjectionOrderedRoot.sign_evaluator h ha
+
+example (P : BoundedFullWriter.Readers) (c : List Bool) (r : Fin (BoundedProjectionRootCount.count P c)) (k : ℕ) :
+    BoundedProjectionOrderedRoot.sign P (pair (pair c (BinaryNatCode.encode r.val)) (BinaryNatCode.encode k)) =
+      InfinitesimalSign.encode (SignType.sign
+        (((BoundedProjectionThom.polynomial P c k).map (Int.castRingHom ℝ)).eval (BoundedProjectionOrderedRoot.root P c r).val)) :=
+  BoundedProjectionOrderedRoot.sign_packet P c r k
+
+end ProjectionRootOrderTests

@@ -311,6 +311,10 @@ The checked ingredients are:
   hash. Short root ordinals enumerate every distinct realizable signature;
   a native polynomial-space reader returns any derivative sign without
   storing the complete signature. Orders above the degree bound return zero.
+  A native one-bit Thom-sign scan compares labels in real order. Streamed
+  comparison counts compute their geometric ranks, and bounded search inverts
+  those ranks. Derivative signs can now be read at any real-order root index,
+  consistently retaining extraneous projection roots.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between

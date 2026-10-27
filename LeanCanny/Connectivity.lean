@@ -75,6 +75,7 @@ import LeanCanny.Encoding.BoundedProjectionBasisPencil
 import LeanCanny.Encoding.BoundedProjectionHashChoice
 import LeanCanny.Encoding.BoundedProjectionSignatureProbe
 import LeanCanny.Encoding.BoundedProjectionSignatureRead
+import LeanCanny.Encoding.BoundedProjectionOrderedRoot
 import LeanCanny.Encoding.BoundedProjectionFeatureMoments
 
 /-! # Connectivity development
@@ -381,6 +382,10 @@ sign extraction recover that sign at an enumerated hash, with a proved nonzero
 denominator. Short root ordinals enumerate all distinct realizable signatures;
 a native polynomial-space reader returns any indexed derivative sign without
 storing the complete signature. Orders above the degree bound return zero.
+An ascending one-bit Thom-sign scan compares two labels in real order. Native
+comparison counts compute their geometric root ranks, and bounded search
+inverts those ranks. Derivative signs can therefore be read directly at each
+real-order root index, consistently retaining extraneous projection roots.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular
