@@ -379,8 +379,10 @@ The checked ingredients are:
   system in native space under generated real formula constraints. Scanning
   every kernel chart detects singular points even in positive-dimensional
   critical sets, while keeping formula witnesses independent of auxiliary
-  wires. Actual-parent constraint generation and a bounded successful
-  direction search remain open.
+  wires. Generated actual-parent constraints include the selected parent
+  circuit, real-input guards, and zero-extension links. The resulting native
+  validator accepts exactly when every critical root over every actual
+  parent is regular. A bounded successful direction search remains open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

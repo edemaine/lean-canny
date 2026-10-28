@@ -1285,12 +1285,18 @@ singular critical locus of the frozen slice, with no finiteness assumption.
 `ComplexBlockKernel` constructs the native PSPACE validator for original-term
 blocks and scans every chart. `ComplexBlockKernelGeometry` identifies its
 specialized polynomial with the original frozen-coordinate term polynomial
-used by child-sample geometry. The validator accepts generated real formula
-constraints; constructing the constraint that selects the intended actual
-parent tuples, and a bounded successful direction search, remain open.
-The parent equations already have native serialization through
-`BoundedCriticalSampleQuery.selected_encode_evaluator`; their independent
-logical witnesses still need an address map compatible with the block inputs.
+used by child-sample geometry. `ComplexFrozenParentConstraint` now constructs
+real parent-circuit guards in a later witness region, with links to the frozen
+inputs and zero extension beyond the parent tuple. `BoundedCriticalSampleBlockConstraint`
+serializes the selected actual-parent circuit in native space and proves both
+soundness and completeness: any satisfying assignment has an actual parent,
+and any actual parent and arbitrary free tuple extend to witnesses.
+`BoundedCriticalSampleBlockRegularity` composes this generated predicate with
+the native kernel validator. Its acceptance is exactly regularity of every
+critical root over every actual parent of the original term. Only referenced
+term variables need frozen-input links; no coordinate table, parent labels,
+or finite-critical-set premise is supplied. A bounded successful direction
+search and the recursive cover remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

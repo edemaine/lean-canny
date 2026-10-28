@@ -23,18 +23,19 @@ open scoped Classical
 set_option backward.isDefEq.respectTransparency false
 variable {N : ℕ}
 
-theorem specialize_term (t : Term) (parent : Fin N → ℝ) (offset dim : ℕ) :
-    FreeCoordinateSpecialization.specialize (n := dim) (Int.castRingHom ℝ) (Formula.extend parent)
+theorem specialize_term_congr (t : Term) (frozen : ℕ → ℝ) (parent : Fin N → ℝ) (offset dim : ℕ)
+    (hf : ∀ i < t.arity, frozen i = Formula.extend parent i) :
+    FreeCoordinateSpecialization.specialize (n := dim) (Int.castRingHom ℝ) frozen
       (CircuitBlock.substitution offset dim t.toPolynomial) =
         BoundedCriticalSampleBlockScaling.original t parent offset dim := by
   unfold BoundedCriticalSampleBlockScaling.original
-  let ψ := (FreeCoordinateSpecialization.specialize (n := dim) (Int.castRingHom ℝ) (Formula.extend parent)).comp
+  let ψ := (FreeCoordinateSpecialization.specialize (n := dim) (Int.castRingHom ℝ) frozen).comp
     (CircuitBlock.substitution offset dim)
   change ψ t.toPolynomial = _
   rw [← Source.eval_variables, Term.eval_hom]
   apply Term.eval_congr
-  intro i _
-  change FreeCoordinateSpecialization.specialize (n := dim) (Int.castRingHom ℝ) (Formula.extend parent)
+  intro i hiScope
+  change FreeCoordinateSpecialization.specialize (n := dim) (Int.castRingHom ℝ) frozen
     (rename (CircuitBlock.input offset dim) (X i)) = _
   rw [rename_X]
   by_cases hi : BoundedCriticalSampleBlockSource.InBlock offset dim i
@@ -45,7 +46,18 @@ theorem specialize_term (t : Term) (parent : Fin N → ℝ) (offset dim : ℕ) :
   · have hh : ¬dim + i < dim := by omega
     have hp : ¬(offset ≤ i ∧ i < offset + dim) := hi
     rw [CircuitBlock.input_frozen _ _ _ hp, FreeCoordinateSpecialization.specialize, eval₂Hom_X',
-      dite_eq_right hh, Nat.add_sub_cancel_left, dite_eq_right hi]
+      dite_eq_right hh, Nat.add_sub_cancel_left, hf i hiScope, dite_eq_right hi]
+
+theorem specialize_term (t : Term) (parent : Fin N → ℝ) (offset dim : ℕ) :
+    FreeCoordinateSpecialization.specialize (n := dim) (Int.castRingHom ℝ) (Formula.extend parent)
+      (CircuitBlock.substitution offset dim t.toPolynomial) =
+        BoundedCriticalSampleBlockScaling.original t parent offset dim :=
+  specialize_term_congr t (Formula.extend parent) parent offset dim (fun _ _ => rfl)
+
+theorem slice_eq_original_bounded (F : Inputs) (c : List Bool) (x : ℕ → ℝ) (parent : Fin N → ℝ)
+    (hparent : ∀ i < (term F c).arity, x (dim F c + i) = Formula.extend parent i) :
+    slice F c x = BoundedCriticalSampleBlockScaling.original (term F c) parent (F.offset c) (dim F c) :=
+  specialize_term_congr (term F c) (fun i => x (dim F c + i)) parent (F.offset c) (dim F c) hparent
 
 theorem slice_eq_original (F : Inputs) (c : List Bool) (x : ℕ → ℝ) (parent : Fin N → ℝ)
     (hparent : ∀ i, x (dim F c + i) = Formula.extend parent i) :

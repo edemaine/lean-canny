@@ -123,6 +123,7 @@ import LeanCanny.Connectivity.CriticalSampleChildPairs
 import LeanCanny.Encoding.BoundedCriticalSampleChildTermSign
 import LeanCanny.Connectivity.CriticalSampleOriginalSlice
 import LeanCanny.ETR.ComplexBlockKernelGeometry
+import LeanCanny.Encoding.BoundedCriticalSampleBlockRegularity
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -520,8 +521,12 @@ normalized first-coordinate critical system under generated real formula
 constraints. Every kernel chart is checked; neither finiteness nor a
 singularity-testing oracle is assumed. Formula witnesses remain independent
 of every circuit auxiliary. Its specialization is exactly the original
-frozen-coordinate polynomial. Actual-parent constraint generation and a
-bounded successful direction search remain open.
+frozen-coordinate polynomial. Generated parent constraints now include the
+actual selected sample circuit, real-input guards, and zero-extension links.
+Every actual parent and arbitrary free tuple admit witnesses. Acceptance
+of the resulting native validator is exactly critical regularity of every
+actual-parent slice, without supplied labels or a finiteness promise.
+A bounded successful direction search remains open.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

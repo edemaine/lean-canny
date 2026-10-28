@@ -8396,3 +8396,77 @@ example (x : ℕ → ℝ) : ¬ CriticalKernel.At ((X 0 ^ 2 + 1) ^ 2) 1 (fun _ =>
 
 example {F : BlockKernel.Inputs} (h : F.PolyTime) : BlockKernel.language F ∈ PSPACE := BlockKernel.mem_PSPACE h
 end NativeBlockKernelTests
+
+namespace ActualParentBlockTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation LeanCanny.ETR MvPolynomial
+open LeanCanny.ETR.ComplexCircuit
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+#guard FrozenParentConstraint.bits 1 1 1 2 3 (encode [.constant 0 7]) =
+  (FrozenParentConstraint.formula 1 1 1 2 3 [.constant 0 7]).encode
+#guard FrozenParentConstraint.bits 0 0 0 1 1 (encode []) =
+  (FrozenParentConstraint.formula 0 0 0 1 1 []).encode
+
+-- At the exact witness-region boundary, an arbitrary free value coexists
+-- with the parent coordinate and a zero-extended unused source coordinate.
+example (y : ℝ) : ∃ x : ℕ → ℝ,
+    (FrozenParentConstraint.formula 1 1 1 2 3 [.constant 0 7]).Holds x ∧
+      x 0 = y ∧ x 1 = 7 ∧ x 2 = 0 := by
+  let parent : Fin 1 → ℝ := fun _ => 7
+  let child : Fin 1 → ℝ := fun _ => y
+  let env : ℕ → ℂ := fun _ => 7
+  refine ⟨FrozenParentConstraint.assignment 3 child parent env, ?_, ?_, ?_, ?_⟩
+  · apply FrozenParentConstraint.assignment_holds 3 1 2 child parent env _ (by decide)
+    · intro g hg
+      obtain rfl := List.mem_singleton.mp hg
+      rfl
+    · intro i hi
+      norm_num [env]
+    · intro i
+      norm_num [env, parent]
+  · exact FrozenParentConstraint.assignment_free 3 child parent env 0
+  · simpa [Formula.extend, parent] using
+      FrozenParentConstraint.assignment_frozen 3 2 child parent env (by decide) 0 (by decide)
+  · simpa [Formula.extend] using
+      FrozenParentConstraint.assignment_frozen 3 2 child parent env (by decide) 1 (by decide)
+
+private def zeroBlock : BlockKernel.Inputs :=
+  ⟨fun _ => (Term.const 0).toData.toBits, fun _ => 0, fun _ => 0, fun _ _ => 0, fun _ => .falsum⟩
+
+private theorem zeroBlock_polyTime : zeroBlock.PolyTime := by
+  refine ⟨constFn_mem_FP _, BinaryFn.const 0, UnaryFn.const 0, ?_, ?_⟩
+  · simpa only [zeroBlock, neg_zero] using constFn_mem_FP (Term.const 0).toData.toBits
+  · change (fun _ : List Bool => Formula.falsum.encode) ∈ FP
+    exact constFn_mem_FP _
+
+private theorem zero_rows (P : BoundedFullWriter.Readers) (c : List Bool)
+    (p : BoundedFullCriticalSamples.Samples P c) :
+    BoundedCriticalSampleBlockRegularity.originalRows P zeroBlock c p = fun _ : Fin 1 => 0 := by
+  funext i
+  have hi : i = 0 := Fin.eq_zero i
+  subst i
+  simp [BoundedCriticalSampleBlockRegularity.originalRows, zeroBlock, BlockKernel.term,
+    TermView.term_toBits, BlockKernel.dim, BoundedCriticalSampleBlockScaling.original, Term.eval,
+    CriticalKernel.finiteRows, Fin.cons_zero, Int.cast_zero]
+
+-- The old condition is falsum, but is replaced by the generated parent
+-- predicate. A real parent therefore cannot hide a singular zero source.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (p : BoundedFullCriticalSamples.Samples P c) :
+    ¬ BoundedCriticalSampleBlockRegularity.Good P zeroBlock c := by
+  intro h
+  have H := h p 0 (by
+    intro i
+    rw [zero_rows]
+    exact map_zero (MvPolynomial.eval 0))
+  simp only [zero_rows, map_zero] at H
+  change (fderiv ℝ (fun _ : Fin 1 → ℝ => (0 : Fin 1 → ℝ)) 0).IsInvertible at H
+  rw [fderiv_const_apply] at H
+  have he : (0 : Fin 1 → ℝ) = 1 := H.injective (by simp)
+  have hv := congrFun he 0
+  norm_num at hv
+
+example {P : BoundedFullWriter.Readers} (hP : P.PolyTime)
+    (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    BoundedCriticalSampleBlockRegularity.language P zeroBlock ∈ PSPACE :=
+  BoundedCriticalSampleBlockRegularity.mem_PSPACE hP zeroBlock_polyTime ht
+end ActualParentBlockTests
