@@ -8243,3 +8243,65 @@ example (F : Inputs) (u : List Bool)
   exact h x x
 
 end ChildPairScanTests
+
+namespace ChildOriginalTermTests
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR
+open BoundedCriticalSampleChildSource (Inputs)
+open BoundedCriticalSampleChildActualSamples
+open BoundedCriticalSampleChildTermSign
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] BoundedCriticalSampleChildQueries.roots
+  BoundedCriticalSampleChildCoordinates.parameter BoundedCriticalSampleLabels.parameter
+  BoundedCriticalSampleHashChoice.descriptor BoundedCriticalSampleChildHashChoice.descriptor
+
+-- A block replaces exactly its own coordinates, including its first and
+-- last coordinate. The immediate neighbors retain the parent assignment.
+private def oldPoint : Fin 5 → ℝ := ![2, 3, 5, 7, 11]
+private def newPoint : Fin 2 → ℝ := ![-1, -2]
+example : BoundedCriticalSampleBlockSource.assignment oldPoint 1 2 newPoint 0 = 2 := by
+  norm_num [BoundedCriticalSampleBlockSource.assignment, BoundedCriticalSampleBlockSource.InBlock,
+    Formula.extend, oldPoint]
+example : BoundedCriticalSampleBlockSource.assignment oldPoint 1 2 newPoint 1 = -1 := by
+  norm_num [BoundedCriticalSampleBlockSource.assignment, BoundedCriticalSampleBlockSource.InBlock, newPoint]
+example : BoundedCriticalSampleBlockSource.assignment oldPoint 1 2 newPoint 2 = -2 := by
+  norm_num [BoundedCriticalSampleBlockSource.assignment, BoundedCriticalSampleBlockSource.InBlock, newPoint]
+example : BoundedCriticalSampleBlockSource.assignment oldPoint 1 2 newPoint 3 = 7 := by
+  norm_num [BoundedCriticalSampleBlockSource.assignment, BoundedCriticalSampleBlockSource.InBlock,
+    Formula.extend, oldPoint]
+example : BoundedCriticalSampleBlockSource.assignment oldPoint 1 2 newPoint 100 = 0 := by
+  norm_num [BoundedCriticalSampleBlockSource.assignment, BoundedCriticalSampleBlockSource.InBlock, Formula.extend]
+
+-- The native routine constructs both substitution readers and bounds from
+-- the original source; it needs no supplied term signs at child roots.
+example {F : Inputs} (h : F.PolyTime) (read : List Bool → List Bool) (hr : read ∈ FP) (s : SignType) :
+    SpaceFunction (PrimitivePairBits.coefficient (BoundedCriticalSampleChildTerm.polynomial F read)) ∧
+      BoundedCriticalSampleChildTermSign.language F read s ∈ PSPACE :=
+  ⟨BoundedCriticalSampleChildTerm.evaluator h read hr, mem_PSPACE h read hr s⟩
+
+-- The defining source term vanishes on every actual child. Constant tests
+-- retain all three signs through both denominator clearings.
+example (F : Inputs) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples F.parent (pairFst u)) (x : Samples F u p) :
+    value F F.term (pair u (pair (BoundedCriticalSampleHashChoice.descriptor F.parent (pairFst u) p)
+      (word F u p x))) = [] := source_value F u p x
+
+example (F : Inputs) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples F.parent (pairFst u)) (x : Samples F u p) :
+    value F (fun _ => (Term.const (-3)).toData.toBits)
+      (pair u (pair (BoundedCriticalSampleHashChoice.descriptor F.parent (pairFst u) p)
+        (word F u p x))) = InfinitesimalSign.encode .neg := by
+  rw [constant_value]
+  norm_num
+
+-- A malformed term uses the total zero fallback, but cannot make an invalid
+-- parent/child packet pass, even when the requested sign is zero.
+example : TermView.term [] = .const 0 := by
+  have h : Grammar.recognizeTerm [] = false := by decide
+  simp only [TermView.term, h, Bool.false_eq_true, dite_false]
+
+example (F : Inputs) (q : List Bool)
+    (hq : q ∉ BoundedCriticalSampleChildParentSelection.language F) :
+    q ∉ BoundedCriticalSampleChildTermSign.language F (fun _ => []) 0 := invalid F _ 0 q hq
+
+end ChildOriginalTermTests

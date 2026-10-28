@@ -366,6 +366,11 @@ The checked ingredients are:
   Native pair scans validate the parent and both children; a supplied path
   procedure on the actual slice then decides whole-slice connectivity.
   Native good-direction selection and the recursive cover remain open.
+  Native arithmetic-term sign queries now evaluate the original tuple with
+  the selected child inserted in its free coordinate block. Both rounds of
+  even denominator clearing have source-derived degree and mass bounds and
+  native coefficient readers. The queries validate both labels and their
+  parent relation, retaining total semantics on arbitrary source records.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

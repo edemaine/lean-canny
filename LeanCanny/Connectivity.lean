@@ -120,6 +120,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleChildDescriptors
 import LeanCanny.Encoding.BoundedCriticalSampleChildActualSamples
 import LeanCanny.Connectivity.CriticalSampleChildCoverage
 import LeanCanny.Connectivity.CriticalSampleChildPairs
+import LeanCanny.Encoding.BoundedCriticalSampleChildTermSign
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -502,6 +503,11 @@ selection and the recursive cover remain open. The selected children now
 surject onto slice components and bound their number. Native pair scans
 charge descriptor enumeration, actual-parent selection, and a supplied
 slice-path procedure, reducing whole-slice connectivity to that procedure.
+Original arithmetic terms now have native sign queries at these selected
+children. Two even denominator clearings retain the parent coordinates
+outside the free block and insert exactly the child point inside it. Both
+labels and their parent relation are validated; arbitrary source records,
+malformed term fallback, and unused coordinates retain total semantics.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

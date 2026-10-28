@@ -1253,6 +1253,16 @@ descriptor construction remain open.
 Recursive sample-base construction and the complete
 higher-dimensional cover remain open.
 
+`BoundedCriticalSampleBlockEvaluation` extends exact block-coordinate evaluation
+to arbitrary source records, including records carrying query metadata.
+`BoundedCriticalSampleChildTerm` constructs native coefficient readers and
+binary degree and mass bounds for original terms pulled back to child parameters.
+`BoundedCriticalSampleChildTermSign` then validates both descriptors and their
+actual-parent relation before deciding the original term's sign on the tuple
+with the child inserted in its free block. Both denominator clearings preserve
+signs. The defining source vanishes on every selected child; coordinates outside
+the block retain their original values, including the zero extension.
+
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
 Neither requested full connectivity PSPACE theorem has been established.
