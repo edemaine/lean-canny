@@ -402,6 +402,11 @@ The checked ingredients are:
   success; the unfrozen initial source derives it. Native selected-record
   readers and kernel-query writers preserve the same source and parent
   family. Child descriptors for the shared source remain required.
+  Shared-source sample blocks now have native multivariate coefficient
+  readers with derived degree and mass budgets. Fixed even denominator
+  clearing preserves the exact source block up to a positive constant at
+  every actual parent, retaining singular critical roots and regularity.
+  The child critical/joint descriptor interface remains required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

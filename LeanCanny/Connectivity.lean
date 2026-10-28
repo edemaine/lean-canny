@@ -128,6 +128,7 @@ import LeanCanny.Encoding.FermatCommonCriticalDirection
 import LeanCanny.Connectivity.CriticalSampleSelectedDirection
 import LeanCanny.Encoding.BoundedFullBlockRegularity
 import LeanCanny.Encoding.BoundedFullBlockDirectionChoice
+import LeanCanny.Encoding.BoundedFullSampleBlockScaling
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -553,6 +554,14 @@ slice regularity for success; the unfrozen initial source derives that
 regularity. Native readers and selected kernel-query writers retain the same
 source, parent family, and chosen direction. Shared-source child descriptors
 and the recursive cover remain required.
+Full-source block coefficients now use dense monomial ranks and the existing
+modular source reader, followed by fixed even denominator clearing. Native
+coordinate codes have independent source-derived widths. Exact multivariate
+coefficient recovery and degree/mass budgets are proved. At every actual
+parent, specialization is a positive constant times the same shared-source
+block used by the validator. Its zero set, critical roots, and both regularity
+predicates are preserved, including singular roots. Child critical and joint
+descriptor construction and the complete recursive cover remain required.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

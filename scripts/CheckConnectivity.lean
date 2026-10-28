@@ -8742,3 +8742,68 @@ example (S : BoundedFullWriter.Readers) (c : List Bool) (p : BoundedFullCritical
     norm_num at hv
 
 end FullSharedDirectionTests
+
+namespace FullSampleBlockTests
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR LeanCanny.ETR.ComplexCircuit
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private def parent : BoundedFullWriter.Readers :=
+  ⟨fun _ => (Term.const 0).toData.toBits, fun _ => 0, fun _ => 0⟩
+
+-- The independent width retains the parameter in the lowest field. The
+-- second free variable has exponent 2^(2*3), with no parent coordinate call.
+example : BoundedCriticalSampleBlockCodes.coefficient parent (fun _ => 3) (fun _ => 5) (fun _ => 2) true
+    (pair (pair [true, false] (pair (BinaryNatCode.encode 6) (BinaryNatCode.encode 64))) (BinaryNatCode.encode 6)) = [true] := by
+  have H := BoundedCriticalSampleBlockCodes.packet parent (fun _ => 3) (fun _ => 5) (fun _ => 2)
+    true [true, false] 6 64 7 (by decide)
+  norm_num [BoundedCriticalSampleBlockCodes.encoded, BoundedCriticalSampleBlockSource.InBlock,
+    BoundedCriticalSampleBlockCodes.power, MatrixPower.residueBits] at H
+  exact H
+example : BoundedCriticalSampleBlockCodes.coefficient parent (fun _ => 3) (fun _ => 5) (fun _ => 2) true
+    (pair (pair [true, false] (pair (BinaryNatCode.encode 6) (BinaryNatCode.encode 8))) (BinaryNatCode.encode 6)) = [] := by
+  have H := BoundedCriticalSampleBlockCodes.packet parent (fun _ => 3) (fun _ => 5) (fun _ => 2)
+    true [true, false] 6 8 7 (by decide)
+  norm_num [BoundedCriticalSampleBlockCodes.encoded, BoundedCriticalSampleBlockSource.InBlock,
+    BoundedCriticalSampleBlockCodes.power, MatrixPower.residueBits] at H
+  exact H
+example : BoundedCriticalSampleBlockCodes.coefficient parent (fun _ => 3) (fun _ => 5) (fun _ => 2) false
+    (pair (pair [true, false] (pair (BinaryNatCode.encode 5) (BinaryNatCode.encode 0))) (BinaryNatCode.encode 6)) = [true] := by
+  have H := BoundedCriticalSampleBlockCodes.packet parent (fun _ => 3) (fun _ => 5) (fun _ => 2)
+    false [true, false] 5 0 7 (by decide)
+  norm_num [BoundedCriticalSampleBlockCodes.encoded, BoundedCriticalSampleBlockSource.InBlock,
+    BoundedCriticalSampleBlockCodes.power, MatrixPower.residueBits] at H
+  exact H
+
+-- Modulus one must work even for the actual source's huge constants.
+example (F : BoundedFullSampleBlock.Inputs) (u : List Bool) (r : ℕ) :
+    BoundedFullSampleBlock.sourceCoefficient F (pair (pair u (BinaryNatCode.encode r)) []) = [] := by
+  have H := BoundedFullSampleBlock.sourceCoefficient_packet F u r 1 (by decide)
+  have he : BinaryNatCode.encode (1 - 1) = [] := rfl
+  rw [he] at H
+  convert H using 1
+  have hz : (((BoundedFullSampleBlock.family F).coefficient u r : ℤ) : ZMod 1) = 0 := Subsingleton.elim _ _
+  rw [hz]
+  rfl
+
+-- The complete unfrozen source is recovered exactly and its clearing scale
+-- is one; the selected parent does not alter its coordinates or constants.
+example (P S : BoundedFullWriter.Readers) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples P (pairFst u)) :
+    BoundedFullSampleBlockScaling.specialized (BoundedFullSampleBlockScaling.whole P S) u p =
+      (BoundedFullCriticalSamples.polynomial S u).map (Int.castRingHom ℝ) ∧
+    BoundedFullSampleBlockScaling.scale (BoundedFullSampleBlockScaling.whole P S) u p = 1 :=
+  ⟨BoundedFullSampleBlockScaling.specialized_whole P S u p, BoundedFullSampleBlockScaling.scale_whole P S u p⟩
+
+-- Direction computation may use space. The arithmetic block interface
+-- only needs the source, offset, and free-dimension controls.
+example {P : BoundedFullWriter.Readers} {F : BoundedFullBlockKernel.Inputs}
+    (hP : P.PolyTime) (hS : F.source.PolyTime) (ho : BinaryFn F.offset) (hf : UnaryFn F.free)
+    (htP : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c)
+    (htS : ∀ u, (TermView.term (F.source.source u)).arity ≤ F.source.dim u) :
+    Computation.SpaceFunction (BoundedFullSampleBlockPolynomial.coefficient (BoundedFullSampleBlockScaling.ofKernel P F)) ∧
+      BinaryFn (BoundedFullSampleBlockPolynomial.mass (BoundedFullSampleBlockScaling.ofKernel P F)) :=
+  ⟨BoundedFullSampleBlockPolynomial.evaluator (BoundedFullSampleBlockScaling.ofKernel_polyTime hP hS ho hf) htP htS,
+    BoundedFullSampleBlockPolynomial.mass_binary (BoundedFullSampleBlockScaling.ofKernel_polyTime hP hS ho hf)⟩
+
+end FullSampleBlockTests

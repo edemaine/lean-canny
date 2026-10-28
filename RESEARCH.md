@@ -1340,9 +1340,20 @@ supplied shape, degree, leading coefficient, or regularity certificate.
 Native record readers and selected kernel-query serializers preserve the same
 source, parent family, and direction. Child coefficient/descriptor writers
 still take term syntax; their interface to this shared source remains open.
-The existing `BoundedFullCoefficient` supplies modular coefficients of this
-exact constructed source for the remaining denominator-cleared block and
-child-descriptor interface at actual parent coordinates.
+`BoundedCriticalSampleBlockCodes` now supplies Kronecker coordinate codes with
+an independent native width. `BoundedFullSampleBlock` instantiates the existing
+implicit fixed-width rational-substitution engine with `BoundedFullCoefficient`
+for the exact constructed source. Source ranks remain binary, and fixed even
+denominator powers use source-derived controls. `BoundedFullSampleBlockPolynomial`
+recovers collected multivariate coefficients and derives degree, support,
+coefficient-mass, and native binary budget bounds. `BoundedFullSampleBlockScaling`
+identifies specialization at every actual parent with a positive constant
+times the original finite coordinate block. This block agrees with the
+shared-source kernel validator. Zero sets, hypersurface regularity, and the
+entire spatial critical system and its regularity are preserved, including
+singular roots. The unfrozen whole-source specialization has scale one.
+Child critical/joint eliminants and descriptor writers still need to be
+connected to this arithmetic interface.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.

@@ -32,6 +32,18 @@ noncomputable def finite {n : ℕ} (φ : R →+* S) (frozen : ℕ → S) (offset
     MvPolynomial (Fin n) R →+* MvPolynomial (Fin dim) S :=
   eval₂Hom (C.comp φ) (fun i => coordinate frozen offset dim i.val)
 
+theorem eval_finite {n : ℕ} (φ : R →+* S) (frozen : ℕ → S) (offset dim : ℕ)
+    (p : MvPolynomial (Fin n) R) (y : Fin dim → S) :
+    (finite φ frozen offset dim p).eval y = p.eval₂ φ
+      (fun i => if hi : offset ≤ i.val ∧ i.val < offset + dim then y ⟨i.val - offset, by omega⟩ else frozen i.val) := by
+  induction p using MvPolynomial.induction_on with
+  | C a => simp [finite]
+  | add p q hp hq => simp only [map_add, eval₂_add, hp, hq]
+  | mul_X p i hp =>
+    rw [map_mul, eval_mul, eval₂_mul, hp, eval₂_X]
+    congr 1
+    by_cases hi : offset ≤ i.val ∧ i.val < offset + dim <;> simp [finite, coordinate, hi]
+
 theorem specialize_rename {n : ℕ} (φ : R →+* S) (frozen : ℕ → S) (offset dim : ℕ)
     (p : MvPolynomial (Fin n) R) :
     specialize φ frozen offset dim (rename Fin.val p) = finite φ frozen offset dim p := by
