@@ -347,8 +347,13 @@ The checked ingredients are:
   The regular child parameter's derivative signs now separate its roots, and
   short sparse sign records span all root functions. Native Gram entries and
   prefix ranks select short records forming a basis, read one record at a
-  time. Child descriptor hashes, actual-parent selection, good directions,
-  and validated child descriptors remain required.
+  time. Native triple moments and modular weighted sums construct a Gram
+  pencil whose distinct-root count tests hash injectivity. Native search now
+  selects bounded separating hash parameters using the internally computed
+  regular-child count. The resulting signed integer descriptors are injective
+  and have a source-derived unary length bound. Descriptor validation,
+  enumeration, signs at child labels, actual-parent selection, good directions,
+  and the recursive cover remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

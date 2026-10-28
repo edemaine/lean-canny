@@ -7977,3 +7977,61 @@ example {F : Inputs} (h : F.PolyTime) :
     BoundedCriticalSampleChildRankBasis.record_evaluator h, BoundedCriticalSampleChildPrefixRank.evaluator h⟩
 
 end ChildRecordBasisTests
+
+namespace ChildHashChoiceTests
+open LeanCanny.Encoding LeanCanny.Algebra
+open BoundedCriticalSampleChildSource (Inputs)
+open BoundedCriticalSampleChildWeightedMoments
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] BoundedCriticalSampleChildRegularCount.count BoundedCriticalSampleChildThom.labelWidth
+  BoundedCriticalSampleChildQueries.roots
+
+-- Modulus one gives zero weights, including the zeroth power. A nontrivial
+-- modular power preserves the same context and the selected exponent.
+#guard weight (pair (pair (context [] 3 [] 5) (pair [] [])) (BinaryNatCode.encode 0)) = []
+#guard weight (pair (pair (context [] 3 (BinaryNatCode.encode 4) 2) (pair [] [])) (BinaryNatCode.encode 3)) =
+  BinaryNatCode.encode 3
+
+-- An empty summand field yields zero without requiring that it equal the
+-- actual child count. The evaluator is total on arbitrary context words.
+example (F : Inputs) (c m : List Bool) (t : ℕ) (i j : List Bool) :
+    entry F (pair (context c 0 m t) (pair i j)) = 0 := by
+  simp only [entry, context, count, pairFst_pair, pairSnd_pair, BinaryNatCode.encode,
+    Nat.fromBitsLE_bits, Finset.range_zero, Finset.sum_empty]
+
+-- A zero-dimensional pencil has determinant one and zero distinct roots.
+-- Its root counter handles this case before any injectivity interpretation.
+example (F : Inputs) (c m : List Bool) (t : ℕ) :
+    BoundedCriticalSampleChildPencilRootCount.count F (context c 0 m t) = 0 := by
+  have hd : BoundedCriticalSampleChildPencilEntries.dimension (context c 0 m t) = 0 :=
+    BoundedCriticalSampleChildPencilSource.dimension_context c 0 m t
+  let _ : IsEmpty (Fin (BoundedCriticalSampleChildPencilEntries.dimension (context c 0 m t))) :=
+    ⟨fun i => by have hi := i.isLt; omega⟩
+  simp [BoundedCriticalSampleChildPencilRootCount.count, Matrix.det_isEmpty]
+
+-- Preparation supplies the actual count internally. Native parameter
+-- selection therefore needs no supplied root count or injective hash.
+example (F : Inputs) (c : List Bool) :
+    Nat.fromBitsLE (pairSnd (BoundedCriticalSampleChildHashChoice.prepare F c)) =
+      BoundedCriticalSampleChildRegularCount.count F c := by
+  simp only [BoundedCriticalSampleChildHashChoice.prepare, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+
+example {F : Inputs} (h : F.PolyTime) :
+    SpaceFunction (fun q => SignStatisticBits.integerCode (BoundedCriticalSampleChildBasisMoments.moment F q)) ∧
+      SpaceFunction (BoundedCriticalSampleChildPencilCoefficient.value F) ∧
+      SpaceFunction (BoundedCriticalSampleChildHashChoice.value F) ∧
+      UnaryFn (BoundedCriticalSampleChildHashChoice.descriptorWidth F) :=
+  ⟨BoundedCriticalSampleChildBasisMoments.evaluator h,
+    BoundedCriticalSampleChildPencilCoefficient.evaluator h,
+    BoundedCriticalSampleChildHashChoice.evaluator h,
+    BoundedCriticalSampleChildHashChoice.descriptorWidth_unary h⟩
+
+-- Native selection separates all regular children, across parent fibers.
+-- Empty candidate sets need no special nonemptiness premise.
+example (F : Inputs) (c : List Bool) (x y : BoundedCriticalSampleChildRecordSpan.Root F c)
+    (hxy : x ≠ y) :
+    BoundedCriticalSampleChildHashChoice.descriptor F c x ≠ BoundedCriticalSampleChildHashChoice.descriptor F c y :=
+  fun he => hxy (BoundedCriticalSampleChildHashChoice.descriptor_injective F c he)
+
+end ChildHashChoiceTests

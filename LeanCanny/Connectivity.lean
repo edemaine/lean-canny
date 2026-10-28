@@ -115,6 +115,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleChildEquationCount
 import LeanCanny.Encoding.BoundedCriticalSampleChildRegularCount
 import LeanCanny.Encoding.BoundedCriticalSampleChildParentQueries
 import LeanCanny.Encoding.BoundedCriticalSampleChildRankBasis
+import LeanCanny.Encoding.BoundedCriticalSampleChildHashChoice
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -476,9 +477,13 @@ parent-sign patterns and moments have native readers and bounds. The regular
 child parameter's derivative signs now separate its roots. Short sparse sign
 records span all root functions; their native Gram rank equals the regular
 child count. Native prefix-rank searches select short records forming a basis,
-with one record read at a time. Completing child descriptor hashes,
-actual-parent selection, good directions, and validated child descriptors
-remain required.
+with one record read at a time. Native selected triple moments and modular
+weighted sums now construct a Gram-pencil determinant. Its distinct-root
+count tests injectivity, and native bounded search selects separating hash
+parameters after computing the regular-child count internally. The resulting
+signed integer descriptors are injective and have a source-derived unary
+length bound. Descriptor validation and enumeration, signs at child labels,
+actual-parent selection, good directions, and the recursive cover remain open.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries
