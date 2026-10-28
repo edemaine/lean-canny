@@ -416,6 +416,11 @@ The checked ingredients are:
   Every regular critical point of the original block has exactly one child
   parameter recovering its full tuple. Canonical child labels and native
   filters for this shared-source family remain required.
+  A native selected-direction adapter now supplies these child sources and
+  includes the direction search in their coefficient readers. Accepted
+  records give unique parameters for all actual-parent critical roots.
+  Contained blocks still need slice regularity for selection success;
+  the initial whole source supplies success without a separate certificate.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

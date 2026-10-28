@@ -129,7 +129,7 @@ import LeanCanny.Connectivity.CriticalSampleSelectedDirection
 import LeanCanny.Encoding.BoundedFullBlockRegularity
 import LeanCanny.Encoding.BoundedFullBlockDirectionChoice
 import LeanCanny.Encoding.BoundedFullSampleBlockScaling
-import LeanCanny.Encoding.BoundedFullSampleChildParameters
+import LeanCanny.Encoding.BoundedFullSampleSelectedDirection
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -571,7 +571,11 @@ eliminants now feed exact-degree preparation and a separable child parameter,
 with native rational coordinates and derived bounds. Every regular critical
 point of the original block has a unique parameter recovering its complete
 tuple. Canonical child labels, native filters, and the complete recursive
-cover remain required.
+cover remain required. The selected-direction adapter now supplies these
+child sources, charging the native search in their coefficient readers.
+Accepted records give regularity and unique parameters for all actual-parent
+critical roots. Contained blocks use slice regularity for selection success;
+the initial whole source supplies success without a separate certificate.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries
