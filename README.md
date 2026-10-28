@@ -333,8 +333,11 @@ The checked ingredients are:
   recover every regular joint candidate, with nonzero denominators and
   source-derived bounds. Parameter roots encode distinct tuples; imposing
   the joint equations and regularity gives a bijection with the finite
-  regular candidates. Native filtering, selection of good directions, and
-  validated child descriptors remain required.
+  regular candidates. The joint equations now have native univariate tests
+  with exact zero and sign semantics, bounded coefficient readers, and native
+  counts and existence decisions for the child parameter roots passing them.
+  Singular candidates can remain. Native Jacobian and actual-parent filtering,
+  selection of good directions, and validated child descriptors remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

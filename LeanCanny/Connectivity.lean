@@ -111,6 +111,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleBlockCriticalGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleJointGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleJointCoordinateCoefficient
 import LeanCanny.Encoding.BoundedCriticalSampleChildParameters
+import LeanCanny.Encoding.BoundedCriticalSampleChildEquationCount
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -456,8 +457,12 @@ coordinates. Every regular joint candidate is recovered with nonzero
 denominators, and distinct parameter roots decode to distinct tuples.
 Filtering by the joint equations and regularity gives an exact bijection
 with the regular candidates, retaining their finite cardinality bound.
-Native filtering of the parameter roots, selection of the actual parent and
-good directions, and validated child descriptors remain required.
+Native univariate tests now impose all joint equations on child parameter
+roots. They preserve zeros and signs through fixed even denominator powers,
+with derived binary bounds and native coefficient readers. Their exact
+filtered-root count and existence language are native PSPACE constructions.
+These tests can retain singular candidates. Native Jacobian and actual-parent
+filtering, good directions, and validated child descriptors remain required.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

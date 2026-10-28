@@ -7687,3 +7687,80 @@ example (F : Inputs) (u : List Bool) :
   BoundedCriticalSampleChildParameters.finite_regular_parameters F u
 
 end ChildPrimitiveParameterTests
+
+namespace ChildEquationFilterTests
+noncomputable section
+open LeanCanny.Encoding LeanCanny.Algebra
+open MatrixPower
+open BoundedCriticalSampleChildSource (Inputs)
+
+private def controls : Inputs where
+  parent := ⟨fun _ => [], fun _ => 0, fun _ => 0⟩
+  term _ := []
+  offset _ := 0
+  dim _ := 2
+  directionWidth _ := 0
+  direction _ := []
+  pivot _ := ⟨0, by decide⟩
+
+-- Clamp the selected row while preserving the exact source, rank, and
+-- modulus words, including redundant zeros and modulus one.
+#guard BoundedCriticalSampleChildFilters.query controls
+  (pair (pair (pair [true, false] (BinaryNatCode.encode 300)) [true, false, false]) [false, false]) =
+    pair (pair [true, false] (pair (BinaryNatCode.encode 2) [true, false, false])) [false, false]
+
+private def emptyFamily : FixedWidthRationalSubstitutionBits.Family where
+  arity _ := 0
+  width _ := 0
+  source _ := MvPolynomial.C (-3)
+  numerator _ _ := 0
+  denominator _ _ := 0
+  degree_fit _ i := Fin.elim0 i
+
+-- No variables means no denominator factors, even with zero coordinate data.
+example : emptyFamily.polynomial [] = Polynomial.C (-3) := by
+  change RationalSubstitution.clearedWith _ (MvPolynomial.C (-3)) _ _ = _
+  rw [RationalSubstitution.clearedWith, MvPolynomial.support_C]
+  norm_num [emptyFamily]
+
+private def poleFamily : FixedWidthRationalSubstitutionBits.Family where
+  arity _ := 1
+  width _ := 1
+  source _ := 1
+  numerator _ _ := 0
+  denominator _ _ := Polynomial.X
+  degree_fit _ _ := by simp
+
+-- Clearing can introduce a zero at a pole. The zero/sign theorem therefore
+-- requires nonzero denominators; the child parameter construction supplies them.
+private theorem pole_polynomial : poleFamily.polynomial [] = Polynomial.X ^ 4 := by
+  change RationalSubstitution.clearedWith (fun _ : Fin 1 => 2) (MvPolynomial.C 1)
+    (fun _ => (0 : Polynomial ℤ)) (fun _ => Polynomial.X) = _
+  rw [RationalSubstitution.clearedWith, MvPolynomial.support_C]
+  norm_num [Fin.prod_univ_succ]
+
+example : (poleFamily.polynomial []).eval₂ (Int.castRingHom ℝ) 0 = 0 := by
+  rw [pole_polynomial]
+  norm_num
+example : (poleFamily.source []).eval₂ (Int.castRingHom ℝ) (fun _ => 0) = 1 := by simp [poleFamily]
+-- Negative denominator values retain the constant's positive sign.
+example : (poleFamily.polynomial []).eval₂ (Int.castRingHom ℝ) (-1) = 1 := by
+  rw [pole_polynomial]
+  norm_num
+
+example {F : Inputs} (h : F.PolyTime) :
+    SpaceFunction (PrimitivePairBits.coefficient (BoundedCriticalSampleChildFilters.polynomial F)) ∧
+      SpaceFunction (fun u => BinaryNatCode.encode (BoundedCriticalSampleChildEquationCount.count F u)) ∧
+      BoundedCriticalSampleChildEquationCount.language F ∈ PSPACE :=
+  ⟨BoundedCriticalSampleChildFilters.evaluator h,
+    BoundedCriticalSampleChildEquationCount.evaluator h,
+    BoundedCriticalSampleChildEquationCount.language_mem_PSPACE h⟩
+
+-- All regular candidates pass the equation filters. No all-roots-regular
+-- promise is assumed by the native count, so singular candidates may remain.
+example (F : Inputs) (u : List Bool) (z : BoundedCriticalSampleChildParameters.Candidates F u) :
+    Nonempty (BoundedCriticalSampleChildFilters.Roots F u) :=
+  BoundedCriticalSampleChildFilters.regular_candidate_has_root F u z
+
+end
+end ChildEquationFilterTests
