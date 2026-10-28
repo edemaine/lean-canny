@@ -116,6 +116,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleChildRegularCount
 import LeanCanny.Encoding.BoundedCriticalSampleChildParentQueries
 import LeanCanny.Encoding.BoundedCriticalSampleChildRankBasis
 import LeanCanny.Encoding.BoundedCriticalSampleChildHashChoice
+import LeanCanny.Encoding.BoundedCriticalSampleChildDescriptors
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -482,7 +483,10 @@ weighted sums now construct a Gram-pencil determinant. Its distinct-root
 count tests injectivity, and native bounded search selects separating hash
 parameters after computing the regular-child count internally. The resulting
 signed integer descriptors are injective and have a source-derived unary
-length bound. Descriptor validation and enumeration, signs at child labels,
+length bound. Native rational cuts now count their values below, at, and
+above a threshold. Native hash-order enumeration is bijective with the
+regular joint candidates, and a PSPACE validity test rejects noncanonical
+words and gives each accepted word a unique candidate. Signs at child labels,
 actual-parent selection, good directions, and the recursive cover remain open.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
