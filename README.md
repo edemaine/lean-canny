@@ -453,8 +453,14 @@ The checked ingredients are:
   actual child parameters. Next-stage coefficients include these composition
   costs and have derived degree and mass bounds. Positive scaling preserves
   zero sets and critical regularity, and contained next-stage levels are
-  compact. Generalized child eliminants, selectors, descriptors, and uniform
-  recursion bounds still need to be connected to this interface.
+  compact. Generalized native critical and joint systems now retain a
+  separable parent parameter, with exact root and regularity semantics.
+  Native coordinate eliminants and primitive parameters give unique encodings
+  for every regular next-stage critical point. The resulting ambient rational
+  coordinates and separable parameter supply another native joint input,
+  preserving ancestor coordinates and nonzero denominators at actual samples.
+  Direction selection, ancestor-validity filters, descriptors, singular
+  endpoints, and uniform recursion bounds remain to be connected.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

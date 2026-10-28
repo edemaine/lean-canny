@@ -9390,3 +9390,83 @@ example : point (RationalParentUpdate.update old child (fun _ => 1) (fun _ => 0)
     UnivariateRational.Coordinate.eval, UnivariateRational.Coordinate.compWith, UnivariateRational.clear,
     Finset.sum_range_succ, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.fromBitsLE_cons, show Nat.fromBitsLE [] = 0 from rfl, Polynomial.coeff_one, Polynomial.eval₂_pow, Polynomial.eval₂_add, Polynomial.eval₂_C, Polynomial.eval₂_X]
 end RationalParentRegression
+
+namespace RationalParentJointRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding LeanCanny.ETR MvPolynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] RationalParentFullBlockScaling.original
+  RationalParentFullBlockPolynomial.polynomial RationalParentFullBlockCriticalSource.polynomial
+
+-- An empty block has no spatial rows, for arbitrary native rational parents.
+example (A : RationalCoordinateFamily.Family) (S : BoundedFullWriter.Readers)
+    (o w b : List Bool → ℕ) (bits : List Bool → List Bool) (q : List Bool) :
+    RationalParentFullBlockCritical.value ⟨A, S, o, fun _ => 0⟩ w b bits q = [] := by
+  apply RationalParentFullBlockCritical.invalid
+  simp only [BoundedCriticalSampleBlockCritical.valid]
+  omega
+
+-- Retain the complete generalized parent context, including attached metadata.
+example (F : RationalParentJointSource.Inputs) (u r m : List Bool) :
+    pairFst (pairFst (RationalParentParameterRow.query F (pair (pair u r) m))) = u := by
+  simp only [RationalParentParameterRow.query, RationalParentParameterRow.origin, pairFst_pair]
+
+-- The parent row survives an empty block and never depends on the spatial direction.
+example (F : RationalParentJointSource.Inputs) (w b b' : List Bool → ℕ)
+    (bits bits' : List Bool → List Bool) (u : List Bool) (r m : ℕ) :
+    RationalParentJointCoefficient.value F w b bits
+      (pair (pair u (pair [] (BinaryNatCode.encode r))) (BinaryNatCode.encode m)) =
+    RationalParentJointCoefficient.value F w b' bits'
+      (pair (pair u (pair [] (BinaryNatCode.encode r))) (BinaryNatCode.encode m)) := by
+  rw [RationalParentJointCoefficient.parent_packet, RationalParentJointCoefficient.parent_packet]
+
+-- The modulus-one protocol returns the canonical zero word for every row.
+example (F : RationalParentJointSource.Inputs) (w b : List Bool → ℕ) (bits : List Bool → List Bool)
+    (u : List Bool) (pivot : Fin (F.block.dim u)) (hb : b u = pivot.val)
+    (i : Fin (F.block.dim u + 1)) (r : ℕ) :
+    RationalParentJointCoefficient.value F w b bits
+      (pair (pair u (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode r))) []) = [] := by
+  have H := RationalParentJointCoefficient.packet F w b bits u pivot hb i r 0
+  have hz (z : ZMod 1) : MatrixPower.residueBits z = [] := by
+    have he : z = 0 := Subsingleton.elim _ _
+    rw [he]
+    rfl
+  simpa only [Nat.zero_add, hz, BinaryNatCode.encode, show Nat.bits 0 = [] from rfl] using H
+
+-- Repeated parent roots cannot enter the separable parameter interface.
+example (P : SeparablePolynomialFamily.Source) (u : List Bool)
+    (hp : P.polynomial u = (Polynomial.X : Polynomial ℤ) ^ 2) : False := by
+  have ht : (P.polynomial u).eval₂ (Int.castRingHom ℝ) 0 = 0 := by rw [hp]; simp
+  have H := SeparablePolynomialFamily.derivative_ne_zero P u (0 : ℝ) ht
+  norm_num [hp] at H
+
+-- A zero specialized source still retains every spatial point as a joint root.
+example (F : RationalParentJointSource.Inputs) (w : List Bool → ℕ) (bits : List Bool → List Bool)
+    (u : List Bool) (b : Fin (F.block.dim u)) (t : ℝ)
+    (ht : (F.parent.polynomial u).eval₂ (Int.castRingHom ℝ) t = 0)
+    (hA : RationalCoordinateFamily.Defined F.block.parent u t)
+    (hz : RationalParentFullBlockScaling.original F.block u t = 0) (y : Fin (F.block.dim u) → ℝ) :
+    ∀ i, (RationalParentJointSource.system F w bits u b i).eval₂ (Int.castRingHom ℝ) (Fin.cons t y) = 0 := by
+  apply (RationalParentJointGeometry.original_root_iff F w bits u t ht hA b y).mpr
+  rw [hz]
+  intro i
+  simp only [ProjectionCriticalFamily.spatialEquation, mul_zero, sub_self, ite_self, map_zero]
+
+-- Those roots are singular. The regular-candidate family must not silently
+-- include a positive-dimensional zero slice.
+example (F : RationalParentJointSource.Inputs) (w : List Bool → ℕ) (bits : List Bool → List Bool)
+    (u : List Bool) (b : Fin (F.block.dim u)) (t : ℝ)
+    (ht : (F.parent.polynomial u).eval₂ (Int.castRingHom ℝ) t = 0)
+    (hA : RationalCoordinateFamily.Defined F.block.parent u t)
+    (hz : RationalParentFullBlockScaling.original F.block u t = 0) (y : Fin (F.block.dim u) → ℝ) :
+    ¬ (fderiv ℝ (fun z => fun i => (RationalParentJointSource.system F w bits u b i).eval₂
+      (Int.castRingHom ℝ) z) (Fin.cons t y)).IsInvertible := by
+  intro H
+  have R := (RationalParentJointGeometry.original_regular_iff F w bits u t ht hA b y).mp H
+  simp only [hz, ProjectionCriticalFamily.spatialEquation, mul_zero, sub_self, ite_self, map_zero] at R
+  change (fderiv ℝ (fun _ : Fin (F.block.dim u) → ℝ => (0 : Fin (F.block.dim u) → ℝ)) y).IsInvertible at R
+  rw [fderiv_const_apply] at R
+  have he : (0 : Fin (F.block.dim u) → ℝ) = 1 := R.injective (by simp)
+  have hb := congrFun he b
+  norm_num at hb
+end RationalParentJointRegression

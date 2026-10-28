@@ -1461,10 +1461,39 @@ children. Its specialization is the exact original source with the child's
 ambient coordinates frozen outside the next free block, up to a derived
 positive constant; all contained real levels are compact. No separately
 supplied coordinate reader, denominator witness, or scaling certificate is
-needed. Generalizing the critical and joint eliminant pipeline, direction
-selection, parent filtering, and descriptors to this interface remains open.
-These are one-stage native closure certificates; uniform input-dependent
-recursion and its polynomial bounds are not yet proved.
+needed.
+`SeparablePolynomialFamily` now packages native parent equations and binary
+bounds independently of the original writer. Rational separability gives
+simple roots in every characteristic-zero field. `SampleParentParameters`
+instantiates this interface for both original and derived parents.
+The `RationalParentFullBlockCritical` and `RationalParentJoint` modules give
+native critical and complete joint coefficients, guarded width conversion,
+homogenized rows, Macaulay entries, determinant coefficients, and trailing
+coefficient scans. The retained parent row works even for empty spatial
+blocks and keeps the complete source context. Exact root and analytic
+regularity equivalences hold at every defined parent parameter root.
+Regular candidates have finite native label bounds without requiring other
+parent fibers to be regular or zero dimensional. Each coordinate has a
+nonzero integer annihilator with native coefficients and derived bounds.
+`RationalParentChildSource` performs native exact-degree preparation and feeds
+these equations to the balanced primitive tree. `RationalParentChildCoordinates`
+supplies native separable parameters and rational coordinate readers, with
+binary degree and mass controls. `RationalParentChildParameters` identifies
+regular parameters bijectively with regular joint candidates. Every regular
+original-block critical point at a defined parent root has a unique parameter
+recovering the retained parent and the complete spatial tuple.
+`RationalParentChildParents` turns these coordinates back into an ambient
+parent family and another native joint input. Parent denominator nonvanishing
+passes through the retained parameter; regular children retain a root of the
+previous parent equation. `FullSampleNextStage` instantiates the generalized
+pipeline at actual earlier child samples and proves unique next-stage
+parameters, exact nested ambient assignments, and denominator nonvanishing.
+Direction selection, native equation and Jacobian filters, ancestor-validity
+filtering, and canonical descriptors still need to be generalized. The full
+primitive parameter polynomial can have extraneous roots, so it cannot itself
+be treated as the actual recursive parent family. These are fixed-stage native
+closure certificates; uniform input-dependent recursion and its polynomial
+bounds are not yet proved.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.
