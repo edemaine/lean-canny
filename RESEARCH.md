@@ -1295,8 +1295,17 @@ and any actual parent and arbitrary free tuple extend to witnesses.
 the native kernel validator. Its acceptance is exactly regularity of every
 critical root over every actual parent of the original term. Only referenced
 term variables need frozen-input links; no coordinate table, parent labels,
-or finite-critical-set premise is supplied. A bounded successful direction
-search and the recursive cover remain open.
+or finite-critical-set premise is supplied.
+`ProjectiveDirectionFamily` extracts nonzero maximal-minor certificates with
+bounded parameter degree and avoids all certificates of a finite family on
+one integer grid. `FermatCommonCriticalDirection` applies this to a family of
+pure-power-leading hypersurfaces regular over coefficient-field extensions.
+The grid allowance is the family size times the single-source allowance.
+Its encoding counterpart constructs one record for all actual parents, using
+the existing sample-count bound; the family contributes only its label width
+to each direction field. Native record readers and length bounds are proved.
+Applying the pure-power and extension-regularity premises to the recursive
+sources, a successful native direction search, and the recursive cover remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

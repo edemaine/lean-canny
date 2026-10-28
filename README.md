@@ -382,7 +382,11 @@ The checked ingredients are:
   wires. Generated actual-parent constraints include the selected parent
   circuit, real-input guards, and zero-extension links. The resulting native
   validator accepts exactly when every critical root over every actual
-  parent is regular. A bounded successful direction search remains open.
+  parent is regular. Eligible finite families of pure-power-leading sources
+  now have bounded common-direction records with native readers; the parent
+  count bound contributes only its bit width. Proving the required source
+  shape and regularity over field extensions for recursive inputs, and
+  constructing their successful native direction search, remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

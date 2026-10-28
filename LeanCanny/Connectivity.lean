@@ -124,6 +124,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleChildTermSign
 import LeanCanny.Connectivity.CriticalSampleOriginalSlice
 import LeanCanny.ETR.ComplexBlockKernelGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleBlockRegularity
+import LeanCanny.Encoding.FermatCommonCriticalDirection
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -526,7 +527,12 @@ actual selected sample circuit, real-input guards, and zero-extension links.
 Every actual parent and arbitrary free tuple admit witnesses. Acceptance
 of the resulting native validator is exactly critical regularity of every
 actual-parent slice, without supplied labels or a finiteness promise.
-A bounded successful direction search remains open.
+Finite families of pure-power-leading sources now have one bounded common
+direction under explicit regularity over coefficient-field extensions. The
+family size multiplies the integer-grid allowance and adds only its bit
+length to the record width. The actual parent count bound gives short common
+records with native readers. Applying these hypotheses to the recursive
+sources and constructing the successful native direction search remain open.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

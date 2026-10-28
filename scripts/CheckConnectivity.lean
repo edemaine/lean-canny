@@ -8470,3 +8470,32 @@ example {P : BoundedFullWriter.Readers} (hP : P.PolyTime)
     BoundedCriticalSampleBlockRegularity.language P zeroBlock ∈ PSPACE :=
   BoundedCriticalSampleBlockRegularity.mem_PSPACE hP zeroBlock_polyTime ht
 end ActualParentBlockTests
+
+namespace CommonDirectionTests
+open LeanCanny.Encoding LeanCanny.Algebra MvPolynomial
+open scoped Classical
+#guard Encoding.FermatCommonCriticalDirection.read (fun _ => 1) (fun _ => 2) (fun _ => 3)
+  (pair (pair [] [true, false, true]) (BinaryNatCode.encode 0)) = BinaryNatCode.encode 5
+#guard Encoding.FermatCommonCriticalDirection.read (fun _ => 1) (fun _ => 2) (fun _ => 3)
+  (pair (pair [] [true, false, true]) (BinaryNatCode.encode 1)) = BinaryNatCode.encode 0
+
+-- The empty family still has a bounded common record; it needs no source or
+-- regularity witness and the allowance forces every direction coordinate to zero.
+example : ∃ record : List Bool,
+    record.length = Algebra.FermatCommonCriticalDirection.binaryWidth 1 2 0 := by
+  obtain ⟨r, hr, _⟩ := Encoding.FermatCommonCriticalDirection.exists_record (n := 1) (K := ℚ) (σ := Fin 0)
+    (fun s => Fin.elim0 s) (fun s => Fin.elim0 s) (fun s => Fin.elim0 s)
+    2 0 (by decide) (fun s => Fin.elim0 s) (by decide) (fun s => Fin.elim0 s)
+  exact ⟨r, by simpa only [one_mul] using hr⟩
+
+-- Two degree-one exceptional conditions can each be avoided on {0,1},
+-- while their common avoiding point needs the larger family grid.
+private noncomputable def condition (b : Bool) : MvPolynomial (Fin 1) ℚ :=
+  if b then X 0 - 1 else X 0
+example : ¬ ∃ u : Fin 1 → ℕ, u 0 ≤ 1 ∧ ∀ b, (condition b).eval (fun i => (u i : ℚ)) ≠ 0 := by
+  rintro ⟨u, hu, h⟩
+  have he : u 0 = 0 ∨ u 0 = 1 := by omega
+  rcases he with he | he
+  · exact h false (by simp [condition, he])
+  · exact h true (by simp [condition, he])
+end CommonDirectionTests
