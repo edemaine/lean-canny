@@ -125,6 +125,7 @@ import LeanCanny.Connectivity.CriticalSampleOriginalSlice
 import LeanCanny.ETR.ComplexBlockKernelGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleBlockRegularity
 import LeanCanny.Encoding.FermatCommonCriticalDirection
+import LeanCanny.Connectivity.CriticalSampleSelectedDirection
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -502,8 +503,8 @@ the regular children over the specified actual parent. Both descriptors are
 validated. The selected finite geometric samples are exactly the regular
 spatial critical points over that parent. On a compact regular slice, a
 normalized direction whose critical points are all regular makes every point
-reachable from a sample with an accepted short label. Native good-direction
-selection and the recursive cover remain open. The selected children now
+reachable from a sample with an accepted short label. Constructing the
+recursive sources and cover remains open. The selected children now
 surject onto slice components and bound their number. Native pair scans
 charge descriptor enumeration, actual-parent selection, and a supplied
 slice-path procedure, reducing whole-slice connectivity to that procedure.
@@ -531,8 +532,12 @@ Finite families of pure-power-leading sources now have one bounded common
 direction under explicit regularity over coefficient-field extensions. The
 family size multiplies the integer-grid allowance and adds only its bit
 length to the record width. The actual parent count bound gives short common
-records with native readers. Applying these hypotheses to the recursive
-sources and constructing the successful native direction search remain open.
+records with native readers. Native bounded search now tests every critical
+root over every actual parent and succeeds under those source hypotheses.
+The selected record has native readers and a normalized packet for the
+existing child-source writers. Its acceptance supplies the original-slice
+critical-regularity premise. Applying the source hypotheses to the recursive
+sources and constructing the recursive cover remain open.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

@@ -8499,3 +8499,95 @@ example : ¬ ∃ u : Fin 1 → ℕ, u 0 ≤ 1 ∧ ∀ b, (condition b).eval (fun
   · exact h false (by simp [condition, he])
   · exact h true (by simp [condition, he])
 end CommonDirectionTests
+
+namespace ParentDirectionSearchTests
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR LeanCanny.ETR.ComplexCircuit MvPolynomial
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+
+private def circle : Term := .add (.add (.mul (.var 0) (.var 0)) (.mul (.var 1) (.var 1))) (.const (-1))
+
+private def inputs (P : BoundedFullWriter.Readers) : BoundedCriticalSampleDirectionChoice.Inputs :=
+  ⟨P, fun _ => circle.toData.toBits, fun _ => 0, fun _ => 1, fun _ => 2⟩
+
+private theorem shape {N : ℕ} (p : Fin N → ℝ) :
+    BoundedCriticalSampleBlockScaling.original circle p 0 2 =
+      FermatCriticalHomogenization.polynomial (-1 : MvPolynomial (Fin 2) ℝ) 1 2 := by
+  simp [circle, BoundedCriticalSampleBlockScaling.original, Term.eval, BoundedCriticalSampleBlockSource.InBlock,
+    FermatCriticalHomogenization.polynomial, Fin.sum_univ_two, pow_two]
+  ring
+
+private theorem regular (L : Type) [Field L] [Algebra ℝ L] (x : Fin 2 → L)
+    (hx : aeval x (FermatCriticalHomogenization.polynomial (-1 : MvPolynomial (Fin 2) ℝ) 1 2) = 0) :
+    ∃ j, aeval x (pderiv j (FermatCriticalHomogenization.polynomial (-1 : MvPolynomial (Fin 2) ℝ) 1 2)) ≠ 0 := by
+  let : CharZero L := charZero_of_injective_algebraMap (FaithfulSMul.algebraMap_injective ℝ L)
+  by_contra! h
+  have hzero (j : Fin 2) : x j = 0 := by
+    have H := h j
+    simp [FermatCriticalHomogenization.pderiv_polynomial] at H
+    exact H
+  simp [FermatCriticalHomogenization.polynomial, hzero] at hx
+
+-- A nonempty, compact source exercises geometric success for every actual
+-- parent family. No successful record or direction is supplied.
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    BoundedCriticalSampleDirectionChoice.Good (inputs P) c
+      (BoundedCriticalSampleDirectionChoice.record (inputs P) c) := by
+  apply BoundedCriticalSampleDirectionChoice.record_good (inputs P) c (fun _ => -1) (fun _ => 1)
+  · intro _; norm_num
+  · intro p
+    simpa only [inputs, TermView.term_toBits] using shape p.val
+  · intro _
+    simp only [totalDegree_neg, totalDegree_one, inputs]
+    decide
+  · change 1 < 2
+    decide
+  · intro _ L _ _ x hx
+    exact regular L x hx
+
+example {P : BoundedFullWriter.Readers} (hP : P.PolyTime)
+    (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    Computation.SpaceFunction (BoundedCriticalSampleDirectionChoice.record (inputs P)) :=
+  BoundedCriticalSampleDirectionChoice.evaluator
+    ⟨hP, constFn_mem_FP _, BinaryFn.const 0, UnaryFn.const 1, BinaryFn.const 2⟩ ht
+
+example {P : BoundedFullWriter.Readers} (hP : P.PolyTime)
+    (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    Computation.SpaceFunction (BoundedCriticalSampleDirectionPacket.prepare (inputs P)) :=
+  BoundedCriticalSampleDirectionPacket.prepare_evaluator
+    ⟨hP, constFn_mem_FP _, BinaryFn.const 0, UnaryFn.const 1, BinaryFn.const 2⟩ ht
+
+private def zeroInputs (P : BoundedFullWriter.Readers) : BoundedCriticalSampleDirectionChoice.Inputs :=
+  ⟨P, fun _ => (Term.const 0).toData.toBits, fun _ => 0, fun _ => 0, fun _ => 2⟩
+
+private theorem zero_rows (P : BoundedFullWriter.Readers) (c r : List Bool)
+    (p : BoundedFullCriticalSamples.Samples P c) :
+    BoundedCriticalSampleBlockData.rows ((zeroInputs P).source c) 0 0
+      (BoundedCriticalSampleDirectionChoice.direction (zeroInputs P) c r) p.val = fun _ : Fin 1 => 0 := by
+  funext i
+  have hi : i = 0 := Fin.eq_zero i
+  subst i
+  simp [zeroInputs, BoundedCriticalSampleBlockData.rows, TermView.term_toBits,
+    BoundedCriticalSampleBlockScaling.original, Term.eval,
+    CriticalKernel.finiteRows, Fin.cons_zero, Int.cast_zero]
+
+-- A singular source has no acceptable direction. The total bounded search's
+-- fallback must not be mistaken for a success certificate.
+example (P : BoundedFullWriter.Readers) (c : List Bool) (p : BoundedFullCriticalSamples.Samples P c) :
+    ¬ BoundedCriticalSampleDirectionChoice.Good (zeroInputs P) c
+      (BoundedCriticalSampleDirectionChoice.record (zeroInputs P) c) := by
+  intro h
+  change BoundedCriticalSampleBlockData.Good P c ((zeroInputs P).source c) 0 0
+    (BoundedCriticalSampleDirectionChoice.direction (zeroInputs P) c
+      (BoundedCriticalSampleDirectionChoice.record (zeroInputs P) c)) at h
+  have H := h p 0 (by
+    intro i
+    rw [zero_rows]
+    exact map_zero (MvPolynomial.eval 0))
+  simp only [zero_rows, map_zero] at H
+  change (fderiv ℝ (fun _ : Fin 1 → ℝ => (0 : Fin 1 → ℝ)) 0).IsInvertible at H
+  rw [fderiv_const_apply] at H
+  have he : (0 : Fin 1 → ℝ) = 1 := H.injective (by simp)
+  have hv := congrFun he 0
+  norm_num at hv
+end ParentDirectionSearchTests

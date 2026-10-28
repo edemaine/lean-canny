@@ -365,7 +365,7 @@ The checked ingredients are:
   The selected children surject onto slice components and bound their number.
   Native pair scans validate the parent and both children; a supplied path
   procedure on the actual slice then decides whole-slice connectivity.
-  Native good-direction selection and the recursive cover remain open.
+  Constructing the recursive sources and cover remains open.
   Native arithmetic-term sign queries now evaluate the original tuple with
   the selected child inserted in its free coordinate block. Both rounds of
   even denominator clearing have source-derived degree and mass bounds and
@@ -384,9 +384,13 @@ The checked ingredients are:
   validator accepts exactly when every critical root over every actual
   parent is regular. Eligible finite families of pure-power-leading sources
   now have bounded common-direction records with native readers; the parent
-  count bound contributes only its bit width. Proving the required source
+  count bound contributes only its bit width. Native bounded search now
+  succeeds under those source hypotheses, testing every critical root over
+  every actual parent. Native readers and a normalized packet pass the
+  selected record to the existing child-source writers; acceptance supplies
+  the original-slice critical-regularity premise. Proving the required source
   shape and regularity over field extensions for recursive inputs, and
-  constructing their successful native direction search, remain open.
+  constructing the recursive cover, remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

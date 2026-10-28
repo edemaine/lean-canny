@@ -1304,8 +1304,20 @@ The grid allowance is the family size times the single-source allowance.
 Its encoding counterpart constructs one record for all actual parents, using
 the existing sample-count bound; the family contributes only its label width
 to each direction field. Native record readers and length bounds are proved.
-Applying the pure-power and extension-regularity premises to the recursive
-sources, a successful native direction search, and the recursive cover remain open.
+`FermatCriticalRegularity` specializes the algebraic certificate equations to
+the exact finite critical rows and identifies their Jacobian with the analytic
+derivative determinant. `BoundedCriticalSampleBlockData` transports actual
+parent samples across query contexts while retaining their coordinate values.
+`BoundedCriticalSampleDirectionChoice` now constructs a native bounded record
+search using the actual-parent validator. The common-direction bound proves
+success from the pure-power shape and extension-regularity premises, without
+a supplied successful record. Its selected record has native direction readers.
+`BoundedCriticalSampleDirectionPacket` prepends the normalized pivot field and
+generates the explicit packet in native space; all child-source readers remain
+polynomial time on that packet. `CriticalSampleSelectedDirection` transfers
+acceptance to regularity of the original-slice child critical system.
+Applying the source premises to the recursive sources and constructing the
+recursive cover remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
