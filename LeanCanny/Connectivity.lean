@@ -127,6 +127,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleBlockRegularity
 import LeanCanny.Encoding.FermatCommonCriticalDirection
 import LeanCanny.Connectivity.CriticalSampleSelectedDirection
 import LeanCanny.Encoding.BoundedFullBlockRegularity
+import LeanCanny.Encoding.BoundedFullBlockDirectionChoice
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -546,6 +547,12 @@ all actual parent samples. Every contained free block inherits the source's
 pure-power leading form and lower-degree bound; frozen pure powers contribute
 only a constant. Slice regularity does not follow from this shape: critical
 endpoint slices can still be singular and require separate treatment.
+Native bounded direction selection now uses the actual shared source and
+its derived shape and degree bounds. A contained block needs coefficient-field
+slice regularity for success; the unfrozen initial source derives that
+regularity. Native readers and selected kernel-query writers retain the same
+source, parent family, and chosen direction. Shared-source child descriptors
+and the recursive cover remain required.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

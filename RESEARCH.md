@@ -1329,9 +1329,20 @@ pure-power shape and lower-degree premise for blocks of the constructed full
 source. `BoundedFullBlockRegularity` generates the actual-parent constraints
 and proves acceptance equivalent to regularity of every critical root over
 every actual parent. The original condition is replaced by those constraints.
-The existing bounded direction selector and child coefficient/descriptor
-writers still take term syntax; their interfaces to this shared source remain
-to be constructed.
+`BoundedFullBlockData` transports the actual parent family and snapshots
+the source readers across candidate-record metadata. `BoundedFullBlockDirectionChoice`
+uses the native shared-source validator in a bounded record search. Its width
+comes from the constructed degree and actual parent count allowance. The block
+shape and lower-degree bounds are derived, so only coefficient-field slice
+regularity remains a geometric premise for contained blocks. The unfrozen
+initial source derives this regularity from the construction and needs no
+supplied shape, degree, leading coefficient, or regularity certificate.
+Native record readers and selected kernel-query serializers preserve the same
+source, parent family, and direction. Child coefficient/descriptor writers
+still take term syntax; their interface to this shared source remains open.
+The existing `BoundedFullCoefficient` supplies modular coefficients of this
+exact constructed source for the remaining denominator-cleared block and
+child-descriptor interface at actual parent coordinates.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.

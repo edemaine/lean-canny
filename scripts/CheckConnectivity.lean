@@ -8670,3 +8670,75 @@ example {P : BoundedFullWriter.Readers} {F : BoundedFullBlockKernel.Inputs}
   BoundedFullBlockRegularity.mem_PSPACE hP hF htP htF
 
 end FullSharedBlockTests
+
+namespace FullSharedDirectionTests
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR LeanCanny.ETR.ComplexCircuit MvPolynomial
+open BoundedFullBlockDirectionChoice
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+-- The actual initial source needs no caller-supplied shape, leading
+-- coefficient, degree bound, or regularity certificate.
+example (P S : BoundedFullWriter.Readers) (c : List Bool) :
+    Good (whole P S) c (record (whole P S) c) := whole_record_good P S c
+
+example {P S : BoundedFullWriter.Readers} (hP : P.PolyTime) (hS : S.PolyTime)
+    (htP : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c)
+    (htS : ∀ c, (TermView.term (S.source c)).arity ≤ S.dim c)
+    {chart : List Bool → ℕ} (hi : UnaryFn chart) :
+    Computation.SpaceFunction (record (whole P S)) ∧ Computation.SpaceFunction (query (whole P S) chart) :=
+  ⟨evaluator (whole_polyTime hP hS) htP htS, query_evaluator (whole_polyTime hP hS) hi htP htS⟩
+
+private def outside (S : BoundedFullWriter.Readers) : Inputs := ⟨S, S, fun c => S.dim c + 4, fun _ => 0⟩
+
+private theorem outside_slice (S : BoundedFullWriter.Readers) (c : List Bool)
+    (p : BoundedFullCriticalSamples.Samples S c) : slice (outside S) c p = 0 := by
+  let q := BoundedFullCriticalSamples.polynomial S c
+  change CoordinateBlockSpecialization.finite (Int.castRingHom ℝ) (Formula.extend p.val)
+    (S.dim c + 4) 1 q = 0
+  rw [CoordinateBlockSpecialization.finite_frozen _ _ _ _ _ le_rfl]
+  have he : (fun i : Fin (S.dim c + 4) => Formula.extend p.val i.val) = p.val := by
+    funext i
+    simp only [Formula.extend, i.isLt, dite_true, Fin.eta]
+  rw [he]
+  have hp : q.eval₂ (Int.castRingHom ℝ) p.val = 0 := by
+    simpa only [BoundedFullCriticalSamples.equations, CriticalKernel.finiteRows, Fin.cons_zero] using p.property 0
+  rw [hp, map_zero]
+
+private theorem outside_rows (S : BoundedFullWriter.Readers) (c : List Bool)
+    (p : BoundedFullCriticalSamples.Samples S c) :
+    BoundedFullBlockRegularity.originalRows S (selected (outside S)) c p = fun _ : Fin 1 => 0 := by
+  have hs : BoundedFullBlockKernel.slice (selected (outside S)) c (Formula.extend p.val) = 0 := outside_slice S c p
+  unfold BoundedFullBlockRegularity.originalRows
+  rw [hs]
+  funext i
+  have hi : i = 0 := Fin.eq_zero i
+  subst i
+  simp only [CriticalKernel.finiteRows, Fin.cons_zero]
+
+-- A free block outside all source coordinates is the zero polynomial at
+-- an actual source parent. No direction is acceptable; the zero-width
+-- fallback word therefore must not be treated as a success certificate.
+example (S : BoundedFullWriter.Readers) (c : List Bool) (p : BoundedFullCriticalSamples.Samples S c) :
+    record (outside S) c = [] ∧ ¬ Good (outside S) c (record (outside S) c) := by
+  constructor
+  · apply List.length_eq_zero_iff.mp
+    simpa only [recordLength, outside, Nat.zero_mul] using record_length (outside S) c
+  · intro hg
+    have H : BoundedFullBlockRegularity.Good S (selected (outside S)) c := (selected_good_iff (outside S) c).mpr hg
+    change ∀ p : BoundedFullCriticalSamples.Samples S c, ∀ y : Fin 1 → ℝ,
+      (∀ i : Fin 1, (BoundedFullBlockRegularity.originalRows S (selected (outside S)) c p i).eval y = 0) →
+        (fderiv ℝ (fun z : Fin 1 → ℝ => fun i : Fin 1 =>
+          (BoundedFullBlockRegularity.originalRows S (selected (outside S)) c p i).eval z) y).IsInvertible at H
+    have hd := H p 0 (by
+      intro i
+      rw [outside_rows]
+      exact map_zero (MvPolynomial.eval 0))
+    simp only [outside_rows, map_zero] at hd
+    change (fderiv ℝ (fun _ : Fin 1 → ℝ => (0 : Fin 1 → ℝ)) 0).IsInvertible at hd
+    rw [fderiv_const_apply] at hd
+    have he : (0 : Fin 1 → ℝ) = 1 := hd.injective (by simp)
+    have hv := congrFun he 0
+    norm_num at hv
+
+end FullSharedDirectionTests

@@ -397,6 +397,11 @@ The checked ingredients are:
   for its blocks. Contained free blocks inherit the pure-power leading form
   and lower-degree bound. Frozen pure powers contribute only a constant;
   slice regularity remains separate, including at singular endpoint slices.
+  Native bounded direction search now uses this shared source with derived
+  shape and degree bounds. Coefficient-field slice regularity suffices for
+  success; the unfrozen initial source derives it. Native selected-record
+  readers and kernel-query writers preserve the same source and parent
+  family. Child descriptors for the shared source remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

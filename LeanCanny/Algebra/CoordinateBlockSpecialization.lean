@@ -62,6 +62,18 @@ theorem finite_all {n : ℕ} (φ : R →+* S) (frozen : ℕ → S) (p : MvPolyno
     congr 1
     simp [finite, coordinate]
 
+theorem finite_frozen {n : ℕ} (φ : R →+* S) (frozen : ℕ → S) (offset dim : ℕ)
+    (p : MvPolynomial (Fin n) R) (h : n ≤ offset) :
+    finite φ frozen offset dim p = C (p.eval₂ φ (fun i => frozen i.val)) := by
+  induction p using MvPolynomial.induction_on with
+  | C a => simp [finite]
+  | add p q hp hq => simp only [map_add, hp, hq, eval₂_add]
+  | mul_X p i hp =>
+    have hi : ¬ (offset ≤ i.val ∧ i.val < offset + dim) := by have := i.isLt; omega
+    simp only [map_mul, hp, eval₂_mul, eval₂_X]
+    congr 1
+    simp only [finite, eval₂Hom_X', coordinate, dite_eq_right hi]
+
 theorem coordinate_degree [Nontrivial S] (frozen : ℕ → S) (offset dim i : ℕ) :
     (coordinate frozen offset dim i).totalDegree ≤ 1 := by
   unfold coordinate
