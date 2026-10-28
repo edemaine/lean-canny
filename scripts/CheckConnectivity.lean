@@ -8962,3 +8962,78 @@ example (S : BoundedFullWriter.Readers) (u : List Bool)
   norm_num at hv
 
 end FullSampleChildTests
+
+namespace FullSampleFilterTests
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding LeanCanny.ETR
+open BoundedFullSampleChildSource (Inputs)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] BoundedFullSampleChildCoordinates.parameter
+  BoundedFullSampleChildParentThom.polynomial BoundedFullSampleChildQueries.roots
+  BoundedFullSampleChildRegularCount.count
+
+private def controls : Inputs where
+  block := ⟨⟨fun _ => [], fun _ => 0, fun _ => 0⟩,
+    ⟨fun _ => [], fun _ => 0, fun _ => 0⟩, fun _ => 0, fun _ => 2⟩
+  directionWidth _ := 0
+  direction _ := []
+  pivot _ := ⟨0, by change 0 < 2; decide⟩
+
+-- The shared-source context, raw rank, and modulus survive the row clamp.
+#guard BoundedFullSampleChildFilters.query controls
+  (pair (pair (pair [true, false] (BinaryNatCode.encode 300)) [true, false, false]) [false, false]) =
+    pair (pair [true, false] (pair (BinaryNatCode.encode 2) [true, false, false])) [false, false]
+
+-- An identically zero regularity filter removes every equation candidate.
+-- A constant one retains every equation candidate, including an empty set.
+example (F : Inputs) (u : List Bool) (h : BoundedFullSampleChildRegularFilter.polynomial F u = 0) :
+    BoundedFullSampleChildRegularCount.count F u = 0 := by
+  rw [BoundedFullSampleChildRegularCount.count_eq_difference,
+    BoundedFullSampleChildRegularCount.equationCount_eq_card,
+    BoundedFullSampleChildRegularCount.singularCount_eq_card]
+  simp only [h, Polynomial.eval₂_zero, Finset.filter_true, Nat.sub_self]
+
+example (F : Inputs) (u : List Bool) (h : BoundedFullSampleChildRegularFilter.polynomial F u = 1) :
+    BoundedFullSampleChildRegularCount.count F u = BoundedFullSampleChildEquationCount.count F u := by
+  rw [BoundedFullSampleChildRegularCount.count_eq_difference,
+    BoundedFullSampleChildRegularCount.singularCount_eq_card]
+  simp only [h, Polynomial.eval₂_one, one_ne_zero, Finset.filter_false, Finset.card_empty, Nat.sub_zero]
+
+-- The complete native filters and counts include the direction's space cost.
+example {F : Inputs} (h : F.PolyTime) :
+    SpaceFunction (PrimitivePairBits.coefficient (BoundedFullSampleChildFilters.polynomial F)) ∧
+      SpaceFunction (PrimitivePairBits.coefficient (BoundedFullSampleChildRegularFilter.polynomial F)) ∧
+      SpaceFunction (fun u => BinaryNatCode.encode (BoundedFullSampleChildRegularCount.count F u)) ∧
+      BoundedFullSampleChildRegularCount.language F ∈ PSPACE :=
+  ⟨BoundedFullSampleChildFilters.evaluator h,
+    BoundedFullSampleChildRegularFilter.evaluator h,
+    BoundedFullSampleChildRegularCount.evaluator h,
+    BoundedFullSampleChildRegularCount.language_mem_PSPACE h⟩
+
+-- With no selected parent signs, the signed moment is the regular count.
+example (F : Inputs) (u : List Bool) (orders : List Bool → List Bool) :
+    BoundedFullSampleChildParentQueries.moment F (fun _ => 0) orders u =
+      (BoundedFullSampleChildRegularCount.count F u : ℤ) := by
+  simp only [BoundedFullSampleChildParentQueries.moment, BoundedFullSampleChildQueries.moment,
+    BoundedFullSampleChildQueries.product, BoundedFullSampleChildParentQueries.family,
+    BinaryNatCode.encode, Nat.fromBitsLE_bits, Finset.range_zero, Finset.prod_empty,
+    Finset.sum_const, nsmul_eq_mul, mul_one, BoundedFullSampleChildQueries.roots_card]
+
+example {F : Inputs} (h : F.PolyTime) {features : List Bool → ℕ} (hc : UnaryFn features)
+    {orders : List Bool → List Bool} (ho : orders ∈ FP) :
+    SpaceFunction (PrimitivePairBits.coefficient (BoundedFullSampleChildParentThom.polynomial F)) ∧
+      SpaceFunction (fun u => SignStatisticBits.integerCode
+        (BoundedFullSampleChildParentQueries.moment F features orders u)) :=
+  ⟨BoundedFullSampleChildParentThom.evaluator h,
+    BoundedFullSampleChildParentQueries.moment_evaluator h hc ho⟩
+
+-- The initial whole-source selector supplies the same native certificates.
+example {P S : BoundedFullWriter.Readers} (hP : P.PolyTime) (hS : S.PolyTime)
+    (htP : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c)
+    (htS : ∀ c, (TermView.term (S.source c)).arity ≤ S.dim c) :
+    BoundedFullSampleChildRegularCount.language
+      (BoundedFullSampleSelectedDirection.child (BoundedFullBlockDirectionChoice.whole P S)) ∈ PSPACE :=
+  BoundedFullSampleChildRegularCount.language_mem_PSPACE
+    (BoundedFullSampleSelectedDirection.child_polyTime (BoundedFullBlockDirectionChoice.whole_polyTime hP hS) htP htS)
+
+end FullSampleFilterTests

@@ -130,6 +130,7 @@ import LeanCanny.Encoding.BoundedFullBlockRegularity
 import LeanCanny.Encoding.BoundedFullBlockDirectionChoice
 import LeanCanny.Encoding.BoundedFullSampleBlockScaling
 import LeanCanny.Encoding.BoundedFullSampleSelectedDirection
+import LeanCanny.Encoding.BoundedFullSampleChildParentQueries
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -570,12 +571,18 @@ bound without an all-roots-regular premise. Native nonzero coordinate
 eliminants now feed exact-degree preparation and a separable child parameter,
 with native rational coordinates and derived bounds. Every regular critical
 point of the original block has a unique parameter recovering its complete
-tuple. Canonical child labels, native filters, and the complete recursive
-cover remain required. The selected-direction adapter now supplies these
+tuple. Canonical child labels, native actual-parent selection, and the
+complete recursive cover remain required. The selected-direction adapter supplies these
 child sources, charging the native search in their coefficient readers.
 Accepted records give regularity and unique parameters for all actual-parent
 critical roots. Contained blocks use slice regularity for selection success;
 the initial whole source supplies success without a separate certificate.
+Native joint-equation and Jacobian filters now characterize regular child
+parameters. Exact counts and PSPACE existence decisions charge the source,
+coordinate, derivative, determinant, and selected-direction readers.
+Signed queries exclude singular contributions. Parent derivative-sign probes
+preserve the retained coordinate, and their full signature identifies its
+root. Selected-sign moments are native; candidate fibers may be singular.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

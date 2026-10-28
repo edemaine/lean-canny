@@ -1374,8 +1374,8 @@ coefficient readers and derived degree/mass bounds. Filtered parameter roots
 are in bijection with the regular joint candidates. Every regular critical
 point over an actual parent has exactly one child parameter recovering its
 retained parent coordinate and complete spatial tuple. Canonical child
-labels, native equation/regularity filters, and actual-parent selection still
-need to be connected to this shared-source parameter family.
+labels and native actual-parent selection still need to be connected to
+this shared-source parameter family.
 `BoundedFullSampleSelectedDirection` now connects the actual native selector
 to these child inputs. A leading unused pivot field preserves every selected
 free-direction entry; source and parent contexts are unchanged. Its space
@@ -1383,6 +1383,18 @@ certificate charges the direction search. Accepted records make the original
 block critical system regular, so every actual-parent critical point has a
 unique child parameter. Contained blocks derive selection success from slice
 regularity, while the initial whole source supplies it unconditionally.
+`BoundedFullSampleChildReaders` supplies native rational coordinate access.
+The equation filters clear the exact joint rows with even powers; the
+Jacobian source, entry, determinant, and regularity-filter modules give
+native coefficients, bounds, and exact analytic regularity semantics.
+Equation counts minus singular counts compute exactly the regular parameter
+and joint-candidate counts, with native PSPACE existence decisions and no
+all-roots-regular premise. Signed queries subtract singular contributions
+over the same regular root set. Parent derivative-sign probes preserve the
+retained parent coordinate, and their full sign signatures identify the
+specified actual parent root. Selected-sign pattern counts and signed moments
+are native. Canonical child labels and descriptor-level parent validation
+remain open for the shared source.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.
