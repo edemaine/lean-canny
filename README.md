@@ -414,8 +414,8 @@ The checked ingredients are:
   coordinate eliminants now feed exact-degree preparation and a separable
   child parameter with native rational coordinates and derived bounds.
   Every regular critical point of the original block has exactly one child
-  parameter recovering its full tuple. Canonical child labels and native
-  actual-parent selection for this shared-source family remain required.
+  parameter recovering its full tuple. Native actual-parent selection for
+  this shared-source family remains required.
   A native selected-direction adapter now supplies these child sources and
   includes the direction search in their coefficient readers. Accepted
   records give unique parameters for all actual-parent critical roots.
@@ -427,6 +427,12 @@ The checked ingredients are:
   singular contributions. Parent derivative-sign probes preserve the retained
   coordinate, and their full signature identifies its root. Selected-sign
   moments are native too.
+  Native sparse-record basis and hash selection now construct canonical
+  bounded child descriptors. Their validity is in PSPACE, and native
+  enumeration covers exactly the regular joint candidates. Accepted words
+  name unique tuples. Every regular original block critical point has one
+  valid bounded descriptor; accepted selected directions cover all of their
+  actual-parent critical points, including the initial whole source.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

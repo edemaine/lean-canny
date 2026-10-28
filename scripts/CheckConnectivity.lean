@@ -9037,3 +9037,62 @@ example {P S : BoundedFullWriter.Readers} (hP : P.PolyTime) (hS : S.PolyTime)
     (BoundedFullSampleSelectedDirection.child_polyTime (BoundedFullBlockDirectionChoice.whole_polyTime hP hS) htP htS)
 
 end FullSampleFilterTests
+
+namespace FullChildDescriptorTests
+open LeanCanny.Encoding LeanCanny.Algebra
+open BoundedFullSampleChildSource (Inputs)
+open BoundedFullSampleChildDescriptors
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] BoundedFullSampleChildQueries.roots BoundedFullSampleChildRegularCount.count
+
+-- A redundant zero bit denotes integer zero, but is not a canonical label.
+example (F : Inputs) (c : List Bool) : pair c (pair [false] []) ∉ language F := by
+  intro h
+  have hc := ((language_iff F (pair c (pair [false] []))).mp h).1
+  have hn : ¬ Canonical (pair [false] []) := by unfold Canonical; decide
+  exact hn (by simpa only [pairSnd_pair] using hc)
+
+-- Positive and negative parts can encode the same integer as a short word.
+-- The validity test still rejects a word with both parts nonzero.
+example : integer (pair (BinaryNatCode.encode 3) (BinaryNatCode.encode 2)) = 1 := by decide
+example (F : Inputs) (c : List Bool) :
+    pair c (pair (BinaryNatCode.encode 3) (BinaryNatCode.encode 2)) ∉ language F := by
+  intro h
+  have hc := ((language_iff F (pair c (pair (BinaryNatCode.encode 3) (BinaryNatCode.encode 2)))).mp h).1
+  have hn : ¬ Canonical (pair (BinaryNatCode.encode 3) (BinaryNatCode.encode 2)) := by unfold Canonical; decide
+  exact hn (by simpa only [pairSnd_pair] using hc)
+
+-- An empty candidate set admits no descriptor, regardless of word length
+-- or the total fallback value used by an invalid enumeration ordinal.
+example (F : Inputs) (c w : List Bool) (h : BoundedFullSampleChildRegularCount.count F c = 0) :
+    pair c w ∉ language F := by
+  rintro ⟨x, _⟩
+  have hp : 0 < (BoundedFullSampleChildQueries.roots F (pairFst (pair c w))).card :=
+    Finset.card_pos.mpr ⟨x.val, x.property⟩
+  have hc := BoundedFullSampleChildQueries.roots_card F (pairFst (pair c w))
+  have hn : BoundedFullSampleChildRegularCount.count F (pairFst (pair c w)) = 0 := by
+    simpa only [pairFst_pair] using h
+  omega
+
+-- Every regular joint candidate occurs in the native hash-order enumeration.
+-- This includes regular candidates over other roots of the parent parameter.
+example (F : Inputs) (c : List Bool) (z : BoundedFullSampleChildParameters.Candidates F c) :
+    ∃ r : Fin (BoundedFullSampleChildRegularCount.count F c), candidateWord F c z =
+      SignStatisticBits.integerCode (BoundedFullSampleChildHashEnumeration.value F (pair c (BinaryNatCode.encode r.val))) := by
+  obtain ⟨r, rfl⟩ := (BoundedFullSampleChildHashEnumeration.candidateEquiv F c).surjective z
+  exact ⟨r, candidateWord_enumerated F c r⟩
+
+-- Accepted words name one geometric candidate and satisfy the source bound.
+example (F : Inputs) (q : List Bool) (hq : q ∈ language F) :
+    (∃! z : BoundedFullSampleChildParameters.Candidates F (pairFst q), candidateWord F (pairFst q) z = pairSnd q) ∧
+      (pairSnd q).length ≤ BoundedFullSampleChildHashChoice.descriptorWidth F (pairFst q) :=
+  ⟨unique_candidate F q hq, length_bound F q hq⟩
+
+-- Both enumeration and validity use the original source controls only.
+example {F : Inputs} (h : F.PolyTime) :
+    SpaceFunction (fun u => SignStatisticBits.integerCode (BoundedFullSampleChildHashEnumeration.value F u)) ∧
+      language F ∈ PSPACE :=
+  ⟨BoundedFullSampleChildHashEnumeration.evaluator h, mem_PSPACE h⟩
+
+end FullChildDescriptorTests

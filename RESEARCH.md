@@ -1373,9 +1373,8 @@ primitive tree. Its separable parameter and rational coordinates have native
 coefficient readers and derived degree/mass bounds. Filtered parameter roots
 are in bijection with the regular joint candidates. Every regular critical
 point over an actual parent has exactly one child parameter recovering its
-retained parent coordinate and complete spatial tuple. Canonical child
-labels and native actual-parent selection still need to be connected to
-this shared-source parameter family.
+retained parent coordinate and complete spatial tuple. Native actual-parent
+selection still needs to be connected to this shared-source parameter family.
 `BoundedFullSampleSelectedDirection` now connects the actual native selector
 to these child inputs. A leading unused pivot field preserves every selected
 free-direction entry; source and parent contexts are unchanged. Its space
@@ -1393,8 +1392,20 @@ all-roots-regular premise. Signed queries subtract singular contributions
 over the same regular root set. Parent derivative-sign probes preserve the
 retained parent coordinate, and their full sign signatures identify the
 specified actual parent root. Selected-sign pattern counts and signed moments
-are native. Canonical child labels and descriptor-level parent validation
-remain open for the shared source.
+are native. Descriptor-level parent validation remains open for the shared
+source.
+Native reindexed queries and child-parameter derivative signs supply sparse
+records spanning all functions on the regular roots. Prefix-rank scans select
+a basis; native Gram pencils and bounded hash search select an injective
+integer hash. Determinant cuts enumerate its values. Canonical signed words
+have native PSPACE validity and a derived unary length allowance, name unique
+regular joint candidates, and cover exactly that candidate family.
+`BoundedFullSampleChildDescriptorGeometry` connects these words to the
+original full-source blocks: every regular critical point over an actual
+parent has exactly one valid bounded descriptor. The selected-direction
+adapter supplies regularity, and the initial whole source supplies successful
+selection without a separate witness. Descriptor signs and native validation
+of the specified parent remain to be connected.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.
