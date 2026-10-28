@@ -113,6 +113,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleJointCoordinateCoefficient
 import LeanCanny.Encoding.BoundedCriticalSampleChildParameters
 import LeanCanny.Encoding.BoundedCriticalSampleChildEquationCount
 import LeanCanny.Encoding.BoundedCriticalSampleChildRegularCount
+import LeanCanny.Encoding.BoundedCriticalSampleChildParentQueries
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -466,8 +467,13 @@ The joint Jacobian now has native partial-derivative and determinant readers,
 source-derived bounds, and an exact univariate regularity test. Counting
 equation roots minus singular roots gives a native exact count and PSPACE
 existence decision for regular joint candidates, without an all-roots-regular
-promise. Actual-parent filtering, good directions, and validated child
-descriptors remain required.
+promise. Arbitrary native sign-pattern counts and sparse sign products now
+run on precisely these regular roots. Parent derivative probes pull back
+through the retained rational coordinate with unchanged signs; agreement
+of all derivative signs identifies exactly the intended parent. Selected
+parent-sign patterns and moments have native readers and bounds. Completing
+actual-parent selection at short child labels, good directions, and validated
+child descriptors remain required.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

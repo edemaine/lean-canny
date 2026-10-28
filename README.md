@@ -339,9 +339,13 @@ The checked ingredients are:
   The joint Jacobian now has native derivative and determinant coefficient
   readers, derived bounds, and an exact univariate regularity test. Subtracting
   singular roots gives native exact counts and PSPACE existence decisions for
-  regular joint candidates, without an all-roots-regular promise. Actual-parent
-  filtering, selection of good directions, and validated child descriptors
-  remain required.
+  regular joint candidates, without an all-roots-regular promise. Native
+  sign-pattern counts and sparse sign products now run on these regular roots.
+  Native parent-derivative probes preserve signs through the retained rational
+  coordinate, and matching all derivative signs identifies the intended parent.
+  Selected parent-sign patterns and moments have native readers and bounds.
+  Actual-parent selection at short child labels, good directions, and validated
+  child descriptors remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

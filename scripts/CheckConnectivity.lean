@@ -7830,3 +7830,76 @@ example (F : Inputs) (u : List Bool) (h : BoundedCriticalSampleChildRegularFilte
 
 end
 end ChildRegularFilterTests
+
+namespace ChildParentQueryTests
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny.Algebra LeanCanny.Encoding
+open BoundedCriticalSampleChildSource (Inputs)
+open scoped Classical BigOperators
+noncomputable section
+attribute [local irreducible] BoundedCriticalSampleChildParentThom.polynomial
+  BoundedCriticalSampleChildCoordinates.parameter
+
+-- Signed singular contributions can be negative. Subtraction must therefore
+-- preserve both signs, including zero and a negative result.
+#guard IntegerDifferenceBits.value (pair (SignStatisticBits.integerCode (-1)) (SignStatisticBits.integerCode (-5))) =
+  SignStatisticBits.integerCode 4
+#guard IntegerDifferenceBits.value (pair (SignStatisticBits.integerCode (-3)) (SignStatisticBits.integerCode 5)) =
+  SignStatisticBits.integerCode (-8)
+#guard IntegerDifferenceBits.value (pair (SignStatisticBits.integerCode 0) (SignStatisticBits.integerCode 0)) =
+  SignStatisticBits.integerCode 0
+
+-- Parent derivative queries retain redundant degree and modulus bits, and
+-- extract the original parent source from the child context.
+#guard BoundedCriticalSampleChildParentThom.sourceQuery
+  (pair (pair (pair (pair [true, false] [false, true]) [true, false, false]) [true, false]) [false, false]) =
+    pair (pair [true, false] (pair [true, false, false] [true, false])) [false, false]
+#guard BoundedCriticalSampleChildParentQueries.orderContext (fun _ => [true, false, false])
+  (pair [false, true, false] [false, false]) = pair [false, true, false] [true]
+
+-- Even clearing preserves the negative sign when the retained coordinate's
+-- denominator is negative. An odd exponent would reverse it here.
+example : (UnivariateRational.clear 2 Polynomial.X Polynomial.X (Polynomial.C (-1) : Polynomial ℤ)).eval₂
+    (Int.castRingHom ℝ) 1 = -1 := by
+  norm_num [UnivariateRational.clear, Finset.sum_range_succ, Polynomial.coeff_X]
+example : (UnivariateRational.clear 1 Polynomial.X Polynomial.X (Polynomial.C (-1) : Polynomial ℤ)).eval₂
+    (Int.castRingHom ℝ) 1 = 1 := by
+  norm_num [UnivariateRational.clear, Finset.sum_range_succ]
+
+-- The zeroth derivative vanishes at both parent roots, while the first
+-- derivative distinguishes them. Parent identification needs all orders.
+example : let p : Polynomial ℤ := Polynomial.X ^ 2 - 1
+    p.eval₂ (Int.castRingHom ℝ) (-1) = 0 ∧ p.eval₂ (Int.castRingHom ℝ) 1 = 0 ∧
+      p.derivative.eval₂ (Int.castRingHom ℝ) (-1) < 0 ∧ 0 < p.derivative.eval₂ (Int.castRingHom ℝ) 1 := by
+  norm_num
+
+-- No selected features gives the exact regular-root count, including an
+-- empty candidate set. The signed product uses the empty-product value one.
+example (F : Inputs) (u : List Bool) :
+    BoundedCriticalSampleChildParentQueries.moment F (fun _ => 0) (fun _ => []) u =
+      (BoundedCriticalSampleChildRegularCount.count F u : ℤ) := by
+  simp only [BoundedCriticalSampleChildParentQueries.moment, BoundedCriticalSampleChildQueries.moment,
+    BoundedCriticalSampleChildQueries.product, BoundedCriticalSampleChildParentQueries.family,
+    BinaryNatCode.encode, Nat.fromBitsLE_bits, Finset.range_zero, Finset.prod_empty,
+    Finset.sum_const, nsmul_eq_mul, mul_one, BoundedCriticalSampleChildQueries.roots_card]
+
+example {F : Inputs} (h : F.PolyTime) {features : List Bool → ℕ} (hc : UnaryFn features)
+    {orders : List Bool → List Bool} (ho : orders ∈ FP) :
+    SpaceFunction (PrimitivePairBits.coefficient (BoundedCriticalSampleChildParentThom.polynomial F)) ∧
+      SpaceFunction (fun u => SignStatisticBits.integerCode
+        (BoundedCriticalSampleChildParentQueries.moment F features orders u)) :=
+  ⟨BoundedCriticalSampleChildParentThom.evaluator h,
+    BoundedCriticalSampleChildParentQueries.moment_evaluator h hc ho⟩
+
+example {F : Inputs} (h : F.PolyTime) {features : List Bool → ℕ} (hc : UnaryFn features)
+    {orders : List Bool → List Bool} (ho : orders ∈ FP) {sigma : List Bool → SignType}
+    (hs : (fun w => InfinitesimalSign.encode (sigma w)) ∈ FP) :
+    BoundedCriticalSampleChildQueries.patternLanguage F
+      (BoundedCriticalSampleChildParentQueries.family F features orders sigma) ∈ PSPACE :=
+  (BoundedCriticalSampleChildQueries.patternDecider h
+    (BoundedCriticalSampleChildParentQueries.access F features orders sigma)
+    (BoundedCriticalSampleChildParentQueries.controls h hc orders sigma) hs
+    (BoundedCriticalSampleChildParentQueries.coefficient_evaluator h features ho sigma)).mem_PSPACE
+
+end
+end ChildParentQueryTests
