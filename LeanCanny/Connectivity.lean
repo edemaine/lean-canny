@@ -131,6 +131,7 @@ import LeanCanny.Encoding.BoundedFullBlockDirectionChoice
 import LeanCanny.Encoding.BoundedFullSampleBlockScaling
 import LeanCanny.Encoding.BoundedFullSampleChildDescriptorGeometry
 import LeanCanny.Encoding.BoundedFullSampleChildActualSamples
+import LeanCanny.Connectivity.FullSampleChildPairs
 import LeanCanny.Encoding.BoundedFullSampleChildParentQueries
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram

@@ -438,6 +438,15 @@ The checked ingredients are:
   samples in bijection with the original block's regular critical points over
   that parent. Selected directions give valid bounded words for every
   critical point, including on the initial whole source.
+  Contained full-source blocks now inherit properness and compact real levels,
+  including singular levels and empty blocks. Critical-system regularity also
+  implies hypersurface regularity. Every point of an accepted selected slice
+  can reach a sample with a valid bounded descriptor; the finite actual-parent
+  samples bound its component count. Native pair scans charge enumeration,
+  parent selection, and a supplied PSPACE path language. They transfer its
+  correctness to whole-slice connectivity, including empty fibers. The initial
+  whole source supplies all geometric sampling premises. The recursive path
+  procedure and child-as-parent interface remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

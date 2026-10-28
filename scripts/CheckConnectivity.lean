@@ -9209,3 +9209,116 @@ example (F : Inputs) (u : List Bool)
   omega
 
 end FullActualChildSampleTests
+
+namespace FullBlockGeometryTests
+open LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding MvPolynomial Set
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def circle : MvPolynomial (Fin 2) ℝ := X 0 ^ 2 + X 1 ^ 2 - 1
+private theorem circle_eval (x : Fin 2 → ℝ) : circle.eval x = x 0 ^ 2 + x 1 ^ 2 - 1 := by
+  simp only [circle, eval_sub, eval_add, eval_pow, eval_X, map_one]
+
+private theorem circle_compact : IsCompact {x : Fin 2 → ℝ | circle.eval x = 0} := by
+  apply (isCompact_Icc : IsCompact (Icc (fun _ : Fin 2 => (-1 : ℝ)) (fun _ => 1))).of_isClosed_subset
+    (isClosed_eq (MvPolynomial.continuous_eval circle) continuous_const)
+  intro x hx
+  rw [Set.mem_ofPred_eq, circle_eval] at hx
+  constructor <;> intro i <;> fin_cases i <;> dsimp <;>
+    nlinarith [sq_nonneg (x 0), sq_nonneg (x 1)]
+
+private theorem tangent_eq : CoordinateBlockSpecialization.finite (RingHom.id ℝ) (fun _ => 1) 1 1 circle =
+    (X 0 : MvPolynomial (Fin 1) ℝ) ^ 2 := by
+  norm_num [circle, CoordinateBlockSpecialization.finite, CoordinateBlockSpecialization.coordinate]
+
+-- Compactness still holds at a tangent, singular slice.
+example :
+    let q := CoordinateBlockSpecialization.finite (RingHom.id ℝ) (fun _ => 1) 1 1 circle
+    IsCompact {y | q.eval y = 0} ∧ q.eval 0 = 0 ∧ ∀ j, (pderiv j q).eval 0 = 0 := by
+  dsimp only
+  refine ⟨?_, ?_, ?_⟩
+  · exact CoordinateBlockCompactness.compact_preimage (RingHom.id ℝ) (fun _ => 1) 1 1 circle
+      (by omega) {0} isClosed_singleton circle_compact
+  · rw [tangent_eq]
+    simp
+  · rw [tangent_eq]
+    simp
+
+-- Zero free coordinates give a compact fiber without a regularity premise.
+example : IsCompact {y : Fin 0 → ℝ |
+    (CoordinateBlockSpecialization.finite (RingHom.id ℝ) (fun _ => 1) 0 0 circle).eval y = 0} :=
+  CoordinateBlockCompactness.compact_preimage (RingHom.id ℝ) (fun _ => 1) 0 0 circle
+    (by omega) {0} isClosed_singleton circle_compact
+
+-- A free coordinate outside the source creates a dummy variable. Without
+-- containment, even a compact ambient level can have a noncompact slice.
+example : ¬ IsCompact {y : Fin 1 → ℝ |
+    (CoordinateBlockSpecialization.finite (RingHom.id ℝ) (fun i => if i = 0 then 1 else 0) 2 1 circle).eval y = 0} := by
+  have he : CoordinateBlockSpecialization.finite (RingHom.id ℝ)
+      (fun i => if i = 0 then 1 else 0) 2 1 circle = 0 := by
+    rw [CoordinateBlockSpecialization.finite_frozen _ _ _ _ _ (by omega)]
+    norm_num [circle]
+  rw [he]
+  simp only [map_zero, Set.ofPred_true]
+  intro hc
+  have hr := hc.image (continuous_apply (0 : Fin 1))
+  have hi : (fun y : Fin 1 → ℝ => y 0) '' Set.univ = Set.univ := by
+    ext r
+    simp only [Set.mem_image, Set.mem_univ, true_and, iff_true]
+    exact ⟨fun _ => r, rfl⟩
+  rw [hi] at hr
+  exact noncompact_univ ℝ hr
+
+-- A singular tangent cannot satisfy the all-critical-roots regularity
+-- premise, even though compactness still holds.
+example : ¬ (∀ x : Fin 1 → ℝ,
+    (∀ i, (ProjectionCriticalFamily.spatialEquation ((X 0 : MvPolynomial (Fin 1) ℝ) ^ 2)
+      0 (fun _ => 1) i).eval x = 0) →
+    (fderiv ℝ (fun y => fun i => (ProjectionCriticalFamily.spatialEquation
+      ((X 0 : MvPolynomial (Fin 1) ℝ) ^ 2) 0 (fun _ => 1) i).eval y) x).IsInvertible) := by
+  intro h
+  have hs := ProjectionCriticalSourceRegularity.source_regular
+    ((X 0 : MvPolynomial (Fin 1) ℝ) ^ 2) 0 (fun _ => 1) h 0 (by simp)
+  have hd : fderiv ℝ (fun y : Fin 1 → ℝ => ((X 0 : MvPolynomial (Fin 1) ℝ) ^ 2).eval y) 0 = 0 :=
+    (PolynomialCalculus.critical_iff (RingHom.id ℝ) ((X 0 : MvPolynomial (Fin 1) ℝ) ^ 2) 0).mpr (by simp)
+  rw [hd] at hs
+  obtain ⟨z, hz⟩ := hs 1
+  exact zero_ne_one hz
+
+end FullBlockGeometryTests
+
+namespace FullChildPairScanTests
+open LeanCanny.Encoding LeanCanny.Algebra
+open BoundedFullSampleChildSource (Inputs)
+open BoundedFullSampleChildActualSamples
+open LeanCanny.Connectivity.FullSampleChildPairs
+open scoped Classical
+
+-- The scan charges native enumeration and parent selection as well as the
+-- recursive path routine; it needs no FP promise on those computations.
+example {F : Inputs} (h : F.PolyTime) {L : Language} (D : SpaceDecider L) :
+    LeanCanny.Connectivity.FullSampleChildPairs.language F L ∈ PSPACE :=
+  LeanCanny.Connectivity.FullSampleChildPairs.mem_PSPACE h D
+
+-- An empty selected fiber is connected, even when the pair routine always
+-- rejects. This also covers the enumeration's out-of-range fallback values.
+example (F : Inputs) (L : Language) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples F.block.parent (pairFst u))
+    [IsEmpty (Samples F u p)] :
+    pair u (BoundedCriticalSampleHashChoice.descriptor F.block.parent (pairFst u) p) ∈
+      LeanCanny.Connectivity.FullSampleChildPairs.language F L := by
+  rw [at_parent]
+  intro x
+  exact isEmptyElim x
+
+-- A nonempty fiber must test its diagonal too: an always-false path routine
+-- cannot accept a single selected child by vacuity.
+example (F : Inputs) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples F.block.parent (pairFst u)) (x : Samples F u p) :
+    pair u (BoundedCriticalSampleHashChoice.descriptor F.block.parent (pairFst u) p) ∉
+      LeanCanny.Connectivity.FullSampleChildPairs.language F (∅ : Language) := by
+  rw [at_parent]
+  intro h
+  exact h x x
+
+end FullChildPairScanTests

@@ -1413,8 +1413,30 @@ the original block's regular spatial critical points over that parent.
 Accepted words name unique samples and have the native length allowance;
 the native enumeration contains every sample in the fiber. Accepted selected
 directions cover every critical point without a pointwise regularity witness,
-including on the initial whole source. The recursive path procedure and
-component-preserving cover remain to be constructed.
+including on the initial whole source.
+`CoordinateBlockCompactness` proves compactness of contained coordinate-block
+preimages by projection from the ambient compact preimage. No bounds on frozen
+values or regularity assumption are required. `BoundedFullSampleBlockGeometry`
+therefore derives properness and compactness of every real level of the
+constructed full-source blocks, including singular levels and empty blocks.
+Containment is essential: an out-of-range free variable can leave a constant
+zero polynomial with a noncompact level.
+`ProjectionCriticalSourceRegularity` derives hypersurface regularity from
+regularity of every spatial critical root. A singular source point would be a
+critical root with a zero base row in its derivative. The native selected
+critical-system certificate thus supplies this sampling premise as well.
+`FullSampleChildCoverage` constructs a path from every slice point to a sample
+with an accepted bounded actual-parent descriptor. Its component map is
+surjective, giving finite components bounded by the actual selected fiber and
+then by the native regular-candidate count. Whole-slice preconnectedness is
+equivalent to paths between all actual samples, including the empty slice.
+`FullSampleChildPairs` implements these pair scans with native enumeration and
+parent selection. Its PSPACE bound includes both scans and a supplied PSPACE
+pair-language decider. Correctness transfers a pair-language path predicate to
+whole-slice connectivity. Selected-direction wrappers remove separate critical
+regularity premises; the initial whole source also supplies selection success
+and containment. This is a conditional transfer: the recursive path procedure
+and component-preserving cover remain to be constructed.
 The parent field of `BoundedFullSampleBlock.Inputs` still takes
 `BoundedFullWriter.Readers`. Iteration still needs an interface that accepts
 the derived child family as its next parent.
