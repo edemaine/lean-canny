@@ -410,8 +410,12 @@ The checked ingredients are:
   space-computed directions. Their degree, mass, exponent-width, and label
   bounds are derived. At actual parents, joint roots and regularity agree
   with the original block critical system, including singular roots.
-  Regular candidates have the derived finite label bound. Shared-source
-  child eliminants and descriptors remain required.
+  Regular candidates have the derived finite label bound. Native nonzero
+  coordinate eliminants now feed exact-degree preparation and a separable
+  child parameter with native rational coordinates and derived bounds.
+  Every regular critical point of the original block has exactly one child
+  parameter recovering its full tuple. Canonical child labels and native
+  filters for this shared-source family remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

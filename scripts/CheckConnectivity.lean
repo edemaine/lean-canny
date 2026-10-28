@@ -8890,3 +8890,75 @@ example (S : BoundedFullWriter.Readers) (u : List Bool)
   simp only [ProjectionCriticalFamily.spatialEquation, ite_true, map_zero]
 
 end FullSampleJointTests
+
+namespace FullSampleChildTests
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding LeanCanny.ETR MvPolynomial
+open LeanCanny.ETR.ComplexCircuit BoundedFullSampleChildParameters
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+set_option maxHeartbeats 2000000
+
+-- The exact-degree scan and both rational-coordinate readers include the
+-- shared source and the space-computed direction, without a degree oracle.
+example {F : BoundedFullSampleChildSource.Inputs} (h : F.PolyTime) :
+    SpaceFunction (BoundedFullSampleChildSource.prepare F) ∧
+      SpaceFunction (PrimitivePairBits.coefficient (BoundedFullSampleChildCoordinates.parameter F)) ∧
+      SpaceFunction (PrimitivePairBits.coefficient (fun u => (BoundedFullSampleChildCoordinates.coordinate F u).numerator)) ∧
+      SpaceFunction (PrimitivePairBits.coefficient (fun u => (BoundedFullSampleChildCoordinates.coordinate F u).denominator)) :=
+  ⟨BoundedFullSampleChildSource.prepare_evaluator h,
+    BoundedFullSampleChildCoordinates.parameter_coefficient_evaluator h,
+    BoundedFullSampleChildCoordinates.coefficient_evaluators h⟩
+
+-- The parameter remains nonzero and separable even if filtering leaves no
+-- regular candidates. Its roots still decode with nonzero denominators.
+example (F : BoundedFullSampleChildSource.Inputs) (u : List Bool) :
+    BoundedFullSampleChildCoordinates.parameter F u ≠ 0 ∧
+      ((BoundedFullSampleChildCoordinates.parameter F u).map (Int.castRingHom ℝ)).Separable :=
+  ⟨BoundedFullSampleChildCoordinates.parameter_ne_zero F u,
+    BoundedFullSampleChildCoordinates.parameter_separable F u⟩
+
+private abbrev outside (S : BoundedFullWriter.Readers) : BoundedFullSampleChildSource.Inputs :=
+  ⟨⟨S, S.comp pairFst, fun u => S.dim (pairFst u) + 4, fun _ => 1⟩,
+    fun _ => 0, fun _ => [], fun _ => (0 : Fin 1)⟩
+
+private theorem outside_original (S : BoundedFullWriter.Readers) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples S (pairFst u)) :
+    BoundedFullSampleBlockScaling.original (outside S).block u p = 0 := by
+  let q := BoundedFullCriticalSamples.polynomial S (pairFst u)
+  change CoordinateBlockSpecialization.finite (Int.castRingHom ℝ) (Formula.extend p.val)
+    (S.dim (pairFst u) + 4) 1 q = 0
+  rw [CoordinateBlockSpecialization.finite_frozen _ _ _ _ _ le_rfl]
+  have he : (fun i : Fin (S.dim (pairFst u) + 4) => Formula.extend p.val i.val) = p.val := by
+    funext i
+    simp only [Formula.extend, i.isLt, dite_true, Fin.eta]
+  rw [he]
+  have hp : q.eval₂ (Int.castRingHom ℝ) p.val = 0 := by
+    simpa only [BoundedFullCriticalSamples.equations, CriticalKernel.finiteRows, Fin.cons_zero] using p.property 0
+  rw [hp, map_zero]
+
+private theorem outside_rows (S : BoundedFullWriter.Readers) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples S (pairFst u)) :
+    originalRows (outside S) u p = fun _ : Fin 1 => 0 := by
+  unfold originalRows
+  rw [outside_original]
+  funext i
+  have hi : i = 0 := Fin.eq_zero i
+  subst i
+  simp only [ProjectionCriticalFamily.spatialEquation, ite_true]
+
+-- Every spatial point is a critical root of this zero slice, but none may
+-- enter the regular child parameter family over the actual parent.
+example (S : BoundedFullWriter.Readers) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples S (pairFst u)) (y : Fin 1 → ℝ) :
+    ¬ ∃ theta : RegularParameters (outside S) u,
+      decode (outside S) u theta.val = Fin.cons (BoundedCriticalSampleLabels.parameter S (pairFst u) p).val y := by
+  intro h
+  have hr := ((sample_iff (outside S) u p y).mp h).2
+  simp only [outside_rows, map_zero] at hr
+  change (fderiv ℝ (fun _ : Fin 1 → ℝ => (0 : Fin 1 → ℝ)) y).IsInvertible at hr
+  rw [fderiv_const_apply] at hr
+  have he : (0 : Fin 1 → ℝ) = 1 := hr.injective (by simp)
+  have hv := congrFun he 0
+  norm_num at hv
+
+end FullSampleChildTests

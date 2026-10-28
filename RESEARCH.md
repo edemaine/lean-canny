@@ -1363,8 +1363,19 @@ context, including empty blocks and modulus one. At actual parents,
 `BoundedFullSampleJointGeometry` identifies all joint roots and their
 regularity with the original block critical system. Regular candidates have
 the derived finite label bound even if other parent fibers are singular or
-positive dimensional. Shared-source child eliminants and descriptor writers
-still need to be connected to this joint interface.
+positive dimensional. `BoundedFullSampleJointCoordinate` constructs nonzero
+coordinate annihilators with native degree and coefficient bounds. Width
+conversion, homogenized rows, implicit Macaulay entries, subtractive
+characteristic determinants, and trailing-coefficient scans retain the
+shared-source coefficient and space-computed direction costs. The new child
+source feeds native exact-degree preparation and the existing balanced
+primitive tree. Its separable parameter and rational coordinates have native
+coefficient readers and derived degree/mass bounds. Filtered parameter roots
+are in bijection with the regular joint candidates. Every regular critical
+point over an actual parent has exactly one child parameter recovering its
+retained parent coordinate and complete spatial tuple. Canonical child
+labels, native equation/regularity filters, and actual-parent selection still
+need to be connected to this shared-source parameter family.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.

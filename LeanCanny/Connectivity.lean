@@ -129,7 +129,7 @@ import LeanCanny.Connectivity.CriticalSampleSelectedDirection
 import LeanCanny.Encoding.BoundedFullBlockRegularity
 import LeanCanny.Encoding.BoundedFullBlockDirectionChoice
 import LeanCanny.Encoding.BoundedFullSampleBlockScaling
-import LeanCanny.Encoding.BoundedFullSampleJointGeometry
+import LeanCanny.Encoding.BoundedFullSampleChildParameters
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -566,8 +566,12 @@ equations now have native coefficient readers, including space-computed
 directions, and common degree, mass, exponent-width, and label bounds.
 Their joint roots and regularity at actual parents agree with the original
 block critical system. Regular candidates have the derived finite label
-bound without an all-roots-regular premise. Child eliminants, descriptor
-construction, and the complete recursive cover remain required.
+bound without an all-roots-regular premise. Native nonzero coordinate
+eliminants now feed exact-degree preparation and a separable child parameter,
+with native rational coordinates and derived bounds. Every regular critical
+point of the original block has a unique parameter recovering its complete
+tuple. Canonical child labels, native filters, and the complete recursive
+cover remain required.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries
