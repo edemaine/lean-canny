@@ -14,29 +14,31 @@ namespace LeanCanny.Encoding.BoundedCriticalSampleJointMacaulay
 open LeanCanny.Algebra LeanCanny.Computation LeanCanny.ETR BoundedFullWriter MatrixPower
 open FixedWidthPolynomial
 open scoped Classical
+set_option backward.isDefEq.respectTransparency false
 attribute [local irreducible] BoundedCriticalSampleJointSource.system
   BoundedCriticalSampleJointSource.degree BoundedCriticalSampleJointCoordinate.width
 
-noncomputable def layout (P : Readers) (read : List Bool → List Bool) (k : List Bool → ℕ) : MacaulayBits.Layout where
-  arity u := k u + 2
-  width := BoundedCriticalSampleJointCoordinate.width P read k
-  degree u i := if i = 0 then 1 else BoundedCriticalSampleJointSource.degree P read u
+noncomputable def layout (P : Readers) (read : List Bool → List Bool) (k : List Bool → ℕ) (pull : List Bool → List Bool) : MacaulayBits.Layout where
+  arity u := k (pull u) + 2
+  width := BoundedCriticalSampleJointCoordinate.width P read k ∘ pull
+  degree u i := if i = 0 then 1 else BoundedCriticalSampleJointSource.degree P read (pull u)
 
 theorem layout_binary {P : Readers} (h : P.PolyTime) (read : List Bool → List Bool) (hr : read ∈ FP)
-    {k : List Bool → ℕ} (hk : UnaryFn k) : (layout P read k).BinaryPolyTime :=
-  ⟨hk.add (UnaryFn.const 2), BoundedCriticalSampleJointCoordinate.width_unary h read hr hk,
+    {k : List Bool → ℕ} (hk : UnaryFn k) {pull : List Bool → List Bool} (hpull : pull ∈ FP) :
+    (layout P read k pull).BinaryPolyTime :=
+  ⟨(hk.comp hpull).add (UnaryFn.const 2), (BoundedCriticalSampleJointCoordinate.width_unary h read hr hk).comp hpull,
     BinaryFn.ite (FPPred.eq UnaryFn.index (UnaryFn.const 0)) (BinaryFn.const 1)
-      ((BoundedCriticalSampleJointSource.degree_binary h read hr).comp pairFst_mem_FP)⟩
+      ((BoundedCriticalSampleJointSource.degree_binary h read hr).comp (mem_FP_comp pairFst_mem_FP hpull))⟩
 
 noncomputable def system (P : Readers) (read : List Bool → List Bool) (o k w : List Bool → ℕ)
-    (bits : List Bool → List Bool) (pivot : (u : List Bool) → Fin (k u))
-    (coordinate : (u : List Bool) → Fin (k u + 1)) (u : List Bool) :=
-  AffineCoordinateSystem.rows (BoundedCriticalSampleJointSource.system P read o k w bits u (pivot u))
-    (fun _ => BoundedCriticalSampleJointSource.degree P read u) (coordinate u)
+    (bits pull : List Bool → List Bool) (pivot : (u : List Bool) → Fin (k u))
+    (coordinate : (u : List Bool) → Fin (k (pull u) + 1)) (u : List Bool) :=
+  AffineCoordinateSystem.rows (BoundedCriticalSampleJointSource.system P read o k w bits (pull u) (pivot (pull u)))
+    (fun _ => BoundedCriticalSampleJointSource.degree P read (pull u)) (coordinate u)
 
-theorem degrees_eq (P : Readers) (read : List Bool → List Bool) (k : List Bool → ℕ) (u : List Bool) :
-    MacaulayBits.Degrees (layout P read k) u =
-      AffineCoordinateSystem.degrees (fun _ : Fin (k u + 1) => BoundedCriticalSampleJointSource.degree P read u) := by
+theorem degrees_eq (P : Readers) (read : List Bool → List Bool) (k : List Bool → ℕ) (pull : List Bool → List Bool) (u : List Bool) :
+    MacaulayBits.Degrees (layout P read k pull) u =
+      AffineCoordinateSystem.degrees (fun _ : Fin (k (pull u) + 1) => BoundedCriticalSampleJointSource.degree P read (pull u)) := by
   funext i
   refine Fin.cases ?_ (fun _ => ?_) i <;> simp [MacaulayBits.Degrees, layout, AffineCoordinateSystem.degrees]
 
@@ -57,60 +59,60 @@ theorem selectedRow_unary {k : List Bool → ℕ} (hk : UnaryFn k) : UnaryFn (fu
   UnaryFn.fromBitsLE_min index_FP ((hk.comp origin_FP).add (UnaryFn.const 1))
 
 noncomputable def coefficientData (P : Readers) (read : List Bool → List Bool) (o k w : List Bool → ℕ)
-    (bits : List Bool → List Bool) (pivot : (u : List Bool) → Fin (k u))
-    (coordinate : (u : List Bool) → Fin (k u + 1)) (u : List Bool) (i r j : ℕ) : ℤ :=
-  (((system P read o k w bits pivot coordinate u ⟨min i (k u + 1), by omega⟩).coeff
-    (RationalSubstitution.Indexed.exponentVector (k u + 2)
-      (entry (BoundedCriticalSampleJointCoordinate.width P read k u) r))).coeff j)
+    (bits pull : List Bool → List Bool) (pivot : (u : List Bool) → Fin (k u))
+    (coordinate : (u : List Bool) → Fin (k (pull u) + 1)) (u : List Bool) (i r j : ℕ) : ℤ :=
+  (((system P read o k w bits pull pivot coordinate u ⟨min i (k (pull u) + 1), by omega⟩).coeff
+    (RationalSubstitution.Indexed.exponentVector (k (pull u) + 2)
+      (entry (BoundedCriticalSampleJointCoordinate.width P read k (pull u)) r))).coeff j)
 
 theorem coefficientData_valid (P : Readers) (read : List Bool → List Bool) (o k w : List Bool → ℕ)
-    (bits : List Bool → List Bool) (pivot : (u : List Bool) → Fin (k u))
-    (coordinate : (u : List Bool) → Fin (k u + 1)) (u : List Bool) (i : Fin (k u + 2)) (r j : ℕ) :
-    coefficientData P read o k w bits pivot coordinate u i.val r j =
-      ((system P read o k w bits pivot coordinate u i).coeff
-        (RationalSubstitution.Indexed.exponentVector (k u + 2)
-          (entry (BoundedCriticalSampleJointCoordinate.width P read k u) r))).coeff j := by
+    (bits pull : List Bool → List Bool) (pivot : (u : List Bool) → Fin (k u))
+    (coordinate : (u : List Bool) → Fin (k (pull u) + 1)) (u : List Bool) (i : Fin (k (pull u) + 2)) (r j : ℕ) :
+    coefficientData P read o k w bits pull pivot coordinate u i.val r j =
+      ((system P read o k w bits pull pivot coordinate u i).coeff
+        (RationalSubstitution.Indexed.exponentVector (k (pull u) + 2)
+          (entry (BoundedCriticalSampleJointCoordinate.width P read k (pull u)) r))).coeff j := by
   unfold coefficientData
-  have hi : (⟨min i.val (k u + 1), by omega⟩ : Fin (k u + 2)) = i := by
+  have hi : (⟨min i.val (k (pull u) + 1), by omega⟩ : Fin (k (pull u) + 2)) = i := by
     apply Fin.ext
-    exact Nat.min_eq_left (show i.val ≤ k u + 1 by have := i.isLt; omega)
+    exact Nat.min_eq_left (show i.val ≤ k (pull u) + 1 by have := i.isLt; omega)
   rw [hi]
 
 noncomputable def coefficient (P : Readers) (read : List Bool → List Bool) (o k w : List Bool → ℕ)
-    (bits : List Bool → List Bool) (pivot : (u : List Bool) → Fin (k u))
-    (coordinate : (u : List Bool) → Fin (k u + 1)) (q : List Bool) : List Bool :=
-  residueBits ((coefficientData P read o k w bits pivot coordinate (origin q) (Nat.fromBitsLE (index q))
+    (bits pull : List Bool → List Bool) (pivot : (u : List Bool) → Fin (k u))
+    (coordinate : (u : List Bool) → Fin (k (pull u) + 1)) (q : List Bool) : List Bool :=
+  residueBits ((coefficientData P read o k w bits pull pivot coordinate (origin q) (Nat.fromBitsLE (index q))
     (Nat.fromBitsLE (rank q)) (Nat.fromBitsLE (parameter q)) : ℤ) : ZMod (Nat.fromBitsLE (modulus q) + 1))
 
 theorem coefficient_evaluator {P : Readers} (h : P.PolyTime) (read : List Bool → List Bool) (hr : read ∈ FP)
     {o k w : List Bool → ℕ} (ho : BinaryFn o) (hk : UnaryFn k) (hw : UnaryFn w)
-    {bits : List Bool → List Bool} (hbits : bits ∈ FP)
+    {bits pull : List Bool → List Bool} (hbits : bits ∈ FP) (hpull : pull ∈ FP)
     (pivot : (u : List Bool) → Fin (k u)) (hp : BinaryFn (fun u => (pivot u).val))
-    (coordinate : (u : List Bool) → Fin (k u + 1)) (hc : UnaryFn (fun u => (coordinate u).val))
+    (coordinate : (u : List Bool) → Fin (k (pull u) + 1)) (hc : UnaryFn (fun u => (coordinate u).val))
     (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
-    SpaceFunction (coefficient P read o k w bits pivot coordinate) := by
-  have E := BoundedCriticalSampleJointRows.evaluator h read hr ho hk hw hbits origin_FP pivot hp
-    (fun q => coordinate (origin q)) (hc.comp origin_FP) (selectedRow k) (selectedRow_unary hk) parameter_FP modulus_FP ha
+    SpaceFunction (coefficient P read o k w bits pull pivot coordinate) := by
+  have E := BoundedCriticalSampleJointRows.evaluator h read hr ho hk hw hbits (mem_FP_comp origin_FP hpull) pivot hp
+    (fun q => coordinate (origin q)) (hc.comp origin_FP) (selectedRow (k ∘ pull)) (selectedRow_unary (hk.comp hpull)) parameter_FP modulus_FP ha
   have EQ := E.precompose (fun q => pair q (BinaryNat.normalize (rank q)))
     (mem_FP_pair id_mem_FP (mem_FP_comp rank_FP BinaryNat.normalize_mem_FP))
   refine EQ.congr (funext fun q => ?_)
-  have H := AffineCoordinateRowsBits.value_packet (fun q => k (origin q) + 1)
-    (BoundedCriticalSampleJointCoordinate.width P read k ∘ origin)
-    (BoundedCriticalSampleJointSource.degree P read ∘ origin)
-    (fun q => BoundedCriticalSampleJointSource.system P read o k w bits (origin q) (pivot (origin q)))
-    (fun q => coordinate (origin q)) (selectedRow k) parameter modulus q (Nat.fromBitsLE (rank q))
-  simpa only [Function.comp_apply, BinaryNat.normalize_eq_bits, BinaryNatCode.encode, nativeExponent_refl,
+  have H := AffineCoordinateRowsBits.value_packet (fun q => k (pull (origin q)) + 1)
+    (BoundedCriticalSampleJointCoordinate.width P read k ∘ pull ∘ origin)
+    (BoundedCriticalSampleJointSource.degree P read ∘ pull ∘ origin)
+    (fun q => BoundedCriticalSampleJointSource.system P read o k w bits (pull (origin q)) (pivot (pull (origin q))))
+    (fun q => coordinate (origin q)) (selectedRow (k ∘ pull)) parameter modulus q (Nat.fromBitsLE (rank q))
+  simpa only [Function.comp_def, BinaryNat.normalize_eq_bits, BinaryNatCode.encode, nativeExponent_refl,
     BoundedCriticalSampleJointRows.value, coefficient, coefficientData, system, selectedRow] using H
 
 theorem coefficient_packet (P : Readers) (read : List Bool → List Bool) (o k w : List Bool → ℕ)
-    (bits : List Bool → List Bool) (pivot : (u : List Bool) → Fin (k u))
-    (coordinate : (u : List Bool) → Fin (k u + 1)) (z : List Bool)
-    (i : Fin (k (pairFst z) + 2)) (r j : ℕ) :
-    coefficient P read o k w bits pivot coordinate
+    (bits pull : List Bool → List Bool) (pivot : (u : List Bool) → Fin (k u))
+    (coordinate : (u : List Bool) → Fin (k (pull u) + 1)) (z : List Bool)
+    (i : Fin (k (pull (pairFst z)) + 2)) (r j : ℕ) :
+    coefficient P read o k w bits pull pivot coordinate
       (pair z (pair (BinaryNatCode.encode i.val) (pair (BinaryNatCode.encode r) (BinaryNatCode.encode j)))) =
-        residueBits ((((system P read o k w bits pivot coordinate (pairFst z) i).coeff
-          (RationalSubstitution.Indexed.exponentVector (k (pairFst z) + 2)
-            (entry (BoundedCriticalSampleJointCoordinate.width P read k (pairFst z)) r))).coeff j : ℤ) :
+        residueBits ((((system P read o k w bits pull pivot coordinate (pairFst z) i).coeff
+          (RationalSubstitution.Indexed.exponentVector (k (pull (pairFst z)) + 2)
+            (entry (BoundedCriticalSampleJointCoordinate.width P read k (pull (pairFst z))) r))).coeff j : ℤ) :
               ZMod (Nat.fromBitsLE (pairSnd z) + 1)) := by
   generalize hq : pair z (pair (BinaryNatCode.encode i.val)
     (pair (BinaryNatCode.encode r) (BinaryNatCode.encode j))) = q

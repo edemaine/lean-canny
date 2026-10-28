@@ -110,6 +110,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleBlockTerm
 import LeanCanny.Encoding.BoundedCriticalSampleBlockCriticalGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleJointGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleJointCoordinateCoefficient
+import LeanCanny.Encoding.BoundedCriticalSampleChildParameters
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -448,8 +449,15 @@ binary controls. Native augmented-row, implicit Macaulay, determinant, and
 lowest-coefficient readers compute their modular coefficients directly from
 the original joint source. This construction does not require regularity or
 finiteness of the other parent fibers.
-Parent filtering, good-direction selection, and child
-descriptor construction remain required.
+The indexed coordinate equations now feed a native exact-degree preparation
+and a balanced primitive-element tree. Their child parameter is separable,
+with native coefficient readers and bounds for the parameter and rational
+coordinates. Every regular joint candidate is recovered with nonzero
+denominators, and distinct parameter roots decode to distinct tuples.
+Filtering by the joint equations and regularity gives an exact bijection
+with the regular candidates, retaining their finite cardinality bound.
+Native filtering of the parameter roots, selection of the actual parent and
+good directions, and validated child descriptors remain required.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

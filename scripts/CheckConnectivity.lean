@@ -7605,8 +7605,8 @@ example {P : Readers} (h : P.PolyTime) (read : List Bool → List Bool) (hr : re
     (pivot : (u : List Bool) → Fin (k u)) (hp : BinaryFn (fun u => (pivot u).val))
     (coordinate : (u : List Bool) → Fin (k u + 1)) (hc : UnaryFn (fun u => (coordinate u).val))
     (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
-    SpaceFunction (BoundedCriticalSampleJointCoordinateCoefficient.value P read o k w bits pivot coordinate) :=
-  BoundedCriticalSampleJointCoordinateCoefficient.evaluator h read hr ho hk hw hbits pivot hp coordinate hc ha
+    SpaceFunction (BoundedCriticalSampleJointCoordinateCoefficient.value P read o k w bits id pivot coordinate) :=
+  BoundedCriticalSampleJointCoordinateCoefficient.evaluator h read hr ho hk hw hbits id_mem_FP pivot hp coordinate hc ha
 
 example (P : Readers) (read : List Bool → List Bool) (o k w : List Bool → ℕ)
     (bits : List Bool → List Bool) (u : List Bool) (b : Fin (k u))
@@ -7618,3 +7618,72 @@ example (P : Readers) (read : List Bool → List Bool) (o k w : List Bool → �
     BoundedCriticalSampleJointCoordinate.eval_regular_candidate P read o k w bits u b z i⟩
 
 end JointCoordinateAnnihilatorTests
+
+namespace ChildPrimitiveParameterTests
+open LeanCanny.Encoding LeanCanny.Algebra
+open BoundedCriticalSampleChildSource (Inputs)
+
+private def controlSource : Inputs where
+  parent := ⟨fun _ => [], fun _ => 0, fun _ => 0⟩
+  term _ := []
+  offset _ := 0
+  dim _ := 2
+  directionWidth _ := 0
+  direction _ := []
+  pivot _ := ⟨0, by decide⟩
+
+-- Coordinate query indices are binary, normalize high zeros, and clamp to
+-- an existing coordinate; the prepared family pads non-source leaves itself.
+#guard BoundedCriticalSampleChildSource.count controlSource [] = 3
+#guard (BoundedCriticalSampleChildSource.selected controlSource (pair [] [false, false])).val = 0
+#guard (BoundedCriticalSampleChildSource.selected controlSource
+  (pair [] (BinaryNatCode.encode 2 ++ [false, false]))).val = 2
+#guard (BoundedCriticalSampleChildSource.selected controlSource (pair [] (BinaryNatCode.encode 300))).val = 2
+
+-- Exact degrees are prepared in polynomial space, rather than assumed FP
+-- for the original annihilator family. All three output readers are native.
+example {F : Inputs} (h : F.PolyTime) :
+    SpaceFunction (BoundedCriticalSampleChildSource.prepare F) ∧
+      SpaceFunction (PrimitivePairBits.coefficient (BoundedCriticalSampleChildCoordinates.parameter F)) ∧
+      SpaceFunction (PrimitivePairBits.coefficient (fun u => (BoundedCriticalSampleChildCoordinates.coordinate F u).numerator)) ∧
+      SpaceFunction (PrimitivePairBits.coefficient (fun u => (BoundedCriticalSampleChildCoordinates.coordinate F u).denominator)) :=
+  ⟨BoundedCriticalSampleChildSource.prepare_evaluator h,
+    BoundedCriticalSampleChildCoordinates.parameter_coefficient_evaluator h,
+    (BoundedCriticalSampleChildCoordinates.coefficient_evaluators h).1,
+    (BoundedCriticalSampleChildCoordinates.coefficient_evaluators h).2⟩
+
+example {F : Inputs} (h : F.PolyTime) : (BoundedCriticalSampleChildSource.readers h).degree ∈ FP :=
+  (BoundedCriticalSampleChildSource.readers h).degreeFP
+
+example {F : Inputs} (h : F.PolyTime) :
+    SpaceFunction (fun u => BinaryNatCode.encode (BoundedCriticalSampleChildCoordinates.parameter F u).natDegree) :=
+  BoundedCriticalSampleChildCoordinates.parameter_degree_evaluator h
+
+example (F : Inputs) (u : List Bool) (i : ℕ) (hi : i < BoundedCriticalSampleChildSource.count F u) :
+    (BoundedCriticalSampleChildSource.family F).polynomial
+      (pair (BoundedCriticalSampleChildSource.prepare F u) (BinaryNatCode.encode i)) =
+        BoundedCriticalSampleChildSource.polynomial F (pair u (BinaryNatCode.encode i)) :=
+  BoundedCriticalSampleChildSource.prepared_polynomial F u i hi
+
+-- Every parameter root has safe coordinate denominators, including roots
+-- that will later be rejected by joint-equation or actual-parent filtering.
+example (F : Inputs) (u : List Bool) (theta : ℝ)
+    (ht : (BoundedCriticalSampleChildCoordinates.parameter F u).eval₂ (Int.castRingHom ℝ) theta = 0)
+    (i : Fin (BoundedCriticalSampleChildSource.count F u)) :
+    (BoundedCriticalSampleChildCoordinates.coordinate F (pair u (BinaryNatCode.encode i.val))).denominator.eval₂
+      (Int.castRingHom ℝ) theta ≠ 0 :=
+  (BoundedCriticalSampleChildCoordinates.parameter_root_coordinates F u theta ht i).1
+
+-- An empty regular family has no filtered parameter roots. The equivalence
+-- and its cardinality bound do not assume all joint roots are regular.
+example (F : Inputs) (u : List Bool) [IsEmpty (BoundedCriticalSampleChildParameters.Candidates F u)] :
+    IsEmpty (BoundedCriticalSampleChildParameters.RegularParameters F u) :=
+  ⟨fun theta => isEmptyElim (BoundedCriticalSampleChildParameters.candidate F u theta)⟩
+
+example (F : Inputs) (u : List Bool) :
+    Finite (BoundedCriticalSampleChildParameters.RegularParameters F u) ∧
+      Nat.card (BoundedCriticalSampleChildParameters.RegularParameters F u) ≤
+        2 ^ BoundedCriticalSampleJointSource.labelWidth F.parent F.term F.dim u :=
+  BoundedCriticalSampleChildParameters.finite_regular_parameters F u
+
+end ChildPrimitiveParameterTests

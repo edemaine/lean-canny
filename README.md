@@ -328,8 +328,13 @@ The checked ingredients are:
   Binary-degree homogenization and implicit Macaulay controls retain the
   original joint coefficient costs through determinant and lowest-coefficient
   scans; no finite-root or regularity oracle is supplied.
-  Filtering parent candidates, selecting good directions, and constructing
-  child descriptors remain required.
+  The indexed equations now have native exact-degree preparation and feed
+  a separable child primitive parameter. Native rational coordinate readers
+  recover every regular joint candidate, with nonzero denominators and
+  source-derived bounds. Parameter roots encode distinct tuples; imposing
+  the joint equations and regularity gives a bijection with the finite
+  regular candidates. Native filtering, selection of good directions, and
+  validated child descriptors remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same
