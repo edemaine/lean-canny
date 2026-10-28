@@ -316,7 +316,7 @@ The checked ingredients are:
   equations, with derived degree and mass bounds. Specialization retains the
   actual sample parameter and gives the same lower-dimensional critical
   system. Invalid pivots and rows return zero, including empty blocks.
-  Constructing finite regular child samples remains required.
+  Finite regular child samples are constructed as follows.
   The retained parent parameter is separable. A joint integer system now
   combines it with the spatial critical rows, with native coefficients and
   common degree, mass, exponent-width, and root-label bounds. Its Jacobian
@@ -354,8 +354,18 @@ The checked ingredients are:
   and have a source-derived unary length bound. Native rational cuts and
   hash-order enumeration now cover exactly the regular joint candidates.
   A PSPACE validity test rejects noncanonical words and gives each accepted
-  word a unique candidate. Signs at child labels, actual-parent selection,
-  good directions, and the recursive cover remain open.
+  word a unique candidate. Native determinant probes now read arbitrary
+  polynomial signs at these labels, with binary-indexed tests retaining the
+  same root set, basis, and hash. Native parent-derivative comparisons and a
+  binary-counted scan validate both labels and select exactly the children
+  over the specified actual parent. These labels give a finite family in
+  bijection with the regular spatial critical points over that parent. For a
+  compact regular slice and a normalized direction with all critical points
+  regular, every point can reach a sample with an accepted short label.
+  The selected children surject onto slice components and bound their number.
+  Native pair scans validate the parent and both children; a supplied path
+  procedure on the actual slice then decides whole-slice connectivity.
+  Native good-direction selection and the recursive cover remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

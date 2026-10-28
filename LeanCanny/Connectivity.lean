@@ -117,6 +117,9 @@ import LeanCanny.Encoding.BoundedCriticalSampleChildParentQueries
 import LeanCanny.Encoding.BoundedCriticalSampleChildRankBasis
 import LeanCanny.Encoding.BoundedCriticalSampleChildHashChoice
 import LeanCanny.Encoding.BoundedCriticalSampleChildDescriptors
+import LeanCanny.Encoding.BoundedCriticalSampleChildActualSamples
+import LeanCanny.Connectivity.CriticalSampleChildCoverage
+import LeanCanny.Connectivity.CriticalSampleChildPairs
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -439,7 +442,7 @@ original term and candidate direction width. Only spatial variables are
 differentiated; the actual sample parameter stays fixed. Specialization gives
 the exact critical equations of the actual lower-dimensional polynomial slice.
 Invalid pivots and rows, including empty blocks, return zero. Finite regular
-child-sample construction and the recursive cover remain required.
+child samples over the actual parent are constructed below.
 The original parent parameter is separable, so its derivative is nonzero at
 every root. A constructed joint integer system retains that parameter equation
 alongside the spatial critical rows, with common native degree, mass, exponent,
@@ -486,8 +489,19 @@ signed integer descriptors are injective and have a source-derived unary
 length bound. Native rational cuts now count their values below, at, and
 above a threshold. Native hash-order enumeration is bijective with the
 regular joint candidates, and a PSPACE validity test rejects noncanonical
-words and gives each accepted word a unique candidate. Signs at child labels,
-actual-parent selection, good directions, and the recursive cover remain open.
+words and gives each accepted word a unique candidate. Native determinant
+probes now read polynomial signs at these labels. Binary-indexed probes keep
+the original root set, basis, and hash fixed. Comparing all parent derivative
+signs with a binary-counted scan gives a native PSPACE test selecting exactly
+the regular children over the specified actual parent. Both descriptors are
+validated. The selected finite geometric samples are exactly the regular
+spatial critical points over that parent. On a compact regular slice, a
+normalized direction whose critical points are all regular makes every point
+reachable from a sample with an accepted short label. Native good-direction
+selection and the recursive cover remain open. The selected children now
+surject onto slice components and bound their number. Native pair scans
+charge descriptor enumeration, actual-parent selection, and a supplied
+slice-path procedure, reducing whole-slice connectivity to that procedure.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

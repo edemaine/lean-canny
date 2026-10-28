@@ -11,8 +11,9 @@ public import LeanCanny.Encoding.BoundedCriticalSampleChildHashEnumeration
 Canonical signed integer words name the selected injective hash values.
 Validity charges parameter selection and the determinant cut reader. Each
 valid descriptor names one regular child root, and every ordinal
-below the native regular-child count produces such a word. Polynomial signs at
-these labels and actual-parent selection remain downstream work.
+below the native regular-child count produces such a word. Downstream
+`BoundedCriticalSampleChildTestSign` reads polynomial signs at these labels;
+`BoundedCriticalSampleChildParentSelection` selects the actual parent fiber.
 -/
 
 @[expose] public section
