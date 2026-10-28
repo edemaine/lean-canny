@@ -130,6 +130,7 @@ import LeanCanny.Encoding.BoundedFullBlockRegularity
 import LeanCanny.Encoding.BoundedFullBlockDirectionChoice
 import LeanCanny.Encoding.BoundedFullSampleBlockScaling
 import LeanCanny.Encoding.BoundedFullSampleChildDescriptorGeometry
+import LeanCanny.Encoding.BoundedFullSampleChildActualSamples
 import LeanCanny.Encoding.BoundedFullSampleChildParentQueries
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
@@ -571,8 +572,8 @@ bound without an all-roots-regular premise. Native nonzero coordinate
 eliminants now feed exact-degree preparation and a separable child parameter,
 with native rational coordinates and derived bounds. Every regular critical
 point of the original block has a unique parameter recovering its complete
-tuple. Native actual-parent selection and the complete recursive cover remain
-required. The selected-direction adapter supplies these
+tuple. The complete recursive cover remains required. The selected-direction
+adapter supplies these
 child sources, charging the native search in their coefficient readers.
 Accepted records give regularity and unique parameters for all actual-parent
 critical roots. Contained blocks use slice regularity for selection success;
@@ -589,6 +590,12 @@ enumeration covers exactly the regular joint candidates, and accepted words
 name unique tuples. Every regular original block critical point has exactly
 one valid bounded descriptor; accepted selected directions cover all of
 their actual-parent critical points, including the initial whole source.
+Native polynomial and binary-indexed sign readers now operate at these
+descriptors. Parent validation and a binary derivative-sign scan select
+exactly the specified actual parent. Accepted words name unique finite
+samples in bijection with the original block's regular critical points over
+that parent. Selected directions cover all its critical points, with native
+valid bounded words; the initial whole source supplies success itself.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

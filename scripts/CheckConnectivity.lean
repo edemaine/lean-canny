@@ -9096,3 +9096,116 @@ example {F : Inputs} (h : F.PolyTime) :
   ⟨BoundedFullSampleChildHashEnumeration.evaluator h, mem_PSPACE h⟩
 
 end FullChildDescriptorTests
+
+namespace FullChildPointSignTests
+open LeanCanny.Encoding LeanCanny.Algebra
+open BoundedFullSampleChildSource (Inputs)
+open BoundedFullSampleChildTestMoments
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] BoundedFullSampleChildQueries.roots
+  BoundedFullSampleChildRegularCount.count
+
+-- The defining parameter vanishes at every accepted root. The unit test
+-- stays positive, so zero signs cannot arise from a zero probe denominator.
+example (F : Inputs) (c : List Bool) (x : BoundedFullSampleChildRecordSpan.Root F c) :
+    BoundedFullSampleChildTestSign.value F (BoundedFullSampleChildTestSign.parameterTest F)
+        (pair c (BoundedFullSampleChildHashChoice.descriptor F c x)) = [] ∧
+      BoundedFullSampleChildTestSign.value F unit
+        (pair c (BoundedFullSampleChildHashChoice.descriptor F c x)) = InfinitesimalSign.encode .pos := by
+  refine ⟨BoundedFullSampleChildTestSign.parameter_value F c x, ?_⟩
+  rw [BoundedFullSampleChildTestSign.value_descriptor, sign_unit]
+
+-- An arbitrary total fallback sign cannot validate a malformed descriptor.
+example (F : Inputs) (T : Test) (s : SignType) (q : List Bool)
+    (hq : q ∉ BoundedFullSampleChildDescriptors.language F) :
+    q ∉ BoundedFullSampleChildTestSign.language F T s := fun h => hq h.1
+
+-- The first ordinal past the root count is rejected for every sign.
+example (F : Inputs) (T : Test) (s : SignType) (c : List Bool) :
+    pair c (BinaryNatCode.encode (BoundedFullSampleChildRegularCount.count F c)) ∉
+      BoundedFullSampleChildTestSign.ordinalLanguage F T s := by
+  apply BoundedFullSampleChildTestSign.ordinal_language_invalid
+  simp only [pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, le_refl]
+
+-- Different binary query indices preserve the same selected root and hash.
+example (F : Inputs) (c d e : List Bool) (x : BoundedFullSampleChildRecordSpan.Root F c) :
+    BoundedFullSampleChildIndexedSign.value F unit
+        (pair (pair c (BoundedFullSampleChildHashChoice.descriptor F c x)) d) =
+      BoundedFullSampleChildIndexedSign.value F unit
+        (pair (pair c (BoundedFullSampleChildHashChoice.descriptor F c x)) e) := by
+  rw [BoundedFullSampleChildIndexedSign.value_descriptor,
+    BoundedFullSampleChildIndexedSign.value_descriptor, sign_unit, sign_unit]
+
+-- Every native cost is derived from the original source and modular test
+-- coefficients. No table of signs, moments, or regular roots is supplied.
+example {F : Inputs} (h : F.PolyTime) {T : Test} (A : T.Access) (s : SignType) :
+    BoundedFullSampleChildTestSign.language F T s ∈ PSPACE ∧
+      BoundedFullSampleChildIndexedSign.language F T s ∈ PSPACE ∧
+      BoundedFullSampleChildParentSelection.language F ∈ PSPACE :=
+  ⟨BoundedFullSampleChildTestSign.mem_PSPACE h A s,
+    BoundedFullSampleChildIndexedSign.mem_PSPACE h A s,
+    BoundedFullSampleChildParentSelection.mem_PSPACE h⟩
+
+-- Even a perfectly valid regular candidate is rejected over the wrong
+-- parent. Joint regularity alone is insufficient for child selection.
+example (F : Inputs) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples F.block.parent (pairFst u))
+    (z : BoundedFullSampleChildParameters.Candidates F u)
+    (hz : z.val.val (BoundedFullSampleChildParentThom.first F u) ≠
+      (BoundedCriticalSampleLabels.parameter F.block.parent (pairFst u) p).val) :
+    pair u (pair (BoundedCriticalSampleHashChoice.descriptor F.block.parent (pairFst u) p)
+      (BoundedFullSampleChildDescriptors.candidateWord F u z)) ∉
+        BoundedFullSampleChildParentSelection.language F := by
+  rw [BoundedFullSampleChildParentSelection.candidate_packet]
+  exact hz
+
+-- Conversely every regular candidate over the specified parent is accepted;
+-- no regularity promise on the other parent fibers is needed.
+example (F : Inputs) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples F.block.parent (pairFst u))
+    (z : BoundedFullSampleChildParameters.Candidates F u)
+    (hz : z.val.val (BoundedFullSampleChildParentThom.first F u) =
+      (BoundedCriticalSampleLabels.parameter F.block.parent (pairFst u) p).val) :
+    pair u (pair (BoundedCriticalSampleHashChoice.descriptor F.block.parent (pairFst u) p)
+      (BoundedFullSampleChildDescriptors.candidateWord F u z)) ∈
+        BoundedFullSampleChildParentSelection.language F :=
+  (BoundedFullSampleChildParentSelection.candidate_packet F u p z).mpr hz
+
+-- Descriptor validity is required independently of all derivative matches.
+example (F : Inputs) (q : List Bool)
+    (hp : BoundedFullSampleChildParentSelection.parentLabel q ∉
+      BoundedCriticalSampleDescriptors.language F.block.parent) :
+    q ∉ BoundedFullSampleChildParentSelection.language F :=
+  BoundedFullSampleChildParentSelection.invalid_parent F q hp
+
+end FullChildPointSignTests
+
+namespace FullActualChildSampleTests
+open LeanCanny.Encoding LeanCanny.Algebra
+open BoundedFullSampleChildSource (Inputs)
+open BoundedFullSampleChildActualSamples
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+-- A regular spatial critical point has an accepted short child label over
+-- this exact parent, even if other parent fibers contain singular families.
+example (F : Inputs) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples F.block.parent (pairFst u)) (y : Fin (F.block.dim u) → ℝ)
+    (hy : ∀ i, (spatial F u p i).eval y = 0)
+    (hr : (fderiv ℝ (fun z => fun i => (spatial F u p i).eval z) y).IsInvertible) :
+    ∃ x : Samples F u p, point F u p x = y ∧
+      (word F u p x).length ≤ BoundedFullSampleChildHashChoice.descriptorWidth F u ∧
+      pair u (pair (BoundedCriticalSampleHashChoice.descriptor F.block.parent (pairFst u) p) (word F u p x)) ∈
+        BoundedFullSampleChildParentSelection.language F := by
+  obtain ⟨x, hx⟩ := point_complete F u p y hy hr
+  exact ⟨x, hx, word_length F u p x, word_valid F u p x⟩
+
+-- An empty total regular-candidate family also has an empty selected fiber.
+example (F : Inputs) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples F.block.parent (pairFst u))
+    (hc : BoundedFullSampleChildRegularCount.count F u = 0) : Nat.card (Samples F u p) = 0 := by
+  have h := card_le F u p
+  omega
+
+end FullActualChildSampleTests

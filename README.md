@@ -414,8 +414,7 @@ The checked ingredients are:
   coordinate eliminants now feed exact-degree preparation and a separable
   child parameter with native rational coordinates and derived bounds.
   Every regular critical point of the original block has exactly one child
-  parameter recovering its full tuple. Native actual-parent selection for
-  this shared-source family remains required.
+  parameter recovering its full tuple.
   A native selected-direction adapter now supplies these child sources and
   includes the direction search in their coefficient readers. Accepted
   records give unique parameters for all actual-parent critical roots.
@@ -433,6 +432,12 @@ The checked ingredients are:
   name unique tuples. Every regular original block critical point has one
   valid bounded descriptor; accepted selected directions cover all of their
   actual-parent critical points, including the initial whole source.
+  Native polynomial and binary-indexed sign readers now operate at these
+  descriptors. Parent validation and a binary derivative-sign scan select
+  exactly the specified actual parent. Accepted words name unique finite
+  samples in bijection with the original block's regular critical points over
+  that parent. Selected directions give valid bounded words for every
+  critical point, including on the initial whole source.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

@@ -1373,8 +1373,7 @@ primitive tree. Its separable parameter and rational coordinates have native
 coefficient readers and derived degree/mass bounds. Filtered parameter roots
 are in bijection with the regular joint candidates. Every regular critical
 point over an actual parent has exactly one child parameter recovering its
-retained parent coordinate and complete spatial tuple. Native actual-parent
-selection still needs to be connected to this shared-source parameter family.
+retained parent coordinate and complete spatial tuple.
 `BoundedFullSampleSelectedDirection` now connects the actual native selector
 to these child inputs. A leading unused pivot field preserves every selected
 free-direction entry; source and parent contexts are unchanged. Its space
@@ -1392,8 +1391,7 @@ all-roots-regular premise. Signed queries subtract singular contributions
 over the same regular root set. Parent derivative-sign probes preserve the
 retained parent coordinate, and their full sign signatures identify the
 specified actual parent root. Selected-sign pattern counts and signed moments
-are native. Descriptor-level parent validation remains open for the shared
-source.
+are native.
 Native reindexed queries and child-parameter derivative signs supply sparse
 records spanning all functions on the regular roots. Prefix-rank scans select
 a basis; native Gram pencils and bounded hash search select an injective
@@ -1404,8 +1402,22 @@ regular joint candidates, and cover exactly that candidate family.
 original full-source blocks: every regular critical point over an actual
 parent has exactly one valid bounded descriptor. The selected-direction
 adapter supplies regularity, and the initial whole source supplies successful
-selection without a separate witness. Descriptor signs and native validation
-of the specified parent remain to be connected.
+selection without a separate witness.
+Native polynomial-test and binary-indexed sign probes now read signs at these
+descriptors, with validity guards rejecting malformed words and ordinals.
+`BoundedFullSampleChildParentSelection` validates both descriptors and compares
+all parent derivative signs with a binary-counted scan. It selects exactly
+the retained coordinate of the specified actual parent. The resulting
+`BoundedFullSampleChildActualSamples` family is finite and in bijection with
+the original block's regular spatial critical points over that parent.
+Accepted words name unique samples and have the native length allowance;
+the native enumeration contains every sample in the fiber. Accepted selected
+directions cover every critical point without a pointwise regularity witness,
+including on the initial whole source. The recursive path procedure and
+component-preserving cover remain to be constructed.
+The parent field of `BoundedFullSampleBlock.Inputs` still takes
+`BoundedFullWriter.Readers`. Iteration still needs an interface that accepts
+the derived child family as its next parent.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.
