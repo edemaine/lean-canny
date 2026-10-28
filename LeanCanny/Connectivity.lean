@@ -122,6 +122,7 @@ import LeanCanny.Connectivity.CriticalSampleChildCoverage
 import LeanCanny.Connectivity.CriticalSampleChildPairs
 import LeanCanny.Encoding.BoundedCriticalSampleChildTermSign
 import LeanCanny.Connectivity.CriticalSampleOriginalSlice
+import LeanCanny.ETR.ComplexBlockKernelGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -514,6 +515,13 @@ times the original frozen-coordinate term polynomial. Its whole critical
 zero set and analytic regularity are preserved, including singular and
 positive-dimensional sets. The native child-pair reduction therefore also
 applies directly to the original term's slice and recursive path predicate.
+Shared block circuits now give a native regularity validator for the
+normalized first-coordinate critical system under generated real formula
+constraints. Every kernel chart is checked; neither finiteness nor a
+singularity-testing oracle is assumed. Formula witnesses remain independent
+of every circuit auxiliary. Its specialization is exactly the original
+frozen-coordinate polynomial. Actual-parent constraint generation and a
+bounded successful direction search remain open.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

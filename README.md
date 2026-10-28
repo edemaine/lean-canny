@@ -375,6 +375,12 @@ The checked ingredients are:
   original term, preserving all critical roots and their regularity.
   The native pair scan consequently reduces original-term slice connectivity
   to paths between selected children under the same geometric assumptions.
+  Shared block circuits now validate the normalized first-coordinate critical
+  system in native space under generated real formula constraints. Scanning
+  every kernel chart detects singular points even in positive-dimensional
+  critical sets, while keeping formula witnesses independent of auxiliary
+  wires. Actual-parent constraint generation and a bounded successful
+  direction search remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

@@ -8340,3 +8340,59 @@ example :
       (fun _ : Fin 0 => (C 0 : MvPolynomial (Fin 0) ℝ)) 0).det = 1 := by
   simp only [Matrix.det_isEmpty]
 end CriticalScalingTests
+
+namespace NativeBlockKernelTests
+open LeanCanny.ETR LeanCanny.Computation MvPolynomial
+open LeanCanny.ETR.ComplexCircuit
+open scoped Classical
+#guard CircuitBlock.input 1 2 0 = 2
+#guard CircuitBlock.input 1 2 1 = 0
+#guard CircuitBlock.input 1 2 2 = 1
+#guard CircuitBlock.input 1 2 3 = 5
+#guard CircuitBlock.input (2 ^ 100) 2 7 = 9
+#guard CircuitBlock.input 1000000 0 8 = 8
+
+-- A regular hypersurface can have a positive-dimensional critical set in a
+-- bad direction. Its only normalized kernel chart here is the last one.
+private theorem lastChart (t : ℝ) :
+    CriticalKernel.At (X 0) 2 (fun _ => 0) 1 (fun i => if i = 0 then 0 else (t : ℂ)) ∧
+      ¬ CriticalKernel.At (X 0) 2 (fun _ => 0) 0 (fun i => if i = 0 then 0 else (t : ℂ)) := by
+  constructor
+  · refine ⟨fun i => if i = 1 then 1 else 0, by norm_num, ?_⟩
+    intro j hj
+    have he : j = 0 ∨ j = 1 := by omega
+    rcases he with rfl | rfl <;>
+      norm_num [CriticalKernel.criticalValue, CriticalKernel.kernelValue,
+        CriticalKernel.selectedPolynomial, CriticalKernel.entryPolynomial, CriticalKernel.coefficient,
+        Finset.sum_range_succ, pderiv_X, Pi.single_apply]
+  · rintro ⟨u, hu, hroot⟩
+    have hz : u 0 = 0 := by
+      simpa [CriticalKernel.kernelValue, CriticalKernel.entryPolynomial, CriticalKernel.coefficient,
+        Finset.sum_range_succ, pderiv_X, Pi.single_apply] using (hroot 0 (by decide)).2
+    rw [hu] at hz
+    exact one_ne_zero hz
+
+-- A formula witness at the numerical address of the normalized kernel wire
+-- remains independent: the formula sets it to zero while the kernel is one.
+example : RealQuery.Interleaved.InputSatisfiable 3 3
+    (CriticalKernel.query 3 2 [] 0 (fun _ => 0) 1) (.eqZero (.var 4)) := by
+  apply (CriticalKernel.input_correct (fun i => (X i : MvPolynomial ℕ ℤ))
+    3 2 [] 0 (fun _ => 0) 1 (by decide) (by trivial) (by trivial)
+    (fun _ _ => rfl) (by decide) (.eqZero (.var 4))).mpr
+  refine ⟨fun _ => 0, ?_, rfl⟩
+  simpa using (lastChart 0).1
+
+-- Complex singular roots alone cannot reject a direction at real inputs.
+example (x : ℕ → ℝ) : ¬ CriticalKernel.At ((X 0 ^ 2 + 1) ^ 2) 1 (fun _ => 0) 0 (fun i => (x i : ℂ)) := by
+  rintro ⟨u, _, hroot⟩
+  have h := (hroot 0 (by decide)).1
+  simp only [CriticalKernel.criticalValue, CriticalKernel.selectedPolynomial, CriticalKernel.coefficient,
+    ite_true, Int.cast_zero, zero_mul, add_zero] at h
+  rw [polynomial_eval_ofReal] at h
+  have hz : ((x 0) ^ 2 + 1) ^ 2 = 0 := by
+    simpa only [eval₂_pow, eval₂_add, eval₂_X, eval₂_one, Complex.ofReal_eq_zero] using h
+  have hp : 0 < ((x 0) ^ 2 + 1) ^ 2 := by positivity
+  exact (ne_of_gt hp) hz
+
+example {F : BlockKernel.Inputs} (h : F.PolyTime) : BlockKernel.language F ∈ PSPACE := BlockKernel.mem_PSPACE h
+end NativeBlockKernelTests

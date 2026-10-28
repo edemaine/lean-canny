@@ -1274,7 +1274,23 @@ the constructed regular-child enumeration are retained by the equivalence.
 A direction validator must exclude every singular critical root; counting
 only roots of the regular-candidate parameterization cannot establish this.
 The scaling bridge permits such a test on the original frozen-coordinate term.
-Its native construction and a bounded successful direction search remain open.
+`ComplexCircuitBlock` now compiles the original source with free coordinates
+first and frozen parent inputs after them. The operation count is unchanged;
+all addresses and the gate writer have native time bounds, including binary
+offsets. `FreeCoordinateSpecialization` commutes with free partial derivatives.
+`ComplexCriticalKernelPorts` gives exact constrained kernel queries with
+independent logical witnesses. `ComplexCriticalKernelSpecialization` proves
+that the union of normalized kernel charts at real inputs is exactly the
+singular critical locus of the frozen slice, with no finiteness assumption.
+`ComplexBlockKernel` constructs the native PSPACE validator for original-term
+blocks and scans every chart. `ComplexBlockKernelGeometry` identifies its
+specialized polynomial with the original frozen-coordinate term polynomial
+used by child-sample geometry. The validator accepts generated real formula
+constraints; constructing the constraint that selects the intended actual
+parent tuples, and a bounded successful direction search, remain open.
+The parent equations already have native serialization through
+`BoundedCriticalSampleQuery.selected_encode_evaluator`; their independent
+logical witnesses still need an address map compatible with the block inputs.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
