@@ -1224,6 +1224,32 @@ with the actual lower-dimensional critical equations and identifies the
 specialized source's zero set with the original term on the updated actual
 sample block. Selecting directions yielding finite regular child samples,
 constructing their descriptors, and assembling the recursive cover remain open.
+`BoundedCriticalParameterSeparable` exposes the separability already guaranteed
+by the balanced primitive-parameter constructor. Its derivative is nonzero at
+every root, including extraneous roots and actual selected parent parameters.
+`RetainedParameterPolynomial` supplies the embedded parameter row's coefficient
+mask, mass bound, and exact partial derivatives. `RetainedParameterSystem`
+proves that adjoining this row multiplies the spatial Jacobian determinant by
+the parent derivative, with the corresponding analytic regularity equivalence.
+`BoundedCriticalSampleJointSource` combines the retained parent equation and
+constructed spatial critical rows into one square integer system. Its common
+degree, mass, exponent-width, and root-label allowances have native controls.
+`CoefficientWidthBinarySpace` extends the existing guarded exponent conversion
+to binary degree bounds; no exact-degree FP oracle is introduced.
+`BoundedCriticalSampleParameterRow`, `JointCritical`, and `JointCoefficient`
+construct native modular access to every row in the common layout. Oversized
+critical exponents are rejected before narrowing; spatial monomials are masked
+from the parent row. Parent-row queries remain defined for empty blocks.
+`JointGeometry` identifies the actual parent fibers and reduces joint regularity
+to spatial regularity. `RegularAffineSubsetCount` applies the existing individual
+coordinate eliminants to the regular subset, without requiring every root to be
+regular or the full root set to be finite. The regular joint candidates therefore
+form a finite family with the derived label bound, even when other parent fibers
+have singular or positive-dimensional root sets. Every regular critical point
+over an actual parent sample belongs to this family. Completeness for intended
+children still needs good directions. These candidates also include extraneous
+parent roots; native parent filtering, good-direction selection, and child
+descriptor construction remain open.
 Recursive sample-base construction and the complete
 higher-dimensional cover remain open.
 

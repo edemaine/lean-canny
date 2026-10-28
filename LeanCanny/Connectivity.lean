@@ -108,6 +108,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleSliceRootCount
 import LeanCanny.Encoding.BoundedCriticalSampleLineZero
 import LeanCanny.Encoding.BoundedCriticalSampleBlockTerm
 import LeanCanny.Encoding.BoundedCriticalSampleBlockCriticalGeometry
+import LeanCanny.Encoding.BoundedCriticalSampleJointGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -431,6 +432,17 @@ differentiated; the actual sample parameter stays fixed. Specialization gives
 the exact critical equations of the actual lower-dimensional polynomial slice.
 Invalid pivots and rows, including empty blocks, return zero. Finite regular
 child-sample construction and the recursive cover remain required.
+The original parent parameter is separable, so its derivative is nonzero at
+every root. A constructed joint integer system retains that parameter equation
+alongside the spatial critical rows, with common native degree, mass, exponent,
+and label controls. Its native coefficient reader uses a spatial mask for the
+parent row and guarded width conversion for critical rows. Joint regularity
+at a parent root is exactly spatial regularity; the parent contributes no new
+singularity. The regular candidate subset is finite with the derived label
+bound even if other roots form positive-dimensional sets. Regular critical
+points over actual sample parameters are included in that family.
+Parent filtering, good-direction selection, and child
+descriptor construction remain required.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

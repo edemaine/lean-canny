@@ -7461,3 +7461,100 @@ example {P : Readers} (h : P.PolyTime) (read : List Bool → List Bool) (hr : re
 
 end
 end ActualSampleBlockCriticalTests
+
+namespace ActualSampleJointSystemTests
+noncomputable section
+open MvPolynomial LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR
+open BoundedFullWriter
+open scoped Classical
+
+-- The retained equation has no spatial monomials, even if the same
+-- parameter exponent has a nonzero univariate coefficient.
+example (p : Polynomial ℤ) :
+    (IndexedMultivariateRational.parameter 1 p).coeff (Finsupp.single (1 : Fin 2) 1) = 0 := by
+  simp [RetainedParameterPolynomial.coefficient, Fin.forall_fin_succ]
+
+example (p : Polynomial ℤ) (r : ℕ) :
+    (IndexedMultivariateRational.parameter 1 p).coeff (Finsupp.single (0 : Fin 2) r) = p.coeff r := by
+  simp [RetainedParameterPolynomial.coefficient]
+
+-- Narrowing three-bit exponents to two bits would turn exponent four into zero.
+-- The binary degree guard rejects it before the constant reader can accept.
+#guard CoefficientWidthBits.value (fun _ => 1) (fun _ => 3) (fun _ => 2) (fun _ => 1)
+  (fun _ => [true, true, true]) (pair [] (BinaryNatCode.encode 4)) = []
+#guard CoefficientWidthBits.value (fun _ => 1) (fun _ => 3) (fun _ => 2) (fun _ => 1)
+  (fun _ => [true, true, true]) (pair [] (BinaryNatCode.encode 0)) = [true, true, true]
+
+-- No spatial variables leaves exactly the parent derivative determinant.
+example (p : Polynomial ℤ) (t : ℝ) :
+    (Matrix.of (fun i j => (pderiv j (RetainedParameterSystem.system p
+      (fun z : Fin 0 => Fin.elim0 z) i)).eval₂ (Int.castRingHom ℝ) (Fin.cons t (fun z => Fin.elim0 z)))).det =
+        p.derivative.eval₂ (Int.castRingHom ℝ) t := by
+  rw [RetainedParameterSystem.jacobian_det]
+  simp only [Matrix.det_isEmpty, mul_one]
+
+-- A repeated parent root makes the joint system singular even when the
+-- spatial equation itself is linear. The constructed parent avoids this.
+example :
+    (Matrix.of (fun i j => (pderiv j (RetainedParameterSystem.system (Polynomial.X ^ 2)
+      (fun _ : Fin 1 => X (1 : Fin 2)) i)).eval₂ (Int.castRingHom ℝ)
+        (Fin.cons 0 (fun _ => (0 : ℝ))))).det = 0 := by
+  rw [RetainedParameterSystem.jacobian_det]
+  simp
+
+-- Row translation preserves both the original record and modulus.
+#guard BoundedCriticalSampleJointCoefficient.criticalQuery
+  (pair (pair [true] (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 5))) (BinaryNatCode.encode 3)) =
+    pair (pair [true] (pair (BinaryNatCode.encode 1) (BinaryNatCode.encode 3))) (BinaryNatCode.encode 5)
+
+-- Parent access does not require a spatial pivot, including in dimension zero.
+example (P : Readers) (read : List Bool → List Bool) (o k w b b' : List Bool → ℕ)
+    (bits : List Bool → List Bool) (u : List Bool) (r m : ℕ) :
+    BoundedCriticalSampleJointCoefficient.value P read o k w b bits
+      (pair (pair u (pair [] (BinaryNatCode.encode r))) (BinaryNatCode.encode m)) =
+    BoundedCriticalSampleJointCoefficient.value P read o k w b' bits
+      (pair (pair u (pair [] (BinaryNatCode.encode r))) (BinaryNatCode.encode m)) := by
+  rw [BoundedCriticalSampleJointCoefficient.parent_packet, BoundedCriticalSampleJointCoefficient.parent_packet]
+
+example (P : Readers) (read : List Bool → List Bool) (o w b : List Bool → ℕ)
+    (bits : List Bool → List Bool) (q : List Bool)
+    (h0 : Nat.fromBitsLE (BoundedCriticalSampleBlockCritical.row q) ≠ 0) :
+    BoundedCriticalSampleJointCoefficient.value P read o (fun _ => 0) w b bits q = [] := by
+  apply BoundedCriticalSampleJointCoefficient.invalid_spatial P read o (fun _ => 0) w b bits q h0
+  intro h
+  exact (Nat.not_lt_zero _) h.2
+
+-- Native access and all label bounds depend only on original readers.
+-- No regularity or finite-root promise is used by the evaluator.
+example {P : Readers} (h : P.PolyTime) (read : List Bool → List Bool) (hr : read ∈ FP)
+    {o k w b : List Bool → ℕ} (ho : BinaryFn o) (hk : UnaryFn k) (hw : UnaryFn w) (hb : BinaryFn b)
+    {bits : List Bool → List Bool} (hbits : bits ∈ FP)
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalSampleJointCoefficient.value P read o k w b bits) ∧
+      UnaryFn (BoundedCriticalSampleJointSource.labelWidth P read k) :=
+  ⟨BoundedCriticalSampleJointCoefficient.evaluator h read hr ho hk hw hb hbits ha,
+    BoundedCriticalSampleJointSource.labelWidth_unary h read hr hk⟩
+
+end
+end ActualSampleJointSystemTests
+
+namespace RegularJointSubsetTests
+noncomputable section
+open MvPolynomial LeanCanny.Algebra LeanCanny.Geometry
+open scoped Classical
+
+-- The zero equation has every real number as a root, but no regular roots.
+-- Finiteness of the regular subset must not assume finiteness of all roots.
+example : IsEmpty (RegularAffineRootCount.RegularRoots (fun _ : Fin 1 => (0 : MvPolynomial (Fin 1) ℤ))) := by
+  refine ⟨fun x => ?_⟩
+  have H := (PolynomialSystemRegularity.isInvertible_iff (Int.castRingHom ℝ)
+    (fun _ : Fin 1 => (0 : MvPolynomial (Fin 1) ℤ)) x.val.val).mp x.property
+  simp [PolynomialSystemRegularity.matrix] at H
+
+example (q : Fin 2 → MvPolynomial (Fin 2) ℤ) (hq : ∀ i, (q i).totalDegree ≤ 3) :
+    Finite (RegularAffineRootCount.RegularRoots q) ∧
+      Nat.card (RegularAffineRootCount.RegularRoots q) ≤ 2 ^ RegularAffineRootCount.labelWidth 2 3 :=
+  RegularAffineRootCount.finite_regular_card_le_uniform q 3 hq (by decide)
+
+end
+end RegularJointSubsetTests

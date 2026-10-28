@@ -317,6 +317,14 @@ The checked ingredients are:
   actual sample parameter and gives the same lower-dimensional critical
   system. Invalid pivots and rows return zero, including empty blocks.
   Constructing finite regular child samples remains required.
+  The retained parent parameter is separable. A joint integer system now
+  combines it with the spatial critical rows, with native coefficients and
+  common degree, mass, exponent-width, and root-label bounds. Its Jacobian
+  factors into the nonzero parent derivative and the spatial Jacobian.
+  Regular joint candidates form a finite family with the derived label bound,
+  even when other candidate roots form positive-dimensional sets.
+  Filtering parent candidates, selecting good directions, and constructing
+  child descriptors remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same
