@@ -406,7 +406,12 @@ The checked ingredients are:
   readers with derived degree and mass budgets. Fixed even denominator
   clearing preserves the exact source block up to a positive constant at
   every actual parent, retaining singular critical roots and regularity.
-  The child critical/joint descriptor interface remains required.
+  Native critical and retained-parent joint coefficient readers now accept
+  space-computed directions. Their degree, mass, exponent-width, and label
+  bounds are derived. At actual parents, joint roots and regularity agree
+  with the original block critical system, including singular roots.
+  Regular candidates have the derived finite label bound. Shared-source
+  child eliminants and descriptors remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

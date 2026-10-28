@@ -8807,3 +8807,86 @@ example {P : BoundedFullWriter.Readers} {F : BoundedFullBlockKernel.Inputs}
     BoundedFullSampleBlockPolynomial.mass_binary (BoundedFullSampleBlockScaling.ofKernel_polyTime hP hS ho hf)⟩
 
 end FullSampleBlockTests
+
+namespace FullSampleJointTests
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding LeanCanny.ETR MvPolynomial
+open BoundedFullSampleBlock LeanCanny.ETR.ComplexCircuit
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+set_option maxHeartbeats 2000000
+
+-- An empty free block has no critical rows, regardless of the raw pivot.
+example (P S : BoundedFullWriter.Readers) (o w b : List Bool → ℕ)
+    (bits : List Bool → List Bool) (q : List Bool) :
+    BoundedFullSampleBlockCritical.value ⟨P, S, o, fun _ => 0⟩ w b bits q = [] := by
+  apply BoundedFullSampleBlockCritical.invalid
+  simp only [BoundedCriticalSampleBlockCritical.valid]
+  omega
+
+-- The parent row survives an empty block and does not query its direction.
+example (F : Inputs) (w b b' : List Bool → ℕ) (bits bits' : List Bool → List Bool)
+    (u : List Bool) (r m : ℕ) :
+    BoundedFullSampleJointCoefficient.value F w b bits
+      (pair (pair u (pair [] (BinaryNatCode.encode r))) (BinaryNatCode.encode m)) =
+    BoundedFullSampleJointCoefficient.value F w b' bits'
+      (pair (pair u (pair [] (BinaryNatCode.encode r))) (BinaryNatCode.encode m)) := by
+  rw [BoundedFullSampleJointCoefficient.parent_packet, BoundedFullSampleJointCoefficient.parent_packet]
+
+-- All joint rows give the canonical zero residue modulo one.
+example (F : Inputs) (w b : List Bool → ℕ) (bits : List Bool → List Bool)
+    (u : List Bool) (pivot : Fin (F.dim u)) (hb : b u = pivot.val)
+    (i : Fin (F.dim u + 1)) (r : ℕ) :
+    BoundedFullSampleJointCoefficient.value F w b bits
+      (pair (pair u (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode r))) []) = [] := by
+  have H := BoundedFullSampleJointCoefficient.packet F w b bits u pivot hb i r 0
+  have hz (z : ZMod 1) : MatrixPower.residueBits z = [] := by
+    have he : z = 0 := Subsingleton.elim _ _
+    rw [he]
+    rfl
+  simpa only [Nat.zero_add, hz, BinaryNatCode.encode, show Nat.bits 0 = [] from rfl] using H
+
+-- Direction selection is charged in space, with no FP direction assumption.
+example {F : Inputs} (h : F.PolyTime) {w b : List Bool → ℕ} (hw : UnaryFn w) (hb : BinaryFn b)
+    {bits : List Bool → List Bool} (E : SpaceFunction bits)
+    (htP : ∀ c, (TermView.term (F.parent.source c)).arity ≤ F.parent.dim c)
+    (htS : ∀ u, (TermView.term (F.source.source u)).arity ≤ F.source.dim u) :
+    SpaceFunction (BoundedFullSampleJointCoefficient.value F w b bits) ∧
+      BinaryFn (BoundedFullSampleJointSource.massExponent F w) ∧
+      UnaryFn (BoundedFullSampleJointSource.labelWidth F) :=
+  ⟨BoundedFullSampleJointCoefficient.evaluator h hw hb E htP htS,
+    BoundedFullSampleJointSource.massExponent_binary h hw,
+    BoundedFullSampleJointSource.labelWidth_unary h⟩
+
+private abbrev outside (S : BoundedFullWriter.Readers) : Inputs :=
+  ⟨S, S.comp pairFst, fun u => S.dim (pairFst u) + 4, fun _ => 1⟩
+
+private theorem outside_original (S : BoundedFullWriter.Readers) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples S (pairFst u)) :
+    BoundedFullSampleBlockScaling.original (outside S) u p = 0 := by
+  let q := BoundedFullCriticalSamples.polynomial S (pairFst u)
+  change CoordinateBlockSpecialization.finite (Int.castRingHom ℝ) (Formula.extend p.val)
+    (S.dim (pairFst u) + 4) 1 q = 0
+  rw [CoordinateBlockSpecialization.finite_frozen _ _ _ _ _ le_rfl]
+  have he : (fun i : Fin (S.dim (pairFst u) + 4) => Formula.extend p.val i.val) = p.val := by
+    funext i
+    simp only [Formula.extend, i.isLt, dite_true, Fin.eta]
+  rw [he]
+  have hp : q.eval₂ (Int.castRingHom ℝ) p.val = 0 := by
+    simpa only [BoundedFullCriticalSamples.equations, CriticalKernel.finiteRows, Fin.cons_zero] using p.property 0
+  rw [hp, map_zero]
+
+-- Free coordinates outside the source give a zero slice at an actual parent.
+-- Every point remains a joint root, including this positive-dimensional fiber.
+example (S : BoundedFullWriter.Readers) (u : List Bool)
+    (p : BoundedFullCriticalSamples.Samples S (pairFst u)) (w : List Bool → ℕ)
+    (bits : List Bool → List Bool) (y : Fin 1 → ℝ) :
+    ∀ i, (BoundedFullSampleJointSource.system (outside S) w bits u 0 i).eval₂ (Int.castRingHom ℝ)
+      (Fin.cons (BoundedCriticalSampleLabels.parameter S (pairFst u) p).val y) = 0 := by
+  apply (BoundedFullSampleJointGeometry.sample_root_iff (outside S) w bits u p 0 y).mpr
+  rw [outside_original]
+  intro i
+  have hi : i = 0 := Fin.eq_zero i
+  subst i
+  simp only [ProjectionCriticalFamily.spatialEquation, ite_true, map_zero]
+
+end FullSampleJointTests

@@ -45,6 +45,10 @@ noncomputable def degreeBound (F : Inputs) (u : List Bool) : ℕ := arity F u * 
 noncomputable def width (F : Inputs) (u : List Bool) : ℕ := (degreeBound F u + extent F u + 1).size
 noncomputable def span (F : Inputs) (u : List Bool) : ℕ := width F u * (F.dim u + 1)
 
+theorem degreeBound_pos (F : Inputs) (u : List Bool) : 0 < degreeBound F u := by
+  unfold degreeBound arity clearing grid extent
+  positivity
+
 theorem arity_unary {F : Inputs} (h : F.PolyTime) : UnaryFn (arity F) := h.source.dim.add (UnaryFn.const 4)
 theorem sourceWidth_unary {F : Inputs} (h : F.PolyTime) : UnaryFn (sourceWidth F) :=
   (UnaryFn.length (degree_binary h.source).bits_mem_FP).of_eq (fun _ => BinaryNatCode.length_encode _)

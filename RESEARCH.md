@@ -1338,8 +1338,8 @@ regularity remains a geometric premise for contained blocks. The unfrozen
 initial source derives this regularity from the construction and needs no
 supplied shape, degree, leading coefficient, or regularity certificate.
 Native record readers and selected kernel-query serializers preserve the same
-source, parent family, and direction. Child coefficient/descriptor writers
-still take term syntax; their interface to this shared source remains open.
+source, parent family, and direction. The complete child descriptor pipeline
+still takes term syntax; its shared-source interface is under construction.
 `BoundedCriticalSampleBlockCodes` now supplies Kronecker coordinate codes with
 an independent native width. `BoundedFullSampleBlock` instantiates the existing
 implicit fixed-width rational-substitution engine with `BoundedFullCoefficient`
@@ -1352,8 +1352,19 @@ times the original finite coordinate block. This block agrees with the
 shared-source kernel validator. Zero sets, hypersurface regularity, and the
 entire spatial critical system and its regularity are preserved, including
 singular roots. The unfrozen whole-source specialization has scale one.
-Child critical/joint eliminants and descriptor writers still need to be
-connected to this arithmetic interface.
+`FixedWidthCriticalDirectionSpace` and `FixedWidthQuerySpace` charge native
+direction selection in polynomial space. `BoundedFullSampleBlockCoefficient`
+repackages arbitrary binary exponent words, and the critical source/reader
+modules stream spatial critical equations with derived degree and mass bounds.
+`BoundedFullSampleJointSource` retains the separable parent equation and gives
+common degree, mass, exponent-width, and root-label allowances. Its native
+coefficient readers guard width conversion and preserve the exact source
+context, including empty blocks and modulus one. At actual parents,
+`BoundedFullSampleJointGeometry` identifies all joint roots and their
+regularity with the original block critical system. Regular candidates have
+the derived finite label bound even if other parent fibers are singular or
+positive dimensional. Shared-source child eliminants and descriptor writers
+still need to be connected to this joint interface.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.

@@ -129,6 +129,7 @@ import LeanCanny.Connectivity.CriticalSampleSelectedDirection
 import LeanCanny.Encoding.BoundedFullBlockRegularity
 import LeanCanny.Encoding.BoundedFullBlockDirectionChoice
 import LeanCanny.Encoding.BoundedFullSampleBlockScaling
+import LeanCanny.Encoding.BoundedFullSampleJointGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -561,7 +562,12 @@ coefficient recovery and degree/mass budgets are proved. At every actual
 parent, specialization is a positive constant times the same shared-source
 block used by the validator. Its zero set, critical roots, and both regularity
 predicates are preserved, including singular roots. Child critical and joint
-descriptor construction and the complete recursive cover remain required.
+equations now have native coefficient readers, including space-computed
+directions, and common degree, mass, exponent-width, and label bounds.
+Their joint roots and regularity at actual parents agree with the original
+block critical system. Regular candidates have the derived finite label
+bound without an all-roots-regular premise. Child eliminants, descriptor
+construction, and the complete recursive cover remain required.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries
