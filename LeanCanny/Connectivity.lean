@@ -112,6 +112,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleJointGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleJointCoordinateCoefficient
 import LeanCanny.Encoding.BoundedCriticalSampleChildParameters
 import LeanCanny.Encoding.BoundedCriticalSampleChildEquationCount
+import LeanCanny.Encoding.BoundedCriticalSampleChildRegularCount
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -461,8 +462,12 @@ Native univariate tests now impose all joint equations on child parameter
 roots. They preserve zeros and signs through fixed even denominator powers,
 with derived binary bounds and native coefficient readers. Their exact
 filtered-root count and existence language are native PSPACE constructions.
-These tests can retain singular candidates. Native Jacobian and actual-parent
-filtering, good directions, and validated child descriptors remain required.
+The joint Jacobian now has native partial-derivative and determinant readers,
+source-derived bounds, and an exact univariate regularity test. Counting
+equation roots minus singular roots gives a native exact count and PSPACE
+existence decision for regular joint candidates, without an all-roots-regular
+promise. Actual-parent filtering, good directions, and validated child
+descriptors remain required.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

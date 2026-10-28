@@ -10,8 +10,9 @@ public import LeanCanny.Encoding.BoundedCriticalSampleChildCoordinates
 
 The joint equations and Jacobian condition select precisely the regular
 candidates among the child parameter roots. The correspondence is bijective,
-including when there are no regular candidates. Native filtering and
-selection of the actual parent root remain separate obligations.
+including when there are no regular candidates. Native equation and
+regularity filters are supplied by the downstream child-count modules;
+selection of the actual parent root remains a separate obligation.
 -/
 
 @[expose] public section

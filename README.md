@@ -336,8 +336,12 @@ The checked ingredients are:
   regular candidates. The joint equations now have native univariate tests
   with exact zero and sign semantics, bounded coefficient readers, and native
   counts and existence decisions for the child parameter roots passing them.
-  Singular candidates can remain. Native Jacobian and actual-parent filtering,
-  selection of good directions, and validated child descriptors remain required.
+  The joint Jacobian now has native derivative and determinant coefficient
+  readers, derived bounds, and an exact univariate regularity test. Subtracting
+  singular roots gives native exact counts and PSPACE existence decisions for
+  regular joint candidates, without an all-roots-regular promise. Actual-parent
+  filtering, selection of good directions, and validated child descriptors
+  remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

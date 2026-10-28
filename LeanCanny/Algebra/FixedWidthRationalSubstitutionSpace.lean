@@ -67,7 +67,7 @@ structure Access (F : Family) where
   width : UnaryFn F.width
   coefficient : List Bool → List Bool
   evaluator : SpaceFunction coefficient
-  coefficient_eq : ∀ c r m, 0 < m →
+  coefficient_eq : ∀ c r, r < F.terms c → ∀ m, 0 < m →
     coefficient (pair (pair c (BinaryNatCode.encode r)) (BinaryNatCode.encode (m - 1))) =
       residueBits ((F.coefficient c r : ℤ) : ZMod m)
   coordinates : RationalSubstitution.IntegerBits.CoordinateReaders F.arity F.numerator F.denominator
@@ -86,7 +86,7 @@ noncomputable def Access.indexed {F : Family} (A : Access F) : RationalSubstitut
   exponent_eq c r _ i hi := by
     rw [exponentRead_packet F.arity F.width c r i (show i < F.arity c from hi)]
     exact Nat.fromBitsLE_bits _
-  coefficient_eq c r _ m hm := A.coefficient_eq c r m hm
+  coefficient_eq c r hr m hm := A.coefficient_eq c r hr m hm
   numerator_eq := A.coordinates.numerator_eq
   denominator_eq := A.coordinates.denominator_eq
 

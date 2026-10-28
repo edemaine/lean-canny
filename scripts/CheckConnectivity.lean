@@ -7764,3 +7764,69 @@ example (F : Inputs) (u : List Bool) (z : BoundedCriticalSampleChildParameters.C
 
 end
 end ChildEquationFilterTests
+
+namespace ChildRegularFilterTests
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny.Algebra LeanCanny.Encoding
+open BoundedCriticalSampleChildSource (Inputs)
+open scoped Classical
+noncomputable section
+
+-- A raw multivariate rank ignores unused high blocks. The determinant's
+-- univariate entry reader must reject that rank before asking its source.
+#guard FixedWidthPolynomial.entry 1 2 0 = FixedWidthPolynomial.entry 1 0 0
+#guard FixedWidthDeterminantBits.entry (fun _ => 1) (fun _ => 1) (fun _ => [true])
+  (pair [] (pair [] (pair [] (BinaryNatCode.encode 2)))) = []
+#guard FixedWidthDeterminantBits.entry (fun _ => 1) (fun _ => 1) (fun _ => [true])
+  (pair [] (pair [] (pair [] (BinaryNatCode.encode 1)))) = [true]
+
+-- The empty determinant is one, including its coefficient mass. A bound
+-- derived from an empty sum must retain this constant term.
+example (A : Matrix (Fin 0) (Fin 0) (MvPolynomial (Fin 0) ℤ)) :
+    A.det = 1 ∧ MvMass.mass A.det ≤ 2 ^ (0 : ℕ) := by
+  constructor
+  · exact Matrix.det_isEmpty
+  · simpa only [Fintype.card_fin, Nat.zero_mul, Nat.mul_zero, Nat.add_zero] using
+      MvDeterminantBounds.mass_le_pow A 0 (fun i => Fin.elim0 i)
+
+-- Linear equations are regular, whereas a double root is singular.
+example : (Matrix.det (fun i j : Fin 1 => MvPolynomial.pderiv j (MvPolynomial.X i : MvPolynomial (Fin 1) ℤ))).eval₂
+    (Int.castRingHom ℝ) (fun _ => 0) = 1 := by
+  rw [Matrix.det_fin_one]
+  simp
+example : (Matrix.det (fun i j : Fin 1 => MvPolynomial.pderiv j ((MvPolynomial.X i : MvPolynomial (Fin 1) ℤ) ^ 2))).eval₂
+    (Int.castRingHom ℝ) (fun _ => 0) = 0 := by
+  rw [Matrix.det_fin_one]
+  norm_num [MvPolynomial.pderiv_pow]
+
+-- Native counts and decisions need only the original source's polynomial
+-- time controls, with no supplied Jacobian coefficients or regularity oracle.
+example {F : Inputs} (h : F.PolyTime) :
+    SpaceFunction (PrimitivePairBits.coefficient (BoundedCriticalSampleChildRegularFilter.polynomial F)) ∧
+      SpaceFunction (fun u => BinaryNatCode.encode (BoundedCriticalSampleChildRegularCount.count F u)) ∧
+      BoundedCriticalSampleChildRegularCount.language F ∈ PSPACE :=
+  ⟨BoundedCriticalSampleChildRegularFilter.evaluator h,
+    BoundedCriticalSampleChildRegularCount.evaluator h,
+    BoundedCriticalSampleChildRegularCount.language_mem_PSPACE h⟩
+
+example (F : Inputs) (u : List Bool) :
+    BoundedCriticalSampleChildRegularCount.count F u = Nat.card (BoundedCriticalSampleChildParameters.Candidates F u) :=
+  BoundedCriticalSampleChildRegularCount.count_eq_candidates F u
+
+-- An identically zero Jacobian removes every candidate; the constant one
+-- removes none. Neither case needs the singular count's test to be nonzero.
+example (F : Inputs) (u : List Bool) (h : BoundedCriticalSampleChildRegularFilter.polynomial F u = 0) :
+    BoundedCriticalSampleChildRegularCount.count F u = 0 := by
+  rw [BoundedCriticalSampleChildRegularCount.count_eq_difference,
+    BoundedCriticalSampleChildRegularCount.equationCount_eq_card,
+    BoundedCriticalSampleChildRegularCount.singularCount_eq_card]
+  simp only [h, Polynomial.eval₂_zero, Finset.filter_true, Nat.sub_self]
+
+example (F : Inputs) (u : List Bool) (h : BoundedCriticalSampleChildRegularFilter.polynomial F u = 1) :
+    BoundedCriticalSampleChildRegularCount.count F u = BoundedCriticalSampleChildEquationCount.count F u := by
+  rw [BoundedCriticalSampleChildRegularCount.count_eq_difference,
+    BoundedCriticalSampleChildRegularCount.singularCount_eq_card]
+  simp only [h, Polynomial.eval₂_one, one_ne_zero, Finset.filter_false, Finset.card_empty, Nat.sub_zero]
+
+end
+end ChildRegularFilterTests

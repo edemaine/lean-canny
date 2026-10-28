@@ -78,7 +78,7 @@ noncomputable def access {F : Inputs} (h : F.PolyTime) : FixedWidthRationalSubst
   width := (BoundedCriticalSampleJointSource.width_unary h.parent F.term h.term).comp pairFst_mem_FP
   coefficient := coefficient F
   evaluator := coefficient_evaluator h
-  coefficient_eq := coefficient_packet F
+  coefficient_eq c r _ m hm := coefficient_packet F c r m hm
   coordinates := (BoundedCriticalSampleChildReaders.readers h).precompose pairFst pairFst_mem_FP
 
 theorem evaluator {F : Inputs} (h : F.PolyTime) : SpaceFunction (PrimitivePairBits.coefficient (polynomial F)) :=
