@@ -445,8 +445,16 @@ The checked ingredients are:
   samples bound its component count. Native pair scans charge enumeration,
   parent selection, and a supplied PSPACE path language. They transfer its
   correctness to whole-slice connectivity, including empty fibers. The initial
-  whole source supplies all geometric sampling premises. The recursive path
-  procedure and child-as-parent interface remain open.
+  whole source supplies all geometric sampling premises.
+  A generic native rational-coordinate interface now accepts derived children
+  as parents of the next full-source block. Ambient coordinates outside the
+  sampled block are composed through the retained parent parameter; every
+  coordinate has the exact original assignment and nonzero denominators at
+  actual child parameters. Next-stage coefficients include these composition
+  costs and have derived degree and mass bounds. Positive scaling preserves
+  zero sets and critical regularity, and contained next-stage levels are
+  compact. Generalized child eliminants, selectors, descriptors, and uniform
+  recursion bounds still need to be connected to this interface.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

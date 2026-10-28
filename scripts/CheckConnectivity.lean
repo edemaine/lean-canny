@@ -9322,3 +9322,71 @@ example (F : Inputs) (u : List Bool)
   exact h x x
 
 end FullChildPairScanTests
+
+namespace RationalParentRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open RationalCoordinateFamily Polynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def oldRaw : Family where
+  coordinate _ := ⟨X ^ 2, 1⟩
+  degree _ := 2
+  mass _ := 0
+  degree_le _ := by norm_num [UnivariateRational.Coordinate.degree]
+  numerator_mass _ := by simp only [coefficientMass_X_pow, pow_zero, le_refl]
+  denominator_mass _ := by simp only [← Polynomial.C_1, coefficientMass_C, Int.natAbs_one, pow_zero, le_refl]
+
+private noncomputable def childRaw : Family where
+  coordinate q := if Nat.fromBitsLE (pairSnd q) = 0 then ⟨X, X + C 1⟩
+    else if Nat.fromBitsLE (pairSnd q) = 1 then ⟨X ^ 3, 1⟩ else ⟨X ^ 2, 1⟩
+  degree _ := 3
+  mass _ := 1
+  degree_le _ := by
+    split_ifs <;> norm_num [UnivariateRational.Coordinate.degree]
+  numerator_mass _ := by
+    have hx : coefficientMass (X : ℤ[X]) = 1 := by simpa only [pow_one] using coefficientMass_X_pow 1
+    split_ifs <;> norm_num [hx, coefficientMass_X_pow]
+  denominator_mass _ := by
+    have hx : coefficientMass (X : ℤ[X]) = 1 := by simpa only [pow_one] using coefficientMass_X_pow 1
+    have h1 : coefficientMass (1 : ℤ[X]) = 1 := by simpa only [Polynomial.C_1, Int.natAbs_one] using coefficientMass_C (1 : ℤ)
+    split_ifs
+    · exact (coefficientMass_add_le _ _).trans (by norm_num [hx, h1, coefficientMass_C])
+    · simp only [← Polynomial.C_1, coefficientMass_C, Int.natAbs_one, pow_one]; omega
+    · simp only [← Polynomial.C_1, coefficientMass_C, Int.natAbs_one, pow_one]; omega
+
+private noncomputable def old : Family := extend oldRaw (fun _ => 5)
+private noncomputable def child : Family := extend childRaw (fun _ => 3)
+private noncomputable def next : Family := RationalParentUpdate.update old child (fun _ => 1) (fun _ => 2)
+
+-- Both neighbors retain the composed parent coordinate; the two free
+-- coordinates are distinct successor entries, and zero extension survives.
+example : point next [] 3 0 = 9 / 16 ∧ point next [] 3 1 = 27 ∧
+    point next [] 3 2 = 9 ∧ point next [] 3 3 = 9 / 16 ∧ point next [] 3 5 = 0 := by
+  norm_num [point, next, RationalParentUpdate.update, choose, RationalParentUpdate.old,
+    RationalParentUpdate.retained, RationalParentUpdate.spatial, reindex, compose,
+    RationalParentUpdate.oldQuery, RationalParentUpdate.retainedQuery, RationalParentUpdate.spatialQuery,
+    old, child, extend, oldRaw, childRaw, zero, BoundedCriticalSampleBlockSource.InBlock,
+    UnivariateRational.Coordinate.eval, UnivariateRational.Coordinate.compWith, UnivariateRational.clear,
+    Finset.sum_range_succ, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.fromBitsLE_cons, show Nat.fromBitsLE [] = 0 from rfl, Polynomial.coeff_one, Polynomial.eval₂_pow, Polynomial.eval₂_add, Polynomial.eval₂_C, Polynomial.eval₂_X, pairFst_pair, pairSnd_pair]
+
+-- A retained parent pole cannot become a usable recursive parent.
+example : ¬ Defined next [] (-1) := by
+  intro h
+  have H := h 0
+  norm_num [next, RationalParentUpdate.update, choose, RationalParentUpdate.old,
+    RationalParentUpdate.retained, RationalParentUpdate.spatial, reindex, compose,
+    RationalParentUpdate.oldQuery, RationalParentUpdate.retainedQuery, RationalParentUpdate.spatialQuery,
+    old, child, extend, oldRaw, childRaw, zero, BoundedCriticalSampleBlockSource.InBlock,
+    UnivariateRational.Coordinate.compWith, UnivariateRational.clear, Finset.sum_range_succ, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.fromBitsLE_cons, show Nat.fromBitsLE [] = 0 from rfl, Polynomial.coeff_one, Polynomial.eval₂_pow, Polynomial.eval₂_add, Polynomial.eval₂_C, Polynomial.eval₂_X] at H
+
+-- An empty update still composes every retained coordinate through the
+-- child parameter. It never reads the spatial successor coordinates.
+example : point (RationalParentUpdate.update old child (fun _ => 1) (fun _ => 0)) [] 3 1 = 9 / 16 := by
+  norm_num [point, RationalParentUpdate.update, choose, RationalParentUpdate.old,
+    RationalParentUpdate.retained, RationalParentUpdate.spatial, reindex, compose,
+    RationalParentUpdate.oldQuery, RationalParentUpdate.retainedQuery, RationalParentUpdate.spatialQuery,
+    old, child, extend, oldRaw, childRaw, zero, BoundedCriticalSampleBlockSource.InBlock,
+    UnivariateRational.Coordinate.eval, UnivariateRational.Coordinate.compWith, UnivariateRational.clear,
+    Finset.sum_range_succ, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.fromBitsLE_cons, show Nat.fromBitsLE [] = 0 from rfl, Polynomial.coeff_one, Polynomial.eval₂_pow, Polynomial.eval₂_add, Polynomial.eval₂_C, Polynomial.eval₂_X]
+end RationalParentRegression

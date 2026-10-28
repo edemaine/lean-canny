@@ -1338,8 +1338,8 @@ regularity remains a geometric premise for contained blocks. The unfrozen
 initial source derives this regularity from the construction and needs no
 supplied shape, degree, leading coefficient, or regularity certificate.
 Native record readers and selected kernel-query serializers preserve the same
-source, parent family, and direction. The complete child descriptor pipeline
-still takes term syntax; its shared-source interface is under construction.
+source, parent family, and direction. The shared-source child descriptor
+pipeline below supplies the native interface.
 `BoundedCriticalSampleBlockCodes` now supplies Kronecker coordinate codes with
 an independent native width. `BoundedFullSampleBlock` instantiates the existing
 implicit fixed-width rational-substitution engine with `BoundedFullCoefficient`
@@ -1437,9 +1437,34 @@ whole-slice connectivity. Selected-direction wrappers remove separate critical
 regularity premises; the initial whole source also supplies selection success
 and containment. This is a conditional transfer: the recursive path procedure
 and component-preserving cover remain to be constructed.
-The parent field of `BoundedFullSampleBlock.Inputs` still takes
-`BoundedFullWriter.Readers`. Iteration still needs an interface that accepts
-the derived child family as its next parent.
+The original `BoundedFullSampleBlock.Inputs` still takes
+`BoundedFullWriter.Readers`. `RationalCoordinateFamily` now provides a native
+parent-coordinate interface independent of that source syntax. Its binary
+degree and mass controls and coefficient evaluators are closed under
+reindexing, fixed-exponent composition, guarded choice, and zero extension.
+`RationalParentUpdate` retains the complete ambient point through a child
+parameter: successor coordinates replace the sampled block, while all other
+coordinates compose through the retained parent coordinate. Its native space
+certificate includes both families and the composition routines.
+`FullSampleParentCoordinates` instantiates the interface for original and
+shared-source child samples. At every actual child parameter it proves all
+denominators nonzero and recovers exactly the original ambient assignment,
+including the coordinates outside the child block and zero extension.
+`RationalParentBlockCodes` and `RationalParentFullBlock` stream full-source
+blocks over these generalized parents. Multivariate coefficient, degree,
+support, and mass bounds are derived, and the native coefficient evaluator
+includes every parent computation. `RationalParentFullBlockScaling` proves
+positive constant scaling, exact zero sets, hypersurface and critical-system
+regularity equivalences, and properness of contained free blocks.
+`FullSampleNextBlock` constructs this next-stage input at actual derived
+children. Its specialization is the exact original source with the child's
+ambient coordinates frozen outside the next free block, up to a derived
+positive constant; all contained real levels are compact. No separately
+supplied coordinate reader, denominator witness, or scaling certificate is
+needed. Generalizing the critical and joint eliminant pipeline, direction
+selection, parent filtering, and descriptors to this interface remains open.
+These are one-stage native closure certificates; uniform input-dependent
+recursion and its polynomial bounds are not yet proved.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.
