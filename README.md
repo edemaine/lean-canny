@@ -344,8 +344,11 @@ The checked ingredients are:
   Native parent-derivative probes preserve signs through the retained rational
   coordinate, and matching all derivative signs identifies the intended parent.
   Selected parent-sign patterns and moments have native readers and bounds.
-  Actual-parent selection at short child labels, good directions, and validated
-  child descriptors remain required.
+  The regular child parameter's derivative signs now separate its roots, and
+  short sparse sign records span all root functions. Native Gram entries and
+  prefix ranks select short records forming a basis, read one record at a
+  time. Child descriptor hashes, actual-parent selection, good directions,
+  and validated child descriptors remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

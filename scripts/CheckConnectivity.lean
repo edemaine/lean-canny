@@ -7903,3 +7903,77 @@ example {F : Inputs} (h : F.PolyTime) {features : List Bool → ℕ} (hc : Unary
 
 end
 end ChildParentQueryTests
+
+namespace ChildRecordBasisTests
+open LeanCanny.Encoding LeanCanny.Algebra
+open BoundedCriticalSampleChildSource (Inputs)
+open BoundedCriticalSampleChildRecords
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] BoundedCriticalSampleChildCoordinates.parameter
+  BoundedCriticalSampleChildCoordinates.parameterDegree BoundedCriticalSampleChildRegularCount.count
+  BoundedCriticalSampleChildQueries.roots BoundedCriticalSampleChildThom.labelWidth
+
+-- A zero slot denotes one, rather than the vanishing zeroth derivative.
+-- Its moment must count every regular root, even if there are no roots.
+example (F : Inputs) (c : List Bool) :
+    (moment F (pair c (List.replicate (width F c) false)) : ℚ) =
+      (BoundedCriticalSampleChildRegularCount.count F c : ℚ) := by
+  have hz (n : ℕ) : Nat.fromBitsLE (List.replicate n false) = 0 := by
+    induction n with
+    | zero => rfl
+    | succ n ih => simp only [List.replicate_succ, Nat.fromBitsLE_cons, Bool.false_eq_true, ite_false, ih]
+  have hc : recordSlots F (pair c (List.replicate (width F c) false)) = 1 := by
+    simp only [recordSlots, pairFst_pair, pairSnd_pair, List.length_replicate]
+    exact Nat.div_self (width_pos F c)
+  have hcoord : SparseFeatureRecords.coordinate (width F c) (List.replicate (width F c) false) 0 = 0 := by
+    simp only [SparseFeatureRecords.coordinate, Nat.zero_mul, List.drop_zero, List.take_replicate, Nat.min_self]
+    exact hz _
+  rw [BoundedCriticalSampleChildRecordSpan.moment_eq_sum_values, hc]
+  simp only [SparseFeatureRecords.value, Finset.prod_range_succ, Finset.prod_range_zero,
+    hcoord, SparseFeatureRecords.factor_zero, Finset.sum_const, Finset.card_univ, nsmul_eq_mul, mul_one,
+    Fintype.card_coe, BoundedCriticalSampleChildQueries.roots_card]
+
+-- Binary derivative orders beyond the degree allowance yield zero.
+example (F : Inputs) (c : List Bool) (k : ℕ)
+    (hk : BoundedCriticalSampleChildCoordinates.parameterDegree F c < k) :
+    BoundedCriticalSampleChildThom.polynomial F c k = 0 :=
+  Polynomial.iterate_derivative_eq_zero ((BoundedCriticalSampleChildCoordinates.parameter_bounds F c).1.trans_lt hk)
+
+-- An empty regular candidate set gives rank zero for every prefix, even
+-- when the requested prefix extends past the candidate matrix dimension.
+example (F : Inputs) (c : List Bool) (h : BoundedCriticalSampleChildRegularCount.count F c = 0) (k : ℕ) :
+    BoundedCriticalSampleChildPrefixRank.prefixRank F c k = 0 := by
+  have H := BoundedCriticalSampleChildPrefixRank.prefixRank_le_count F c k
+  omega
+
+-- Native Gram diagonal entries are sums of squares on the regular roots.
+example (F : Inputs) (c : List Bool) (i : BoundedCriticalSampleChildRecordSpan.Index F c) :
+    0 ≤ (BoundedCriticalSampleChildRecordSpan.entry F
+      (pair c (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode i.val))) : ℚ) := by
+  rw [BoundedCriticalSampleChildRecordSpan.entry_packet, BoundedCriticalSampleChildRecordSpan.gram, Matrix.mul_apply]
+  simp only [Matrix.transpose_apply]
+  exact Finset.sum_nonneg (fun x _ => mul_self_nonneg (BoundedCriticalSampleChildRecordSpan.matrix F c i x))
+
+-- Selected records separate distinct regular children, including children
+-- retained over different roots of the original parent parameter.
+example (F : Inputs) (c : List Bool) (x y : BoundedCriticalSampleChildRecordSpan.Root F c) (hxy : x ≠ y) :
+    ∃ r : Fin (BoundedCriticalSampleChildRegularCount.count F c),
+      BoundedCriticalSampleChildRecordSpan.row F c
+        (BoundedCriticalSampleChildRankBasis.record F (pair c (BinaryNatCode.encode r.val))) x ≠
+      BoundedCriticalSampleChildRecordSpan.row F c
+        (BoundedCriticalSampleChildRankBasis.record F (pair c (BinaryNatCode.encode r.val))) y := by
+  by_contra! he
+  simp only [BoundedCriticalSampleChildRankBasis.record_selected] at he
+  exact hxy (BoundedCriticalSampleChildRankBasis.selected_separates F c he)
+
+-- The source controls supply derivative reads, moments, native ranks, and
+-- basis selection. Neither a rank oracle nor a supplied basis table occurs.
+example {F : Inputs} (h : F.PolyTime) :
+    UnaryFn (length F) ∧ SpaceFunction (BoundedCriticalSampleChildThom.value F) ∧
+      SpaceFunction (BoundedCriticalSampleChildRankBasis.record F) ∧
+        SpaceFunction (fun q => BinaryNatCode.encode (BoundedCriticalSampleChildPrefixRank.rank F q)) :=
+  ⟨length_unary h, BoundedCriticalSampleChildThom.evaluator h,
+    BoundedCriticalSampleChildRankBasis.record_evaluator h, BoundedCriticalSampleChildPrefixRank.evaluator h⟩
+
+end ChildRecordBasisTests

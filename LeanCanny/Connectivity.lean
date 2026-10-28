@@ -114,6 +114,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleChildParameters
 import LeanCanny.Encoding.BoundedCriticalSampleChildEquationCount
 import LeanCanny.Encoding.BoundedCriticalSampleChildRegularCount
 import LeanCanny.Encoding.BoundedCriticalSampleChildParentQueries
+import LeanCanny.Encoding.BoundedCriticalSampleChildRankBasis
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -471,9 +472,13 @@ promise. Arbitrary native sign-pattern counts and sparse sign products now
 run on precisely these regular roots. Parent derivative probes pull back
 through the retained rational coordinate with unchanged signs; agreement
 of all derivative signs identifies exactly the intended parent. Selected
-parent-sign patterns and moments have native readers and bounds. Completing
-actual-parent selection at short child labels, good directions, and validated
-child descriptors remain required.
+parent-sign patterns and moments have native readers and bounds. The regular
+child parameter's derivative signs now separate its roots. Short sparse sign
+records span all root functions; their native Gram rank equals the regular
+child count. Native prefix-rank searches select short records forming a basis,
+with one record read at a time. Completing child descriptor hashes,
+actual-parent selection, good directions, and validated child descriptors
+remain required.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries
