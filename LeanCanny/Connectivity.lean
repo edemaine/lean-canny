@@ -109,6 +109,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleLineZero
 import LeanCanny.Encoding.BoundedCriticalSampleBlockTerm
 import LeanCanny.Encoding.BoundedCriticalSampleBlockCriticalGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleJointGeometry
+import LeanCanny.Encoding.BoundedCriticalSampleJointCoordinateCoefficient
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -441,6 +442,12 @@ at a parent root is exactly spatial regularity; the parent contributes no new
 singularity. The regular candidate subset is finite with the derived label
 bound even if other roots form positive-dimensional sets. Regular critical
 points over actual sample parameters are included in that family.
+Concrete nonzero integer equations now annihilate every coordinate of these
+regular candidates. Their degree and coefficient-bit allowances have native
+binary controls. Native augmented-row, implicit Macaulay, determinant, and
+lowest-coefficient readers compute their modular coefficients directly from
+the original joint source. This construction does not require regularity or
+finiteness of the other parent fibers.
 Parent filtering, good-direction selection, and child
 descriptor construction remain required.
 Bivariate fibers over actual samples now have short ordered root labels with

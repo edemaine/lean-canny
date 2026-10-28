@@ -323,6 +323,11 @@ The checked ingredients are:
   factors into the nonzero parent derivative and the spatial Jacobian.
   Regular joint candidates form a finite family with the derived label bound,
   even when other candidate roots form positive-dimensional sets.
+  Constructed nonzero coordinate annihilators now have source-derived binary
+  degree and coefficient-bit bounds and native modular coefficient readers.
+  Binary-degree homogenization and implicit Macaulay controls retain the
+  original joint coefficient costs through determinant and lowest-coefficient
+  scans; no finite-root or regularity oracle is supplied.
   Filtering parent candidates, selecting good directions, and constructing
   child descriptors remain required.
   Bivariate fibers over actual samples now have short ordered root labels

@@ -7558,3 +7558,63 @@ example (q : Fin 2 → MvPolynomial (Fin 2) ℤ) (hq : ∀ i, (q i).totalDegree 
 
 end
 end RegularJointSubsetTests
+
+namespace JointCoordinateAnnihilatorTests
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR
+open BoundedFullWriter
+
+-- Exponentially large degrees have native binary controls; only arity and
+-- exponent-block width are unary. No unary degree certificate is assumed.
+private def growingLayout : MacaulayBits.Layout where
+  arity _ := 1
+  width u := u.length + 1
+  degree u _ := 2 ^ u.length
+
+example : growingLayout.BinaryPolyTime :=
+  ⟨UnaryFn.const 1, (UnaryFn.length id_mem_FP).add (UnaryFn.const 1),
+    (BinaryFn.const 2).powUnary ((UnaryFn.length id_mem_FP).comp pairFst_mem_FP)⟩
+
+-- Homogenization reads exactly the declared blocks. The degree test includes
+-- the homogenizing exponent; high unused blocks retain the same coefficient.
+#guard HomogenizationBits.value (fun _ => 1) (fun _ => 1) (fun _ => 4) (fun _ => 9)
+  (fun _ => [true]) (pair [] (BinaryNatCode.encode 9)) = [true]
+#guard HomogenizationBits.value (fun _ => 1) (fun _ => 1) (fun _ => 4) (fun _ => 9)
+  (fun _ => [true]) (pair [] (BinaryNatCode.encode 8)) = []
+#guard HomogenizationBits.value (fun _ => 1) (fun _ => 1) (fun _ => 4) (fun _ => 9)
+  (fun _ => [true]) (pair [] (BinaryNatCode.encode (9 + 2 ^ 8))) = [true]
+
+private def nineLayout : MacaulayBits.Layout := ⟨fun _ => 1, fun _ => 4, fun _ _ => 9⟩
+-- Active rows call the supplied source; padding remains the exact identity.
+#guard MacaulayBits.entry nineLayout (fun _ => [true, true])
+  (MacaulayBits.packet (pair [] (BinaryNatCode.encode 6)) 9 9) = [true, true]
+#guard MacaulayBits.entry nineLayout (fun _ => [true, true])
+  (MacaulayBits.packet (pair [] (BinaryNatCode.encode 6)) 8 8) = [true]
+#guard MacaulayBits.entry nineLayout (fun _ => [true, true])
+  (MacaulayBits.packet (pair [] (BinaryNatCode.encode 6)) 8 9) = []
+-- The empty monomial layout is still one padded index. Modulus one is zero.
+#guard MacaulayBits.entry ⟨fun _ => 0, fun _ => 0, fun _ _ => 9⟩ (fun _ => [true, true])
+  (MacaulayBits.packet (pair [] []) 0 0) = []
+#guard MacaulayBits.entry ⟨fun _ => 0, fun _ => 0, fun _ _ => 9⟩ (fun _ => [true, true])
+  (MacaulayBits.packet (pair [] (BinaryNatCode.encode 6)) 0 0) = [true]
+
+-- The final modular reader depends on native source and metadata controls.
+-- It does not take a finite-root or regularity promise, or a determinant oracle.
+example {P : Readers} (h : P.PolyTime) (read : List Bool → List Bool) (hr : read ∈ FP)
+    {o k w : List Bool → ℕ} (ho : BinaryFn o) (hk : UnaryFn k) (hw : UnaryFn w)
+    {bits : List Bool → List Bool} (hbits : bits ∈ FP)
+    (pivot : (u : List Bool) → Fin (k u)) (hp : BinaryFn (fun u => (pivot u).val))
+    (coordinate : (u : List Bool) → Fin (k u + 1)) (hc : UnaryFn (fun u => (coordinate u).val))
+    (ha : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
+    SpaceFunction (BoundedCriticalSampleJointCoordinateCoefficient.value P read o k w bits pivot coordinate) :=
+  BoundedCriticalSampleJointCoordinateCoefficient.evaluator h read hr ho hk hw hbits pivot hp coordinate hc ha
+
+example (P : Readers) (read : List Bool → List Bool) (o k w : List Bool → ℕ)
+    (bits : List Bool → List Bool) (u : List Bool) (b : Fin (k u))
+    (z : BoundedCriticalSampleJointGeometry.RegularCandidates P read o k w bits u b) (i : Fin (k u + 1)) :
+    BoundedCriticalSampleJointCoordinate.polynomial P read o k w bits u b i ≠ 0 ∧
+      (BoundedCriticalSampleJointCoordinate.polynomial P read o k w bits u b i).eval₂
+        (Int.castRingHom ℝ) (z.val.val i) = 0 :=
+  ⟨BoundedCriticalSampleJointCoordinate.ne_zero P read o k w bits u b i,
+    BoundedCriticalSampleJointCoordinate.eval_regular_candidate P read o k w bits u b z i⟩
+
+end JointCoordinateAnnihilatorTests
