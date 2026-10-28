@@ -371,6 +371,10 @@ The checked ingredients are:
   even denominator clearing have source-derived degree and mass bounds and
   native coefficient readers. The queries validate both labels and their
   parent relation, retaining total semantics on arbitrary source records.
+  Exact positive constant scaling now relates the cleared slice to the
+  original term, preserving all critical roots and their regularity.
+  The native pair scan consequently reduces original-term slice connectivity
+  to paths between selected children under the same geometric assumptions.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

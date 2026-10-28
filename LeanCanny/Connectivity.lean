@@ -121,6 +121,7 @@ import LeanCanny.Encoding.BoundedCriticalSampleChildActualSamples
 import LeanCanny.Connectivity.CriticalSampleChildCoverage
 import LeanCanny.Connectivity.CriticalSampleChildPairs
 import LeanCanny.Encoding.BoundedCriticalSampleChildTermSign
+import LeanCanny.Connectivity.CriticalSampleOriginalSlice
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -508,6 +509,11 @@ children. Two even denominator clearings retain the parent coordinates
 outside the free block and insert exactly the child point inside it. Both
 labels and their parent relation are validated; arbitrary source records,
 malformed term fallback, and unused coordinates retain total semantics.
+At an actual parent, the cleared slice polynomial is a positive constant
+times the original frozen-coordinate term polynomial. Its whole critical
+zero set and analytic regularity are preserved, including singular and
+positive-dimensional sets. The native child-pair reduction therefore also
+applies directly to the original term's slice and recursive path predicate.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries

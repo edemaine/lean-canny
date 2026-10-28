@@ -1262,6 +1262,19 @@ actual-parent relation before deciding the original term's sign on the tuple
 with the child inserted in its free block. Both denominator clearings preserve
 signs. The defining source vanishes on every selected child; coordinates outside
 the block retain their original values, including the zero extension.
+`ScaledCriticalSystem` proves that nonzero constant scaling preserves the
+whole spatial critical zero set, scales its Jacobian determinant by the
+appropriate power, and preserves both critical and hypersurface regularity.
+`BoundedCriticalSampleBlockScaling` identifies the actual cleared slice with
+a positive constant times the original frozen-coordinate term polynomial.
+`CriticalSampleOriginalSlice` transports the native child-pair reduction to
+that original term's zero set. These identities do not assume that the
+critical roots are finite or regular; in particular, singular roots outside
+the constructed regular-child enumeration are retained by the equivalence.
+A direction validator must exclude every singular critical root; counting
+only roots of the regular-candidate parameterization cannot establish this.
+The scaling bridge permits such a test on the original frozen-coordinate term.
+Its native construction and a bounded successful direction search remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

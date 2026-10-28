@@ -8305,3 +8305,38 @@ example (F : Inputs) (q : List Bool)
     q ∉ BoundedCriticalSampleChildTermSign.language F (fun _ => []) 0 := invalid F _ 0 q hq
 
 end ChildOriginalTermTests
+
+namespace CriticalScalingTests
+open LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Algebra MvPolynomial
+open scoped Classical
+private noncomputable def squareLine : MvPolynomial (Fin 2) ℝ := X 0 ^ 2
+
+-- The unbounded singular line remains present after clearing; regular-root
+-- enumeration alone cannot certify that no singular critical points exist.
+example (t : ℝ) :
+    (∀ i, (ProjectionCriticalFamily.spatialEquation (C 3 * squareLine) 0 ![1, 0] i).eval ![0, t] = 0) ∧
+      ¬ (fderiv ℝ (fun y => fun i =>
+        (ProjectionCriticalFamily.spatialEquation (C 3 * squareLine) 0 ![1, 0] i).eval y) ![0, t]).IsInvertible := by
+  have he := ScaledCriticalSystem.zero_iff (RingHom.id ℝ) squareLine 0 ![1, 0] 3 (by norm_num) ![0, t]
+  simp only [eval₂_id] at he
+  have hr := ScaledCriticalSystem.regular_iff (RingHom.id ℝ) squareLine 0 ![1, 0] 3 (by norm_num) ![0, t]
+  simp only [eval₂_id] at hr
+  constructor
+  · apply he.mpr
+    intro i
+    fin_cases i <;> norm_num [ProjectionCriticalFamily.spatialEquation, squareLine, pderiv_pow]
+  · rw [hr]
+    have h := PolynomialSystemRegularity.isInvertible_iff (RingHom.id ℝ)
+      (ProjectionCriticalFamily.spatialEquation squareLine 0 ![1, 0]) ![0, t]
+    simp only [eval₂_id] at h
+    rw [h]
+    norm_num [PolynomialSystemRegularity.matrix, Matrix.det_fin_two,
+      ProjectionCriticalFamily.spatialEquation, squareLine, pderiv_pow]
+
+-- In dimension zero the empty derivative remains invertible, even when the
+-- scalar is zero. The determinant exponent must therefore be exactly zero.
+example :
+    (PolynomialSystemRegularity.matrix (RingHom.id ℝ)
+      (fun _ : Fin 0 => (C 0 : MvPolynomial (Fin 0) ℝ)) 0).det = 1 := by
+  simp only [Matrix.det_isEmpty]
+end CriticalScalingTests
