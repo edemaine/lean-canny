@@ -1318,6 +1318,23 @@ polynomial time on that packet. `CriticalSampleSelectedDirection` transfers
 acceptance to regularity of the original-slice child critical system.
 Applying the source premises to the recursive sources and constructing the
 recursive cover remain open.
+`ComplexSharedKernel` now validates the shared circuit itself, with native
+program and gate bounds. `BoundedFullBlockKernel` instantiates it with the
+actual constructed regular-source program and proves the finite frozen-block
+identity; no expression expansion of its binary powers is used.
+`CoordinateBlockSpecialization` proves that every contained block preserves
+the pure-power leading degree. The frozen pure powers add only a constant
+to the specialized lower part, whose degree cannot increase. These give the
+pure-power shape and lower-degree premise for blocks of the constructed full
+source. `BoundedFullBlockRegularity` generates the actual-parent constraints
+and proves acceptance equivalent to regularity of every critical root over
+every actual parent. The original condition is replaced by those constraints.
+The existing bounded direction selector and child coefficient/descriptor
+writers still take term syntax; their interfaces to this shared source remain
+to be constructed.
+Slice regularity is still required separately: even a tangent slice of the
+regular circle has a singular root. General recursive endpoint slices and
+their component-preserving treatment remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

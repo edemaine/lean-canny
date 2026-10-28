@@ -8591,3 +8591,82 @@ example (P : BoundedFullWriter.Readers) (c : List Bool) (p : BoundedFullCritical
   have hv := congrFun he 0
   norm_num at hv
 end ParentDirectionSearchTests
+
+namespace FullSharedBlockTests
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR LeanCanny.ETR.ComplexCircuit
+open MvPolynomial
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+
+private def frozen (i : ℕ) : ℝ := if i = 0 then 3 else if i = 2 then 5 else 0
+
+-- Freezing two pure powers contributes a constant; a mixed lower term
+-- becomes a nonconstant coefficient of the one remaining coordinate.
+example : CoordinateBlockSpecialization.finite (Int.castRingHom ℝ) frozen 1 1
+    (FermatCriticalHomogenization.polynomial
+      (X 0 * X 1 + X 2 : MvPolynomial (Fin 3) ℤ) 2 4) =
+        2 * (X 0 : MvPolynomial (Fin 1) ℝ) ^ 4 + 3 * X 0 + 1417 := by
+  norm_num [CoordinateBlockSpecialization.finite, CoordinateBlockSpecialization.coordinate,
+    FermatCriticalHomogenization.polynomial, Fin.sum_univ_succ, frozen, map_ofNat]
+  ring
+
+-- An empty free block leaves exactly the frozen polynomial value.
+example : CoordinateBlockSpecialization.finite (Int.castRingHom ℝ) (fun i => if i = 0 then 3 else 4) 0 0
+    (FermatCriticalHomogenization.polynomial (0 : MvPolynomial (Fin 2) ℤ) 1 2) =
+      (C 25 : MvPolynomial (Fin 0) ℝ) := by
+  norm_num [CoordinateBlockSpecialization.finite, CoordinateBlockSpecialization.coordinate,
+    FermatCriticalHomogenization.polynomial, Fin.sum_univ_succ, map_ofNat]
+
+private noncomputable def whole (P : BoundedFullWriter.Readers) : BoundedFullBlockKernel.Inputs :=
+  ⟨P, fun _ => 0, fun c => P.dim c + 3, BoundedFullCriticalSamples.direction P, fun _ => .falsum⟩
+
+-- Pure-power shape does not imply slice regularity: a tangent circle slice
+-- has a singular root. Recursive endpoint slices still need their own treatment.
+example :
+    let q := CoordinateBlockSpecialization.finite (RingHom.id ℝ) (fun _ => 1) 1 1
+      (FermatCriticalHomogenization.polynomial (-1 : MvPolynomial (Fin 2) ℝ) 1 2)
+    q.eval 0 = 0 ∧ ∀ j, (pderiv j q).eval 0 = 0 := by
+  dsimp only
+  have hq : CoordinateBlockSpecialization.finite (RingHom.id ℝ) (fun _ => 1) 1 1
+      (FermatCriticalHomogenization.polynomial (-1 : MvPolynomial (Fin 2) ℝ) 1 2) =
+        (X 0 : MvPolynomial (Fin 1) ℝ) ^ 2 := by
+    norm_num [CoordinateBlockSpecialization.finite, CoordinateBlockSpecialization.coordinate,
+      FermatCriticalHomogenization.polynomial, Fin.sum_univ_succ]
+  rw [hq]
+  simp
+
+private theorem whole_slice (P : BoundedFullWriter.Readers) (c : List Bool) (parent : ℕ → ℝ) :
+    BoundedFullBlockKernel.slice (whole P) c parent =
+      (BoundedFullCriticalSamples.polynomial P c).map (Int.castRingHom ℝ) :=
+  CoordinateBlockSpecialization.finite_all _ _ _
+
+private theorem whole_rows (P : BoundedFullWriter.Readers) (c : List Bool)
+    (p : BoundedFullCriticalSamples.Samples P c) (y : Fin (P.dim c + 4) → ℝ) (i : Fin (P.dim c + 4)) :
+    (BoundedFullBlockRegularity.originalRows P (whole P) c p i).eval y =
+      (BoundedFullCriticalSamples.equations P c i).eval₂ (Int.castRingHom ℝ) y := by
+  unfold BoundedFullBlockRegularity.originalRows
+  rw [whole_slice]
+  refine Fin.cases ?_ (fun _ => ?_) i <;>
+    simp only [CriticalKernel.finiteRows, BoundedFullCriticalSamples.equations,
+      Fin.cons_zero, Fin.cons_succ, pderiv_map, eval_map, eval₂_sub, eval₂_mul, eval₂_C,
+      eval_sub, eval_mul, eval_C, whole]; rfl
+
+-- The full free block recovers the actual source and selected critical
+-- system, over every parent. The old falsum condition is replaced.
+example (P : BoundedFullWriter.Readers) (c : List Bool) :
+    BoundedFullBlockRegularity.Good P (whole P) c := by
+  intro p y hy
+  have he : (fun z => fun i => (BoundedFullBlockRegularity.originalRows P (whole P) c p i).eval z) =
+      (fun z => fun i => (BoundedFullCriticalSamples.equations P c i).eval₂ (Int.castRingHom ℝ) z) :=
+    funext fun z => funext fun i => whole_rows P c p z i
+  rw [he]
+  exact BoundedFullCriticalSamples.regular P c ⟨y, fun i => (whole_rows P c p y i) ▸ hy i⟩
+
+example {P : BoundedFullWriter.Readers} {F : BoundedFullBlockKernel.Inputs}
+    (hP : P.PolyTime) (hF : F.PolyTime)
+    (htP : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c)
+    (htF : ∀ c, (TermView.term (F.source.source c)).arity ≤ F.source.dim c) :
+    BoundedFullBlockRegularity.language P F ∈ PSPACE :=
+  BoundedFullBlockRegularity.mem_PSPACE hP hF htP htF
+
+end FullSharedBlockTests

@@ -391,6 +391,12 @@ The checked ingredients are:
   the original-slice critical-regularity premise. Proving the required source
   shape and regularity over field extensions for recursive inputs, and
   constructing the recursive cover, remain open.
+  Shared-circuit block validation now applies to the actual constructed full
+  regular source, retaining binary powers and native program bounds.
+  Generated actual-parent constraints give exact critical-regularity tests
+  for its blocks. Contained free blocks inherit the pure-power leading form
+  and lower-degree bound. Frozen pure powers contribute only a constant;
+  slice regularity remains separate, including at singular endpoint slices.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

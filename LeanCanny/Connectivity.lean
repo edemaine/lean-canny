@@ -126,6 +126,7 @@ import LeanCanny.ETR.ComplexBlockKernelGeometry
 import LeanCanny.Encoding.BoundedCriticalSampleBlockRegularity
 import LeanCanny.Encoding.FermatCommonCriticalDirection
 import LeanCanny.Connectivity.CriticalSampleSelectedDirection
+import LeanCanny.Encoding.BoundedFullBlockRegularity
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberFeatureMoments
@@ -538,6 +539,13 @@ The selected record has native readers and a normalized packet for the
 existing child-source writers. Its acceptance supplies the original-slice
 critical-regularity premise. Applying the source hypotheses to the recursive
 sources and constructing the recursive cover remain open.
+Shared-circuit block validation now also accepts the actual constructed full
+regular source, retaining its binary powers and native program bounds. Its
+generated parent constraints give exact critical-regularity validation over
+all actual parent samples. Every contained free block inherits the source's
+pure-power leading form and lower-degree bound; frozen pure powers contribute
+only a constant. Slice regularity does not follow from this shape: critical
+endpoint slices can still be singular and require separate treatment.
 Bivariate fibers over actual samples now have short ordered root labels with
 native validity. Their derivative signatures separate the roots; short sparse
 records span all root functions. Native record moments and Gram entries
