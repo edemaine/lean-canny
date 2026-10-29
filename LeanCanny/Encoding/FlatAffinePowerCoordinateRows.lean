@@ -24,6 +24,15 @@ noncomputable def system (F : Inputs) (coordinate : (u : List Bool) → Fin (cou
     (AffineFiniteCoordinates.homogeneousRows (FlatAffinePowerPositive.system F u) (FlatAffinePowerPositive.degree F u))
     (coordinate u).succ
 
+lemma system_comp (F : Inputs) (f : List Bool → List Bool)
+    (coordinate : (u : List Bool) → Fin (count F u)) (u : List Bool) :
+    system (FlatAffineFullSourceContext.comp F f) (fun q => coordinate (f q)) u =
+      system F coordinate (f u) := by
+  have hs := funext (FlatAffinePowerPositive.system_comp F f u)
+  have hd := funext (FlatAffinePowerPositive.degree_comp F f u)
+  exact congrArg (fun H => AffineBoxGramEliminant.system H (coordinate (f u)).succ)
+    (congrArg₂ AffineFiniteCoordinates.homogeneousRows hs hd)
+
 lemma zero_row (F : Inputs) (coordinate : (u : List Bool) → Fin (count F u)) (u : List Bool) :
     system F coordinate u 0 = ReciprocalCoordinateBits.polynomial (count F) coordinate u := rfl
 
@@ -41,6 +50,19 @@ noncomputable def value (F : Inputs) (W : List Bool → ℕ)
   residueBits (((system F coordinate (pairFst q) (row (pairFst q))).coeff
     (FixedWidthPolynomial.nativeExponent (Equiv.refl _) (W (pairFst q)) (Nat.fromBitsLE (pairSnd q)))).coeff
       (Nat.fromBitsLE (parameter (pairFst q))) : ZMod (Nat.fromBitsLE (modulus (pairFst q)) + 1))
+
+lemma value_pair (F : Inputs) (W : List Bool → ℕ)
+    (coordinate : (u : List Bool) → Fin (count F u)) (row : (u : List Bool) → Fin (count F u + 1))
+    (parameter modulus : List Bool → List Bool) (c r : List Bool) :
+    value F W coordinate row parameter modulus (pair c r) =
+      residueBits (((system F coordinate c (row c)).coeff
+        (FixedWidthPolynomial.nativeExponent (Equiv.refl _) (W c) (Nat.fromBitsLE r))).coeff
+          (Nat.fromBitsLE (parameter c)) : ZMod (Nat.fromBitsLE (modulus c) + 1)) := by
+  let read (u bits : List Bool) := residueBits (((system F coordinate u (row u)).coeff
+    (FixedWidthPolynomial.nativeExponent (Equiv.refl _) (W u) (Nat.fromBitsLE bits))).coeff
+      (Nat.fromBitsLE (parameter u)) : ZMod (Nat.fromBitsLE (modulus u) + 1))
+  change read (pairFst (pair c r)) (pairSnd (pair c r)) = read c r
+  rw [pairFst_pair, pairSnd_pair]
 
 theorem evaluator {F : Inputs} (h : F.Access) {W : List Bool → ℕ} (hW : UnaryFn W)
     (coordinate : (u : List Bool) → Fin (count F u)) (hc : UnaryFn (fun u => (coordinate u).val))

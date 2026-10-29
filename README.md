@@ -560,8 +560,10 @@ The checked ingredients are:
   the original source and charged signed records. FP exponent division handles
   multiplier powers, with linear inactive rows and a unique zero dummy at
   every depth. A native reciprocal row completes the homogeneous family for
-  the Gram backend. Its complete coefficient-reader composition, all-root
-  sampling budgets, and the full recursive component cover remain required.
+  the Gram backend. The native full-box determinant and reflection now compose
+  into a complete coefficient reader for these coordinate annihilators, retaining
+  the original source and signed record costs. All-root sampling budgets,
+  direction selection, and the full recursive component cover remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

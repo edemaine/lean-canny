@@ -605,3 +605,21 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
     ComputableTidilyInPolySpace
       (LeanCanny.Encoding.FlatAffinePowerCoordinateRows.value F W coordinate row parameter modulus) encBits encBits :=
   (LeanCanny.Encoding.FlatAffinePowerCoordinateRows.evaluator h hW coordinate hc row hr hk hm).computable
+
+/-! Native complete Gram annihilators use only the original affine inputs.
+No coefficient, determinant, or selected-minor oracle is assumed. -/
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
+    (coordinate : (u : List Bool) → Fin (LeanCanny.Encoding.FlatAffineFullSourcePositive.count F u))
+    (hc : LeanCanny.UnaryFn (fun u => (coordinate u).val)) :
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Encoding.FlatAffinePowerGram.polynomial F coordinate))
+      encBits encBits :=
+  (LeanCanny.Encoding.FlatAffinePowerGram.coefficient_evaluator h coordinate hc).computable
+
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
+    (coordinate : (u : List Bool) → Fin (LeanCanny.Encoding.FlatAffineFullSourcePositive.count F u))
+    (hc : LeanCanny.UnaryFn (fun u => (coordinate u).val)) :
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Encoding.FlatAffinePowerGram.annihilator F coordinate))
+      encBits encBits :=
+  (LeanCanny.Encoding.FlatAffinePowerGram.annihilator_evaluator h coordinate hc).computable

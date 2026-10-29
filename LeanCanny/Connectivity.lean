@@ -172,6 +172,7 @@ import LeanCanny.Encoding.SquareSampleComplete
 import LeanCanny.Algebra.AffineBoxGramEncoding
 import LeanCanny.Encoding.FlatAffinePowerControls
 import LeanCanny.Encoding.FlatAffinePowerCoordinateRows
+import LeanCanny.Encoding.FlatAffinePowerGram
 import LeanCanny.Encoding.BoundedFullRelocatedSource
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
@@ -246,9 +247,11 @@ controls. Native mixed-degree homogenized rows now read the actual positive
 power tower from the original source and charged signed records. FP exponent
 division handles gradient multiplier powers, while inactive height rows stay
 linear; the unique zero dummy includes depth zero. A native reciprocal row
-completes the homogeneous family supplied to the Gram backend. Composing the
-complete Gram coefficient reader, all-root sampling budgets and direction
-selection, and the full recursive component cover remain open.
+completes the homogeneous family supplied to the Gram backend. Its native
+coefficient reader composes the full-box determinant with fixed-degree
+reflection, charging the original source and signed record readers throughout.
+All-root sampling budgets, direction selection, and the full recursive
+component cover remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
 implicit-graph algorithms. Canonical input recognition is polynomial time;

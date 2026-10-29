@@ -11062,3 +11062,49 @@ example : (((C Polynomial.X * X (1 : Fin 2) - X 0 : MvPolynomial (Fin 2) (Polyno
   norm_num [coeff_X]
 
 end AffinePowerCoefficientRegression
+
+
+namespace AffinePowerGramRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open scoped Classical
+
+-- The reciprocal parameter occupies the outer polynomial, with inner degree zero.
+example : ((AffineBoxGramEliminant.liftParameter (3 + 5 * Polynomial.X)).coeff 1).coeff 0 = 5 := by
+  rw [AffineBoxGramEliminant.lift_coefficient]
+  norm_num
+
+example : ((AffineBoxGramEliminant.liftParameter (3 + 5 * Polynomial.X)).coeff 1).coeff 1 = 0 := by
+  rw [AffineBoxGramEliminant.lift_coefficient]
+  norm_num
+
+-- Reflection uses the fixed allowance even when the actual degree is smaller.
+example : (Polynomial.X * ((Polynomial.X ^ 2 - 1 : Polynomial ℤ).reflect 3)).coeff 4 = -1 := by
+  rw [PolynomialReflectBits.coefficient_eq _ 3 (by compute_degree; norm_num)]
+  norm_num [Polynomial.coeff_sub, Polynomial.coeff_one]
+
+example : (Polynomial.X * ((Polynomial.X ^ 2 - 1 : Polynomial ℤ).reflect 3)).coeff 2 = 1 := by
+  rw [PolynomialReflectBits.coefficient_eq _ 3 (by compute_degree; norm_num)]
+  norm_num [Polynomial.coeff_sub, Polynomial.coeff_one]
+
+example : (Polynomial.X * ((Polynomial.X ^ 2 - 1 : Polynomial ℤ).reflect 3)).coeff 0 = 0 := by
+  simp
+
+example : (Polynomial.X * ((Polynomial.X ^ 2 - 1 : Polynomial ℤ).reflect 3)).coeff 5 = 0 := by
+  rw [PolynomialReflectBits.coefficient_eq _ 3 (by compute_degree; norm_num)]
+  norm_num
+
+-- The actual reader is for the canonical complete-coordinate annihilator.
+example (F : FlatAffineFullSourceTower.Inputs)
+    (coordinate : (c : List Bool) → Fin (FlatAffineFullSourcePositive.count F c)) (c : List Bool) :
+    FlatAffinePowerGram.annihilator F coordinate c = AffineFiniteCoordinates.annihilator
+      (FlatAffinePowerPositive.system F c) (FlatAffinePowerPositive.degree F c) (coordinate c) :=
+  FlatAffinePowerGram.annihilator_eq F coordinate c
+
+-- Depth zero still has the unique zero dummy and a positive Gram dimension.
+example (F : FlatAffineFullSourceTower.Inputs) (c : List Bool) (h : F.depth c = 0) :
+    FlatAffinePowerGramLayout.dimension F c = 16 := by
+  norm_num [FlatAffinePowerGramLayout.dimension, AffineBoxGramEliminant.dimension,
+    FlatAffineFullSourcePositive.count, FlatAffineFullSourceTower.count, h,
+    FlatAffinePowerControls.width, FlatAffinePowerControls.level, FixedWidthPolynomial.count]
+
+end AffinePowerGramRegression
