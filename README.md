@@ -545,8 +545,16 @@ The checked ingredients are:
   and midpoint levels in the original tower layout. Their output references
   and lengths depend only on source dimension. Native space-bounded
   concatenation emits whole families without copying earlier stages. Full
-  affine query composition and direction selection, quantitative regular-locus
-  guards on singular slices, and the full recursive component cover remain open.
+  affine query composition and direction selection remain open. A canonical
+  reciprocal Gram determinant now gives bounded integer coordinate annihilators
+  for all roots of affine systems without infinity roots, including singular
+  roots. Stagewise original cone certificates exclude infinity roots of the
+  entire multiplier-power tower. Every original critical root lifts to that
+  tower over the complex numbers, proving finiteness of both complete towers
+  without affine-slice smoothness. When the coordinate annihilators capture all
+  roots, the equation-only native sampler counts exactly all system roots.
+  Native readers for these new annihilators and the full recursive component
+  cover remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

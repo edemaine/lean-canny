@@ -561,3 +561,16 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
     LeanCanny.Encoding.FlatAffineSampleVertices.language (LeanCanny.Encoding.FlatAffineSampleExtension.next F) ∈
       Cslib.Complexity.PSPACE encBits :=
   LeanCanny.Encoding.FlatAffineSampleVertices.mem_PSPACE (LeanCanny.Encoding.FlatAffineSampleExtension.access h)
+
+/-! Complete annihilators retain singular roots in the native equation counter. -/
+example (F : LeanCanny.Encoding.SquareSampleInput.Inputs) (h : F.Access)
+    (hc : LeanCanny.Encoding.SquareSampleComplete.Complete F) :
+    {u | ∃ z : Fin (F.count u) → ℝ, ∀ i, (F.system u i).eval₂ (Int.castRingHom ℝ) z = 0} ∈
+      Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.Encoding.SquareSampleComplete.language_mem_PSPACE h hc
+
+example (F : LeanCanny.Encoding.SquareSampleInput.Inputs) (h : F.Access)
+    (hc : LeanCanny.Encoding.SquareSampleComplete.Complete F) :
+    ComputableTidilyInPolySpace
+      (fun u => LeanCanny.BinaryNatCode.encode (LeanCanny.Encoding.SquareSampleComplete.count F u)) encBits encBits :=
+  (LeanCanny.Encoding.SquareSampleComplete.count_evaluator h hc).computable

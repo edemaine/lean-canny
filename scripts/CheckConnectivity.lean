@@ -10886,3 +10886,132 @@ example (depth : ℕ) (tag : List Bool) : AffineLevel.packedOutput (config depth
 
 end
 end AffineLevelCircuitRegression
+
+
+namespace AffineFiniteCoordinatesRegression
+open LeanCanny.Algebra MvPolynomial
+open scoped Classical
+noncomputable section
+set_option backward.isDefEq.respectTransparency false
+
+def singular : Fin 1 → MvPolynomial (Fin 1) ℤ := fun _ => X 0 ^ 2
+
+def degree : Fin 1 → ℕ := fun _ => 2
+
+private theorem homogeneous_square : (X (0 : Fin 1) ^ 2 : MvPolynomial (Fin 1) ℤ).IsHomogeneous 2 := by
+  simpa only [one_mul] using (isHomogeneous_X (R := ℤ) (0 : Fin 1)).pow 2
+
+private theorem noInfinity : AffineFiniteCoordinates.NoInfinity singular degree := by
+  intro y hy hx
+  have h := hx 0
+  change (WeightedHomogenization.homogenize (fun _ => 1) 2 (X (0 : Fin 1) ^ 2)).eval₂ (Int.castRingHom ℂ) y = 0 at h
+  rw [HomogenizationAtInfinity.eval_homogeneous _ _ _ homogeneous_square] at h
+  simp only [eval₂_pow, eval₂_X, Function.comp_apply] at h
+  funext j
+  cases j with
+  | none => exact hy
+  | some i =>
+    have hi : i = 0 := Subsingleton.elim _ _
+    subst i
+    exact (pow_eq_zero_iff (by decide : 2 ≠ 0)).mp h
+
+-- The repeated root has zero Jacobian, but its annihilator is nonzero and
+-- still includes the root. No regular-root premise occurs in either result.
+example : (pderiv (0 : Fin 1) (singular 0)).eval₂ (Int.castRingHom ℝ) (fun _ => 0) = 0 := by
+  norm_num [singular, pderiv_pow, pderiv_X, Pi.single_apply, eval₂_mul, eval₂_pow, eval₂_X]
+
+example : AffineFiniteCoordinates.annihilator singular degree 0 ≠ 0 :=
+  AffineFiniteCoordinates.ne_zero singular degree (fun _ => by change 0 < 2; decide) noInfinity 0
+
+example : (AffineFiniteCoordinates.annihilator singular degree 0).eval₂ (Int.castRingHom ℝ) 0 = 0 := by
+  apply AffineFiniteCoordinates.eval_eq_zero singular degree
+    (fun _ => by simp [singular, degree])
+    (fun _ => 0) (fun _ => by simp [singular]) 0
+
+example : {x : Fin 1 → ℂ | ∀ i, (singular i).eval₂ (Int.castRingHom ℂ) x = 0}.Finite := by
+  apply AffineFiniteCoordinates.finite_roots singular degree
+    (fun _ => by simp [singular, degree])
+    (fun _ => by change 0 < 2; decide) noInfinity
+
+-- The zero-dimensional empty system has its unique empty tuple.
+example : {x : Fin 0 → ℂ | ∀ i : Fin 0,
+    ((Fin.elim0 i : MvPolynomial (Fin 0) ℤ)).eval₂ (Int.castRingHom ℂ) x = 0}.Finite := by
+  apply AffineFiniteCoordinates.finite_roots (fun i : Fin 0 => Fin.elim0 i) (fun i => Fin.elim0 i)
+    (fun i => Fin.elim0 i) (fun i => Fin.elim0 i)
+  intro y hy _
+  funext j
+  cases j with
+  | none => exact hy
+  | some i => exact Fin.elim0 i
+
+end
+end AffineFiniteCoordinatesRegression
+
+
+namespace AffinePowerTowerRegression
+open LeanCanny.Algebra MvPolynomial FlatAffineCriticalTower FlatAffineCriticalStage
+open scoped Classical BigOperators
+noncomputable section
+set_option backward.isDefEq.respectTransparency false
+
+def H : MvPolynomial (Fin 2) ℤ := X 0 ^ 4 + X 1 ^ 4
+def active (t : ℕ) : Finset (Fin 2) := if t = 0 then ∅ else {0}
+def normal (t : ℕ) (r : Fin 3) (i : Fin 2) : ℤ :=
+  if t = 0 then if r = 0 ∧ i = 0 then 1 else 0
+  else if (r = 0 ∧ i = 1) ∨ (r = 1 ∧ i = 0) then 1 else 0
+
+def levels (t : ℕ) (_r : Fin 2) : Level 2 t ℤ :=
+  if ht : 0 < t then .height ⟨0, ht⟩ (fun i => if i = 0 then 1 else 0) else .constant 0
+
+private theorem homogeneous : H.IsHomogeneous 4 := by
+  apply IsHomogeneous.add
+  · simpa only [one_mul] using (isHomogeneous_X (R := ℤ) (0 : Fin 2)).pow 4
+  · simpa only [one_mul] using (isHomogeneous_X (R := ℤ) (1 : Fin 2)).pow 4
+
+private theorem cone (t : Fin 2) : FlatAffinePowerTower.ConeRootFree H (active t.val) (normal t.val) := by
+  intro x mu hp hl hg hu
+  have g0 := hg 0
+  have g1 := hg 1
+  simp only [H, map_add, pderiv_pow, pderiv_X, Pi.single_apply] at g0 g1
+  norm_num [H, eval₂_add, eval₂_pow, eval₂_X] at hp
+  by_cases ht : t.val = 0
+  · norm_num [normal, ht, Fin.sum_univ_succ, eval₂_add, eval₂_mul, eval₂_pow, eval₂_X] at g0 g1
+    have hx1 : x 1 = 0 := g1
+    have hx0 : x 0 = 0 := by
+      rw [hx1] at hp
+      norm_num at hp
+      exact hp
+    have hm0 : mu 0 = 0 := by simpa only [hx0, zero_pow (by decide : 3 ≠ 0), mul_zero] using g0.symm
+    refine ⟨funext fun i => ?_, funext fun r => ?_⟩
+    · fin_cases i <;> assumption
+    · refine Fin.cases hm0 (fun r => hu r (by simp [active, ht])) r
+  · have hx0 : x 0 = 0 := by
+      have h := hl 0 (by simp [active, ht])
+      simpa [normal, ht, Fin.sum_univ_succ] using h
+    have hx1 : x 1 = 0 := by
+      rw [hx0] at hp
+      norm_num at hp
+      exact hp
+    norm_num [normal, ht, Fin.sum_univ_succ, eval₂_add, eval₂_mul, eval₂_pow, eval₂_X, hx0, hx1] at g0 g1
+    refine ⟨funext fun i => ?_, funext fun r => ?_⟩
+    · fin_cases i <;> assumption
+    · fin_cases r
+      · exact g1.symm
+      · exact g0.symm
+      · exact hu 1 (by simp [active, ht])
+
+-- The second slice is tangent at the first-stage extremum. Its objective
+-- multiplier may vanish. The complete original tower is nevertheless finite.
+example : {z : Fin (2 * width 2) → ℝ | ∀ i,
+    (FlatAffineCriticalTower.system (C (-1) + H) active normal levels 2 i).eval₂ (Int.castRingHom ℝ) z = 0}.Finite :=
+  FlatAffinePowerTower.finite_real_original_roots (C (-1)) H 4 (by simp) homogeneous (by decide)
+    active normal levels cone
+
+-- Row degree metadata remains the same for active and inactive height rows.
+example (t : Fin 2) (r : Fin 2) :
+    FlatAffinePowerTower.degrees 4 (FlatAffinePowerTower.rowEquiv 2 2 (t, Sum.inr r.succ)) = 1 := by
+  rw [FlatAffinePowerTower.degrees_row]
+  rfl
+
+end
+end AffinePowerTowerRegression

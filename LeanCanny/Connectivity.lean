@@ -166,6 +166,9 @@ import LeanCanny.ETR.ComplexAffineStageBridge
 import LeanCanny.ETR.ComplexAffineStageEncoding
 import LeanCanny.Encoding.FlatAffineNormalTable
 import LeanCanny.Encoding.FlatAffineLevelFamilyCorrect
+import LeanCanny.Algebra.FlatAffinePowerOriginal
+import LeanCanny.Algebra.FlatAffinePowerConeBridge
+import LeanCanny.Encoding.SquareSampleComplete
 import LeanCanny.Encoding.BoundedFullRelocatedSource
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
@@ -224,9 +227,17 @@ Native shared level families now read the actual signed records and evaluate
 constant, ancestral-height, and midpoint levels in the original tower layout.
 Their output references and lengths are fixed by the source dimension. Native
 space-bounded concatenation emits each family without copying earlier stages.
-Full affine query composition and direction selection, quantitative
-regular-locus guards on singular slices, and the full recursive component
-cover remain open.
+A canonical reciprocal Gram determinant now supplies bounded integer
+coordinate annihilators for all roots of affine systems without infinity
+roots, including singular roots. Stagewise original cone certificates exclude
+infinity roots of the entire multiplier-power tower, and every original
+critical root lifts to that tower over the complex numbers. Thus both the
+power tower and the complete original critical tower have finite root sets;
+no affine-slice smoothness assumption is used. When coordinate annihilators
+capture all roots, the existing equation-only native counter counts exactly
+all system roots, with no Jacobian filter. Native readers for these new
+annihilators, full affine query composition and direction selection, and the
+full recursive component cover remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
 implicit-graph algorithms. Canonical input recognition is polynomial time;
