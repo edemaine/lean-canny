@@ -511,8 +511,12 @@ The checked ingredients are:
   roots with their coordinates retained. With explicit regularity hypotheses,
   each compact slice component reaches a short child label. At a nonsingular
   stage the slice constraints are surjective, with fewer active old heights
-  than ambient coordinates. Generic stage regularity and the full recursive
-  component cover, including singular slices, remain open.
+  than ambient coordinates. For a fixed affine slice, generic objective
+  derivations and polynomial regularity guards now produce an integer height
+  outside the old span whose regular-slice critical roots are nonsingular.
+  This direction allowance is qualitative. Polynomial input-size direction
+  bounds and the full recursive component cover, including singular slices,
+  remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

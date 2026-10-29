@@ -1757,9 +1757,38 @@ next-tower count, without another elimination over the parent's coordinates.
 Its compact slice theorem produces a valid child label in the component of every slice
 point, retaining the given parent. Compactness, slice regularity, independent
 new height, and regularity of every frozen critical child remain explicit
-hypotheses. Generic critical-stage regularity, selection of recursive levels
-and directions, singular slices, and component-preserving graph edges remain
-open.
+hypotheses.
+
+`GenericAffineCriticalJacobian` proves generic affine critical regularity
+without first changing ambient coordinates. Derivations of algebraically
+independent objective coefficients produce Jacobian columns supported on the
+gradient rows, scaled by the source multiplier. Slice row independence
+forces that multiplier to be nonzero. Pairing a left-kernel vector with these
+columns kills its gradient entries; slice row independence and the unused
+multiplier equations then kill every remaining entry.
+`FlatAffineGradientJacobian` identifies this matrix with the actual polynomial
+stage, including source coefficient maps and arbitrary ancestral level
+polynomials whose frozen values lie in the coefficient field.
+
+`FlatAffineRegularSpecialization` encodes slice regularity with polynomial
+right-inverse variables. Every regular-slice root extends to this guarded
+system, and every guarded root has a surjective slice constraint matrix.
+The generic Jacobian theorem applies over every extension of the parameter
+fraction field. Existing ideal-based denominator clearing produces a nonzero
+objective exceptional polynomial. Integer-grid avoidance specializes it to a
+natural-number objective, with an allowance depending on that polynomial.
+`AffineDirectionAvoidance` constructs a nonzero linear factor vanishing on
+the old height span whenever fewer than n heights are active. Avoiding both
+factors gives an integer objective outside that span, with all critical roots
+on the fixed regular slice nonsingular. No complex smoothness of the whole
+unsaturated slice is assumed: the polynomial guards retain exactly regular
+slice points.
+
+This proves qualitative integer genericity for fixed affine slices. It does
+not bound the exceptional polynomial's degree in the original source data,
+or supply polynomial input-size bounds for the chosen direction. Uniform
+recursive direction/level choices, singular slices, effective prefix-label
+projection, and component-preserving graph edges remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

@@ -10317,3 +10317,61 @@ example (F : FlatAffineFullSourceTower.Inputs) (u w : List Bool)
 
 end
 end AffineStagePrefixRegression
+
+
+namespace GenericAffineDirectionRegression
+open LeanCanny LeanCanny.Algebra MvPolynomial
+open scoped Classical BigOperators
+noncomputable section
+
+-- The exceptional linear factor distinguishes a height in the old span.
+example : (AffineDirectionAvoidance.polynomial (![1, -1] : Fin 2 → ℚ)).eval₂
+    (RingHom.id ℚ) ![2, 2] = 0 := by
+  rw [AffineDirectionAvoidance.eval]
+  norm_num [Fin.sum_univ_succ]
+
+example : (AffineDirectionAvoidance.polynomial (![1, -1] : Fin 2 → ℚ)).eval₂
+    (RingHom.id ℚ) ![2, 3] = -1 := by
+  rw [AffineDirectionAvoidance.eval]
+  norm_num [Fin.sum_univ_succ]
+
+def oldNormals : Fin 2 → Fin 2 → ℚ := fun _ _ => 1
+def circle : MvPolynomial (Fin 2) ℚ := X 0 ^ 2 + X 1 ^ 2 - 1
+
+-- Genericity selects an actual integer objective transverse to x+y=0;
+-- equal integer coordinates would give a height constant on that slice.
+example : ∃ B : ℕ, ∃ u : Fin 2 → ℕ, (∀ i, u i ≤ B) ∧ u 0 ≠ u 1 := by
+  obtain ⟨B, u, hu, hgood⟩ := FlatAffineRegularSpecialization.exists_nat_good circle {0}
+    (by decide) oldNormals (fun _ => 0)
+  refine ⟨B, u, hu, ?_⟩
+  intro he
+  apply (hgood ℚ).1
+  refine ⟨fun _ => (u 0 : ℚ), fun i => ?_⟩
+  simp only [oldNormals, Algebra.algebraMap_self, RingHom.id_apply, mul_one]
+  have hs : (∑ _j : ({0} : Finset (Fin 2)), (u 0 : ℚ)) = (u 0 : ℚ) := by simp
+  rw [hs]
+  fin_cases i
+  · rfl
+  · exact_mod_cast he.symm
+
+def squareSource : MvPolynomial (Fin 1) ℚ := X 0 ^ 2
+
+-- A singular source point cannot fake a regularity guard by choosing the
+-- right-inverse variables differently, even when its critical equations hold.
+example (u : Fin 1 → ℕ)
+    (z : FlatAffineRegularSpecialization.PointSpace (∅ : Finset (Fin 1)) → ℚ)
+    (hx : z (Sum.inl (FlatAffineCriticalStage.ambient 0)) = 0) :
+    ¬ ∀ i, (FlatAffineRegularSpecialization.guarded squareSource ∅ (fun _ _ => 0) (fun _ => 0) i).eval₂
+      (FlatAffineRegularSpecialization.specialize u) z = 0 := by
+  intro hz
+  have H := FlatAffineRegularSpecialization.guarded_roots
+    (FlatAffineRegularSpecialization.specialize u) (FlatAffineRegularSpecialization.specialize_comp u)
+    squareSource ∅ (fun _ _ => 0) (fun _ => 0) z hz
+  obtain ⟨d, hd⟩ := H.2 (fun _ => 1)
+  have he := congrFun hd none
+  change (∑ i : Fin 1, aeval ((z ∘ Sum.inl) ∘ FlatAffineCriticalStage.ambient)
+    (pderiv i squareSource) * d i) = 1 at he
+  norm_num [squareSource, pderiv_pow, pderiv_X, Function.comp_apply, hx, Fin.sum_univ_succ] at he
+
+end
+end GenericAffineDirectionRegression
