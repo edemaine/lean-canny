@@ -156,6 +156,13 @@ import LeanCanny.Encoding.FlatAffineFullSourcePositiveContext
 import LeanCanny.Encoding.FlatAffineSampleExtension
 import LeanCanny.Algebra.FlatAffineRegularSpecialization
 import LeanCanny.Algebra.FermatAffineConeFlag
+import LeanCanny.Algebra.AffineCriticalCommonDirection
+import LeanCanny.Algebra.AffineCriticalClosedCertificate
+import LeanCanny.Encoding.AffineCriticalDirection
+import LeanCanny.ETR.ComplexSharedSquareKernel
+import LeanCanny.ETR.ComplexRightInverseEncoding
+import LeanCanny.ETR.ComplexParentRegularityEncoding
+import LeanCanny.Encoding.BoundedFullRelocatedSource
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
 import LeanCanny.Algebra.FixedWidthLinearCoefficientSpace
@@ -188,8 +195,25 @@ Homogeneous leading cones now admit bounded integer directions preserving
 transverse affine-height flags over every coefficient-field extension. A
 multiplier-power system excludes nonzero roots at infinity; Macaulay minors
 give polynomial bit bounds. Pure-power leading forms supply the initial
-empty flag. Finite-level affine bad-critical direction bounds, singular
-slices, and the full recursive component cover remain open.
+empty flag. For affine slices regular over coefficient-field extensions,
+a new projective system now also excludes finite singular critical roots
+with a polynomial integer-objective bit bound. It retains the original
+Jacobian while taking multiplier powers, including zero multipliers. Finite
+families have one common direction, with only their count's bit bound added.
+The same objective extends the leading-cone flag. Native fixed-width records
+charge the actual regular-parent count using source dimension, degree, and
+depth. A shared-circuit PSPACE test detects singular complex child roots at
+real parents with polynomial guards, including positive-dimensional fibers.
+Native shared right-inverse circuits encode nonsingular parent matrices;
+complex inverse witnesses select exactly the nonsingular real matrices.
+A native combined writer computes the original parent Jacobian from its
+shared row program and retains parent equations at the same assignment.
+Native circuit relocation places the original source after a parent prefix
+with exact source, marking, and child-derivative identities.
+One algebraically closed projective bad-root check certifies affine regularity
+and cone exclusion over every field extension. Quantitative regular-locus
+guards on singular slices, the actual affine query writer and direction
+selection, and the full recursive component cover remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
 implicit-graph algorithms. Canonical input recognition is polynomial time;

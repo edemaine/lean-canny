@@ -514,13 +514,31 @@ The checked ingredients are:
   than ambient coordinates. For a fixed affine slice, generic objective
   derivations and polynomial regularity guards now produce an integer height
   outside the old span whose regular-slice critical roots are nonsingular.
-  The allowance for these finite-level critical roots remains qualitative.
-  For homogeneous leading cones, a multiplier-power system now gives integer
-  normals using at most (2*n+1)*(2*n+size(D)+2)+1 bits per coordinate. These
-  normals extend transverse cone flags over every coefficient-field extension;
-  pure-power leading forms supply the empty flag. Bounds for finite-level
-  affine critical singularities and the full recursive component cover,
-  including singular slices, remain open.
+  The guarded regular-locus allowance remains qualitative. For homogeneous
+  leading cones, a multiplier-power system now gives integer normals using
+  at most (2*n+1)*(2*n+size(D)+2)+1 bits per coordinate. These normals extend
+  transverse cone flags over every coefficient-field extension; pure-power
+  leading forms supply the empty flag. When the affine slice is regular over
+  field extensions and its leading-cone flag is transverse, a projective
+  bad-root system now also gives nonsingular original critical stages with
+  objective width (2*n+2)*(4*n+size(D)+5)+size(2*n+1). The retained determinant
+  is the original Lagrange Jacobian, including at zero multipliers. The same
+  objective extends the leading flag. Finite families share one direction,
+  adding only their count's bit bound to the objective width. Native direction
+  records charge the actual regular-parent count from source dimension,
+  degree, and depth, independently of prior direction magnitudes. A shared
+  arithmetic-circuit PSPACE test now detects all singular complex child roots
+  at guarded real parents, including positive-dimensional fibers. Shared
+  right-inverse guard circuits select exactly nonsingular real parent matrices,
+  allowing complex auxiliary inverse entries. A combined native writer derives
+  that Jacobian from the shared parent row program and retains the parent
+  equation guards at the same assignment. Native
+  source relocation preserves the original source, marking polynomial, and
+  child derivatives after a parent prefix. A single
+  algebraically closed projective bad-root check certifies affine regularity
+  and cone exclusion over all coefficient-field extensions. Quantitative
+  regular-locus guards on singular slices, the actual affine query writer and
+  direction selection, and the full recursive component cover remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

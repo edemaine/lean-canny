@@ -10422,3 +10422,305 @@ example : ∃ z : FlatAffineCriticalStage.Variables 1 → ℚ, z ≠ 0 ∧
 
 end
 end AffineConeDirectionRegression
+
+
+
+namespace AffineCriticalDirectionRegression
+open LeanCanny LeanCanny.Algebra MvPolynomial
+open scoped Classical BigOperators Matrix
+noncomputable section
+
+def low (t : Fin 2) : MvPolynomial (Fin 1) ℚ := C (-(![1, 2] t))
+def leading : MvPolynomial (Fin 1) ℚ := FermatAffineConeFlag.form 1 2
+
+private theorem regularSlice (t : Fin 2) (L : Type) [Field L] [Algebra ℚ L]
+    (x : Fin 1 → L) (hp : aeval x (low t + leading) = 0) :
+    GenericAffineCriticalJacobian.ConstraintIndependent (low t + leading) ∅ (fun _ _ => 0) x := by
+  let _ : CharZero L := charZero_of_injective_algebraMap (algebraMap ℚ L).injective
+  have hx : x 0 ≠ 0 := by
+    intro he
+    fin_cases t <;> norm_num [low, leading, FermatAffineConeFlag.form, Fin.sum_univ_succ, he] at hp
+  have hgrad : aeval x (pderiv 0 (low t + leading)) ≠ 0 := by
+    simpa [low, leading, FermatAffineConeFlag.pderiv_form] using
+      mul_ne_zero (show (2 : L) ≠ 0 by norm_num) hx
+  intro c0 c hc hz
+  have hczero (r : Fin 1) : c r = 0 := hc r (by simp)
+  have H := hz 0
+  simp only [hczero, zero_mul, Finset.sum_const_zero, add_zero] at H
+  exact ⟨(mul_eq_zero.mp H).resolve_right hgrad, hczero⟩
+
+-- Both affine levels share one explicitly bounded objective over every extension field.
+#guard AffineCriticalCommonDirection.binaryWidth 1 2 1 == 47
+
+example : ∃ v : Fin 1 → ℕ, (∀ i, v i < 2 ^ 47) ∧
+    ∀ t : Fin 2, ∀ (L : Type) [Field L] [Algebra ℚ L],
+      AffineCriticalDirectionGeometry.CriticalRegular (low t + leading) ∅ (fun _ _ => 0)
+        (fun _ => 0) (fun i => (v i : L)) := by
+  obtain ⟨v, hv, hg⟩ := AffineCriticalCommonDirection.exists_common low (fun _ => leading) 2
+    (by intro t; simp [low]) (fun _ => FermatAffineConeFlag.homogeneous 1 2) (by decide)
+    ∅ (by decide) (fun _ _ _ => 0) (fun _ _ => 0)
+    (fun _ L _ _ => FermatAffineConeFlag.transverse_empty 1 one_ne_zero 2 (by decide) (fun _ _ => 0) L)
+    (fun t L _ _ x hp _ => regularSlice t L x hp) 1 (by decide)
+  have hw : AffineCriticalCommonDirection.binaryWidth 1 2 1 = 47 := by decide
+  rw [hw] at hv
+  exact ⟨v, hv, fun t L _ _ => (hg t L).1⟩
+
+-- The unused multipliers vanish at an actual quartic critical root. Their
+-- power-coordinate equation has zero derivative, while the original matrix is regular.
+def quartic : MvPolynomial (Fin 2) ℚ := C (-2) + FermatAffineConeFlag.form 1 4
+def point : FlatAffineCriticalStage.Variables 2 → ℚ :=
+  Sum.elim (fun _ => 1) (Fin.cases 1 (fun _ => 0))
+noncomputable def objective : MvPolynomial (Fin 2) ℚ →+* ℚ := eval (fun _ => 4)
+
+example : ∀ j, (AffineCriticalPowerSystem.rows quartic 4 ∅ (fun _ _ => 0) (fun _ => 0) j).eval₂
+    objective point = 0 := by
+  apply (AffineCriticalPowerSystem.roots_iff objective (by ext k; simp [objective])
+    quartic 4 ∅ (fun _ _ => 0) (fun _ => 0) point).mpr
+  refine ⟨?_, by simp, ?_, ?_⟩
+  · norm_num [quartic, point, Function.comp_def, FermatAffineConeFlag.form, Fin.sum_univ_succ]
+  · intro i
+    simp [quartic, point, Function.comp_def, objective, FermatAffineConeFlag.pderiv_form]
+  · intro r _
+    simp [point]
+
+example (k : FlatAffineCriticalStage.Variables 2) :
+    (pderiv k (AffineCriticalPowerSystem.rows quartic 4 ∅ (fun _ _ => 0) (fun _ => 0)
+      (Sum.inr (1 : Fin 3)))).eval₂ objective point = 0 := by
+  have hrow : AffineCriticalPowerSystem.rows quartic 4 ∅ (fun _ _ => 0) (fun _ => 0)
+      (Sum.inr (1 : Fin 3)) = (X (Sum.inr (1 : Fin 3)) :
+        MvPolynomial (FlatAffineCriticalStage.Variables 2) (MvPolynomial (Fin 2) ℚ)) ^ 3 := by
+    change AffineCriticalPowerSystem.rows quartic 4 ∅ (fun _ _ => 0) (fun _ => 0)
+      (Sum.inr (Fin.succ (0 : Fin 2))) = _
+    simp only [AffineCriticalPowerSystem.rows, AffineCriticalPowerSystem.offset, AffineCriticalConeSystem.rows,
+      Fin.cases_succ, Finset.notMem_empty, ite_false, AffineCriticalConeSystem.lift, map_pow, map_X, map_zero, sub_zero]
+    rfl
+  have hx : point (Sum.inr (1 : Fin 3)) = 0 := rfl
+  rw [hrow, pderiv_pow]
+  norm_num [hx]
+
+example : (AffineCriticalOriginalJacobian.jacobian quartic ∅ (fun _ _ => 0)).eval₂ objective point ≠ 0 := by
+  rw [AffineCriticalOriginalJacobian.eval_jacobian objective (by ext k; simp [objective])]
+  let M := GenericAffineCriticalJacobian.matrix quartic ∅ (fun _ _ => 0)
+    (fun i => objective (X i)) (point ∘ Sum.inl)
+  have hkernel (w : FlatAffineCriticalStage.Variables 2 → ℚ) (hw : M *ᵥ w = 0) : w = 0 := by
+    have hconst (k : Fin 2) : pderiv k (4 : MvPolynomial (Fin 2) ℚ) = 0 := by
+      have he : (4 : MvPolynomial (Fin 2) ℚ) = C (4 : ℚ) :=
+        (map_natCast (C : ℚ →+* MvPolynomial (Fin 2) ℚ) 4).symm
+      rw [he, pderiv_C]
+    have h0 := congrFun hw (Sum.inl 0)
+    have h1 := congrFun hw (Sum.inl 1)
+    have hs := congrFun hw (Sum.inr 0)
+    have hu0 := congrFun hw (Sum.inr (Fin.succ (0 : Fin 2)))
+    have hu1 := congrFun hw (Sum.inr (Fin.succ (1 : Fin 2)))
+    norm_num [M, Matrix.mulVec, dotProduct, Fintype.sum_sum_type, Fin.sum_univ_succ,
+      GenericAffineCriticalJacobian.matrix, quartic, objective, point, Function.comp_def,
+      FermatAffineConeFlag.form, pderiv_pow, pderiv_X, Pi.single_apply] at h0 h1 hs hu0 hu1
+    simp only [hconst, map_zero, zero_mul, add_zero, zero_add] at h0 h1
+    rw [show (1 : Fin 3) = Fin.succ (0 : Fin 2) from rfl] at hu0
+    rw [show (2 : Fin 3) = Fin.succ (1 : Fin 2) from rfl] at hu1
+    simp only [Fin.cases_succ] at hu0 hu1
+    norm_num at hu0 hu1
+    have hx0 : w (Sum.inl 0) = 0 := by linarith
+    have hx1 : w (Sum.inl 1) = 0 := by linarith
+    have hμ : w (Sum.inr 0) = 0 := by linarith
+    funext j
+    cases j with
+    | inl i => fin_cases i <;> assumption
+    | inr r => fin_cases r <;> assumption
+  have hinj : Function.Injective M.mulVec := by
+    intro a b he
+    apply sub_eq_zero.mp
+    apply hkernel
+    rw [Matrix.mulVec_sub, he, sub_self]
+  exact ((M.isUnit_iff_isUnit_det).mp (Matrix.mulVec_injective_iff_isUnit.mp hinj)).ne_zero
+
+end
+end AffineCriticalDirectionRegression
+
+
+namespace SharedSquareKernelRegression
+open LeanCanny LeanCanny.ETR LeanCanny.ETR.ComplexCircuit
+open LeanCanny.Computation MvPolynomial
+open scoped Classical BigOperators
+noncomputable section
+
+def ops : List Operation := [.mul 1 1, .constant 1, .add 2 3, .mul 4 4]
+def native (regular : Bool) : SharedSquareKernel.Inputs where
+  start _ := 2
+  count _ := 1
+  offset _ := 1
+  program _ := ops
+  outputs _ _ := if regular then 4 else 5
+  guardCount _ := 1
+  guardOutputs _ _ := 0
+  realInputs _ := 1
+  condition _ := .not .falsum
+
+private theorem polyTime (b : Bool) : (native b).PolyTime := by
+  refine ⟨UnaryFn.const 2, UnaryFn.const 1, UnaryFn.const 1, ?_, constFn_mem_FP (encode (StraightLine.gates 2 ops)), ?_,
+    UnaryFn.const 1, UnaryFn.const 0, UnaryFn.const 1, constFn_mem_FP (Formula.not Formula.falsum).encode⟩
+  · exact (UnaryFn.const 4).of_eq (fun _ => rfl)
+  · exact UnaryFn.const (if b then 4 else 5)
+
+private theorem valid (b : Bool) : (native b).Valid := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · intro c
+    norm_num [native, ops, StraightLine.WellFormed, Operation.InputsBelow]
+  · intro c
+    norm_num [native]
+  · intro c j hj
+    cases b <;> norm_num [native, ops]
+  · intro c j hj
+    norm_num [native, ops]
+  · intro c
+    norm_num [native]
+  · intro c
+    norm_num [native, Formula.arity]
+
+example (b : Bool) : SharedSquareKernel.language (native b) ∈ PSPACE :=
+  SharedSquareKernel.mem_PSPACE (polyTime b) (valid b)
+
+-- The unsquared equation is regular at both complex roots.
+example : SharedSquareKernel.Regular (native true) [] := by
+  apply (SquareKernel.regular_iff_no_charts _ _ _ _ _ _ _ _).mpr
+  intro i
+  rintro ⟨x, u, hAt, hreal, hp⟩
+  obtain ⟨hn, hrows, hguards⟩ := hAt
+  have hi : i.val = 0 := by have H := i.isLt; change i.val < 1 at H; omega
+  rw [hi] at hn
+  have hroot := (hrows 0 (by decide)).1
+  have hkernel := (hrows 0 (by decide)).2
+  simp [SharedSquareKernel.wire, native, ops, Differential.symbolicRun, Differential.polynomial, hn] at hroot hkernel
+  simp [hkernel] at hroot
+
+-- The squared equation has no real root, but a singular child root at I.
+example (r : ℝ) : (r * r + 1) * (r * r + 1) ≠ 0 := by
+  have h : 0 < r * r + 1 := by nlinarith [sq_nonneg r]
+  exact mul_ne_zero (ne_of_gt h) (ne_of_gt h)
+
+example : ¬ SharedSquareKernel.Regular (native false) [] := by
+  intro h
+  apply (SquareKernel.regular_iff_no_charts _ _ _ _ _ _ _ _).mp h (0 : Fin 1)
+  let x : ℕ → ℂ := fun j => if j = 1 then Complex.I else 0
+  let u : ℕ → ℂ := fun _ => 1
+  refine ⟨x, u, ?_, ?_, ?_⟩
+  · refine ⟨rfl, fun j hj => ?_, fun j hj => ?_⟩
+    · have hj0 : j = 0 := by change j < 1 at hj; omega
+      subst j
+      constructor <;> norm_num [SharedSquareKernel.wire, native, ops, Differential.symbolicRun,
+        Differential.polynomial, Function.update_apply, x, u, pderiv_mul, pderiv_X, Pi.single_apply]
+    · norm_num [SharedSquareKernel.wire, native, ops, Differential.symbolicRun,
+        Differential.polynomial, Function.update_apply, x]
+  · intro j hj
+    have hj0 : j = 0 := by change j < 1 at hj; omega
+    simp [x, hj0]
+  · simp [native, Formula.Holds]
+
+end
+end SharedSquareKernelRegression
+
+
+namespace SharedSquareKernelPositiveDimensionRegression
+open LeanCanny LeanCanny.ETR LeanCanny.ETR.ComplexCircuit MvPolynomial
+open scoped Classical
+noncomputable section
+
+def zeroFiber : SharedSquareKernel.Inputs where
+  start _ := 1
+  count _ := 1
+  offset _ := 0
+  program _ := [.constant 0]
+  outputs _ _ := 1
+  guardCount _ := 0
+  guardOutputs _ _ := 0
+  realInputs _ := 0
+  condition _ := .not .falsum
+
+-- Every complex child is a root, and every root is singular.
+example : ¬ SharedSquareKernel.Regular zeroFiber [] := by
+  intro h
+  apply (SquareKernel.regular_iff_no_charts _ _ _ _ _ _ _ _).mp h (0 : Fin 1)
+  refine ⟨fun _ => 0, fun _ => 1, ?_, ?_, ?_⟩
+  · refine ⟨rfl, fun j hj => ?_, fun j hj => ?_⟩
+    · have hj0 : j = 0 := by change j < 1 at hj; omega
+      subst j
+      norm_num [SharedSquareKernel.wire, zeroFiber, Differential.symbolicRun, Differential.polynomial]
+    · change j < 0 at hj
+      omega
+  · intro j hj
+    change j < 0 at hj
+    omega
+  · simp [zeroFiber, Formula.Holds]
+
+end
+end SharedSquareKernelPositiveDimensionRegression
+
+
+namespace RightInverseGuardRegression
+open LeanCanny LeanCanny.ETR LeanCanny.ETR.ComplexCircuit
+open scoped Classical
+noncomputable section
+
+-- Even arbitrary complex inverse entries cannot certify a singular parent.
+example (env : ℕ → ℂ) (hz : env 0 = 0) (ho : env 1 = 1)
+    (hg : ∀ g ∈ RightInverse.gates 0 1 3 2 1 (fun _ _ => 0) 1, g.Holds env) :
+    ¬ ∀ q < 1, env (RightInverse.output 3 1 q) = 0 := by
+  intro h
+  have H := (RightInverse.constraints_iff 0 1 3 2 1 (fun _ _ => 0) env hz ho hg).mp h
+  have H0 := congrFun (congrFun H (0 : Fin 1)) (0 : Fin 1)
+  norm_num [RightInverse.matrix, RightInverse.inverseMatrix, Matrix.mul_apply, hz] at H0
+
+-- The guard circuit is acyclic and includes no division operation.
+example : StraightLine.WellFormed 3 (RightInverse.program 0 1 3 2 1 (fun _ _ => 0) 1) :=
+  RightInverse.wellFormed 0 1 3 2 1 (fun _ _ => 0) (by decide) (by decide)
+    (by intros; decide) (by decide) 1 (by decide)
+
+-- The empty parent Jacobian has an inverse, as required at recursion depth zero.
+example : ∃ B : Matrix (Fin 0) (Fin 0) ℂ, (0 : Matrix (Fin 0) (Fin 0) ℝ).map Complex.ofRealHom * B = 1 := by
+  apply (RightInverse.exists_inverse_real_iff 0 _).mpr
+  simp
+
+end
+end RightInverseGuardRegression
+
+
+namespace ParentRegularityRegression
+open LeanCanny LeanCanny.ETR LeanCanny.ETR.ComplexCircuit MvPolynomial
+open scoped Classical
+noncomputable section
+
+def ops : List Operation := [.mul 0 0]
+noncomputable def wire := Differential.symbolicRun (fun i => (X i : MvPolynomial ℕ ℤ)) 1 ops
+
+-- x^2 has a root, but none of its roots admits the parent regularity guards.
+example (env : ℕ → ℂ)
+    (hg : ∀ g ∈ ParentRegularity.gates 2 1 1 1 ops (fun _ => 1), g.Holds env)
+    (hz : ∀ q < 2, env (ParentRegularity.guardOutput 2 1 1 ops (fun _ => 1) q) = 0) : False := by
+  have hw : StraightLine.WellFormed 1 ops := by norm_num [ops, StraightLine.WellFormed, Operation.InputsBelow]
+  have hr := Differential.symbolicRun_realizes (fun i => (X i : MvPolynomial ℕ ℤ)) 1 ops hw
+  have hin : ∀ i < 1, wire i = X i := fun i hi => Differential.symbolicRun_preserves_before _ _ _ i hi
+  obtain ⟨hroot, hregular⟩ := ParentRegularity.regular_of_guards wire 2 1 1 1 ops (fun _ => 1) hw hr hin
+    (by intro i hi; norm_num [ops]) env env (fun _ _ => rfl) hg hz
+  have H := hroot 0 (by decide)
+  have h0 : env 0 = 0 := by simpa [wire, ops, Differential.symbolicRun, Differential.polynomial] using H
+  norm_num [ParentRegularity.matrix, wire, ops, Differential.symbolicRun, Differential.polynomial,
+    pderiv_mul, pderiv_X, Pi.single_apply, h0] at hregular
+
+-- A regular parent admits the completed circuit with its chosen inverse input.
+example (x : ℕ → ℂ) (hx0 : x 0 = 0) (hx1 : x 1 = 1) :
+    ∃ env : ℕ → ℂ, (∀ i < 2, env i = x i) ∧
+      (∀ g ∈ ParentRegularity.gates 2 2 1 1 [] (fun _ => 0), g.Holds env) ∧
+      ∀ q < 2, env (ParentRegularity.guardOutput 2 2 1 [] (fun _ => 0) q) = 0 := by
+  apply ParentRegularity.exists_completion (fun i => X i) 2 2 1 1 [] (fun _ => 0)
+    le_rfl (by trivial) (by trivial) (fun _ _ => rfl) (by intros; decide) (by decide) x
+  · intro i hi
+    simpa only [eval₂_X] using hx0
+  · apply Matrix.ext
+    intro i j
+    fin_cases i
+    fin_cases j
+    norm_num [ParentRegularity.matrix, RightInverse.inverseMatrix, Matrix.mul_apply,
+      pderiv_X, Pi.single_apply, hx1]
+
+end
+end ParentRegularityRegression

@@ -40,6 +40,18 @@ theorem transverse_empty {L : Type u} [Field L] [Algebra K L]
   simp only [hczero, zero_mul, Finset.sum_const_zero, add_zero] at H
   exact ⟨(mul_eq_zero.mp H).resolve_right hi, hczero⟩
 
+theorem transverse_insert_of_root_free {L : Type u} [Field L] [Algebra K L]
+    (p : MvPolynomial (Fin n) K) (D : ℕ) (hD : p.IsHomogeneous D) (hD2 : 1 < D)
+    (s : Finset (Fin n)) (A : Fin n → Fin n → K) (r : Fin n) (hr : r ∉ s) (v : Fin n → K)
+    (hfree : CriticalRootFree p s A (fun i => algebraMap K L (v i))) :
+    Transverse (L := L) p (insert r s) (Function.update A r v) := by
+  refine ⟨normal_independent_insert p D hD hD2 s r A v hfree, ?_⟩
+  intro x hp hl hx
+  apply constraint_independent_insert p D hD hD2 s r A v x hfree hp ?_ hx
+  intro j hj
+  have hne : j ≠ r := by intro he; exact hr (he ▸ hj)
+  simpa only [Function.update_of_ne hne] using hl j (Finset.mem_insert_of_mem hj)
+
 variable [CharZero K]
 
 /-- Extend any transverse cone flag by an integer normal of explicitly
@@ -57,11 +69,6 @@ theorem exists_bounded_extension (p : MvPolynomial (Fin n) K) (D : ℕ)
   intro L _ _
   have hcrit : CriticalRootFree p s A (fun i => algebraMap K L (v i : K)) := by
     simpa only [map_natCast] using hfree L
-  refine ⟨normal_independent_insert p D hD hD2 s r A (fun i => (v i : K)) hcrit, ?_⟩
-  intro x hp hl hx
-  apply constraint_independent_insert p D hD hD2 s r A (fun i => (v i : K)) x hcrit hp ?_ hx
-  intro j hj
-  have hne : j ≠ r := by intro he; exact hr (he ▸ hj)
-  simpa only [Function.update_of_ne hne] using hl j (Finset.mem_insert_of_mem hj)
+  exact transverse_insert_of_root_free p D hD hD2 s A r hr (fun i => (v i : K)) hcrit
 
 end LeanCanny.Algebra.AffineConeFlag
