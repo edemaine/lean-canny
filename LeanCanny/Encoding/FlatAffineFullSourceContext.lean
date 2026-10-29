@@ -83,4 +83,7 @@ theorem system_comp (F : Inputs) (f : List Bool → List Bool) (u : List Bool)
   rw [family_comp]
   rfl
 
+theorem degree_comp (F : Inputs) (f : List Bool → List Bool) (u : List Bool) :
+    FlatAffineFullSourceTower.degree (comp F f) u = FlatAffineFullSourceTower.degree F (f u) := rfl
+
 end LeanCanny.Encoding.FlatAffineFullSourceContext

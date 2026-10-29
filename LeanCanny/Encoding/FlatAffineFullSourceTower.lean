@@ -177,4 +177,8 @@ theorem polynomial_mass (F : Inputs) (u : List Bool) (i : Fin (count F u)) :
       _ ≤ 2 ^ T + 2 ^ T + 1 := Nat.add_le_add_right (Nat.add_le_add hsmall (max_le hU htwice)) 1
       _ ≤ 2 ^ (T + 2) := by have := Nat.one_le_two_pow (n := T); rw [hp4]; omega
 
+theorem degree_pos (F : Inputs) (u : List Bool) : 0 < degree F u := by
+  unfold degree
+  omega
+
 end LeanCanny.Encoding.FlatAffineFullSourceTower

@@ -10115,3 +10115,51 @@ example (F : FlatAffineFullSourceTower.Inputs) (u : List Bool) (j : Fin (FlatAff
 
 end
 end FlatAffineNativeRegression
+
+
+namespace FlatAffineCompleteRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+noncomputable section
+
+-- At zero depth the full reader sees the dummy equation alone, whatever
+-- source, direction, or ancestral-level records are attached to the input.
+example (F : FlatAffineFullSourceTower.Inputs)
+    (row : (u : List Bool) → Fin (FlatAffineFullSourcePositive.count F u))
+    (u : List Bool) (hz : F.depth u = 0) :
+    FlatAffineFullSourcePositiveCoefficient.value F (fun _ => 1) row
+      (fun _ => [true]) (fun _ => [true]) u = [true] := by
+  have hc : FlatAffineFullSourceTower.count F u = 0 := by simp [FlatAffineFullSourceTower.count, hz]
+  have hi : row u = Fin.last (FlatAffineFullSourceTower.count F u) := by
+    apply Fin.ext
+    have H := (row u).isLt
+    change (row u).val < FlatAffineFullSourceTower.count F u + 1 at H
+    change (row u).val = FlatAffineFullSourceTower.count F u
+    omega
+  unfold FlatAffineFullSourcePositiveCoefficient.value FixedWidthRowBits.value
+  dsimp only
+  rw [hi, FlatAffineFullSourcePositive.system, PositivePolynomialSystem.new_row]
+  dsimp +instances only [FlatAffineFullSourcePositive.count]
+  rw [hc]
+  change MatrixPower.residueBits (((X (0 : Fin 1) : MvPolynomial (Fin 1) ℤ).coeff
+    (FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin 1)) 1 1) : ℤ) : ZMod 2) = [true]
+  have he : FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin 1)) 1 1 = Finsupp.single 0 1 := by
+    ext; norm_num [FixedWidthPolynomial.nativeExponent, FixedWidthPolynomial.entry_eq_digit]
+  rw [he, coeff_X]
+  norm_num [MatrixPower.residueBits, BinaryNatCode.encode, ZMod.val_one_eq_one_mod]
+
+-- Redundant zero modulus words retain modulus-one behavior through complete
+-- row dispatch, including signed height and derivative coefficients.
+example (F : FlatAffineFullSourceTower.Inputs) (W : List Bool → ℕ)
+    (row : (u : List Bool) → Fin (FlatAffineFullSourcePositive.count F u))
+    (target : List Bool → List Bool) (u : List Bool) :
+    FlatAffineFullSourcePositiveCoefficient.value F W row target (fun _ => [false, false]) u = [] := by
+  unfold FlatAffineFullSourcePositiveCoefficient.value FixedWidthRowBits.value
+  have H : ∀ z : ZMod 1, MatrixPower.residueBits z = [] := by
+    intro z
+    rw [Subsingleton.elim z 0]
+    rfl
+  exact H _
+
+end
+end FlatAffineCompleteRegression

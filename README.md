@@ -498,8 +498,10 @@ The checked ingredients are:
   uniform row bounds and at most n*(2*n+1) variables. Signed direction and
   ancestral level records now have native controls and uniform budgets.
   Native scalar, source-block, derivative, and weighted-height coefficient
-  readers are constructed, with exact indexed row formulas. Complete row
-  dispatch and a connection to the sample backend remain required.
+  readers now supply complete indexed row dispatch, including the dummy row
+  at zero depth. Native homogenized rows and coordinate annihilators for the
+  entire affine tower are constructed too, with derived uniform budgets.
+  Connecting these equations to sample enumeration remains required.
   Generic stage regularity and the recursive component cover, including
   singular slices, remain open.
   Bivariate fibers over actual samples now have short ordered root labels

@@ -151,6 +151,8 @@ import LeanCanny.Algebra.FixedWidthConstantSpace
 import LeanCanny.Encoding.FlatAffineFullSourceContext
 import LeanCanny.Encoding.FlatAffineFullSourceDerivative
 import LeanCanny.Encoding.FlatAffineHeightCoefficient
+import LeanCanny.Encoding.FlatAffineFullSourcePositiveCoordinateCoefficient
+import LeanCanny.Encoding.FlatAffineFullSourcePositiveContext
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
 import LeanCanny.Algebra.FixedWidthLinearCoefficientSpace

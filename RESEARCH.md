@@ -1665,11 +1665,36 @@ linear forms, allowing coincident variable selections and charged
 space-bounded variable selectors. `FlatAffineHeightCoefficient` instantiates
 it with actual signed record entries. `FlatAffineFullSourceBlockCoefficient`
 and `FlatAffineFullSourceDerivative` supply native embedded original-source
-coefficients and partial derivatives with binary degree bounds. These are
-row-component readers: complete indexed row dispatch and integration with
-the existing regular-root sampling backend remain to be constructed.
-Generic critical-stage regularity, selection of recursive levels and
-directions, and component-preserving graph edges also remain open.
+coefficients and partial derivatives with binary degree bounds.
+
+`FlatAffineFullSourcePositive` appends one coordinate fixed at zero, retaining
+all original indices, roots, and analytic regularity, including depth zero.
+`FlatAffineFullSourceEmbedded` reads original-source coefficients and partial
+derivatives in this larger layout. `FlatAffineRowLayout` and `RowAccess`
+supply total clamped coordinates and native metadata. The ancestral selector
+charges the actual space-bounded level-record computation. `RowPolynomials`
+constructs the source, gradient, active-height, unused-multiplier, and dummy
+components; `RowIdentity` proves that their dispatch equals every actual row
+of the completed indexed system. The linear, source, and level reader modules
+then feed `FlatAffineFullSourcePositiveCoefficient`: every selected row now
+has a native coefficient evaluator with arbitrary unary caller exponent
+width, a separately derived safe source-derivative width, and modulus-one
+semantics. No ancestral coefficient oracle is supplied.
+
+`FlatAffineFullSourcePositiveRows` supplies native integer and homogenized
+rows, preserving the entire source context under query transforms.
+`FlatAffineFullSourcePositiveCoordinate` constructs a nonzero annihilator
+for each coordinate of the completed tower. Every regular original root
+extends to a root of these equations, including all ancestral coordinates.
+Degree and coefficient-bit bounds have native controls uniformly in depth.
+`FlatAffineFullSourcePositiveMacaulay` reads the actual homogenized matrix;
+`PositiveCoordinateCoefficient` computes the determinant and its lowest
+nonzero coefficient natively. `PositiveContext` preserves these exact
+coordinate equations when the original source context changes. Integration
+with the primitive-parameter, accepted-root, and sample-enumeration backend
+remains required for this affine tower. Generic critical-stage regularity,
+selection of recursive levels and directions, and component-preserving graph
+edges also remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
