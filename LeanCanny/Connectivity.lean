@@ -175,6 +175,7 @@ import LeanCanny.Encoding.FlatAffinePowerCoordinateRows
 import LeanCanny.Encoding.FlatAffinePowerGram
 import LeanCanny.Encoding.FlatAffinePowerGramBounds
 import LeanCanny.Encoding.FlatAffinePowerOriginalSamples
+import LeanCanny.Encoding.FlatAffineCompleteVertices
 import LeanCanny.Encoding.BoundedFullRelocatedSource
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
@@ -259,8 +260,12 @@ The actual power tower now instantiates complete square sampling under stage
 cone certificates. Nonzero coordinate annihilators retain every root. Odd
 multiplier powers biject its real roots with the complete original Lagrange
 roots while fixing ambient coordinates. Their native counts and existence
-tests therefore include singular original roots. Native direction selection
-and the full recursive component cover remain open.
+tests therefore include singular original roots. A regular coordinate grid
+keeps the same primitive parameter and rational coordinates. Native equation
+filtering of its short ordinals now gives vertices in bijection with all
+captured roots, including singular roots. The original affine vertices preserve
+ambient coordinates. Native direction selection and the full recursive
+component cover remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
 implicit-graph algorithms. Canonical input recognition is polynomial time;

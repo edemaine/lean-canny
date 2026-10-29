@@ -11201,3 +11201,119 @@ example (F : FlatAffineFullSourceTower.Inputs) (hcone : FlatAffinePowerPositive.
   FlatAffinePowerSampleInput.originalCount_le F hcone u
 
 end CompleteAffinePowerSampleRegression
+
+namespace CompleteGridVertexRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+-- A nonzero exponent in a different variable must be rejected.
+example : ¬UnivariateRowBits.Supported (fun _ => 2) (fun _ => 2) (fun _ => (1 : Fin 2))
+    (fun _ => [true]) [] := by
+  intro h
+  have H := h 0 (by decide)
+  norm_num [FixedWidthQuery.coordinate] at H
+  change 1 = 0 at H
+  omega
+
+-- Zero-width input keeps the constant coefficient, whatever the payload.
+example : UnivariateRowBits.Supported (fun _ => 2) (fun _ => 0) (fun _ => (1 : Fin 2))
+    (fun _ => [true, true]) [] := by
+  intro j _
+  right
+  simp [FixedWidthQuery.coordinate]
+  rfl
+
+example : ((PolynomialSumSquaresBits.polynomial (fun _ => (Polynomial.X : Polynomial ℤ)) (fun _ => 2) []).coeff 2) = 2 := by
+  norm_num [PolynomialSumSquaresBits.polynomial, Finset.sum_range_succ, Polynomial.coeff_add, Polynomial.coeff_X_pow]
+
+private noncomputable abbrev repeated : SquareSampleInput.Inputs where
+  count _ := 1
+  degree _ := 2
+  mass _ := 2
+  system _ _ := X 0 ^ 2
+  count_pos _ := by decide
+  degree_pos _ := by decide
+  system_degree _ _ := by
+    simpa only [totalDegree_X, Nat.mul_one] using totalDegree_pow (X (0 : Fin 1) : MvPolynomial (Fin 1) ℤ) 2
+  system_mass _ _ := (MvMass.pow_le (X (0 : Fin 1)) 2).trans (by norm_num [MvMass.X])
+  annihilator _ _ := Polynomial.X ^ 2
+  annDegree _ := 2
+  annHeight _ := 1
+  ann_nonzero _ _ := pow_ne_zero _ Polynomial.X_ne_zero
+  ann_degree _ _ := by simp
+  ann_height _ _ j := by simp only [Polynomial.coeff_X_pow]; split_ifs <;> norm_num
+  ann_root _ z hz _ i := by
+    have hi : i = 0 := Subsingleton.elim _ _
+    subst i
+    simpa only [Polynomial.eval₂_pow, Polynomial.eval₂_X, eval₂_pow, eval₂_X] using hz 0
+
+
+private theorem repeated_complete : SquareSampleComplete.Complete repeated := by
+  intro u z hz i
+  have hi : i = 0 := Subsingleton.elim _ _
+  subst i
+  simpa only [repeated, Polynomial.eval₂_pow, Polynomial.eval₂_X, eval₂_pow, eval₂_X] using hz 0
+
+-- The original repeated root has zero Jacobian.
+example : (pderiv (0 : Fin 1) (repeated.system [] 0)).eval₂ (Int.castRingHom ℝ) (fun _ => 0) = 0 := by
+  norm_num [repeated, pderiv_pow, pderiv_X, eval₂_mul, eval₂_pow, eval₂_X]
+
+-- It nevertheless receives a complete label and decodes to the original root.
+example : ∃ w, ∃ hw : SquareSampleCompleteVertices.Valid repeated [] w,
+    (SquareSampleCompleteVertices.candidate repeated [] w hw).val = fun _ => 0 := by
+  let z : SquareSampleComplete.Roots repeated [] := ⟨fun _ => 0, by intro i; simp [repeated]⟩
+  exact ⟨SquareSampleCompleteVertices.word repeated repeated_complete [] z,
+    SquareSampleCompleteVertices.word_valid repeated repeated_complete [] z,
+    congrArg Subtype.val (SquareSampleCompleteVertices.candidate_word repeated repeated_complete [] z)⟩
+
+example : ¬SquareSampleCompleteVertices.Valid repeated [] [] := by
+  intro h
+  have hh := (Classical.choose h).1
+  change 0 = 3 at hh
+  omega
+
+-- An annihilator may have an extra coordinate root that the equations exclude.
+private noncomputable abbrev extraneous : SquareSampleInput.Inputs := { repeated with
+  degree _ := 1
+  degree_pos _ := by decide
+  system _ _ := X 0
+  system_degree _ _ := by simp
+  system_mass _ _ := by norm_num [MvMass.X]
+  annihilator _ _ := Polynomial.X * (Polynomial.X - 1)
+  ann_nonzero _ _ := mul_ne_zero Polynomial.X_ne_zero (by
+    intro h
+    have H := congrArg (fun p : Polynomial ℤ => p.coeff 1) h
+    norm_num [Polynomial.coeff_sub, Polynomial.coeff_X, Polynomial.coeff_one] at H)
+  ann_degree _ _ := by compute_degree
+  ann_height _ _ j := by
+    rw [mul_sub, mul_one, ← pow_two]
+    simp only [Polynomial.coeff_sub, Polynomial.coeff_X_pow, Polynomial.coeff_X]
+    split_ifs <;> norm_num
+  ann_root _ z hz _ i := by
+    have hi : i = 0 := Subsingleton.elim _ _
+    subst i
+    have hx : z 0 = 0 := by simpa only [eval₂_X] using hz 0
+    simp only [Polynomial.eval₂_mul, Polynomial.eval₂_X, hx, zero_mul] }
+
+
+example : ∃ w, SquareSampleCompleteVertices.GridValid extraneous [] w ∧
+    ¬SquareSampleCompleteVertices.Valid extraneous [] w := by
+  let y : Fin 1 → ℝ := fun _ => 1
+  have hy : ∀ i, (SquareSampleGrid.system extraneous [] i).eval₂ (Int.castRingHom ℝ) y = 0 := by
+    apply (SquareSampleGrid.roots_iff extraneous [] y).mpr
+    intro i
+    norm_num [extraneous, y, Polynomial.eval₂_mul, Polynomial.eval₂_sub, Polynomial.eval₂_X]
+  let z : SquareSampleParameters.Candidates (SquareSampleGrid.input extraneous) [] :=
+    ⟨⟨y, hy⟩, SquareSampleGrid.regular extraneous [] y hy⟩
+  let w := SquareSampleVertices.word (SquareSampleGrid.input extraneous) [] z
+  have hw := SquareSampleVertices.word_valid (SquareSampleGrid.input extraneous) [] z
+  refine ⟨w, hw, ?_⟩
+  rintro ⟨hv, hz⟩
+  have he := congrArg (fun x : SquareSampleParameters.Candidates (SquareSampleGrid.input extraneous) [] => x.val.val)
+    (SquareSampleVertices.sample_word (SquareSampleGrid.input extraneous) [] z)
+  change SquareSampleCompleteVertices.point extraneous [] w hv = y at he
+  rw [he] at hz
+  have H := hz 0
+  norm_num [extraneous, y, eval₂_X] at H
+end CompleteGridVertexRegression

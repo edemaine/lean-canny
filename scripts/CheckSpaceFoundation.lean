@@ -653,3 +653,22 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
 example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access) :
     LeanCanny.BinaryFn (LeanCanny.Encoding.FlatAffinePowerSampleInput.originalCountBound F) :=
   LeanCanny.Encoding.FlatAffinePowerSampleInput.originalCountBound_binary h
+
+/-! Complete labels retain the original coefficient reader and do not assume
+regularity of original roots. The regular grid is constructed internally. -/
+example (F : LeanCanny.Encoding.SquareSampleInput.Inputs) (h : F.Access) :
+    (LeanCanny.Encoding.SquareSampleGrid.input F).Access := LeanCanny.Encoding.SquareSampleGrid.access h
+
+example (F : LeanCanny.Encoding.SquareSampleInput.Inputs) (h : F.Access) :
+    LeanCanny.Encoding.SquareSampleCompleteVertices.language F ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.Encoding.SquareSampleCompleteVertices.mem_PSPACE h
+
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
+    (hcone : LeanCanny.Encoding.FlatAffinePowerPositive.ConeCertificate F) :
+    LeanCanny.Encoding.FlatAffineCompleteVertices.language F hcone ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.Encoding.FlatAffineCompleteVertices.mem_PSPACE h hcone
+
+example (F : LeanCanny.Encoding.SquareSampleInput.Inputs) (h : F.Access)
+    (T : LeanCanny.Encoding.SquareSampleTestMoments.Test) (A : T.Access) :
+    ComputableTidilyInPolySpace (LeanCanny.Encoding.SquareSampleCompleteVertices.signValue F T) encBits encBits :=
+  (LeanCanny.Encoding.SquareSampleCompleteVertices.sign_evaluator h A).computable

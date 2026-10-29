@@ -568,8 +568,12 @@ The checked ingredients are:
   The actual power tower now instantiates complete square sampling under stage
   cone certificates. Odd multiplier powers preserve ambient coordinates and
   biject its real roots with all original Lagrange roots. Native counts and
-  existence tests therefore retain singular original roots. Native direction
-  selection and the full recursive component cover remain required.
+  existence tests therefore retain singular original roots. A regular coordinate
+  grid preserves the same primitive parameter and rational coordinates. Native
+  equation filtering now gives short vertices in bijection with all captured
+  roots, including singular roots; original affine vertices preserve ambient
+  coordinates. Native direction selection and the full recursive component
+  cover remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same
