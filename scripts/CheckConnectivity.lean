@@ -9776,3 +9776,33 @@ example (F : FlatFullSourceTower.Inputs) (u : List Bool)
   simpa [hz, MatrixPower.residueBits, BinaryNatCode.encode] using H
 end
 end FlatIndexedReaderRegression
+
+
+namespace PositiveSystemRegression
+open LeanCanny.Algebra MvPolynomial
+open scoped Classical
+noncomputable section
+
+-- Completing the empty system yields one root, with its sole coordinate zero.
+example (z : Fin 1 → ℝ) :
+    (∀ i, (PositivePolynomialSystem.system (fun i : Fin 0 => Fin.elim0 i) i).eval₂
+      (Int.castRingHom ℝ) z = 0) ↔ z 0 = 0 := by
+  rw [PositivePolynomialSystem.roots_iff]
+  simp
+
+-- The dummy coordinate supplies an invertible block even at the empty seed.
+example (z : Fin 1 → ℝ) :
+    (TriangularPolynomialSystem.jacobian
+      (PositivePolynomialSystem.system (fun i : Fin 0 => Fin.elim0 i))).eval₂
+        (Int.castRingHom ℝ) z ≠ 0 := by
+  rw [PositivePolynomialSystem.jacobian_system, eval₂_rename]
+  simp [TriangularPolynomialSystem.jacobian, Matrix.det_isEmpty]
+
+-- A dummy coordinate cannot turn a singular original root into a regular one.
+example : (TriangularPolynomialSystem.jacobian
+    (PositivePolynomialSystem.system (fun _ : Fin 1 => (X 0 ^ 2 : MvPolynomial (Fin 1) ℤ)))).eval₂
+      (Int.castRingHom ℝ) (fun _ => 0) = 0 := by
+  rw [PositivePolynomialSystem.jacobian_system, eval₂_rename]
+  simp [TriangularPolynomialSystem.jacobian, Matrix.det_unique, pderiv_X, Pi.single_apply]
+end
+end PositiveSystemRegression

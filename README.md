@@ -479,8 +479,9 @@ The checked ingredients are:
   inside them. Native readers handle source blocks, critical differences, and
   linear copy rows. The complete indexed tower now has a native coefficient
   reader with derived exponent width, exact row semantics, and charged
-  direction computation. Native elimination, uniform descriptors, and the
-  complete recursive cover remain.
+  direction computation. Adding one dummy coordinate fixed at zero preserves
+  roots and regularity, including the empty seed. Native elimination, uniform
+  descriptors, and the complete recursive cover remain.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

@@ -1547,8 +1547,13 @@ space-computed direction record before dispatching to critical or copy rows.
 semantics for the existing indexed system. `FlatFullSourceCoefficient` derives
 the exponent width from the original degree allowance. Invalid rows, including
 every row at depth zero, return zero; modulus one is supported. Native
-coordinate elimination and uniform primitive descriptors remain. Its native
-matrix interface still needs an explicit treatment of zero-dimensional inputs.
+coordinate elimination and uniform primitive descriptors remain.
+`PositivePolynomialSystem` appends a zero dummy coordinate, preserves every
+original index, gives unique root extension, and preserves the Jacobian
+determinant. `FlatFullSourcePositive` instantiates it with native positive
+dimension and the same degree and mass budgets. Analytic regularity is
+preserved, including at depth zero. Adapting the coefficient reader to this
+completion will allow the native matrix interface to handle the empty seed.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.
