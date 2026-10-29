@@ -3,6 +3,13 @@ import LeanCanny.Connectivity.FormulaPathCover
 import LeanCanny.Connectivity.EndpointValidation
 import LeanCanny.Connectivity.AccessibleArc
 import LeanCanny.Connectivity.RegularRootArcs
+import LeanCanny.Connectivity.SquarefreeRootArcs
+import LeanCanny.Connectivity.AlgebraicArcFilter
+import LeanCanny.Connectivity.SymbolicSquarefreeArcs
+import LeanCanny.Connectivity.PolynomialGridArcs
+import LeanCanny.Geometry.PolynomialCoordinateProper
+import LeanCanny.Connectivity.AffineShiftArcs
+import LeanCanny.Algebra.AffineConstantParameterShift
 import LeanCanny.Connectivity.SlabCover
 import LeanCanny.Connectivity.BitFrontierCover
 import LeanCanny.Geometry.RootBranchCount
@@ -275,7 +282,19 @@ equations copy ancestral coordinates or place a current coordinate strictly
 between ordered ancestral bounds. Complete original roots project to all prefixes and append arbitrary frozen-stage roots. Their
 labels sample compact regular slice components without critical-stage Jacobian
 conditions. Singular constraint points give zero-objective-multiplier stage
-roots when the height normals are independent. The full recursive component
+roots when the height normals are independent. Symbolic squarefree coordinate
+families now have complete finite anchored arcs off explicit finite exceptional
+sets. Their auxiliary spatial regularity suffices; properness and endpoint
+roots come from the original equations. Constructed value annihilators make
+equation zero tests constant along a branch, so one original fiber indexes
+all retained arcs on intervals outside a constructed finite exceptional set.
+Nonvanishing leading coefficients give properness of coordinate grids;
+monic grids are proper globally. Polynomial constant shifts of affine systems
+with infinity exclusion now construct proper complete Gram coordinate grids
+and original-root arcs, including singular endpoints. Their coordinate and
+parameter degrees have uniform determinant bounds. Quantitative value-certificate bounds and
+effective recursive branch records remain required. Polynomial shifts of row
+constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space

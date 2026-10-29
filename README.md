@@ -579,7 +579,19 @@ The checked ingredients are:
   ordered ancestral bounds. Complete original roots project to prefixes and append frozen-stage roots. Their labels sample
   compact regular slice components without critical-stage Jacobian conditions.
   Singular constraint points give zero-objective-multiplier stage roots when
-  the height normals are independent. The full recursive component cover and
+  the height normals are independent. Symbolic squarefree coordinate families
+  now have complete finite anchored arcs off explicit finite exceptional sets.
+  Auxiliary spatial regularity suffices; properness and endpoint roots come
+  from the original equations. Constructed value annihilators make equation
+  zero tests constant along a branch, so one original fiber indexes all
+  retained arcs outside a constructed finite exceptional parameter set.
+  Nonvanishing leading coefficients give properness of coordinate grids;
+  monic grids are proper globally. Polynomial constant shifts of affine systems
+  with infinity exclusion construct proper complete Gram coordinate grids and
+  original-root arcs, including singular endpoints. Their coordinate and
+  parameter degrees have uniform determinant bounds. Quantitative value-certificate bounds and
+  effective recursive branch records remain required. Polynomial shifts of
+  row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
@@ -834,6 +846,8 @@ lake env lean scripts/CheckGrammar.lean
 lake env lean scripts/CheckSpaceFoundation.lean
 lake env lean scripts/CheckPolyTimeFoundation.lean
 lake env lean scripts/CheckConnectivity.lean
+lake env lean scripts/CheckAlgebraicArcs.lean
+lake env lean scripts/CheckAffineShiftArcs.lean
 ```
 
 The core import check enforces the separation from the optional tube route.

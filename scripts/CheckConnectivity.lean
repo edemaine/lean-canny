@@ -11477,3 +11477,123 @@ example (P : BoundedFullWriter.Readers) (d o : List Bool → ℕ) (l : List Bool
     FlatAffinePowerPositive.ConeCertificate (CoordinateDoubleAffinePrefix.inputs P d o l) :=
   CoordinateDoubleAffinePrefix.coneCertificate P d o l
 end CoordinateMidpointRegression
+
+namespace OriginalSquarefreeArcRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Connectivity MvPolynomial
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable abbrev repeated : Polynomial SymbolicScaledSquarefree.Coefficient := Polynomial.X ^ 2
+private noncomputable abbrev f := SymbolicUnivariateRootFamily.value repeated
+private noncomputable abbrev Q : Polynomial (Polynomial ℝ) := Polynomial.C Polynomial.X * Polynomial.X
+private noncomputable abbrev g := PolynomialRootFamily.value (UnivariateRootFamily.rows Q)
+
+private theorem f_eq (t : ℝ) (x : Fin 1 → ℝ) (i : Fin 1) : f (t, x) i = x 0 ^ 2 := by
+  simpa only [repeated, Polynomial.eval₂_pow, Polynomial.eval₂_X] using
+    SymbolicUnivariateRootFamily.value_eq repeated t x i
+private theorem g_eq (t : ℝ) (x : Fin 1 → ℝ) (i : Fin 1) : g (t, x) i = t * x 0 := by
+  change (Q.toMvPolynomial (0 : Fin 1)).eval₂ (Polynomial.evalRingHom t) x = _
+  rw [UnivariateRootFamily.eval]
+  simp [Q]
+private theorem f_zero (t : ℝ) (x : Fin 1 → ℝ) : f (t, x) = 0 ↔ x 0 = 0 := by
+  constructor
+  · intro h
+    have H := congrFun h 0
+    rw [f_eq, Pi.zero_apply] at H
+    exact (pow_eq_zero_iff (by decide : 2 ≠ 0)).mp H
+  · intro h
+    funext i
+    simp only [f_eq, h, zero_pow (by decide : 2 ≠ 0), Pi.zero_apply]
+private theorem g_zero (t : ℝ) (x : Fin 1 → ℝ) : g (t, x) = 0 ↔ t * x 0 = 0 := by
+  constructor
+  · intro h
+    simpa only [g_eq, Pi.zero_apply] using congrFun h 0
+  · intro h
+    funext i
+    exact (g_eq t x i).trans h
+
+-- Every original spatial root is repeated.
+example (t : ℝ) : (MvPolynomial.pderiv 0 (UnivariateRootFamily.rows
+    (SymbolicUnivariateRootFamily.realPolynomial repeated) 0)).eval₂
+    (Polynomial.evalRingHom t) (fun _ => 0) = 0 := by
+  change (MvPolynomial.pderiv 0 ((SymbolicUnivariateRootFamily.realPolynomial repeated).toMvPolynomial (0 : Fin 1))).eval₂
+    (Polynomial.evalRingHom t) (fun _ => 0) = 0
+  rw [UnivariateRootFamily.pderiv, ite_eq_left rfl, UnivariateRootFamily.eval]
+  norm_num [SymbolicUnivariateRootFamily.realPolynomial, repeated]
+
+-- The auxiliary endpoint has false roots, so global auxiliary properness is unavailable.
+example : g (0, fun _ => 1) = 0 ∧ f (0, fun _ => 1) ≠ 0 := by
+  constructor
+  · apply (g_zero 0 _).mpr
+    norm_num
+  · intro h
+    have H := (f_zero 0 (fun _ => 1)).mp h
+    norm_num at H
+
+private theorem original_proper : IsProperMap (RootProjection.projection f) := by
+  apply RootProjection.isProperMap_of_compact_bound f
+    (SymbolicUnivariateRootFamily.contDiff_value repeated 1).continuous (K := {0}) isCompact_singleton
+  intro z
+  change z.val.2 = 0
+  have H := (f_zero z.val.1 z.val.2).mp z.property
+  funext i
+  have hi : i = 0 := Subsingleton.elim _ _
+  simpa only [hi, Pi.zero_apply] using H
+
+-- Nevertheless complete auxiliary branches extend only to actual original roots.
+example : ∃ curve : RootBranches.Index g 0 1 ⟨(1 : ℝ) / 2, by norm_num⟩ → ℝ → Fin 1 → ℝ,
+    ∀ j, curve j 0 0 = 0 := by
+  have heq (t : ℝ) (ht : t ∈ Set.Ioo (0 : ℝ) 1) (x : Fin 1 → ℝ) : f (t, x) = 0 ↔ g (t, x) = 0 := by
+    rw [f_zero, g_zero, mul_eq_zero, or_iff_right (ne_of_gt ht.1)]
+  have hregular (z : RootProjection.Space g) (hz : RootProjection.projection g z ∈ Set.Ioo (0 : ℝ) 1) :
+      (fderiv ℝ g z.val ∘L ContinuousLinearMap.inr ℝ ℝ (Fin 1 → ℝ)).IsInvertible := by
+    apply UnivariateRootFamily.regular Q z.val.1 z.val.2 ?_ z.property
+    have ht : z.val.1 ≠ 0 := ne_of_gt hz.1
+    have hq : Q.map (Polynomial.evalRingHom z.val.1) = Polynomial.C z.val.1 * Polynomial.X := by simp [Q]
+    rw [hq]
+    exact Polynomial.Separable.unit_mul (Polynomial.isUnit_C.mpr (isUnit_iff_ne_zero.mpr ht)) Polynomial.separable_X
+  obtain ⟨_, curve, _, _, hroot, _, _⟩ := OriginalRootArcs.exists_anchored_arcs f g 0 1
+    ⟨(1 : ℝ) / 2, by norm_num⟩ heq (SymbolicUnivariateRootFamily.contDiff_value repeated 1).continuous
+    original_proper (fun _ _ => (PolynomialRootFamily.contDiff_value _ 1).contDiffAt) hregular
+    (fun _ => SymbolicSquarefreeArcs.limitPolynomial repeated)
+    (fun _ => SymbolicSquarefreeArcs.limitPolynomial_ne_zero repeated (by simp [repeated]))
+    (fun z _ i => by
+      have hi : i = 0 := Subsingleton.elim _ _
+      subst i
+      rw [SymbolicSquarefreeArcs.limit_relation]
+      exact (SymbolicUnivariateRootFamily.value_zero_iff repeated z.val.1 z.val.2).mp z.property)
+  refine ⟨curve, fun j => (f_zero 0 _).mp (hroot j 0 ?_)⟩
+  norm_num
+
+
+-- The auxiliary projection really is nonproper: its zero fiber covers ℝ.
+example : ¬IsProperMap (RootProjection.projection g) := by
+  intro hp
+  let read : RootProjection.Space g → ℝ := fun z => z.val.2 0
+  have hc : Continuous read := (continuous_apply 0).comp
+    (continuous_snd.comp continuous_subtype_val)
+  have hi := (hp.isCompact_preimage (isCompact_singleton (x := (0 : ℝ)))).image hc
+  have he : read '' (RootProjection.projection g ⁻¹' {(0 : ℝ)}) = Set.univ := by
+    apply Set.eq_univ_of_forall
+    intro a
+    let z : RootProjection.Space g := ⟨(0, fun _ => a), (g_zero 0 _).mpr (by ring)⟩
+    exact ⟨z, rfl, rfl⟩
+  rw [he] at hi
+  exact noncompact_univ ℝ hi
+
+example : SymbolicScaledSquarefree.exceptional (0 : Polynomial SymbolicScaledSquarefree.Coefficient) = 0 := by
+  simp [SymbolicScaledSquarefree.exceptional]
+example : SymbolicScaledSquarefree.exceptional (1 : Polynomial SymbolicScaledSquarefree.Coefficient) = 1 := by
+  simp [SymbolicScaledSquarefree.exceptional]
+
+-- The general diagonal construction includes the empty coordinate family.
+example (t : ℝ) (x : Fin 0 → ℝ) :
+    (fderiv ℝ (SquarefreeRootFamily.value
+      (fun i : Fin 0 => SymbolicScaledSquarefree.polynomial (Fin.elim0 i))) (t, x) ∘L
+      ContinuousLinearMap.inr ℝ ℝ (Fin 0 → ℝ)).IsInvertible := by
+  apply SquarefreeRootFamily.regular_away (fun i : Fin 0 => Fin.elim0 i) t x
+  · intro i
+    exact Fin.elim0 i
+  · funext i
+    exact Fin.elim0 i
+end OriginalSquarefreeArcRegression

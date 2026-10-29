@@ -56,19 +56,15 @@ theorem finite_index (f : ℝ × E → F) (a b : ℝ) (t₀ : Ioo a b)
   apply Subtype.ext
   exact congrArg (fun w : (RootProjection.projection f ⁻¹' {t₀.val}) => w.val) hij
 
-/-- Complete global branches retain their actual root in the indexing fiber.
-This ties a branch label to its sample coordinates without a permutation oracle. -/
-theorem exists_anchored_branches (f : ℝ × E → F) (a b : ℝ) (t₀ : Ioo a b)
-    (hproper : IsProperMap (RootProjection.projection f))
-    (hf : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
-      ContDiffAt ℝ 1 f z.val)
-    (hJac : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
-      (fderiv ℝ f z.val ∘L ContinuousLinearMap.inr ℝ ℝ E).IsInvertible) :
+omit [NormedSpace ℝ E] [CompleteSpace E] [NormedSpace ℝ F] [CompleteSpace F] in
+/-- A covering on the retained interval supplies complete branches, without
+requiring properness of an auxiliary equation at excluded endpoints. -/
+theorem exists_anchored_branches_of_covering (f : ℝ × E → F) (a b : ℝ) (t₀ : Ioo a b)
+    (hcover : IsCoveringMap (projection f a b)) :
     ∃ curve : Index f a b t₀ → C(Ioo a b, E),
       (∀ i, curve i t₀ = i.val.val.val.2) ∧
       (∀ i t, f (t.val, curve i t) = 0) ∧
       ∀ t : Ioo a b, ∀ x : E, f (t.val, x) = 0 ↔ ∃! i, curve i t = x := by
-  have hcover := (RootProjection.isCoveringMapOn f (Ioo a b) hproper hf hJac).isCoveringMap_restrictPreimage
   obtain ⟨branch, hanchor, hproj, hcomplete⟩ := CoveringBranches.exists_interval_branches hcover t₀
   let curve : Index f a b t₀ → C(Ioo a b, E) := fun i =>
     ⟨fun t => (branch i t).val.val.2,
@@ -100,6 +96,21 @@ theorem exists_anchored_branches (f : ℝ × E → F) (a b : ℝ) (t₀ : Ioo a 
       have hroot := (branch i t).val.property
       have hz : (branch i t).val.val = (t.val, x) := Prod.ext (hparameter i t) hi
       rwa [hz] at hroot
+
+/-- Complete global branches retain their actual root in the indexing fiber.
+This ties a branch label to its sample coordinates without a permutation oracle. -/
+theorem exists_anchored_branches (f : ℝ × E → F) (a b : ℝ) (t₀ : Ioo a b)
+    (hproper : IsProperMap (RootProjection.projection f))
+    (hf : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
+      ContDiffAt ℝ 1 f z.val)
+    (hJac : ∀ z : RootProjection.Space f, RootProjection.projection f z ∈ Ioo a b →
+      (fderiv ℝ f z.val ∘L ContinuousLinearMap.inr ℝ ℝ E).IsInvertible) :
+    ∃ curve : Index f a b t₀ → C(Ioo a b, E),
+      (∀ i, curve i t₀ = i.val.val.val.2) ∧
+      (∀ i t, f (t.val, curve i t) = 0) ∧
+      ∀ t : Ioo a b, ∀ x : E, f (t.val, x) = 0 ↔ ∃! i, curve i t = x := by
+  exact exists_anchored_branches_of_covering f a b t₀
+    (RootProjection.isCoveringMapOn f (Ioo a b) hproper hf hJac).isCoveringMap_restrictPreimage
 
 /-- Complete, disjoint continuous root branches. Their index type is proved
 finite by `finite_index`; their cardinality is not assumed as input. -/
