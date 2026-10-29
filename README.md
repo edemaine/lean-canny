@@ -471,8 +471,14 @@ The checked ingredients are:
   A flat triangular polynomial tower now preserves uniform row degree and
   coefficient-mass bounds at arbitrary depth. At depth at most the ambient
   dimension it uses at most its square in variables. Its derivative is
-  invertible exactly when every frozen stage is regular. Instantiating this
-  tower with native sampling readers and a complete recursive cover remains.
+  invertible exactly when every frozen stage is regular. Explicit finite
+  indexing now preserves roots and Jacobians. Actual flat critical stages use
+  the original full source, with linear constraints copying frozen coordinates.
+  Their uniform degree, mass, and single-elimination budgets have native
+  controls. A native plan check enforces contained nonempty blocks and pivots
+  inside them. Native readers handle source blocks, critical differences, and
+  linear copy rows. Assembling these readers for the entire indexed tower,
+  uniform descriptors, and the complete recursive cover remains.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

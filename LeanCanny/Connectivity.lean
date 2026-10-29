@@ -137,6 +137,10 @@ import LeanCanny.Encoding.FullSampleNextStage
 import LeanCanny.Encoding.NamedParentChildSamples
 import LeanCanny.Encoding.NamedRationalSeed
 import LeanCanny.Geometry.TriangularPolynomialRegularity
+import LeanCanny.Encoding.FlatFullSourceCoordinate
+import LeanCanny.Encoding.FlatFullSourcePlan
+import LeanCanny.Encoding.FlatFullSourceCriticalCoefficient
+import LeanCanny.Algebra.FixedWidthLinearCoefficientSpace
 import LeanCanny.Encoding.BoundedFullSampleChildParentQueries
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram

@@ -9631,3 +9631,79 @@ example (k : ℕ) (F : TriangularPolynomialTower.Family 0 ℤ)
   simp only [eval₂_one, ne_eq, one_ne_zero, not_false_eq_true]
 end
 end FlatPolynomialTowerRegression
+
+
+namespace FlatNativeSamplingRegression
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry MvPolynomial
+open scoped Classical
+
+-- Explicit enumeration preserves old indices while appending each new block.
+#guard (TriangularPolynomialIndexing.enumerate 2 3 (Sum.inr (1 : Fin 2))).val = 5
+#guard (TriangularPolynomialIndexing.enumerate 2 3
+  (Sum.inl (Sum.inl (Sum.inr (1 : Fin 2))))).val = 1
+
+-- Repacking preserves both source exponents and ignores redundant high zeros.
+#guard FixedWidthBlockRenameBits.word (fun _ => 2) (fun _ => 4) (fun _ => 1) (fun _ => 2)
+  (fun _ => [false, false, true, false, false, true]) [] = [true, false, false, true]
+#guard FixedWidthBlockRenameBits.word (fun _ => 2) (fun _ => 4) (fun _ => 1) (fun _ => 2)
+  (fun _ => [false, false, true, false, false, true, false, false, false, false]) [] = [true, false, false, true]
+
+-- The same extracted source word cannot make an outside exponent acceptable.
+example : ¬ FixedWidthBlockRenameBits.Supported (fun _ => 2) (fun _ => 4) (fun _ => 1) (fun _ => 2)
+    (fun _ => [true, false, true, false, false, true]) [] := by
+  intro h
+  have H := h 0 (by decide)
+  change (1 ≤ 0 ∧ 0 < 3) ∨ 1 = 0 at H
+  omega
+
+noncomputable section
+def circle : MvPolynomial (Fin 2) ℤ := X 0 ^ 2 + X 1 ^ 2 - 1
+def wrongCopy : (Fin 2 ⊕ Fin 2) → ℝ :=
+  Sum.elim (fun i => if i = 1 then 1 else 0) (fun i => if i = 1 then -1 else 0)
+
+-- A point on the original circle can still violate the frozen coordinate.
+-- The copy row must reject it even though the source equation vanishes.
+example : circle.eval₂ (Int.castRingHom ℝ) (wrongCopy ∘ Sum.inr) = 0 ∧
+    (FlatCriticalStage.row circle {0} 0 (fun _ => 0) (fun i => some i) 1).eval₂
+      (Int.castRingHom ℝ) wrongCopy ≠ 0 := by
+  norm_num [circle, wrongCopy, Function.comp_apply, FlatCriticalStage.row, FlatCriticalStage.oldCoordinate]
+
+-- Coincident copy coordinates cancel for every exponent word and modulus.
+example (A W selected : List Bool → ℕ) (target modulus : List Bool → List Bool)
+    (c : List Bool) (i : Fin (A c)) (hi : selected c = i.val) (m : ℕ) [NeZero m]
+    (hm : modulus c = BinaryNatCode.encode m) :
+    FixedWidthLinearCoefficientBits.difference A W selected target modulus selected c = [] := by
+  rw [FixedWidthLinearCoefficientBits.difference_packet A W selected target modulus selected c i i hi hi m hm]
+  simp [MatrixPower.residueBits, BinaryNatCode.encode]
+
+-- Modulus one returns zero even when a coordinate monomial is present.
+example (A W selected : List Bool → ℕ) (target : List Bool → List Bool)
+    (c : List Bool) (i : Fin (A c)) (hi : selected c = i.val) :
+    FixedWidthLinearCoefficientBits.value A W selected target (fun _ => BinaryNatCode.encode 1) c = [] := by
+  rw [FixedWidthLinearCoefficientBits.packet A W selected target (fun _ => BinaryNatCode.encode 1) c i hi 1 rfl]
+  have he : ∀ z : ZMod 1, z = 0 := fun z => Subsingleton.elim _ _
+  simp only [he, MatrixPower.residueBits, ZMod.val_zero, BinaryNatCode.encode]
+  rfl
+end
+end FlatNativeSamplingRegression
+
+
+namespace FlatPlanRegression
+open LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+
+-- A pivot outside the free set can omit the source equation completely.
+-- For the unit source, the malformed stage has roots; the valid pivot rejects.
+example :
+    (∀ i : Fin 2, (FlatCriticalStage.row (1 : MvPolynomial (Fin 2) ℤ) {0} 1
+      (fun _ => 0) (fun _ => (none : Option (Fin 2))) i).eval₂ (Int.castRingHom ℝ) (fun _ => 0) = 0) ∧
+    ¬ (∀ i : Fin 2, (FlatCriticalStage.row (1 : MvPolynomial (Fin 2) ℤ) {0} 0
+      (fun _ => 0) (fun _ => (none : Option (Fin 2))) i).eval₂ (Int.castRingHom ℝ) (fun _ => 0) = 0) := by
+  constructor
+  · intro i
+    fin_cases i <;> norm_num [FlatCriticalStage.row, FlatCriticalStage.oldCoordinate,
+      ProjectionCriticalFamily.spatialEquation]
+  · intro h
+    have H := h 0
+    norm_num [FlatCriticalStage.row, ProjectionCriticalFamily.spatialEquation] at H
+end FlatPlanRegression

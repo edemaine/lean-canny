@@ -1516,9 +1516,30 @@ exactly k*n variables; k ≤ n gives at most n² variables. The combined Jacobia
 factors into the old determinant and the new spatial determinant, including
 empty blocks. `TriangularPolynomialRegularity` proves that freezing ancestral
 coordinates commutes with differentiation, and identifies analytic regularity
-with the stage-by-stage criterion. These results apply at arbitrary depth;
-native coefficient access for the actual sampling tower and its uniform
-elimination and descriptor bounds are still required.
+with the stage-by-stage criterion. These results apply at arbitrary depth.
+`PolynomialSystemReindex` preserves the Jacobian under explicit simultaneous
+equation and variable reindexing. `TriangularPolynomialIndexing` gives a
+computable stage-order equivalence with Fin(k*n), preserving root, regularity,
+degree, and mass statements. `FlatCriticalStage` uses the original polynomial
+for critical rows in the free set and linear copy constraints outside it.
+`FlatCriticalTower` copies from the preceding complete ambient tuple, starting
+from zero, and proves exact stage-by-stage root semantics and uniform bounds.
+`FlatFullSourceTower` instantiates this construction with the original native
+full-source readers and input-dependent depth. Degree and mass budgets have
+native controls. `FlatFullSourcePlan` validates every block's containment,
+nonemptiness, and pivot membership in native polynomial time; roots of valid
+nonempty plans satisfy the original source equation at the newest stage.
+`FlatFullSourceCoordinate` applies one elimination to the
+whole tower: every regular root annihilates concrete nonzero coordinate
+polynomials with natively computed degree and coefficient-bit allowances.
+`BlockRenameCoefficient` and `FixedWidthBlockRenameSpace` give exact native
+coefficient access to a source embedded in a selected variable block. Outside
+exponents are rejected; redundant bits and raw moduli are retained correctly.
+The full-source block and critical-coefficient adapters use the original
+source reader, with two derivative calls for each critical difference.
+`FixedWidthLinearCoefficientSpace` provides native coordinate and copy-row
+coefficients. Assembly of the complete indexed tower coefficient reader,
+native coordinate elimination, and uniform primitive descriptors remains.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.
