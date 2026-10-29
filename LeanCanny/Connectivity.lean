@@ -9,6 +9,7 @@ import LeanCanny.Connectivity.SymbolicSquarefreeArcs
 import LeanCanny.Connectivity.PolynomialGridArcs
 import LeanCanny.Geometry.PolynomialCoordinateProper
 import LeanCanny.Connectivity.AffineShiftArcs
+import LeanCanny.Geometry.IntegerGridValueCertificate
 import LeanCanny.Algebra.AffineConstantParameterShift
 import LeanCanny.Connectivity.SlabCover
 import LeanCanny.Connectivity.BitFrontierCover
@@ -292,8 +293,10 @@ Nonvanishing leading coefficients give properness of coordinate grids;
 monic grids are proper globally. Polynomial constant shifts of affine systems
 with infinity exclusion now construct proper complete Gram coordinate grids
 and original-root arcs, including singular endpoints. Their coordinate and
-parameter degrees have uniform determinant bounds. Quantitative value-certificate bounds and
-effective recursive branch records remain required. Polynomial shifts of row
+parameter degrees have uniform determinant bounds. Explicit integer-grid
+test-value annihilators now have determinant degree bounds; their underlying
+Gram construction also has coefficient-mass bounds. Native value-certificate
+readers and effective recursive branch records remain required. Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.
 

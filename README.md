@@ -589,8 +589,10 @@ The checked ingredients are:
   monic grids are proper globally. Polynomial constant shifts of affine systems
   with infinity exclusion construct proper complete Gram coordinate grids and
   original-root arcs, including singular endpoints. Their coordinate and
-  parameter degrees have uniform determinant bounds. Quantitative value-certificate bounds and
-  effective recursive branch records remain required. Polynomial shifts of
+  parameter degrees have uniform determinant bounds. Explicit integer-grid
+  test-value annihilators have determinant degree bounds; their underlying
+  Gram construction also has coefficient-mass bounds. Native value-certificate
+  readers and effective recursive branch records remain required. Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.
   Bivariate fibers over actual samples now have short ordered root labels
@@ -848,6 +850,7 @@ lake env lean scripts/CheckPolyTimeFoundation.lean
 lake env lean scripts/CheckConnectivity.lean
 lake env lean scripts/CheckAlgebraicArcs.lean
 lake env lean scripts/CheckAffineShiftArcs.lean
+lake env lean scripts/CheckIntegerGridValues.lean
 ```
 
 The core import check enforces the separation from the optional tube route.
