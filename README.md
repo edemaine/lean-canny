@@ -565,8 +565,11 @@ The checked ingredients are:
   the original source and signed record costs. Actual rows retain the original
   mass budget, and native degree and coefficient-size budgets now bound these
   annihilators. Every field-valued root is retained without a Jacobian condition.
-  The complete sampling interface, direction selection, and the full recursive
-  component cover remain required.
+  The actual power tower now instantiates complete square sampling under stage
+  cone certificates. Odd multiplier powers preserve ambient coordinates and
+  biject its real roots with all original Lagrange roots. Native counts and
+  existence tests therefore retain singular original roots. Native direction
+  selection and the full recursive component cover remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

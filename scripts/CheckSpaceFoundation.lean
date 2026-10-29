@@ -630,3 +630,26 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
       LeanCanny.BinaryFn (LeanCanny.Encoding.FlatAffinePowerGram.heightBound F) :=
   ⟨LeanCanny.Encoding.FlatAffinePowerGram.degreeBound_binary h,
     LeanCanny.Encoding.FlatAffinePowerGram.heightBound_binary h⟩
+
+/-! Complete original-root counts charge only the original affine readers;
+cone exclusion is a mathematical promise, with no runtime oracle. -/
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
+    (hcone : LeanCanny.Encoding.FlatAffinePowerPositive.ConeCertificate F) :
+    ComputableTidilyInPolySpace
+      (fun u => LeanCanny.BinaryNatCode.encode (LeanCanny.Encoding.FlatAffinePowerSampleInput.originalCount F u))
+      encBits encBits :=
+  (LeanCanny.Encoding.FlatAffinePowerSampleInput.original_count_evaluator h hcone).computable
+
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
+    (hcone : LeanCanny.Encoding.FlatAffinePowerPositive.ConeCertificate F) :
+    LeanCanny.Encoding.FlatAffinePowerSampleInput.originalLanguage F ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.Encoding.FlatAffinePowerSampleInput.originalLanguage_mem_PSPACE h hcone
+
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
+    (hcone : LeanCanny.Encoding.FlatAffinePowerPositive.ConeCertificate F) :
+    (LeanCanny.Encoding.FlatAffinePowerSampleInput.input F hcone).Access :=
+  LeanCanny.Encoding.FlatAffinePowerSampleInput.access h hcone
+
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access) :
+    LeanCanny.BinaryFn (LeanCanny.Encoding.FlatAffinePowerSampleInput.originalCountBound F) :=
+  LeanCanny.Encoding.FlatAffinePowerSampleInput.originalCountBound_binary h

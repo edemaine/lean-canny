@@ -11144,3 +11144,60 @@ example (F : FlatAffineFullSourceTower.Inputs)
   FlatAffinePowerGram.annihilator_height_le F coordinate c j
 
 end AffinePowerBoundsRegression
+
+
+namespace CompleteAffinePowerSampleRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+
+-- Renaming may merge variables and cancel collected coefficients.
+example : rename (Option.map (fun _ : Fin 2 => (0 : Fin 1)))
+    (WeightedHomogenization.homogenize (fun _ => 1) 2 (X 0 - X 1 : MvPolynomial (Fin 2) ℤ)) = 0 := by
+  rw [← WeightedHomogenization.homogenize_rename]
+  simp only [map_sub, rename_X, sub_self, WeightedHomogenization.homogenize_zero]
+
+-- Odd multiplier powers keep negative multipliers and fix ambient coordinates.
+example : FlatAffinePowerTower.powerPoint (n := 1) (k := 1) (K := ℝ) 4 (fun _ => -2)
+    (FlatAffinePowerTower.multiplier 0 0) = -8 := by
+  rw [FlatAffinePowerTower.powerPoint_multiplier]
+  norm_num
+
+example : FlatAffinePowerTower.powerPoint (n := 1) (k := 1) (K := ℝ) 4 (fun _ => -2)
+    (FlatAffinePowerTower.current 0 0) = -2 := by
+  rw [FlatAffinePowerTower.powerPoint_current]
+
+example : Function.Bijective (FlatAffinePowerTower.powerPoint (n := 1) (k := 1) (K := ℝ) 4) :=
+  ⟨FlatAffinePowerTower.real_powerPoint_injective 4 ⟨1, rfl⟩,
+    FlatAffinePowerTower.real_powerPoint_surjective 4 ⟨1, rfl⟩⟩
+
+-- The forced-zero completion preserves exclusion at infinity for a repeated root.
+private noncomputable def square : Fin 1 → MvPolynomial (Fin 1) ℤ := fun _ => X 0 ^ 2
+private def degrees : Fin 1 → ℕ := fun _ => 2
+private theorem square_noInfinity : AffineFiniteCoordinates.NoInfinity square degrees := by
+  intro y hy hx
+  have h := hx 0
+  change (WeightedHomogenization.homogenize (fun _ => 1) 2 (X (0 : Fin 1) ^ 2)).eval₂ (Int.castRingHom ℂ) y = 0 at h
+  have hh : (X (0 : Fin 1) ^ 2 : MvPolynomial (Fin 1) ℤ).IsHomogeneous 2 := by
+    simpa only [one_mul] using (isHomogeneous_X (R := ℤ) (0 : Fin 1)).pow 2
+  rw [HomogenizationAtInfinity.eval_homogeneous _ _ _ hh] at h
+  simp only [eval₂_pow, eval₂_X, Function.comp_apply] at h
+  funext j
+  cases j with
+  | none => exact hy
+  | some i =>
+    have hi : i = 0 := Subsingleton.elim _ _
+    subst i
+    exact (pow_eq_zero_iff (by decide : 2 ≠ 0)).mp h
+
+example : AffineFiniteCoordinates.NoInfinity (PositivePolynomialSystem.system square) (Fin.lastCases 1 degrees) :=
+  PositivePolynomialSystem.noInfinity square degrees square_noInfinity
+
+example (F : FlatAffineFullSourceTower.Inputs) (u : List Bool) (h : F.depth u = 0) :
+    FlatAffinePowerSampleInput.originalCount F u = 1 :=
+  FlatAffinePowerSampleInput.originalCount_depth_zero F u h
+
+example (F : FlatAffineFullSourceTower.Inputs) (hcone : FlatAffinePowerPositive.ConeCertificate F) (u : List Bool) :
+    FlatAffinePowerSampleInput.originalCount F u ≤ FlatAffinePowerSampleInput.originalCountBound F u :=
+  FlatAffinePowerSampleInput.originalCount_le F hcone u
+
+end CompleteAffinePowerSampleRegression
