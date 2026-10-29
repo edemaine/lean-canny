@@ -562,8 +562,11 @@ The checked ingredients are:
   every depth. A native reciprocal row completes the homogeneous family for
   the Gram backend. The native full-box determinant and reflection now compose
   into a complete coefficient reader for these coordinate annihilators, retaining
-  the original source and signed record costs. All-root sampling budgets,
-  direction selection, and the full recursive component cover remain required.
+  the original source and signed record costs. Actual rows retain the original
+  mass budget, and native degree and coefficient-size budgets now bound these
+  annihilators. Every field-valued root is retained without a Jacobian condition.
+  The complete sampling interface, direction selection, and the full recursive
+  component cover remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

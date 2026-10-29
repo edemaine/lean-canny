@@ -623,3 +623,10 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Encoding.FlatAffinePowerGram.annihilator F coordinate))
       encBits encBits :=
   (LeanCanny.Encoding.FlatAffinePowerGram.annihilator_evaluator h coordinate hc).computable
+
+/-! Complete-coordinate budgets are native binary controls from original inputs. -/
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access) :
+    LeanCanny.BinaryFn (LeanCanny.Encoding.FlatAffinePowerGram.degreeBound F) ∧
+      LeanCanny.BinaryFn (LeanCanny.Encoding.FlatAffinePowerGram.heightBound F) :=
+  ⟨LeanCanny.Encoding.FlatAffinePowerGram.degreeBound_binary h,
+    LeanCanny.Encoding.FlatAffinePowerGram.heightBound_binary h⟩

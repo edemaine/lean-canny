@@ -11108,3 +11108,39 @@ example (F : FlatAffineFullSourceTower.Inputs) (c : List Bool) (h : F.depth c = 
     FlatAffinePowerControls.width, FlatAffinePowerControls.level, FixedWidthPolynomial.count]
 
 end AffinePowerGramRegression
+
+
+namespace AffinePowerBoundsRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open scoped Classical
+
+-- The depth-zero dummy retains the positive dimension in both native budgets.
+example (F : FlatAffineFullSourceTower.Inputs) (c : List Bool) (h : F.depth c = 0) :
+    FlatAffinePowerGram.degreeBound F c = 17 := by
+  norm_num [FlatAffinePowerGram.degreeBound, FlatAffinePowerGramLayout.dimension,
+    AffineBoxGramEliminant.dimension, FlatAffineFullSourcePositive.count,
+    FlatAffineFullSourceTower.count, h, FlatAffinePowerControls.width,
+    FlatAffinePowerControls.level, FixedWidthPolynomial.count]
+
+example (F : FlatAffineFullSourceTower.Inputs) (c : List Bool) (h : F.depth c = 0) :
+    FlatAffinePowerGram.heightBound F c = 80 + 16 * FlatAffineFullSourceTower.mass F c + 1 := by
+  norm_num [FlatAffinePowerGram.heightBound, FlatAffinePowerGramLayout.dimension,
+    AffineBoxGramEliminant.dimension, FlatAffineFullSourcePositive.count,
+    FlatAffineFullSourceTower.count, h, FlatAffinePowerControls.width,
+    FlatAffinePowerControls.level, FixedWidthPolynomial.count]
+  decide
+
+-- All actual field-valued roots are retained without a regularity hypothesis.
+example (F : FlatAffineFullSourceTower.Inputs)
+    (coordinate : (c : List Bool) → Fin (FlatAffineFullSourcePositive.count F c))
+    (c : List Bool) (z : Fin (FlatAffineFullSourcePositive.count F c) → ℝ)
+    (hz : ∀ i, (FlatAffinePowerPositive.system F c i).eval₂ (Int.castRingHom ℝ) z = 0) :
+    (FlatAffinePowerGram.annihilator F coordinate c).eval₂ (Int.castRingHom ℝ) (z (coordinate c)) = 0 :=
+  FlatAffinePowerGram.annihilator_eval_eq_zero F coordinate c z hz
+
+example (F : FlatAffineFullSourceTower.Inputs)
+    (coordinate : (c : List Bool) → Fin (FlatAffineFullSourcePositive.count F c)) (c : List Bool) (j : ℕ) :
+    ((FlatAffinePowerGram.annihilator F coordinate c).coeff j).natAbs.size ≤ FlatAffinePowerGram.heightBound F c :=
+  FlatAffinePowerGram.annihilator_height_le F coordinate c j
+
+end AffinePowerBoundsRegression

@@ -173,6 +173,7 @@ import LeanCanny.Algebra.AffineBoxGramEncoding
 import LeanCanny.Encoding.FlatAffinePowerControls
 import LeanCanny.Encoding.FlatAffinePowerCoordinateRows
 import LeanCanny.Encoding.FlatAffinePowerGram
+import LeanCanny.Encoding.FlatAffinePowerGramBounds
 import LeanCanny.Encoding.BoundedFullRelocatedSource
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
@@ -250,7 +251,10 @@ linear; the unique zero dummy includes depth zero. A native reciprocal row
 completes the homogeneous family supplied to the Gram backend. Its native
 coefficient reader composes the full-box determinant with fixed-degree
 reflection, charging the original source and signed record readers throughout.
-All-root sampling budgets, direction selection, and the full recursive
+Actual power rows retain the original mass budget and their mixed degree
+bounds. Binary degree and coefficient-size budgets now bound every coordinate
+annihilator, which retains every field-valued root without a Jacobian condition.
+The complete sampling interface, direction selection, and the full recursive
 component cover remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
