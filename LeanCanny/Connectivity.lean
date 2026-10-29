@@ -176,6 +176,7 @@ import LeanCanny.Encoding.FlatAffinePowerGram
 import LeanCanny.Encoding.FlatAffinePowerGramBounds
 import LeanCanny.Encoding.FlatAffinePowerOriginalSamples
 import LeanCanny.Encoding.FlatAffineCompleteVertices
+import LeanCanny.Encoding.CoordinateAffinePrefix
 import LeanCanny.Encoding.BoundedFullRelocatedSource
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
@@ -264,8 +265,10 @@ tests therefore include singular original roots. A regular coordinate grid
 keeps the same primitive parameter and rational coordinates. Native equation
 filtering of its short ordinals now gives vertices in bijection with all
 captured roots, including singular roots. The original affine vertices preserve
-ambient coordinates. Native direction selection and the full recursive
-component cover remain open.
+ambient coordinates. Explicit coordinate objectives and prefix constraints now
+supply native cone certificates using 0/1 direction records. Connecting these
+towers to the full recursive component cover and endpoint attachment remains
+open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
 implicit-graph algorithms. Canonical input recognition is polynomial time;

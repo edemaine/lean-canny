@@ -11317,3 +11317,44 @@ example : ∃ w, SquareSampleCompleteVertices.GridValid extraneous [] w ∧
   have H := hz 0
   norm_num [extraneous, y, eval₂_X] at H
 end CompleteGridVertexRegression
+
+namespace CoordinatePrefixRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+-- Objective row, identity normal rows, zero padding, and the signed layout.
+#guard (CoordinateAffineRecord.record 3 1).length == 24
+#guard FlatAffineFullSourceTower.integer 1 (CoordinateAffineRecord.record 3 1) 0 == 0
+#guard FlatAffineFullSourceTower.integer 1 (CoordinateAffineRecord.record 3 1) 1 == 1
+#guard FlatAffineFullSourceTower.integer 1 (CoordinateAffineRecord.record 3 1) 3 == 1
+#guard FlatAffineFullSourceTower.integer 1 (CoordinateAffineRecord.record 3 1) 7 == 1
+#guard FlatAffineFullSourceTower.integer 1 (CoordinateAffineRecord.record 3 1) 11 == 1
+#guard FlatAffineFullSourceTower.integer 1 (CoordinateAffineRecord.record 3 1) 5 == 0
+#guard FlatAffineFullSourceTower.integer 1 (CoordinateAffineRecord.record 3 1) 12 == 0
+#guard CoordinateAffineRecord.record 0 7 == []
+
+-- Quartic pure-power cones admit coordinate objectives over the complex numbers.
+example : AffineConeDirectionGeometry.CriticalRootFree (K := ℚ) (L := ℂ)
+    (FermatAffineConeFlag.form (n := 3) 3 4) {0} FermatCoordinateCone.normal
+    (fun i => algebraMap ℚ ℂ (FermatCoordinateCone.normal (1 : Fin 3) i)) :=
+  FermatCoordinateCone.criticalRootFree 3 (by norm_num) 4 (by decide) {0} 1 (by decide)
+
+-- In dimension four, clamping a large request activates exactly 0,1,2.
+private def P : BoundedFullWriter.Readers := ⟨fun _ => [], fun _ => 0, fun _ => 0⟩
+example : (CoordinateAffineTower.selected P (fun _ => 100) [] 0).val = 3 := rfl
+example : (0 : Fin 4) ∈ FlatAffineFullSourceTower.free
+    (CoordinateAffinePrefix.inputs P (fun _ => 1) (fun _ => 100) (fun _ => [])) [] 0 := by
+  exact (CoordinateAffinePrefix.active_iff P (fun _ => 1) (fun _ => 100) (fun _ => []) [] 0 0).mpr (by decide)
+example : (3 : Fin 4) ∉ FlatAffineFullSourceTower.free
+    (CoordinateAffinePrefix.inputs P (fun _ => 1) (fun _ => 100) (fun _ => [])) [] 0 := by
+  intro h
+  have H := (CoordinateAffinePrefix.active_iff P (fun _ => 1) (fun _ => 100) (fun _ => []) [] 0 3).mp h
+  exact (by decide : ¬ (3 : ℕ) < 3) H
+
+-- The cone certificate is unconditional, even for arbitrary level payloads.
+example (P : BoundedFullWriter.Readers) (depth objective : List Bool → ℕ)
+    (level : List Bool → List Bool) :
+    FlatAffinePowerPositive.ConeCertificate (CoordinateAffinePrefix.inputs P depth objective level) :=
+  CoordinateAffinePrefix.coneCertificate P depth objective level
+end CoordinatePrefixRegression

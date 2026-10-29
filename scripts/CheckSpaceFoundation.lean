@@ -672,3 +672,18 @@ example (F : LeanCanny.Encoding.SquareSampleInput.Inputs) (h : F.Access)
     (T : LeanCanny.Encoding.SquareSampleTestMoments.Test) (A : T.Access) :
     ComputableTidilyInPolySpace (LeanCanny.Encoding.SquareSampleCompleteVertices.signValue F T) encBits encBits :=
   (LeanCanny.Encoding.SquareSampleCompleteVertices.sign_evaluator h A).computable
+
+-- Coordinate-prefix sampling constructs its own cone certificate.
+example (P : LeanCanny.Encoding.BoundedFullWriter.Readers) (depth objective : List Bool → ℕ)
+    (level : List Bool → List Bool) :
+    LeanCanny.Encoding.FlatAffinePowerPositive.ConeCertificate
+      (LeanCanny.Encoding.CoordinateAffinePrefix.inputs P depth objective level) :=
+  LeanCanny.Encoding.CoordinateAffinePrefix.coneCertificate P depth objective level
+
+example {P : LeanCanny.Encoding.BoundedFullWriter.Readers} (hP : P.PolyTime)
+    {depth objective : List Bool → ℕ} {level : List Bool → List Bool}
+    (hd : LeanCanny.UnaryFn depth) (ho : LeanCanny.UnaryFn objective)
+    (hl : LeanCanny.Computation.SpaceFunction level)
+    (hA : ∀ u, (LeanCanny.ETR.TermView.term (P.source u)).arity ≤ P.dim u) :
+    LeanCanny.Encoding.CoordinateAffinePrefix.language P depth objective level ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.Encoding.CoordinateAffinePrefix.mem_PSPACE hP hd ho hl hA
