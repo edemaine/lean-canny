@@ -143,6 +143,7 @@ import LeanCanny.Encoding.FlatFullSourceCriticalCoefficient
 import LeanCanny.Encoding.FlatFullSourceCoefficient
 import LeanCanny.Encoding.FlatFullSourcePositive
 import LeanCanny.Encoding.FlatFullSourcePositiveCoordinateCoefficient
+import LeanCanny.Encoding.FlatFullSourceSampleRegularFilter
 import LeanCanny.Algebra.FixedWidthLinearCoefficientSpace
 import LeanCanny.Encoding.BoundedFullSampleChildParentQueries
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram

@@ -1565,9 +1565,28 @@ regular original root at the corresponding old coordinate.
 `FlatFullSourcePositiveCoordinateCoefficient` feeds these entries to the native
 subtractive-characteristic reader and lowest-coefficient scan. It computes
 the actual nonzero coordinate eliminant, uniformly in the input-dependent
-tower depth. The entire source and direction costs remain charged. Uniform
-primitive sources, candidate filters, and canonical sample descriptors for
-this flat family remain to be assembled.
+tower depth. The entire source and direction costs remain charged.
+`FlatFullSourcePositiveContext` preserves these exact equations when the
+complete original source context is transformed. `FlatFullSourceSampleSource`
+constructs a finite coordinate source, computes exact degrees natively, and
+retains every prepared coordinate equation at regular flat roots.
+`FlatFullSourceSampleCoordinates` supplies a separable common parameter and
+native rational coordinate readers. Parameter degree, coordinate degree, and
+coefficient-mass allowances have binary native controls uniformly in the
+input-dependent depth. Every coordinate-root tuple has a unique parameter
+with nonvanishing coordinate denominators. Parameter roots can still encode
+extraneous tuples. `FlatFullSourceSampleParameters` selects the flat equations
+and analytic regularity, proves a bijection with regular original tower roots,
+and gives a native polynomial label-width bound without assuming every root
+is regular. `FlatFullSourceSampleReaders` retains the complete source context
+through rational substitution. `FlatFullSourceSampleFilters` constructs native
+univariate equation tests with exact zeros and real signs on parameter roots.
+The `FlatFullSourceSampleJacobian` modules differentiate all ancestral and
+dummy coordinates and read the actual determinant.
+`FlatFullSourceSampleRegularFilter` gives a native polynomial whose
+nonvanishing is exactly analytic regularity on parameter roots. All test
+degree and mass allowances are native. Native accepted-parameter counting,
+canonical hashes, and ordered sample descriptors remain to be assembled.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.

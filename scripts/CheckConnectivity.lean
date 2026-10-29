@@ -9865,3 +9865,59 @@ example (F : FlatFullSourceTower.Inputs)
   simp [MatrixPower.residueBits, BinaryNatCode.encode]
 end
 end FlatPositiveCoefficientRegression
+
+
+namespace FlatPrimitiveSampleRegression
+open LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+noncomputable section
+
+-- Every raw leaf index of the empty tower denotes its sole dummy coordinate.
+example (F : FlatFullSourceTower.Inputs) (u raw : List Bool) (hd : F.depth u = 0) :
+    (FlatFullSourceSampleSource.selected F (pair u raw)).val = 0 := by
+  simp [FlatFullSourceSampleSource.selected, FlatFullSourceSampleSource.count,
+    FlatFullSourcePositive.count, FlatFullSourceTower.count, pairFst_pair, hd]
+
+-- Tests on every flat row force the padded coordinate to zero. A primitive
+-- parameter cannot bypass this equation merely by satisfying its eliminant.
+example (F : FlatFullSourceTower.Inputs) (u : List Bool) (theta : ℝ)
+    (ht : (FlatFullSourceSampleCoordinates.parameter F u).eval₂ (Int.castRingHom ℝ) theta = 0)
+    (he : ∀ i : Fin (FlatFullSourceSampleSource.count F u),
+      (FlatFullSourceSampleFilters.polynomial F (pair u (BinaryNatCode.encode i.val))).eval₂
+        (Int.castRingHom ℝ) theta = 0) :
+    FlatFullSourceSampleParameters.decode F u theta (Fin.last (FlatFullSourceTower.count F u)) = 0 := by
+  have hv := (FlatFullSourceSampleFilters.valid_iff_filters F u theta).mpr ⟨ht, he⟩
+  exact ((FlatFullSourcePositive.roots_iff (Int.castRingHom ℝ) F u _).mp hv.2).2
+
+-- The parameter-to-original bijection recovers every original coordinate,
+-- including all earlier stage coordinates, not just the newest ambient tuple.
+example (F : FlatFullSourceTower.Inputs) (u : List Bool)
+    (theta : FlatFullSourceSampleParameters.RegularParameters F u)
+    (i : Fin (FlatFullSourceTower.count F u)) :
+    ((FlatFullSourceSampleParameters.originalEquiv F u) theta).val.val i =
+      FlatFullSourceSampleParameters.decode F u theta.val i.castSucc := rfl
+
+-- A zero Jacobian is excluded even if every equation test vanishes.
+example (F : FlatFullSourceTower.Inputs) (u : List Bool) (theta : ℝ)
+    (ht : (FlatFullSourceSampleCoordinates.parameter F u).eval₂ (Int.castRingHom ℝ) theta = 0)
+    (hj : (FlatFullSourceSampleRegularFilter.polynomial F u).eval₂ (Int.castRingHom ℝ) theta = 0) :
+    ¬ (fderiv ℝ (fun z => fun i => (FlatFullSourcePositive.system F u i).eval₂ (Int.castRingHom ℝ) z)
+      (FlatFullSourceSampleParameters.decode F u theta)).IsInvertible := by
+  intro hr
+  exact ((FlatFullSourceSampleRegularFilter.nonzero_iff F u theta ht).mpr hr) hj
+
+-- Noncanonical zero words for the modulus retain the modulus-one semantics
+-- through the primitive parameter coefficient reader.
+example (F : FlatFullSourceTower.Inputs) (u : List Bool) (j : ℕ) :
+    PrimitivePairBits.coefficient (FlatFullSourceSampleCoordinates.parameter F)
+      (pair (pair u (BinaryNatCode.encode j)) [false, false]) = [] := by
+  unfold PrimitivePairBits.coefficient RationalSubstitution.IntegerBits.coefficientResidue
+  have hz (m : ℕ) (hm : m = 1) (z : ℤ) : MatrixPower.residueBits (z : ZMod m) = [] := by
+    subst m
+    rw [Subsingleton.elim (z : ZMod 1) 0]
+    rfl
+  apply hz
+  simp [RationalSubstitution.IntegerBits.mValue]
+  rfl
+end
+end FlatPrimitiveSampleRegression

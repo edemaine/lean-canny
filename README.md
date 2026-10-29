@@ -482,7 +482,11 @@ The checked ingredients are:
   direction computation. Adding one dummy coordinate fixed at zero preserves
   roots and regularity, including the empty seed. Native coordinate elimination
   now uses the whole flat system, with derived degree and coefficient-bit
-  budgets and no ancestral coefficient oracle. Uniform sample descriptors
+  budgets and no ancestral coefficient oracle. These equations now feed a
+  balanced primitive construction with native rational coordinate readers and
+  equation/Jacobian test polynomials. Accepted parameters correspond exactly
+  to regular roots of the original tower, with native uniform budgets and a
+  polynomial label-width bound. Native counting, canonical sample descriptors,
   and the complete recursive cover remain.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
