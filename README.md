@@ -459,8 +459,15 @@ The checked ingredients are:
   for every regular next-stage critical point. The resulting ambient rational
   coordinates and separable parameter supply another native joint input,
   preserving ancestor coordinates and nonzero denominators at actual samples.
-  Direction selection, ancestor-validity filters, descriptors, singular
-  endpoints, and uniform recursion bounds remain to be connected.
+  Generalized native equation and Jacobian filters count exactly the regular
+  candidates. Canonical bounded descriptors, enumeration, and polynomial sign
+  readers now work over these rational parents. A named-parent interface
+  validates the entire ancestry: a native derivative-sign scan identifies the
+  retained parent, and each actual child supplies the same interface for the
+  next stage. Names append ancestry without repeatedly doubling its length;
+  the zero seed has an unconditional native certificate. This proves closure
+  for each fixed stage. Direction selection, singular endpoints, and uniform
+  bounds for input-dependent recursion remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

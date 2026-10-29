@@ -1,0 +1,115 @@
+/-
+Copyright (c) 2026 lean-canny contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+module
+
+public import LeanCanny.Encoding.RationalParentChildHashRoots
+
+/-! # Native cut queries with hash parameters computed internally
+
+Inputs retain the original source and a signed rational threshold. The
+selected hash context is computed before calling the pencil cut reader.
+Membership therefore certifies one specific regular child root, without
+requiring a supplied hash context or a full derivative-sign record.
+-/
+
+@[expose] public section
+namespace LeanCanny.Encoding.RationalParentChildHashCuts
+open LeanCanny.Algebra LeanCanny.Computation LeanCanny.ETR BoundedFullWriter
+open RationalParentChildSource (Inputs)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] RationalParentChildRecords.length RationalParentChildThom.labelWidth
+  RationalParentChildCoordinates.parameterDegree RationalParentChildCoordinates.baseHeight
+  RationalParentChildQueries.roots RationalParentChildRegularCount.count
+
+def finish (z : List Bool) : List Bool := pair (pairSnd z) (pairSnd (pairFst z))
+theorem finish_FP : finish ∈ FP := mem_FP_pair pairSnd_mem_FP (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP)
+
+noncomputable def query (P : Inputs) (q : List Bool) : List Bool :=
+  pair (RationalParentChildHashChoice.value P (pairFst q)) (pairSnd q)
+theorem query_evaluator {P : Inputs} (h : P.Access) : SpaceFunction (query P) := by
+  have E := (RationalParentChildHashChoice.evaluator h).precompose pairFst pairFst_mem_FP
+  have H := E.withInput.postcompose finish finish_FP
+  exact H.congr (funext fun q => by simp only [query, finish, Function.comp_apply, pairFst_pair, pairSnd_pair])
+
+theorem query_source (P : Inputs) (q : List Bool) :
+    pairFst (query P q) = RationalParentChildHashChoice.value P (pairFst q) := pairFst_pair _ _
+theorem query_threshold (P : Inputs) (q : List Bool) :
+    RationalCutBits.threshold (query P q) = RationalCutBits.threshold q := by
+  simp only [query, RationalCutBits.threshold, RationalCutBits.numerator, RationalCutBits.positive,
+    RationalCutBits.negative, RationalCutBits.divisor, RationalCutBits.denominatorMinusOne, pairSnd_pair]
+
+noncomputable def count (P : Inputs) (σ : SignType) (q : List Bool) : ℕ :=
+  RationalParentChildPencilCuts.count P σ (query P q)
+theorem evaluator {P : Inputs} (h : P.Access) (σ : SignType) :
+    SpaceFunction (fun q => BinaryNatCode.encode (count P σ q)) :=
+  (query_evaluator h).chain (RationalParentChildPencilCuts.evaluator h σ)
+
+theorem count_below (P : Inputs) (q : List Bool) : count P .neg q =
+    (((RationalParentChildHashRoots.values P (pairFst q)).image (Int.castRingHom ℝ)).filter
+      (fun x => x < RationalCutBits.threshold q)).card := by
+  rw [count, RationalParentChildPencilCuts.count_below, query_source, query_threshold, RationalParentChildHashRoots.rootSet_eq]
+
+noncomputable def language (P : Inputs) : Language := {q |
+  RationalCutBits.threshold q ∈ (RationalParentChildHashRoots.values P (pairFst q)).image (Int.castRingHom ℝ)}
+
+theorem count_zero_pos_iff (P : Inputs) (q : List Bool) : 0 < count P 0 q ↔ q ∈ language P := by
+  rw [count, RationalParentChildPencilCuts.count_zero_pos_iff, query_source, query_threshold,
+    RationalParentChildHashRoots.rootSet_eq]
+  rfl
+
+theorem count_below_at_integer (P : Inputs) (q c : List Bool) (z : ℤ)
+    (hc : pairFst q = c) (hz : RationalCutBits.threshold q = (z : ℝ)) :
+    count P .neg q = RationalParentChildHashRoots.rank P c z := by
+  rw [count_below, hc, hz, Finset.filter_image,
+    Finset.card_image_of_injective _ (show Function.Injective (Int.castRingHom ℝ) from Int.cast_injective)]
+  simp only [Int.coe_castRingHom, Int.cast_lt]
+  rfl
+
+theorem language_at_integer (P : Inputs) (q c : List Bool) (z : ℤ)
+    (hc : pairFst q = c) (hz : RationalCutBits.threshold q = (z : ℝ)) :
+    q ∈ language P ↔ z ∈ RationalParentChildHashRoots.values P c := by
+  change RationalCutBits.threshold q ∈ (RationalParentChildHashRoots.values P (pairFst q)).image (Int.castRingHom ℝ) ↔ _
+  rw [hc, hz]
+  simp only [Finset.mem_image, Int.coe_castRingHom, Int.cast_inj, exists_eq_right]
+
+theorem decider {P : Inputs} (h : P.Access) : SpaceDecider (language P) := by
+  have E := evaluator h 0
+  have hc := ((BinaryFn.const 0).lt (BinaryFn.fromBits id_mem_FP)).flag_mem_FP
+  apply E.decider (fun z => decide (0 < Nat.fromBitsLE z)) hc
+  intro q
+  simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits, decide_eq_true_eq, language, Set.mem_ofPred_eq]
+  rw [count, RationalParentChildPencilCuts.count_zero_pos_iff, query_source, query_threshold,
+    RationalParentChildHashRoots.rootSet_eq]
+
+theorem unique_root (P : Inputs) (q : List Bool) (hq : q ∈ language P) :
+    ∃! x : RationalParentChildRecordSpan.Root P (pairFst q),
+      (RationalParentChildHashChoice.hash P (pairFst q) x : ℝ) = RationalCutBits.threshold q := by
+  obtain ⟨z, hz, he⟩ := Finset.mem_image.mp hq
+  obtain ⟨x, hx⟩ := (RationalParentChildHashRoots.mem_values P (pairFst q) z).mp hz
+  refine ⟨x, ?_, ?_⟩
+  · simpa only [hx, Int.coe_castRingHom] using he
+  · intro y hy
+    apply RationalParentChildHashChoice.hash_injective P (pairFst q)
+    apply (Int.cast_injective (α := ℝ))
+    exact hy.trans (by simpa only [hx, Int.coe_castRingHom] using he.symm)
+
+def integerQuery (c : List Bool) (z : ℤ) : List Bool :=
+  pair c (pair (BinaryNatCode.encode z.toNat) (pair (BinaryNatCode.encode (-z).toNat) []))
+theorem integer_threshold (c : List Bool) (z : ℤ) : RationalCutBits.threshold (integerQuery c z) = (z : ℝ) := by
+  have he : (z.toNat : ℤ) - (-z).toNat = z := by omega
+  simp only [integerQuery, RationalCutBits.threshold, RationalCutBits.numerator, RationalCutBits.positive,
+    RationalCutBits.negative, RationalCutBits.divisor, RationalCutBits.denominatorMinusOne, pairFst_pair,
+    pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, show Nat.fromBitsLE ([] : List Bool) = 0 from rfl,
+    Nat.zero_add, Nat.cast_one, div_one, he]
+
+theorem integer_mem_iff (P : Inputs) (c : List Bool) (z : ℤ) :
+    integerQuery c z ∈ language P ↔ z ∈ RationalParentChildHashRoots.values P c := by
+  change RationalCutBits.threshold (integerQuery c z) ∈
+    (RationalParentChildHashRoots.values P (pairFst (integerQuery c z))).image (Int.castRingHom ℝ) ↔ _
+  rw [integer_threshold]
+  simp only [integerQuery, pairFst_pair, Finset.mem_image, Int.coe_castRingHom, Int.cast_inj, exists_eq_right]
+
+end LeanCanny.Encoding.RationalParentChildHashCuts

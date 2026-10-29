@@ -9470,3 +9470,120 @@ example (F : RationalParentJointSource.Inputs) (w : List Bool → ℕ) (bits : L
   have hb := congrFun he b
   norm_num at hb
 end RationalParentJointRegression
+
+
+namespace NamedParentRegression
+open LeanCanny.Algebra LeanCanny.Encoding
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] RationalParentChildCoordinates.parameter
+  RationalParentChildRegularFilter.polynomial RationalParentChildQueries.roots
+  RationalParentChildHashChoice.descriptor RationalParentChildParameters.decode
+
+-- The generalized filters must still remove every singular candidate and
+-- retain every equation root when the regularity filter is the unit.
+example (F : RationalParentChildSource.Inputs) (u : List Bool)
+    (h : RationalParentChildRegularFilter.polynomial F u = 0) :
+    RationalParentChildRegularCount.count F u = 0 := by
+  rw [RationalParentChildRegularCount.count_eq_difference,
+    RationalParentChildRegularCount.equationCount_eq_card,
+    RationalParentChildRegularCount.singularCount_eq_card]
+  simp only [h, Polynomial.eval₂_zero, Finset.filter_true, Nat.sub_self]
+
+example (F : RationalParentChildSource.Inputs) (u : List Bool)
+    (h : RationalParentChildRegularFilter.polynomial F u = 1) :
+    RationalParentChildRegularCount.count F u = RationalParentChildEquationCount.count F u := by
+  rw [RationalParentChildRegularCount.count_eq_difference,
+    RationalParentChildRegularCount.singularCount_eq_card]
+  simp only [h, Polynomial.eval₂_one, one_ne_zero, Finset.filter_false, Finset.card_empty, Nat.sub_zero]
+
+-- A total sign reader returning zero must not make an invalid word valid.
+example (F : RationalParentChildSource.Inputs) (T : RationalParentChildTestMoments.Test)
+    (q : List Bool) (hq : q ∉ RationalParentChildDescriptors.language F) :
+    q ∉ RationalParentChildTestSign.language F T 0 := fun H => hq H.1
+
+-- An empty regular set has no accepted descriptor, whatever its hash value.
+example (F : RationalParentChildSource.Inputs) (q : List Bool)
+    (h : RationalParentChildQueries.roots F (pairFst q) = ∅) :
+    q ∉ RationalParentChildDescriptors.language F := by
+  rintro ⟨x, _⟩
+  have hx := x.property
+  change x.val ∈ RationalParentChildQueries.roots F (pairFst q) at hx
+  exact (Finset.eq_empty_iff_forall_notMem.mp h) x.val hx
+
+-- The concrete seed accepts precisely the empty name, in every context.
+example (u : List Bool) : pair u [] ∈ NamedRationalParents.language NamedRationalSeed.source := by
+  rw [NamedRationalSeed.language_iff, pairSnd_pair]
+example (u : List Bool) : pair u [false] ∉ NamedRationalParents.language NamedRationalSeed.source := by
+  rw [NamedRationalSeed.language_iff, pairSnd_pair]
+  decide
+
+#guard NamedRationalSeed.derivativeValue (pair (pair [true, false] []) []) = InfinitesimalSign.encode 0
+#guard NamedRationalSeed.derivativeValue (pair (pair [true, false] []) [true]) = InfinitesimalSign.encode 1
+#guard NamedRationalSeed.derivativeValue (pair (pair [true, false] []) [false, true]) = InfinitesimalSign.encode 0
+
+-- Child and ancestor derivative queries preserve the full original context.
+#guard NamedParentChildSelection.childQuery
+  (pair (pair [true, false] (pair [false, true] [true, true])) [false, false, true]) =
+    pair (pair [true, false] [false, true]) [false, false, true]
+#guard NamedParentChildSelection.parentQuery
+  (pair (pair [true, false] (pair [false, true] [true, true])) [false, false, true]) =
+    pair (pair [true, false] [true, true]) [false, false, true]
+
+-- Total pair projections also parse malformed words. The canonical pair guard
+-- must reject these words before accepting a child/ancestor combination.
+#guard pair (pairFst []) (pairSnd []) != ([] : List Bool)
+example (F : NamedParentChildSelection.Inputs) :
+    pair [true] [] ∉ NamedParentChildSelection.language F := by
+  intro H
+  have hn : ¬ NamedParentChildSelection.Paired (pair [true] []) := by
+    change pair [] [] ≠ []
+    intro he
+    have hl := congrArg List.length he
+    rw [pair_length] at hl
+    simp only [List.length_nil] at hl
+    omega
+  exact hn H.1
+
+-- A valid child descriptor paired with the wrong valid parent is rejected.
+example (F : NamedParentChildSelection.Inputs) (u : List Bool)
+    (p : NamedRationalParents.Root F.parent u)
+    (x : RationalParentChildRecordSpan.Root (NamedParentChildSelection.generic F) u)
+    (hne : RationalParentChildParameters.decode (NamedParentChildSelection.generic F) u x.val
+      (RationalParentChildParentThom.first (NamedParentChildSelection.generic F) u) ≠ p.val) :
+    pair u (pair (RationalParentChildHashChoice.descriptor (NamedParentChildSelection.generic F) u x)
+      (F.parent.descriptor u p)) ∉ NamedParentChildSelection.language F := by
+  rw [NamedParentChildSelection.at_descriptors]
+  exact hne
+
+-- Regular children retaining an extraneous parent root are rejected by the
+-- validator, regardless of which ancestor word is attached.
+example (F : NamedParentChildSelection.Inputs) (q : List Bool)
+    (x : RationalParentChildRecordSpan.Root (NamedParentChildSelection.generic F)
+      (NamedParentChildSelection.source q))
+    (hx : RationalParentChildHashChoice.descriptor (NamedParentChildSelection.generic F)
+      (NamedParentChildSelection.source q) x = NamedParentChildSelection.childWord q)
+    (h : RationalParentChildParents.retained (NamedParentChildSelection.generic F)
+      (NamedParentChildSelection.source q) x.val ∉ F.parent.roots (NamedParentChildSelection.source q)) :
+    q ∉ NamedParentChildSelection.language F := by
+  intro H
+  obtain ⟨_, p, y, _, hy, he⟩ := (NamedParentChildSelection.language_iff F q).mp H
+  have hxy := RationalParentChildHashChoice.descriptor_injective
+    (NamedParentChildSelection.generic F) (NamedParentChildSelection.source q) (hy.trans hx.symm)
+  subst y
+  apply h
+  change RationalParentChildParameters.decode (NamedParentChildSelection.generic F)
+    (NamedParentChildSelection.source q) x.val
+    (RationalParentChildParentThom.first (NamedParentChildSelection.generic F) (NamedParentChildSelection.source q)) ∈ _
+  rw [he]
+  exact p.property
+
+-- New names pay the newest descriptor's pair overhead only once. The entire
+-- ancestor name remains in the undoubled right tail.
+example (F : NamedParentChildSelection.Inputs) (u : List Bool) (x : NamedParentChildNext.Root F u) :
+    (NamedParentChildNext.word F u x).length =
+      2 * (RationalParentChildHashChoice.descriptor (NamedParentChildSelection.generic F) u
+        (NamedParentChildNext.childRoot F u x)).length + 2 +
+      (F.parent.descriptor u (NamedParentChildNext.parentRoot F u x)).length := by
+  exact pair_length _ _
+end NamedParentRegression

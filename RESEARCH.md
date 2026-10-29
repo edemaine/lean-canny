@@ -1488,12 +1488,26 @@ passes through the retained parameter; regular children retain a root of the
 previous parent equation. `FullSampleNextStage` instantiates the generalized
 pipeline at actual earlier child samples and proves unique next-stage
 parameters, exact nested ambient assignments, and denominator nonvanishing.
-Direction selection, native equation and Jacobian filters, ancestor-validity
-filtering, and canonical descriptors still need to be generalized. The full
-primitive parameter polynomial can have extraneous roots, so it cannot itself
-be treated as the actual recursive parent family. These are fixed-stage native
-closure certificates; uniform input-dependent recursion and its polynomial
-bounds are not yet proved.
+Native equation and Jacobian filters now count exactly the regular candidates
+over generalized rational parents. Sparse records, Gram bases, injective
+hashes, and ordered enumeration construct canonical bounded descriptors.
+Native polynomial and indexed sign readers operate at these descriptors.
+`SeparablePolynomialThom` supplies native iterated-derivative coefficients for
+arbitrary separable parent equations. `NamedRationalParents` records the actual
+subset of parent roots, injective bounded names, and native validity and
+derivative readers. `NamedParentChildSelection` validates both names and uses
+a binary derivative-sign scan to identify precisely the retained actual
+parent. `NamedParentChildNext` constructs another such source, with exact
+ambient coordinates and nonzero denominators. Every regular original-block
+critical point over an actual parent has a unique accepted child parameter.
+Newest-first pair encoding adds the new descriptor length to the old ancestry
+length. `NamedRationalSeed` supplies the concrete zero root and empty name.
+The full primitive parameter polynomial can still have extraneous roots;
+the ancestry validator excludes them from the actual parent family. These
+are fixed-stage native closure certificates. In particular, composing them
+does not establish uniform degree, mass, space, or name bounds for an
+input-dependent number of stages. Direction selection and these uniform
+recursive bounds remain open.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.

@@ -134,6 +134,8 @@ import LeanCanny.Encoding.BoundedFullSampleChildActualSamples
 import LeanCanny.Connectivity.FullSampleChildPairs
 import LeanCanny.Encoding.FullSampleNextBlock
 import LeanCanny.Encoding.FullSampleNextStage
+import LeanCanny.Encoding.NamedParentChildSamples
+import LeanCanny.Encoding.NamedRationalSeed
 import LeanCanny.Encoding.BoundedFullSampleChildParentQueries
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram
 import LeanCanny.Encoding.BoundedCriticalSampleFiberBasisGram
