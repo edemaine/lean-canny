@@ -9921,3 +9921,53 @@ example (F : FlatFullSourceTower.Inputs) (u : List Bool) (j : ℕ) :
   rfl
 end
 end FlatPrimitiveSampleRegression
+
+
+namespace FlatNativeDescriptorRegression
+open LeanCanny.Algebra LeanCanny.Encoding
+open scoped Classical
+noncomputable section
+
+-- The empty regular-root set has no valid descriptor, including signed zero.
+example (F : FlatFullSourceTower.Inputs) (u w : List Bool)
+    (h : FlatFullSourceSampleRegularCount.count F u = 0) :
+    pair u w ∉ FlatFullSourceSampleDescriptors.language F := by
+  intro hw
+  have hv := ((FlatFullSourceSampleDescriptors.language_iff F (pair u w)).mp hw).2
+  rw [pairFst_pair, pairSnd_pair] at hv
+  have he : FlatFullSourceSampleHashRoots.values F u = ∅ := Finset.card_eq_zero.mp
+    ((FlatFullSourceSampleHashRoots.values_card F u).trans h)
+  rw [he] at hv
+  simp at hv
+
+-- Canceling positive and negative payloads do not form a canonical signed word.
+example : ¬ FlatFullSourceSampleDescriptors.Canonical (pair [true] [true]) := by
+  change IntegerSumBits.difference (pair [true] [true]) ≠ pair [true] [true]
+  decide
+
+-- A raw fallback value at an invalid ordinal cannot pass even the zero-sign language.
+example (F : FlatFullSourceTower.Inputs) (T : FlatFullSourceSampleTestMoments.Test) (u : List Bool) :
+    pair u (BinaryNatCode.encode (FlatFullSourceSampleRegularCount.count F u)) ∉
+      FlatFullSourceSampleTestSign.ordinalLanguage F T 0 := by
+  apply FlatFullSourceSampleTestSign.ordinal_language_invalid
+  simp only [pairFst_pair, pairSnd_pair, MacaulayBits.fromBits_encode, le_refl]
+
+-- The fixed-width graph interface rejects an extra high zero bit, even though
+-- the binary ordinal has the same numeric value.
+example (F : FlatFullSourceTower.Inputs) (u w : List Bool) (h : FlatFullSourceSampleVertices.Valid F u w) :
+    ¬ FlatFullSourceSampleVertices.Valid F u (w ++ [false]) := by
+  intro hv
+  have hw := h.1
+  have hx := hv.1
+  simp only [List.length_append, List.length_singleton] at hx
+  omega
+
+-- Enumeration recovers a unique original full ancestral tuple, rather than
+-- retaining an unconstrained padding coordinate as an extra sample dimension.
+example (F : FlatFullSourceTower.Inputs) (u : List Bool)
+    (z : FlatFullSourceSampleParameters.OriginalCandidates F u) :
+    FlatFullSourceSampleVertices.sample F u (FlatFullSourceSampleVertices.word F u z)
+      (FlatFullSourceSampleVertices.word_valid F u z) = z :=
+  FlatFullSourceSampleVertices.sample_word F u z
+end
+end FlatNativeDescriptorRegression

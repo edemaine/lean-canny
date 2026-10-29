@@ -486,8 +486,10 @@ The checked ingredients are:
   balanced primitive construction with native rational coordinate readers and
   equation/Jacobian test polynomials. Accepted parameters correspond exactly
   to regular roots of the original tower, with native uniform budgets and a
-  polynomial label-width bound. Native counting, canonical sample descriptors,
-  and the complete recursive cover remain.
+  polynomial label-width bound. Native counts, canonical bounded descriptors,
+  ordered enumeration, and polynomial sign readers are now constructed.
+  Fixed-width vertex words name exactly the regular original roots. The
+  recursive component cover, including singular slices, remains open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

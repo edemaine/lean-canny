@@ -1585,11 +1585,37 @@ The `FlatFullSourceSampleJacobian` modules differentiate all ancestral and
 dummy coordinates and read the actual determinant.
 `FlatFullSourceSampleRegularFilter` gives a native polynomial whose
 nonvanishing is exactly analytic regularity on parameter roots. All test
-degree and mass allowances are native. Native accepted-parameter counting,
-canonical hashes, and ordered sample descriptors remain to be assembled.
+degree and mass allowances are native.
+`FlatFullSourceSampleEquationCount`, `SingularCount`, and `RegularCount`
+instantiate native sign-pattern counting and subtract the singular roots.
+The result is exactly the number of regular original flat roots, with a native
+existence decider. `Queries` and `ReindexedQueries` supply signed moments on
+this actual filtered set while preserving the complete source context.
+`Thom`, `Records`, and `RecordSpan` give short derivative-sign records spanning
+the root-function space, with Gram rank equal to the regular-root count.
+The prefix-rank and basis modules select records natively. The root-hash,
+weighted-moment, and pencil modules construct a separating integer hash,
+checking the determinant root count rather than assuming a selected basis or
+a hash witness. `HashChoice`, `HashRoots`, `HashCuts`, `HashEnumeration`, and
+`Descriptors` give canonical bounded words, native validity, and ordered
+enumeration. Every descriptor names one accepted parameter and one regular
+flat root. `TestSign` and `IndexedSign` read general native polynomial tests at
+these labels, rejecting invalid labels even for sign zero. `DerivativeSigns`
+streams arbitrary indexed derivatives of the common parameter. All these
+modules use the `FlatFullSourceSample` prefix and the uniform flat source.
+`FlatFullSourceSampleVertices` converts hash-order ordinals into fixed-width
+vertex words with a native polynomial width and a PSPACE validity language.
+It proves a bijection with regular roots of the original unpadded tower,
+including all ancestral coordinates. Polynomial sign readers normalize the
+ordinal word while retaining the source. Component-preserving graph edges
+and coverage of general recursive fibers remain to be constructed.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
-their component-preserving treatment remain open.
+their component-preserving treatment remain open. To use a chosen nonzero
+critical direction as the next slice coordinate, the stage equations must
+also encode its linear height, or a proved coordinate change. The current
+copy rows freeze original coordinates and do not establish this step.
+Intervening slice values and shared ancestry also need a uniform construction.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.
