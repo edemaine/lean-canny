@@ -553,8 +553,11 @@ The checked ingredients are:
   tower over the complex numbers, proving finiteness of both complete towers
   without affine-slice smoothness. When the coordinate annihilators capture all
   roots, the equation-only native sampler counts exactly all system roots.
-  Native readers for these new annihilators and the full recursive component
-  cover remain required.
+  The reciprocal determinant embeds in the existing nested determinant
+  backend. Fixed-degree reflection has native coefficient access charging the
+  Gram reader; actual power-tower Macaulay metadata has native controls. The
+  complete Gram reader from original power-row coefficients and the full
+  recursive component cover remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

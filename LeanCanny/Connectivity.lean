@@ -169,6 +169,8 @@ import LeanCanny.Encoding.FlatAffineLevelFamilyCorrect
 import LeanCanny.Algebra.FlatAffinePowerOriginal
 import LeanCanny.Algebra.FlatAffinePowerConeBridge
 import LeanCanny.Encoding.SquareSampleComplete
+import LeanCanny.Algebra.AffineBoxGramEncoding
+import LeanCanny.Encoding.FlatAffinePowerControls
 import LeanCanny.Encoding.BoundedFullRelocatedSource
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
@@ -235,8 +237,12 @@ critical root lifts to that tower over the complex numbers. Thus both the
 power tower and the complete original critical tower have finite root sets;
 no affine-slice smoothness assumption is used. When coordinate annihilators
 capture all roots, the existing equation-only native counter counts exactly
-all system roots, with no Jacobian filter. Native readers for these new
-annihilators, full affine query composition and direction selection, and the
+all system roots, with no Jacobian filter. The reciprocal determinant embeds
+exactly in the existing nested determinant backend. Fixed-degree reflection
+has a native coefficient reader charging the Gram reader, and the actual
+power-tower Macaulay level, width, and determinant dimension have native
+controls. Constructing the complete Gram reader from the original power-row
+coefficients, full affine query composition and direction selection, and the
 full recursive component cover remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space

@@ -574,3 +574,12 @@ example (F : LeanCanny.Encoding.SquareSampleInput.Inputs) (h : F.Access)
     ComputableTidilyInPolySpace
       (fun u => LeanCanny.BinaryNatCode.encode (LeanCanny.Encoding.SquareSampleComplete.count F u)) encBits encBits :=
   (LeanCanny.Encoding.SquareSampleComplete.count_evaluator h hc).computable
+
+/-! Reciprocal reflection preserves an arbitrary native coefficient child. -/
+example (p : List Bool → Polynomial ℤ) (D : List Bool → ℕ)
+    (hp : ∀ u, (p u).natDegree ≤ D u) (hd : LeanCanny.BinaryFn D)
+    (E : LeanCanny.Computation.SpaceFunction (LeanCanny.Algebra.PrimitivePairBits.coefficient p)) :
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Algebra.PolynomialReflectBits.polynomial p D))
+      encBits encBits :=
+  (LeanCanny.Algebra.PolynomialReflectBits.evaluator p D hp hd E).computable
