@@ -1508,6 +1508,17 @@ are fixed-stage native closure certificates. In particular, composing them
 does not establish uniform degree, mass, space, or name bounds for an
 input-dependent number of stages. Direction selection and these uniform
 recursive bounds remain open.
+`TriangularPolynomialSystem` and `TriangularPolynomialTower` provide an
+algebraic alternative to repeatedly eliminating the old parameters. Appending
+a stage retains all earlier variables and takes the maximum row degree and
+coefficient-mass bounds. At arbitrary depth k and stage width n, there are
+exactly k*n variables; k ≤ n gives at most n² variables. The combined Jacobian
+factors into the old determinant and the new spatial determinant, including
+empty blocks. `TriangularPolynomialRegularity` proves that freezing ancestral
+coordinates commutes with differentiation, and identifies analytic regularity
+with the stage-by-stage criterion. These results apply at arbitrary depth;
+native coefficient access for the actual sampling tower and its uniform
+elimination and descriptor bounds are still required.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.

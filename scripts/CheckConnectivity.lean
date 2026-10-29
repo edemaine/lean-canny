@@ -9587,3 +9587,47 @@ example (F : NamedParentChildSelection.Inputs) (u : List Bool) (x : NamedParentC
       (F.parent.descriptor u (NamedParentChildNext.parentRoot F u x)).length := by
   exact pair_length _ _
 end NamedParentRegression
+
+
+namespace FlatPolynomialTowerRegression
+open LeanCanny.Algebra LeanCanny.Geometry MvPolynomial
+open TriangularPolynomialSystem TriangularPolynomialRegularity
+open scoped Classical
+noncomputable section
+
+def oldLinear : Unit → MvPolynomial Unit ℝ := fun _ => X ()
+def oldSingular : Unit → MvPolynomial Unit ℝ := fun _ => X () ^ 2
+def childQuadratic : Unit → MvPolynomial (Unit ⊕ Unit) ℝ :=
+  fun _ => X (Sum.inr ()) ^ 2 - X (Sum.inl ())
+def childLinear : Unit → MvPolynomial (Unit ⊕ Unit) ℝ :=
+  fun _ => X (Sum.inr ()) - X (Sum.inl ())
+
+-- A mixed dependency on an ancestral coordinate must not make the singular
+-- new spatial block invertible. The full system is regular exactly off y=0.
+example (x y : ℝ) :
+    (fderiv ℝ (fun z => fun i => (append oldLinear childQuadratic i).eval₂ (RingHom.id ℝ) z)
+      (Sum.elim (fun _ => x) (fun _ => y))).IsInvertible ↔ y ≠ 0 := by
+  rw [analytic_iff, jacobian_append]
+  norm_num [jacobian, spatialJacobian, oldLinear, childQuadratic, Matrix.det_unique,
+    MvPolynomial.pderiv_pow, pderiv_X, Pi.single_apply, mul_ne_zero_iff]
+
+-- A regular new stage cannot repair a singular ancestral stage.
+example (y : ℝ) :
+    ¬ (fderiv ℝ (fun z => fun i => (append oldSingular childLinear i).eval₂ (RingHom.id ℝ) z)
+      (Sum.elim (fun _ => 0) (fun _ => y))).IsInvertible := by
+  rw [analytic_iff, jacobian_append]
+  norm_num [jacobian, spatialJacobian, oldSingular, childLinear, Matrix.det_unique,
+    MvPolynomial.pderiv_pow, pderiv_X, Pi.single_apply]
+
+-- Any number of empty stages still gives an invertible zero-dimensional
+-- derivative. Neither determinant nor regularity may silently become zero.
+example (k : ℕ) (F : TriangularPolynomialTower.Family 0 ℤ)
+    (z : TriangularPolynomialTower.Variables 0 k → ℝ) :
+    (fderiv ℝ (fun y => fun i => (TriangularPolynomialTower.system F k i).eval₂
+      (Int.castRingHom ℝ) y) z).IsInvertible := by
+  let : IsEmpty (TriangularPolynomialTower.Variables 0 k) := Fintype.card_eq_zero_iff.mp (by
+    rw [TriangularPolynomialTower.variables_card, Nat.mul_zero])
+  rw [analytic_iff, jacobian, Matrix.det_isEmpty]
+  simp only [eval₂_one, ne_eq, one_ne_zero, not_false_eq_true]
+end
+end FlatPolynomialTowerRegression

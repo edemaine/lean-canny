@@ -468,6 +468,11 @@ The checked ingredients are:
   the zero seed has an unconditional native certificate. This proves closure
   for each fixed stage. Direction selection, singular endpoints, and uniform
   bounds for input-dependent recursion remain open.
+  A flat triangular polynomial tower now preserves uniform row degree and
+  coefficient-mass bounds at arbitrary depth. At depth at most the ambient
+  dimension it uses at most its square in variables. Its derivative is
+  invertible exactly when every frozen stage is regular. Instantiating this
+  tower with native sampling readers and a complete recursive cover remains.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same
