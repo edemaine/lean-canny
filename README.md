@@ -477,8 +477,10 @@ The checked ingredients are:
   Their uniform degree, mass, and single-elimination budgets have native
   controls. A native plan check enforces contained nonempty blocks and pivots
   inside them. Native readers handle source blocks, critical differences, and
-  linear copy rows. Assembling these readers for the entire indexed tower,
-  uniform descriptors, and the complete recursive cover remains.
+  linear copy rows. The complete indexed tower now has a native coefficient
+  reader with derived exponent width, exact row semantics, and charged
+  direction computation. Native elimination, uniform descriptors, and the
+  complete recursive cover remain.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

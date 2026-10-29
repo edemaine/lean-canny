@@ -1538,8 +1538,17 @@ exponents are rejected; redundant bits and raw moduli are retained correctly.
 The full-source block and critical-coefficient adapters use the original
 source reader, with two derivative calls for each critical difference.
 `FixedWidthLinearCoefficientSpace` provides native coordinate and copy-row
-coefficients. Assembly of the complete indexed tower coefficient reader,
-native coordinate elimination, and uniform primitive descriptors remains.
+coefficients. `TriangularPolynomialRows` and `FlatCriticalIndexedRows` identify
+every indexed row at arbitrary depth, retaining ancestral indices.
+`FlatFullSourceContext` transports all source and stage metadata together.
+`FlatFullSourceRowCoefficient` assembles the complete reader, charging the
+space-computed direction record before dispatching to critical or copy rows.
+`FlatFullSourceRowCoefficientCorrect` proves exact collected-coefficient
+semantics for the existing indexed system. `FlatFullSourceCoefficient` derives
+the exponent width from the original degree allowance. Invalid rows, including
+every row at depth zero, return zero; modulus one is supported. Native
+coordinate elimination and uniform primitive descriptors remain. Its native
+matrix interface still needs an explicit treatment of zero-dimensional inputs.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.

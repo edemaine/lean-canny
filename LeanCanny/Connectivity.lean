@@ -140,6 +140,7 @@ import LeanCanny.Geometry.TriangularPolynomialRegularity
 import LeanCanny.Encoding.FlatFullSourceCoordinate
 import LeanCanny.Encoding.FlatFullSourcePlan
 import LeanCanny.Encoding.FlatFullSourceCriticalCoefficient
+import LeanCanny.Encoding.FlatFullSourceCoefficient
 import LeanCanny.Algebra.FixedWidthLinearCoefficientSpace
 import LeanCanny.Encoding.BoundedFullSampleChildParentQueries
 import LeanCanny.Encoding.BoundedCriticalSampleFiberRecordGram

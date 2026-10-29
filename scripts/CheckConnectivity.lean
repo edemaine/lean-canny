@@ -9707,3 +9707,72 @@ example :
     have H := h 0
     norm_num [FlatCriticalStage.row, ProjectionCriticalFamily.spatialEquation] at H
 end FlatPlanRegression
+
+
+namespace FlatIndexedReaderRegression
+open LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+
+private def metadataPlan : FlatFullSourceTower.Inputs where
+  source := ⟨fun _ => [], fun _ => 0, fun _ => 1⟩
+  depth u := if u.isEmpty then 0 else 3
+  width _ := 2
+  offset _ := 0
+  dim _ := 4
+  direction q := q
+  pivot _ _ := 0
+
+private def metadataQuery (row : List Bool) : List Bool := pair (pair [true] (pair row [])) []
+
+-- Redundant row bits keep the source and stage number attached to the query.
+-- Row six is the third coordinate of stage one, with coordinate two as parent.
+#guard FlatFullSourceRowQuery.stageQuery metadataPlan (metadataQuery [false, true, true, false, false]) =
+  FlatFullSourceTower.stage [true] 1
+#guard FlatFullSourceRowQuery.localIndex metadataPlan (metadataQuery [false, true, true, false, false]) = 2
+#guard FlatFullSourceRowQuery.previousIndex metadataPlan (metadataQuery [false, true, true, false, false]) = 2
+#guard FlatFullSourceRowQuery.rawRow (metadataQuery [true, false, true, true]) = 13
+
+noncomputable section
+
+-- Appending a third ambient tuple retains the second tuple's frozen row,
+-- and that row still copies from the first tuple rather than the newest one.
+example (p : MvPolynomial (Fin 2) ℤ) :
+    FlatCriticalTower.system p (fun _ => {0}) (fun _ => 0) (fun _ _ => 0) 3 (3 : Fin 6) =
+      X (3 : Fin 6) - X (1 : Fin 6) := by
+  have H := FlatCriticalIndexedRows.system_row p (fun _ => {0}) (fun _ => 0)
+    (fun _ _ => 0) 1 3 (by decide) (1 : Fin 2)
+  simpa [FlatCriticalIndexedRows.row, FlatCriticalIndexedRows.previousPolynomial,
+    TriangularPolynomialRows.block, BlockRenameCoefficient.shift] using H
+
+-- The first frozen tuple starts at zero even in a tower with later stages.
+example (p : MvPolynomial (Fin 2) ℤ) :
+    FlatCriticalTower.system p (fun _ => {0}) (fun _ => 0) (fun _ _ => 0) 3 (1 : Fin 6) =
+      X (1 : Fin 6) := by
+  have H := FlatCriticalIndexedRows.system_row p (fun _ => {0}) (fun _ => 0)
+    (fun _ _ => 0) 0 3 (by decide) (1 : Fin 2)
+  simpa [FlatCriticalIndexedRows.row, FlatCriticalIndexedRows.previousPolynomial,
+    TriangularPolynomialRows.block, BlockRenameCoefficient.shift] using H
+
+-- Depth zero has no coefficient rows, including when raw metadata is malformed.
+example (F : FlatFullSourceTower.Inputs) (q : List Bool)
+    (h : F.depth (FlatFullSourceRowQuery.source q) = 0) :
+    FlatFullSourceCoefficient.value F q = [] := by
+  apply FlatFullSourceCoefficient.invalid
+  simp [FlatFullSourceRowQuery.Valid, FlatFullSourceTower.count, h]
+
+-- A queried row equal to the count is invalid; clamping must not read a row.
+example (F : FlatFullSourceTower.Inputs) (q : List Bool)
+    (h : FlatFullSourceTower.count F (FlatFullSourceRowQuery.source q) ≤ FlatFullSourceRowQuery.rawRow q) :
+    FlatFullSourceCoefficient.value F q = [] :=
+  FlatFullSourceCoefficient.invalid F q (Nat.not_lt.mpr h)
+
+-- The complete source reader handles modulus one, including critical rows.
+example (F : FlatFullSourceTower.Inputs) (u : List Bool)
+    (i : Fin (FlatFullSourceTower.count F u)) (r : ℕ) :
+    FlatFullSourceCoefficient.value F
+      (pair (pair u (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode r))) []) = [] := by
+  have H := FlatFullSourceCoefficient.packet F u i r 0
+  have hz : ∀ z : ZMod 1, z = 0 := fun z => Subsingleton.elim _ _
+  simpa [hz, MatrixPower.residueBits, BinaryNatCode.encode] using H
+end
+end FlatIndexedReaderRegression
