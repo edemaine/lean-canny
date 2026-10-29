@@ -177,6 +177,8 @@ import LeanCanny.Encoding.FlatAffinePowerGramBounds
 import LeanCanny.Encoding.FlatAffinePowerOriginalSamples
 import LeanCanny.Encoding.FlatAffineCompleteVertices
 import LeanCanny.Encoding.CoordinateAffinePrefix
+import LeanCanny.Encoding.FlatAffineCompleteComponentSamples
+import LeanCanny.Geometry.FlatAffineSingularCriticalRoot
 import LeanCanny.Encoding.BoundedFullRelocatedSource
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
@@ -266,9 +268,12 @@ keeps the same primitive parameter and rational coordinates. Native equation
 filtering of its short ordinals now gives vertices in bijection with all
 captured roots, including singular roots. The original affine vertices preserve
 ambient coordinates. Explicit coordinate objectives and prefix constraints now
-supply native cone certificates using 0/1 direction records. Connecting these
-towers to the full recursive component cover and endpoint attachment remains
-open.
+supply native cone certificates using 0/1 direction records. Complete original
+roots project to all prefixes and append arbitrary frozen-stage roots. Their
+labels sample compact regular slice components without critical-stage Jacobian
+conditions. Singular constraint points give zero-objective-multiplier stage
+roots when the height normals are independent. The full recursive component
+cover and endpoint attachment remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
 implicit-graph algorithms. Canonical input recognition is polynomial time;

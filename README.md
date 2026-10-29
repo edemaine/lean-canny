@@ -573,9 +573,12 @@ The checked ingredients are:
   equation filtering now gives short vertices in bijection with all captured
   roots, including singular roots; original affine vertices preserve ambient
   coordinates. Coordinate objectives and prefix constraints now supply native
-  cone certificates using explicit 0/1 direction records. Connecting these
-  towers to the full recursive component cover and endpoint attachment remains
-  required.
+  cone certificates using explicit 0/1 direction records. Complete original
+  roots project to prefixes and append frozen-stage roots. Their labels sample
+  compact regular slice components without critical-stage Jacobian conditions.
+  Singular constraint points give zero-objective-multiplier stage roots when
+  the height normals are independent. The full recursive component cover and
+  endpoint attachment remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

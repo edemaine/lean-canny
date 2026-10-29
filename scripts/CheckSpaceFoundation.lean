@@ -687,3 +687,13 @@ example {P : LeanCanny.Encoding.BoundedFullWriter.Readers} (hP : P.PolyTime)
     (hA : ∀ u, (LeanCanny.ETR.TermView.term (P.source u)).arity ≤ P.dim u) :
     LeanCanny.Encoding.CoordinateAffinePrefix.language P depth objective level ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.Encoding.CoordinateAffinePrefix.mem_PSPACE hP hd ho hl hA
+
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
+    (hc : LeanCanny.Encoding.FlatAffinePowerPositive.ConeCertificate F)
+    (d : List Bool → ℕ) (hd : ∀ u, d u ≤ F.depth u) (hD : LeanCanny.UnaryFn d) :
+    LeanCanny.UnaryFn (LeanCanny.Encoding.FlatAffineCompleteVertices.width
+      (LeanCanny.Encoding.FlatAffineCompleteRootStages.truncate F d)
+      (LeanCanny.Encoding.FlatAffineCompleteRootStages.cone_prefix F hc d hd)) :=
+  LeanCanny.Encoding.FlatAffineCompleteVertices.width_unary
+    (LeanCanny.Encoding.FlatAffineCompleteRootStages.access h hD)
+    (LeanCanny.Encoding.FlatAffineCompleteRootStages.cone_prefix F hc d hd)

@@ -11358,3 +11358,69 @@ example (P : BoundedFullWriter.Readers) (depth objective : List Bool → ℕ)
     FlatAffinePowerPositive.ConeCertificate (CoordinateAffinePrefix.inputs P depth objective level) :=
   CoordinateAffinePrefix.coneCertificate P depth objective level
 end CoordinatePrefixRegression
+
+namespace CompleteAffineStageRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding MvPolynomial
+open FlatAffineCriticalStage FlatAffineCriticalExtremum
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+
+-- A regular circle has a singular tangent slice at (1,0).
+private noncomputable abbrev circle : MvPolynomial (Fin 2) ℤ := X 0 ^ 2 + X 1 ^ 2 - 1
+private def point (i : Fin 2) : ℝ := if i = 0 then 1 else 0
+private def table : Fin 3 → Fin 2 → ℤ :=
+  Fin.cases (FermatCoordinateCone.normal 1) FermatCoordinateCone.normal
+private def active : Finset (Fin 2) := {0}
+
+private theorem tangent_singular : ¬Function.Surjective (derivative (Int.castRingHom ℝ) circle active table point) := by
+  intro h
+  obtain ⟨v, hv⟩ := h (fun j => if j = none then 1 else 0)
+  have h0 := congrFun hv none
+  have h1 := congrFun hv (some ⟨0, by simp [active]⟩)
+  norm_num [derivative, ContinuousLinearMap.pi_apply, PolynomialCalculus.derivative_apply,
+    constraint, circle, point, table, FermatCoordinateCone.normal,
+    AffineHeightPolynomial.polynomial, pderiv_pow, pderiv_X, Fin.sum_univ_succ] at h0 h1
+  linarith
+
+private theorem heights_independent : ∀ c : active → ℝ,
+    (∀ i, ∑ j : active, c j * (table j.val.succ i : ℝ) = 0) → ∀ j, c j = 0 := by
+  let _ : Unique active := {
+    default := ⟨0, by simp [active]⟩
+    uniq j := Subtype.ext (by simpa only [active, Finset.mem_singleton] using j.property) }
+  intro c hc j
+  have H := hc 0
+  have hd : (default : active).val = 0 := by
+    simpa only [active, Finset.mem_singleton] using (default : active).property
+  have hj : j = default := Subsingleton.elim _ _
+  simpa [table, FermatCoordinateCone.normal, hd, hj] using H
+
+-- The missing critical root has zero objective multiplier; it is retained.
+example : ∃ mu : Fin 3 → ℝ, mu 0 = 0 ∧
+    ∀ i, (row circle active table (fun _ => (C 1 : MvPolynomial (Fin 0) ℤ)) i).eval₂
+      (Int.castRingHom ℝ) (Sum.elim (fun _ => 0) (Sum.elim point mu)) = 0 := by
+  apply FlatAffineSingularCriticalRoot.exists_stage_root_of_singular
+  · norm_num [circle, point]
+  · intro j hj
+    have he : j = 0 := by simpa only [active, Finset.mem_singleton] using hj
+    subst j
+    norm_num [table, FermatCoordinateCone.normal, point, Fin.sum_univ_succ]
+    change (if (0 : Fin 2) = 0 then (1 : ℤ) else 0) = 1
+    rfl
+  · exact heights_independent
+  · exact tangent_singular
+
+-- Every original full root projects to a complete prefix, with no Jacobian premise.
+example (F : FlatAffineFullSourceTower.Inputs) (d : List Bool → ℕ) (u : List Bool)
+    (hd : d u ≤ F.depth u) (z : FlatAffinePowerSampleInput.OriginalRoots F u) :
+    (FlatAffineCompleteRootStages.project F d u hd z).val =
+      z.val ∘ FlatAffineCompleteRootStages.prefixIndex F d u hd := rfl
+
+example (F : FlatAffineFullSourceTower.Inputs) (hc : FlatAffinePowerPositive.ConeCertificate F)
+    (d : List Bool → ℕ) (hd : ∀ u, d u ≤ F.depth u) (u : List Bool)
+    (z : FlatAffinePowerSampleInput.OriginalRoots F u) :
+    FlatAffineCompleteVertices.vertexEquiv (FlatAffineCompleteRootStages.truncate F d)
+      (FlatAffineCompleteRootStages.cone_prefix F hc d hd) u
+      (FlatAffineCompleteRootStages.word F hc d hd u z) =
+      FlatAffineCompleteRootStages.project F d u (hd u) z :=
+  FlatAffineCompleteRootStages.sample_word F hc d hd u z
+end CompleteAffineStageRegression
