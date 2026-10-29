@@ -9971,3 +9971,91 @@ example (F : FlatFullSourceTower.Inputs) (u : List Bool)
   FlatFullSourceSampleVertices.sample_word F u z
 end
 end FlatNativeDescriptorRegression
+
+
+namespace FlatAffineStageRegression
+open LeanCanny.Algebra MvPolynomial FlatAffineCriticalStage
+open scoped BigOperators Classical
+noncomputable section
+
+def circle : MvPolynomial (Fin 2) ℤ := X 0 ^ 2 + X 1 ^ 2 - C 2
+def directions : Fin 3 → Fin 2 → ℤ := ![![1, 0], ![1, 1], ![0, 0]]
+def levels : Fin 2 → MvPolynomial Unit ℤ := fun _ => 0
+
+def wrong : (Unit ⊕ Variables 2) → ℝ := Sum.elim (fun _ => 0) (Sum.elim ![1, 1] ![0, 0, 0])
+
+-- The original equation can hold while the rotated height slice fails.
+example : circle.eval₂ (Int.castRingHom ℝ) (wrong ∘ ambient) = 0 ∧
+    (row circle {0} directions levels (Sum.inr (Fin.succ (0 : Fin 2)))).eval₂ (Int.castRingHom ℝ) wrong ≠ 0 := by
+  constructor
+  · norm_num [circle, wrong, ambient, Function.comp_apply]
+  · simp only [row, Fin.cases_succ]
+    norm_num [wrong, directions, levels, AffineHeightPolynomial.eval,
+      ambient, Function.comp_apply, Fin.sum_univ_succ]
+
+def criticalPoint : (Unit ⊕ Variables 2) → ℝ :=
+  Sum.elim (fun _ => 0) (Sum.elim ![1, -1] ![4, -2, 0])
+
+-- A genuine critical point on x+y=0 solves every stage row, including unused multipliers.
+example : ∀ j, (row circle {0} directions levels j).eval₂ (Int.castRingHom ℝ) criticalPoint = 0 := by
+  apply (roots_iff (Int.castRingHom ℝ) circle {0} directions levels criticalPoint).mpr
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · norm_num [circle, criticalPoint, ambient, Function.comp_apply]
+  · intro j hj
+    have he : j = 0 := by simpa only [Finset.mem_singleton] using hj
+    subst j
+    norm_num [directions, criticalPoint, levels, ambient, Function.comp_apply, Fin.sum_univ_succ]
+  · intro i
+    simp only [circle, map_sub, map_add, pderiv_C]
+    fin_cases i <;> norm_num [directions, criticalPoint, ambient, multiplier,
+      Function.comp_apply, Fin.sum_univ_succ, pderiv_pow, pderiv_X]
+  · intro j hj
+    fin_cases j <;> simp_all [criticalPoint, multiplier]
+
+def unitCircle : MvPolynomial (Fin 2) ℤ := X 0 ^ 2 + X 1 ^ 2 - 1
+def tangentDirections : Fin 3 → Fin 2 → ℤ := ![![1, 0], ![0, 1], ![0, 0]]
+def tangentLevels : Fin 2 → MvPolynomial Unit ℤ := fun _ => 1
+def tangentPoint : (Unit ⊕ Variables 2) → ℝ :=
+  Sum.elim (fun _ => 0) (Sum.elim ![0, 1] ![0, 2, 0])
+
+lemma tangent_root : ∀ j, (row unitCircle {0} tangentDirections tangentLevels j).eval₂
+    (Int.castRingHom ℝ) tangentPoint = 0 := by
+  apply (roots_iff (Int.castRingHom ℝ) unitCircle {0} tangentDirections tangentLevels tangentPoint).mpr
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · norm_num [unitCircle, tangentPoint, ambient, Function.comp_apply]
+  · intro j hj
+    have he : j = 0 := by simpa only [Finset.mem_singleton] using hj
+    subst j
+    norm_num [tangentDirections, tangentPoint, tangentLevels, ambient, Function.comp_apply, Fin.sum_univ_succ]
+  · intro i
+    fin_cases i <;> norm_num [unitCircle, tangentDirections, tangentPoint, ambient, multiplier,
+      Function.comp_apply, Fin.sum_univ_succ, pderiv_pow, pderiv_X]
+  · intro j hj
+    fin_cases j <;> simp_all [tangentPoint, multiplier]
+
+-- The tangent slice has an actual stage root, but the full Jacobian is singular.
+-- Native regular-root sampling must not silently count it as a regular sample.
+example : (FlatAffineCriticalRegularity.matrix (Int.castRingHom ℝ) unitCircle {0}
+    tangentDirections tangentLevels tangentPoint).det = 0 := by
+  by_contra h
+  have hn := FlatAffineCriticalRegularity.multiplier_ne_zero (Int.castRingHom ℝ)
+    unitCircle {0} tangentDirections tangentLevels tangentPoint tangent_root h
+  exact hn rfl
+
+-- The level midpoint concerns height; the ambient tuple (3,0) is allowed
+-- between ancestral tuples (0,0) and (2,4) along the height x+y.
+example :
+    (AffineHeightPolynomial.polynomial (fun _ : Fin 2 => (2 : ℤ)) (fun i => ((2 : Fin 3), i)) -
+      AffineHeightPolynomial.midpointLevel (fun _ : Fin 2 => (1 : ℤ))
+        (fun i => ((0 : Fin 3), i)) (fun i => ((1 : Fin 3), i))).eval₂ (Int.castRingHom ℝ)
+        (fun v : Fin 3 × Fin 2 => (![![0, 0], ![2, 4], ![3, 0]] : Fin 3 → Fin 2 → ℝ) v.1 v.2) = 0 := by
+  norm_num [AffineHeightPolynomial.eval, AffineHeightPolynomial.midpoint_eval, Fin.sum_univ_succ]
+
+-- The empty ancestry supports constant levels without inventing a prior sample.
+example (c : ℤ) : (FlatAffineCriticalTower.Level.constant (n := 2) (k := 0) c).polynomial = C c := rfl
+
+-- Input-dependent depth at most n keeps the entire system quadratic in n.
+example (n k : ℕ) (hk : k ≤ n) : k * FlatAffineCriticalTower.width n ≤ n * (2 * n + 1) :=
+  FlatAffineCriticalTower.variables_le k hk
+end
+end FlatAffineStageRegression

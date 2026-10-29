@@ -145,6 +145,8 @@ import LeanCanny.Encoding.FlatFullSourcePositive
 import LeanCanny.Encoding.FlatFullSourcePositiveCoordinateCoefficient
 import LeanCanny.Encoding.FlatFullSourceSampleRegularFilter
 import LeanCanny.Encoding.FlatFullSourceSampleVertices
+import LeanCanny.Algebra.FlatAffineCriticalTower
+import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
 import LeanCanny.Algebra.FixedWidthLinearCoefficientSpace
 import LeanCanny.Encoding.BoundedFullSampleChildParentQueries

@@ -1611,11 +1611,43 @@ ordinal word while retaining the source. Component-preserving graph edges
 and coverage of general recursive fibers remain to be constructed.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
-their component-preserving treatment remain open. To use a chosen nonzero
-critical direction as the next slice coordinate, the stage equations must
-also encode its linear height, or a proved coordinate change. The current
-copy rows freeze original coordinates and do not establish this step.
-Intervening slice values and shared ancestry also need a uniform construction.
+their component-preserving treatment remain open. The original copy rows
+freeze raw coordinates, so their native backend alone does not implement
+slicing along a newly chosen critical direction.
+
+`AffineHeightPolynomial` now constructs arbitrary linear heights and midpoint
+levels from two ancestral ambient blocks. A doubled current height equated
+to that sum lies strictly between distinct endpoint heights; it does not
+constrain each ambient coordinate to its midpoint. `FlatAffineCriticalStage`
+uses n ambient coordinates and n+1 multipliers. Its rows are the original
+source equation, its gradient expressed in the new and active old normals,
+active affine-height levels, and zero unused multipliers. All row degrees
+are bounded by max(source degree,1), with explicit coefficient-mass bounds.
+`FlatAffineCriticalRegularity` proves that a regular stage root has nonzero
+new-height multiplier: otherwise the source row is dependent on the active
+height rows. The new height consequently annihilates every slice tangent.
+`FlatAffineCriticalGeometry` identifies its formal Jacobian with the analytic
+frozen-stage derivative.
+
+`FlatAffineCriticalExtremum` proves the converse for constrained local maxima.
+A surjective slice derivative supplies normalized Lagrange multipliers;
+independence of the new normal from the old normals makes the source
+coefficient nonzero, yielding an actual stage root with nonzero new-height
+multiplier. `ComponentFiberMaximum` supplies a local maximum in each component
+of a compact regular fiber, joined to every point of that component.
+`FlatAffineComponentSampling` applies it to the actual affine slice. This
+requires regularity of the slice constraint map; it does not assert that
+all critical stage roots are nonsingular.
+
+`FlatAffineCriticalTower` assembles these rows with fixed stage width 2*n+1.
+Levels refer directly to earlier ambient blocks, including sums of two
+heights for midpoint levels, sharing all ancestry. Indexed row degree and
+mass bounds remain uniform at every depth, and depth at most n uses at most
+n*(2*n+1) variables. This is a separate algebraic tower: its native coefficient
+readers and integration with the existing regular-root sampling backend
+remain to be constructed. Generic critical-stage regularity, selection of
+recursive levels and directions, and component-preserving graph edges also
+remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

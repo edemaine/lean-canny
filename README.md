@@ -488,8 +488,17 @@ The checked ingredients are:
   to regular roots of the original tower, with native uniform budgets and a
   polynomial label-width bound. Native counts, canonical bounded descriptors,
   ordered enumeration, and polynomial sign readers are now constructed.
-  Fixed-width vertex words name exactly the regular original roots. The
-  recursive component cover, including singular slices, remains open.
+  Fixed-width vertex words name exactly the regular original roots.
+  Separate affine-height critical stages now constrain actual linear heights,
+  retaining ambient coordinates and Lagrange multipliers. Regular stage roots
+  are critical on their slices. On regular slices, constrained maxima yield
+  stage roots when the new height is independent of the old ones. Every point
+  of a compact regular affine slice can reach such a root in its component.
+  A shared ancestry tower supports old heights and midpoint levels with
+  uniform row bounds and at most n*(2*n+1) variables. This new tower still
+  needs native coefficient readers and a connection to the sample backend.
+  Generic stage regularity and the recursive component cover, including
+  singular slices, remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same
