@@ -1546,14 +1546,28 @@ space-computed direction record before dispatching to critical or copy rows.
 `FlatFullSourceRowCoefficientCorrect` proves exact collected-coefficient
 semantics for the existing indexed system. `FlatFullSourceCoefficient` derives
 the exponent width from the original degree allowance. Invalid rows, including
-every row at depth zero, return zero; modulus one is supported. Native
-coordinate elimination and uniform primitive descriptors remain.
+every row at depth zero, return zero; modulus one is supported.
 `PositivePolynomialSystem` appends a zero dummy coordinate, preserves every
 original index, gives unique root extension, and preserves the Jacobian
 determinant. `FlatFullSourcePositive` instantiates it with native positive
 dimension and the same degree and mass budgets. Analytic regularity is
-preserved, including at depth zero. Adapting the coefficient reader to this
-completion will allow the native matrix interface to handle the empty seed.
+preserved, including at depth zero.
+`FlatFullSourcePositiveCoefficient` embeds the old rows and supplies the dummy
+row with exact native coefficients. Nonzero dummy exponents are rejected in
+old rows; raw moduli, invalid row indices, and the valid empty-seed row are
+handled explicitly. `FlatFullSourcePositiveRows` supplies native homogenized
+coordinate rows, retaining the source and coefficient parameter.
+`FlatFullSourcePositiveCoordinate` derives a positive width containing every
+row degree, as well as native matrix-size and coefficient-bit budgets. Its
+nonzero coordinate polynomials annihilate every regular padded root and every
+regular original root at the corresponding old coordinate.
+`FlatFullSourcePositiveMacaulay` reads the implicit integer polynomial matrix.
+`FlatFullSourcePositiveCoordinateCoefficient` feeds these entries to the native
+subtractive-characteristic reader and lowest-coefficient scan. It computes
+the actual nonzero coordinate eliminant, uniformly in the input-dependent
+tower depth. The entire source and direction costs remain charged. Uniform
+primitive sources, candidate filters, and canonical sample descriptors for
+this flat family remain to be assembled.
 Slice regularity is still required separately: even a tangent slice of the
 regular circle has a singular root. General recursive endpoint slices and
 their component-preserving treatment remain open.

@@ -52,6 +52,9 @@ theorem access {F : Inputs} (h : F.Access) {f : List Bool → List Bool} (hf : f
   rw [h0, h1]
   rfl
 
+theorem degree_comp (F : Inputs) (f : List Bool → List Bool) (u : List Bool) :
+    FlatFullSourceTower.degree (comp F f) u = FlatFullSourceTower.degree F (f u) := rfl
+
 theorem polynomial_comp (F : Inputs) (f : List Bool → List Bool) (u : List Bool) :
     BoundedFullCriticalSamples.polynomial (comp F f).source u = BoundedFullCriticalSamples.polynomial F.source (f u) := by
   change BoundedFullCriticalSamples.polynomial (F.source.comp f) u = _

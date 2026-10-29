@@ -9806,3 +9806,62 @@ example : (TriangularPolynomialSystem.jacobian
   simp [TriangularPolynomialSystem.jacobian, Matrix.det_unique, pderiv_X, Pi.single_apply]
 end
 end PositiveSystemRegression
+
+
+namespace FlatPositiveCoefficientRegression
+open LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+noncomputable section
+
+-- A nonzero dummy exponent cannot contribute to any original row, even if
+-- its old-coordinate restriction is a valid source monomial.
+example (F : FlatFullSourceTower.Inputs) (W : List Bool → ℕ)
+    (row target modulus : List Bool → List Bool) (c : List Bool)
+    (he : FixedWidthQuery.coordinate W target c (FlatFullSourceTower.count F c) ≠ 0) :
+    FlatFullSourcePositiveCoefficient.embedded F W row target modulus c = [] := by
+  unfold FlatFullSourcePositiveCoefficient.embedded FixedWidthBlockRenameBits.value
+  apply ite_eq_right
+  intro h
+  have H := h (FlatFullSourceTower.count F c) (by unfold FlatFullSourcePositive.count; omega)
+  rcases H with H | H
+  · have hb := H.2
+    change FlatFullSourceTower.count F c < 0 + FlatFullSourceTower.count F c at hb
+    omega
+  · exact he H
+
+-- Unlike the old reader, the completed empty tower has a valid row zero.
+example (F : FlatFullSourceTower.Inputs) (W : List Bool → ℕ)
+    (target modulus : List Bool → List Bool) (c : List Bool) (hd : F.depth c = 0) :
+    FlatFullSourcePositiveCoefficient.value F W (fun _ => []) target modulus c =
+      FlatFullSourcePositiveCoefficient.dummy F W target modulus c := by
+  have hn : FlatFullSourceTower.count F c = 0 := by simp [FlatFullSourceTower.count, hd]
+  have hz : Nat.fromBitsLE ([] : List Bool) = 0 := rfl
+  simp only [FlatFullSourcePositiveCoefficient.value, hz, hn, ite_true]
+
+-- The modulus-one boundary includes both the dummy and critical branches.
+example (F : FlatFullSourceTower.Inputs) (W : List Bool → ℕ)
+    (row target : List Bool → List Bool) (c : List Bool) (i : Fin (FlatFullSourcePositive.count F c))
+    (hi : Nat.fromBitsLE (row c) = i.val) (hW : FlatFullSourceTower.degree F c < 2 ^ W c) :
+    FlatFullSourcePositiveCoefficient.value F W row target (fun _ => []) c = [] := by
+  rw [FlatFullSourcePositiveCoefficient.packet F W row target (fun _ => []) c i hi hW]
+  have hz : ∀ z : ZMod 1, MatrixPower.residueBits z = [] := fun z => by
+    rw [Subsingleton.elim z 0]
+    rfl
+  exact hz _
+
+-- Homogeneous source rows have no coefficient-parameter powers above one.
+-- This tests separation of the parameter index from rank, source, and modulus.
+example (F : FlatFullSourceTower.Inputs)
+    (coordinate : (u : List Bool) → Fin (FlatFullSourcePositive.count F u))
+    (z : List Bool) (i : Fin (FlatFullSourcePositive.count F (pairFst z) + 1)) (r j : ℕ) (hj : 1 < j) :
+    FlatFullSourcePositiveMacaulay.coefficient F coordinate
+      (pair z (pair (BinaryNatCode.encode i.val) (pair (BinaryNatCode.encode r) (BinaryNatCode.encode j)))) = [] := by
+  rw [FlatFullSourcePositiveMacaulay.coefficient_packet]
+  have hd : (((FlatFullSourcePositiveMacaulay.system F coordinate (pairFst z) i).coeff
+      (RationalSubstitution.Indexed.exponentVector (FlatFullSourcePositive.count F (pairFst z) + 1)
+        (FixedWidthPolynomial.entry (FlatFullSourcePositiveCoordinate.width F (pairFst z)) r)))).natDegree ≤ 1 :=
+    AffineCoordinateSystem.coefficient_degree _ _ _ _ _
+  rw [Polynomial.coeff_eq_zero_of_natDegree_lt (hd.trans_lt hj)]
+  simp [MatrixPower.residueBits, BinaryNatCode.encode]
+end
+end FlatPositiveCoefficientRegression

@@ -480,8 +480,10 @@ The checked ingredients are:
   linear copy rows. The complete indexed tower now has a native coefficient
   reader with derived exponent width, exact row semantics, and charged
   direction computation. Adding one dummy coordinate fixed at zero preserves
-  roots and regularity, including the empty seed. Native elimination, uniform
-  descriptors, and the complete recursive cover remain.
+  roots and regularity, including the empty seed. Native coordinate elimination
+  now uses the whole flat system, with derived degree and coefficient-bit
+  budgets and no ancestral coefficient oracle. Uniform sample descriptors
+  and the complete recursive cover remain.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same
