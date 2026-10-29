@@ -162,6 +162,9 @@ import LeanCanny.Encoding.AffineCriticalDirection
 import LeanCanny.ETR.ComplexSharedSquareKernel
 import LeanCanny.ETR.ComplexRightInverseEncoding
 import LeanCanny.ETR.ComplexParentRegularityEncoding
+import LeanCanny.ETR.ComplexAffineStageBridge
+import LeanCanny.ETR.ComplexAffineStageEncoding
+import LeanCanny.Encoding.FlatAffineNormalTable
 import LeanCanny.Encoding.BoundedFullRelocatedSource
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
@@ -210,10 +213,15 @@ A native combined writer computes the original parent Jacobian from its
 shared row program and retains parent equations at the same assignment.
 Native circuit relocation places the original source after a parent prefix
 with exact source, marking, and child-derivative identities.
-One algebraically closed projective bad-root check certifies affine regularity
-and cone exclusion over every field extension. Quantitative regular-locus
-guards on singular slices, the actual affine query writer and direction
-selection, and the full recursive component cover remain open.
+Original affine critical stages now have native shared circuits, with exact
+original-row identities and completions for every root, including singular
+roots and zero multipliers. Each derivative call copies only the original
+source. A charged writer captures the actual signed normal records as shared
+binary integer constants. One algebraically closed projective bad-root check
+certifies affine regularity and cone exclusion over every field extension.
+The ancestral-level writer, full affine query composition and direction
+selection, quantitative regular-locus guards on singular slices, and the full
+recursive component cover remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
 implicit-graph algorithms. Canonical input recognition is polynomial time;

@@ -532,13 +532,18 @@ The checked ingredients are:
   right-inverse guard circuits select exactly nonsingular real parent matrices,
   allowing complex auxiliary inverse entries. A combined native writer derives
   that Jacobian from the shared parent row program and retains the parent
-  equation guards at the same assignment. Native
-  source relocation preserves the original source, marking polynomial, and
-  child derivatives after a parent prefix. A single
-  algebraically closed projective bad-root check certifies affine regularity
-  and cone exclusion over all coefficient-field extensions. Quantitative
-  regular-locus guards on singular slices, the actual affine query writer and
-  direction selection, and the full recursive component cover remain open.
+  equation guards at the same assignment. Native source relocation preserves
+  the original source, marking polynomial, and child derivatives after a
+  parent prefix. Original affine critical stages now have native shared
+  circuits with exact original-row identities and completions for every
+  root, including singular roots and zero multipliers. Each derivative call
+  copies only the original source. A charged writer captures actual signed
+  normal records as shared binary integer constants. A single algebraically
+  closed projective bad-root check certifies affine regularity and cone
+  exclusion over all coefficient-field extensions. The ancestral-level
+  writer, full affine query composition and direction selection, quantitative
+  regular-locus guards on singular slices, and the full recursive component
+  cover remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

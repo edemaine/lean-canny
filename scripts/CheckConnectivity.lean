@@ -10724,3 +10724,97 @@ example (x : ℕ → ℂ) (hx0 : x 0 = 0) (hx1 : x 1 = 1) :
 
 end
 end ParentRegularityRegression
+
+
+
+namespace AffineStageCircuitRegression
+open LeanCanny LeanCanny.ETR LeanCanny.ETR.ComplexCircuit LeanCanny.Algebra MvPolynomial
+open scoped Classical BigOperators
+noncomputable section
+set_option backward.isDefEq.respectTransparency false
+
+def ops : List Operation := [.mul 0 0, .mul 1 1, .mul 5 5, .mul 6 6, .add 7 8, .constant (-2), .add 9 10]
+def stage : AffineStage.Inputs where
+  base := 13
+  start := 5
+  ambient := 0
+  multipliers := 2
+  count := 2
+  source := ops
+  sourceOutput := 11
+  normal r i := 5 + (r * 2 + i)
+  level r := 11 + r
+  active r := decide (r = 0)
+
+def p : MvPolynomial (Fin 2) ℤ := X 0 ^ 4 + X 1 ^ 4 - C 2
+noncomputable def wire := Differential.symbolicRun (fun i => (X i : MvPolynomial ℕ ℤ)) 5 ops
+
+def a (r : Fin 3) (i : Fin 2) : ℤ := if r = 0 then 4 else if r = 1 then if i = 0 then 1 else -1 else 0
+
+def x (j : ℕ) : ℂ := match j with
+  | 0 | 1 | 2 => 1
+  | 5 | 6 => 4
+  | 7 => 1
+  | 8 => -1
+  | _ => 0
+
+def z : Fin 0 ⊕ FlatAffineCriticalStage.Variables 2 → ℂ :=
+  Sum.elim Fin.elim0 (Sum.elim (fun _ => 1) (fun r => if r = 0 then 1 else 0))
+
+private theorem valid : stage.Valid := by
+  refine ⟨?_, by decide, by decide, by decide, by decide, by decide, ?_, ?_⟩
+  · norm_num [stage, ops, StraightLine.WellFormed, Operation.InputsBelow]
+  · intro r hr i hi
+    change r < 3 at hr
+    change i < 2 at hi
+    change 5 + (r * 2 + i) < 13
+    omega
+  · intro r hr
+    change r < 2 at hr
+    change 11 + r < 13
+    omega
+
+-- Two source-gradient copies and four affine rows stay shared.
+#guard (AffineStage.program stage).length == 437
+
+private theorem identity : wire stage.sourceOutput = rename (fun i : Fin 2 => stage.ambient + i.val) p := by
+  simp only [p, map_sub, map_add, map_pow, rename_X, rename_C]
+  norm_num [wire, stage, ops, Differential.symbolicRun, Differential.polynomial, Function.update_apply]
+  ring
+
+-- An active old height, a negative normal coefficient, and zero old multipliers
+-- all survive in the original circuit. Source temporary indices overlap the
+-- existing normal/level indices; the initialized copies must keep them fresh.
+example : ∃ env : ℕ → ℂ, (∀ i < 13, env i = x i) ∧
+    (∀ g ∈ AffineStage.gates stage, g.Holds env) ∧
+    ∀ j < 5, env (AffineStage.output stage j) = 0 := by
+  apply AffineStage.original_completion stage valid wire
+    (Differential.symbolicRun_realizes _ _ _ valid.source)
+    (fun i hi => Differential.symbolicRun_preserves_before _ _ _ i hi)
+    p identity ({0} : Finset (Fin 2)) a (fun _ => 0) x z
+  · intro i
+    fin_cases i <;> norm_num [stage, x, z, FlatAffineCriticalStage.ambient]
+  · intro j
+    fin_cases j <;> norm_num [stage, x, z, FlatAffineCriticalStage.multiplier]
+  · intro r i
+    fin_cases r <;> fin_cases i <;> norm_num [stage, x, a]
+  · intro r
+    fin_cases r <;> norm_num [stage, x]
+  · intro r
+    fin_cases r <;> simp [stage]
+  · apply (FlatAffineCriticalStage.roots_iff (Int.castRingHom ℂ) p ({0} : Finset (Fin 2)) a (fun _ => 0) z).mpr
+    refine ⟨?_, ?_, ?_, ?_⟩
+    · norm_num [p, z, FlatAffineCriticalStage.ambient, eval₂_add, eval₂_sub, eval₂_pow, eval₂_X, eval₂_C]
+    · intro r hr
+      have hr0 : r = 0 := Finset.mem_singleton.mp hr
+      subst r
+      norm_num [a, z, FlatAffineCriticalStage.ambient, Fin.sum_univ_succ]
+    · intro i
+      simp only [p, map_sub, map_add, pderiv_pow, pderiv_C, pderiv_X, Pi.single_apply]
+      fin_cases i <;> norm_num [a, z, FlatAffineCriticalStage.ambient, FlatAffineCriticalStage.multiplier,
+        pderiv_pow, pderiv_X, Pi.single_apply, Fin.sum_univ_succ, eval₂_add, eval₂_sub, eval₂_pow, eval₂_X, eval₂_C, eval₂_mul]
+    · intro r hr
+      fin_cases r <;> simp_all [z, FlatAffineCriticalStage.multiplier]
+
+end
+end AffineStageCircuitRegression
