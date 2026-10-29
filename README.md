@@ -495,8 +495,11 @@ The checked ingredients are:
   stage roots when the new height is independent of the old ones. Every point
   of a compact regular affine slice can reach such a root in its component.
   A shared ancestry tower supports old heights and midpoint levels with
-  uniform row bounds and at most n*(2*n+1) variables. This new tower still
-  needs native coefficient readers and a connection to the sample backend.
+  uniform row bounds and at most n*(2*n+1) variables. Signed direction and
+  ancestral level records now have native controls and uniform budgets.
+  Native scalar, source-block, derivative, and weighted-height coefficient
+  readers are constructed, with exact indexed row formulas. Complete row
+  dispatch and a connection to the sample backend remain required.
   Generic stage regularity and the recursive component cover, including
   singular slices, remain open.
   Bivariate fibers over actual samples now have short ordered root labels

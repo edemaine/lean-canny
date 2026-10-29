@@ -1643,11 +1643,33 @@ all critical stage roots are nonsingular.
 Levels refer directly to earlier ambient blocks, including sums of two
 heights for midpoint levels, sharing all ancestry. Indexed row degree and
 mass bounds remain uniform at every depth, and depth at most n uses at most
-n*(2*n+1) variables. This is a separate algebraic tower: its native coefficient
-readers and integration with the existing regular-root sampling backend
-remain to be constructed. Generic critical-stage regularity, selection of
-recursive levels and directions, and component-preserving graph edges also
-remain open.
+n*(2*n+1) variables. `FlatAffineCriticalIndexedRows` now identifies the exact
+source, gradient, multiplier, and affine-level rows at their stage-order
+indices, including references to ancestral ambient blocks.
+
+`FlatAffineFullSourceTower` now gives this separate tower native input
+controls. Directions and level records are charged space-bounded readers;
+signed coefficients are differences of fixed-width blocks. Levels decode as
+constants, earlier heights, or midpoints, with references clamped to existing
+stages and a constant fallback for empty ancestry. Variable counts have unary
+controls; degree and coefficient-mass exponents have binary controls uniformly
+in the input-dependent depth. `FlatAffineFullSourceContext` preserves the
+entire system when its original source context changes, including the nested
+stage and level queries.
+
+`FlatAffineIntegerSpace` computes signed scalar residues, including modulus
+one and redundant words. `FixedWidthConstantSpace` supplies constant-row
+coefficients, including empty and zero-width exponent layouts.
+`FixedWidthHeightSpace` streams actual collected coefficients of weighted
+linear forms, allowing coincident variable selections and charged
+space-bounded variable selectors. `FlatAffineHeightCoefficient` instantiates
+it with actual signed record entries. `FlatAffineFullSourceBlockCoefficient`
+and `FlatAffineFullSourceDerivative` supply native embedded original-source
+coefficients and partial derivatives with binary degree bounds. These are
+row-component readers: complete indexed row dispatch and integration with
+the existing regular-root sampling backend remain to be constructed.
+Generic critical-stage regularity, selection of recursive levels and
+directions, and component-preserving graph edges also remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

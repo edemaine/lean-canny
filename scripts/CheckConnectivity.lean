@@ -10059,3 +10059,59 @@ example (n k : ℕ) (hk : k ≤ n) : k * FlatAffineCriticalTower.width n ≤ n *
   FlatAffineCriticalTower.variables_le k hk
 end
 end FlatAffineStageRegression
+
+
+namespace FlatAffineNativeRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped BigOperators Classical
+
+-- Signed blocks decode negatives, cancellations, and zero-width entries.
+#guard FlatAffineFullSourceTower.integer 2 [false, false, true, true] 0 = -3
+#guard FlatAffineFullSourceTower.integer 2 [true, true, true, true] 0 = 0
+#guard FlatAffineFullSourceTower.integer 0 [true, true, true] 100 = 0
+
+-- The actual native arithmetic program handles signed residues, ignored
+-- trailing bits, and redundant zero modulus words (decoded modulus one).
+#guard FlatAffineIntegerSpace.code (fun _ => 2) (fun _ => 0)
+  (fun _ => [false, false, true, true]) (fun _ => [false, false, true]) [] == [false, true]
+#guard FlatAffineIntegerSpace.code (fun _ => 2) (fun _ => 0)
+  (fun _ => [false, false, true, true, true, true]) (fun _ => [false, false, true]) [] == [false, true]
+#guard FlatAffineIntegerSpace.code (fun _ => 2) (fun _ => 0)
+  (fun _ => [true, true, true, true]) (fun _ => [false, false, true]) [] == []
+#guard FlatAffineIntegerSpace.code (fun _ => 2) (fun _ => 0)
+  (fun _ => [false, false, true, true]) (fun _ => [false, false]) [] == []
+#guard FlatAffineIntegerSpace.code (fun _ => 0) (fun _ => 99)
+  (fun _ => [true, true, true]) (fun _ => [false, false, true]) [] == []
+
+-- Context changes retain noncanonical stage and row words verbatim.
+#guard FlatAffineFullSourceContext.levelQuery (fun u => u ++ [true])
+  (pair (pair [false] [false, true, false]) [true, false]) ==
+    pair (pair [false, true] [false, true, false]) [true, false]
+
+noncomputable section
+
+-- Coincident variable selections must collect both signed weights.
+example : (FixedWidthHeightBits.polynomial (fun _ => 1) (fun _ => 2)
+    (fun _ => ![3, -5]) (fun _ _ => 0) []).coeff (Finsupp.single 0 1) = -2 := by
+  simp only [FixedWidthHeightBits.polynomial, coeff_sum, coeff_C_mul, coeff_X]
+  norm_num [Fin.sum_univ_succ]
+
+-- A zero-width exponent layout always denotes the constant monomial.
+example (A : List Bool → ℕ) (target : List Bool → List Bool) (c : List Bool) :
+    FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin (A c))) 0 (Nat.fromBitsLE (target c)) = 0 := by
+  apply (FixedWidthConstantBits.zero_iff A (fun _ => 0) target c).mp
+  intro i _
+  simp [FixedWidthQuery.coordinate]
+  rfl
+
+-- Height tags cannot introduce a nonexistent stage into the empty seed.
+example (F : FlatAffineFullSourceTower.Inputs) (u : List Bool) (j : Fin (FlatAffineFullSourceTower.arity F u)) :
+    FlatAffineFullSourceTower.level F u 0 j = .constant
+      (FlatAffineFullSourceTower.integer (F.width u)
+        (FlatAffineFullSourceTower.constant (F.level (FlatAffineFullSourceTower.levelQuery u 0 j.val))) 0) := by
+  unfold FlatAffineFullSourceTower.level
+  dsimp only
+  rw [dite_eq_right (by omega : ¬ (0 < 0))]
+
+end
+end FlatAffineNativeRegression
