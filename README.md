@@ -540,10 +540,13 @@ The checked ingredients are:
   copies only the original source. A charged writer captures actual signed
   normal records as shared binary integer constants. A single algebraically
   closed projective bad-root check certifies affine regularity and cone
-  exclusion over all coefficient-field extensions. The ancestral-level
-  writer, full affine query composition and direction selection, quantitative
-  regular-locus guards on singular slices, and the full recursive component
-  cover remain open.
+  exclusion over all coefficient-field extensions. Native shared level
+  families now read actual signed records and compute constant, ancestral-height,
+  and midpoint levels in the original tower layout. Their output references
+  and lengths depend only on source dimension. Native space-bounded
+  concatenation emits whole families without copying earlier stages. Full
+  affine query composition and direction selection, quantitative regular-locus
+  guards on singular slices, and the full recursive component cover remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

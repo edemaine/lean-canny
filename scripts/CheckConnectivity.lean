@@ -10818,3 +10818,71 @@ example : ∃ env : ℕ → ℂ, (∀ i < 13, env i = x i) ∧
 
 end
 end AffineStageCircuitRegression
+
+
+namespace AffineLevelCircuitRegression
+open LeanCanny LeanCanny.ETR LeanCanny.ETR.ComplexCircuit LeanCanny.Encoding
+open LeanCanny.Algebra MvPolynomial
+open scoped Classical BigOperators
+noncomputable section
+set_option backward.isDefEq.respectTransparency false
+
+-- Signed width-three blocks encode the normal (3,-1) and the constant -2.
+def normal : List Bool := [true, true, false, false, false, false, false, false, false, true, false, false]
+def constant : List Bool := [false, false, false, false, true, false]
+def record (tag : List Bool) : List Bool :=
+  pair tag (pair (BinaryNatCode.encode 1000) (pair [] (pair normal constant)))
+def config (depth : ℕ) (tag : List Bool) : AffineLevel.Inputs :=
+  FlatAffineLevelRecord.fromRecord 20 1 2 3 depth (record tag)
+
+def x (j : ℕ) : ℂ := match j with
+  | 1 => 2
+  | 2 => 5
+  | 6 => 4
+  | 7 => 2
+  | _ => 0
+
+private theorem valid (depth : ℕ) (h : depth ≤ 2) (tag : List Bool) : (config depth tag).Valid := by
+  apply FlatAffineLevelRecord.valid
+  change 1 + (depth + 1) * (2 + (2 + 1)) ≤ 20
+  omega
+
+-- The midpoint is the sum of the two earlier heights. Its current normal
+-- is scaled separately by the affine stage. The large left index clips to 1.
+private theorem midpoint_value : AffineLevel.value (config 2 [true, false, true]) x = 11 := by
+  norm_num [AffineLevel.value, config, FlatAffineLevelRecord.fromRecord, record, normal, constant, x,
+    FlatAffineLevelRecord.leftStage, FlatAffineLevelRecord.rightStage, FlatAffineFullSourceTower.left,
+    FlatAffineFullSourceTower.right, FlatAffineFullSourceTower.normal, FlatAffineFullSourceTower.constant,
+    FlatAffineFullSourceTower.tag, FlatAffineFullSourceTower.flags, FlatAffineFullSourceTower.integer,
+    FlatAffineCriticalTower.width, Finset.sum_range_succ, pairFst_pair, pairSnd_pair, Nat.fromBitsLE_cons,
+    show Nat.fromBitsLE [] = 0 from rfl, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+
+example : ∃ env : ℕ → ℂ, (∀ i < 20, env i = x i) ∧
+    (∀ g ∈ AffineLevel.packedGates (config 2 [true, false, true]), g.Holds env) ∧ env 47 = 11 := by
+  obtain ⟨env, hp, hg, hv⟩ := AffineLevel.packed_exists_completion (config 2 [true, false, true]) (valid 2 le_rfl _) x
+  refine ⟨env, hp, hg, ?_⟩
+  rw [midpoint_value] at hv
+  simpa only [AffineLevel.packed_output_eq, config, FlatAffineLevelRecord.fromRecord] using hv
+
+-- The same midpoint tag at depth zero selects the constant, even though
+-- the unselected height computation would read nonzero ambient inputs.
+example : AffineLevel.value (config 0 [true, false, true]) x = -2 := by
+  norm_num [AffineLevel.value, config, FlatAffineLevelRecord.fromRecord, record, constant,
+    FlatAffineFullSourceTower.constant, FlatAffineFullSourceTower.integer, pairFst_pair, pairSnd_pair, Nat.fromBitsLE_cons,
+    show Nat.fromBitsLE [] = 0 from rfl, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+
+-- Unknown tags use the same constant fallback.
+example : AffineLevel.value (config 2 [true, true, true]) x = -2 := by
+  norm_num [AffineLevel.value, config, FlatAffineLevelRecord.fromRecord, record, constant,
+    FlatAffineFullSourceTower.constant, FlatAffineFullSourceTower.integer, FlatAffineFullSourceTower.tag,
+    FlatAffineFullSourceTower.flags, pairFst_pair, pairSnd_pair, Nat.fromBitsLE_cons,
+    show Nat.fromBitsLE [] = 0 from rfl, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+
+example (depth : ℕ) (tag : List Bool) : AffineLevel.packedOutput (config depth tag) = 47 := by
+  rw [AffineLevel.packed_output_eq]
+  rfl
+
+#guard (AffineLevel.packedProgram (config 2 [true, false, true])).length == 28
+
+end
+end AffineLevelCircuitRegression

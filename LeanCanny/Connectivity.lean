@@ -165,6 +165,7 @@ import LeanCanny.ETR.ComplexParentRegularityEncoding
 import LeanCanny.ETR.ComplexAffineStageBridge
 import LeanCanny.ETR.ComplexAffineStageEncoding
 import LeanCanny.Encoding.FlatAffineNormalTable
+import LeanCanny.Encoding.FlatAffineLevelFamilyCorrect
 import LeanCanny.Encoding.BoundedFullRelocatedSource
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
@@ -219,9 +220,13 @@ roots and zero multipliers. Each derivative call copies only the original
 source. A charged writer captures the actual signed normal records as shared
 binary integer constants. One algebraically closed projective bad-root check
 certifies affine regularity and cone exclusion over every field extension.
-The ancestral-level writer, full affine query composition and direction
-selection, quantitative regular-locus guards on singular slices, and the full
-recursive component cover remain open.
+Native shared level families now read the actual signed records and evaluate
+constant, ancestral-height, and midpoint levels in the original tower layout.
+Their output references and lengths are fixed by the source dimension. Native
+space-bounded concatenation emits each family without copying earlier stages.
+Full affine query composition and direction selection, quantitative
+regular-locus guards on singular slices, and the full recursive component
+cover remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
 implicit-graph algorithms. Canonical input recognition is polynomial time;
