@@ -11015,3 +11015,50 @@ example (t : Fin 2) (r : Fin 2) :
 
 end
 end AffinePowerTowerRegression
+
+
+namespace AffinePowerCoefficientRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+-- The third exponent block lies outside the declared two-variable layout.
+example : FixedWidthExpandBits.Divisible (fun _ => 2) (fun _ => 2) (fun _ => 3)
+    (fun _ => [true, true, false, false, true, true]) [] := by decide
+
+example : Nat.fromBitsLE (FixedWidthExpandBits.quotientTarget (fun _ => 2) (fun _ => 2) (fun _ => 3)
+    (fun _ => [true, true, false, false, true, true]) []) = 1 := by decide
+
+-- A source coefficient must not be used when an exponent is not divisible.
+example : ¬FixedWidthExpandBits.Divisible (fun _ => 2) (fun _ => 2) (fun _ => 3)
+    (fun _ => [true]) [] := by decide
+
+-- Zero-width queries retain the constant coefficient, regardless of payload.
+example : FixedWidthExpandBits.Divisible (fun _ => 2) (fun _ => 0) (fun _ => 3)
+    (fun _ => [true, true, true]) [] := by decide
+
+example : FixedWidthExpandBits.quotientTarget (fun _ => 2) (fun _ => 0) (fun _ => 3)
+    (fun _ => [true, true, true]) [] = [] := by decide
+
+-- Coincident normal ports collect before and after power substitution.
+example : (((C (3 : ℤ) * X (0 : Fin 1) + C (-1) * X 0 : MvPolynomial (Fin 1) ℤ).expand 3).coeff
+    (Finsupp.single 0 3)) = 2 := by
+  have h : (C (3 : ℤ) * X (0 : Fin 1) + C (-1) * X 0 : MvPolynomial (Fin 1) ℤ).expand 3 = C 2 * X 0 ^ 3 := by
+    simp only [map_add, map_mul, expand_C, expand_X]
+    rw [← add_mul, ← map_add]
+    norm_num
+  rw [h, coeff_C_mul, X_pow_eq_monomial, coeff_monomial]
+  norm_num
+
+-- The reciprocal row keeps its constant negative sign and its linear parameter.
+example : (((C Polynomial.X * X (1 : Fin 2) - X 0 : MvPolynomial (Fin 2) (Polynomial ℤ)).coeff
+    (Finsupp.single 0 1)).coeff 0) = -1 := by
+  rw [ReciprocalCoordinateBits.coefficient]
+  norm_num [coeff_X]
+
+example : (((C Polynomial.X * X (1 : Fin 2) - X 0 : MvPolynomial (Fin 2) (Polynomial ℤ)).coeff
+    (Finsupp.single 1 1)).coeff 1) = 1 := by
+  rw [ReciprocalCoordinateBits.coefficient]
+  norm_num [coeff_X]
+
+end AffinePowerCoefficientRegression

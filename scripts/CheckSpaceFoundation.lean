@@ -583,3 +583,25 @@ example (p : List Bool → Polynomial ℤ) (D : List Bool → ℕ)
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Algebra.PolynomialReflectBits.polynomial p D))
       encBits encBits :=
   (LeanCanny.Algebra.PolynomialReflectBits.evaluator p D hp hd E).computable
+
+/-! Actual multiplier-power rows charge original source and affine-record readers. -/
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
+    (W : List Bool → ℕ) (hW : LeanCanny.UnaryFn W)
+    (row : (u : List Bool) → Fin (LeanCanny.Encoding.FlatAffineFullSourcePositive.count F u))
+    (hr : LeanCanny.UnaryFn (fun u => (row u).val))
+    (target modulus : List Bool → List Bool) (ht : target ∈ LeanCanny.FP) (hm : modulus ∈ LeanCanny.FP) :
+    ComputableTidilyInPolySpace
+      (LeanCanny.Algebra.FixedWidthRowBits.value (LeanCanny.Encoding.FlatAffineFullSourcePositive.count F) W
+        (fun u => LeanCanny.Encoding.FlatAffinePowerPositive.system F u (row u)) target modulus) encBits encBits :=
+  (LeanCanny.Encoding.FlatAffinePowerPositive.evaluator h row hr hW ht hm).computable
+
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
+    (W : List Bool → ℕ) (hW : LeanCanny.UnaryFn W)
+    (coordinate : (u : List Bool) → Fin (LeanCanny.Encoding.FlatAffineFullSourcePositive.count F u))
+    (hc : LeanCanny.UnaryFn (fun u => (coordinate u).val))
+    (row : (u : List Bool) → Fin (LeanCanny.Encoding.FlatAffineFullSourcePositive.count F u + 1))
+    (hr : LeanCanny.UnaryFn (fun u => (row u).val))
+    (parameter modulus : List Bool → List Bool) (hk : parameter ∈ LeanCanny.FP) (hm : modulus ∈ LeanCanny.FP) :
+    ComputableTidilyInPolySpace
+      (LeanCanny.Encoding.FlatAffinePowerCoordinateRows.value F W coordinate row parameter modulus) encBits encBits :=
+  (LeanCanny.Encoding.FlatAffinePowerCoordinateRows.evaluator h hW coordinate hc row hr hk hm).computable

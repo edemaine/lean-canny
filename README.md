@@ -555,9 +555,13 @@ The checked ingredients are:
   roots, the equation-only native sampler counts exactly all system roots.
   The reciprocal determinant embeds in the existing nested determinant
   backend. Fixed-degree reflection has native coefficient access charging the
-  Gram reader; actual power-tower Macaulay metadata has native controls. The
-  complete Gram reader from original power-row coefficients and the full
-  recursive component cover remain required.
+  Gram reader; actual power-tower Macaulay metadata has native controls. Native
+  mixed-degree homogenized rows now read the actual positive power tower from
+  the original source and charged signed records. FP exponent division handles
+  multiplier powers, with linear inactive rows and a unique zero dummy at
+  every depth. A native reciprocal row completes the homogeneous family for
+  the Gram backend. Its complete coefficient-reader composition, all-root
+  sampling budgets, and the full recursive component cover remain required.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

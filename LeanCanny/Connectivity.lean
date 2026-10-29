@@ -171,6 +171,7 @@ import LeanCanny.Algebra.FlatAffinePowerConeBridge
 import LeanCanny.Encoding.SquareSampleComplete
 import LeanCanny.Algebra.AffineBoxGramEncoding
 import LeanCanny.Encoding.FlatAffinePowerControls
+import LeanCanny.Encoding.FlatAffinePowerCoordinateRows
 import LeanCanny.Encoding.BoundedFullRelocatedSource
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
@@ -241,9 +242,13 @@ all system roots, with no Jacobian filter. The reciprocal determinant embeds
 exactly in the existing nested determinant backend. Fixed-degree reflection
 has a native coefficient reader charging the Gram reader, and the actual
 power-tower Macaulay level, width, and determinant dimension have native
-controls. Constructing the complete Gram reader from the original power-row
-coefficients, full affine query composition and direction selection, and the
-full recursive component cover remain open.
+controls. Native mixed-degree homogenized rows now read the actual positive
+power tower from the original source and charged signed records. FP exponent
+division handles gradient multiplier powers, while inactive height rows stay
+linear; the unique zero dummy includes depth zero. A native reciprocal row
+completes the homogeneous family supplied to the Gram backend. Composing the
+complete Gram coefficient reader, all-root sampling budgets and direction
+selection, and the full recursive component cover remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
 implicit-graph algorithms. Canonical input recognition is polynomial time;
