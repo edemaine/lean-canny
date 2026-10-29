@@ -10252,3 +10252,68 @@ example (F : SquareSampleInput.Inputs) (row : (u : List Bool) → Fin (F.count u
 
 end
 end AffineSquareSamplingRegression
+
+
+namespace AffineStagePrefixRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding MvPolynomial
+open scoped Classical
+noncomputable section
+
+-- Empty blocks do not acquire a singular Jacobian at positive depth.
+example (F : TriangularPolynomialTower.Family 0 ℤ) (k : ℕ) (z : Fin (k * 0) → ℝ) :
+    (TriangularPolynomialSystem.jacobian (TriangularPolynomialIndexing.system F k)).eval₂ (Int.castRingHom ℝ) z ≠ 0 := by
+  apply (TriangularPolynomialStageRegularity.regular_iff_stages (Int.castRingHom ℝ) F k z).mpr
+  intro j hj
+  simp [TriangularPolynomialSystem.spatialJacobian, Matrix.det_isEmpty]
+
+-- Each stage below has a singular root at zero; later stages cannot repair it.
+def quadraticStages : TriangularPolynomialTower.Family 1 ℤ where
+  row _ _ := X (Sum.inr (0 : Fin 1)) ^ 2
+
+example : ∀ i, (TriangularPolynomialIndexing.system quadraticStages 2 i).eval₂ (Int.castRingHom ℝ) (fun _ => 0) = 0 := by
+  apply (TriangularPolynomialStageRegularity.roots_iff_stages (Int.castRingHom ℝ) quadraticStages 2 _).mpr
+  intro j hj i
+  simp [quadraticStages]
+
+example : (TriangularPolynomialSystem.jacobian (TriangularPolynomialIndexing.system quadraticStages 2)).eval₂
+    (Int.castRingHom ℝ) (fun _ => 0) = 0 := by
+  by_contra h
+  have h0 := (TriangularPolynomialStageRegularity.regular_iff_stages (Int.castRingHom ℝ) quadraticStages 2 _).mp h 0 (by decide)
+  norm_num [quadraticStages, TriangularPolynomialSystem.spatialJacobian, pderiv_pow, pderiv_X,
+    Pi.single_apply, Function.comp_apply] at h0
+
+-- The physical layout retains all old entries and appends ambient entries
+-- before multipliers, even when the next stage has different values.
+example : FlatAffineTowerRegularity.appendPoint (n := 2) 1 (fun i : Fin 5 => (i.val : ℝ))
+    (Sum.elim (fun i : Fin 2 => (7 + i.val : ℝ)) (fun j : Fin 3 => (11 + j.val : ℝ))) (3 : Fin 10) = 3 := rfl
+example : FlatAffineTowerRegularity.appendPoint (n := 2) 1 (fun i : Fin 5 => (i.val : ℝ))
+    (Sum.elim (fun i : Fin 2 => (7 + i.val : ℝ)) (fun j : Fin 3 => (11 + j.val : ℝ))) (5 : Fin 10) = 7 := by
+  have H := FlatAffineTowerRegularity.appendPoint_new (n := 2) 1
+    (fun i => (i.val : ℝ))
+    (Sum.elim (fun i : Fin 2 => (7 + i.val : ℝ)) (fun j : Fin 3 => (11 + j.val : ℝ))) (Sum.inl 0)
+  dsimp +instances only [FlatAffineCriticalTower.width, TriangularPolynomialRows.block,
+    BlockRenameCoefficient.shift, FlatAffineCriticalTower.blockEquiv] at H
+  norm_num at H
+  exact H
+
+example : FlatAffineTowerRegularity.appendPoint (n := 2) 1 (fun i : Fin 5 => (i.val : ℝ))
+    (Sum.elim (fun i : Fin 2 => (7 + i.val : ℝ)) (fun j : Fin 3 => (11 + j.val : ℝ))) (7 : Fin 10) = 11 := by
+  have H := FlatAffineTowerRegularity.appendPoint_new (n := 2) 1
+    (fun i => (i.val : ℝ))
+    (Sum.elim (fun i : Fin 2 => (7 + i.val : ℝ)) (fun j : Fin 3 => (11 + j.val : ℝ))) (Sum.inr 0)
+  dsimp +instances only [FlatAffineCriticalTower.width, TriangularPolynomialRows.block,
+    BlockRenameCoefficient.shift, FlatAffineCriticalTower.blockEquiv] at H
+  norm_num at H
+  exact H
+
+-- n active old heights leave no room for the source constraint in a regular
+-- child stage; consequently no valid native vertex can name such a root.
+example (F : FlatAffineFullSourceTower.Inputs) (u w : List Bool)
+    (ha : FlatAffineSampleExtension.active F u = Finset.univ) :
+    ¬ FlatAffineSampleVertices.Valid (FlatAffineSampleExtension.next F) u w := by
+  intro hw
+  exact FlatAffineSampleExtension.no_child_of_all_active F u ha
+    ⟨FlatAffineSampleVertices.sample (FlatAffineSampleExtension.next F) u w hw⟩
+
+end
+end AffineStagePrefixRegression

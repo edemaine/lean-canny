@@ -506,8 +506,13 @@ The checked ingredients are:
   counting, and short native labels. Removing the zero dummy gives a bijection
   with regular roots of the entire original affine tower. Native multivariate
   polynomial sign tests retain the same selected root and charge their readers.
-  Generic stage regularity and the recursive component cover, including
-  singular slices, remain open.
+  Full-tower regularity now holds exactly when all frozen stages are regular,
+  and projects to every earlier prefix. Regular child stages extend parent
+  roots with their coordinates retained. With explicit regularity hypotheses,
+  each compact slice component reaches a short child label. At a nonsingular
+  stage the slice constraints are surjective, with fewer active old heights
+  than ambient coordinates. Generic stage regularity and the full recursive
+  component cover, including singular slices, remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same

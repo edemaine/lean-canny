@@ -1723,9 +1723,43 @@ valid sample.
 `FlatAffineSampleVertices` removes the unique zero dummy coordinate. Its
 vertex labels cover exactly the regular roots of the entire original affine
 tower; both their native count and existence decision require only the
-original source and direction/level access. Generic critical-stage regularity,
-selection of recursive levels and directions, singular slices, and
-component-preserving graph edges remain open.
+original source and direction/level access.
+
+`SpatialPolynomialReindex` proves that simultaneous spatial row/variable
+reindexing preserves the frozen Jacobian, while retaining every ancestor.
+`TriangularPolynomialStageRegularity` gives exact root and Jacobian criteria
+for all stages of an indexed tower. They preserve every earlier prefix,
+including empty blocks and depth zero. An explicit appended-point map has
+exact old/new block identities and root/regularity extension criteria.
+`FlatAffineTowerRegularity` identifies these criteria with the actual affine
+Lagrange stage matrices. `FlatAffineTowerGeometry` proves the corresponding
+analytic derivative equivalences, prefix preservation, and criticality at
+every stage of a regular full root.
+
+`FlatAffineSliceRegularity` solves the full nonsingular spatial Jacobian with
+prescribed constraint outputs. Its ambient coordinates prove surjectivity
+of the source/old-height derivative. Consequently the number of active old
+heights is strictly less than the ambient dimension. This implication does
+not need a root hypothesis. In particular, fully activating every old-height
+slot cannot produce a regular child sample.
+
+`FlatAffineSamplePrefix` changes only the depth, retaining the original
+source and all charged records. It projects regular sample roots to every
+earlier prefix, with unchanged coordinates; repeated projections compose.
+The projected root has a short sample word. A native program computing that
+word directly from the full sample label is not yet supplied.
+`FlatAffineSampleExtension` combines a regular parent and an actual regular
+frozen child stage into a regular complete tower root. Projecting recovers
+the parent, and the appended coordinates are exactly the child. When every
+frozen critical child is regular, this extension injects the child roots into
+the complete next-tower regular roots. Their number is bounded by the native
+next-tower count, without another elimination over the parent's coordinates.
+Its compact slice theorem produces a valid child label in the component of every slice
+point, retaining the given parent. Compactness, slice regularity, independent
+new height, and regularity of every frozen critical child remain explicit
+hypotheses. Generic critical-stage regularity, selection of recursive levels
+and directions, singular slices, and component-preserving graph edges remain
+open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

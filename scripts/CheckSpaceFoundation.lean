@@ -548,3 +548,16 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
       (fun u => LeanCanny.BinaryNatCode.encode (LeanCanny.Encoding.FlatAffineSampleVertices.count F u))
         encBits encBits :=
   (LeanCanny.Encoding.FlatAffineSampleVertices.count_evaluator h).computable
+
+/-! Prefix/extension input families retain the same native source and record
+programs; their changed depths are unary controls. -/
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
+    (d : List Bool → ℕ) (hd : LeanCanny.UnaryFn d) :
+    LeanCanny.Encoding.FlatAffineSampleVertices.language (LeanCanny.Encoding.FlatAffineSamplePrefix.truncate F d) ∈
+      Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.Encoding.FlatAffineSampleVertices.mem_PSPACE (LeanCanny.Encoding.FlatAffineSamplePrefix.access h hd)
+
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access) :
+    LeanCanny.Encoding.FlatAffineSampleVertices.language (LeanCanny.Encoding.FlatAffineSampleExtension.next F) ∈
+      Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.Encoding.FlatAffineSampleVertices.mem_PSPACE (LeanCanny.Encoding.FlatAffineSampleExtension.access h)

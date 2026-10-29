@@ -153,7 +153,7 @@ import LeanCanny.Encoding.FlatAffineFullSourceDerivative
 import LeanCanny.Encoding.FlatAffineHeightCoefficient
 import LeanCanny.Encoding.FlatAffineFullSourcePositiveCoordinateCoefficient
 import LeanCanny.Encoding.FlatAffineFullSourcePositiveContext
-import LeanCanny.Encoding.FlatAffineSampleVertices
+import LeanCanny.Encoding.FlatAffineSampleExtension
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
 import LeanCanny.Algebra.FixedWidthLinearCoefficientSpace
@@ -175,8 +175,12 @@ Complete affine towers now instantiate a reusable native square-system
 sampler. Its exact equation/Jacobian filters select all regular roots; native
 counting, enumeration, fixed-width vertices, and multivariate sign tests use
 the proved original-source row and annihilator programs. The affine bridge
-removes the unique zero dummy coordinate. Constructing generic regular
-critical stages and the recursive component cover remains open.
+removes the unique zero dummy coordinate. Full regularity is equivalent to
+regularity of every frozen affine stage and passes to all earlier prefixes.
+Regular child stages extend parent samples with the original coordinates
+retained. Under the explicit compact-slice and stage-regularity hypotheses,
+every slice component reaches such a child label. Generic regular critical
+stages, singular slices, and the full recursive component cover remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
 implicit-graph algorithms. Canonical input recognition is polynomial time;
