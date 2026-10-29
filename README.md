@@ -573,8 +573,10 @@ The checked ingredients are:
   equation filtering now gives short vertices in bijection with all captured
   roots, including singular roots; original affine vertices preserve ambient
   coordinates. Coordinate objectives and prefix constraints now supply native
-  cone certificates using explicit 0/1 direction records. Complete original
-  roots project to prefixes and append frozen-stage roots. Their labels sample
+  cone certificates using explicit 0/1 direction records. Doubled coordinate
+  towers also carry native exact height and midpoint records; their actual rows
+  copy ancestral coordinates or put a current coordinate strictly between
+  ordered ancestral bounds. Complete original roots project to prefixes and append frozen-stage roots. Their labels sample
   compact regular slice components without critical-stage Jacobian conditions.
   Singular constraint points give zero-objective-multiplier stage roots when
   the height normals are independent. The full recursive component cover and

@@ -11424,3 +11424,56 @@ example (F : FlatAffineFullSourceTower.Inputs) (hc : FlatAffinePowerPositive.Con
       FlatAffineCompleteRootStages.project F d u (hd u) z :=
   FlatAffineCompleteRootStages.sample_word F hc d hd u z
 end CompleteAffineStageRegression
+
+namespace CoordinateMidpointRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+
+#guard (CoordinateDoubleAffineRecord.record 3 1).length == 48
+#guard FlatAffineFullSourceTower.integer 2 (CoordinateDoubleAffineRecord.record 3 1) 1 == 2
+#guard FlatAffineFullSourceTower.integer 2 (CoordinateDoubleAffineRecord.record 3 1) 7 == 2
+#guard FlatAffineFullSourceTower.integer 2 (CoordinateDoubleAffineRecord.record 3 1) 8 == 0
+#guard FlatAffineFullSourceTower.integer 2 (CoordinateDoubleAffineRecord.record 3 1) 12 == 0
+#guard CoordinateDoubleAffineRecord.record 0 1 == []
+#guard FlatAffineFullSourceTower.tag (CoordinateHeightRecord.height 4 1 100) == 1
+#guard FlatAffineFullSourceTower.tag (CoordinateHeightRecord.midpoint 4 1 100 200) == 2
+#guard FlatAffineFullSourceTower.integer 2
+  (FlatAffineFullSourceTower.normal (CoordinateHeightRecord.height 4 1 0)) 1 == 2
+#guard FlatAffineFullSourceTower.integer 2
+  (FlatAffineFullSourceTower.normal (CoordinateHeightRecord.midpoint 4 1 0 1)) 1 == 1
+#guard FlatAffineFullSourceTower.integer 2
+  (FlatAffineFullSourceTower.normal (CoordinateHeightRecord.midpoint 4 1 0 1)) 2 == 0
+
+-- With no ancestry, all generated records fall back to the zero constant.
+example : CoordinateHeightRecord.decode 4 0 (CoordinateHeightRecord.height 4 1 100) = .constant 0 := rfl
+example : CoordinateHeightRecord.decode 4 0 (CoordinateHeightRecord.midpoint 4 1 100 200) = .constant 0 := rfl
+-- Oversized references clamp to the last actual ancestor, independently.
+example : CoordinateHeightRecord.decode 4 2 (CoordinateHeightRecord.midpoint 4 1 100 200) =
+    CoordinateHeightRecord.decode 4 2 (CoordinateHeightRecord.midpoint 4 1 1 1) := rfl
+
+-- These are actual signed tower rows, so the factor two gives 7 between 4 and 10.
+private def P : BoundedFullWriter.Readers := ⟨fun _ => [], fun _ => 0, fun _ => 0⟩
+private def depth : List Bool → ℕ := fun _ => 3
+private def objective : List Bool → ℕ := fun _ => 3
+private def levels : List Bool → List Bool := fun _ => CoordinateHeightRecord.midpoint 4 1 0 1
+private def F := CoordinateDoubleAffinePrefix.inputs P depth objective levels
+
+example : FlatAffineFullSourceTower.level F [] 2 (1 : Fin 4) =
+    .midpoint (0 : Fin 2) 1 (FermatCoordinateCone.normal (1 : Fin 4)) := by
+  exact CoordinateDoubleAffinePrefix.level_midpoint P depth objective levels [] 2 1 0 1 rfl
+
+example (x : FlatAffineCriticalTower.Ancestors 4 2 → ℝ) (y : Fin 4 → ℝ)
+    (hl : x (FlatAffineCriticalTower.oldAmbient 2 0 1) = 4)
+    (hr : x (FlatAffineCriticalTower.oldAmbient 2 1 1) = 10)
+    (he : (∑ i, (FlatAffineFullSourceTower.direction F [] 2 (1 : Fin 4).succ i : ℝ) * y i) =
+      (FlatAffineFullSourceTower.level F [] 2 (1 : Fin 4)).polynomial.eval₂ (Int.castRingHom ℝ) x) :
+    y 1 = 7 := by
+  have H := CoordinateDoubleAffinePrefix.midpoint_coordinate P depth objective levels [] 2 1 0 1 rfl x y he
+  rw [hl, hr] at H
+  linarith
+
+example (P : BoundedFullWriter.Readers) (d o : List Bool → ℕ) (l : List Bool → List Bool) :
+    FlatAffinePowerPositive.ConeCertificate (CoordinateDoubleAffinePrefix.inputs P d o l) :=
+  CoordinateDoubleAffinePrefix.coneCertificate P d o l
+end CoordinateMidpointRegression

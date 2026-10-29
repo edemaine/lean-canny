@@ -697,3 +697,17 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
   LeanCanny.Encoding.FlatAffineCompleteVertices.width_unary
     (LeanCanny.Encoding.FlatAffineCompleteRootStages.access h hD)
     (LeanCanny.Encoding.FlatAffineCompleteRootStages.cone_prefix F hc d hd)
+
+-- Exact midpoint writers and doubled towers retain native reader costs.
+example (n index left right : List Bool → ℕ) (hn : LeanCanny.UnaryFn n)
+    (hi : LeanCanny.BinaryFn index) (hl : LeanCanny.BinaryFn left) (hr : LeanCanny.BinaryFn right) :
+    (fun c => LeanCanny.Encoding.CoordinateHeightRecord.midpoint (n c) (index c) (left c) (right c)) ∈ LeanCanny.FP :=
+  LeanCanny.Encoding.CoordinateHeightRecord.midpoint_FP hn hi hl hr
+
+example {P : LeanCanny.Encoding.BoundedFullWriter.Readers} (hP : P.PolyTime)
+    {depth objective : List Bool → ℕ} {level : List Bool → List Bool}
+    (hd : LeanCanny.UnaryFn depth) (ho : LeanCanny.UnaryFn objective)
+    (hl : LeanCanny.Computation.SpaceFunction level)
+    (hA : ∀ u, (LeanCanny.ETR.TermView.term (P.source u)).arity ≤ P.dim u) :
+    LeanCanny.Encoding.CoordinateDoubleAffinePrefix.language P depth objective level ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.Encoding.CoordinateDoubleAffinePrefix.mem_PSPACE hP hd ho hl hA

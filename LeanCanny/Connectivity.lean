@@ -177,6 +177,7 @@ import LeanCanny.Encoding.FlatAffinePowerGramBounds
 import LeanCanny.Encoding.FlatAffinePowerOriginalSamples
 import LeanCanny.Encoding.FlatAffineCompleteVertices
 import LeanCanny.Encoding.CoordinateAffinePrefix
+import LeanCanny.Encoding.CoordinateHeightTower
 import LeanCanny.Encoding.FlatAffineCompleteComponentSamples
 import LeanCanny.Geometry.FlatAffineSingularCriticalRoot
 import LeanCanny.Encoding.BoundedFullRelocatedSource
@@ -268,8 +269,10 @@ keeps the same primitive parameter and rational coordinates. Native equation
 filtering of its short ordinals now gives vertices in bijection with all
 captured roots, including singular roots. The original affine vertices preserve
 ambient coordinates. Explicit coordinate objectives and prefix constraints now
-supply native cone certificates using 0/1 direction records. Complete original
-roots project to all prefixes and append arbitrary frozen-stage roots. Their
+supply native cone certificates using 0/1 direction records. Doubled coordinate
+towers now carry native exact height and midpoint records. Their actual row
+equations copy ancestral coordinates or place a current coordinate strictly
+between ordered ancestral bounds. Complete original roots project to all prefixes and append arbitrary frozen-stage roots. Their
 labels sample compact regular slice components without critical-stage Jacobian
 conditions. Singular constraint points give zero-objective-multiplier stage
 roots when the height normals are independent. The full recursive component
