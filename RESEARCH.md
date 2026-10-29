@@ -1690,11 +1690,42 @@ Degree and coefficient-bit bounds have native controls uniformly in depth.
 `FlatAffineFullSourcePositiveMacaulay` reads the actual homogenized matrix;
 `PositiveCoordinateCoefficient` computes the determinant and its lowest
 nonzero coefficient natively. `PositiveContext` preserves these exact
-coordinate equations when the original source context changes. Integration
-with the primitive-parameter, accepted-root, and sample-enumeration backend
-remains required for this affine tower. Generic critical-stage regularity,
-selection of recursive levels and directions, and component-preserving graph
-edges also remain open.
+coordinate equations when the original source context changes.
+
+`SquareSampleInput` supplies a reusable positive square-system interface.
+Its canonical row query carries the source, selected row, exponent-width word,
+rank, and modulus predecessor. Width is the word length; context changes
+preserve the other fields, including noncanonical words. `SquareSampleAccess`
+derives arbitrary FP-context row and annihilator readers from these two native
+programs. `FlatAffineSampleInput` constructs both programs from the actual
+affine tower, requiring only its original source and direction/level access.
+No additional coefficient-access premise is introduced by this adapter.
+
+`SquareSampleSource` prepares exact degrees for the coordinate annihilators.
+`SquareSampleCoordinates` constructs separable primitive parameters and
+rational coordinates; every regular system root is recovered with all
+coordinate denominators nonzero. `SquareSampleParameters` proves a bijection
+between accepted parameters and the regular system roots. A binary parameter
+degree bound gives a unary label width. The equation and Jacobian filters,
+regular-root count, streamed signatures, sparse records, rank-selected bases,
+hash labels, enumeration, and indexed sign routines now use this interface.
+They do not assume that every system root is regular or that the entire
+root set is finite.
+
+`SquareSampleVertices` has native fixed-width validity and a bijection with
+regular system roots. `SquareSamplePolynomialTest` clears rational-coordinate
+denominators by even powers, giving native signs of implicit multivariate
+polynomials at those same roots. Its native coefficient access and binary
+budgets are charged. In particular, tests of actual system rows derive their
+coefficient reader from `SquareSampleInput.Access` and have sign zero at every
+valid sample.
+
+`FlatAffineSampleVertices` removes the unique zero dummy coordinate. Its
+vertex labels cover exactly the regular roots of the entire original affine
+tower; both their native count and existence decision require only the
+original source and direction/level access. Generic critical-stage regularity,
+selection of recursive levels and directions, singular slices, and
+component-preserving graph edges remain open.
 
 The full effective recursion for arbitrary Boolean, singular, and noncompact
 inputs, its component preservation, and its polynomial bounds remain open.

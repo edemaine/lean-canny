@@ -10163,3 +10163,92 @@ example (F : FlatAffineFullSourceTower.Inputs) (W : List Bool → ℕ)
 
 end
 end FlatAffineCompleteRegression
+
+
+namespace AffineSquareSamplingRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open scoped Classical
+noncomputable section
+
+-- Changing source context preserves noncanonical row, width, rank, and modulus words.
+#guard SquareSampleInput.mapSource (fun u => u ++ [true])
+    (SquareSampleInput.query [false] [false, true, false] [true, false]
+      [false, false, true, false] [false, false]) ==
+  SquareSampleInput.query [false, true] [false, true, false] [true, false]
+    [false, false, true, false] [false, false]
+
+-- All raw indices still select the sole dummy coordinate at depth zero.
+example (F : FlatAffineFullSourceTower.Inputs) (u raw : List Bool) (hd : F.depth u = 0) :
+    (SquareSampleSource.selected (FlatAffineSampleInput.input F) (pair u raw)).val = 0 := by
+  simp [SquareSampleSource.selected, SquareSampleInput.selected, FlatAffineSampleInput.input,
+    FlatAffineFullSourcePositive.count, FlatAffineFullSourceTower.count, pairFst_pair, hd]
+
+-- The sampler's checked coordinate source is the actual affine annihilator.
+example (F : FlatAffineFullSourceTower.Inputs) (u : List Bool)
+    (i : Fin (FlatAffineFullSourcePositive.count F u)) :
+    ((SquareSampleSource.family (FlatAffineSampleInput.input F)).polynomial
+      (pair (SquareSampleSource.prepare (FlatAffineSampleInput.input F) u) (BinaryNatCode.encode i.val))) =
+        FlatAffineFullSourcePositiveCoordinate.polynomial F u i :=
+  SquareSampleSource.prepared_coordinate (FlatAffineSampleInput.input F) u i
+
+-- The equation filter enforces the dummy row as well as every ancestral row.
+example (F : FlatAffineFullSourceTower.Inputs) (u : List Bool) (theta : ℝ)
+    (ht : (SquareSampleCoordinates.parameter (FlatAffineSampleInput.input F) u).eval₂ (Int.castRingHom ℝ) theta = 0)
+    (he : ∀ i : Fin (FlatAffineFullSourcePositive.count F u),
+      (SquareSampleFilters.polynomial (FlatAffineSampleInput.input F) (pair u (BinaryNatCode.encode i.val))).eval₂
+        (Int.castRingHom ℝ) theta = 0) :
+    SquareSampleParameters.decode (FlatAffineSampleInput.input F) u theta
+      (Fin.last (FlatAffineFullSourceTower.count F u)) = 0 := by
+  have hv := (SquareSampleFilters.valid_iff_filters (FlatAffineSampleInput.input F) u theta).mpr ⟨ht, he⟩
+  exact ((FlatAffineFullSourcePositive.roots_iff (Int.castRingHom ℝ) F u _).mp hv.2).2
+
+-- Removing padding retains every original ancestral coordinate.
+example (F : FlatAffineFullSourceTower.Inputs) (u : List Bool)
+    (theta : SquareSampleParameters.RegularParameters (FlatAffineSampleInput.input F) u)
+    (i : Fin (FlatAffineFullSourceTower.count F u)) :
+    ((FlatAffineSampleVertices.originalEquiv F u) theta).val.val i =
+      SquareSampleParameters.decode (FlatAffineSampleInput.input F) u theta.val i.castSucc := rfl
+
+-- A singular parameter root cannot enter the regular sample set.
+example (F : SquareSampleInput.Inputs) (u : List Bool) (theta : ℝ)
+    (ht : (SquareSampleCoordinates.parameter F u).eval₂ (Int.castRingHom ℝ) theta = 0)
+    (hj : (SquareSampleRegularFilter.polynomial F u).eval₂ (Int.castRingHom ℝ) theta = 0) :
+    ¬ (fderiv ℝ (fun z => fun i => (F.system u i).eval₂ (Int.castRingHom ℝ) z)
+      (SquareSampleParameters.decode F u theta)).IsInvertible := by
+  intro hr
+  exact ((SquareSampleRegularFilter.nonzero_iff F u theta ht).mpr hr) hj
+
+-- Invalid ordinals cannot pass a sign query, including its zero-sign branch.
+example (F : FlatAffineFullSourceTower.Inputs) (T : SquareSampleTestMoments.Test) (u : List Bool) :
+    pair u (BinaryNatCode.encode (FlatAffineSampleVertices.count F u)) ∉
+      SquareSampleTestSign.ordinalLanguage (FlatAffineSampleInput.input F) T 0 := by
+  apply SquareSampleTestSign.ordinal_language_invalid
+  simp only [pairFst_pair, pairSnd_pair, MacaulayBits.fromBits_encode, FlatAffineSampleVertices.count, le_refl]
+
+-- Fixed-width vertex validity rejects an extra high zero bit.
+example (F : FlatAffineFullSourceTower.Inputs) (u w : List Bool) (h : FlatAffineSampleVertices.Valid F u w) :
+    ¬ FlatAffineSampleVertices.Valid F u (w ++ [false]) := by
+  intro hv
+  have hw := h.1
+  have hx := hv.1
+  simp only [List.length_append, List.length_singleton] at hx
+  omega
+
+-- Vertex labels cover every regular original root with no extra padding root.
+example (F : FlatAffineFullSourceTower.Inputs) (u : List Bool) (z : FlatAffineSampleVertices.OriginalCandidates F u) :
+    ∃! w : {w : List Bool // FlatAffineSampleVertices.Valid F u w},
+      FlatAffineSampleVertices.vertexEquiv F u w = z :=
+by
+  refine ⟨(FlatAffineSampleVertices.vertexEquiv F u).symm z, Equiv.apply_symm_apply _ _, ?_⟩
+  intro w hw
+  exact (FlatAffineSampleVertices.vertexEquiv F u).injective (hw.trans (Equiv.apply_symm_apply _ _).symm)
+
+-- Actual system-row tests use native row access and vanish at every valid vertex.
+example (F : SquareSampleInput.Inputs) (row : (u : List Bool) → Fin (F.count u))
+    (u w : List Bool) (hw : SquareSampleVertices.Valid F u w) :
+    SquareSamplePolynomialTest.value F (SquareSamplePolynomialTest.rowTest F row) (pair u w) =
+      InfinitesimalSign.encode 0 :=
+  SquareSamplePolynomialTest.row_value F row u w hw
+
+end
+end AffineSquareSamplingRegression

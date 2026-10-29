@@ -501,7 +501,11 @@ The checked ingredients are:
   readers now supply complete indexed row dispatch, including the dummy row
   at zero depth. Native homogenized rows and coordinate annihilators for the
   entire affine tower are constructed too, with derived uniform budgets.
-  Connecting these equations to sample enumeration remains required.
+  A reusable square-system sampler now feeds these exact equations into the
+  balanced primitive construction, equation and Jacobian filters, regular-root
+  counting, and short native labels. Removing the zero dummy gives a bijection
+  with regular roots of the entire original affine tower. Native multivariate
+  polynomial sign tests retain the same selected root and charge their readers.
   Generic stage regularity and the recursive component cover, including
   singular slices, remain open.
   Bivariate fibers over actual samples now have short ordered root labels

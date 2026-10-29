@@ -531,3 +531,20 @@ example (S : LeanCanny.ETR.TubeNativeAnnihilator.Source) :
     {c | ∃ z, LeanCanny.ETR.TubeLevelPacket.CompiledSample
       (S.packet c) (S.mask c) (S.projection c) (S.level c) z ∧ S.Simple c z} ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.ETR.TubeSimpleSampling.compiledSimpleSampleLanguage_mem_PSPACE S
+
+/-! Affine sample vertices and regular-root existence use the original source
+and charged direction/level access, with no new coefficient oracle. -/
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access) :
+    LeanCanny.Encoding.FlatAffineSampleVertices.language F ∈ Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.Encoding.FlatAffineSampleVertices.mem_PSPACE h
+
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access) :
+    {u | Nonempty (LeanCanny.Encoding.FlatAffineSampleVertices.OriginalCandidates F u)} ∈
+      Cslib.Complexity.PSPACE encBits :=
+  LeanCanny.Encoding.FlatAffineSampleVertices.existence_mem_PSPACE h
+
+example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access) :
+    ComputableTidilyInPolySpace
+      (fun u => LeanCanny.BinaryNatCode.encode (LeanCanny.Encoding.FlatAffineSampleVertices.count F u))
+        encBits encBits :=
+  (LeanCanny.Encoding.FlatAffineSampleVertices.count_evaluator h).computable
