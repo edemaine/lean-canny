@@ -155,6 +155,7 @@ import LeanCanny.Encoding.FlatAffineFullSourcePositiveCoordinateCoefficient
 import LeanCanny.Encoding.FlatAffineFullSourcePositiveContext
 import LeanCanny.Encoding.FlatAffineSampleExtension
 import LeanCanny.Algebra.FlatAffineRegularSpecialization
+import LeanCanny.Algebra.FermatAffineConeFlag
 import LeanCanny.Geometry.FlatAffineComponentSampling
 import LeanCanny.Encoding.FlatFullSourceSampleDerivativeSigns
 import LeanCanny.Algebra.FixedWidthLinearCoefficientSpace
@@ -183,8 +184,12 @@ retained. Under the explicit compact-slice and stage-regularity hypotheses,
 every slice component reaches such a child label. A generic-direction
 Jacobian proof and guarded specialization now supply qualitative integer
 heights for fixed regular affine slices, avoiding the old height span.
-Polynomial input-size direction bounds, singular slices, and the full
-recursive component cover remain open.
+Homogeneous leading cones now admit bounded integer directions preserving
+transverse affine-height flags over every coefficient-field extension. A
+multiplier-power system excludes nonzero roots at infinity; Macaulay minors
+give polynomial bit bounds. Pure-power leading forms supply the initial
+empty flag. Finite-level affine bad-critical direction bounds, singular
+slices, and the full recursive component cover remain open.
 
 Checked input encodings, finite closed path covers, frontier incidence, and native polynomial-space
 implicit-graph algorithms. Canonical input recognition is polynomial time;

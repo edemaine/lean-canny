@@ -10375,3 +10375,50 @@ example (u : Fin 1 → ℕ)
 
 end
 end GenericAffineDirectionRegression
+
+
+
+namespace AffineConeDirectionRegression
+open LeanCanny LeanCanny.Algebra MvPolynomial
+open scoped Classical BigOperators
+noncomputable section
+
+-- Degree four and dimension two give a concrete bound, with no coefficient budget.
+#guard AffineConeBoundedDirection.binaryWidth 2 4 == 46
+
+example : ∃ v : Fin 2 → ℕ, (∀ i, v i < 2 ^ 46) ∧ v ≠ 0 := by
+  obtain ⟨v, hv, hflag⟩ := FermatAffineConeFlag.exists_first_bounded (n := 2) (1 : ℚ)
+    one_ne_zero 4 (by decide) (fun _ _ => 0) 0
+  have hwidth : AffineConeBoundedDirection.binaryWidth 2 4 = 46 := by decide
+  rw [hwidth] at hv
+  refine ⟨v, hv, ?_⟩
+  intro he
+  have H := (hflag ℚ).1 (Pi.single 0 1)
+    (fun r hr => by
+      have hn : r ≠ 0 := by simpa only [Finset.mem_singleton] using hr
+      simp only [Pi.single_apply, hn, ite_false])
+    (fun i => by simp [he]) 0
+  norm_num [Pi.single_apply] at H
+
+-- A zero objective leaves a nonzero pure-multiplier root. The projective
+-- certificate must exclude this case, even though the ambient point is zero.
+example : ∃ z : FlatAffineCriticalStage.Variables 1 → ℚ, z ≠ 0 ∧
+    ∀ j, (AffineCriticalConeSystem.rows (FermatAffineConeFlag.form (1 : ℚ) 4) 4 ∅
+      (fun _ _ => 0) j).eval₂ (eval (fun _ => 0)) z = 0 := by
+  let z : FlatAffineCriticalStage.Variables 1 → ℚ :=
+    Sum.elim (fun _ => 0) (Fin.cases 1 (fun _ => 0))
+  refine ⟨z, ?_, ?_⟩
+  · intro he
+    have H := congrFun he (Sum.inr 0)
+    norm_num [z] at H
+  · apply (AffineCriticalConeSystem.roots_iff (eval (fun _ => (0 : ℚ)))
+      (by ext k; simp) (FermatAffineConeFlag.form 1 4) 4 ∅ (fun _ _ => 0) z).mpr
+    refine ⟨?_, by simp, ?_, ?_⟩
+    · simp [z, Function.comp_def, FermatAffineConeFlag.form]
+    · intro i
+      simp [z, Function.comp_def, FermatAffineConeFlag.pderiv_form]
+    · intro r _
+      simp [z]
+
+end
+end AffineConeDirectionRegression

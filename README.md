@@ -514,9 +514,13 @@ The checked ingredients are:
   than ambient coordinates. For a fixed affine slice, generic objective
   derivations and polynomial regularity guards now produce an integer height
   outside the old span whose regular-slice critical roots are nonsingular.
-  This direction allowance is qualitative. Polynomial input-size direction
-  bounds and the full recursive component cover, including singular slices,
-  remain open.
+  The allowance for these finite-level critical roots remains qualitative.
+  For homogeneous leading cones, a multiplier-power system now gives integer
+  normals using at most (2*n+1)*(2*n+size(D)+2)+1 bits per coordinate. These
+  normals extend transverse cone flags over every coefficient-field extension;
+  pure-power leading forms supply the empty flag. Bounds for finite-level
+  affine critical singularities and the full recursive component cover,
+  including singular slices, remain open.
   Bivariate fibers over actual samples now have short ordered root labels
   with native validity. Their separating derivative signatures have short
   spanning records; native sparse moments and Gram entries retain the same
