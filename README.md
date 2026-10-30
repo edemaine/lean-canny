@@ -861,6 +861,10 @@ The checked ingredients are:
   use the endpoint's own ancestor. On an actual branch endpoint, its computed
   word equals the interior descriptor's word, including at singular limits;
   the corresponding native marker filter accepts that same ancestor.
+  The coarsening and slab regularity arguments now allow independently
+  scaled coordinate normals. Actual doubled midpoint records supply their
+  own independence proofs, complete singular component covers, and native
+  whole-slice regularity and singularity decisions.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

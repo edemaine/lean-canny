@@ -75,6 +75,9 @@ import LeanCanny.Encoding.FlatAffineLastHeightRow
 import LeanCanny.Encoding.FlatAffineBranchOriginalAncestorMatch
 import LeanCanny.Connectivity.FlatAffineSlabComputedParents
 import LeanCanny.Connectivity.FlatAffineSlabEndpointPrefixes
+import LeanCanny.Connectivity.FlatAffineScaledSlabSliceRegularity
+import LeanCanny.Connectivity.CoordinateDoubleAffineComponentCover
+import LeanCanny.Encoding.CoordinateDoubleAffineSliceRegularity
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -430,6 +433,12 @@ use the endpoint copy's own prefix. For actual constructed branch endpoints,
 that computed word equals the interior descriptor's ancestor word, including
 at singular limits. The corresponding endpoint marker passes the native
 ancestor filter with that same word.
+Coarsening and the zero-objective constancy argument now allow a distinct
+nonzero integer scale for each coordinate normal. Thus actual scaled slices
+are regular throughout retained open slabs as well. The native doubled
+midpoint records now supply independent normals and objectives, complete
+component covers including singular points, and native whole-slice
+singularity and regularity decisions.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

@@ -53,6 +53,9 @@ import LeanCanny.Encoding.FlatAffineLastHeightRow
 import LeanCanny.Encoding.FlatAffineBranchOriginalAncestorMatch
 import LeanCanny.Connectivity.FlatAffineSlabComputedParents
 import LeanCanny.Connectivity.FlatAffineSlabEndpointPrefixes
+import LeanCanny.Connectivity.FlatAffineScaledSlabSliceRegularity
+import LeanCanny.Connectivity.CoordinateDoubleAffineComponentCover
+import LeanCanny.Encoding.CoordinateDoubleAffineSliceRegularity
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -770,6 +773,55 @@ example (P : BoundedFullWriter.Readers) (depth objective : List Bool → ℕ)
     (CoordinateAffineSliceControls.normal P depth objective level _ _) hactive
     (CoordinateAffineSliceControls.objective_independent P depth objective level _ _) x
   exact ⟨D⟩
+
+-- Doubled midpoint rows retain singular components and have native global
+-- regularity decisions from the original readers alone.
+example : FlatAffineSliceRegularity.regularLanguage
+    (CoordinateDoubleAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => []))
+    (CoordinateDoubleAffineSliceRegularity.cone F.source F.depth (fun _ => 100) (fun _ => [])) ∈ PSPACE :=
+  CoordinateDoubleAffineSliceRegularity.regular_mem_PSPACE access.source access.depth
+    (UnaryFn.const 100) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example (u : List Bool) (x : FlatAffinePowerSampleInput.OriginalRoots
+    (CoordinateDoubleAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => [])) u) :
+    Finite (ConnectedComponents (FlatAffineCompleteComponentSamples.slice
+      (CoordinateDoubleAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => [])) u x)) :=
+  (LeanCanny.Connectivity.CoordinateDoubleAffineComponentCover.finite_components
+    F.source F.depth (fun _ => 100) (fun _ => []) u x).1
+
+-- Slab regularity also applies to the actual doubled records.
+example (P : BoundedFullWriter.Readers) (depth objective : List Bool → ℕ)
+    (level : List Bool → List Bool)
+    (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next (CoordinateDoubleAffinePrefix.inputs P depth objective level)))
+    (height : (u : List Bool) → Fin (FlatAffineFullSourcePositive.count
+      (FlatAffineCompleteRootStages.next (CoordinateDoubleAffinePrefix.inputs P depth objective level)) u))
+    (c : List Bool)
+    (B : LeanCanny.Connectivity.FlatAffineSlabGraphBranches.Family
+      (FlatAffineCompleteRootStages.next (CoordinateDoubleAffinePrefix.inputs P depth objective level)) C height c)
+    (hc : c ∈ FlatAffineSlabGraphContext.language
+      (FlatAffineCompleteRootStages.next (CoordinateDoubleAffinePrefix.inputs P depth objective level)) C height)
+    (h : Fin (P.dim (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) + 4))
+    (hheight : height (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) =
+      FlatAffinePowerSingularHeightCurves.rowIndex (CoordinateDoubleAffinePrefix.inputs P depth objective level)
+        (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) h)
+    (hactive : h ∈ FlatAffineFullSourceTower.free (CoordinateDoubleAffinePrefix.inputs P depth objective level)
+      (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) (depth (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c)))
+    (x : FlatAffinePowerSampleInput.OriginalRoots (CoordinateDoubleAffinePrefix.inputs P depth objective level)
+      (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c))
+    (t : Set.Ioo (FlatAffineSlabGraphContext.endpointValue _ C height false c)
+      (FlatAffineSlabGraphContext.endpointValue _ C height true c))
+    (y : Fin (P.dim (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) + 4) → ℝ)
+    (hy : y ∈ FlatAffineShiftedSlice.slice (CoordinateDoubleAffinePrefix.inputs P depth objective level)
+      (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) x h t.val) :
+    Function.Surjective (LeanCanny.Geometry.FlatAffineCriticalExtremum.derivative (Int.castRingHom ℝ)
+      (BoundedFullCriticalSamples.polynomial P (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c))
+      (FlatAffineFullSourceTower.free (CoordinateDoubleAffinePrefix.inputs P depth objective level)
+        (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) (depth (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c)))
+      (FlatAffineFullSourceTower.direction (CoordinateDoubleAffinePrefix.inputs P depth objective level)
+        (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) (depth (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c))) y) :=
+  B.shifted_slice_regular_scaled (CoordinateDoubleAffinePrefix.inputs P depth objective level) C height c hc h hheight (fun _ => 2) (fun _ => by decide)
+    (CoordinateDoubleAffinePrefix.normal P depth objective level _ _) hactive x t y hy
+
 
 end
 end ActualHeightReaderRegression
