@@ -42,6 +42,7 @@ import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
+import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -597,6 +598,30 @@ example : (FlatAffineShiftPrefixInput.input F cone selected).Access :=
 
 example (u : List Bool) : FlatAffineShiftPrefixInput.depth F selected u ≤ F.depth u :=
   FlatAffineShiftPrefixInput.depth_le F selected u
+
+-- Complete joint samples and short branch descriptors compute exact frozen
+-- ancestor labels through the original native coefficient programs.
+example : (FlatAffineJointPrefixChoice.target F cone selected).Access :=
+  FlatAffineJointPrefixChoice.targetAccess access cone selected selected_unary
+
+example : SpaceFunction (FlatAffineJointPrefixChoice.value F cone selected) :=
+  FlatAffineJointPrefixChoice.evaluator access cone selected selected_unary
+
+example : SpaceFunction (FlatAffineBranchPrefixChoice.value F cone selected) :=
+  FlatAffineBranchPrefixChoice.evaluator access cone selected selected_unary
+
+example (G : Inputs) (C : FlatAffinePowerPositive.ConeCertificate G)
+    (height : (u : List Bool) → Fin (FlatAffineFullSourcePositive.count G u)) (c : List Bool)
+    [Fintype (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.Index G C height c)]
+    [LinearOrder (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.Index G C height c)]
+    (B : LeanCanny.Connectivity.FlatAffineSlabGraphBranches.Family G C height c)
+    (hc : c ∈ FlatAffineSlabGraphContext.language G C height)
+    (hold : (height (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c)).val <
+      FlatAffineFullSourceTower.count G (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c))
+    (j : LeanCanny.Connectivity.FlatAffineSlabGraphArcs.Index G C height c) :
+    FlatAffineBranchPrefixChoice.value G C height (B.sampleQuery false j) =
+      FlatAffineBranchPrefixChoice.value G C height (B.sampleQuery true j) :=
+  B.native_prefix_same hc hold j
 
 end
 end ActualHeightReaderRegression

@@ -818,6 +818,10 @@ The checked ingredients are:
   Every constructed critical branch keeps the same earlier blocks over its
   entire closed slab, including singular endpoint limits. Its two retained
   joint sample references therefore have exactly the same frozen ancestor.
+  Native projection search now computes that complete ancestor label from
+  the joint sample or its short branch descriptor. Its decoded point is
+  exactly the earlier blocks of the branch, and the two retained descriptor
+  programs return identical ancestor words despite auxiliary witness choices.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

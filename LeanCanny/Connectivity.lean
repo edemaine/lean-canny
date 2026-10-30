@@ -62,6 +62,7 @@ import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
+import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -369,6 +370,10 @@ The varied row's stage now computes a native complete sampler for its frozen
 prefix. Shifted roots project to that original prefix. Every constructed slab
 branch retains precisely the same earlier blocks throughout the closed slab,
 including singular endpoint limits and both retained joint sample references.
+Native projection search now computes the complete frozen ancestor label from
+a validated joint sample or a short branch descriptor. The decoded point is
+the exact earlier blocks of the branch. The two descriptor programs return
+identical complete ancestor words, independently of auxiliary witness choices.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint
