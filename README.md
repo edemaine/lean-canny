@@ -598,8 +598,10 @@ The checked ingredients are:
   exceptional parameters. Singleton endpoint roots and the constructed arcs
   give finite graphs of entire closed affine-height slabs, preserving paths
   and connectedness. Incidence reduces to vertex and arc endpoint equality,
-  including isolated endpoint roots. Native value-certificate
-  readers and effective recursive branch records remain required. Polynomial shifts of
+  including isolated endpoint roots. A native reciprocal-Gram value reader now
+  uses binary Macaulay levels and charges the original homogeneous-row readers.
+  Composition from the recursive coordinate grids and effective branch records
+  remain required. Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.
   Bivariate fibers over actual samples now have short ordered root labels
@@ -860,6 +862,7 @@ lake env lean scripts/CheckAffineShiftArcs.lean
 lake env lean scripts/CheckIntegerGridValues.lean
 lake env lean scripts/CheckIntegerGridArcs.lean
 lake env lean scripts/CheckFiniteFiberSlabs.lean
+lake env lean scripts/CheckBinaryValueReaders.lean
 ```
 
 The core import check enforces the separation from the optional tube route.

@@ -91,7 +91,10 @@ def isPadding (L : Layout) (q : List Bool) : Prop :=
     Nat.fromBitsLE (idx q) - Nat.fromBitsLE (sourceCut L (ctx q)) = Nat.fromBitsLE (shift q)
 instance (L : Layout) : DecidablePred (isPadding L) := fun _ => inferInstanceAs (Decidable (_ ∧ _))
 lemma isPadding_FP {L : Layout} (h : L.Controls) : FPPred (isPadding L) := by
-  have ha := FPPred.eq ((total_unary h).comp (rawPaddingInput_FP h)) (h.level.comp ctx_FP)
+  have ht : BinaryFn (fun q => total L (rawPaddingInput L q)) :=
+    (total_binary h).comp (rawPaddingInput_FP h)
+  have hl : BinaryFn (fun q => L.level (ctx q)) := h.level.comp ctx_FP
+  have ha := ht.eq hl
   have hc := mem_FP_comp (f := ctx) (g := sourceCut L) ctx_FP (sourceCut_FP h)
   have hd := mem_FP_comp (mem_FP_pair idx_FP hc) BinaryNat.sub_mem_FP
   have hb := BinaryNat.eq_fppred hd shift_FP

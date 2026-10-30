@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.MacaulayEntryCorrect
-public import LeanCanny.Computation.PolyTimeBinaryNat
+public import LeanCanny.Computation.PolyTimeBinaryRange
 
 /-! # Native selection of arbitrary monomial-multiple coefficients -/
 
@@ -24,7 +24,7 @@ structure Layout where
 structure Layout.Controls (L : Layout) : Prop where
   arity : UnaryFn L.arity
   width : UnaryFn L.width
-  level : UnaryFn L.level
+  level : BinaryFn L.level
   degree : BinaryFn (fun q => L.degree (pairFst q) (Nat.fromBitsLE (pairSnd q)))
 
 def ctx (q : List Bool) := pairFst q
@@ -96,14 +96,20 @@ lemma differenceWord_FP {L : Layout} (h : L.Controls) : differenceWord L ∈ FP 
 def total (L : Layout) (q : List Bool) : ℕ :=
   ∑ i ∈ Finset.range (L.arity (ctx q)), min (shiftAt L q i) (L.level (ctx q) + 1)
 
-lemma total_unary {L : Layout} (h : L.Controls) : UnaryFn (total L) := by
+/-- Binary level allowances admit exponentially large polynomial degrees.
+Only the number of spatial coordinates is traversed in unary. -/
+lemma total_binary {L : Layout} (h : L.Controls) : BinaryFn (total L) := by
   have hr := mem_FP_comp MacaulayBits.loopQuery_mem_FP (shiftRead_FP h)
-  have hc := (((h.level.comp ctx_FP).add (UnaryFn.const 1))).comp pairFst_mem_FP
-  have hs := (h.arity.comp ctx_FP).sum (UnaryFn.fromBitsLE_min hr hc)
+  have he := BinaryFn.fromBits hr
+  have hc : BinaryFn (fun q => L.level (ctx (pairFst q)) + 1) :=
+    ((h.level.add (BinaryFn.const 1)).comp ctx_FP).comp pairFst_mem_FP
+  have hm := BinaryFn.ite (he.le hc) he hc
+  have hn : UnaryFn (fun q => L.arity (ctx q)) := h.arity.comp ctx_FP
+  have hs := BinaryFn.sum hn hm
   refine hs.of_eq (fun q => ?_)
   simp only [MacaulayBits.loopQuery, Function.comp_apply, pairFst_pair, pairSnd_pair,
     List.length_replicate, shiftRead, FixedWidthQuery.read_packet, MacaulayBits.fromBits_encode,
-    total, shiftAt]
+    total, shiftAt, Nat.min_def]
 
 def degreeCode (L : Layout) (q : List Bool) :=
   BinaryNatCode.encode (L.degree (ctx q) (Nat.fromBitsLE (idx q)))
@@ -118,8 +124,8 @@ def active (L : Layout) (q : List Bool) : Prop :=
 instance (L : Layout) : DecidablePred (active L) := fun _ => inferInstanceAs (Decidable (_ = _))
 
 lemma active_FP {L : Layout} (h : L.Controls) : FPPred (active L) := by
-  have hs := mem_FP_comp (mem_FP_pair (bits_mem_FP (total_unary h)) (degreeCode_FP h)) BinaryNat.add_mem_FP
-  have hl := bits_mem_FP (h.level.comp ctx_FP)
+  have hs := mem_FP_comp (mem_FP_pair ((total_binary h).bits_mem_FP) (degreeCode_FP h)) BinaryNat.add_mem_FP
+  have hl := mem_FP_comp ctx_FP h.level.bits_mem_FP
   exact (BinaryNat.eq_fppred hs hl).of_iff (fun q => by
     simp only [Function.comp_apply, BinaryNat.add_pair, Nat.fromBitsLE_bits,
       degreeCode, BinaryNatCode.encode, active])

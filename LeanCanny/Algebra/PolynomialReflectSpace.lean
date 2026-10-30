@@ -26,7 +26,7 @@ attribute [local irreducible] BinaryNat.add BinaryNat.sub
 noncomputable def polynomial (p : List Bool → Polynomial ℤ) (D : List Bool → ℕ) (c : List Bool) : Polynomial ℤ :=
   Polynomial.X * (p c).reflect (D c)
 
-lemma coefficient_eq (p : Polynomial ℤ) (D : ℕ) (hp : p.natDegree ≤ D) (j : ℕ) :
+lemma coefficient_eq {R : Type*} [Semiring R] (p : Polynomial R) (D : ℕ) (hp : p.natDegree ≤ D) (j : ℕ) :
     (Polynomial.X * p.reflect D).coeff j = if 0 < j ∧ j ≤ D + 1 then p.coeff (D + 1 - j) else 0 := by
   cases j with
   | zero => simp

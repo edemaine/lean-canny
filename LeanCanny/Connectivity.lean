@@ -10,6 +10,7 @@ import LeanCanny.Connectivity.PolynomialGridArcs
 import LeanCanny.Geometry.PolynomialCoordinateProper
 import LeanCanny.Connectivity.AffineShiftArcs
 import LeanCanny.Connectivity.AffineShiftSlab
+import LeanCanny.Algebra.ProjectiveValueGramSpace
 import LeanCanny.Geometry.IntegerGridValueCertificate
 import LeanCanny.Algebra.AffineConstantParameterShift
 import LeanCanny.Connectivity.SlabCover
@@ -303,8 +304,10 @@ this explicit polynomial. Their original endpoint fibers are finite even at
 exceptional parameters. Singleton endpoint roots and the constructed arcs
 give finite graphs of entire closed affine-height slabs, preserving paths and
 connectedness. Incidence reduces to vertex equality and arc endpoint equality,
-including isolated endpoint roots. Native value-certificate
-readers and effective recursive branch records remain required. Polynomial shifts of row
+including isolated endpoint roots. A native reciprocal-Gram value reader now
+uses binary Macaulay levels and charges the original homogeneous-row readers.
+Composition from the recursive coordinate grids and effective branch records
+remain required. Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.
 

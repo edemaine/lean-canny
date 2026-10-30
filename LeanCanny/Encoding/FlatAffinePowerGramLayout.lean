@@ -39,7 +39,7 @@ theorem controls {F : Inputs} (h : F.Access) : (layout F).Controls := by
   have he : BinaryFn (fun q => FlatAffinePowerPositive.degree F (pairFst q)
       (tail F (pairFst q) (Nat.fromBitsLE (pairSnd q)))) := BinaryFn.ofUnary hd
   refine ⟨(FlatAffineFullSourcePositive.count_unary h).add (UnaryFn.const 1),
-    FlatAffinePowerControls.width_unary h, FlatAffinePowerControls.level_unary h, ?_⟩
+    FlatAffinePowerControls.width_unary h, BinaryFn.ofUnary (FlatAffinePowerControls.level_unary h), ?_⟩
   exact (BinaryFn.ite ((BinaryFn.fromBits pairSnd_mem_FP).eq (BinaryFn.const 0)) (BinaryFn.const 1) he).of_eq (fun _ => rfl)
 
 lemma degrees_eq (F : Inputs) (u : List Bool) :

@@ -31,7 +31,7 @@ lemma controls {input : List Bool → List Bool} (hi : input ∈ FP) : (layout i
   have heq : FPPred (fun q => Nat.fromBitsLE (pairSnd q) = 0) :=
     (BinaryNat.le_fppred pairSnd_mem_FP (constFn_mem_FP [])).of_iff (fun _ => by change _ ≤ 0 ↔ _; omega)
   refine ⟨hn.add (UnaryFn.const 1), CoerciveHomogeneousRepack.width_unary.comp hi,
-    (hn.mul ((UnaryFn.const 2).mul hd)).add (UnaryFn.const 1), ?_⟩
+    BinaryFn.ofUnary ((hn.mul ((UnaryFn.const 2).mul hd)).add (UnaryFn.const 1)), ?_⟩
   apply BinaryFn.of_bits
   exact bits_mem_FP (UnaryFn.ite heq (UnaryFn.const 1)
     ((((UnaryFn.const 2).mul hd).add (UnaryFn.const 1)).comp pairFst_mem_FP))
