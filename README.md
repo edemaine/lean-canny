@@ -768,6 +768,11 @@ The checked ingredients are:
   algorithm takes only the prepared frame and gap index and decides the
   actual original root set over the closure of that gap. Endpoint, sample,
   branch, and marker labels are computed internally.
+  Short branch descriptors also compute native ancestry names for the actual
+  interior sample points. Their rational coordinates recover precisely the
+  constructed curve at the requested sample, independently of auxiliary tuple
+  choices. Native child queries retain this ancestry and cover regular child
+  roots over those points, without requiring the parent point to be regular.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

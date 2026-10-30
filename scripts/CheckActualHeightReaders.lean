@@ -32,6 +32,7 @@ import LeanCanny.Encoding.FlatAffineEndpointBranchLabelComplete
 import LeanCanny.Connectivity.FlatAffineSlabGraphBranchLabels
 import LeanCanny.Connectivity.FlatAffineSlabConnectivity
 import LeanCanny.Connectivity.FlatAffineGapConnectivity
+import LeanCanny.Connectivity.FlatAffineSlabBranchParents
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -437,6 +438,25 @@ example (s : List Bool) (hs : FlatAffineEndpointFiniteFrame.Valid F selected s)
     pair s (BinaryNatCode.encode k.val) ∈ LeanCanny.Connectivity.FlatAffineGapConnectivity.language F cone selected ↔
       IsPreconnected (LeanCanny.Connectivity.FlatAffineGapConnectivity.solutionSetAt F cone selected s (BinaryNatCode.encode k.val)) :=
   LeanCanny.Connectivity.FlatAffineGapConnectivity.bounded_gap_correct F cone selected s hs k h0 hk
+
+-- Interior branch descriptors also compute actual rational parent names for
+-- recursive sample-fiber queries, with native ancestry-aware child routines.
+example : NamedRationalParents.Access (FlatAffineCurrentNamedParents.source F cone selected) :=
+  FlatAffineCurrentNamedParents.access access cone selected selected_unary
+
+example : SpaceFunction (FlatAffineBranchChoice.value F cone selected) :=
+  FlatAffineBranchChoice.evaluator access cone selected selected_unary
+
+example : SpaceFunction (FlatAffineBranchChoice.parentRecord F cone selected) :=
+  FlatAffineBranchChoice.parentEvaluator access cone selected selected_unary
+
+example (C : FlatAffineEndpointChildSamples.Controls) (A : C.Access) :
+    NamedParentChildSelection.language (FlatAffineBranchChildSamples.inputs F cone selected C) ∈ PSPACE :=
+  FlatAffineBranchChildSamples.mem_PSPACE access cone selected selected_unary A
+
+example (C : FlatAffineEndpointChildSamples.Controls) (A : C.Access) :
+    NamedRationalParents.Access (NamedParentChildNext.next (FlatAffineBranchChildSamples.inputs F cone selected C)) :=
+  FlatAffineBranchChildSamples.nextAccess access cone selected selected_unary A
 
 end
 end ActualHeightReaderRegression

@@ -51,6 +51,7 @@ import LeanCanny.Encoding.FlatAffineEndpointBranchLabelComplete
 import LeanCanny.Connectivity.FlatAffineSlabGraphBranchLabels
 import LeanCanny.Connectivity.FlatAffineSlabConnectivity
 import LeanCanny.Connectivity.FlatAffineGapConnectivity
+import LeanCanny.Connectivity.FlatAffineSlabBranchParents
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -475,6 +476,11 @@ Every bounded original gap has an accepted context. A native bounded search
 computes its endpoint and sample labels at a derived polynomial width. The
 resulting algorithm takes only the prepared frame and gap index and decides
 connectivity of the actual original root set over that gap's closure.
+Short branch descriptors also compute native ancestry names for their actual
+interior sample points. Rational coordinate recovery selects the current copy,
+and native height and rank identities identify it with the constructed curve.
+The existing ancestry-aware child routines now apply at these points as well
+as endpoint markers, retaining every regular child with its original parent.
 Constructing the full recursive component graph remains open.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
