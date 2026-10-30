@@ -55,6 +55,7 @@ import LeanCanny.Connectivity.FlatAffineSlabBranchParents
 import LeanCanny.Connectivity.FlatAffineSlabCoordinateSignReader
 import LeanCanny.Encoding.FlatAffineSingularSliceSamples
 import LeanCanny.Encoding.FlatAffineSingularChildLabels
+import LeanCanny.Encoding.FlatAffineCompactComponentSamples
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -332,8 +333,12 @@ towers now carry native exact height and midpoint records. Their actual row
 equations copy ancestral coordinates or place a current coordinate strictly
 between ordered ancestral bounds. Complete original roots project to all prefixes and append arbitrary frozen-stage roots. Their
 labels sample compact regular slice components without critical-stage Jacobian
-conditions. Singular constraint points give zero-objective-multiplier stage
-roots when the height normals are independent. Symbolic squarefree coordinate
+conditions. For independent affine normals, every connected component of a
+compact slice, including singular components, now contains an ancestry-checked
+native critical sample. The number of these components has the native
+next-stage root bound. At a component maximum, regularity gives normalized
+multipliers; singularity gives zero-objective multipliers. No path connectivity
+of singular components is inferred. Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint
 roots come from the original equations. Constructed value annihilators make

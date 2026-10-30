@@ -787,6 +787,11 @@ The checked ingredients are:
   A native zero-objective-multiplier filter retains every singular slice point
   with that checked ancestry. Compact regular slices have joined accepted
   samples in every component; no regularity of the full critical root is needed.
+  For independent affine normals, complete critical samples now meet every
+  connected component of any compact slice, including singular components.
+  A maximum on each component is either a regular constrained critical point
+  or a retained singular point. This bounds the number of components by the
+  native next-stage root bound, without asserting paths through singularities.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

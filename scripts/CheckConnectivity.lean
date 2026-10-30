@@ -11606,3 +11606,53 @@ example (t : ℝ) (x : Fin 0 → ℝ) :
   · funext i
     exact Fin.elim0 i
 end OriginalSquarefreeArcRegression
+
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry MvPolynomial Set
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+namespace SingularCompactComponentRegression
+noncomputable section
+private def p : MvPolynomial (Fin 1) ℤ := X 0 ^ 2
+private def active : Finset (Fin 1) := ∅
+private def a : Fin 2 → Fin 1 → ℤ := fun _ _ => 1
+private def b : Fin 1 → MvPolynomial (Fin 0) ℤ := fun _ => 0
+private def x : Fin 0 → ℝ := fun _ => 0
+private def S : Set (Fin 1 → ℝ) :=
+  {y | p.eval₂ (Int.castRingHom ℝ) y = 0 ∧ ∀ j ∈ active,
+    ∑ i, (a j.succ i : ℝ) * y i = (b j).eval₂ (Int.castRingHom ℝ) x}
+private theorem S_eq : S = {0} := by
+  ext y
+  simp only [S, p, active, eval₂_pow, eval₂_X, Set.mem_ofPred_eq, Finset.notMem_empty,
+    false_implies, implies_true, and_true, Set.mem_singleton_iff]
+  constructor
+  · intro H
+    have hy : y 0 = 0 := (pow_eq_zero_iff (by decide : (2 : ℕ) ≠ 0)).mp H
+    funext i
+    have hi : i = 0 := Subsingleton.elim _ _
+    simpa only [hi, Pi.zero_apply] using hy
+  · rintro rfl
+    norm_num
+
+-- A double root is a singular singleton component. Component sampling must
+-- retain it even though no regular point exists in this slice.
+example : ∃ (y : Fin 1 → ℝ) (mu : Fin 2 → ℝ), y ∈ connectedComponentIn S 0 ∧
+    ∀ j, (FlatAffineCriticalStage.row p active a b j).eval₂ (Int.castRingHom ℝ)
+      (Sum.elim x (Sum.elim y mu)) = 0 := by
+  apply FlatAffineSingularComponentSampling.exists_component_stage_root (Int.castRingHom ℝ) p active a b x
+  · change IsCompact S
+    rw [S_eq]
+    exact isCompact_singleton
+  · intro c hc j
+    exact False.elim (Finset.notMem_empty j.val j.property)
+  · rintro ⟨c, hc⟩
+    have H := hc 0
+    have HS : (∑ j : active, c j * (Int.castRingHom ℝ) (a j.val.succ (0 : Fin 1))) = 0 :=
+      Finset.sum_eq_zero (fun j _ => False.elim (Finset.notMem_empty j.val j.property))
+    rw [HS] at H
+    norm_num [a] at H
+  · norm_num [p]
+  · intro j hj
+    exact False.elim (Finset.notMem_empty j hj)
+end
+end SingularCompactComponentRegression
