@@ -21,6 +21,7 @@ import LeanCanny.Encoding.FlatAffineHeightTrailing
 import LeanCanny.Encoding.FlatAffineHeightSlabExceptional
 import LeanCanny.Encoding.FlatAffineHeightCells
 import LeanCanny.Encoding.FlatAffineHeightOrdinals
+import LeanCanny.Encoding.FlatAffineHeightAlgebraicCoordinates
 import LeanCanny.Encoding.FlatAffineEndpointRows
 import LeanCanny.Encoding.FlatAffineEndpointGram
 import LeanCanny.Encoding.FlatAffineEndpointGrid

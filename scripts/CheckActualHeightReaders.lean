@@ -12,6 +12,7 @@ import LeanCanny.Encoding.FlatAffineEndpointTrailing
 import LeanCanny.Encoding.FlatAffineEndpointValidity
 import LeanCanny.Encoding.FlatAffineEndpointCells
 import LeanCanny.Encoding.FlatAffineEndpointSamples
+import LeanCanny.Encoding.FlatAffineHeightAlgebraicCoordinates
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -237,6 +238,19 @@ example : SquareSampleCompletePolynomialTest.language (FlatAffineEndpointSamples
       (FlatAffineEndpointCells.source F cone selected)) .pos ∈ PSPACE :=
   IntegerPolynomialSampleInput.sign_mem_PSPACE (FlatAffineEndpointSamples.access access cone selected selected_unary)
     (FlatAffineEndpointCells.access access cone selected selected_unary) .pos
+
+-- The original source supplies signs and actual degrees after specializing
+-- any coordinate at a labeled exceptional height, including singular ones.
+example : SpaceFunction (IntegerPolynomialSampleSlice.coefficientSign
+    (FlatAffineHeightCells.source F cone selected) (FlatAffineHeightAlgebraicCoordinates.family F selected)) :=
+  FlatAffineHeightAlgebraicCoordinates.coefficientSignEvaluator access cone selected selected_unary
+
+example : SpaceFunction (fun u => BinaryNatCode.encode (IntegerPolynomialSampleSlice.specialized
+    (FlatAffineHeightCells.source F cone selected) (FlatAffineHeightAlgebraicCoordinates.family F selected) u).natDegree) :=
+  FlatAffineHeightAlgebraicCoordinates.degreeEvaluator access cone selected selected_unary
+
+example (u : List Bool) (a : ℝ) : (FlatAffineHeightAlgebraicCoordinates.family F selected).slice u a ≠ 0 :=
+  FlatAffineHeightAlgebraicCoordinates.specialized_ne_zero F cone selected u a
 
 end
 end ActualHeightReaderRegression

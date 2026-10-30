@@ -678,7 +678,13 @@ The checked ingredients are:
   scalar sampling gives these candidates short labels, native validity, and
   native polynomial-test signs, including repeated roots. A checked-promise
   sampler also keeps native access total on malformed preparation records;
-  its guarded language rejects them. Native adjacent-gap label validation,
+  its guarded language rejects them. Indexed polynomial tests now preserve
+  the complete source label while query fields select the test. They supply
+  native coefficient signs, actual degrees, zero tests, and leading signs
+  after algebraic specialization. The original affine source instantiates
+  these queries for every coordinate at every exceptional height, without
+  endpoint regularity assumptions; each specialized coordinate stays nonzero.
+  Native adjacent-gap label validation,
   multivariate endpoint signs, and the recursive cover remain open.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
