@@ -65,6 +65,7 @@ import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
 import LeanCanny.Connectivity.FlatAffineSlabComponentSampling
+import LeanCanny.Connectivity.FlatAffineSlabParentBranches
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -388,6 +389,9 @@ The actual varying slices are compact. Every feasible point can now reach a
 shifted critical root in its own fiber component, and its lifted power root
 lies on a constructed branch with exactly the stated frozen parent. Thus
 retained branches sample every component of every interior varying fiber.
+Filtering this finite family by one exact original parent preserves that
+sampling property. Each retained spatial branch stays in the parent's
+varying slice throughout the closed slab, including both endpoint limits.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

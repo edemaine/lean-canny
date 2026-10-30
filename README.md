@@ -833,6 +833,9 @@ The checked ingredients are:
   path within its fiber to a constructed critical branch with precisely the
   stated frozen parent. The branches therefore sample every component of
   every interior varying fiber.
+  Filtering by one exact original parent gives a finite branch family that
+  still samples every interior fiber component. Its spatial branches stay
+  in that parent's varying slice through both closed-slab endpoints.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
