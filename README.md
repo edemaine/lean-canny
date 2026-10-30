@@ -847,6 +847,10 @@ The checked ingredients are:
   Given the two recursive endpoint component covers, this actual saturation
   now constructs a clopen path cover of the closed slab. Selected attachments
   retain an additive sum of the branch and endpoint label types.
+  Exact ancestor filtering of short descriptors is now native PSPACE, by
+  validation, computed ancestor words, and word comparison. It agrees at
+  both retained samples. The native newest-height index recovers exactly
+  the original parent depth and complete sampler.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

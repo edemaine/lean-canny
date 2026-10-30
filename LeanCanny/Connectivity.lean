@@ -70,6 +70,8 @@ import LeanCanny.Connectivity.FlatAffineSlabParentSections
 import LeanCanny.Geometry.ConstraintLineCharts
 import LeanCanny.Connectivity.FlatAffineSlabSaturation
 import LeanCanny.Connectivity.FlatAffineSlabRecursiveCover
+import LeanCanny.Connectivity.FlatAffineSlabAncestorFilter
+import LeanCanny.Encoding.FlatAffineLastHeightRow
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -410,6 +412,10 @@ sample-connection tests and endpoint covers remain required. Given the two
 recursive endpoint component covers, the constructed saturation now supplies
 a clopen path cover of the actual closed slab. Selecting one attachment per
 branch retains an additive sum of branch and endpoint label types.
+Native descriptor validation, ancestor computation, and word comparison now
+give an exact ancestor filter in PSPACE. It tests the actual frozen blocks
+and has the same answer at both retained branch descriptors. A native newest
+height-row writer recovers exactly the original parent depth and sampler.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

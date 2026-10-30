@@ -48,6 +48,8 @@ import LeanCanny.Connectivity.FlatAffineSlabComponentSampling
 import LeanCanny.Connectivity.FlatAffineSlabParentBranches
 import LeanCanny.Connectivity.FlatAffineSlabParentSections
 import LeanCanny.Connectivity.FlatAffineSlabSaturation
+import LeanCanny.Connectivity.FlatAffineSlabAncestorFilter
+import LeanCanny.Encoding.FlatAffineLastHeightRow
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -614,6 +616,18 @@ example : SpaceFunction (FlatAffineJointPrefixChoice.value F cone selected) :=
 
 example : SpaceFunction (FlatAffineBranchPrefixChoice.value F cone selected) :=
   FlatAffineBranchPrefixChoice.evaluator access cone selected selected_unary
+
+example : FlatAffineBranchAncestorMatch.language F cone selected ∈ PSPACE :=
+  FlatAffineBranchAncestorMatch.mem_PSPACE access cone selected selected_unary
+
+private def firstHeight (u : List Bool) : Fin (FlatAffineFullSourceTower.arity F u) :=
+  ⟨0, by unfold FlatAffineFullSourceTower.arity; omega⟩
+
+example : UnaryFn (fun u => (FlatAffineLastHeightRow.row F firstHeight u).val) :=
+  FlatAffineLastHeightRow.row_unary access firstHeight (UnaryFn.const 0)
+
+example : FlatAffineShiftPrefixInput.inputs (FlatAffineCompleteRootStages.next F)
+    (FlatAffineLastHeightRow.row F firstHeight) = F := FlatAffineLastHeightRow.inputs_eq F firstHeight
 
 example (G : Inputs) (C : FlatAffinePowerPositive.ConeCertificate G)
     (height : (u : List Bool) → Fin (FlatAffineFullSourcePositive.count G u)) (c : List Bool)
