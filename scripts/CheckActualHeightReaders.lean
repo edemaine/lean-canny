@@ -10,6 +10,7 @@ import LeanCanny.Encoding.FlatAffineEndpointGram
 import LeanCanny.Encoding.FlatAffineEndpointGrid
 import LeanCanny.Encoding.FlatAffineEndpointTrailing
 import LeanCanny.Encoding.FlatAffineEndpointValidity
+import LeanCanny.Encoding.FlatAffineEndpointCells
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -196,6 +197,28 @@ example : SpaceDecider {r | FlatAffineEndpointValidity.Valid F selected r} :=
 
 example (u : List Bool) : FlatAffineEndpointValidity.Valid F selected (FlatAffineEndpointPreparation.record F selected u) :=
   FlatAffineEndpointValidity.record_valid F selected u
+
+-- One streamed product stabilizes every midpoint comparison while retaining
+-- every original endpoint height. No endpoint coordinates are runtime oracles.
+example : SpaceFunction (PrimitivePairBits.coefficient (FlatAffineEndpointExceptional.polynomial F selected)) :=
+  FlatAffineEndpointExceptional.evaluator access selected selected_unary
+
+example : BinaryFn (FlatAffineEndpointExceptional.degreeBound F) :=
+  FlatAffineEndpointExceptional.degreeBound_binary access selected
+
+example : BinaryFn (FlatAffineEndpointExceptional.massBound F) :=
+  FlatAffineEndpointExceptional.massBound_binary access selected
+
+example : SpaceFunction (fun r => BinaryNatCode.encode (FlatAffineEndpointCells.roots F cone selected r).card) :=
+  FlatAffineEndpointCells.countEvaluator access cone selected selected_unary
+
+example : IntegerPolynomialRootQueriesBits.cellLanguage (FlatAffineEndpointCells.source F cone selected) ∈ PSPACE :=
+  FlatAffineEndpointCells.cell_mem_PSPACE access cone selected selected_unary
+
+example (r : List Bool) (hr : FlatAffineEndpointValidity.Valid F selected r) (a : ℝ)
+    (ha : SymbolicScaledSquarefree.scalarEvaluation a (FlatAffineHeightSlabExceptional.polynomial F selected (pairFst r)) = 0) :
+    a ∈ FlatAffineEndpointCells.roots F cone selected r :=
+  FlatAffineEndpointCells.endpoint_mem F cone selected r hr a ha
 
 end
 end ActualHeightReaderRegression

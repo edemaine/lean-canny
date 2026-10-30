@@ -2,6 +2,7 @@ import LeanCanny.Connectivity.FiniteFiberMidpoint
 import LeanCanny.Geometry.SymbolicRootCurveOrder
 import LeanCanny.Encoding.CoordinateBranchOrdinals
 import LeanCanny.Geometry.FrozenAffineBranches
+import LeanCanny.Geometry.OrderedRealCellNeighborhood
 
 /-! Finite endpoint selection, tied coordinates, and zero midpoint tests.
 Run with `lake env lean -DwarningAsError=true scripts/CheckEndpointMidpoints.lean`.
@@ -13,6 +14,15 @@ open scoped Topology
 namespace EndpointMidpointRegression
 open LeanCanny.Algebra
 open scoped Classical
+
+-- Adjacent gaps approach every retained root, including either extreme.
+example (s : Finset ℝ) (i : Fin s.card) (b : ℝ) (hb : OrderedRealCells.root s i < b) :
+    ∃ t ∈ OrderedRealCells.gap s (OrderedRealCells.rightGap s i), t < b :=
+  OrderedRealCells.exists_rightGap_before s i hb
+
+example (s : Finset ℝ) (i : Fin s.card) (a : ℝ) (ha : a < OrderedRealCells.root s i) :
+    ∃ t ∈ OrderedRealCells.gap s (OrderedRealCells.leftGap s i), a < t :=
+  OrderedRealCells.exists_leftGap_after s i ha
 
 -- A midpoint test can vanish identically on a third branch. Strict-side
 -- matching still rejects the incorrect endpoint candidate.

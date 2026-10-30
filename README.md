@@ -665,7 +665,14 @@ The checked ingredients are:
   Degree-record validity is native as well. The same computed midpoint
   polynomials capture every pair of endpoint candidates, so their trailing
   factors make matching stable and one retained sample characterizes each
-  actual slab endpoint edge. Native adjacent-sample evaluation remains open.
+  actual slab endpoint edge. A native streamed product now combines every
+  midpoint trailing factor with the original exceptional polynomial. It retains
+  every original endpoint height and has source-derived binary degree and mass
+  budgets. Native distinct-root and rational cell queries give refined gaps
+  where every midpoint test is stable. Samples in either refined adjacent gap
+  identify the original slab's endpoint edges; extra refinement roots require
+  no new endpoint attachments. Both gaps approach their retained root, including
+  the extreme roots. Native algebraic adjacent-sample evaluation remains open.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.
