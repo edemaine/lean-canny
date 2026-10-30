@@ -813,6 +813,11 @@ The checked ingredients are:
   edges, and its clopen path saturation supplies recursive endpoint pieces.
   Whole-set connectivity of the actual terminal slice is now in native PSPACE
   as well, including the empty case, without a supplied cover or adjacency code.
+  The stage of a varied height row now computes the frozen prefix and its
+  native complete sampler. Shifted roots project to that original prefix.
+  Every constructed critical branch keeps the same earlier blocks over its
+  entire closed slab, including singular endpoint limits. Its two retained
+  joint sample references therefore have exactly the same frozen ancestor.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

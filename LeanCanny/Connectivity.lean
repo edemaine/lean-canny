@@ -61,6 +61,7 @@ import LeanCanny.Encoding.CoordinateAffineSliceRegularity
 import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
+import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -364,6 +365,10 @@ Complete terminal child labels also construct a native accessible cover and
 its clopen path saturation, ready for recursive endpoint attachments. Their
 exact graph gives native PSPACE whole-slice connectivity as well, including
 empty slices, with no supplied cover or adjacency program.
+The varied row's stage now computes a native complete sampler for its frozen
+prefix. Shifted roots project to that original prefix. Every constructed slab
+branch retains precisely the same earlier blocks throughout the closed slab,
+including singular endpoint limits and both retained joint sample references.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

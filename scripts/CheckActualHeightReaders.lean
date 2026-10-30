@@ -41,6 +41,7 @@ import LeanCanny.Encoding.CoordinateAffineSliceRegularity
 import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
+import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -585,6 +586,17 @@ example (u v : List Bool) (hv : FlatAffineCompleteVertices.Valid
         (CoordinateAffineSliceRegularity.cone F.source F.depth (fun _ => 100) (fun _ => [])) u v hv) :=
   LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity.packet F.source F.depth (fun _ => 100) (fun _ => []) u v
     (by change (3 : ℕ) ≤ 100; decide) hv
+
+-- The varied row itself computes the frozen depth and its complete sampler.
+-- The zero-depth seed remains a total native sampler as well.
+example : UnaryFn (FlatAffineShiftPrefixInput.depth F selected) :=
+  FlatAffineShiftPrefixInput.depth_unary access selected selected_unary
+
+example : (FlatAffineShiftPrefixInput.input F cone selected).Access :=
+  FlatAffineShiftPrefixInput.inputAccess access cone selected selected_unary
+
+example (u : List Bool) : FlatAffineShiftPrefixInput.depth F selected u ≤ F.depth u :=
+  FlatAffineShiftPrefixInput.depth_le F selected u
 
 end
 end ActualHeightReaderRegression
