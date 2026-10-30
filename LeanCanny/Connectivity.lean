@@ -12,6 +12,7 @@ import LeanCanny.Connectivity.AffineShiftArcs
 import LeanCanny.Connectivity.AffineShiftSlab
 import LeanCanny.Algebra.ProjectiveValueGramSpace
 import LeanCanny.Geometry.IntegerGridValueCertificate
+import LeanCanny.Geometry.IntegerGridValueReader
 import LeanCanny.Algebra.AffineConstantParameterShift
 import LeanCanny.Connectivity.SlabCover
 import LeanCanny.Connectivity.BitFrontierCover
@@ -304,10 +305,13 @@ this explicit polynomial. Their original endpoint fibers are finite even at
 exceptional parameters. Singleton endpoint roots and the constructed arcs
 give finite graphs of entire closed affine-height slabs, preserving paths and
 connectedness. Incidence reduces to vertex equality and arc endpoint equality,
-including isolated endpoint roots. A native reciprocal-Gram value reader now
-uses binary Macaulay levels and charges the original homogeneous-row readers.
-Composition from the recursive coordinate grids and effective branch records
-remain required. Polynomial shifts of row
+including isolated endpoint roots. Native value readers now start with the
+original bivariate coordinate polynomials and multivariate test. They compute
+homogenization and the reciprocal Gram determinant with binary degree
+allowances, retaining parameter coefficients and charging all original readers.
+The computed polynomial retains singular grid roots and is nonzero for exact
+positive coordinate degrees. Recursive coordinate metadata and effective branch
+records remain required. Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.
 
