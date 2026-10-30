@@ -37,6 +37,8 @@ import LeanCanny.Connectivity.FlatAffineSlabCoordinateSignReader
 import LeanCanny.Encoding.FlatAffineSingularSliceSamples
 import LeanCanny.Encoding.FlatAffineSingularChildLabels
 import LeanCanny.Connectivity.CoordinateAffineComponentCover
+import LeanCanny.Encoding.CoordinateAffineSliceRegularity
+import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -519,6 +521,33 @@ example : UnaryFn (FlatAffineCompleteVertices.width
     (LeanCanny.Connectivity.CoordinateAffineComponentCover.cone F.source F.depth (fun _ => 100) (fun _ => []))) :=
   LeanCanny.Connectivity.CoordinateAffineComponentCover.width_unary F.source F.depth (fun _ => 100) (fun _ => [])
     access.source access.depth (UnaryFn.const 100) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+-- Native global slice regularity is decided by complete singular-child
+-- search. A singular query also computes an actual ancestry-checked witness.
+example : FlatAffineSliceRegularity.singularLanguage
+    (CoordinateAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => []))
+    (CoordinateAffineSliceRegularity.cone F.source F.depth (fun _ => 100) (fun _ => [])) ∈ PSPACE :=
+  CoordinateAffineSliceRegularity.singular_mem_PSPACE access.source access.depth
+    (UnaryFn.const 100) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : FlatAffineSliceRegularity.regularLanguage
+    (CoordinateAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => []))
+    (CoordinateAffineSliceRegularity.cone F.source F.depth (fun _ => 100) (fun _ => [])) ∈ PSPACE :=
+  CoordinateAffineSliceRegularity.regular_mem_PSPACE access.source access.depth
+    (UnaryFn.const 100) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F)) :
+    SpaceFunction (FlatAffineSingularSliceChoice.value F C) :=
+  FlatAffineSingularSliceChoice.evaluator access C
+
+example (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F))
+    (u v : List Bool) (hv : FlatAffineCompleteVertices.Valid F (FlatAffineCompleteChildLabels.parentCone F C) u v)
+    (hq : pair u v ∈ FlatAffineSliceRegularity.singularLanguage F C) :
+    FlatAffineCompleteRootStages.newest F u (FlatAffineCompleteVertices.vertexEquiv (FlatAffineCompleteRootStages.next F) C u
+      ⟨FlatAffineSingularSliceChoice.value F C (pair u v), (FlatAffineSingularSliceChoice.value_valid F C u v hq).1⟩).val ∘ Sum.inl ∈
+      FlatAffineSingularSliceSamples.singular F u
+        (FlatAffineCompleteVertices.vertexEquiv F (FlatAffineCompleteChildLabels.parentCone F C) u ⟨v, hv⟩) :=
+  FlatAffineSingularSliceChoice.value_singular F C u v hv hq
 
 end
 end ActualHeightReaderRegression

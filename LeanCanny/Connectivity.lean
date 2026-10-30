@@ -57,6 +57,8 @@ import LeanCanny.Encoding.FlatAffineSingularSliceSamples
 import LeanCanny.Encoding.FlatAffineSingularChildLabels
 import LeanCanny.Encoding.FlatAffineCompactComponentSamples
 import LeanCanny.Connectivity.CoordinateAffineComponentCover
+import LeanCanny.Encoding.CoordinateAffineSliceRegularity
+import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -346,6 +348,11 @@ generated source proves compactness; actual coordinate-prefix records prove
 normal independence and the cone certificates. Thus these coordinate-slice
 covers have native label validity and unary widths without supplied geometric
 promises. Their sample connection tests still require recursion.
+Streamed complete-child searches now decide singularity and regularity of
+these entire frozen slices in native PSPACE. An accepted singularity query
+also computes an actual complete child label whose spatial point is singular
+in the exact parent slice. These tests use the original source readers;
+regularity is not a supplied oracle.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

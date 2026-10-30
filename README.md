@@ -799,6 +799,11 @@ The checked ingredients are:
   certificates are derived, with native label validity and unary widths.
   The zero-objective child filter is also sound: every accepted point lies in
   the singular locus of its stated parent slice.
+  Streamed complete-child searches now decide whether an entire generated
+  coordinate-prefix slice is singular or regular, in native PSPACE. An accepted
+  singularity query also computes an actual complete singular child label with
+  its exact ancestry. These routines charge the original readers and derived
+  widths, without a supplied regularity test or singular-point oracle.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
