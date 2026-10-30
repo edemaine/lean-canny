@@ -15,6 +15,7 @@ import LeanCanny.Encoding.FlatAffineEndpointSamples
 import LeanCanny.Encoding.FlatAffineHeightAlgebraicCoordinates
 import LeanCanny.Encoding.FlatAffineEndpointAdjacentComplete
 import LeanCanny.Encoding.FlatAffineEndpointFiniteMidpoint
+import LeanCanny.Encoding.FlatAffineEndpointFiniteMatching
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -285,6 +286,14 @@ private lemma jointIndex_unary : UnaryFn (fun s => (jointIndex s).val) :=
 
 example (sigma : SignType) : FlatAffineEndpointFiniteMidpoint.language F cone selected jointIndex sigma ∈ PSPACE :=
   FlatAffineEndpointFiniteMidpoint.mem_PSPACE access cone selected selected_unary jointIndex jointIndex_unary sigma
+
+-- Both height coordinates and the chosen spatial projections are compared
+-- by streamed Thom signs; a universal scan checks every endpoint candidate.
+example : SquareSampleCompleteCoordinateEquality.language (FlatAffineEndpointFiniteSample.input F cone selected) ∈ PSPACE :=
+  SquareSampleCompleteCoordinateEquality.mem_PSPACE (FlatAffineEndpointFiniteSample.sampleAccess access cone selected selected_unary)
+
+example : FlatAffineEndpointFiniteMatching.language F cone selected ∈ PSPACE :=
+  FlatAffineEndpointFiniteMatching.mem_PSPACE access cone selected selected_unary
 
 end
 end ActualHeightReaderRegression

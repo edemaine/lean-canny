@@ -7,6 +7,7 @@ import LeanCanny.Geometry.OrderedRealCellDerivativeSample
 import LeanCanny.Encoding.IntegerPolynomialSampleInput
 import LeanCanny.Encoding.IntegerPolynomialAdjacentSamplesComplete
 import LeanCanny.Algebra.FrozenRetainedMidpointSpace
+import LeanCanny.Encoding.SquareSampleCompletePrefixEquality
 
 /-! Finite endpoint selection, tied coordinates, and zero midpoint tests.
 Run with `lake env lean -DwarningAsError=true scripts/CheckEndpointMidpoints.lean`.
@@ -247,3 +248,57 @@ example : ∃ w v, pair (pair [] w) v ∈ IntegerPolynomialAdjacentSamples.langu
   exact ⟨w, v, hv⟩
 
 end NativeAdjacentSampleRegression
+
+namespace NativeCoordinateEqualityRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def source : IntegerPolynomialRootQueriesBits.Source where
+  polynomial _ := (Polynomial.X * (Polynomial.X - Polynomial.C 1)) ^ 2
+  degree _ := 4
+  mass _ := 4
+  degree_bound _ := by
+    apply Polynomial.natDegree_pow_le.trans
+    apply (Nat.mul_le_mul_left 2 (Polynomial.natDegree_mul_le)).trans
+    simp only [Polynomial.natDegree_X, Polynomial.natDegree_X_sub_C]
+    decide
+  mass_bound _ := by
+    have hx : coefficientMass (Polynomial.X : Polynomial ℤ) = 1 := by
+      simpa only [pow_one] using coefficientMass_X_pow 1
+    have hs : coefficientMass (Polynomial.X - Polynomial.C 1 : Polynomial ℤ) ≤ 2 := by
+      simpa only [hx, coefficientMass_C, Int.natAbs_one] using
+        coefficientMass_sub_le (Polynomial.X : Polynomial ℤ) (Polynomial.C 1)
+    have hm : coefficientMass (Polynomial.X * (Polynomial.X - Polynomial.C 1) : Polynomial ℤ) ≤ 2 :=
+      (coefficientMass_mul_le _ _).trans (by simpa only [hx, one_mul] using hs)
+    exact (coefficientMass_pow_le _ _).trans ((Nat.pow_le_pow_left hm _).trans (by decide))
+
+-- Both coordinate values are repeated roots. Thom scans still reject
+-- their equality; an empty fixed prefix permits both complete labels.
+example : ∃ w v,
+    pair (pair [] (pair w v)) (BinaryNatCode.encode 0) ∉
+      SquareSampleCompleteCoordinateEquality.language (IntegerPolynomialSampleInput.input source) ∧
+    pair [] (pair w v) ∈ SquareSampleCompletePrefixEquality.language (IntegerPolynomialSampleInput.input source) (fun _ => 0) := by
+  have hn : source.polynomial [] ≠ 0 :=
+    pow_ne_zero _ (mul_ne_zero Polynomial.X_ne_zero (Polynomial.monic_X_sub_C (1 : ℤ)).ne_zero)
+  obtain ⟨w, hw, hew⟩ := IntegerPolynomialSampleInput.root_complete source [] hn 0 (by
+    change (((Polynomial.X * (Polynomial.X - Polynomial.C 1)) ^ 2 : Polynomial ℤ).eval₂ (Int.castRingHom ℝ) (0 : ℝ)) = 0
+    rw [Polynomial.eval₂_pow, Polynomial.eval₂_mul, Polynomial.eval₂_X, zero_mul]
+    norm_num)
+  obtain ⟨v, hv, hev⟩ := IntegerPolynomialSampleInput.root_complete source [] hn 1 (by
+    change (((Polynomial.X * (Polynomial.X - Polynomial.C 1)) ^ 2 : Polynomial ℤ).eval₂ (Int.castRingHom ℝ) (1 : ℝ)) = 0
+    rw [Polynomial.eval₂_pow, Polynomial.eval₂_mul, Polynomial.eval₂_sub, Polynomial.eval₂_X, Polynomial.eval₂_C]
+    norm_num)
+  refine ⟨w, v, ?_, ?_⟩
+  · intro h
+    have H := SquareSampleCompleteCoordinateEquality.packet _ (IntegerPolynomialSampleInput.complete source) [] w v hw hv (0 : Fin 1)
+    have h0 : (0 : Fin 1).val = 0 := rfl
+    rw [h0] at H
+    have heq := H.mp h
+    rw [hew, hev] at heq
+    norm_num at heq
+  · apply (SquareSampleCompletePrefixEquality.packet _ (IntegerPolynomialSampleInput.complete source) (fun _ => 0)
+      [] w v hw hv (by decide)).mpr
+    intro i hi
+    exact (Nat.not_lt_zero i.val hi).elim
+
+end NativeCoordinateEqualityRegression

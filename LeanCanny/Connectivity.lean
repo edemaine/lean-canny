@@ -34,6 +34,7 @@ import LeanCanny.Encoding.GuardedSquareSampleInput
 import LeanCanny.Connectivity.FlatAffineEndpointIncidence
 import LeanCanny.Connectivity.FlatAffineEndpointCellIncidence
 import LeanCanny.Connectivity.FlatAffineEndpointNativeIncidence
+import LeanCanny.Connectivity.FlatAffineEndpointFiniteIncidence
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -399,9 +400,12 @@ derivative sample height, making the current point and both endpoint candidates
 one finite integer system. Its original rows, exact degree-record validator,
 coordinate annihilators, and complete short labels all have native readers.
 Every actual tuple receives a label, including singular roots. Native midpoint
-signs at these labels equal the original coordinate comparisons. Identifying
-fixed projections across labels and scanning every endpoint candidate remain
-required for the full native matching predicate.
+signs at these labels equal the original coordinate comparisons. Streamed
+coordinate Thom comparisons now fix projections across labels; an all-label
+scan decides the exact midpoint matching predicate in native PSPACE. At an
+adjacent retained sample its answer equals actual left or right slab
+attachment. Aligning joint labels with independently encoded sample and
+branch records remains required, along with the recursive cover.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.

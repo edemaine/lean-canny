@@ -697,9 +697,14 @@ The checked ingredients are:
   validator, nonzero coordinate annihilators, and their degree and height
   budgets. Complete short labels cover every actual tuple, including singular
   roots. Native multivariate midpoint signs at those labels equal the original
-  comparisons. Identifying fixed projections across labels and scanning every
-  endpoint candidate remain required for the full native matching predicate;
-  the recursive cover remains open.
+  comparisons. Streamed coordinate Thom comparisons now identify fixed
+  projections across labels, including repeated coordinate roots. A native
+  universal scan fixes both heights, the current point, and the chosen
+  endpoint while ranging over every other endpoint candidate. It decides
+  exactly the geometric midpoint matching predicate in PSPACE. At an adjacent
+  retained sample the result equals actual left or right slab attachment.
+  Aligning these joint labels with independently encoded samples and branch
+  records remains required; the recursive cover remains open.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.
