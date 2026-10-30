@@ -6,12 +6,14 @@ module
 
 public import LeanCanny.Encoding.FlatAffineHeightExceptional
 public import LeanCanny.Encoding.FlatAffineHeightTrailing
+public import LeanCanny.Encoding.FlatAffineHeightCoordinateTrailing
 public import LeanCanny.Connectivity.FlatAffineHeightArcs
 
 /-! # A native complete exceptional polynomial for actual affine-height slabs
 
 The first block of factors regularizes every coordinate. The second retains
-every equation-value trailing factor. The polynomial and all its budgets
+every equation-value trailing factor. The third controls coordinate zeros,
+including critical multiplier zeros. The polynomial and all its budgets
 come from the original source programs.
 -/
 
@@ -116,24 +118,30 @@ theorem first_fppred {F : Inputs} (h : F.Access) : FPPred (first F) :=
   (BinaryFn.fromBits pairSnd_mem_FP).lt ((BinaryFn.ofUnary (FlatAffineFullSourcePositive.count_unary h)).comp pairFst_mem_FP)
 
 noncomputable def factor (F : Inputs) (height : (u : List Bool) → Fin (count F u)) (z : List Bool) : Polynomial ℤ :=
-  if first F z then FlatAffineHeightExceptional.indexed F height z else trailing F height (second F z)
+  if first F z then FlatAffineHeightExceptional.indexed F height z else
+    if first F (second F z) then trailing F height (second F z) else
+      FlatAffineHeightCoordinateTrailing.indexed F height (second F (second F z))
 
 theorem factorEvaluator {F : Inputs} (h : F.Access) (height : (u : List Bool) → Fin (count F u))
     (hh : UnaryFn (fun u => (height u).val)) : SpaceFunction (PrimitivePairBits.coefficient (factor F height)) := by
   have T := PolynomialFamilyProductBits.reindexEvaluator (trailingEvaluator h height hh) (second F) (second_FP h)
+  have C := PolynomialFamilyProductBits.reindexEvaluator (FlatAffineHeightCoordinateTrailing.indexedEvaluator h height hh)
+    (second F ∘ second F) (mem_FP_comp (second_FP h) (second_FP h))
+  have TC := SpaceFunction.branch (fun q => decide (first F (second F (RationalSubstitution.IntegerBits.context q))))
+    ((first_fppred h).comp (mem_FP_comp RationalSubstitution.IntegerBits.context_mem_FP (second_FP h))).flag_mem_FP T C
   have H := SpaceFunction.branch (fun q => decide (first F (RationalSubstitution.IntegerBits.context q)))
     ((first_fppred h).comp RationalSubstitution.IntegerBits.context_mem_FP).flag_mem_FP
-    (FlatAffineHeightExceptional.indexedEvaluator h height hh) T
+    (FlatAffineHeightExceptional.indexedEvaluator h height hh) TC
   refine H.congr (funext fun q => ?_)
   simp only [decide_eq_true_eq, Function.comp_apply, PrimitivePairBits.coefficient, factor]
   split_ifs <;> rfl
 
 noncomputable def polynomial (F : Inputs) (height : (u : List Bool) → Fin (count F u)) : List Bool → Polynomial ℤ :=
-  PolynomialFamilyProductBits.polynomial (factor F height) (fun u => 2 * count F u)
+  PolynomialFamilyProductBits.polynomial (factor F height) (fun u => 3 * count F u)
 
 theorem evaluator {F : Inputs} (h : F.Access) (height : (u : List Bool) → Fin (count F u))
     (hh : UnaryFn (fun u => (height u).val)) : SpaceFunction (PrimitivePairBits.coefficient (polynomial F height)) :=
-  PolynomialFamilyProductBits.evaluator _ _ ((BinaryFn.const 2).mul (BinaryFn.ofUnary (FlatAffineFullSourcePositive.count_unary h)))
+  PolynomialFamilyProductBits.evaluator _ _ ((BinaryFn.const 3).mul (BinaryFn.ofUnary (FlatAffineFullSourcePositive.count_unary h)))
     (factorEvaluator h height hh)
 
 theorem ne_zero (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCertificate F)
@@ -144,13 +152,14 @@ theorem ne_zero (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCertificate F)
   split_ifs
   · exact FlatAffineHeightExceptional.indexed_ne_zero F hcone height z
   · exact trailing_ne_zero F hcone height _
+  · exact FlatAffineHeightCoordinateTrailing.indexed_ne_zero F hcone height _
 
 theorem avoids {K : Type*} [Field K] (phi : Polynomial ℤ →+* K)
     (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCertificate F)
     (height : (u : List Bool) → Fin (count F u)) (u : List Bool)
     (ht : phi (polynomial F height u) ≠ 0) :
     phi (Connectivity.FlatAffineHeightArcs.exceptional F height u) ≠ 0 := by
-  have H : ∀ j < 2 * count F u, phi (factor F height (pair u (BinaryNatCode.encode j))) ≠ 0 := by
+  have H : ∀ j < 3 * count F u, phi (factor F height (pair u (BinaryNatCode.encode j))) ≠ 0 := by
     simpa only [polynomial, PolynomialFamilyProductBits.polynomial, map_prod,
       Finset.prod_ne_zero_iff, Finset.mem_range] using ht
   rw [Connectivity.FlatAffineHeightArcs.exceptional, map_mul, mul_ne_zero_iff]
@@ -168,25 +177,49 @@ theorem avoids {K : Type*} [Field K] (phi : Polynomial ℤ →+* K)
     have Hi := H (count F u + i.val) (by have := i.isLt; omega)
     have hn : ¬ count F u + i.val < count F u := by omega
     simp only [factor, first, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, hn, ite_false,
-      second, Nat.add_sub_cancel_left, trailing] at Hi
+      second, Nat.add_sub_cancel_left, i.isLt, ite_true, trailing] at Hi
     change phi (certificate F height (pair u (BinaryNatCode.encode i.val))).trailingCoeff ≠ 0 at Hi
     rwa [certificate_packet F height u i] at Hi
 
+theorem coordinate_trailing_avoids {K : Type*} [Field K] (phi : Polynomial ℤ →+* K)
+    (F : Inputs) (height : (u : List Bool) → Fin (count F u)) (u : List Bool)
+    (ht : phi (polynomial F height u) ≠ 0) :
+    phi (FlatAffineHeightCoordinateTrailing.polynomial F height u) ≠ 0 := by
+  have H : ∀ j < 3 * count F u, phi (factor F height (pair u (BinaryNatCode.encode j))) ≠ 0 := by
+    simpa only [polynomial, PolynomialFamilyProductBits.polynomial, map_prod,
+      Finset.prod_ne_zero_iff, Finset.mem_range] using ht
+  simp only [FlatAffineHeightCoordinateTrailing.polynomial, PolynomialFamilyProductBits.polynomial,
+    map_prod, Finset.prod_ne_zero_iff, Finset.mem_range]
+  intro i hi
+  have HI := H (2 * count F u + i) (by omega)
+  have H0 : ¬2 * count F u + i < count F u := by omega
+  have H1 : 2 * count F u + i - count F u = count F u + i := by omega
+  have H2 : ¬count F u + i < count F u := by omega
+  have H3 : count F u + i - count F u = i := by omega
+  simpa only [factor, first, second, pairFst_pair, pairSnd_pair, BinaryNatCode.encode,
+    Nat.fromBitsLE_bits, H0, ite_false, H1, H2, H3] using HI
+
 noncomputable def factorDegreeBound (F : Inputs) (z : List Bool) : ℕ :=
-  if first F z then FlatAffineHeightExceptional.indexedDegreeBound F z else trailingDegreeBound F (second F z)
+  if first F z then FlatAffineHeightExceptional.indexedDegreeBound F z else
+    if first F (second F z) then trailingDegreeBound F (second F z) else
+      FlatAffineHeightExceptional.degree F (second F (second F z))
 
 noncomputable def factorMassBound (F : Inputs) (z : List Bool) : ℕ :=
-  if first F z then FlatAffineHeightExceptional.indexedMassBound F z else trailingMassBound F (second F z)
+  if first F z then FlatAffineHeightExceptional.indexedMassBound F z else
+    if first F (second F z) then trailingMassBound F (second F z) else
+      FlatAffineHeightExceptional.exponent F (second F (second F z))
 
 theorem factorDegreeBound_binary {F : Inputs} (h : F.Access)
     (height : (u : List Bool) → Fin (count F u)) : BinaryFn (factorDegreeBound F) :=
   BinaryFn.ite (first_fppred h) (FlatAffineHeightExceptional.indexedDegreeBound_binary h)
-    ((trailingDegreeBound_binary h height).comp (second_FP h))
+    (BinaryFn.ite ((first_fppred h).comp (second_FP h)) ((trailingDegreeBound_binary h height).comp (second_FP h))
+      ((FlatAffineHeightExceptional.degree_binary h).comp (mem_FP_comp (second_FP h) (second_FP h))))
 
 theorem factorMassBound_binary {F : Inputs} (h : F.Access)
     (height : (u : List Bool) → Fin (count F u)) : BinaryFn (factorMassBound F) :=
   BinaryFn.ite (first_fppred h) (FlatAffineHeightExceptional.indexedMassBound_binary h)
-    ((trailingMassBound_binary h height).comp (second_FP h))
+    (BinaryFn.ite ((first_fppred h).comp (second_FP h)) ((trailingMassBound_binary h height).comp (second_FP h))
+      ((FlatAffineHeightExceptional.exponent_binary h).comp (mem_FP_comp (second_FP h) (second_FP h))))
 
 theorem factor_degree_bound (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCertificate F)
     (height : (u : List Bool) → Fin (count F u)) (z : List Bool) :
@@ -195,6 +228,7 @@ theorem factor_degree_bound (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCe
   split_ifs
   · exact FlatAffineHeightExceptional.indexed_degree_bound F hcone height z
   · exact trailing_degree_bound F height _
+  · exact FlatAffineHeightCoordinateTrailing.indexed_degree_bound F height _
 
 theorem factor_mass_bound (F : Inputs) (height : (u : List Bool) → Fin (count F u)) (z : List Bool) :
     coefficientMass (factor F height z) ≤ 2 ^ factorMassBound F z := by
@@ -202,21 +236,22 @@ theorem factor_mass_bound (F : Inputs) (height : (u : List Bool) → Fin (count 
   split_ifs
   · exact FlatAffineHeightExceptional.indexed_mass_bound F height z
   · exact trailing_mass_bound F height _
+  · exact FlatAffineHeightCoordinateTrailing.indexed_mass_bound F height _
 
 noncomputable def degreeBound (F : Inputs) : List Bool → ℕ :=
-  PolynomialFamilyProductBits.budget (fun u => 2 * count F u) (factorDegreeBound F)
+  PolynomialFamilyProductBits.budget (fun u => 3 * count F u) (factorDegreeBound F)
 
 noncomputable def massBound (F : Inputs) : List Bool → ℕ :=
-  PolynomialFamilyProductBits.budget (fun u => 2 * count F u) (factorMassBound F)
+  PolynomialFamilyProductBits.budget (fun u => 3 * count F u) (factorMassBound F)
 
 theorem degreeBound_binary {F : Inputs} (h : F.Access)
     (height : (u : List Bool) → Fin (count F u)) : BinaryFn (degreeBound F) :=
-  PolynomialFamilyProductBits.budget_binary ((UnaryFn.const 2).mul (FlatAffineFullSourcePositive.count_unary h))
+  PolynomialFamilyProductBits.budget_binary ((UnaryFn.const 3).mul (FlatAffineFullSourcePositive.count_unary h))
     (factorDegreeBound_binary h height)
 
 theorem massBound_binary {F : Inputs} (h : F.Access)
     (height : (u : List Bool) → Fin (count F u)) : BinaryFn (massBound F) :=
-  PolynomialFamilyProductBits.budget_binary ((UnaryFn.const 2).mul (FlatAffineFullSourcePositive.count_unary h))
+  PolynomialFamilyProductBits.budget_binary ((UnaryFn.const 3).mul (FlatAffineFullSourcePositive.count_unary h))
     (factorMassBound_binary h height)
 
 theorem degree_bound (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCertificate F)

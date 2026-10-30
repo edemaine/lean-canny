@@ -52,6 +52,8 @@ import LeanCanny.Connectivity.FlatAffineSlabGraphBranchLabels
 import LeanCanny.Connectivity.FlatAffineSlabConnectivity
 import LeanCanny.Connectivity.FlatAffineGapConnectivity
 import LeanCanny.Connectivity.FlatAffineSlabBranchParents
+import LeanCanny.Connectivity.FlatAffineSlabCoordinateSignReader
+import LeanCanny.Encoding.FlatAffineSingularSliceSamples
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -481,6 +483,13 @@ interior sample points. Rational coordinate recovery selects the current copy,
 and native height and rank identities identify it with the constructed curve.
 The existing ancestry-aware child routines now apply at these points as well
 as endpoint markers, retaining every regular child with its original parent.
+The computed exceptional polynomial also retains coordinate trailing factors.
+Consequently every coordinate zero and strict-sign test is constant on each
+interior branch, including critical multiplier tests. A native sign reader
+from its short descriptor computes that sign throughout the entire branch.
+Independent slice normals also give complete native labels for every singular
+slice point, with zero objective multiplier. Their locus is finite with the
+source-derived next-stage critical-root bound.
 Constructing the full recursive component graph remains open.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component

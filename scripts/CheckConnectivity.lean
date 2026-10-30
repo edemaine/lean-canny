@@ -11409,6 +11409,15 @@ example : ∃ mu : Fin 3 → ℝ, mu 0 = 0 ∧
   · exact heights_independent
   · exact tangent_singular
 
+-- Zero objective multipliers characterize singular slice points independently
+-- of the Jacobian of the larger critical system.
+example (mu : Fin 3 → ℝ) (hmu : mu 0 = 0)
+    (hroot : ∀ i, (row circle active table (fun _ => (C 1 : MvPolynomial (Fin 0) ℤ)) i).eval₂
+      (Int.castRingHom ℝ) (Sum.elim (fun _ => 0) (Sum.elim point mu)) = 0) :
+    ¬Function.Surjective (FlatAffineCriticalExtremum.derivative (Int.castRingHom ℝ) circle active table point) :=
+  FlatAffineSingularCriticalRoot.singular_of_zero_multiplier (Int.castRingHom ℝ) circle active table
+    (fun _ => (C 1 : MvPolynomial (Fin 0) ℤ)) (fun _ => 0) point mu hroot hmu
+
 -- Every original full root projects to a complete prefix, with no Jacobian premise.
 example (F : FlatAffineFullSourceTower.Inputs) (d : List Bool → ℕ) (u : List Bool)
     (hd : d u ≤ F.depth u) (z : FlatAffinePowerSampleInput.OriginalRoots F u) :

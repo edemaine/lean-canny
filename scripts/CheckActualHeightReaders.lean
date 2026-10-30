@@ -33,6 +33,8 @@ import LeanCanny.Connectivity.FlatAffineSlabGraphBranchLabels
 import LeanCanny.Connectivity.FlatAffineSlabConnectivity
 import LeanCanny.Connectivity.FlatAffineGapConnectivity
 import LeanCanny.Connectivity.FlatAffineSlabBranchParents
+import LeanCanny.Connectivity.FlatAffineSlabCoordinateSignReader
+import LeanCanny.Encoding.FlatAffineSingularSliceSamples
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -457,6 +459,23 @@ example (C : FlatAffineEndpointChildSamples.Controls) (A : C.Access) :
 example (C : FlatAffineEndpointChildSamples.Controls) (A : C.Access) :
     NamedRationalParents.Access (NamedParentChildNext.next (FlatAffineBranchChildSamples.inputs F cone selected C)) :=
   FlatAffineBranchChildSamples.nextAccess access cone selected selected_unary A
+
+-- The source computes the coordinate-zero exceptional factors and reads
+-- actual coordinate signs from complete labels and short branch descriptors.
+example : SpaceFunction (PrimitivePairBits.coefficient (FlatAffineHeightCoordinateTrailing.polynomial F selected)) :=
+  FlatAffineHeightCoordinateTrailing.evaluator access selected selected_unary
+
+example : BinaryFn (FlatAffineHeightCoordinateTrailing.degreeBound F) :=
+  FlatAffineHeightCoordinateTrailing.degreeBound_binary access
+
+example : SpaceFunction (SquareSampleCompleteCoordinateSign.value (FlatAffineEndpointFiniteSample.input F cone selected)) :=
+  SquareSampleCompleteCoordinateSign.evaluator (FlatAffineEndpointFiniteSample.sampleAccess access cone selected selected_unary)
+
+example : SpaceFunction (FlatAffineBranchCoordinateSign.value F cone selected) :=
+  FlatAffineBranchCoordinateSign.evaluator access cone selected selected_unary
+
+example (sigma : SignType) : FlatAffineBranchCoordinateSign.language F cone selected sigma ∈ PSPACE :=
+  FlatAffineBranchCoordinateSign.mem_PSPACE access cone selected selected_unary sigma
 
 end
 end ActualHeightReaderRegression

@@ -44,20 +44,36 @@ noncomputable abbrev Index (F : Inputs) (cone : FlatAffinePowerPositive.ConeCert
   PolynomialGridArcs.Fiber (IntegerGridArcs.realRows (FlatAffineHeightArcs.rows F height (original c)))
     (FlatAffineSlabGraphContext.sampleValue F cone height false c)
 
-theorem avoids (F : Inputs) (cone : FlatAffinePowerPositive.ConeCertificate F)
+theorem native_avoids (F : Inputs) (cone : FlatAffinePowerPositive.ConeCertificate F)
     (height : (u : List Bool) → Fin (count F u)) (c : List Bool)
     (hc : c ∈ FlatAffineSlabGraphContext.language F cone height) (t : ℝ)
     (ht : t ∈ Ioo (FlatAffineSlabGraphContext.endpointValue F cone height false c)
       (FlatAffineSlabGraphContext.endpointValue F cone height true c)) :
-    SymbolicScaledSquarefree.scalarEvaluation t (FlatAffineHeightArcs.exceptional F height (original c)) ≠ 0 := by
+    SymbolicScaledSquarefree.scalarEvaluation t (FlatAffineHeightSlabExceptional.polynomial F height (original c)) ≠ 0 := by
   have HG : t ∈ OrderedRealCells.gap (FlatAffineSlabGraphContext.roots F cone height c)
       (FlatAffineSlabGraphContext.gapIndex F cone height c hc) := by
     rw [FlatAffineSlabGraphContext.gap_eq_interval F cone height c hc]
     exact ht
   have HN := OrderedRealCells.gap_no_root _ _ HG
-  have HE : SymbolicScaledSquarefree.scalarEvaluation t (FlatAffineHeightSlabExceptional.polynomial F height (original c)) ≠ 0 :=
-    (FlatAffineHeightCells.mem_roots_iff F cone height (original c) t).not.mp HN
-  exact FlatAffineHeightSlabExceptional.avoids (SymbolicScaledSquarefree.scalarEvaluation t) F cone height (original c) HE
+  exact (FlatAffineHeightCells.mem_roots_iff F cone height (original c) t).not.mp HN
+
+theorem avoids (F : Inputs) (cone : FlatAffinePowerPositive.ConeCertificate F)
+    (height : (u : List Bool) → Fin (count F u)) (c : List Bool)
+    (hc : c ∈ FlatAffineSlabGraphContext.language F cone height) (t : ℝ)
+    (ht : t ∈ Ioo (FlatAffineSlabGraphContext.endpointValue F cone height false c)
+      (FlatAffineSlabGraphContext.endpointValue F cone height true c)) :
+    SymbolicScaledSquarefree.scalarEvaluation t (FlatAffineHeightArcs.exceptional F height (original c)) ≠ 0 :=
+  FlatAffineHeightSlabExceptional.avoids (SymbolicScaledSquarefree.scalarEvaluation t) F cone height (original c)
+    (native_avoids F cone height c hc t ht)
+
+theorem coordinate_trailing_avoids (F : Inputs) (cone : FlatAffinePowerPositive.ConeCertificate F)
+    (height : (u : List Bool) → Fin (count F u)) (c : List Bool)
+    (hc : c ∈ FlatAffineSlabGraphContext.language F cone height) (t : ℝ)
+    (ht : t ∈ Ioo (FlatAffineSlabGraphContext.endpointValue F cone height false c)
+      (FlatAffineSlabGraphContext.endpointValue F cone height true c)) :
+    SymbolicScaledSquarefree.scalarEvaluation t (FlatAffineHeightCoordinateTrailing.polynomial F height (original c)) ≠ 0 :=
+  FlatAffineHeightSlabExceptional.coordinate_trailing_avoids (SymbolicScaledSquarefree.scalarEvaluation t) F height (original c)
+    (native_avoids F cone height c hc t ht)
 
 theorem anchored_arcs (F : Inputs) (cone : FlatAffinePowerPositive.ConeCertificate F)
     (height : (u : List Bool) → Fin (count F u)) (c : List Bool)

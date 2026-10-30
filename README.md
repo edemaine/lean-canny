@@ -773,6 +773,12 @@ The checked ingredients are:
   constructed curve at the requested sample, independently of auxiliary tuple
   choices. Native child queries retain this ancestry and cover regular child
   roots over those points, without requiring the parent point to be regular.
+  Coordinate trailing factors now refine the computed exceptional set. Every
+  coordinate zero and sign test, including multiplier tests, is constant along
+  an interior branch; a native reader computes it from the short descriptor.
+  With independent slice normals, every singular slice point also has a
+  complete native critical label with zero objective multiplier. Its singular
+  locus is finite with the source-derived next-stage critical-root bound.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
