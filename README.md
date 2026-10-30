@@ -757,8 +757,13 @@ The checked ingredients are:
   branch has constructed native joint references at both samples, satisfying
   the sample and adjacency checks. Their injective descriptors enumerate
   exactly the branches and agree across the two samples.
-  The assembled geometric cover and full recursive component graph remain
-  required.
+  Every valid native graph vertex now denotes a unique actual curve or endpoint
+  point, and every geometric piece has a bounded vertex. Native edges agree
+  with relative frontier incidence, including duplicate markers and arbitrary
+  padding. The assembled accessible cover transfers whole-graph connectivity
+  to the actual closed root slab. Validated connectivity of these slabs is
+  in native PSPACE, with no supplied cover or adjacency routine.
+  The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

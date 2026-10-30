@@ -49,6 +49,7 @@ import LeanCanny.Encoding.FlatAffineSlabGraphAlgorithms
 import LeanCanny.Encoding.FlatAffineSlabGraphEdges
 import LeanCanny.Encoding.FlatAffineEndpointBranchLabelComplete
 import LeanCanny.Connectivity.FlatAffineSlabGraphBranchLabels
+import LeanCanny.Connectivity.FlatAffineSlabConnectivity
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -461,8 +462,15 @@ attachment edges agree with the checked native queries in both orientations.
 Validated branch words enumerate exactly a complete geometric sample fiber;
 when its branch points are distinct, their descriptor words are injective.
 Whole-graph connectivity and reachability between native endpoint readers are
-in PSPACE. Identifying the assembled geometric cover and constructing the full
-recursive component graph remain open.
+in PSPACE. Native scalar context checks now supply ordered original gap
+boundaries and interior samples, even with empty spatial fibers. Accepted
+contexts construct complete continuous arcs and native references at both
+samples. Their injective descriptors agree across the gap. Every graph word
+denotes a unique actual curve or endpoint point; unused words denote empty
+pieces. All native edges agree with relative frontier incidence. The assembled
+accessible cover therefore transfers native graph connectivity to actual
+closed root slabs in PSPACE, without supplied cover or adjacency routines.
+Constructing the full recursive component graph remains open.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.

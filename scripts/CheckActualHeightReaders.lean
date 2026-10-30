@@ -30,6 +30,7 @@ import LeanCanny.Encoding.FlatAffineSlabGraphAlgorithms
 import LeanCanny.Encoding.FlatAffineSlabGraphEdges
 import LeanCanny.Encoding.FlatAffineEndpointBranchLabelComplete
 import LeanCanny.Connectivity.FlatAffineSlabGraphBranchLabels
+import LeanCanny.Connectivity.FlatAffineSlabConnectivity
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -408,6 +409,16 @@ example (c : List Bool) (hc : c ∈ FlatAffineSlabGraphContext.language F cone s
     Finite (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.Index F cone selected c) ∧
       Nonempty (LeanCanny.Connectivity.FlatAffineSlabGraphBranches.Family F cone selected c) :=
   LeanCanny.Connectivity.FlatAffineSlabGraphBranches.exists_family F cone selected c hc
+
+-- This language concerns the actual closed root slab, with its cover and all
+-- graph queries constructed from the original source, rather than supplied.
+example : LeanCanny.Connectivity.FlatAffineSlabConnectivity.language F cone selected ∈ PSPACE :=
+  LeanCanny.Connectivity.FlatAffineSlabConnectivity.mem_PSPACE access cone selected selected_unary
+
+example (c : List Bool) (hc : c ∈ FlatAffineSlabGraphContext.language F cone selected) :
+    IsPreconnected (Set.univ : Set (LeanCanny.Connectivity.FlatAffineSlabGraphBranches.Space F cone selected c)) ↔
+      c ∈ FlatAffineSlabGraph.connectedLanguage F cone selected :=
+  LeanCanny.Connectivity.FlatAffineSlabConnectivity.connected_iff F cone selected c hc
 
 end
 end ActualHeightReaderRegression
