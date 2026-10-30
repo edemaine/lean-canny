@@ -39,6 +39,7 @@ import LeanCanny.Encoding.FlatAffineSingularChildLabels
 import LeanCanny.Connectivity.CoordinateAffineComponentCover
 import LeanCanny.Encoding.CoordinateAffineSliceRegularity
 import LeanCanny.Encoding.FlatAffineSingularSliceChoice
+import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -548,6 +549,23 @@ example (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStag
       FlatAffineSingularSliceSamples.singular F u
         (FlatAffineCompleteVertices.vertexEquiv F (FlatAffineCompleteChildLabels.parentCone F C) u ⟨v, hv⟩) :=
   FlatAffineSingularSliceChoice.value_singular F C u v hv hq
+
+-- The terminal stage fixes every coordinate except the final one. The
+-- actual source gives finitely many points and native point reachability.
+example (u : List Bool) (x : FlatAffinePowerSampleInput.OriginalRoots
+    (CoordinateAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => [])) u) :
+    Finite (FlatAffineCompleteComponentSamples.slice
+      (CoordinateAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => [])) u x) :=
+  (CoordinateAffineTerminalSamples.finite_card_le F.source F.depth (fun _ => 100) (fun _ => []) u x
+    (by change (3 : ℕ) ≤ 100; decide)).1
+
+example : LeanCanny.Connectivity.CoordinateAffineTerminalReachability.language F.source F.depth (fun _ => 100) (fun _ => []) ∈ PSPACE :=
+  LeanCanny.Connectivity.CoordinateAffineTerminalReachability.mem_PSPACE access.source access.depth
+    (UnaryFn.const 100) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F)) :
+    SpaceDecider (FlatAffineChildSpatialEquality.language F C) :=
+  FlatAffineChildSpatialEquality.decider access C
 
 end
 end ActualHeightReaderRegression

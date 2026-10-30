@@ -59,6 +59,7 @@ import LeanCanny.Encoding.FlatAffineCompactComponentSamples
 import LeanCanny.Connectivity.CoordinateAffineComponentCover
 import LeanCanny.Encoding.CoordinateAffineSliceRegularity
 import LeanCanny.Encoding.FlatAffineSingularSliceChoice
+import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -353,6 +354,11 @@ these entire frozen slices in native PSPACE. An accepted singularity query
 also computes an actual complete child label whose spatial point is singular
 in the exact parent slice. These tests use the original source readers;
 regularity is not a supplied oracle.
+At a terminal coordinate slice, every feasible point has a unique critical
+multiplier lift, including multiple source roots. The actual next-stage cone
+bound therefore bounds all slice points. Native guarded spatial comparison
+now decides paths between complete child labels in these terminal slices,
+with exact parent ancestry and terminal-coordinate validation.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

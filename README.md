@@ -804,6 +804,11 @@ The checked ingredients are:
   singularity query also computes an actual complete singular child label with
   its exact ancestry. These routines charge the original readers and derived
   widths, without a supplied regularity test or singular-point oracle.
+  When a coordinate prefix fixes all but the last coordinate, every feasible
+  point has a unique critical multiplier lift, including multiple roots.
+  The actual next-stage root bound bounds every point of this terminal slice.
+  Native spatial equality now gives PSPACE point reachability in these slices,
+  checking the terminal coordinate flag and both exact parent ancestries.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
