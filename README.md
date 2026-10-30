@@ -672,7 +672,14 @@ The checked ingredients are:
   where every midpoint test is stable. Samples in either refined adjacent gap
   identify the original slab's endpoint edges; extra refinement roots require
   no new endpoint attachments. Both gaps approach their retained root, including
-  the extreme roots. Native algebraic adjacent-sample evaluation remains open.
+  the extreme roots. The derivative of the computed matching polynomial now
+  supplies algebraic candidates in every bounded refined gap, by Rolle's
+  theorem. Its coefficient reader and root counts are native. Complete
+  scalar sampling gives these candidates short labels, native validity, and
+  native polynomial-test signs, including repeated roots. A checked-promise
+  sampler also keeps native access total on malformed preparation records;
+  its guarded language rejects them. Native adjacent-gap label validation,
+  multivariate endpoint signs, and the recursive cover remain open.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

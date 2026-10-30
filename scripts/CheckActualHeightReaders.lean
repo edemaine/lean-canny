@@ -11,6 +11,7 @@ import LeanCanny.Encoding.FlatAffineEndpointGrid
 import LeanCanny.Encoding.FlatAffineEndpointTrailing
 import LeanCanny.Encoding.FlatAffineEndpointValidity
 import LeanCanny.Encoding.FlatAffineEndpointCells
+import LeanCanny.Encoding.FlatAffineEndpointSamples
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -219,6 +220,23 @@ example (r : List Bool) (hr : FlatAffineEndpointValidity.Valid F selected r) (a 
     (ha : SymbolicScaledSquarefree.scalarEvaluation a (FlatAffineHeightSlabExceptional.polynomial F selected (pairFst r)) = 0) :
     a ∈ FlatAffineEndpointCells.roots F cone selected r :=
   FlatAffineEndpointCells.endpoint_mem F cone selected r hr a ha
+
+-- Algebraic candidates use source-derived derivative coefficients. Their
+-- native labels retain repeated roots and require no isolating rationals.
+example : SpaceFunction (fun r => BinaryNatCode.encode (FlatAffineEndpointSamples.roots F cone selected r).card) :=
+  FlatAffineEndpointSamples.countEvaluator access cone selected selected_unary
+
+example : UnaryFn (SquareSampleCompleteVertices.width (FlatAffineEndpointSamples.input F cone selected)) :=
+  FlatAffineEndpointSamples.vertexWidth_unary access cone selected selected_unary
+
+example : SquareSampleCompleteVertices.language (FlatAffineEndpointSamples.input F cone selected) ∈ PSPACE :=
+  FlatAffineEndpointSamples.vertex_mem_PSPACE access cone selected selected_unary
+
+example : SquareSampleCompletePolynomialTest.language (FlatAffineEndpointSamples.input F cone selected)
+    (IntegerPolynomialSampleInput.test (FlatAffineEndpointSamples.source F cone selected)
+      (FlatAffineEndpointCells.source F cone selected)) .pos ∈ PSPACE :=
+  IntegerPolynomialSampleInput.sign_mem_PSPACE (FlatAffineEndpointSamples.access access cone selected selected_unary)
+    (FlatAffineEndpointCells.access access cone selected selected_unary) .pos
 
 end
 end ActualHeightReaderRegression

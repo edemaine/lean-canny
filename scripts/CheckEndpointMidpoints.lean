@@ -3,6 +3,8 @@ import LeanCanny.Geometry.SymbolicRootCurveOrder
 import LeanCanny.Encoding.CoordinateBranchOrdinals
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Geometry.OrderedRealCellNeighborhood
+import LeanCanny.Geometry.OrderedRealCellDerivativeSample
+import LeanCanny.Encoding.IntegerPolynomialSampleInput
 
 /-! Finite endpoint selection, tied coordinates, and zero midpoint tests.
 Run with `lake env lean -DwarningAsError=true scripts/CheckEndpointMidpoints.lean`.
@@ -23,6 +25,27 @@ example (s : Finset ℝ) (i : Fin s.card) (b : ℝ) (hb : OrderedRealCells.root 
 example (s : Finset ℝ) (i : Fin s.card) (a : ℝ) (ha : a < OrderedRealCells.root s i) :
     ∃ t ∈ OrderedRealCells.gap s (OrderedRealCells.leftGap s i), a < t :=
   OrderedRealCells.exists_leftGap_after s i ha
+
+-- Repeated roots still admit algebraic samples between consecutive roots.
+example (p : Polynomial ℝ) (s : Finset ℝ) (hs : ∀ t ∈ s, p.eval t = 0)
+    (k : Fin (s.card + 1)) (h0 : 0 < k.val) (hk : k.val < s.card) :
+    ∃ t ∈ OrderedRealCells.gap s k, p.derivative.eval t = 0 :=
+  OrderedRealCells.exists_derivative_in_gap p s hs k h0 hk
+
+private noncomputable def singularSource : IntegerPolynomialRootQueriesBits.Source where
+  polynomial _ := Polynomial.X ^ 2
+  degree _ := 2
+  mass _ := 0
+  degree_bound _ := by simp
+  mass_bound _ := by simp
+
+-- A root rejected by a regular-root sampler has a complete vertex label.
+example : ∃ w, ∃ hw : LeanCanny.Encoding.SquareSampleCompleteVertices.Valid
+    (LeanCanny.Encoding.IntegerPolynomialSampleInput.input singularSource) [] w,
+    (LeanCanny.Encoding.SquareSampleCompleteVertices.candidate
+      (LeanCanny.Encoding.IntegerPolynomialSampleInput.input singularSource) [] w hw).val (0 : Fin 1) = 0 :=
+  LeanCanny.Encoding.IntegerPolynomialSampleInput.root_complete singularSource []
+    (by change (Polynomial.X ^ 2 : Polynomial ℤ) ≠ 0; exact pow_ne_zero _ Polynomial.X_ne_zero) 0 (by simp [singularSource])
 
 -- A midpoint test can vanish identically on a third branch. Strict-side
 -- matching still rejects the incorrect endpoint candidate.

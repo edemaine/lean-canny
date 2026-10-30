@@ -26,6 +26,8 @@ import LeanCanny.Encoding.FlatAffineEndpointGram
 import LeanCanny.Encoding.FlatAffineEndpointGrid
 import LeanCanny.Encoding.FlatAffineEndpointTrailing
 import LeanCanny.Encoding.FlatAffineEndpointCells
+import LeanCanny.Encoding.FlatAffineEndpointSamples
+import LeanCanny.Encoding.GuardedSquareSampleInput
 import LeanCanny.Connectivity.FlatAffineEndpointIncidence
 import LeanCanny.Connectivity.FlatAffineEndpointCellIncidence
 import LeanCanny.Geometry.FrozenAffineBranches
