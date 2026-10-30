@@ -15,6 +15,9 @@ import LeanCanny.Geometry.SymbolicRootCurveOrder
 import LeanCanny.Encoding.CoordinateBranchOrdinals
 import LeanCanny.Encoding.AffineShiftCoordinateSpace
 import LeanCanny.Encoding.FlatAffineHeightGram
+import LeanCanny.Encoding.FlatAffineHeightValues
+import LeanCanny.Connectivity.FlatAffineHeightArcs
+import LeanCanny.Encoding.FlatAffineHeightTrailing
 import LeanCanny.Algebra.ProjectiveValueGramSpace
 import LeanCanny.Geometry.IntegerGridValueCertificate
 import LeanCanny.Geometry.IntegerGridValueReader
@@ -335,6 +338,17 @@ polynomials, supplying the grid degrees without an actual-degree scan.
 The actual affine power tower now instantiates these readers for one varying
 row; its original signed-record program supplies all integer coefficients and
 the parameter shift is internal.
+Uniform indexed access now supplies its entire coordinate grid, rejecting
+invalid coordinates. The original source alone also supplies value readers
+for its shifted equations on that grid. Both Gram determinants are internal;
+the existing cone certificate proves nonvanishing, and every field-valued
+grid root satisfies the computed value relation without regularity.
+These same computed value polynomials now construct the exceptional factors
+for complete actual-source height arcs, so the native readers and geometric
+certificates agree. Their outer and parameter degrees have native binary bounds.
+Both Gram stages now also have derived coefficient-height budgets. A native
+lowest-nonzero-coefficient scan computes each actual trailing factor from the
+original source, with no trailing-index or coefficient-height oracle.
 Recursive coordinate metadata and effective branch records remain required.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
