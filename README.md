@@ -614,6 +614,15 @@ The checked ingredients are:
   preserves distinct-root ranks. One fixed-width ordinal per coordinate gives
   constant branch records that distinguish grid points and use n*W bits for
   coordinate degrees at most 2^W, including empty grids and zero-width records.
+  Native affine-height coordinate readers now compute the exact reciprocal
+  Gram certificates from original integer rows and polynomial shifts. Their
+  canonical binary levels and unary widths are derived from source dimension
+  and binary row allowances, with both source readers charged. Infinity exclusion
+  makes the native determinant degree allowance exact for these coordinate
+  polynomials, supplying the grid degrees without an actual-degree scan.
+  The actual affine power tower now instantiates these readers for one varying
+  row; its original signed-record program supplies all integer coefficients and
+  the parameter shift is internal.
   Recursive coordinate metadata and effective branch records remain required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
@@ -879,6 +888,7 @@ lake env lean scripts/CheckFiniteFiberSlabs.lean
 lake env lean scripts/CheckBinaryValueReaders.lean
 lake env lean scripts/CheckGridValueReaders.lean
 lake env lean scripts/CheckEndpointMidpoints.lean
+lake env lean scripts/CheckAffineShiftReaders.lean
 ```
 
 The core import check enforces the separation from the optional tube route.
