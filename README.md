@@ -634,6 +634,12 @@ The checked ingredients are:
   Both Gram stages now also have derived coefficient-height budgets. A native
   lowest-nonzero-coefficient scan computes each actual trailing factor from the
   original source, with no trailing-index or coefficient-height oracle.
+  A native complete slab exceptional polynomial now combines those trailing
+  factors with every nonzero principal subresultant of each coordinate and its
+  derivative. Zero factors are detected in space and replaced by one, so the
+  construction requires no FP GCD-order oracle. Its streamed coefficient reader,
+  binary degree bound, and coefficient-mass budget come from the original source;
+  avoidance implies the geometric slab's exact exceptional conditions.
   Recursive coordinate metadata and effective branch records remain required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

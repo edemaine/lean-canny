@@ -18,6 +18,7 @@ import LeanCanny.Encoding.FlatAffineHeightGram
 import LeanCanny.Encoding.FlatAffineHeightValues
 import LeanCanny.Connectivity.FlatAffineHeightArcs
 import LeanCanny.Encoding.FlatAffineHeightTrailing
+import LeanCanny.Encoding.FlatAffineHeightSlabExceptional
 import LeanCanny.Algebra.ProjectiveValueGramSpace
 import LeanCanny.Geometry.IntegerGridValueCertificate
 import LeanCanny.Geometry.IntegerGridValueReader
@@ -349,6 +350,11 @@ certificates agree. Their outer and parameter degrees have native binary bounds.
 Both Gram stages now also have derived coefficient-height budgets. A native
 lowest-nonzero-coefficient scan computes each actual trailing factor from the
 original source, with no trailing-index or coefficient-height oracle.
+A native complete slab exceptional polynomial now combines these factors
+with all nonzero coordinate principal subresultants, detecting zero factors
+in space. Binary degree and coefficient-mass budgets are derived, and its
+avoidance implies the exact geometric exceptional conditions. No FP GCD-order
+routine is a premise.
 Recursive coordinate metadata and effective branch records remain required.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component

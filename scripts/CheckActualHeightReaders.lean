@@ -1,6 +1,7 @@
 import LeanCanny.Encoding.FlatAffineHeightValues
 import LeanCanny.Connectivity.FlatAffineHeightArcs
 import LeanCanny.Encoding.FlatAffineHeightTrailing
+import LeanCanny.Encoding.FlatAffineHeightSlabExceptional
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -82,6 +83,25 @@ example : SpaceFunction (PrimitivePairBits.coefficient (fun u =>
 
 example : (FlatAffineHeightTrailing.polynomial F selected selected []).trailingCoeff ≠ 0 :=
   FlatAffineHeightTrailing.trailing_ne_zero F cone selected selected []
+
+-- Every nonzero principal factor is computed in space; the selected GCD
+-- order is never an assumed FP metadata routine.
+example : SpaceFunction (PrimitivePairBits.coefficient (FlatAffineHeightSlabExceptional.polynomial F selected)) :=
+  FlatAffineHeightSlabExceptional.evaluator access selected selected_unary
+
+example : FlatAffineHeightSlabExceptional.polynomial F selected [] ≠ 0 :=
+  FlatAffineHeightSlabExceptional.ne_zero F cone selected []
+
+example : BinaryFn (FlatAffineHeightSlabExceptional.degreeBound F) :=
+  FlatAffineHeightSlabExceptional.degreeBound_binary access selected
+
+example : BinaryFn (FlatAffineHeightSlabExceptional.massBound F) :=
+  FlatAffineHeightSlabExceptional.massBound_binary access selected
+
+example (t : ℝ) (ht : SymbolicScaledSquarefree.scalarEvaluation t
+    (FlatAffineHeightSlabExceptional.polynomial F selected []) ≠ 0) :
+    SymbolicScaledSquarefree.scalarEvaluation t (Connectivity.FlatAffineHeightArcs.exceptional F selected []) ≠ 0 :=
+  FlatAffineHeightSlabExceptional.avoids (SymbolicScaledSquarefree.scalarEvaluation t) F cone selected [] ht
 
 end
 end ActualHeightReaderRegression

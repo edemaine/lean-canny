@@ -48,6 +48,29 @@ noncomputable def family (F : Inputs) (height row : (u : List Bool) → Fin (cou
   test u := AffineConstantParameterShift.system (FlatAffinePowerPositive.system F u)
     (fun i => if i = height u then Polynomial.X else 0) (row u)
 
+lemma annihilator_comp (F : Inputs) (height row : (u : List Bool) → Fin (count F u))
+    (f : List Bool → List Bool) (u : List Bool) :
+    (family (FlatAffineFullSourceContext.comp F f) (fun z => height (f z)) (fun z => row (f z))).affine.homogeneous.annihilator u =
+      (family F height row).affine.homogeneous.annihilator (f u) := by
+  have hs := funext (FlatAffinePowerPositive.system_comp F f u)
+  have hc := funext (FlatAffineHeightGrid.coordinate_comp F height f u)
+  have hdim : coordinateDegree (FlatAffineFullSourceContext.comp F f) u = coordinateDegree F (f u) := by
+    unfold coordinateDegree FlatAffinePowerGramLayout.dimension
+    rw [FlatAffinePowerGramLayout.width_eq, FlatAffinePowerGramLayout.width_eq]
+    rfl
+  dsimp only [ProjectiveValueGramBits.Family.annihilator, AffineValueGramBits.Family.homogeneous,
+    IntegerGridValueGramBits.Family.affine, family]
+  simp only [hc, hs, hdim, testDegree, width]
+  rfl
+
+lemma annihilator_row_congr (F : Inputs) (height row row' : (u : List Bool) → Fin (count F u))
+    (u : List Bool) (hr : row u = row' u) :
+    (family F height row).affine.homogeneous.annihilator u =
+      (family F height row').affine.homogeneous.annihilator u := by
+  dsimp only [ProjectiveValueGramBits.Family.annihilator, AffineValueGramBits.Family.homogeneous,
+    IntegerGridValueGramBits.Family.affine, family, width, testDegree]
+  rw [hr]
+
 theorem coordinateDegree_binary {F : Inputs} (h : F.Access) : BinaryFn (coordinateDegree F) :=
   (FlatAffinePowerGramLayout.dimension_binary h).add (BinaryFn.const 1)
 
