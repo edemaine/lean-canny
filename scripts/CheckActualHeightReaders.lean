@@ -26,6 +26,9 @@ import LeanCanny.Encoding.FlatAffineEndpointChildSamples
 import LeanCanny.Encoding.FlatAffineEndpointMarkerComplete
 import LeanCanny.Encoding.FlatAffineEndpointParentComplete
 import LeanCanny.Connectivity.FlatAffineEndpointDescriptorIncidence
+import LeanCanny.Encoding.FlatAffineSlabGraphAlgorithms
+import LeanCanny.Encoding.FlatAffineSlabGraphEdges
+import LeanCanny.Encoding.FlatAffineEndpointBranchLabelComplete
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -379,6 +382,20 @@ example (C : FlatAffineEndpointChildSamples.Controls) (A : C.Access) :
 example (C : FlatAffineEndpointChildSamples.Controls) (A : C.Access) :
     NamedRationalParents.Access (NamedParentChildNext.next (FlatAffineEndpointChildSamples.inputs F cone selected C)) :=
   FlatAffineEndpointChildSamples.nextAccess access cone selected selected_unary A
+
+-- The concrete bit graph charges its own native validity, equality, and
+-- attachment queries, including all searches performed inside them.
+example : UnaryFn (FlatAffineSlabGraphCodes.width F cone selected) :=
+  FlatAffineSlabGraphCodes.width_unary access cone selected selected_unary
+
+example : FlatAffineSlabGraph.validLanguage F cone selected ∈ PSPACE :=
+  FlatAffineSlabGraph.valid_mem_PSPACE access cone selected selected_unary
+
+example : FlatAffineSlabGraph.edgeLanguage F cone selected ∈ PSPACE :=
+  FlatAffineSlabGraph.edge_mem_PSPACE access cone selected selected_unary
+
+example : FlatAffineSlabGraph.connectedLanguage F cone selected ∈ PSPACE :=
+  FlatAffineSlabGraph.connected_mem_PSPACE access cone selected selected_unary
 
 end
 end ActualHeightReaderRegression

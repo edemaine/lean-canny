@@ -742,8 +742,16 @@ The checked ingredients are:
   Every endpoint point has such a bounded parent name with exact recovery,
   including isolated points absent from neighboring slabs.
   The existing ancestry-aware child routines now give native regular child
-  samples over these markers, without parent endpoint regularity. Recursive
-  graph assembly remains required.
+  samples over these markers, without parent endpoint regularity. A concrete
+  bounded slab graph now encodes the branch and endpoint-marker vertices.
+  Its native validity and adjacency charge point equality and attachment
+  searches. Valid labels embed at the derived unary width, and encoded arc
+  edges agree with the checked queries in both orientations. Validated branch
+  words enumerate exactly a complete geometric sample fiber and distinguish
+  its distinct branch points. Whole-graph connectivity and reachability with
+  native endpoint readers are in PSPACE.
+  The assembled geometric cover and full recursive component graph remain
+  required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

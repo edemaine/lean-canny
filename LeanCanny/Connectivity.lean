@@ -45,6 +45,9 @@ import LeanCanny.Encoding.FlatAffineEndpointChildSamples
 import LeanCanny.Encoding.FlatAffineEndpointMarkerComplete
 import LeanCanny.Encoding.FlatAffineEndpointParentComplete
 import LeanCanny.Connectivity.FlatAffineEndpointDescriptorIncidence
+import LeanCanny.Encoding.FlatAffineSlabGraphAlgorithms
+import LeanCanny.Encoding.FlatAffineSlabGraphEdges
+import LeanCanny.Encoding.FlatAffineEndpointBranchLabelComplete
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -449,7 +452,16 @@ accept bounded parent names for every actual endpoint point, including
 isolated points with empty neighboring fibers, with exact coordinate recovery.
 These child routines
 now give native regular child samples over these markers, without regularity
-of the original endpoint. The complete recursive graph assembly remains open.
+of the original endpoint. A concrete bounded slab graph now encodes branch
+descriptors and both endpoint-marker families. Its native validity and edge
+deciders include all point identities and attachment searches. Every validated
+descriptor or marker embeds as a word of the derived unary width. Encoded
+attachment edges agree with the checked native queries in both orientations.
+Validated branch words enumerate exactly a complete geometric sample fiber;
+when its branch points are distinct, their descriptor words are injective.
+Whole-graph connectivity and reachability between native endpoint readers are
+in PSPACE. Identifying the assembled geometric cover and constructing the full
+recursive component graph remain open.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.
