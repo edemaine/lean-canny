@@ -31,37 +31,27 @@ variable {ι κ : Type*} [Fintype ι] [DecidableEq ι] [Fintype κ]
 abbrev Fiber (q : κ → MvPolynomial ι (Polynomial ℝ)) (t : ℝ) :=
   {x : ι → ℝ // PolynomialGridValues.value q (t, x) = 0}
 
-/-- One actual original root in the indexing fiber labels each retained arc.
-Neither original-system regularity nor simple coordinate roots are assumed. -/
-theorem exists_anchored_arcs (p : ι → Polynomial (Polynomial ℤ)) (hp : ∀ i, p i ≠ 0)
+omit [Fintype κ] in
+/-- Supplied value relations select complete original arcs on any interval
+where the coordinate and trailing-coefficient exceptional factors do not vanish. -/
+theorem anchored_arcs_of_annihilators (p : ι → Polynomial (Polynomial ℤ)) (hp : ∀ i, p i ≠ 0)
     (q : κ → MvPolynomial ι (Polynomial ℝ))
+    (Q : κ → Polynomial (Polynomial ℝ))
+    (hrelQ : ∀ t x, (∀ i, (p i).eval₂ (SymbolicScaledSquarefree.scalarEvaluation t) (x i) = 0) →
+      ∀ k, (Q k).eval₂ (Polynomial.evalRingHom t) (PolynomialGridValues.value q (t, x) k) = 0)
     (hproper : IsProperMap (RootProjection.projection (SquarefreeRootFamily.value p)))
-    (hcapture : ∀ t x, PolynomialGridValues.value q (t, x) = 0 →
-      SquarefreeRootFamily.value p (t, x) = 0) :
-    ∃ bad : Set ℝ, bad.Finite ∧ ∀ (a b : ℝ) (t₀ : Ioo a b),
-      (∀ t ∈ Ioo a b, t ∉ bad) →
-      Finite (Fiber q t₀.val) ∧
-      ∃ curve : Fiber q t₀.val → ℝ → ι → ℝ,
-        (∀ j, curve j t₀.val = j.val) ∧
-        (∀ j, ContinuousOn (curve j) (Icc a b)) ∧
-        (∀ j t, t ∈ Icc a b → PolynomialGridValues.value q (t, curve j t) = 0) ∧
-        (∀ t : Ioo a b, ∀ x, PolynomialGridValues.value q (t.val, x) = 0 ↔
-          ∃! j, curve j t.val = x) ∧
-        ∀ j, FrontierCover.Accessible ((fun t => (t, curve j t)) '' Ioo a b) := by
-  obtain ⟨Q, _, hfiniteQ, hrelQ⟩ := PolynomialGridValues.exists_annihilators
-    (fun i => SquarefreeRootFamily.realPolynomial (p i))
-    (fun i => SquarefreeRootFamily.realPolynomial_ne_zero (hp i)) q
-  let exceptional : Set ℝ := {t | ∃ i, SymbolicScaledSquarefree.scalarEvaluation t
-    (SymbolicScaledSquarefree.exceptional (p i)) = 0}
-  let testExceptional : Set ℝ := {t | ∃ k, (Q k).trailingCoeff.eval t = 0}
-  refine ⟨exceptional ∪ testExceptional,
-    (SquarefreeRootFamily.finite_exceptional p hp).union hfiniteQ, ?_⟩
-  intro a b t₀ havoid
-  have havoidP (t : ℝ) (ht : t ∈ Ioo a b) (i : ι) : SymbolicScaledSquarefree.scalarEvaluation t
-      (SymbolicScaledSquarefree.exceptional (p i)) ≠ 0 :=
-    fun hz => havoid t ht (Or.inl ⟨i, hz⟩)
-  have havoidQ (k : κ) (t : ℝ) (ht : t ∈ Ioo a b) : (Q k).trailingCoeff.eval t ≠ 0 :=
-    fun hz => havoid t ht (Or.inr ⟨k, hz⟩)
+    (hcapture : ∀ t x, PolynomialGridValues.value q (t, x) = 0 → SquarefreeRootFamily.value p (t, x) = 0)
+    (a b : ℝ) (t₀ : Ioo a b)
+    (havoidP : ∀ t ∈ Ioo a b, ∀ i, SymbolicScaledSquarefree.scalarEvaluation t
+      (SymbolicScaledSquarefree.exceptional (p i)) ≠ 0)
+    (havoidQ : ∀ k t, t ∈ Ioo a b → (Q k).trailingCoeff.eval t ≠ 0) :
+    Finite (Fiber q t₀.val) ∧
+    ∃ curve : Fiber q t₀.val → ℝ → ι → ℝ,
+      (∀ j, curve j t₀.val = j.val) ∧
+      (∀ j, ContinuousOn (curve j) (Icc a b)) ∧
+      (∀ j t, t ∈ Icc a b → PolynomialGridValues.value q (t, curve j t) = 0) ∧
+      (∀ t : Ioo a b, ∀ x, PolynomialGridValues.value q (t.val, x) = 0 ↔ ∃! j, curve j t.val = x) ∧
+      ∀ j, FrontierCover.Accessible ((fun t => (t, curve j t)) '' Ioo a b) := by
   obtain ⟨hfinite, branch, _, hcont, hgridroot, hgridcomplete, _⟩ :=
     SquarefreeRootArcs.exists_anchored_arcs p hp a b t₀ hproper havoidP
   let I := RootBranches.Index
@@ -71,7 +61,6 @@ theorem exists_anchored_arcs (p : ι → Polynomial (Polynomial ℤ)) (hp : ∀ 
       (Q k).eval₂ (Polynomial.evalRingHom t) (PolynomialGridValues.value q (t, branch j t) k) = 0 := by
     apply hrelQ t (branch j t) _ k
     intro i
-    rw [SquarefreeRootFamily.eval_realPolynomial]
     have H := congrFun (hgridroot j t (Ioo_subset_Icc_self ht)) i
     rwa [SquarefreeRootFamily.value_apply, Pi.zero_apply] at H
   have hcover (t : Ioo a b) (x : ι → ℝ) (hx : PolynomialGridValues.value q (t.val, x) = 0) :
@@ -116,5 +105,43 @@ theorem exists_anchored_arcs (p : ι → Polynomial (Polynomial ℤ)) (hp : ∀ 
       exact hroots (e.symm j) t.val (Ioo_subset_Icc_self t.property)
   · intro x
     exact haccess (e.symm x)
+
+/-- One actual original root in the indexing fiber labels each retained arc.
+Neither original-system regularity nor simple coordinate roots are assumed. -/
+theorem exists_anchored_arcs (p : ι → Polynomial (Polynomial ℤ)) (hp : ∀ i, p i ≠ 0)
+    (q : κ → MvPolynomial ι (Polynomial ℝ))
+    (hproper : IsProperMap (RootProjection.projection (SquarefreeRootFamily.value p)))
+    (hcapture : ∀ t x, PolynomialGridValues.value q (t, x) = 0 →
+      SquarefreeRootFamily.value p (t, x) = 0) :
+    ∃ bad : Set ℝ, bad.Finite ∧ ∀ (a b : ℝ) (t₀ : Ioo a b),
+      (∀ t ∈ Ioo a b, t ∉ bad) →
+      Finite (Fiber q t₀.val) ∧
+      ∃ curve : Fiber q t₀.val → ℝ → ι → ℝ,
+        (∀ j, curve j t₀.val = j.val) ∧
+        (∀ j, ContinuousOn (curve j) (Icc a b)) ∧
+        (∀ j t, t ∈ Icc a b → PolynomialGridValues.value q (t, curve j t) = 0) ∧
+        (∀ t : Ioo a b, ∀ x, PolynomialGridValues.value q (t.val, x) = 0 ↔
+          ∃! j, curve j t.val = x) ∧
+        ∀ j, FrontierCover.Accessible ((fun t => (t, curve j t)) '' Ioo a b) := by
+  obtain ⟨Q, _, hfiniteQ, hrelQ⟩ := PolynomialGridValues.exists_annihilators
+    (fun i => SquarefreeRootFamily.realPolynomial (p i))
+    (fun i => SquarefreeRootFamily.realPolynomial_ne_zero (hp i)) q
+  let exceptional : Set ℝ := {t | ∃ i, SymbolicScaledSquarefree.scalarEvaluation t
+    (SymbolicScaledSquarefree.exceptional (p i)) = 0}
+  let testExceptional : Set ℝ := {t | ∃ k, (Q k).trailingCoeff.eval t = 0}
+  refine ⟨exceptional ∪ testExceptional,
+    (SquarefreeRootFamily.finite_exceptional p hp).union hfiniteQ, ?_⟩
+  intro a b t₀ havoid
+  have havoidP (t : ℝ) (ht : t ∈ Ioo a b) (i : ι) : SymbolicScaledSquarefree.scalarEvaluation t
+      (SymbolicScaledSquarefree.exceptional (p i)) ≠ 0 :=
+    fun hz => havoid t ht (Or.inl ⟨i, hz⟩)
+  have havoidQ (k : κ) (t : ℝ) (ht : t ∈ Ioo a b) : (Q k).trailingCoeff.eval t ≠ 0 :=
+    fun hz => havoid t ht (Or.inr ⟨k, hz⟩)
+  apply anchored_arcs_of_annihilators p hp q Q ?_ hproper hcapture a b t₀ havoidP havoidQ
+  intro t x hx k
+  apply hrelQ t x _ k
+  intro i
+  rw [SquarefreeRootFamily.eval_realPolynomial]
+  exact hx i
 
 end LeanCanny.Connectivity.PolynomialGridArcs

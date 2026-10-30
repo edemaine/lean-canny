@@ -1,4 +1,4 @@
-import LeanCanny.Connectivity.AffineShiftArcs
+import LeanCanny.Connectivity.AffineShiftSlab
 
 /-! A varying height with a repeated endpoint root. Run with
 `lake env lean -DwarningAsError=true scripts/CheckAffineShiftArcs.lean`.
@@ -84,9 +84,36 @@ example : ∃ bad : Set ℝ, bad.Finite ∧ ∀ (a b : ℝ) (t₀ : Ioo a b),
   intro j t ht
   simpa [square, shift, SymbolicScaledSquarefree.scalarEvaluation] using hroot j t ht 0
 
+-- The actual exceptional factor is nonzero, not an unspecified finite set.
+example : AffineShiftArcs.exceptional square shift degree ≠ 0 :=
+  AffineShiftArcs.exceptional_ne_zero square shift degree positive noInfinity
+
+example (a b : ℝ) (t₀ : Ioo a b)
+    (havoid : ∀ t ∈ Ioo a b, SymbolicScaledSquarefree.scalarEvaluation t
+      (AffineShiftArcs.exceptional square shift degree) ≠ 0) :
+    ∃ curve : AffineShiftArcs.Fiber square shift t₀.val → ℝ → Fin 1 → ℝ,
+      ∀ j t, t ∈ Icc a b → curve j t 0 ^ 2 = t := by
+  obtain ⟨_, curve, _, _, hroot, _, _⟩ := AffineShiftArcs.anchored_arcs square shift degree
+    bounded positive noInfinity a b t₀ havoid
+  refine ⟨curve, ?_⟩
+  intro j t ht
+  simpa [square, shift, SymbolicScaledSquarefree.scalarEvaluation] using hroot j t ht 0
+
 -- The original equation has a vanishing derivative at the exceptional endpoint.
 example : (pderiv (0 : Fin 1) (square 0)).eval₂ (Int.castRingHom ℝ) (fun _ => 0) = 0 := by
   simp [square]
+
+-- The singular zero fiber and every other original fiber are finite.
+example (t : ℝ) : Finite (AffineShiftArcs.Fiber square shift t) :=
+  (AffineShiftCoordinates.finite_fiber square shift degree bounded positive noInfinity t).to_subtype
+
+-- The full graph theorem needs no supplied endpoint covers or finite-root oracle.
+example (a b : ℝ) (t₀ : Ioo a b)
+    (havoid : ∀ t ∈ Ioo a b, SymbolicScaledSquarefree.scalarEvaluation t
+      (AffineShiftArcs.exceptional square shift degree) ≠ 0) :
+    Finite (FiniteFiberSlab.Index (AffineShiftSlab.equation square shift)
+      (AffineShiftArcs.Fiber square shift t₀.val) a b) :=
+  (AffineShiftSlab.exists_graph square shift degree bounded positive noInfinity a b t₀ havoid).1
 
 -- Empty affine systems and coordinate grids are also covered.
 example : AffineFiniteCoordinates.NoInfinity (fun i : Fin 0 => i.elim0) (fun i => i.elim0) := by

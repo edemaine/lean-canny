@@ -63,6 +63,15 @@ lemma coordinate_ne_zero (p : Fin n → MvPolynomial (Fin n) ℤ) (c : Fin n →
   rw [hz, Polynomial.leadingCoeff_zero, map_zero] at h
   exact (lt_irrefl 0) h
 
+lemma coordinate_degree_pos (p : Fin n → MvPolynomial (Fin n) ℤ) (c : Fin n → Polynomial ℤ)
+    (d : Fin n → ℕ) (hd : ∀ i, 0 < d i) (hp : AffineFiniteCoordinates.NoInfinity p d)
+    (i : Fin n) : 0 < (coordinate p c d i).natDegree := by
+  have h := (AffineRingCoordinates.exact_degree_and_positive_leading
+    (SymbolicScaledSquarefree.scalarEvaluation 0) (AffineConstantParameterShift.system p c) d hd
+    (AffineConstantParameterShift.noInfinity p c d hd hp _) i).1
+  rw [coordinate, h]
+  exact Nat.zero_lt_succ _
+
 lemma proper (p : Fin n → MvPolynomial (Fin n) ℤ) (c : Fin n → Polynomial ℤ)
     (d : Fin n → ℕ) (hd : ∀ i, 0 < d i) (hp : AffineFiniteCoordinates.NoInfinity p d) :
     IsProperMap (RootProjection.projection (SquarefreeRootFamily.value (coordinate p c d))) := by
@@ -100,5 +109,25 @@ lemma capture (p : Fin n → MvPolynomial (Fin n) ℤ) (c : Fin n → Polynomial
   have h := congrFun hx j
   change ((AffineConstantParameterShift.system p c j).map _).eval₂ (Polynomial.evalRingHom t) x = 0 at h
   rwa [MvPolynomial.eval₂_map, SymbolicUnivariateRootFamily.evaluation_comp] at h
+
+/-- Endpoint fibers are finite too; exceptional parameters need no spatial
+regularity hypothesis. All coordinate leading coefficients remain positive. -/
+lemma finite_fiber (p : Fin n → MvPolynomial (Fin n) ℤ) (c : Fin n → Polynomial ℤ)
+    (d : Fin n → ℕ) (hdeg : ∀ i, (p i).totalDegree ≤ d i) (hd : ∀ i, 0 < d i)
+    (hp : AffineFiniteCoordinates.NoInfinity p d) (t : ℝ) :
+    {x : Fin n → ℝ | PolynomialGridValues.value (rows p c) (t, x) = 0}.Finite := by
+  let Q (i : Fin n) := (coordinate p c d i).map (SymbolicScaledSquarefree.scalarEvaluation t)
+  have hn (i : Fin n) : Q i ≠ 0 := by
+    intro hz
+    have H := congrArg Polynomial.leadingCoeff hz
+    rw [Polynomial.leadingCoeff_zero, Polynomial.leadingCoeff_map_of_leadingCoeff_ne_zero _
+      (ne_of_gt (positive_leading p c d hd hp i t))] at H
+    exact (ne_of_gt (positive_leading p c d hd hp i t)) H
+  apply (Set.Finite.pi' (fun i => Polynomial.finite_setOfPred_isRoot (hn i))).subset
+  intro x hx i
+  change (Q i).eval (x i) = 0
+  rw [Polynomial.eval_map]
+  have H := congrFun (capture p c d hdeg t x hx) i
+  simpa only [SquarefreeRootFamily.value_apply, Pi.zero_apply] using H
 
 end LeanCanny.Geometry.AffineShiftCoordinates

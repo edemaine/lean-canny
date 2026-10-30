@@ -591,7 +591,14 @@ The checked ingredients are:
   original-root arcs, including singular endpoints. Their coordinate and
   parameter degrees have uniform determinant bounds. Explicit integer-grid
   test-value annihilators have determinant degree bounds; their underlying
-  Gram construction also has coefficient-mass bounds. Native value-certificate
+  Gram construction also has coefficient-mass bounds. Their trailing coefficients
+  and squarefree coordinate factors construct a nonzero integer exceptional
+  polynomial with degree and root-count bounds. The affine-height arcs now use
+  this explicit polynomial. Their original endpoint fibers are finite even at
+  exceptional parameters. Singleton endpoint roots and the constructed arcs
+  give finite graphs of entire closed affine-height slabs, preserving paths
+  and connectedness. Incidence reduces to vertex and arc endpoint equality,
+  including isolated endpoint roots. Native value-certificate
   readers and effective recursive branch records remain required. Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.
@@ -851,6 +858,8 @@ lake env lean scripts/CheckConnectivity.lean
 lake env lean scripts/CheckAlgebraicArcs.lean
 lake env lean scripts/CheckAffineShiftArcs.lean
 lake env lean scripts/CheckIntegerGridValues.lean
+lake env lean scripts/CheckIntegerGridArcs.lean
+lake env lean scripts/CheckFiniteFiberSlabs.lean
 ```
 
 The core import check enforces the separation from the optional tube route.
