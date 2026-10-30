@@ -97,4 +97,26 @@ example (W : ℕ) (p : Fin 0 → Polynomial (Polynomial ℤ)) (t : ℝ) (x : Fin
   apply List.length_eq_zero_iff.mp
   exact (LeanCanny.Encoding.CoordinateBranchOrdinals.length_word W p t x).trans (Nat.zero_mul W)
 
+private noncomputable def collision : Polynomial (Polynomial ℤ) :=
+  (Polynomial.X ^ 2 - Polynomial.C Polynomial.X) * (Polynomial.X - Polynomial.C 1)
+
+private lemma collision_specialized : collision.map (SymbolicScaledSquarefree.scalarEvaluation 0) =
+    (Polynomial.X : Polynomial ℝ) ^ 2 * (Polynomial.X - Polynomial.C 1) := by
+  simp [collision, SymbolicScaledSquarefree.scalarEvaluation]
+
+private lemma collision_specialized_ne_zero : collision.map (SymbolicScaledSquarefree.scalarEvaluation 0) ≠ 0 := by
+  rw [collision_specialized]
+  exact ((Polynomial.monic_X.pow 2).mul (Polynomial.monic_X_sub_C 1)).ne_zero
+
+-- At the collision parameter, the repeated root zero is singular. Distinct
+-- root ordinals still distinguish zero from one without exception avoidance.
+example : (collision.map (SymbolicScaledSquarefree.scalarEvaluation 0)).derivative.eval 0 = 0 := by
+  rw [collision_specialized]
+  simp
+
+example : ScalarRootTransport.rank collision 0 0 < ScalarRootTransport.rank collision 0 1 := by
+  apply ScalarRootTransport.rank_lt_rank_of_ne_zero collision 0 0 1 collision_specialized_ne_zero
+  · simp [collision, SymbolicScaledSquarefree.scalarEvaluation]
+  · norm_num
+
 end EndpointMidpointRegression

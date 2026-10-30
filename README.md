@@ -640,7 +640,14 @@ The checked ingredients are:
   construction requires no FP GCD-order oracle. Its streamed coefficient reader,
   binary degree bound, and coefficient-mass budget come from the original source;
   avoidance implies the geometric slab's exact exceptional conditions.
-  Recursive coordinate metadata and effective branch records remain required.
+  Distinct-root counts and rational cuts now compute exact point/gap cell
+  codes in native PSPACE, with source-derived unary label widths. Every gap
+  avoids the geometric exceptional factors. Coordinate ordinal records also
+  distinguish original roots at singular exceptional parameters, since the
+  specialized coordinate polynomials remain nonzero. Their lengths are
+  polynomially bounded from the source metadata, and the records stay constant
+  along retained branches. Effective branch/endpoint membership and recursive
+  coordinate metadata remain required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

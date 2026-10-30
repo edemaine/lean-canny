@@ -2,6 +2,8 @@ import LeanCanny.Encoding.FlatAffineHeightValues
 import LeanCanny.Connectivity.FlatAffineHeightArcs
 import LeanCanny.Encoding.FlatAffineHeightTrailing
 import LeanCanny.Encoding.FlatAffineHeightSlabExceptional
+import LeanCanny.Encoding.FlatAffineHeightCells
+import LeanCanny.Encoding.FlatAffineHeightOrdinals
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -102,6 +104,29 @@ example (t : ℝ) (ht : SymbolicScaledSquarefree.scalarEvaluation t
     (FlatAffineHeightSlabExceptional.polynomial F selected []) ≠ 0) :
     SymbolicScaledSquarefree.scalarEvaluation t (Connectivity.FlatAffineHeightArcs.exceptional F selected []) ≠ 0 :=
   FlatAffineHeightSlabExceptional.avoids (SymbolicScaledSquarefree.scalarEvaluation t) F cone selected [] ht
+
+example : SpaceFunction (fun u => BinaryNatCode.encode (FlatAffineHeightCells.roots F cone selected u).card) :=
+  FlatAffineHeightCells.countEvaluator access cone selected selected_unary
+
+example : SpaceFunction (fun q => BinaryNatCode.encode
+    (IntegerPolynomialRootQueriesBits.cellCode (FlatAffineHeightCells.source F cone selected) q)) :=
+  FlatAffineHeightCells.cellEvaluator access cone selected selected_unary
+
+example : IntegerPolynomialRootQueriesBits.cellLanguage (FlatAffineHeightCells.source F cone selected) ∈ PSPACE :=
+  FlatAffineHeightCells.cell_mem_PSPACE access cone selected selected_unary
+
+example : UnaryFn (IntegerPolynomialRootQueriesBits.labelWidth (FlatAffineHeightCells.source F cone selected)) :=
+  IntegerPolynomialRootQueriesBits.labelWidth_unary (FlatAffineHeightCells.access access cone selected selected_unary)
+
+-- Short coordinate records distinguish every original endpoint root, even
+-- when that endpoint is exceptional and its fiber is singular.
+example : UnaryFn (fun u => FlatAffineFullSourcePositive.count F u * FlatAffineHeightOrdinals.width F u) :=
+  FlatAffineHeightOrdinals.length_unary access
+
+example (t : ℝ) : Function.Injective (fun x : Connectivity.PolynomialGridArcs.Fiber
+    (Connectivity.IntegerGridArcs.realRows (Connectivity.FlatAffineHeightArcs.rows F selected [])) t =>
+      FlatAffineHeightOrdinals.word F selected [] t x.val) :=
+  FlatAffineHeightOrdinals.fiber_word_injective F cone selected [] t
 
 end
 end ActualHeightReaderRegression

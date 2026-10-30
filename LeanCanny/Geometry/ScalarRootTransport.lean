@@ -26,15 +26,9 @@ abbrev Root (p : Polynomial Coefficient) (t : ℝ) :=
 noncomputable def rank (p : Polynomial Coefficient) (t y : ℝ) : ℕ :=
   Nat.card {x : Root p t // x.val < y}
 
-theorem finite_card_root (p : Polynomial Coefficient) (t : ℝ)
-    (ht : scalarEvaluation t (exceptional p) ≠ 0) :
+theorem finite_card_root_of_ne_zero (p : Polynomial Coefficient) (t : ℝ)
+    (hn : p.map (scalarEvaluation t) ≠ 0) :
     Finite (Root p t) ∧ Nat.card (Root p t) ≤ p.natDegree := by
-  have hl := (SymbolicScaledSquarefree.exceptional_conditions (scalarEvaluation t) p ht).1
-  have hn : p.map (scalarEvaluation t) ≠ 0 := by
-    intro hz
-    have h := congrArg Polynomial.leadingCoeff hz
-    rw [Polynomial.leadingCoeff_map_of_leadingCoeff_ne_zero _ hl, Polynomial.leadingCoeff_zero] at h
-    exact hl h
   let roots := (p.map (scalarEvaluation t)).roots.toFinset
   let enc : Root p t → {x // x ∈ roots} := fun x =>
     ⟨x.val, Multiset.mem_toFinset.mpr ((Polynomial.mem_roots hn).mpr (by
@@ -52,10 +46,23 @@ theorem finite_card_root (p : Polynomial Coefficient) (t : ℝ)
       (Multiset.toFinset_card_le _).trans (Polynomial.card_roots' _)
     _ ≤ p.natDegree := Polynomial.natDegree_map_le
 
-theorem rank_lt_degree (p : Polynomial Coefficient) (t y : ℝ)
-    (ht : scalarEvaluation t (exceptional p) ≠ 0) (hy : p.eval₂ (scalarEvaluation t) y = 0) :
+theorem specialized_ne_zero (p : Polynomial Coefficient) (t : ℝ)
+    (ht : scalarEvaluation t (exceptional p) ≠ 0) : p.map (scalarEvaluation t) ≠ 0 := by
+  have hl := (SymbolicScaledSquarefree.exceptional_conditions (scalarEvaluation t) p ht).1
+  intro hz
+  have h := congrArg Polynomial.leadingCoeff hz
+  rw [Polynomial.leadingCoeff_map_of_leadingCoeff_ne_zero _ hl, Polynomial.leadingCoeff_zero] at h
+  exact hl h
+
+theorem finite_card_root (p : Polynomial Coefficient) (t : ℝ)
+    (ht : scalarEvaluation t (exceptional p) ≠ 0) :
+    Finite (Root p t) ∧ Nat.card (Root p t) ≤ p.natDegree :=
+  finite_card_root_of_ne_zero p t (specialized_ne_zero p t ht)
+
+theorem rank_lt_degree_of_ne_zero (p : Polynomial Coefficient) (t y : ℝ)
+    (hn : p.map (scalarEvaluation t) ≠ 0) (hy : p.eval₂ (scalarEvaluation t) y = 0) :
     rank p t y < p.natDegree := by
-  have h := finite_card_root p t ht
+  have h := finite_card_root_of_ne_zero p t hn
   have : Finite (Root p t) := h.1
   let := Fintype.ofFinite (Root p t)
   have hr : rank p t y < Nat.card (Root p t) := by
@@ -63,10 +70,15 @@ theorem rank_lt_degree (p : Polynomial Coefficient) (t y : ℝ)
     exact Fintype.card_subtype_lt (x := (⟨y, hy⟩ : Root p t)) (lt_irrefl y)
   exact hr.trans_le h.2
 
-theorem rank_lt_rank (p : Polynomial Coefficient) (t x y : ℝ)
-    (ht : scalarEvaluation t (exceptional p) ≠ 0) (hx : p.eval₂ (scalarEvaluation t) x = 0)
+theorem rank_lt_degree (p : Polynomial Coefficient) (t y : ℝ)
+    (ht : scalarEvaluation t (exceptional p) ≠ 0) (hy : p.eval₂ (scalarEvaluation t) y = 0) :
+    rank p t y < p.natDegree :=
+  rank_lt_degree_of_ne_zero p t y (specialized_ne_zero p t ht) hy
+
+theorem rank_lt_rank_of_ne_zero (p : Polynomial Coefficient) (t x y : ℝ)
+    (hn : p.map (scalarEvaluation t) ≠ 0) (hx : p.eval₂ (scalarEvaluation t) x = 0)
     (hxy : x < y) : rank p t x < rank p t y := by
-  have : Finite (Root p t) := (finite_card_root p t ht).1
+  have : Finite (Root p t) := (finite_card_root_of_ne_zero p t hn).1
   let := Fintype.ofFinite (Root p t)
   let incl : {z : Root p t // z.val < x} → {z : Root p t // z.val < y} :=
     fun z => ⟨z.val, z.property.trans hxy⟩
@@ -82,15 +94,25 @@ theorem rank_lt_rank (p : Polynomial Coefficient) (t x y : ℝ)
   rw [rank, rank, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
   exact Fintype.card_lt_of_injective_of_notMem incl hi hn
 
-theorem rank_injective (p : Polynomial Coefficient) (t : ℝ)
-    (ht : scalarEvaluation t (exceptional p) ≠ 0) :
+theorem rank_lt_rank (p : Polynomial Coefficient) (t x y : ℝ)
+    (ht : scalarEvaluation t (exceptional p) ≠ 0) (hx : p.eval₂ (scalarEvaluation t) x = 0)
+    (hxy : x < y) : rank p t x < rank p t y :=
+  rank_lt_rank_of_ne_zero p t x y (specialized_ne_zero p t ht) hx hxy
+
+theorem rank_injective_of_ne_zero (p : Polynomial Coefficient) (t : ℝ)
+    (hn : p.map (scalarEvaluation t) ≠ 0) :
     Function.Injective (fun x : Root p t => rank p t x.val) := by
   intro x y he
   apply Subtype.ext
   by_contra hxy
   rcases lt_or_gt_of_ne hxy with hlt | hgt
-  · exact (ne_of_lt (rank_lt_rank p t x.val y.val ht x.property hlt)) he
-  · exact (ne_of_lt (rank_lt_rank p t y.val x.val ht y.property hgt)) he.symm
+  · exact (ne_of_lt (rank_lt_rank_of_ne_zero p t x.val y.val hn x.property hlt)) he
+  · exact (ne_of_lt (rank_lt_rank_of_ne_zero p t y.val x.val hn y.property hgt)) he.symm
+
+theorem rank_injective (p : Polynomial Coefficient) (t : ℝ)
+    (ht : scalarEvaluation t (exceptional p) ≠ 0) :
+    Function.Injective (fun x : Root p t => rank p t x.val) :=
+  rank_injective_of_ne_zero p t (specialized_ne_zero p t ht)
 
 theorem exists_orderIso (p : Polynomial Coefficient) {a b : ℝ}
     (havoid : ∀ t ∈ Ioo a b, scalarEvaluation t (exceptional p) ≠ 0) (s t : Ioo a b) :

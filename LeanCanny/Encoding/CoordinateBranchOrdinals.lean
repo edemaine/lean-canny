@@ -12,8 +12,9 @@ public import LeanCanny.Encoding.FixedWidthNatVector
 One distinct-root ordinal per coordinate identifies a grid point. These
 records are constant along continuous branches on a retained interval and
 have exactly n*W bits when every coordinate degree is at most 2^W. Empty
-coordinate families and width-zero records are included. Native computation
-of the coordinate polynomials and retained interval samples remains required.
+coordinate families and width-zero records are included. Nonzero specialized
+coordinates also give distinct records at singular endpoint fibers. Native
+computation of retained interval samples remains required.
 -/
 
 @[expose] public section
@@ -32,28 +33,43 @@ noncomputable def word (W : ℕ) (p : Fin n → Polynomial Coefficient) (t : ℝ
 theorem length_word (W : ℕ) (p : Fin n → Polynomial Coefficient) (t : ℝ) (x : Fin n → ℝ) :
     (word W p t x).length = n * W := FixedWidthNatVector.length_encode _ _ _
 
-theorem decode_word (W : ℕ) (p : Fin n → Polynomial Coefficient) (t : ℝ) (x : Fin n → ℝ)
-    (ht : ∀ i, scalarEvaluation t (exceptional (p i)) ≠ 0)
+theorem decode_word_of_ne_zero (W : ℕ) (p : Fin n → Polynomial Coefficient) (t : ℝ) (x : Fin n → ℝ)
+    (ht : ∀ i, (p i).map (scalarEvaluation t) ≠ 0)
     (hdeg : ∀ i, (p i).natDegree ≤ 2 ^ W)
     (hx : ∀ i, (p i).eval₂ (scalarEvaluation t) (x i) = 0) (i : Fin n) :
     Nat.fromBitsLE (((word W p t x).drop (i.val * W)).take W) = ScalarRootTransport.rank (p i) t (x i) := by
   have hfit : ordinal p t x i.val < 2 ^ W := by
     rw [ordinal, dite_eq_left i.isLt]
-    exact (ScalarRootTransport.rank_lt_degree (p i) t (x i) (ht i) (hx i)).trans_le (hdeg i)
+    exact (ScalarRootTransport.rank_lt_degree_of_ne_zero (p i) t (x i) (ht i) (hx i)).trans_le (hdeg i)
   have h := FixedWidthNatVector.decode_block n W (ordinal p t x) i.val i.isLt hfit
   simpa only [word, ordinal, dite_eq_left i.isLt] using h
 
-theorem word_injective (W : ℕ) (p : Fin n → Polynomial Coefficient) (t : ℝ)
+theorem decode_word (W : ℕ) (p : Fin n → Polynomial Coefficient) (t : ℝ) (x : Fin n → ℝ)
     (ht : ∀ i, scalarEvaluation t (exceptional (p i)) ≠ 0)
+    (hdeg : ∀ i, (p i).natDegree ≤ 2 ^ W)
+    (hx : ∀ i, (p i).eval₂ (scalarEvaluation t) (x i) = 0) (i : Fin n) :
+    Nat.fromBitsLE (((word W p t x).drop (i.val * W)).take W) = ScalarRootTransport.rank (p i) t (x i) :=
+  decode_word_of_ne_zero W p t x (fun i => ScalarRootTransport.specialized_ne_zero (p i) t (ht i)) hdeg hx i
+
+theorem word_injective_of_ne_zero (W : ℕ) (p : Fin n → Polynomial Coefficient) (t : ℝ)
+    (ht : ∀ i, (p i).map (scalarEvaluation t) ≠ 0)
     (hdeg : ∀ i, (p i).natDegree ≤ 2 ^ W) (x y : Fin n → ℝ)
     (hx : ∀ i, (p i).eval₂ (scalarEvaluation t) (x i) = 0)
     (hy : ∀ i, (p i).eval₂ (scalarEvaluation t) (y i) = 0)
     (he : word W p t x = word W p t y) : x = y := by
   funext i
   have hh := congrArg (fun z : List Bool => Nat.fromBitsLE ((z.drop (i.val * W)).take W)) he
-  rw [decode_word W p t x ht hdeg hx i, decode_word W p t y ht hdeg hy i] at hh
-  exact congrArg Subtype.val (ScalarRootTransport.rank_injective (p i) t (ht i)
+  rw [decode_word_of_ne_zero W p t x ht hdeg hx i, decode_word_of_ne_zero W p t y ht hdeg hy i] at hh
+  exact congrArg Subtype.val (ScalarRootTransport.rank_injective_of_ne_zero (p i) t (ht i)
     (a₁ := ⟨x i, hx i⟩) (a₂ := ⟨y i, hy i⟩) hh)
+
+theorem word_injective (W : ℕ) (p : Fin n → Polynomial Coefficient) (t : ℝ)
+    (ht : ∀ i, scalarEvaluation t (exceptional (p i)) ≠ 0)
+    (hdeg : ∀ i, (p i).natDegree ≤ 2 ^ W) (x y : Fin n → ℝ)
+    (hx : ∀ i, (p i).eval₂ (scalarEvaluation t) (x i) = 0)
+    (hy : ∀ i, (p i).eval₂ (scalarEvaluation t) (y i) = 0)
+    (he : word W p t x = word W p t y) : x = y :=
+  word_injective_of_ne_zero W p t (fun i => ScalarRootTransport.specialized_ne_zero (p i) t (ht i)) hdeg x y hx hy he
 
 /-- The anchor record denotes the same coordinate roots at every retained
 sample, so no permutation of root ordinals has to be supplied. -/

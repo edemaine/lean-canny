@@ -19,6 +19,8 @@ import LeanCanny.Encoding.FlatAffineHeightValues
 import LeanCanny.Connectivity.FlatAffineHeightArcs
 import LeanCanny.Encoding.FlatAffineHeightTrailing
 import LeanCanny.Encoding.FlatAffineHeightSlabExceptional
+import LeanCanny.Encoding.FlatAffineHeightCells
+import LeanCanny.Encoding.FlatAffineHeightOrdinals
 import LeanCanny.Algebra.ProjectiveValueGramSpace
 import LeanCanny.Geometry.IntegerGridValueCertificate
 import LeanCanny.Geometry.IntegerGridValueReader
@@ -355,7 +357,12 @@ with all nonzero coordinate principal subresultants, detecting zero factors
 in space. Binary degree and coefficient-mass budgets are derived, and its
 avoidance implies the exact geometric exceptional conditions. No FP GCD-order
 routine is a premise.
-Recursive coordinate metadata and effective branch records remain required.
+Native distinct-root and rational-cut counts compute point/gap cell codes,
+with derived unary label widths. Every gap avoids the geometric exceptional
+factors. Coordinate ordinal records distinguish original roots even at
+singular exceptional fibers; their lengths are polynomially bounded from
+source metadata, and they stay constant on retained branches. Effective
+branch/endpoint membership and recursive coordinate metadata remain required.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.
