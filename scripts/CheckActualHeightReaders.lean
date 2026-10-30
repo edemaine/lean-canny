@@ -14,6 +14,7 @@ import LeanCanny.Encoding.FlatAffineEndpointCells
 import LeanCanny.Encoding.FlatAffineEndpointSamples
 import LeanCanny.Encoding.FlatAffineHeightAlgebraicCoordinates
 import LeanCanny.Encoding.FlatAffineEndpointAdjacentComplete
+import LeanCanny.Encoding.FlatAffineEndpointFiniteMidpoint
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -261,6 +262,29 @@ example : SpaceFunction (fun u => BinaryNatCode.encode (IntegerPolynomialSampleS
 -- and validates the prepared degree record for either adjacent side.
 example (right : Bool) : FlatAffineEndpointAdjacentSamples.language F cone selected right ∈ PSPACE :=
   FlatAffineEndpointAdjacentSamples.mem_PSPACE access cone selected selected_unary right
+
+-- A joint frame retains both algebraic heights and all three spatial copies.
+-- Native validity and signs include singular tuples and reject bad records.
+example : SpaceFunction (FlatAffineEndpointFiniteFrame.record F selected) :=
+  FlatAffineEndpointFiniteFrame.recordEvaluator access cone selected selected_unary
+
+example : SpaceDecider {s | FlatAffineEndpointFiniteFrame.Valid F selected s} :=
+  FlatAffineEndpointFiniteFrame.validDecider access cone selected selected_unary
+
+example : GuardedSquareSampleInput.language (FlatAffineEndpointFiniteSample.data F cone selected) ∈ PSPACE :=
+  FlatAffineEndpointFiniteSample.mem_PSPACE access cone selected selected_unary
+
+example : UnaryFn (SquareSampleCompleteVertices.width (FlatAffineEndpointFiniteSample.input F cone selected)) :=
+  FlatAffineEndpointFiniteSample.width_unary access cone selected selected_unary
+
+private def jointIndex (s : List Bool) : Fin (FlatAffineFullSourcePositive.count F (pairFst (pairFst s))) :=
+  selected (pairFst (pairFst s))
+
+private lemma jointIndex_unary : UnaryFn (fun s => (jointIndex s).val) :=
+  selected_unary.comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP)
+
+example (sigma : SignType) : FlatAffineEndpointFiniteMidpoint.language F cone selected jointIndex sigma ∈ PSPACE :=
+  FlatAffineEndpointFiniteMidpoint.mem_PSPACE access cone selected selected_unary jointIndex jointIndex_unary sigma
 
 end
 end ActualHeightReaderRegression

@@ -691,8 +691,15 @@ The checked ingredients are:
   and the prepared degree record. Every bounded refined endpoint gap has an
   accepted derivative-root label. Every accepted native sample identifies the
   original slab endpoint edge by midpoint matching on either side.
-  Multivariate midpoint signs at jointly
-  labeled roots and the recursive cover remain open.
+  Retaining the derivative sample height as one further variable now gives a
+  finite integer system containing the current point and both endpoint
+  candidates. Native source readers compute its rows, exact degree-record
+  validator, nonzero coordinate annihilators, and their degree and height
+  budgets. Complete short labels cover every actual tuple, including singular
+  roots. Native multivariate midpoint signs at those labels equal the original
+  comparisons. Identifying fixed projections across labels and scanning every
+  endpoint candidate remain required for the full native matching predicate;
+  the recursive cover remains open.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

@@ -29,6 +29,7 @@ import LeanCanny.Encoding.FlatAffineEndpointTrailing
 import LeanCanny.Encoding.FlatAffineEndpointCells
 import LeanCanny.Encoding.FlatAffineEndpointSamples
 import LeanCanny.Encoding.FlatAffineEndpointAdjacentComplete
+import LeanCanny.Encoding.FlatAffineEndpointFiniteMidpoint
 import LeanCanny.Encoding.GuardedSquareSampleInput
 import LeanCanny.Connectivity.FlatAffineEndpointIncidence
 import LeanCanny.Connectivity.FlatAffineEndpointCellIncidence
@@ -393,7 +394,14 @@ height budgets, and native coefficient scans compute their trailing factors.
 Prepared degree records have native validity checks. The computed midpoint
 polynomials work uniformly for every pair of endpoint candidates; their
 trailing factors make matching stable, and one retained sample characterizes
-each actual slab endpoint edge. Native adjacent-sample evaluation remains open.
+each actual slab endpoint edge. A second retained variable now freezes the
+derivative sample height, making the current point and both endpoint candidates
+one finite integer system. Its original rows, exact degree-record validator,
+coordinate annihilators, and complete short labels all have native readers.
+Every actual tuple receives a label, including singular roots. Native midpoint
+signs at these labels equal the original coordinate comparisons. Identifying
+fixed projections across labels and scanning every endpoint candidate remain
+required for the full native matching predicate.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.

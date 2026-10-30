@@ -6,6 +6,7 @@ import LeanCanny.Geometry.OrderedRealCellNeighborhood
 import LeanCanny.Geometry.OrderedRealCellDerivativeSample
 import LeanCanny.Encoding.IntegerPolynomialSampleInput
 import LeanCanny.Encoding.IntegerPolynomialAdjacentSamplesComplete
+import LeanCanny.Algebra.FrozenRetainedMidpointSpace
 
 /-! Finite endpoint selection, tied coordinates, and zero midpoint tests.
 Run with `lake env lean -DwarningAsError=true scripts/CheckEndpointMidpoints.lean`.
@@ -175,6 +176,35 @@ example : AffineFiniteCoordinates.NoInfinity
     (fun k : Fin 3 => decide (k.val ≠ 0)) (fun _ => 2)
     (by simp : 0 < (Polynomial.X ^ 2 : Polynomial ℤ).natDegree) squareRows_noInfinity
   simpa only [Polynomial.natDegree_X_pow] using H
+
+-- Retaining a second repeated height preserves finiteness without a
+-- Jacobian promise on any of the three spatial copies.
+example : AffineFiniteCoordinates.NoInfinity
+    (FrozenAffineCopies.system
+      (FrozenAffineCopies.system squareRows (Polynomial.X ^ 2) 0 (fun k : Fin 3 => decide (k.val ≠ 0)))
+      (Polynomial.X ^ 2) (FrozenAffineCopies.block (0 : Fin 3) (0 : Fin 1)) (fun _ : Fin 1 => true))
+    (FrozenAffineCopies.degrees (FrozenAffineCopies.degrees (fun _ : Fin 1 => 2) 2) 2) := by
+  have inner := FrozenAffineCopies.noInfinity squareRows (Polynomial.X ^ 2) 0
+    (fun k : Fin 3 => decide (k.val ≠ 0)) (fun _ => 2)
+    (by simp : 0 < (Polynomial.X ^ 2 : Polynomial ℤ).natDegree) squareRows_noInfinity
+  have outer := FrozenAffineCopies.noInfinity _ (Polynomial.X ^ 2)
+    (FrozenAffineCopies.block (0 : Fin 3) (0 : Fin 1)) (fun _ : Fin 1 => true) _
+    (by simp : 0 < (Polynomial.X ^ 2 : Polynomial ℤ).natDegree) inner
+  simpa only [Polynomial.natDegree_X_pow] using outer
+
+-- Tied midpoint coordinates remain exactly zero after both embeddings.
+example : (FrozenRetainedMidpointBits.polynomial (0 : Fin 1)).eval₂ (Int.castRingHom ℝ)
+    (FrozenAffineCopies.point 7 (fun _ : Fin 1 =>
+      FrozenAffineCopies.point 3 ![fun _ => (1 : ℝ), fun _ => 0, fun _ => 2])) = 0 := by
+  rw [FrozenRetainedMidpointBits.polynomial, MvPolynomial.eval₂_rename]
+  have he : (FrozenAffineCopies.point 7 (fun _ : Fin 1 =>
+      FrozenAffineCopies.point 3 ![fun _ => (1 : ℝ), fun _ => 0, fun _ => 2])) ∘
+        FrozenAffineCopies.block (0 : Fin 1) =
+      FrozenAffineCopies.point 3 ![fun _ : Fin 1 => (1 : ℝ), fun _ => 0, fun _ => 2] := by
+    funext j
+    exact FrozenAffineCopies.point_block _ _ _ j
+  rw [he, FrozenAffineCopies.midpoint_eval]
+  norm_num [FrozenAffineCopies.point_block, Matrix.vecHead, Matrix.vecTail]
 
 end EndpointMidpointRegression
 
