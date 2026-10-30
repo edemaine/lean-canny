@@ -21,6 +21,7 @@ import LeanCanny.Encoding.FlatAffineEndpointRankWord
 import LeanCanny.Encoding.FlatAffineEndpointFiniteRankBranch
 import LeanCanny.Encoding.FlatAffineEndpointBranchRelation
 import LeanCanny.Connectivity.FlatAffineEndpointMarkerIncidence
+import LeanCanny.Encoding.FlatAffineEndpointAlgebraicMarker
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -353,6 +354,16 @@ example : FlatAffineEndpointMarkerEquality.language F cone selected ∈ PSPACE :
 
 example (right : Bool) : FlatAffineEndpointIncidenceQuery.language F cone selected right ∈ PSPACE :=
   FlatAffineEndpointIncidenceQuery.mem_PSPACE access cone selected selected_unary right
+
+example : SpaceFunction (FlatAffineEndpointAlgebraicMarker.record F cone selected) :=
+  FlatAffineEndpointAlgebraicMarker.recordEvaluator access cone selected selected_unary
+
+example : SquareSampleCompleteParameterEquality.language (FlatAffineEndpointFiniteSample.input F cone selected) ∈ PSPACE :=
+  SquareSampleCompleteParameterEquality.mem_PSPACE (FlatAffineEndpointFiniteSample.sampleAccess access cone selected selected_unary)
+
+example (Q : BoundedAlgebraicSlice.Family) (A : Q.Access) :
+    SpaceFunction (SquareSampleCompleteParameterSlice.coefficientSign (FlatAffineEndpointFiniteSample.input F cone selected) Q) :=
+  SquareSampleCompleteParameterSlice.coefficientSignEvaluator (FlatAffineEndpointFiniteSample.sampleAccess access cone selected selected_unary) A
 
 end
 end ActualHeightReaderRegression

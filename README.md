@@ -726,7 +726,11 @@ The checked ingredients are:
   joint copies. A bounded native attachment query validates the short branch
   descriptor, adjacent heights, original slab, and endpoint marker. Its witness
   test is proved equivalent to actual left or right slab incidence together
-  with the requested descriptor. Recursive graph assembly remains required.
+  with the requested descriptor. A native bounded search also converts each
+  complete point label to a scalar primitive-parameter slice record, recovering
+  every original coordinate. Child coefficient signs, actual degrees, and root
+  counts are native over these records. For endpoint markers, recovery preserves
+  the original singular fiber. Recursive graph assembly remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

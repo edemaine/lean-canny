@@ -10,6 +10,7 @@ import LeanCanny.Algebra.FrozenRetainedMidpointSpace
 import LeanCanny.Encoding.SquareSampleCompletePrefixEquality
 import LeanCanny.Encoding.SquareSampleScalarCoordinateEquality
 import LeanCanny.Encoding.SquareSampleCompleteCoordinateOrder
+import LeanCanny.Encoding.SquareSampleCompleteParameterChoice
 import LeanCanny.Geometry.AlgebraicFiberImageRank
 
 /-! Finite endpoint selection, tied coordinates, and zero midpoint tests.
@@ -326,5 +327,23 @@ example : Geometry.FiniteImageRank.rank ({0, 1, 2} : Finset ℕ)
     (fun k => if k < 2 then (0 : ℝ) else 2) 2 = 1 := by
   rw [Geometry.FiniteImageRank.rank_eq]
   norm_num [Finset.filter_insert, Finset.filter_singleton]
+
+-- Converting a singular original point to a scalar slice record recovers
+-- the original zero coordinate; no regularity of the original system is used.
+example : ∃ w,
+    SquareSampleCompleteVertices.Valid (IntegerPolynomialSampleInput.input source) [] w ∧
+    SquareSampleCompleteParameterChoice.record (IntegerPolynomialSampleInput.input source) (pair [] w) ∈
+      IntegerPolynomialSampleSlice.valid (SquareSampleCompleteParameterTest.source (IntegerPolynomialSampleInput.input source)) ∧
+    SquareSampleParameters.decode (IntegerPolynomialSampleInput.input source) []
+      (IntegerPolynomialSampleSlice.point (SquareSampleCompleteParameterTest.source (IntegerPolynomialSampleInput.input source))
+        (SquareSampleCompleteParameterChoice.record (IntegerPolynomialSampleInput.input source) (pair [] w))) (0 : Fin 1) = 0 := by
+  have hn : source.polynomial [] ≠ 0 :=
+    pow_ne_zero _ (mul_ne_zero Polynomial.X_ne_zero (Polynomial.monic_X_sub_C (1 : ℤ)).ne_zero)
+  obtain ⟨w, hw, hew⟩ := IntegerPolynomialSampleInput.root_complete source [] hn 0 (by
+    change (((Polynomial.X * (Polynomial.X - Polynomial.C 1)) ^ 2 : Polynomial ℤ).eval₂ (Int.castRingHom ℝ) (0 : ℝ)) = 0
+    rw [Polynomial.eval₂_pow, Polynomial.eval₂_mul, Polynomial.eval₂_X, zero_mul]
+    norm_num)
+  exact ⟨w, hw, SquareSampleCompleteParameterChoice.record_valid _ [] w hw,
+    (congrFun (SquareSampleCompleteParameterChoice.decode_record _ [] w hw) (0 : Fin 1)).trans hew⟩
 
 end NativeCoordinateEqualityRegression
