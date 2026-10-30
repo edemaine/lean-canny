@@ -63,6 +63,7 @@ import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
+import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -374,6 +375,14 @@ Native projection search now computes the complete frozen ancestor label from
 a validated joint sample or a short branch descriptor. The decoded point is
 the exact earlier blocks of the branch. The two descriptor programs return
 identical complete ancestor words, independently of auxiliary witness choices.
+For a varied active coordinate height in the newest stage, coarsening its
+critical equations gives a finite ordinary root set. A zero objective
+multiplier along a branch would force the height parameter to be constant.
+The native coordinate zero tests therefore prove that every retained open
+branch has nonzero objective multiplier. Every singular point of any frozen
+parent's varying slice lifts to a zero-objective root of the actual power
+system. Complete branch coverage excludes such a point: the entire varying
+slice is regular throughout each retained open slab, without a regularity oracle.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

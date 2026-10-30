@@ -822,6 +822,13 @@ The checked ingredients are:
   the joint sample or its short branch descriptor. Its decoded point is
   exactly the earlier blocks of the branch, and the two retained descriptor
   programs return identical ancestor words despite auxiliary witness choices.
+  Coarsening a varied active coordinate height now gives a finite ordinary
+  critical root set. A zero-objective branch would make its height parameter
+  constant. Native coordinate zero tests thus exclude zero objective
+  multipliers on retained open branches. Every singular point of a frozen
+  parent's varying slice lifts to an actual zero-objective power root;
+  completeness excludes it. The entire varying slice is therefore regular
+  inside each retained open slab, without a supplied regularity test.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
