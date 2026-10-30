@@ -887,6 +887,8 @@ The checked ingredients are:
   roots. Native projection re-encodes the full parent tuple in the original
   sampler. Both children decrease the coordinate rank, while depth plus
   twice the remaining rank does not increase.
+  Native parent filters select precisely the children of the decoded original
+  parent. Rank zero is exactly the native terminal guard.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

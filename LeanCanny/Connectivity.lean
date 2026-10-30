@@ -66,6 +66,7 @@ import LeanCanny.Connectivity.CoordinateDoubleAffineTerminalConnectivity
 import LeanCanny.Connectivity.CoordinateDoubleAffineSweepCover
 import LeanCanny.Encoding.CoordinateDoubleAffineChildOriginalSamples
 import LeanCanny.Encoding.CoordinateDoubleAffineChildBounds
+import LeanCanny.Encoding.CoordinateDoubleAffineChildParentMatch
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -471,6 +472,8 @@ Their exact spatial slices add the selected height or midpoint equation,
 including at singular roots. Native projected-word search recovers the full
 parent tuple in the original sampler. Each child decreases the coordinate
 rank, and depth plus twice the remaining rank does not increase.
+Native parent filters select exactly the children of the decoded original
+parent, and rank zero is exactly the existing terminal guard.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

@@ -26,6 +26,11 @@ theorem rank_unary {P : BoundedFullWriter.Readers} (hP : P.PolyTime)
     {depth old : List Bool → ℕ} (hd : UnaryFn depth) (ho : UnaryFn old) : UnaryFn (rank P depth old) :=
   (hP.dim.add (UnaryFn.const 3)).sub (coordinate_unary hP hd ho)
 
+theorem rank_zero_iff (P : BoundedFullWriter.Readers) (depth old : List Bool → ℕ) (u : List Bool) :
+    rank P depth old u = 0 ↔ P.dim u + 3 ≤ old (stage u (depth u)) := by
+  unfold rank coordinate
+  omega
+
 theorem coordinate_step (midpoint : Bool) (P : BoundedFullWriter.Readers) (depth old : List Bool → ℕ)
     (u : List Bool) (hn : old (stage u (depth u)) < P.dim u + 3) :
     coordinate P (childDepth midpoint depth) (objective midpoint depth old) u = coordinate P depth old u + 1 :=
