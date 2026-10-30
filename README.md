@@ -895,7 +895,8 @@ The checked ingredients are:
   Paired next-stage samplers reuse the original coordinate annihilators and
   native coefficient readers. Their labels retain every pair of critical
   roots, and native projection recovers both original-context member words,
-  including at singular roots. Shared-parent midpoint assembly remains open.
+  including at singular roots. Computed parent-word comparison tests exact
+  shared ancestry, including multipliers. Midpoint assembly remains open.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

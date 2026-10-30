@@ -69,6 +69,7 @@ import LeanCanny.Encoding.CoordinateDoubleAffineChildBounds
 import LeanCanny.Encoding.CoordinateDoubleAffineChildParentMatch
 import LeanCanny.Encoding.CoordinateDoubleAffineChildHeightGeometry
 import LeanCanny.Encoding.CoordinateDoubleAffineCriticalPairs
+import LeanCanny.Encoding.CoordinateDoubleAffineSharedCriticalPairs
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -482,8 +483,9 @@ freezes the selected coordinate of that sample over its original parent.
 Paired next-stage samplers now reuse the original coordinate annihilators and
 native coefficient readers. Every pair of critical roots has a paired label,
 and native projection recovers both original-context member words exactly,
-including at singular roots. Their shared-parent midpoint assembly remains
-required for the recursive component graph.
+including at singular roots. Computed parent-word comparison selects exactly
+the pairs sharing an original ancestor tuple, including multipliers. Building
+the midpoint child from such a pair remains required for the recursive graph.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint
