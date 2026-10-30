@@ -10,6 +10,9 @@ import LeanCanny.Connectivity.PolynomialGridArcs
 import LeanCanny.Geometry.PolynomialCoordinateProper
 import LeanCanny.Connectivity.AffineShiftArcs
 import LeanCanny.Connectivity.AffineShiftSlab
+import LeanCanny.Connectivity.FiniteFiberMidpoint
+import LeanCanny.Geometry.SymbolicRootCurveOrder
+import LeanCanny.Encoding.CoordinateBranchOrdinals
 import LeanCanny.Algebra.ProjectiveValueGramSpace
 import LeanCanny.Geometry.IntegerGridValueCertificate
 import LeanCanny.Geometry.IntegerGridValueReader
@@ -310,8 +313,19 @@ original bivariate coordinate polynomials and multivariate test. They compute
 homogenization and the reciprocal Gram determinant with binary degree
 allowances, retaining parameter coefficients and charging all original readers.
 The computed polynomial retains singular grid roots and is nonzero for exact
-positive coordinate degrees. Recursive coordinate metadata and effective branch
-records remain required. Polynomial shifts of row
+positive coordinate degrees. Pairwise coordinate midpoint signs identify every
+arc endpoint among the finite endpoint roots, uniformly near either end.
+Value relations with nonvanishing trailing coefficients make these signs
+constant on retained intervals, including identically zero tests. Slab
+incidence therefore agrees with midpoint matching at one retained sample.
+The explicit squarefree exceptional factor constructs each scalar covering;
+uniqueness of its lifts preserves coordinate equality and root order along
+grid branches, including labels sharing some coordinates. Ordered transport
+preserves distinct-root ranks. One fixed-width ordinal per coordinate gives
+constant branch records that distinguish grid points and use n*W bits for
+coordinate degrees at most 2^W, including empty grids and zero-width records.
+Recursive coordinate metadata and effective branch records remain required.
+Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.
 
