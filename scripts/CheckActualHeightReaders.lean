@@ -8,6 +8,8 @@ import LeanCanny.Encoding.FlatAffineEndpointRows
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Encoding.FlatAffineEndpointGram
 import LeanCanny.Encoding.FlatAffineEndpointGrid
+import LeanCanny.Encoding.FlatAffineEndpointTrailing
+import LeanCanny.Encoding.FlatAffineEndpointValidity
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -171,6 +173,29 @@ example : CertifiedPolynomial.BivariateReader (fun r => Geometry.AffineShiftCoor
 example : SpaceFunction (SymbolicFixedTableEntryBits.coefficient
     (DiagonalParameterBits.selected (FlatAffineEndpointRows.arity F) (FlatAffineEndpointGrid.coordinate F selected))) :=
   FlatAffineEndpointGrid.coefficientEvaluator (F := F) access selected selected_unary
+
+private def midpointIndex (r : List Bool) : Fin (FlatAffineFullSourcePositive.count F (pairFst r)) := selected (pairFst r)
+private lemma midpointIndex_unary : UnaryFn (fun r => (midpointIndex r).val) := selected_unary.comp pairFst_mem_FP
+
+example : CertifiedPolynomial.BivariateReader (FlatAffineEndpointValues.family F selected midpointIndex).affine.homogeneous.annihilator :=
+  FlatAffineEndpointValues.reader access selected selected_unary midpointIndex midpointIndex_unary
+
+example : BinaryFn (FlatAffineEndpointValueBounds.heightBound F) :=
+  FlatAffineEndpointValueBounds.heightBound_binary access selected midpointIndex
+
+example : SpaceFunction (PrimitivePairBits.coefficient
+    (fun r => (FlatAffineEndpointTrailing.polynomial F selected midpointIndex r).trailingCoeff)) :=
+  FlatAffineEndpointTrailing.coefficientEvaluator access selected selected_unary midpointIndex midpointIndex_unary
+
+example (a : ℝ) (ha : SymbolicScaledSquarefree.scalarEvaluation a (FlatAffineHeightSlabExceptional.polynomial F selected []) = 0) :
+    (FlatAffineEndpointTrailing.polynomial F selected midpointIndex (FlatAffineEndpointPreparation.record F selected [])).trailingCoeff ≠ 0 :=
+  FlatAffineEndpointTrailing.ne_zero F cone selected midpointIndex [] a ha
+
+example : SpaceDecider {r | FlatAffineEndpointValidity.Valid F selected r} :=
+  FlatAffineEndpointValidity.decider access cone selected selected_unary
+
+example (u : List Bool) : FlatAffineEndpointValidity.Valid F selected (FlatAffineEndpointPreparation.record F selected u) :=
+  FlatAffineEndpointValidity.record_valid F selected u
 
 end
 end ActualHeightReaderRegression

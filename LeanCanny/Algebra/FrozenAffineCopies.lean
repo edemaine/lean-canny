@@ -31,6 +31,15 @@ theorem block_eq_iff (k l : Fin m) (i j : Fin n) : block k i = block l j ↔ k =
   change (finProdFinEquiv (k, i)).succ = (finProdFinEquiv (l, j)).succ ↔ _
   rw [Fin.succ_inj, Equiv.apply_eq_iff_eq, Prod.mk.injEq]
 
+def point {K : Type*} (a : K) (x : Fin m → Fin n → K) : Fin (m * n + 1) → K :=
+  Fin.cons a (fun j => x (finProdFinEquiv.symm j).1 (finProdFinEquiv.symm j).2)
+
+@[simp] theorem point_zero {K : Type*} (a : K) (x : Fin m → Fin n → K) : point a x 0 = a := rfl
+
+@[simp] theorem point_block {K : Type*} (a : K) (x : Fin m → Fin n → K) (k : Fin m) (i : Fin n) :
+    point a x (block k i) = x k i := by
+  simp only [point, block, Fin.cons_succ, Equiv.symm_apply_apply]
+
 noncomputable def row (p : Fin n → MvPolynomial (Fin n) ℤ) (h : Fin n)
     (frozen : Fin m → Bool) (k : Fin m) (i : Fin n) : MvPolynomial (Fin (m * n + 1)) ℤ :=
   rename (block k) (p i) - if frozen k = true ∧ i = h then X 0 else 0

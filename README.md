@@ -659,6 +659,13 @@ The checked ingredients are:
   extended system into native varying-height coordinate Gram readers, with
   levels and widths computed from its prepared degree record. Uniform indexed
   access supplies its complete coordinate grid and rejects invalid coordinates.
+  Native midpoint-value annihilators now retain all extended-grid values over
+  every field, and genuine prepared endpoints make them nonzero. Derived height
+  budgets through both Gram stages supply native trailing-factor scans.
+  Degree-record validity is native as well. The same computed midpoint
+  polynomials capture every pair of endpoint candidates, so their trailing
+  factors make matching stable and one retained sample characterizes each
+  actual slab endpoint edge. Native adjacent-sample evaluation remains open.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

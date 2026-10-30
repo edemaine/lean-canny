@@ -24,6 +24,8 @@ import LeanCanny.Encoding.FlatAffineHeightOrdinals
 import LeanCanny.Encoding.FlatAffineEndpointRows
 import LeanCanny.Encoding.FlatAffineEndpointGram
 import LeanCanny.Encoding.FlatAffineEndpointGrid
+import LeanCanny.Encoding.FlatAffineEndpointTrailing
+import LeanCanny.Connectivity.FlatAffineEndpointIncidence
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -377,6 +379,14 @@ The extended system now has context-preserving coefficient access and native
 varying-height coordinate Gram readers with canonical derived controls.
 Uniform indexed access supplies the complete extended coordinate grid and
 rejects invalid coordinate indices.
+Native midpoint-value annihilators now use this grid and the original linear
+tests. They are nonzero on genuinely prepared endpoint records and retain all
+grid midpoint values over every field. Both Gram stages have source-derived
+height budgets, and native coefficient scans compute their trailing factors.
+Prepared degree records have native validity checks. The computed midpoint
+polynomials work uniformly for every pair of endpoint candidates; their
+trailing factors make matching stable, and one retained sample characterizes
+each actual slab endpoint edge. Native adjacent-sample evaluation remains open.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.
