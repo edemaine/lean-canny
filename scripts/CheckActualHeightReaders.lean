@@ -31,6 +31,7 @@ import LeanCanny.Encoding.FlatAffineSlabGraphEdges
 import LeanCanny.Encoding.FlatAffineEndpointBranchLabelComplete
 import LeanCanny.Connectivity.FlatAffineSlabGraphBranchLabels
 import LeanCanny.Connectivity.FlatAffineSlabConnectivity
+import LeanCanny.Connectivity.FlatAffineGapConnectivity
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -419,6 +420,23 @@ example (c : List Bool) (hc : c ∈ FlatAffineSlabGraphContext.language F cone s
     IsPreconnected (Set.univ : Set (LeanCanny.Connectivity.FlatAffineSlabGraphBranches.Space F cone selected c)) ↔
       c ∈ FlatAffineSlabGraph.connectedLanguage F cone selected :=
   LeanCanny.Connectivity.FlatAffineSlabConnectivity.connected_iff F cone selected c hc
+
+-- Endpoint and sample labels are computed from the frame and gap index.
+example : UnaryFn (FlatAffineSlabGraphContextChoice.width F cone selected) :=
+  FlatAffineSlabGraphContextChoice.width_unary access cone selected selected_unary
+
+example : SpaceFunction (FlatAffineSlabGraphContextChoice.value F cone selected) :=
+  FlatAffineSlabGraphContextChoice.evaluator access cone selected selected_unary
+
+example : LeanCanny.Connectivity.FlatAffineGapConnectivity.language F cone selected ∈ PSPACE :=
+  LeanCanny.Connectivity.FlatAffineGapConnectivity.mem_PSPACE access cone selected selected_unary
+
+example (s : List Bool) (hs : FlatAffineEndpointFiniteFrame.Valid F selected s)
+    (k : Fin ((FlatAffineEndpointSampleSlab.roots F cone selected s).card + 1))
+    (h0 : 0 < k.val) (hk : k.val < (FlatAffineEndpointSampleSlab.roots F cone selected s).card) :
+    pair s (BinaryNatCode.encode k.val) ∈ LeanCanny.Connectivity.FlatAffineGapConnectivity.language F cone selected ↔
+      IsPreconnected (LeanCanny.Connectivity.FlatAffineGapConnectivity.solutionSetAt F cone selected s (BinaryNatCode.encode k.val)) :=
+  LeanCanny.Connectivity.FlatAffineGapConnectivity.bounded_gap_correct F cone selected s hs k h0 hk
 
 end
 end ActualHeightReaderRegression

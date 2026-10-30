@@ -50,6 +50,7 @@ import LeanCanny.Encoding.FlatAffineSlabGraphEdges
 import LeanCanny.Encoding.FlatAffineEndpointBranchLabelComplete
 import LeanCanny.Connectivity.FlatAffineSlabGraphBranchLabels
 import LeanCanny.Connectivity.FlatAffineSlabConnectivity
+import LeanCanny.Connectivity.FlatAffineGapConnectivity
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -470,6 +471,10 @@ denotes a unique actual curve or endpoint point; unused words denote empty
 pieces. All native edges agree with relative frontier incidence. The assembled
 accessible cover therefore transfers native graph connectivity to actual
 closed root slabs in PSPACE, without supplied cover or adjacency routines.
+Every bounded original gap has an accepted context. A native bounded search
+computes its endpoint and sample labels at a derived polynomial width. The
+resulting algorithm takes only the prepared frame and gap index and decides
+connectivity of the actual original root set over that gap's closure.
 Constructing the full recursive component graph remains open.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component

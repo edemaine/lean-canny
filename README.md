@@ -763,6 +763,11 @@ The checked ingredients are:
   padding. The assembled accessible cover transfers whole-graph connectivity
   to the actual closed root slab. Validated connectivity of these slabs is
   in native PSPACE, with no supplied cover or adjacency routine.
+  Every bounded original gap now has an accepted context, computed by a native
+  bounded search at a derived polynomial width. The resulting connectivity
+  algorithm takes only the prepared frame and gap index and decides the
+  actual original root set over the closure of that gap. Endpoint, sample,
+  branch, and marker labels are computed internally.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
