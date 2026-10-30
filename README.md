@@ -864,7 +864,9 @@ The checked ingredients are:
   The coarsening and slab regularity arguments now allow independently
   scaled coordinate normals. Actual doubled midpoint records supply their
   own independence proofs, complete singular component covers, and native
-  whole-slice regularity and singularity decisions.
+  whole-slice regularity and singularity decisions. Their constructed slab
+  saturations retain exact critical branch arcs and attach recursive endpoint
+  covers, including singular endpoint fibers.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

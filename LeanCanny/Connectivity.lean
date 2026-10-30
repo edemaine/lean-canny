@@ -75,6 +75,7 @@ import LeanCanny.Encoding.FlatAffineLastHeightRow
 import LeanCanny.Encoding.FlatAffineBranchOriginalAncestorMatch
 import LeanCanny.Connectivity.FlatAffineSlabComputedParents
 import LeanCanny.Connectivity.FlatAffineSlabEndpointPrefixes
+import LeanCanny.Connectivity.FlatAffineScaledSlabRecursiveCover
 import LeanCanny.Connectivity.FlatAffineScaledSlabSliceRegularity
 import LeanCanny.Connectivity.CoordinateDoubleAffineComponentCover
 import LeanCanny.Encoding.CoordinateDoubleAffineSliceRegularity
@@ -438,7 +439,9 @@ nonzero integer scale for each coordinate normal. Thus actual scaled slices
 are regular throughout retained open slabs as well. The native doubled
 midpoint records now supply independent normals and objectives, complete
 component covers including singular points, and native whole-slice
-singularity and regularity decisions.
+singularity and regularity decisions. Their actual open slabs also have
+constructed clopen component saturations, exact critical branch arcs, and
+recursive attachment to singular endpoint covers.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint
