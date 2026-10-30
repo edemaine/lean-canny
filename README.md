@@ -809,6 +809,10 @@ The checked ingredients are:
   The actual next-stage root bound bounds every point of this terminal slice.
   Native spatial equality now gives PSPACE point reachability in these slices,
   checking the terminal coordinate flag and both exact parent ancestries.
+  Their complete labels also construct an accessible bit cover with native
+  edges, and its clopen path saturation supplies recursive endpoint pieces.
+  Whole-set connectivity of the actual terminal slice is now in native PSPACE
+  as well, including the empty case, without a supplied cover or adjacency code.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

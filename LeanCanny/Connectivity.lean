@@ -60,6 +60,7 @@ import LeanCanny.Connectivity.CoordinateAffineComponentCover
 import LeanCanny.Encoding.CoordinateAffineSliceRegularity
 import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
+import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -359,6 +360,10 @@ multiplier lift, including multiple source roots. The actual next-stage cone
 bound therefore bounds all slice points. Native guarded spatial comparison
 now decides paths between complete child labels in these terminal slices,
 with exact parent ancestry and terminal-coordinate validation.
+Complete terminal child labels also construct a native accessible cover and
+its clopen path saturation, ready for recursive endpoint attachments. Their
+exact graph gives native PSPACE whole-slice connectivity as well, including
+empty slices, with no supplied cover or adjacency program.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

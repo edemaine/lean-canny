@@ -40,6 +40,7 @@ import LeanCanny.Connectivity.CoordinateAffineComponentCover
 import LeanCanny.Encoding.CoordinateAffineSliceRegularity
 import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
+import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -566,6 +567,24 @@ example : LeanCanny.Connectivity.CoordinateAffineTerminalReachability.language F
 example (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F)) :
     SpaceDecider (FlatAffineChildSpatialEquality.language F C) :=
   FlatAffineChildSpatialEquality.decider access C
+
+-- The terminal whole-set algorithm uses a constructed accessible cover,
+-- including its clopen path saturation for subsequent endpoint attachments.
+example : LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity.language F.source F.depth (fun _ => 100) (fun _ => []) ∈ PSPACE :=
+  LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity.mem_PSPACE access.source access.depth
+    (UnaryFn.const 100) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example (u v : List Bool) (hv : FlatAffineCompleteVertices.Valid
+    (CoordinateAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => []))
+    (FlatAffineCompleteChildLabels.parentCone
+      (CoordinateAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => []))
+      (CoordinateAffineSliceRegularity.cone F.source F.depth (fun _ => 100) (fun _ => []))) u v) :
+    pair u v ∈ LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity.language F.source F.depth (fun _ => 100) (fun _ => []) ↔
+      IsPreconnected (LeanCanny.Connectivity.FlatAffineCompactComponentCover.Slice
+        (CoordinateAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => []))
+        (CoordinateAffineSliceRegularity.cone F.source F.depth (fun _ => 100) (fun _ => [])) u v hv) :=
+  LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity.packet F.source F.depth (fun _ => 100) (fun _ => []) u v
+    (by change (3 : ℕ) ≤ 100; decide) hv
 
 end
 end ActualHeightReaderRegression
