@@ -703,8 +703,14 @@ The checked ingredients are:
   endpoint while ranging over every other endpoint candidate. It decides
   exactly the geometric midpoint matching predicate in PSPACE. At an adjacent
   retained sample the result equals actual left or right slab attachment.
-  Aligning these joint labels with independently encoded samples and branch
-  records remains required; the recursive cover remains open.
+  Native scalar-coordinate comparisons now bind the independently encoded
+  endpoint and sample heights to the joint tuple, preserving their original
+  labels and retaining repeated roots. Combined queries check these identities
+  and exact adjacency before deciding attachment. Every valid joint tuple in
+  the requested gap has accepted scalar labels. The checked edge language is
+  in native PSPACE, and its answers equal actual left or right slab attachment.
+  Aligning the remaining branch records and constructing the recursive cover
+  remain required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

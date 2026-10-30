@@ -16,6 +16,7 @@ import LeanCanny.Encoding.FlatAffineHeightAlgebraicCoordinates
 import LeanCanny.Encoding.FlatAffineEndpointAdjacentComplete
 import LeanCanny.Encoding.FlatAffineEndpointFiniteMidpoint
 import LeanCanny.Encoding.FlatAffineEndpointFiniteMatching
+import LeanCanny.Encoding.FlatAffineEndpointFiniteEdges
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -294,6 +295,18 @@ example : SquareSampleCompleteCoordinateEquality.language (FlatAffineEndpointFin
 
 example : FlatAffineEndpointFiniteMatching.language F cone selected ∈ PSPACE :=
   FlatAffineEndpointFiniteMatching.mem_PSPACE access cone selected selected_unary
+
+example : FlatAffineEndpointFiniteHeights.endpointLanguage F cone selected ∈ PSPACE :=
+  FlatAffineEndpointFiniteHeights.endpoint_mem_PSPACE access cone selected selected_unary
+
+example : FlatAffineEndpointFiniteHeights.sampleLanguage F cone selected ∈ PSPACE :=
+  FlatAffineEndpointFiniteHeights.sample_mem_PSPACE access cone selected selected_unary
+
+example (right : Bool) : FlatAffineEndpointFiniteAdjacent.language F cone selected right ∈ PSPACE :=
+  FlatAffineEndpointFiniteAdjacent.mem_PSPACE access cone selected selected_unary right
+
+example (right : Bool) : FlatAffineEndpointFiniteEdges.language F cone selected right ∈ PSPACE :=
+  FlatAffineEndpointFiniteEdges.mem_PSPACE access cone selected selected_unary right
 
 end
 end ActualHeightReaderRegression

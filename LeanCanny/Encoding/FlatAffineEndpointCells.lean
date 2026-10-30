@@ -10,7 +10,8 @@ public import LeanCanny.Encoding.FlatAffineEndpointExceptional
 
 The refined polynomial retains every original endpoint height. Its native
 root counts and rational cell queries locate intervals where all computed
-midpoint signs are stable. Algebraic adjacent-sample evaluation remains open.
+midpoint signs are stable. `FlatAffineEndpointCheckedIncidence` supplies
+native algebraic adjacent-sample matching on complete joint labels.
 -/
 
 @[expose] public section

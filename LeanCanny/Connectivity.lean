@@ -35,6 +35,7 @@ import LeanCanny.Connectivity.FlatAffineEndpointIncidence
 import LeanCanny.Connectivity.FlatAffineEndpointCellIncidence
 import LeanCanny.Connectivity.FlatAffineEndpointNativeIncidence
 import LeanCanny.Connectivity.FlatAffineEndpointFiniteIncidence
+import LeanCanny.Connectivity.FlatAffineEndpointCheckedIncidence
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -404,8 +405,12 @@ signs at these labels equal the original coordinate comparisons. Streamed
 coordinate Thom comparisons now fix projections across labels; an all-label
 scan decides the exact midpoint matching predicate in native PSPACE. At an
 adjacent retained sample its answer equals actual left or right slab
-attachment. Aligning joint labels with independently encoded sample and
-branch records remains required, along with the recursive cover.
+attachment. Native scalar-coordinate comparisons now bind independently
+encoded endpoint and sample heights to the joint tuple, preserving their
+original labels. The combined adjacency validator is complete for joint
+tuples in the requested gap. Checked edge queries therefore validate that
+gap before deciding actual attachment. Aligning the remaining branch
+records and constructing the recursive cover remain required.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.

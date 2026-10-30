@@ -13,8 +13,9 @@ The native adjacency language selects a sample in the correct refined gap.
 Every such accepted sample identifies the original slab's endpoint edge by
 midpoint matching. No new attachment is needed at extra refinement roots.
 `FlatAffineEndpointFiniteMatching` supplies native multivariate matching on
-joint labels. Relating those labels to the independently encoded samples
-and branch records remains required.
+joint labels. `FlatAffineEndpointCheckedIncidence` binds those labels to
+independently encoded heights and checks sample adjacency. Relating the
+remaining branch records remains required.
 -/
 
 @[expose] public section

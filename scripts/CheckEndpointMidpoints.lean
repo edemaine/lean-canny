@@ -8,6 +8,7 @@ import LeanCanny.Encoding.IntegerPolynomialSampleInput
 import LeanCanny.Encoding.IntegerPolynomialAdjacentSamplesComplete
 import LeanCanny.Algebra.FrozenRetainedMidpointSpace
 import LeanCanny.Encoding.SquareSampleCompletePrefixEquality
+import LeanCanny.Encoding.SquareSampleScalarCoordinateEquality
 
 /-! Finite endpoint selection, tied coordinates, and zero midpoint tests.
 Run with `lake env lean -DwarningAsError=true scripts/CheckEndpointMidpoints.lean`.
@@ -277,7 +278,9 @@ private noncomputable def source : IntegerPolynomialRootQueriesBits.Source where
 example : ∃ w v,
     pair (pair [] (pair w v)) (BinaryNatCode.encode 0) ∉
       SquareSampleCompleteCoordinateEquality.language (IntegerPolynomialSampleInput.input source) ∧
-    pair [] (pair w v) ∈ SquareSampleCompletePrefixEquality.language (IntegerPolynomialSampleInput.input source) (fun _ => 0) := by
+    pair [] (pair w v) ∈ SquareSampleCompletePrefixEquality.language (IntegerPolynomialSampleInput.input source) (fun _ => 0) ∧
+    pair (pair [] w) v ∉ SquareSampleScalarCoordinateEquality.language (IntegerPolynomialSampleInput.input source)
+      source id (fun _ => (0 : Fin 1)) := by
   have hn : source.polynomial [] ≠ 0 :=
     pow_ne_zero _ (mul_ne_zero Polynomial.X_ne_zero (Polynomial.monic_X_sub_C (1 : ℤ)).ne_zero)
   obtain ⟨w, hw, hew⟩ := IntegerPolynomialSampleInput.root_complete source [] hn 0 (by
@@ -288,7 +291,7 @@ example : ∃ w v,
     change (((Polynomial.X * (Polynomial.X - Polynomial.C 1)) ^ 2 : Polynomial ℤ).eval₂ (Int.castRingHom ℝ) (1 : ℝ)) = 0
     rw [Polynomial.eval₂_pow, Polynomial.eval₂_mul, Polynomial.eval₂_sub, Polynomial.eval₂_X, Polynomial.eval₂_C]
     norm_num)
-  refine ⟨w, v, ?_, ?_⟩
+  refine ⟨w, v, ?_, ?_, ?_⟩
   · intro h
     have H := SquareSampleCompleteCoordinateEquality.packet _ (IntegerPolynomialSampleInput.complete source) [] w v hw hv (0 : Fin 1)
     have h0 : (0 : Fin 1).val = 0 := rfl
@@ -300,5 +303,12 @@ example : ∃ w v,
       [] w v hw hv (by decide)).mpr
     intro i hi
     exact (Nat.not_lt_zero i.val hi).elim
+  · intro h
+    have hr := (IntegerPolynomialSampleInput.roots_iff source [] hn _).mp
+      (SquareSampleCompleteVertices.candidate (IntegerPolynomialSampleInput.input source) [] w hw).property
+    have H := SquareSampleScalarCoordinateEquality.packet (IntegerPolynomialSampleInput.input source) source id
+      (fun _ => (0 : Fin 1)) [] w v hw hv hn hr
+    have h01 : (0 : ℝ) = 1 := hew.symm.trans ((H.mp h).trans hev)
+    exact zero_ne_one h01
 
 end NativeCoordinateEqualityRegression
