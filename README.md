@@ -720,8 +720,13 @@ The checked ingredients are:
   samples. Native algebraic cuts validate each sample's original slab code;
   bounded native witness search validates the short descriptor labels. The
   checked branch relation is proved correct from the original affine equations
-  and their computed exceptional polynomial. Endpoint marker interfaces and
-  recursive graph assembly remain required.
+  and their computed exceptional polynomial. Native endpoint markers now denote
+  actual points in their stated fibers, including singular endpoint fibers.
+  Projected Thom comparisons identify those points independently of auxiliary
+  joint copies. A bounded native attachment query validates the short branch
+  descriptor, adjacent heights, original slab, and endpoint marker. Its witness
+  test is proved equivalent to actual left or right slab incidence together
+  with the requested descriptor. Recursive graph assembly remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

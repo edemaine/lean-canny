@@ -39,6 +39,7 @@ import LeanCanny.Connectivity.FlatAffineEndpointCheckedIncidence
 import LeanCanny.Encoding.FlatAffineEndpointRankWord
 import LeanCanny.Encoding.FlatAffineEndpointFiniteRankBranch
 import LeanCanny.Connectivity.FlatAffineEndpointBranchRelation
+import LeanCanny.Connectivity.FlatAffineEndpointMarkerIncidence
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace

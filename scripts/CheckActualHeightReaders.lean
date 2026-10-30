@@ -20,6 +20,7 @@ import LeanCanny.Encoding.FlatAffineEndpointFiniteEdges
 import LeanCanny.Encoding.FlatAffineEndpointRankWord
 import LeanCanny.Encoding.FlatAffineEndpointFiniteRankBranch
 import LeanCanny.Encoding.FlatAffineEndpointBranchRelation
+import LeanCanny.Connectivity.FlatAffineEndpointMarkerIncidence
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -338,6 +339,20 @@ example : FlatAffineEndpointBranchLabels.language F cone selected ∈ PSPACE :=
 
 example : LeanCanny.Encoding.FlatAffineEndpointBranchRelation.language F cone selected ∈ PSPACE :=
   LeanCanny.Encoding.FlatAffineEndpointBranchRelation.mem_PSPACE access cone selected selected_unary
+
+-- Endpoint markers retain an actual point even at a singular endpoint.
+-- Auxiliary joint copies may differ; only the designated point is compared.
+example (k : Fin 3) : FlatAffineEndpointCopyEquality.language F cone selected k ∈ PSPACE :=
+  FlatAffineEndpointCopyEquality.mem_PSPACE access cone selected selected_unary k
+
+example : FlatAffineEndpointMarkers.language F cone selected ∈ PSPACE :=
+  FlatAffineEndpointMarkers.mem_PSPACE access cone selected selected_unary
+
+example : FlatAffineEndpointMarkerEquality.language F cone selected ∈ PSPACE :=
+  FlatAffineEndpointMarkerEquality.mem_PSPACE access cone selected selected_unary
+
+example (right : Bool) : FlatAffineEndpointIncidenceQuery.language F cone selected right ∈ PSPACE :=
+  FlatAffineEndpointIncidenceQuery.mem_PSPACE access cone selected selected_unary right
 
 end
 end ActualHeightReaderRegression
