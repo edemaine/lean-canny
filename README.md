@@ -892,6 +892,10 @@ The checked ingredients are:
   An original next-stage critical sample constructs its fixed-height child
   root and native word, preserving the full tuple and freezing the selected
   coordinate over the original parent.
+  Paired next-stage samplers reuse the original coordinate annihilators and
+  native coefficient readers. Their labels retain every pair of critical
+  roots, and native projection recovers both original-context member words,
+  including at singular roots. Shared-parent midpoint assembly remains open.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

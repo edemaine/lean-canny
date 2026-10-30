@@ -68,6 +68,7 @@ import LeanCanny.Encoding.CoordinateDoubleAffineChildOriginalSamples
 import LeanCanny.Encoding.CoordinateDoubleAffineChildBounds
 import LeanCanny.Encoding.CoordinateDoubleAffineChildParentMatch
 import LeanCanny.Encoding.CoordinateDoubleAffineChildHeightGeometry
+import LeanCanny.Encoding.CoordinateDoubleAffineCriticalPairs
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -478,6 +479,11 @@ parent, and rank zero is exactly the existing terminal guard.
 An original next-stage critical sample now constructs its actual fixed-height
 child root and native word. The word retains the entire original tuple and
 freezes the selected coordinate of that sample over its original parent.
+Paired next-stage samplers now reuse the original coordinate annihilators and
+native coefficient readers. Every pair of critical roots has a paired label,
+and native projection recovers both original-context member words exactly,
+including at singular roots. Their shared-parent midpoint assembly remains
+required for the recursive component graph.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

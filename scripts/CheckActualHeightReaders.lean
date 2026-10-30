@@ -48,6 +48,7 @@ import LeanCanny.Encoding.CoordinateDoubleAffineChildOriginalSamples
 import LeanCanny.Encoding.CoordinateDoubleAffineChildBounds
 import LeanCanny.Encoding.CoordinateDoubleAffineChildParentMatch
 import LeanCanny.Encoding.CoordinateDoubleAffineChildHeightGeometry
+import LeanCanny.Encoding.CoordinateDoubleAffineCriticalPairs
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -1008,6 +1009,19 @@ example : SpaceFunction
     (CoordinateDoubleAffineChildRecords.heightWord F.source F.depth (fun _ => 0) (fun _ => [])) :=
   CoordinateDoubleAffineChildRecords.heightWord_evaluator access.source access.depth (UnaryFn.const 0)
     (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : (CoordinateDoubleAffineCriticalPairs.input F.source F.depth (fun _ => 0) (fun _ => [])).Access :=
+  CoordinateDoubleAffineCriticalPairs.access access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : SquareSampleComplete.Complete
+    (CoordinateDoubleAffineCriticalPairs.input F.source F.depth (fun _ => 0) (fun _ => [])) :=
+  CoordinateDoubleAffineCriticalPairs.complete F.source F.depth (fun _ => 0) (fun _ => [])
+
+example (right : Bool) : SpaceFunction
+    (CoordinateDoubleAffineCriticalPairs.memberWord F.source F.depth (fun _ => 0) (fun _ => []) right) :=
+  CoordinateDoubleAffineCriticalPairs.memberWord_evaluator access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity right
 
 example (midpoint : Bool) (u : List Bool) :
     CoordinateDoubleAffineChildRecords.rank F.source
