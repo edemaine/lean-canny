@@ -839,8 +839,14 @@ The checked ingredients are:
   Removing the varied constraint constructs the compact original coarser
   slice and its proper height-difference projection. The parent branches
   supply continuous sections extending through both endpoints and meeting
-  every interior fiber component. Generic constraint-line charts are proved;
-  specializing them to these slices and saturating the components remains.
+  every interior fiber component. The specialized implicit charts now
+  construct a component saturation covering the full original open slab.
+  Its pieces are clopen and path connected, have connected limits at both
+  endpoints, and overlap exactly when their critical samples connect in the
+  retained fiber. Native recursive connection tests and endpoint covers remain.
+  Given the two recursive endpoint component covers, this actual saturation
+  now constructs a clopen path cover of the closed slab. Selected attachments
+  retain an additive sum of the branch and endpoint label types.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

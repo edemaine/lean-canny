@@ -68,6 +68,8 @@ import LeanCanny.Connectivity.FlatAffineSlabComponentSampling
 import LeanCanny.Connectivity.FlatAffineSlabParentBranches
 import LeanCanny.Connectivity.FlatAffineSlabParentSections
 import LeanCanny.Geometry.ConstraintLineCharts
+import LeanCanny.Connectivity.FlatAffineSlabSaturation
+import LeanCanny.Connectivity.FlatAffineSlabRecursiveCover
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -399,8 +401,15 @@ Its height-difference projection is proper, with exactly those shifted
 slices as fibers. Parent branches now construct continuous sections of this
 projection, extending through both endpoints and meeting every fiber
 component. General constraint-line charts are constructed from the full
-constraint derivative's surjectivity; their specialization to this source
-and the resulting component saturation remain required.
+constraint derivative's surjectivity. Their actual source specialization
+now constructs the component saturation of the original open slab. Its
+pieces are clopen and path connected, have connected limits at both
+endpoints, and overlap precisely when the corresponding actual critical
+samples are connected in the retained sample fiber. Native recursive
+sample-connection tests and endpoint covers remain required. Given the two
+recursive endpoint component covers, the constructed saturation now supplies
+a clopen path cover of the actual closed slab. Selecting one attachment per
+branch retains an additive sum of branch and endpoint label types.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint
