@@ -43,6 +43,7 @@ import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
 import LeanCanny.Connectivity.CoordinateDoubleAffineTerminalConnectivity
+import LeanCanny.Connectivity.CoordinateDoubleAffineSweepCover
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -932,6 +933,47 @@ example (P : BoundedFullWriter.Readers) (depth objective : List Bool → ℕ)
     (CoordinateDoubleAffinePrefix.normal P depth objective level _ _) hactive
     (CoordinateDoubleAffineSliceControls.objective_independent P depth objective level _ _) x
   exact ⟨D⟩
+
+-- The next coordinate sweep retains the actual old source and ancestry.
+-- All indices and native ancestor filters are derived from the original readers.
+example : (CoordinateDoubleAffineSweep.inputs F.source F.depth (fun _ => 0) (fun _ => [])).Access :=
+  CoordinateDoubleAffineSweep.access access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : UnaryFn (fun u => (CoordinateDoubleAffineSweep.height F.source F.depth (fun _ => 0) (fun _ => []) u).val) :=
+  CoordinateDoubleAffineSweep.height_unary access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : SpaceFunction (CoordinateDoubleAffineSweep.parentWord F.source F.depth (fun _ => 0) (fun _ => [])) :=
+  CoordinateDoubleAffineSweep.parentWord_evaluator access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : FlatAffineBranchCanonicalAncestorMatch.language
+    (CoordinateDoubleAffineSweep.inputs F.source F.depth (fun _ => 0) (fun _ => []))
+    (CoordinateDoubleAffineSweep.cone F.source F.depth (fun _ => 0) (fun _ => []))
+    (CoordinateDoubleAffineSweep.coordinate F.source F.depth (fun _ => 0)) ∈ PSPACE :=
+  CoordinateDoubleAffineSweep.branch_filter_mem_PSPACE access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : FlatAffineEndpointCanonicalParent.language
+    (CoordinateDoubleAffineSweep.inputs F.source F.depth (fun _ => 0) (fun _ => []))
+    (CoordinateDoubleAffineSweep.cone F.source F.depth (fun _ => 0) (fun _ => []))
+    (CoordinateDoubleAffineSweep.coordinate F.source F.depth (fun _ => 0)) ∈ PSPACE :=
+  CoordinateDoubleAffineSweep.endpoint_filter_mem_PSPACE access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example (u : List Bool) :
+    CoordinateDoubleAffineSweep.rank F.source F.depth (CoordinateDoubleAffineSweep.objective F.depth (fun _ => 0)) u <
+      CoordinateDoubleAffineSweep.rank F.source F.depth (fun _ => 0) u :=
+  CoordinateDoubleAffineSweep.rank_decreases F.source F.depth (fun _ => 0) u (by change (0 : ℕ) < 3; decide)
+
+-- Infer the instantiated equality without normalizing the entire depth-zero
+-- system again while checking a separately elaborated result type.
+set_option linter.defProp false in
+private def sweepSliceEquality (u : List Bool)
+    (x : FlatAffinePowerSampleInput.OriginalRoots (CoordinateDoubleAffinePrefix.inputs F.source F.depth (fun _ => 0) (fun _ => [])) u) :=
+  CoordinateDoubleAffineSweep.coarse_slice F.source F.depth (fun _ => 0) (fun _ => []) u
+    (by change (0 : ℕ) < 3; decide) x
 
 
 end

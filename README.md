@@ -875,6 +875,12 @@ The checked ingredients are:
   Their terminal case retains every feasible point, including multiple roots,
   and constructs native reachability and whole-slice connectivity decisions
   together with clopen path covers.
+  Native next-coordinate sweep records preserve every retained original and
+  power equation. Their computed parent words preserve the entire tuple, and
+  removing the newly active height recovers the original slice exactly. The
+  source readers compute the coordinate, row, and canonical ancestor filters;
+  the remaining-coordinate rank decreases strictly. Given recursive endpoint
+  covers, the actual records construct the closed-slab component cover.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

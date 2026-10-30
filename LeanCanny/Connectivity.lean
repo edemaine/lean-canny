@@ -63,6 +63,7 @@ import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
 import LeanCanny.Connectivity.CoordinateDoubleAffineTerminalConnectivity
+import LeanCanny.Connectivity.CoordinateDoubleAffineSweepCover
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -455,6 +456,13 @@ word, and the native endpoint filter accepts that exact original parent.
 Doubled coordinate records now also construct the terminal finite slice,
 retain every multiple root, and provide native point reachability, whole-slice
 connectivity, and clopen path covers for recursive endpoint attachment.
+The next coordinate sweep now advances only the newest objective, preserving
+every retained original and power equation. Its native parent-word conversion
+preserves the entire original tuple; removing the newly active height recovers
+exactly the original spatial slice. The swept coordinate, actual row, and
+canonical branch and endpoint filters come from the source readers, and the
+remaining-coordinate rank strictly decreases. Recursive endpoint covers then
+attach the actual closed slab without supplied normal or objective controls.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint
