@@ -61,6 +61,7 @@ import LeanCanny.Encoding.CoordinateAffineSliceRegularity
 import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
+import LeanCanny.Connectivity.CoordinateDoubleAffineTerminalConnectivity
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -450,6 +451,9 @@ original frozen-parent branch family, and both retained samples return the
 same original-context word. Endpoint markers likewise compute their own
 canonical ancestor words. At actual branch limits these equal the interior
 word, and the native endpoint filter accepts that exact original parent.
+Doubled coordinate records now also construct the terminal finite slice,
+retain every multiple root, and provide native point reachability, whole-slice
+connectivity, and clopen path covers for recursive endpoint attachment.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

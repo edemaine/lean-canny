@@ -41,6 +41,7 @@ import LeanCanny.Encoding.CoordinateAffineSliceRegularity
 import LeanCanny.Encoding.FlatAffineSingularSliceChoice
 import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
+import LeanCanny.Connectivity.CoordinateDoubleAffineTerminalConnectivity
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -603,6 +604,42 @@ example (u v : List Bool) (hv : FlatAffineCompleteVertices.Valid
         (CoordinateAffineSliceRegularity.cone F.source F.depth (fun _ => 100) (fun _ => [])) u v hv) :=
   LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity.packet F.source F.depth (fun _ => 100) (fun _ => []) u v
     (by change (3 : ℕ) ≤ 100; decide) hv
+
+-- Doubled records also supply the terminal stage, fixing every coordinate except the final one. The
+-- actual source gives finitely many points and native point reachability.
+example (u : List Bool) (x : FlatAffinePowerSampleInput.OriginalRoots
+    (CoordinateDoubleAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => [])) u) :
+    Finite (FlatAffineCompleteComponentSamples.slice
+      (CoordinateDoubleAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => [])) u x) :=
+  (CoordinateDoubleAffineTerminalSamples.finite_card_le F.source F.depth (fun _ => 100) (fun _ => []) u x
+    (by change (3 : ℕ) ≤ 100; decide)).1
+
+example : LeanCanny.Connectivity.CoordinateDoubleAffineTerminalReachability.language F.source F.depth (fun _ => 100) (fun _ => []) ∈ PSPACE :=
+  LeanCanny.Connectivity.CoordinateDoubleAffineTerminalReachability.mem_PSPACE access.source access.depth
+    (UnaryFn.const 100) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F)) :
+    SpaceDecider (FlatAffineChildSpatialEquality.language F C) :=
+  FlatAffineChildSpatialEquality.decider access C
+
+-- The terminal whole-set algorithm uses a constructed accessible cover,
+-- including its clopen path saturation for subsequent endpoint attachments.
+example : LeanCanny.Connectivity.CoordinateDoubleAffineTerminalConnectivity.language F.source F.depth (fun _ => 100) (fun _ => []) ∈ PSPACE :=
+  LeanCanny.Connectivity.CoordinateDoubleAffineTerminalConnectivity.mem_PSPACE access.source access.depth
+    (UnaryFn.const 100) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example (u v : List Bool) (hv : FlatAffineCompleteVertices.Valid
+    (CoordinateDoubleAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => []))
+    (FlatAffineCompleteChildLabels.parentCone
+      (CoordinateDoubleAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => []))
+      (CoordinateDoubleAffineSliceRegularity.cone F.source F.depth (fun _ => 100) (fun _ => []))) u v) :
+    pair u v ∈ LeanCanny.Connectivity.CoordinateDoubleAffineTerminalConnectivity.language F.source F.depth (fun _ => 100) (fun _ => []) ↔
+      IsPreconnected (LeanCanny.Connectivity.FlatAffineCompactComponentCover.Slice
+        (CoordinateDoubleAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => []))
+        (CoordinateDoubleAffineSliceRegularity.cone F.source F.depth (fun _ => 100) (fun _ => [])) u v hv) :=
+  LeanCanny.Connectivity.CoordinateDoubleAffineTerminalConnectivity.packet F.source F.depth (fun _ => 100) (fun _ => []) u v
+    (by change (3 : ℕ) ≤ 100; decide) hv
+
 
 -- The varied row itself computes the frozen depth and its complete sampler.
 -- The zero-depth seed remains a total native sampler as well.

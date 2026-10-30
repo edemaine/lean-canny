@@ -872,6 +872,9 @@ The checked ingredients are:
   family, and both interior samples give the same original-context word.
   Actual endpoints retain that canonical word, and native endpoint marker
   filters accept the exact original parent at singular limits.
+  Their terminal case retains every feasible point, including multiple roots,
+  and constructs native reachability and whole-slice connectivity decisions
+  together with clopen path covers.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
