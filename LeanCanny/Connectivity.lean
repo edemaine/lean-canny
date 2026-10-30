@@ -21,6 +21,11 @@ import LeanCanny.Encoding.FlatAffineHeightTrailing
 import LeanCanny.Encoding.FlatAffineHeightSlabExceptional
 import LeanCanny.Encoding.FlatAffineHeightCells
 import LeanCanny.Encoding.FlatAffineHeightOrdinals
+import LeanCanny.Encoding.FlatAffineEndpointRows
+import LeanCanny.Encoding.FlatAffineEndpointGram
+import LeanCanny.Encoding.FlatAffineEndpointGrid
+import LeanCanny.Geometry.FrozenAffineBranches
+import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
 import LeanCanny.Geometry.IntegerGridValueCertificate
 import LeanCanny.Geometry.IntegerGridValueReader
@@ -363,6 +368,15 @@ factors. Coordinate ordinal records distinguish original roots even at
 singular exceptional fibers; their lengths are polynomially bounded from
 source metadata, and they stay constant on retained branches. Effective
 branch/endpoint membership and recursive coordinate metadata remain required.
+Frozen endpoint copies now have native integer-row and midpoint-test readers.
+Their retained equation's actual degree is computed in space and stored in a
+record; it is never an FP oracle. Genuine endpoint roots give exclusion at
+infinity, and continuous frozen copies stay constant even at singular roots.
+Computing effective matching on the adjacent retained interval remains open.
+The extended system now has context-preserving coefficient access and native
+varying-height coordinate Gram readers with canonical derived controls.
+Uniform indexed access supplies the complete extended coordinate grid and
+rejects invalid coordinate indices.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.

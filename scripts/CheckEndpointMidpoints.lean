@@ -1,6 +1,7 @@
 import LeanCanny.Connectivity.FiniteFiberMidpoint
 import LeanCanny.Geometry.SymbolicRootCurveOrder
 import LeanCanny.Encoding.CoordinateBranchOrdinals
+import LeanCanny.Geometry.FrozenAffineBranches
 
 /-! Finite endpoint selection, tied coordinates, and zero midpoint tests.
 Run with `lake env lean -DwarningAsError=true scripts/CheckEndpointMidpoints.lean`.
@@ -118,5 +119,27 @@ example : ScalarRootTransport.rank collision 0 0 < ScalarRootTransport.rank coll
   apply ScalarRootTransport.rank_lt_rank_of_ne_zero collision 0 0 1 collision_specialized_ne_zero
   · simp [collision, SymbolicScaledSquarefree.scalarEvaluation]
   · norm_num
+
+private noncomputable def squareRows (i : Fin 1) : MvPolynomial (Fin 1) ℤ := MvPolynomial.X i ^ 2
+
+private lemma squareRows_noInfinity : AffineFiniteCoordinates.NoInfinity squareRows (fun _ => 2) := by
+  intro y hy hz
+  funext j
+  cases j with
+  | none => exact hy
+  | some i =>
+    have H := hz i
+    rw [squareRows, WeightedHomogenization.homogenize_X_pow, MvPolynomial.eval₂_pow, MvPolynomial.eval₂_X] at H
+    exact (pow_eq_zero_iff (by decide : 2 ≠ 0)).mp H
+
+-- Both the retained height and the original affine root may be repeated.
+-- The frozen construction still excludes roots at infinity.
+example : AffineFiniteCoordinates.NoInfinity
+    (FrozenAffineCopies.system squareRows (Polynomial.X ^ 2) 0 (fun k : Fin 3 => decide (k.val ≠ 0)))
+    (FrozenAffineCopies.degrees (fun _ : Fin 1 => 2) 2) := by
+  have H := FrozenAffineCopies.noInfinity squareRows (Polynomial.X ^ 2) 0
+    (fun k : Fin 3 => decide (k.val ≠ 0)) (fun _ => 2)
+    (by simp : 0 < (Polynomial.X ^ 2 : Polynomial ℤ).natDegree) squareRows_noInfinity
+  simpa only [Polynomial.natDegree_X_pow] using H
 
 end EndpointMidpointRegression

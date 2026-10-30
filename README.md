@@ -648,6 +648,17 @@ The checked ingredients are:
   polynomially bounded from the source metadata, and the records stay constant
   along retained branches. Effective branch/endpoint membership and recursive
   coordinate metadata remain required.
+  Endpoint midpoint comparisons now have an auxiliary integer system with
+  two copies frozen at an algebraic height and a third copy available for the
+  varying branch. The retained equation's actual degree is computed in space
+  and stored in a record. Original source readers supply all extended rows
+  and the linear midpoint tests. Exclusion at infinity and constancy of each
+  frozen copy are proved, including repeated parameter roots and singular
+  endpoint fibers. Effective matching on the adjacent retained interval
+  remains required. A context-preserving coefficient interface now feeds the
+  extended system into native varying-height coordinate Gram readers, with
+  levels and widths computed from its prepared degree record. Uniform indexed
+  access supplies its complete coordinate grid and rejects invalid coordinates.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

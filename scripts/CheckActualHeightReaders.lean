@@ -4,6 +4,10 @@ import LeanCanny.Encoding.FlatAffineHeightTrailing
 import LeanCanny.Encoding.FlatAffineHeightSlabExceptional
 import LeanCanny.Encoding.FlatAffineHeightCells
 import LeanCanny.Encoding.FlatAffineHeightOrdinals
+import LeanCanny.Encoding.FlatAffineEndpointRows
+import LeanCanny.Algebra.FrozenAffineMidpointSpace
+import LeanCanny.Encoding.FlatAffineEndpointGram
+import LeanCanny.Encoding.FlatAffineEndpointGrid
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -15,6 +19,7 @@ open scoped Classical
 
 namespace ActualHeightReaderRegression
 noncomputable section
+set_option backward.isDefEq.respectTransparency false
 
 private def F : Inputs where
   source := ⟨fun _ => [], fun _ => 0, fun _ => 1⟩
@@ -127,6 +132,45 @@ example (t : ℝ) : Function.Injective (fun x : Connectivity.PolynomialGridArcs.
     (Connectivity.IntegerGridArcs.realRows (Connectivity.FlatAffineHeightArcs.rows F selected [])) t =>
       FlatAffineHeightOrdinals.word F selected [] t x.val) :=
   FlatAffineHeightOrdinals.fiber_word_injective F cone selected [] t
+
+example : SpaceFunction (FlatAffineEndpointPreparation.record F selected) :=
+  FlatAffineEndpointPreparation.recordEvaluator access cone selected selected_unary
+
+private def lastCopy (r : List Bool) : Fin (FlatAffineEndpointRows.arity F r) :=
+  Fin.last (3 * FlatAffineEndpointRows.originalCount F r)
+
+private lemma lastCopy_unary : UnaryFn (fun r => (lastCopy r).val) :=
+  (UnaryFn.const 3).mul (FlatAffineEndpointRows.originalCount_unary access)
+
+-- The source internally supplies the retained equation, the embedded tower
+-- row, and the frozen-height subtraction. All raw exponent/modulus words work.
+example : SpaceFunction (FixedWidthRowBits.value (FlatAffineEndpointRows.arity F) (fun _ => 2)
+    (fun r => FlatAffineEndpointPreparation.system F selected r (lastCopy r)) pairSnd pairFst) :=
+  FlatAffineEndpointRows.evaluator access selected selected_unary lastCopy lastCopy_unary (UnaryFn.const 2)
+    pairSnd_mem_FP pairFst_mem_FP
+
+example (a : ℝ) (ha : SymbolicScaledSquarefree.scalarEvaluation a
+    (FlatAffineHeightSlabExceptional.polynomial F selected []) = 0) :
+    AffineFiniteCoordinates.NoInfinity
+      (FlatAffineEndpointPreparation.system F selected (FlatAffineEndpointPreparation.record F selected []))
+      (FlatAffineEndpointPreparation.degrees F (FlatAffineEndpointPreparation.record F selected [])) :=
+  FlatAffineEndpointPreparation.noInfinity_record F cone selected [] a ha
+
+example : SpaceFunction (FixedWidthRowBits.value (fun u => 3 * FlatAffineFullSourcePositive.count F u + 1)
+    (fun _ => 2) (fun u => FrozenAffineCopies.midpoint (selected u)) pairSnd pairFst) :=
+  FrozenAffineMidpointBits.evaluator (FlatAffineFullSourcePositive.count_unary access) (UnaryFn.const 2)
+    selected selected_unary pairSnd_mem_FP pairFst_mem_FP
+
+example : CertifiedPolynomial.BivariateReader (fun r => Geometry.AffineShiftCoordinates.coordinate
+    (FlatAffineEndpointPreparation.system F selected r)
+    (fun i => if i = FlatAffineEndpointGram.active F selected r then Polynomial.X else 0)
+    (FlatAffineEndpointPreparation.degrees F r) (FlatAffineEndpointRows.zero F r)) :=
+  FlatAffineEndpointGram.reader (F := F) access selected (FlatAffineEndpointRows.zero F) selected_unary
+    (show UnaryFn (fun r => (FlatAffineEndpointRows.zero F r).val) from UnaryFn.const 0)
+
+example : SpaceFunction (SymbolicFixedTableEntryBits.coefficient
+    (DiagonalParameterBits.selected (FlatAffineEndpointRows.arity F) (FlatAffineEndpointGrid.coordinate F selected))) :=
+  FlatAffineEndpointGrid.coefficientEvaluator (F := F) access selected selected_unary
 
 end
 end ActualHeightReaderRegression
