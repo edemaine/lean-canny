@@ -1,3 +1,4 @@
+import LeanCanny.Computation.RecursiveGraphQueryBounds
 import LeanCanny.Connectivity.Encoding
 import LeanCanny.Connectivity.FormulaPathCover
 import LeanCanny.Connectivity.EndpointValidation
@@ -1271,6 +1272,10 @@ Denominator roots refine the cells, and a native guard circuit excludes every
 pole. Whole-set connectivity in these guarded rational coordinates has a
 native PSPACE algorithm. Constructing the full recursive coordinate
 families and query records remains required.
+The resumable midpoint layer now supplies native child writers, exact
+Savitch successor semantics, strict depth decrease, and non-growing validated
+query records. Its binary scan stores only the original query, one counter,
+and three Boolean values, with explicit halting and state-length bounds.
 The recursive connection tests remain open.
 Constructing the complete recursive cover remains required.
 Component-preserving reduction from arbitrary Boolean inputs and singular

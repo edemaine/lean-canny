@@ -20,6 +20,20 @@ example {f g : List Bool → List Bool}
   constructor
   fun_prop
 
+/- Recursive midpoint scans accept arbitrary native space-bounded child
+writers while retaining explicit state and request contracts. -/
+example (P : LeanCanny.Computation.PairedScan.Program)
+    (hc : LeanCanny.BinaryFn P.count)
+    (hl : LeanCanny.Computation.SpaceFunction P.left)
+    (hr : LeanCanny.Computation.SpaceFunction P.right) :
+    P.controller.Certificates (encQ := encBits) (encS := LeanCanny.Computation.PairedScan.encState) :=
+  P.certificates hc hl hr
+
+example {width : List Bool → ℕ} (hw : LeanCanny.UnaryFn width) :
+    (LeanCanny.Computation.RecursiveGraphMidpoints.program width).controller.Certificates
+      (encQ := encBits) (encS := LeanCanny.Computation.PairedScan.encState) :=
+  LeanCanny.Computation.RecursiveGraphMidpoints.certificates hw
+
 /-! The unconditional Canny endpoints target the native deterministic class. -/
 example : LeanCanny.ETR.language ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.ETR.etr_mem_PSPACE

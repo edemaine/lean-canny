@@ -1,3 +1,4 @@
+import LeanCanny.Computation.RecursiveGraphQueryBounds
 import LeanCanny.Encoding.FlatAffineHeightValues
 import LeanCanny.Connectivity.FlatAffineHeightArcs
 import LeanCanny.Encoding.FlatAffineHeightTrailing
@@ -693,6 +694,14 @@ example : SpaceFunction (FlatAffineBranchParentChoice.value coordinateF coordina
 
 example : FlatAffineBranchOriginalAncestorMatch.language coordinateF coordinateCone firstHeight ∈ PSPACE :=
   FlatAffineBranchOriginalAncestorMatch.mem_PSPACE coordinateAccess coordinateCone firstHeight (UnaryFn.const 0)
+
+-- The recursive midpoint writers accept the actual source-derived vertex
+-- width; no separate graph-width or numerical-coordinate reader is supplied.
+example : (LeanCanny.Computation.RecursiveGraphMidpoints.program
+    (FlatAffineCompleteVertices.width (FlatAffineCompleteRootStages.next coordinateF) coordinateCone)).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := LeanCanny.Computation.PairedScan.encState) :=
+  LeanCanny.Computation.RecursiveGraphMidpoints.certificates
+    (FlatAffineCompleteVertices.width_unary (FlatAffineCompleteChildLabels.nextAccess coordinateAccess) coordinateCone)
 
 -- Recursive parent queries use the original sampler context, with explicit
 -- native re-encoding rather than an assumption about enumeration stability.

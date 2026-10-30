@@ -1066,6 +1066,10 @@ The checked ingredients are:
   refine the cells. This gives native PSPACE connectivity in the guarded
   rational coordinates. Full recursive coordinate families and query records
   remain required.
+  Resumable midpoint scans now have native child writers, Savitch successor
+  semantics, decreasing depth, and non-growing validated query records.
+  Their halting and state-length bounds charge only a binary counter and
+  three Boolean values alongside the original task.
   The recursive connection tests remain open.
 - Native recursion base cases: both connectivity tests in dimensions zero
   and one. On the real line, an ETR query detects a missing point between
