@@ -730,8 +730,10 @@ The checked ingredients are:
   joint copies. A bounded native attachment query validates the short branch
   descriptor, adjacent heights, original slab, and endpoint marker. Its witness
   test is proved equivalent to actual left or right slab incidence together
-  with the requested descriptor. A native bounded search also converts each
-  complete point label to a scalar primitive-parameter slice record, recovering
+  with the requested descriptor. Complete existential attachment queries are
+  now equivalent to the actual descriptor-to-marker slab edges, independently
+  of their witness tuples. A native bounded search also converts each complete
+  point label to a scalar primitive-parameter slice record, recovering
   every original coordinate. Child coefficient signs, actual degrees, and root
   counts are native over these records. For endpoint markers, recovery preserves
   the original singular fiber. Complete point labels now supply actual named

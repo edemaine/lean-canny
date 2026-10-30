@@ -44,6 +44,7 @@ import LeanCanny.Encoding.FlatAffineEndpointAlgebraicMarker
 import LeanCanny.Encoding.FlatAffineEndpointChildSamples
 import LeanCanny.Encoding.FlatAffineEndpointMarkerComplete
 import LeanCanny.Encoding.FlatAffineEndpointParentComplete
+import LeanCanny.Connectivity.FlatAffineEndpointDescriptorIncidence
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -432,6 +433,9 @@ exceptional polynomial. Native endpoint markers retain actual points of their
 stated fibers, with projected-point identity independent of auxiliary copies.
 Bounded attachment queries combine the checked slab, branch descriptor, and
 marker; their witness tests agree with actual left or right incidence.
+The complete existential queries now decide those actual descriptor-to-marker
+edges: fixed-sample descriptor identity eliminates arbitrary witness tuples,
+and completeness constructs a tuple for every actual matching endpoint.
 The scalar candidate polynomial retains both exceptional roots and derivative
 roots; inside each open gap its roots are exactly the derivative samples.
 Every endpoint point now has a marker, including isolated points with empty
