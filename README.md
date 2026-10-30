@@ -779,6 +779,14 @@ The checked ingredients are:
   With independent slice normals, every singular slice point also has a
   complete native critical label with zero objective multiplier. Its singular
   locus is finite with the source-derived next-stage critical-root bound.
+  Native projection tests now compare complete labels from different square
+  samplers by their coordinate Thom signatures. Bounded search computes exact
+  affine ancestor labels, preserving the original multiplier coordinates as
+  well as the spatial blocks. The resulting native child selector retains
+  every critical root over its named parent, including singular children.
+  A native zero-objective-multiplier filter retains every singular slice point
+  with that checked ancestry. Compact regular slices have joined accepted
+  samples in every component; no regularity of the full critical root is needed.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

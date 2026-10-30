@@ -35,6 +35,7 @@ import LeanCanny.Connectivity.FlatAffineGapConnectivity
 import LeanCanny.Connectivity.FlatAffineSlabBranchParents
 import LeanCanny.Connectivity.FlatAffineSlabCoordinateSignReader
 import LeanCanny.Encoding.FlatAffineSingularSliceSamples
+import LeanCanny.Encoding.FlatAffineSingularChildLabels
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -476,6 +477,28 @@ example : SpaceFunction (FlatAffineBranchCoordinateSign.value F cone selected) :
 
 example (sigma : SignType) : FlatAffineBranchCoordinateSign.language F cone selected sigma ∈ PSPACE :=
   FlatAffineBranchCoordinateSign.mem_PSPACE access cone selected selected_unary sigma
+
+-- Complete ancestry is computed from the actual source, including the
+-- zero-depth seed. Next-stage tests retain singular children as well.
+example : SpaceFunction (FlatAffinePowerPrefix.value F cone F.depth (fun u => Nat.le_refl (F.depth u))) :=
+  FlatAffinePowerPrefix.evaluator access cone access.depth (fun u => Nat.le_refl (F.depth u))
+
+example (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F)) :
+    FlatAffineCompleteChildLabels.language F C ∈ PSPACE :=
+  FlatAffineCompleteChildLabels.mem_PSPACE access C
+
+example (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F)) :
+    FlatAffineSingularChildLabels.language F C ∈ PSPACE :=
+  FlatAffineSingularChildLabels.mem_PSPACE access C
+
+example (u w : List Bool) (hw : FlatAffineCompleteVertices.Valid F cone u w) :
+    FlatAffineCompleteVertices.vertexEquiv (FlatAffineCompleteRootStages.truncate F F.depth)
+      (FlatAffineCompleteRootStages.cone_prefix F cone F.depth (fun u => Nat.le_refl (F.depth u))) u
+      ⟨FlatAffinePowerPrefix.value F cone F.depth (fun u => Nat.le_refl (F.depth u)) (pair u w),
+        FlatAffinePowerPrefix.value_valid F cone F.depth (fun u => Nat.le_refl (F.depth u)) u w hw⟩ =
+    FlatAffineCompleteRootStages.project F F.depth u (Nat.le_refl (F.depth u))
+      (FlatAffineCompleteVertices.vertexEquiv F cone u ⟨w, hw⟩) :=
+  FlatAffineAncestorLabels.value_original F cone F.depth (fun u => Nat.le_refl (F.depth u)) u w hw
 
 end
 end ActualHeightReaderRegression

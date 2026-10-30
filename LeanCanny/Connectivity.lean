@@ -54,6 +54,7 @@ import LeanCanny.Connectivity.FlatAffineGapConnectivity
 import LeanCanny.Connectivity.FlatAffineSlabBranchParents
 import LeanCanny.Connectivity.FlatAffineSlabCoordinateSignReader
 import LeanCanny.Encoding.FlatAffineSingularSliceSamples
+import LeanCanny.Encoding.FlatAffineSingularChildLabels
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
