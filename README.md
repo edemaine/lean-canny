@@ -730,7 +730,12 @@ The checked ingredients are:
   complete point label to a scalar primitive-parameter slice record, recovering
   every original coordinate. Child coefficient signs, actual degrees, and root
   counts are native over these records. For endpoint markers, recovery preserves
-  the original singular fiber. Recursive graph assembly remains required.
+  the original singular fiber. Complete point labels now supply actual named
+  rational parents with native validity and derivative probes. Endpoint names
+  validate the original frame and expose exactly the endpoint coordinates.
+  The existing ancestry-aware child routines now give native regular child
+  samples over these markers, without parent endpoint regularity. Recursive
+  graph assembly remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

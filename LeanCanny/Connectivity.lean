@@ -41,6 +41,7 @@ import LeanCanny.Encoding.FlatAffineEndpointFiniteRankBranch
 import LeanCanny.Connectivity.FlatAffineEndpointBranchRelation
 import LeanCanny.Connectivity.FlatAffineEndpointMarkerIncidence
 import LeanCanny.Encoding.FlatAffineEndpointAlgebraicMarker
+import LeanCanny.Encoding.FlatAffineEndpointChildSamples
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -425,8 +426,17 @@ they persist along retained branches and identify the branch across different
 sample heights. Native algebraic cuts check the original slab code, and a
 bounded native witness search validates short descriptor labels. The checked
 branch relation is proved correct from the original equations and the computed
-exceptional polynomial. Endpoint marker interfaces and recursive graph
-assembly remain required.
+exceptional polynomial. Native endpoint markers retain actual points of their
+stated fibers, with projected-point identity independent of auxiliary copies.
+Bounded attachment queries combine the checked slab, branch descriptor, and
+marker; their witness tests agree with actual left or right incidence.
+Native scalar parameter records recover every parent coordinate, and child
+slice coefficients, degrees, and root counts are computed over those records.
+Complete point labels also supply actual named rational parents with native
+validity and derivative probes. Endpoint parent names check the original frame
+and expose exactly the endpoint copy. Existing ancestry-aware child routines
+now give native regular child samples over these markers, without regularity
+of the original endpoint. The complete recursive graph assembly remains open.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.

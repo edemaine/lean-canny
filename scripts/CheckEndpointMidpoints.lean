@@ -11,6 +11,7 @@ import LeanCanny.Encoding.SquareSampleCompletePrefixEquality
 import LeanCanny.Encoding.SquareSampleScalarCoordinateEquality
 import LeanCanny.Encoding.SquareSampleCompleteCoordinateOrder
 import LeanCanny.Encoding.SquareSampleCompleteParameterChoice
+import LeanCanny.Encoding.SquareSampleNamedParents
 import LeanCanny.Geometry.AlgebraicFiberImageRank
 
 /-! Finite endpoint selection, tied coordinates, and zero midpoint tests.
@@ -332,6 +333,8 @@ example : Geometry.FiniteImageRank.rank ({0, 1, 2} : Finset ℕ)
 -- the original zero coordinate; no regularity of the original system is used.
 example : ∃ w,
     SquareSampleCompleteVertices.Valid (IntegerPolynomialSampleInput.input source) [] w ∧
+    pair [] w ∈ NamedRationalParents.language (SquareSampleNamedParents.source (IntegerPolynomialSampleInput.input source)
+      (IntegerPolynomialSampleInput.complete source)) ∧
     SquareSampleCompleteParameterChoice.record (IntegerPolynomialSampleInput.input source) (pair [] w) ∈
       IntegerPolynomialSampleSlice.valid (SquareSampleCompleteParameterTest.source (IntegerPolynomialSampleInput.input source)) ∧
     SquareSampleParameters.decode (IntegerPolynomialSampleInput.input source) []
@@ -343,7 +346,8 @@ example : ∃ w,
     change (((Polynomial.X * (Polynomial.X - Polynomial.C 1)) ^ 2 : Polynomial ℤ).eval₂ (Int.castRingHom ℝ) (0 : ℝ)) = 0
     rw [Polynomial.eval₂_pow, Polynomial.eval₂_mul, Polynomial.eval₂_X, zero_mul]
     norm_num)
-  exact ⟨w, hw, SquareSampleCompleteParameterChoice.record_valid _ [] w hw,
+  exact ⟨w, hw, (SquareSampleNamedParents.language_iff _ (IntegerPolynomialSampleInput.complete source) (pair [] w)).mpr hw,
+    SquareSampleCompleteParameterChoice.record_valid _ [] w hw,
     (congrFun (SquareSampleCompleteParameterChoice.decode_record _ [] w hw) (0 : Fin 1)).trans hew⟩
 
 end NativeCoordinateEqualityRegression
