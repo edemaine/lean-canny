@@ -44,6 +44,8 @@ import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
 import LeanCanny.Connectivity.CoordinateDoubleAffineTerminalConnectivity
 import LeanCanny.Connectivity.CoordinateDoubleAffineSweepCover
+import LeanCanny.Encoding.CoordinateDoubleAffineChildOriginalSamples
+import LeanCanny.Encoding.CoordinateDoubleAffineChildBounds
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -974,6 +976,42 @@ private def sweepSliceEquality (u : List Bool)
     (x : FlatAffinePowerSampleInput.OriginalRoots (CoordinateDoubleAffinePrefix.inputs F.source F.depth (fun _ => 0) (fun _ => [])) u) :=
   CoordinateDoubleAffineSweep.coarse_slice F.source F.depth (fun _ => 0) (fun _ => []) u
     (by change (0 : ℕ) < 3; decide) x
+
+-- Copied records retain their original parser meaning after ancestry grows.
+#guard FlatAffineFullSourceTower.tag
+  (FlatAffineFrozenLevelRecord.freeze 0 (CoordinateHeightRecord.height 4 0 100)) = 0
+#guard Nat.fromBitsLE (FlatAffineFullSourceTower.left
+  (FlatAffineFrozenLevelRecord.freeze 1 (CoordinateHeightRecord.height 4 0 100))) = 0
+#guard Nat.fromBitsLE (FlatAffineFullSourceTower.left
+  (FlatAffineFrozenLevelRecord.freeze 3 (CoordinateHeightRecord.midpoint 4 0 100 1))) = 2
+#guard Nat.fromBitsLE (FlatAffineFullSourceTower.right
+  (FlatAffineFrozenLevelRecord.freeze 3 (CoordinateHeightRecord.midpoint 4 0 100 1))) = 1
+
+example (midpoint : Bool) :
+    (CoordinateDoubleAffineChildRecords.inputs midpoint F.source F.depth (fun _ => 0) (fun _ => [])).Access :=
+  CoordinateDoubleAffineChildRecords.access midpoint access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example (midpoint : Bool) : SpaceFunction
+    (CoordinateDoubleAffineChildRecords.parentWord midpoint F.source F.depth (fun _ => 0) (fun _ => [])) :=
+  CoordinateDoubleAffineChildRecords.parentWord_evaluator midpoint access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example (midpoint : Bool) (u : List Bool) :
+    CoordinateDoubleAffineChildRecords.rank F.source
+        (CoordinateDoubleAffineChildRecords.childDepth midpoint F.depth)
+        (CoordinateDoubleAffineChildRecords.objective midpoint F.depth (fun _ => 0)) u <
+      CoordinateDoubleAffineChildRecords.rank F.source F.depth (fun _ => 0) u :=
+  CoordinateDoubleAffineChildRecords.rank_decreases midpoint F.source F.depth (fun _ => 0) u
+    (by change (0 : ℕ) < 3; decide)
+
+example (midpoint : Bool) (u : List Bool) :
+    FlatAffineFullSourceTower.count
+        (CoordinateDoubleAffineChildRecords.inputs midpoint F.source F.depth (fun _ => 0) (fun _ => [])) u ≤
+      (F.depth u + 2 * CoordinateDoubleAffineChildRecords.rank F.source F.depth (fun _ => 0) u) *
+        (2 * (F.source.dim u + 4) + 1) :=
+  CoordinateDoubleAffineChildRecords.count_le_budget midpoint F.source F.depth (fun _ => 0) (fun _ => []) u
+    (by change (0 : ℕ) < 3; decide)
 
 
 end

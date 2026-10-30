@@ -64,6 +64,8 @@ import LeanCanny.Connectivity.CoordinateAffineTerminalReachability
 import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
 import LeanCanny.Connectivity.CoordinateDoubleAffineTerminalConnectivity
 import LeanCanny.Connectivity.CoordinateDoubleAffineSweepCover
+import LeanCanny.Encoding.CoordinateDoubleAffineChildOriginalSamples
+import LeanCanny.Encoding.CoordinateDoubleAffineChildBounds
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -463,6 +465,12 @@ exactly the original spatial slice. The swept coordinate, actual row, and
 canonical branch and endpoint filters come from the source readers, and the
 remaining-coordinate rank strictly decreases. Recursive endpoint covers then
 attach the actual closed slab without supplied normal or objective controls.
+Fixed-height and midpoint child records now retain one or two critical blocks,
+freeze older level references, and preserve the original parent equations.
+Their exact spatial slices add the selected height or midpoint equation,
+including at singular roots. Native projected-word search recovers the full
+parent tuple in the original sampler. Each child decreases the coordinate
+rank, and depth plus twice the remaining rank does not increase.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

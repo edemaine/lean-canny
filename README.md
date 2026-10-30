@@ -881,6 +881,12 @@ The checked ingredients are:
   source readers compute the coordinate, row, and canonical ancestor filters;
   the remaining-coordinate rank decreases strictly. Given recursive endpoint
   covers, the actual records construct the closed-slab component cover.
+  Fixed-height and midpoint child records retain one or two critical blocks
+  with frozen ancestral references. Their exact spatial slices add the
+  selected coordinate height or midpoint equation, including at singular
+  roots. Native projection re-encodes the full parent tuple in the original
+  sampler. Both children decrease the coordinate rank, while depth plus
+  twice the remaining rank does not increase.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
