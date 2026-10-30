@@ -691,7 +691,7 @@ The checked ingredients are:
   and the prepared degree record. Every bounded refined endpoint gap has an
   accepted derivative-root label. Every accepted native sample identifies the
   original slab endpoint edge by midpoint matching on either side.
-  Retaining the derivative sample height as one further variable now gives a
+  Retaining a sample or boundary height as one further variable now gives a
   finite integer system containing the current point and both endpoint
   candidates. Native source readers compute its rows, exact degree-record
   validator, nonzero coordinate annihilators, and their degree and height
@@ -722,6 +722,10 @@ The checked ingredients are:
   checked branch relation is proved correct from the original affine equations
   and their computed exceptional polynomial. Native endpoint markers now denote
   actual points in their stated fibers, including singular endpoint fibers.
+  The scalar candidates retain both exceptional heights and derivative roots;
+  inside open gaps they are exactly the original derivative samples. Every
+  endpoint point has a marker, including isolated points with empty neighboring
+  fibers, by taking equal heights and three equal spatial copies.
   Projected Thom comparisons identify those points independently of auxiliary
   joint copies. A bounded native attachment query validates the short branch
   descriptor, adjacent heights, original slab, and endpoint marker. Its witness
@@ -733,6 +737,8 @@ The checked ingredients are:
   the original singular fiber. Complete point labels now supply actual named
   rational parents with native validity and derivative probes. Endpoint names
   validate the original frame and expose exactly the endpoint coordinates.
+  Every endpoint point has such a bounded parent name with exact recovery,
+  including isolated points absent from neighboring slabs.
   The existing ancestry-aware child routines now give native regular child
   samples over these markers, without parent endpoint regularity. Recursive
   graph assembly remains required.

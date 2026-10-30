@@ -12,6 +12,7 @@ import LeanCanny.Encoding.SquareSampleScalarCoordinateEquality
 import LeanCanny.Encoding.SquareSampleCompleteCoordinateOrder
 import LeanCanny.Encoding.SquareSampleCompleteParameterChoice
 import LeanCanny.Encoding.SquareSampleNamedParents
+import LeanCanny.Algebra.IntegerPolynomialStationarySource
 import LeanCanny.Geometry.AlgebraicFiberImageRank
 
 /-! Finite endpoint selection, tied coordinates, and zero midpoint tests.
@@ -251,6 +252,21 @@ example : ∃ w v, pair (pair [] w) v ∈ IntegerPolynomialAdjacentSamples.langu
   obtain ⟨v, hv⟩ := IntegerPolynomialAdjacentSamples.sample_label_complete zeroSource oneSource zeroSource true [] w hw i
     (hi.trans he.symm) 1 (by exact (Polynomial.monic_X_sub_C (1 : ℤ)).ne_zero) (by simp [oneSource]) hgap
   exact ⟨w, v, hv⟩
+
+-- A linear exceptional polynomial has no derivative roots. Its boundary
+-- point must nevertheless have a retained native label.
+example : (∀ t : ℝ, (oneSource.polynomial []).derivative.eval₂ (Int.castRingHom ℝ) t ≠ 0) ∧
+    ∃ w, ∃ hw : SquareSampleCompleteVertices.Valid
+      (IntegerPolynomialSampleInput.input (IntegerPolynomialStationaryBits.source oneSource)) [] w,
+      (SquareSampleCompleteVertices.candidate
+        (IntegerPolynomialSampleInput.input (IntegerPolynomialStationaryBits.source oneSource)) [] w hw).val (0 : Fin 1) = 1 := by
+  constructor
+  · intro t
+    simp [oneSource]
+  · exact IntegerPolynomialSampleInput.root_complete (IntegerPolynomialStationaryBits.source oneSource) []
+      (IntegerPolynomialStationaryBits.ne_zero oneSource [] (Polynomial.monic_X_sub_C (1 : ℤ)).ne_zero
+        (by simp only [oneSource, Polynomial.natDegree_X_sub_C]; decide)) 1
+      (IntegerPolynomialStationaryBits.retains_root oneSource [] (Int.castRingHom ℝ) 1 (by simp [oneSource]))
 
 end NativeAdjacentSampleRegression
 

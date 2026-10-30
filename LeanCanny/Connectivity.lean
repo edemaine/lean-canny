@@ -42,6 +42,8 @@ import LeanCanny.Connectivity.FlatAffineEndpointBranchRelation
 import LeanCanny.Connectivity.FlatAffineEndpointMarkerIncidence
 import LeanCanny.Encoding.FlatAffineEndpointAlgebraicMarker
 import LeanCanny.Encoding.FlatAffineEndpointChildSamples
+import LeanCanny.Encoding.FlatAffineEndpointMarkerComplete
+import LeanCanny.Encoding.FlatAffineEndpointParentComplete
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -402,8 +404,8 @@ height budgets, and native coefficient scans compute their trailing factors.
 Prepared degree records have native validity checks. The computed midpoint
 polynomials work uniformly for every pair of endpoint candidates; their
 trailing factors make matching stable, and one retained sample characterizes
-each actual slab endpoint edge. A second retained variable now freezes the
-derivative sample height, making the current point and both endpoint candidates
+each actual slab endpoint edge. A second retained variable now freezes a
+sample or boundary height, making the current point and both endpoint candidates
 one finite integer system. Its original rows, exact degree-record validator,
 coordinate annihilators, and complete short labels all have native readers.
 Every actual tuple receives a label, including singular roots. Native midpoint
@@ -430,11 +432,18 @@ exceptional polynomial. Native endpoint markers retain actual points of their
 stated fibers, with projected-point identity independent of auxiliary copies.
 Bounded attachment queries combine the checked slab, branch descriptor, and
 marker; their witness tests agree with actual left or right incidence.
+The scalar candidate polynomial retains both exceptional roots and derivative
+roots; inside each open gap its roots are exactly the derivative samples.
+Every endpoint point now has a marker, including isolated points with empty
+neighboring fibers, using equal heights and three equal spatial copies.
 Native scalar parameter records recover every parent coordinate, and child
 slice coefficients, degrees, and root counts are computed over those records.
 Complete point labels also supply actual named rational parents with native
 validity and derivative probes. Endpoint parent names check the original frame
 and expose exactly the endpoint copy. Existing ancestry-aware child routines
+accept bounded parent names for every actual endpoint point, including
+isolated points with empty neighboring fibers, with exact coordinate recovery.
+These child routines
 now give native regular child samples over these markers, without regularity
 of the original endpoint. The complete recursive graph assembly remains open.
 Polynomial shifts of row

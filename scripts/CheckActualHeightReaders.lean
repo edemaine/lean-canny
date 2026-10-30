@@ -23,6 +23,8 @@ import LeanCanny.Encoding.FlatAffineEndpointBranchRelation
 import LeanCanny.Connectivity.FlatAffineEndpointMarkerIncidence
 import LeanCanny.Encoding.FlatAffineEndpointAlgebraicMarker
 import LeanCanny.Encoding.FlatAffineEndpointChildSamples
+import LeanCanny.Encoding.FlatAffineEndpointMarkerComplete
+import LeanCanny.Encoding.FlatAffineEndpointParentComplete
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.

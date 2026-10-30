@@ -9,7 +9,7 @@ public import LeanCanny.Algebra.FrozenAffineMass
 
 /-! # Source-derived budgets for joint finite midpoint sampling
 
-The original retained equation, the derivative sample equation, and the
+The original retained equation, the sample/boundary equation, and the
 embedded tower supply binary row and Gram bounds. Complete coordinate
 annihilators therefore need no degree or coefficient-height oracle.
 -/
@@ -30,7 +30,8 @@ noncomputable def rowDegree (F : Inputs) (s : List Bool) : ℕ :=
     FlatAffineFullSourceTower.degree F (pairFst (pairFst s)) + 1
 
 noncomputable def retainedMass (F : Inputs) (r : List Bool) : ℕ :=
-  (FlatAffineEndpointExceptional.degreeBound F r).size + FlatAffineEndpointExceptional.massBound F r
+  FlatAffineEndpointExceptional.massBound F r +
+    ((FlatAffineEndpointExceptional.degreeBound F r).size + FlatAffineEndpointExceptional.massBound F r)
 noncomputable def integerExponent (F : Inputs) (s : List Bool) : ℕ :=
   FlatAffineEndpointValueBounds.integerExponent F (pairFst s) + retainedMass F (pairFst s) + 1
 noncomputable def coordinateDegree (F : Inputs) (s : List Bool) : ℕ :=
@@ -46,7 +47,8 @@ theorem rowDegree_binary {F : Inputs} (h : F.Access) : BinaryFn (rowDegree F) :=
     ((FlatAffineFullSourceTower.degree_binary h).comp (mem_FP_comp pairFst_mem_FP pairFst_mem_FP))).add (BinaryFn.const 1)
 
 theorem retainedMass_binary {F : Inputs} (h : F.Access) (height : (u : List Bool) → Fin (count F u)) : BinaryFn (retainedMass F) :=
-  (FlatAffineEndpointExceptional.degreeBound_binary h height).size.add (FlatAffineEndpointExceptional.massBound_binary h height)
+  (FlatAffineEndpointExceptional.massBound_binary h height).add
+    ((FlatAffineEndpointExceptional.degreeBound_binary h height).size.add (FlatAffineEndpointExceptional.massBound_binary h height))
 
 theorem integerExponent_binary {F : Inputs} (h : F.Access) (height : (u : List Bool) → Fin (count F u)) : BinaryFn (integerExponent F) := by
   have hp : BinaryFn (fun s => FlatAffineEndpointValueBounds.integerExponent F (pairFst s)) :=

@@ -42,7 +42,7 @@ theorem sample_exists (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCertific
   obtain ⟨t, ht, hgap⟩ := FlatAffineEndpointSamples.exists_in_gap F hcone height r hr a ha _ h0 hk
   obtain ⟨v, hv⟩ := IntegerPolynomialAdjacentSamples.sample_label_complete (heightSource F hcone height)
     (FlatAffineEndpointSamples.source F hcone height) (FlatAffineEndpointCells.source F hcone height) right r w hw i hi t
-    (FlatAffineEndpointSamples.derivative_ne_zero F hcone height r hr a ha)
+    (FlatAffineEndpointSamples.source_ne_zero F hcone height r hr a ha)
     ((FlatAffineEndpointSamples.mem_roots_iff F hcone height r hr a ha t).mp ht) hgap
   refine ⟨v, ?_, hv⟩
   simpa only [pairFst_pair] using hr

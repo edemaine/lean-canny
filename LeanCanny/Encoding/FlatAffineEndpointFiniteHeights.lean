@@ -99,6 +99,6 @@ theorem sample_packet (F : Inputs) (cone : FlatAffinePowerPositive.ConeCertifica
   have H := FlatAffineEndpointFiniteProjection.equations F height s z hz
   exact SquareSampleScalarCoordinateEquality.packet (FlatAffineEndpointFiniteSample.input F cone height)
     (FlatAffineEndpointSamples.source F cone height) pairFst (sampleIndex F) s w v hw hv
-    (FlatAffineEndpointSamples.derivative_ne_zero F cone height (pairFst s) hs.1 _ H.2.1) H.1
+    (FlatAffineEndpointSamples.source_ne_zero F cone height (pairFst s) hs.1 _ H.2.1) H.1
 
 end LeanCanny.Encoding.FlatAffineEndpointFiniteHeights

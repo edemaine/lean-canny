@@ -9,7 +9,7 @@ public import LeanCanny.Geometry.FlatAffineEndpointFiniteLift
 
 /-! # Every actual midpoint tuple has a complete native label
 
-Endpoint and derivative roots validate the charged degree preparation.
+Endpoint and retained sample roots validate the charged degree preparation.
 For a valid frame, any original current point and pair of endpoint roots
 lift to a root with a short label accepted by the guarded native sampler.
 Repeated heights and singular spatial roots remain included.
@@ -31,7 +31,7 @@ theorem record_valid (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCertifica
     (ht : SymbolicScaledSquarefree.scalarEvaluation t (FlatAffineEndpointFiniteFrame.retained F height r) = 0) :
     FlatAffineEndpointFiniteFrame.Valid F height (FlatAffineEndpointFiniteFrame.record F height r) := by
   have hd : 0 < (FlatAffineEndpointFiniteFrame.retained F height r).natDegree :=
-    Polynomial.natDegree_pos_of_eval₂_root (FlatAffineEndpointSamples.derivative_ne_zero F hcone height r hr a ha)
+    Polynomial.natDegree_pos_of_eval₂_root (FlatAffineEndpointSamples.source_ne_zero F hcone height r hr a ha)
       (Int.castRingHom ℝ) ht (by intro z hz; change (z : ℝ) = 0 at hz; exact Int.cast_eq_zero.mp hz)
   simp only [FlatAffineEndpointFiniteFrame.Valid, FlatAffineEndpointFiniteFrame.record, FlatAffineEndpointFiniteFrame.degree,
     pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]

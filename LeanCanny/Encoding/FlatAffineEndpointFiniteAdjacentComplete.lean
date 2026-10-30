@@ -50,7 +50,7 @@ theorem labels_exist (F : Inputs) (cone : FlatAffinePowerPositive.ConeCertificat
     hi.trans hea.symm
   obtain ⟨tWord, ht, het, hadj⟩ := IntegerPolynomialAdjacentSamples.sample_label_complete_point S T Q right
     (pairFst s) aWord ha i hiWord (FlatAffineEndpointFiniteProjection.sample F s z)
-    (FlatAffineEndpointSamples.derivative_ne_zero F cone height (pairFst s) hs.1 _ H.2.1) H.1 hgap
+    (FlatAffineEndpointSamples.source_ne_zero F cone height (pairFst s) hs.1 _ H.2.1) H.1 hgap
   refine ⟨aWord, tWord, (packet F cone height right s w aWord tWord hs hw ha ht).mpr ⟨hea.symm, het.symm, ?_⟩⟩
   change FlatAffineEndpointValidity.Valid F height (pairFst (pairFst (pair (pair (pairFst s) aWord) tWord))) ∧ _
   refine ⟨?_, hadj⟩

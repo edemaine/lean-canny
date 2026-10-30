@@ -9,9 +9,9 @@ public import LeanCanny.Algebra.FrozenAffineLift
 
 /-! # A finite integer frame for jointly labeled midpoint comparisons
 
-Retain a derivative sample height as one more variable around the frozen
+Retain a sample or exceptional height as one more variable around the frozen
 endpoint system. The resulting square integer system contains the current
-point and two endpoint candidates simultaneously. Exact derivative degrees
+point and two endpoint candidates simultaneously. Exact retained degrees
 are computed in space and stored in a checked record. Positive valid degree
 records exclude infinity without any regularity assumptions.
 -/
@@ -26,7 +26,7 @@ set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 300000
 
 noncomputable def retained (F : Inputs) (height : (u : List Bool) → Fin (count F u)) (r : List Bool) : Polynomial ℤ :=
-  (FlatAffineEndpointExceptional.polynomial F height r).derivative
+  FlatAffineEndpointExceptional.polynomial F height r * (FlatAffineEndpointExceptional.polynomial F height r).derivative
 
 noncomputable def record (F : Inputs) (height : (u : List Bool) → Fin (count F u)) (r : List Bool) : List Bool :=
   pair r (BinaryNatCode.encode (retained F height r).natDegree)

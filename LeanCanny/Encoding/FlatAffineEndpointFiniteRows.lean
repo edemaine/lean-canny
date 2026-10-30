@@ -48,7 +48,7 @@ theorem innerAccess {F : Inputs} (h : F.Access) (height : (u : List Bool) → Fi
 theorem retainedEvaluator {F : Inputs} (h : F.Access) (height : (u : List Bool) → Fin (count F u))
     (hh : UnaryFn (fun u => (height u).val)) :
     SpaceFunction (PrimitivePairBits.coefficient (FlatAffineEndpointFiniteFrame.retained F height)) :=
-  IntegerPolynomialDerivativeBits.evaluator _ (FlatAffineEndpointExceptional.evaluator h height hh)
+  IntegerPolynomialStationaryBits.evaluator _ (FlatAffineEndpointExceptional.evaluator h height hh)
 
 theorem rowEvaluator {F : Inputs} (h : F.Access) (height : (u : List Bool) → Fin (count F u))
     (hh : UnaryFn (fun u => (height u).val)) (ctx : List Bool → List Bool) (hctx : ctx ∈ FP)
