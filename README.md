@@ -851,6 +851,12 @@ The checked ingredients are:
   validation, computed ancestor words, and word comparison. It agrees at
   both retained samples. The native newest-height index recovers exactly
   the original parent depth and complete sampler.
+  The computed word now decodes to the full original ancestor tuple,
+  including multiplier slots. Native filtering is equivalent to equality
+  of these decoded original ancestors.
+  On the actual constructed family, the decoded native parent is exactly
+  the parent used by the component saturation. Native filtering agrees with
+  the defining predicate of its finite parent-specific branch index.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

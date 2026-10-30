@@ -72,6 +72,8 @@ import LeanCanny.Connectivity.FlatAffineSlabSaturation
 import LeanCanny.Connectivity.FlatAffineSlabRecursiveCover
 import LeanCanny.Connectivity.FlatAffineSlabAncestorFilter
 import LeanCanny.Encoding.FlatAffineLastHeightRow
+import LeanCanny.Encoding.FlatAffineBranchOriginalAncestorMatch
+import LeanCanny.Connectivity.FlatAffineSlabComputedParents
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -416,6 +418,12 @@ Native descriptor validation, ancestor computation, and word comparison now
 give an exact ancestor filter in PSPACE. It tests the actual frozen blocks
 and has the same answer at both retained branch descriptors. A native newest
 height-row writer recovers exactly the original parent depth and sampler.
+Its computed word now decodes to the exact original parent tuple, including
+all ancestor multiplier slots. The native filter accepts precisely when
+that original tuple equals the original ancestor decoded from the query.
+For the constructed branch family, the decoded native parent is exactly the
+parent used by the original component saturation. Native acceptance agrees
+with the defining predicate of its finite parent-specific branch index.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

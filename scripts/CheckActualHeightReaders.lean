@@ -50,6 +50,8 @@ import LeanCanny.Connectivity.FlatAffineSlabParentSections
 import LeanCanny.Connectivity.FlatAffineSlabSaturation
 import LeanCanny.Connectivity.FlatAffineSlabAncestorFilter
 import LeanCanny.Encoding.FlatAffineLastHeightRow
+import LeanCanny.Encoding.FlatAffineBranchOriginalAncestorMatch
+import LeanCanny.Connectivity.FlatAffineSlabComputedParents
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -628,6 +630,19 @@ example : UnaryFn (fun u => (FlatAffineLastHeightRow.row F firstHeight u).val) :
 
 example : FlatAffineShiftPrefixInput.inputs (FlatAffineCompleteRootStages.next F)
     (FlatAffineLastHeightRow.row F firstHeight) = F := FlatAffineLastHeightRow.inputs_eq F firstHeight
+
+private def coordinateF := CoordinateAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => [])
+private theorem coordinateAccess : coordinateF.Access :=
+  CoordinateAffinePrefix.access access.source access.depth (UnaryFn.const 100)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+private theorem coordinateCone : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next coordinateF) :=
+  CoordinateAffineSliceRegularity.cone F.source F.depth (fun _ => 100) (fun _ => [])
+
+example : SpaceFunction (FlatAffineBranchParentChoice.value coordinateF coordinateCone firstHeight) :=
+  FlatAffineBranchParentChoice.evaluator coordinateAccess coordinateCone firstHeight (UnaryFn.const 0)
+
+example : FlatAffineBranchOriginalAncestorMatch.language coordinateF coordinateCone firstHeight ∈ PSPACE :=
+  FlatAffineBranchOriginalAncestorMatch.mem_PSPACE coordinateAccess coordinateCone firstHeight (UnaryFn.const 0)
 
 example (G : Inputs) (C : FlatAffinePowerPositive.ConeCertificate G)
     (height : (u : List Bool) → Fin (FlatAffineFullSourcePositive.count G u)) (c : List Bool)
