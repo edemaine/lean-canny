@@ -54,6 +54,7 @@ import LeanCanny.Encoding.FlatAffineLastHeightRow
 import LeanCanny.Encoding.FlatAffineBranchOriginalAncestorMatch
 import LeanCanny.Connectivity.FlatAffineSlabComputedParents
 import LeanCanny.Connectivity.FlatAffineSlabCanonicalParents
+import LeanCanny.Connectivity.FlatAffineSlabCanonicalEndpoints
 import LeanCanny.Connectivity.FlatAffineSlabEndpointPrefixes
 import LeanCanny.Connectivity.FlatAffineScaledSlabSliceRegularity
 import LeanCanny.Connectivity.CoordinateDoubleAffineComponentCover
@@ -671,6 +672,20 @@ example (q : List Bool)
       (FlatAffineJointPrefixChoice.original (FlatAffineEndpointBranchLabels.source q))
       (FlatAffineBranchCanonicalParent.value coordinateF coordinateCone firstHeight q) :=
   FlatAffineBranchCanonicalParent.value_valid coordinateF coordinateCone firstHeight q hq
+
+example : SpaceFunction (FlatAffineEndpointCanonicalParent.value coordinateF coordinateCone firstHeight) :=
+  FlatAffineEndpointCanonicalParent.evaluator coordinateAccess coordinateCone firstHeight (UnaryFn.const 0)
+
+example : FlatAffineEndpointCanonicalParent.language coordinateF coordinateCone firstHeight ∈ PSPACE :=
+  FlatAffineEndpointCanonicalParent.mem_PSPACE coordinateAccess coordinateCone firstHeight (UnaryFn.const 0)
+
+example (q : List Bool)
+    (hq : q ∈ FlatAffineEndpointMarkers.language (FlatAffineCompleteRootStages.next coordinateF)
+      coordinateCone (FlatAffineLastHeightRow.row coordinateF firstHeight)) :
+    FlatAffineCompleteVertices.Valid coordinateF (FlatAffineLastHeightRow.parentCone coordinateF coordinateCone)
+      (FlatAffineJointPrefixChoice.original (FlatAffineEndpointMarkers.source q))
+      (FlatAffineEndpointCanonicalParent.value coordinateF coordinateCone firstHeight q) :=
+  FlatAffineEndpointCanonicalParent.value_valid coordinateF coordinateCone firstHeight q hq
 
 example (G : Inputs) (C : FlatAffinePowerPositive.ConeCertificate G)
     (height : (u : List Bool) → Fin (FlatAffineFullSourcePositive.count G u)) (c : List Bool)

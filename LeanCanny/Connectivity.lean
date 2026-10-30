@@ -75,6 +75,7 @@ import LeanCanny.Encoding.FlatAffineLastHeightRow
 import LeanCanny.Encoding.FlatAffineBranchOriginalAncestorMatch
 import LeanCanny.Connectivity.FlatAffineSlabComputedParents
 import LeanCanny.Connectivity.FlatAffineSlabCanonicalParents
+import LeanCanny.Connectivity.FlatAffineSlabCanonicalEndpoints
 import LeanCanny.Connectivity.FlatAffineSlabEndpointPrefixes
 import LeanCanny.Connectivity.FlatAffineScaledSlabRecursiveCover
 import LeanCanny.Connectivity.FlatAffineScaledSlabSliceRegularity
@@ -446,7 +447,9 @@ recursive attachment to singular endpoint covers. Native context conversion
 now re-encodes ancestor labels in the original parent sampler while preserving
 every decoded coordinate. Canonical descriptor filters select exactly the
 original frozen-parent branch family, and both retained samples return the
-same original-context word.
+same original-context word. Endpoint markers likewise compute their own
+canonical ancestor words. At actual branch limits these equal the interior
+word, and the native endpoint filter accepts that exact original parent.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

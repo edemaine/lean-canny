@@ -870,6 +870,8 @@ The checked ingredients are:
   re-encodes ancestor words in the original parent sampler, preserving the
   entire tuple. Canonical descriptor filters select the exact parent branch
   family, and both interior samples give the same original-context word.
+  Actual endpoints retain that canonical word, and native endpoint marker
+  filters accept the exact original parent at singular limits.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
