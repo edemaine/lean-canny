@@ -829,6 +829,10 @@ The checked ingredients are:
   parent's varying slice lifts to an actual zero-objective power root;
   completeness excludes it. The entire varying slice is therefore regular
   inside each retained open slab, without a supplied regularity test.
+  These actual varying slices are compact. Every feasible point now has a
+  path within its fiber to a constructed critical branch with precisely the
+  stated frozen parent. The branches therefore sample every component of
+  every interior varying fiber.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

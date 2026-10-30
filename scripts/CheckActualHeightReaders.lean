@@ -44,6 +44,7 @@ import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
+import LeanCanny.Connectivity.FlatAffineSlabComponentSampling
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -657,6 +658,42 @@ example (P : BoundedFullWriter.Readers) (depth objective : List Bool → ℕ)
         (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) (depth (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c))) y) :=
   B.shifted_slice_regular (CoordinateAffinePrefix.inputs P depth objective level) C height c hc h hheight
     (CoordinateAffineSliceControls.normal P depth objective level _ _) hactive x t y hy
+
+-- Actual coordinate objectives also discharge the component-sampling premise.
+example (P : BoundedFullWriter.Readers) (depth objective : List Bool → ℕ)
+    (level : List Bool → List Bool)
+    (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next (CoordinateAffinePrefix.inputs P depth objective level)))
+    (height : (u : List Bool) → Fin (FlatAffineFullSourcePositive.count
+      (FlatAffineCompleteRootStages.next (CoordinateAffinePrefix.inputs P depth objective level)) u))
+    (c : List Bool)
+    (B : LeanCanny.Connectivity.FlatAffineSlabGraphBranches.Family
+      (FlatAffineCompleteRootStages.next (CoordinateAffinePrefix.inputs P depth objective level)) C height c)
+    (hc : c ∈ FlatAffineSlabGraphContext.language
+      (FlatAffineCompleteRootStages.next (CoordinateAffinePrefix.inputs P depth objective level)) C height)
+    (h : Fin (P.dim (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) + 4))
+    (hheight : height (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) =
+      FlatAffinePowerSingularHeightCurves.rowIndex (CoordinateAffinePrefix.inputs P depth objective level)
+        (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) h)
+    (hactive : h ∈ FlatAffineFullSourceTower.free (CoordinateAffinePrefix.inputs P depth objective level)
+      (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) (depth (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c)))
+    (x : FlatAffinePowerSampleInput.OriginalRoots (CoordinateAffinePrefix.inputs P depth objective level)
+      (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c))
+    (t : Set.Ioo (FlatAffineSlabGraphContext.endpointValue _ C height false c)
+      (FlatAffineSlabGraphContext.endpointValue _ C height true c))
+    (y : Fin (P.dim (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) + 4) → ℝ)
+    (hy : y ∈ FlatAffineShiftedSlice.slice (CoordinateAffinePrefix.inputs P depth objective level)
+      (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) x h t.val) :
+    ∃ j : LeanCanny.Connectivity.FlatAffineSlabGraphArcs.Index
+        (FlatAffineCompleteRootStages.next (CoordinateAffinePrefix.inputs P depth objective level)) C height c,
+      FlatAffineShiftedSlice.ancestorPoint (CoordinateAffinePrefix.inputs P depth objective level)
+        (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) (B.curve j t.val) = x.val ∧
+      JoinedIn (FlatAffineShiftedSlice.slice (CoordinateAffinePrefix.inputs P depth objective level)
+        (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) x h t.val) y
+        (FlatAffineShiftedSlice.spatialPoint (CoordinateAffinePrefix.inputs P depth objective level)
+          (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.original c) (B.curve j t.val)) :=
+  B.sample_shifted_slice (CoordinateAffinePrefix.inputs P depth objective level) C height c hc h hheight
+    (CoordinateAffineSliceControls.normal P depth objective level _ _) hactive
+    (CoordinateAffineSliceControls.objective_independent P depth objective level _ _) x t y hy
 
 end
 end ActualHeightReaderRegression

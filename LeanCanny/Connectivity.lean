@@ -64,6 +64,7 @@ import LeanCanny.Connectivity.CoordinateAffineTerminalConnectivity
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
+import LeanCanny.Connectivity.FlatAffineSlabComponentSampling
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -383,6 +384,10 @@ branch has nonzero objective multiplier. Every singular point of any frozen
 parent's varying slice lifts to a zero-objective root of the actual power
 system. Complete branch coverage excludes such a point: the entire varying
 slice is regular throughout each retained open slab, without a regularity oracle.
+The actual varying slices are compact. Every feasible point can now reach a
+shifted critical root in its own fiber component, and its lifted power root
+lies on a constructed branch with exactly the stated frozen parent. Thus
+retained branches sample every component of every interior varying fiber.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint
