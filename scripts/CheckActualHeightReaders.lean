@@ -53,6 +53,7 @@ import LeanCanny.Connectivity.FlatAffineSlabAncestorFilter
 import LeanCanny.Encoding.FlatAffineLastHeightRow
 import LeanCanny.Encoding.FlatAffineBranchOriginalAncestorMatch
 import LeanCanny.Connectivity.FlatAffineSlabComputedParents
+import LeanCanny.Connectivity.FlatAffineSlabCanonicalParents
 import LeanCanny.Connectivity.FlatAffineSlabEndpointPrefixes
 import LeanCanny.Connectivity.FlatAffineScaledSlabSliceRegularity
 import LeanCanny.Connectivity.CoordinateDoubleAffineComponentCover
@@ -654,6 +655,22 @@ example : SpaceFunction (FlatAffineBranchParentChoice.value coordinateF coordina
 
 example : FlatAffineBranchOriginalAncestorMatch.language coordinateF coordinateCone firstHeight ∈ PSPACE :=
   FlatAffineBranchOriginalAncestorMatch.mem_PSPACE coordinateAccess coordinateCone firstHeight (UnaryFn.const 0)
+
+-- Recursive parent queries use the original sampler context, with explicit
+-- native re-encoding rather than an assumption about enumeration stability.
+example : SpaceFunction (FlatAffineBranchCanonicalParent.value coordinateF coordinateCone firstHeight) :=
+  FlatAffineBranchCanonicalParent.evaluator coordinateAccess coordinateCone firstHeight (UnaryFn.const 0)
+
+example : FlatAffineBranchCanonicalAncestorMatch.language coordinateF coordinateCone firstHeight ∈ PSPACE :=
+  FlatAffineBranchCanonicalAncestorMatch.mem_PSPACE coordinateAccess coordinateCone firstHeight (UnaryFn.const 0)
+
+example (q : List Bool)
+    (hq : q ∈ FlatAffineEndpointBranchLabels.language (FlatAffineCompleteRootStages.next coordinateF)
+      coordinateCone (FlatAffineLastHeightRow.row coordinateF firstHeight)) :
+    FlatAffineCompleteVertices.Valid coordinateF (FlatAffineLastHeightRow.parentCone coordinateF coordinateCone)
+      (FlatAffineJointPrefixChoice.original (FlatAffineEndpointBranchLabels.source q))
+      (FlatAffineBranchCanonicalParent.value coordinateF coordinateCone firstHeight q) :=
+  FlatAffineBranchCanonicalParent.value_valid coordinateF coordinateCone firstHeight q hq
 
 example (G : Inputs) (C : FlatAffinePowerPositive.ConeCertificate G)
     (height : (u : List Bool) → Fin (FlatAffineFullSourcePositive.count G u)) (c : List Bool)

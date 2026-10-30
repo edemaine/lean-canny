@@ -866,7 +866,10 @@ The checked ingredients are:
   own independence proofs, complete singular component covers, and native
   whole-slice regularity and singularity decisions. Their constructed slab
   saturations retain exact critical branch arcs and attach recursive endpoint
-  covers, including singular endpoint fibers.
+  covers, including singular endpoint fibers. Native context conversion
+  re-encodes ancestor words in the original parent sampler, preserving the
+  entire tuple. Canonical descriptor filters select the exact parent branch
+  family, and both interior samples give the same original-context word.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
