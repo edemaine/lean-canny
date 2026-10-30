@@ -74,6 +74,7 @@ import LeanCanny.Connectivity.FlatAffineSlabAncestorFilter
 import LeanCanny.Encoding.FlatAffineLastHeightRow
 import LeanCanny.Encoding.FlatAffineBranchOriginalAncestorMatch
 import LeanCanny.Connectivity.FlatAffineSlabComputedParents
+import LeanCanny.Connectivity.FlatAffineSlabEndpointPrefixes
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -424,6 +425,11 @@ that original tuple equals the original ancestor decoded from the query.
 For the constructed branch family, the decoded native parent is exactly the
 parent used by the original component saturation. Native acceptance agrees
 with the defining predicate of its finite parent-specific branch index.
+Native ancestor readers now handle each joint copy. Endpoint-marker filters
+use the endpoint copy's own prefix. For actual constructed branch endpoints,
+that computed word equals the interior descriptor's ancestor word, including
+at singular limits. The corresponding endpoint marker passes the native
+ancestor filter with that same word.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

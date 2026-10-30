@@ -857,6 +857,10 @@ The checked ingredients are:
   On the actual constructed family, the decoded native parent is exactly
   the parent used by the component saturation. Native filtering agrees with
   the defining predicate of its finite parent-specific branch index.
+  Native ancestor readers also cover both endpoint copies. Marker filters
+  use the endpoint's own ancestor. On an actual branch endpoint, its computed
+  word equals the interior descriptor's word, including at singular limits;
+  the corresponding native marker filter accepts that same ancestor.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

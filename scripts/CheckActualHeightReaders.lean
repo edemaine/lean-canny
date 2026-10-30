@@ -52,6 +52,7 @@ import LeanCanny.Connectivity.FlatAffineSlabAncestorFilter
 import LeanCanny.Encoding.FlatAffineLastHeightRow
 import LeanCanny.Encoding.FlatAffineBranchOriginalAncestorMatch
 import LeanCanny.Connectivity.FlatAffineSlabComputedParents
+import LeanCanny.Connectivity.FlatAffineSlabEndpointPrefixes
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -621,6 +622,12 @@ example : SpaceFunction (FlatAffineBranchPrefixChoice.value F cone selected) :=
 
 example : FlatAffineBranchAncestorMatch.language F cone selected ∈ PSPACE :=
   FlatAffineBranchAncestorMatch.mem_PSPACE access cone selected selected_unary
+
+example (k : Fin 3) : SpaceFunction (FlatAffineJointCopyPrefixChoice.value F cone selected k) :=
+  FlatAffineJointCopyPrefixChoice.evaluator access cone selected selected_unary k
+
+example : FlatAffineEndpointAncestorMatch.language F cone selected ∈ PSPACE :=
+  FlatAffineEndpointAncestorMatch.mem_PSPACE access cone selected selected_unary
 
 private def firstHeight (u : List Bool) : Fin (FlatAffineFullSourceTower.arity F u) :=
   ⟨0, by unfold FlatAffineFullSourceTower.arity; omega⟩
