@@ -9,6 +9,8 @@ import LeanCanny.Encoding.IntegerPolynomialAdjacentSamplesComplete
 import LeanCanny.Algebra.FrozenRetainedMidpointSpace
 import LeanCanny.Encoding.SquareSampleCompletePrefixEquality
 import LeanCanny.Encoding.SquareSampleScalarCoordinateEquality
+import LeanCanny.Encoding.SquareSampleCompleteCoordinateOrder
+import LeanCanny.Geometry.AlgebraicFiberImageRank
 
 /-! Finite endpoint selection, tied coordinates, and zero midpoint tests.
 Run with `lake env lean -DwarningAsError=true scripts/CheckEndpointMidpoints.lean`.
@@ -280,7 +282,9 @@ example : ∃ w v,
       SquareSampleCompleteCoordinateEquality.language (IntegerPolynomialSampleInput.input source) ∧
     pair [] (pair w v) ∈ SquareSampleCompletePrefixEquality.language (IntegerPolynomialSampleInput.input source) (fun _ => 0) ∧
     pair (pair [] w) v ∉ SquareSampleScalarCoordinateEquality.language (IntegerPolynomialSampleInput.input source)
-      source id (fun _ => (0 : Fin 1)) := by
+      source id (fun _ => (0 : Fin 1)) ∧
+    SquareSampleCompleteCoordinateOrder.value (IntegerPolynomialSampleInput.input source)
+      (pair (pair [] (pair w v)) (BinaryNatCode.encode 0)) = [true] := by
   have hn : source.polynomial [] ≠ 0 :=
     pow_ne_zero _ (mul_ne_zero Polynomial.X_ne_zero (Polynomial.monic_X_sub_C (1 : ℤ)).ne_zero)
   obtain ⟨w, hw, hew⟩ := IntegerPolynomialSampleInput.root_complete source [] hn 0 (by
@@ -291,7 +295,7 @@ example : ∃ w v,
     change (((Polynomial.X * (Polynomial.X - Polynomial.C 1)) ^ 2 : Polynomial ℤ).eval₂ (Int.castRingHom ℝ) (1 : ℝ)) = 0
     rw [Polynomial.eval₂_pow, Polynomial.eval₂_mul, Polynomial.eval₂_sub, Polynomial.eval₂_X, Polynomial.eval₂_C]
     norm_num)
-  refine ⟨w, v, ?_, ?_, ?_⟩
+  refine ⟨w, v, ?_, ?_, ?_, ?_⟩
   · intro h
     have H := SquareSampleCompleteCoordinateEquality.packet _ (IntegerPolynomialSampleInput.complete source) [] w v hw hv (0 : Fin 1)
     have h0 : (0 : Fin 1).val = 0 := rfl
@@ -310,5 +314,17 @@ example : ∃ w v,
       (fun _ => (0 : Fin 1)) [] w v hw hv hn hr
     have h01 : (0 : ℝ) = 1 := hew.symm.trans ((H.mp h).trans hev)
     exact zero_ne_one h01
+  · have H := SquareSampleCompleteCoordinateOrder.packet (IntegerPolynomialSampleInput.input source)
+      (IntegerPolynomialSampleInput.complete source) [] w v hw hv (0 : Fin 1)
+    have h0 : (0 : Fin 1).val = 0 := rfl
+    rw [h0] at H
+    rw [H, hew, hev]
+    norm_num
+
+-- Repeated coordinate values contribute only one rank step.
+example : Geometry.FiniteImageRank.rank ({0, 1, 2} : Finset ℕ)
+    (fun k => if k < 2 then (0 : ℝ) else 2) 2 = 1 := by
+  rw [Geometry.FiniteImageRank.rank_eq]
+  norm_num [Finset.filter_insert, Finset.filter_singleton]
 
 end NativeCoordinateEqualityRegression

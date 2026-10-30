@@ -36,6 +36,8 @@ import LeanCanny.Connectivity.FlatAffineEndpointCellIncidence
 import LeanCanny.Connectivity.FlatAffineEndpointNativeIncidence
 import LeanCanny.Connectivity.FlatAffineEndpointFiniteIncidence
 import LeanCanny.Connectivity.FlatAffineEndpointCheckedIncidence
+import LeanCanny.Encoding.FlatAffineEndpointRankWord
+import LeanCanny.Encoding.FlatAffineEndpointFiniteRankBranch
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -409,8 +411,14 @@ attachment. Native scalar-coordinate comparisons now bind independently
 encoded endpoint and sample heights to the joint tuple, preserving their
 original labels. The combined adjacency validator is complete for joint
 tuples in the requested gap. Checked edge queries therefore validate that
-gap before deciding actual attachment. Aligning the remaining branch
-records and constructing the recursive cover remain required.
+gap before deciding actual attachment. Native coordinate-order comparisons
+and least-label scans now count distinct projected values in filtered
+complete sample sets. Fixing just the two retained heights gives exactly
+the actual current spatial fiber. These native coordinate ranks agree with
+geometric finite-branch ranks; the latter are persistent and distinguish
+branch points. A native fixed-width writer packages all coordinates into a
+short descriptor. Completing the branch-record graph interface and the
+recursive cover remains required.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.

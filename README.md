@@ -709,8 +709,14 @@ The checked ingredients are:
   and exact adjacency before deciding attachment. Every valid joint tuple in
   the requested gap has accepted scalar labels. The checked edge language is
   in native PSPACE, and its answers equal actual left or right slab attachment.
-  Aligning the remaining branch records and constructing the recursive cover
-  remain required.
+  Native coordinate-order comparisons now support least-label scans that
+  count each projected value once, even when many complete labels share it.
+  Fixing the two joint heights gives exactly the actual spatial fiber; its
+  native coordinate ranks agree with ranks of a complete finite branch family.
+  These geometric rank vectors distinguish branch points and stay constant
+  along retained branches. A native fixed-width writer packages the coordinate
+  ranks into short descriptors, with source-derived unary lengths. Completing
+  the branch-record graph interface and the recursive cover remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

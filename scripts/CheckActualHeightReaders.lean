@@ -17,6 +17,8 @@ import LeanCanny.Encoding.FlatAffineEndpointAdjacentComplete
 import LeanCanny.Encoding.FlatAffineEndpointFiniteMidpoint
 import LeanCanny.Encoding.FlatAffineEndpointFiniteMatching
 import LeanCanny.Encoding.FlatAffineEndpointFiniteEdges
+import LeanCanny.Encoding.FlatAffineEndpointRankWord
+import LeanCanny.Encoding.FlatAffineEndpointFiniteRankBranch
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -307,6 +309,22 @@ example (right : Bool) : FlatAffineEndpointFiniteAdjacent.language F cone select
 
 example (right : Bool) : FlatAffineEndpointFiniteEdges.language F cone selected right ∈ PSPACE :=
   FlatAffineEndpointFiniteEdges.mem_PSPACE access cone selected selected_unary right
+
+private def rankIndex (c : List Bool) : Fin (FlatAffineEndpointFiniteSide.originalCount F (FlatAffineEndpointFiniteRanks.frame c)) :=
+  jointIndex (FlatAffineEndpointFiniteRanks.frame c)
+
+private lemma rankIndex_unary : UnaryFn (fun c => (rankIndex c).val) :=
+  jointIndex_unary.comp FlatAffineEndpointFiniteRanks.frame_FP
+
+example : SpaceFunction (fun q => BinaryNatCode.encode
+    (FiniteWordProjectionRank.rank (FlatAffineEndpointFiniteRanks.data F cone selected rankIndex) q)) :=
+  FlatAffineEndpointFiniteRanks.evaluator access cone selected selected_unary rankIndex rankIndex_unary
+
+example : SpaceFunction (FlatAffineEndpointRankWord.word F cone selected) :=
+  FlatAffineEndpointRankWord.evaluator access cone selected selected_unary
+
+example : UnaryFn (fun b => FlatAffineEndpointRankWord.arity F b * FlatAffineEndpointRankWord.width F cone selected b) :=
+  FlatAffineEndpointRankWord.length_unary access cone selected selected_unary
 
 end
 end ActualHeightReaderRegression
