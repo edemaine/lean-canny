@@ -5,6 +5,7 @@ import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Geometry.OrderedRealCellNeighborhood
 import LeanCanny.Geometry.OrderedRealCellDerivativeSample
 import LeanCanny.Encoding.IntegerPolynomialSampleInput
+import LeanCanny.Encoding.IntegerPolynomialAdjacentSamplesComplete
 
 /-! Finite endpoint selection, tied coordinates, and zero midpoint tests.
 Run with `lake env lean -DwarningAsError=true scripts/CheckEndpointMidpoints.lean`.
@@ -176,3 +177,43 @@ example : AffineFiniteCoordinates.NoInfinity
   simpa only [Polynomial.natDegree_X_pow] using H
 
 end EndpointMidpointRegression
+
+namespace NativeAdjacentSampleRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def zeroSource : IntegerPolynomialRootQueriesBits.Source where
+  polynomial _ := Polynomial.X ^ 2
+  degree _ := 2
+  mass _ := 0
+  degree_bound _ := by simp
+  mass_bound _ := by simp
+
+private noncomputable def oneSource : IntegerPolynomialRootQueriesBits.Source where
+  polynomial _ := Polynomial.X - Polynomial.C 1
+  degree _ := 1
+  mass _ := 2
+  degree_bound _ := (Polynomial.natDegree_sub_le _ _).trans (by simp)
+  mass_bound _ := by
+    apply (coefficientMass_sub_le _ _).trans
+    have hx : coefficientMass (Polynomial.X : Polynomial ℤ) = 1 := by
+      simpa only [pow_one] using coefficientMass_X_pow 1
+    simp only [hx, coefficientMass_C, Int.natAbs_one]
+    decide
+
+-- A singular endpoint zero and an algebraic sample one have native adjacent labels.
+example : ∃ w v, pair (pair [] w) v ∈ IntegerPolynomialAdjacentSamples.language zeroSource oneSource zeroSource true := by
+  have hz : zeroSource.polynomial [] ≠ 0 := pow_ne_zero _ Polynomial.X_ne_zero
+  obtain ⟨w, hw, he⟩ := IntegerPolynomialSampleInput.root_complete zeroSource [] hz 0 (by simp [zeroSource])
+  have hR : IntegerPolynomialRootQueriesBits.rootSet zeroSource [] = {0} := by
+    simp [IntegerPolynomialRootQueriesBits.rootSet, zeroSource]
+  obtain ⟨i, hi⟩ := Geometry.OrderedRealCells.exists_root (IntegerPolynomialRootQueriesBits.rootSet zeroSource []) 0 (by rw [hR]; simp)
+  have hgap : (1 : ℝ) ∈ Geometry.OrderedRealCells.gap (IntegerPolynomialRootQueriesBits.rootSet zeroSource [])
+      (Geometry.OrderedRealCells.rightGap _ i) := by
+    rw [Geometry.OrderedRealCells.mem_rightGap_iff_rank, hi, hR]
+    norm_num [Geometry.OrderedRealCells.lowerCount, Finset.filter_singleton]
+  obtain ⟨v, hv⟩ := IntegerPolynomialAdjacentSamples.sample_label_complete zeroSource oneSource zeroSource true [] w hw i
+    (hi.trans he.symm) 1 (by exact (Polynomial.monic_X_sub_C (1 : ℤ)).ne_zero) (by simp [oneSource]) hgap
+  exact ⟨w, v, hv⟩
+
+end NativeAdjacentSampleRegression

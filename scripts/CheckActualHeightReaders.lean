@@ -13,6 +13,7 @@ import LeanCanny.Encoding.FlatAffineEndpointValidity
 import LeanCanny.Encoding.FlatAffineEndpointCells
 import LeanCanny.Encoding.FlatAffineEndpointSamples
 import LeanCanny.Encoding.FlatAffineHeightAlgebraicCoordinates
+import LeanCanny.Encoding.FlatAffineEndpointAdjacentComplete
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -251,6 +252,15 @@ example : SpaceFunction (fun u => BinaryNatCode.encode (IntegerPolynomialSampleS
 
 example (u : List Bool) (a : ℝ) : (FlatAffineHeightAlgebraicCoordinates.family F selected).slice u a ≠ 0 :=
   FlatAffineHeightAlgebraicCoordinates.specialized_ne_zero F cone selected u a
+
+example : SpaceFunction (fun u => BinaryNatCode.encode (IntegerPolynomialSampleSlice.RootCount.count
+    (FlatAffineHeightCells.source F cone selected) (FlatAffineHeightAlgebraicCoordinates.family F selected) u)) :=
+  FlatAffineHeightAlgebraicCoordinates.rootCountEvaluator access cone selected selected_unary
+
+-- The source computes both algebraic cuts, checks both complete labels,
+-- and validates the prepared degree record for either adjacent side.
+example (right : Bool) : FlatAffineEndpointAdjacentSamples.language F cone selected right ∈ PSPACE :=
+  FlatAffineEndpointAdjacentSamples.mem_PSPACE access cone selected selected_unary right
 
 end
 end ActualHeightReaderRegression

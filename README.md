@@ -684,8 +684,15 @@ The checked ingredients are:
   after algebraic specialization. The original affine source instantiates
   these queries for every coordinate at every exceptional height, without
   endpoint regularity assumptions; each specialized coordinate stays nonzero.
-  Native adjacent-gap label validation,
-  multivariate endpoint signs, and the recursive cover remain open.
+  Native principal-sign and Tarski routines now count roots in these algebraic
+  fibers. Algebraic cuts count refined roots below independently labeled
+  endpoints and samples. A native validator uses those ranks to check exact
+  adjacency on either side, including repeated roots, and checks both labels
+  and the prepared degree record. Every bounded refined endpoint gap has an
+  accepted derivative-root label. Every accepted native sample identifies the
+  original slab endpoint edge by midpoint matching on either side.
+  Multivariate midpoint signs at jointly
+  labeled roots and the recursive cover remain open.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

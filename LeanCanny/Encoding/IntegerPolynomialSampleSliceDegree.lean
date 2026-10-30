@@ -22,6 +22,14 @@ open scoped Classical
 set_option backward.isDefEq.respectTransparency false
 set_option maxHeartbeats 300000
 
+theorem point_root (S : Source) (u : List Bool) (hu : u ∈ valid S)
+    (hp : S.polynomial (pairFst (pairFst u)) ≠ 0) :
+    (S.polynomial (pairFst (pairFst u))).eval₂ (Int.castRingHom ℝ) (point S u) = 0 := by
+  rw [point, dite_eq_left hu]
+  exact (IntegerPolynomialSampleInput.roots_iff S (pairFst (pairFst u)) hp _).mp
+    (SquareSampleCompleteVertices.candidate (IntegerPolynomialSampleInput.input S)
+      (pairFst (pairFst u)) (pairSnd (pairFst u)) hu).property
+
 noncomputable def degree (S : Source) (F : Family) (u : List Bool) : ℕ := (specialized S F u).natDegree
 noncomputable def offset (S : Source) (F : Family) (u : List Bool) : ℕ :=
   if specialized S F u = 0 then 0 else degree S F u + 1
