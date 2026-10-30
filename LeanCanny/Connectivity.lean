@@ -48,6 +48,7 @@ import LeanCanny.Connectivity.FlatAffineEndpointDescriptorIncidence
 import LeanCanny.Encoding.FlatAffineSlabGraphAlgorithms
 import LeanCanny.Encoding.FlatAffineSlabGraphEdges
 import LeanCanny.Encoding.FlatAffineEndpointBranchLabelComplete
+import LeanCanny.Connectivity.FlatAffineSlabGraphBranchLabels
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace

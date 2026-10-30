@@ -750,6 +750,13 @@ The checked ingredients are:
   words enumerate exactly a complete geometric sample fiber and distinguish
   its distinct branch points. Whole-graph connectivity and reachability with
   native endpoint readers are in PSPACE.
+  Native scalar context checks now identify the two ordered boundaries of an
+  original gap and validate both interior samples without requiring spatial
+  roots. Each accepted context constructs complete continuous branches from
+  the original equations, including their singular endpoint limits. Every
+  branch has constructed native joint references at both samples, satisfying
+  the sample and adjacency checks. Their injective descriptors enumerate
+  exactly the branches and agree across the two samples.
   The assembled geometric cover and full recursive component graph remain
   required.
   Polynomial shifts of

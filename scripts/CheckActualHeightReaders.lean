@@ -29,6 +29,7 @@ import LeanCanny.Connectivity.FlatAffineEndpointDescriptorIncidence
 import LeanCanny.Encoding.FlatAffineSlabGraphAlgorithms
 import LeanCanny.Encoding.FlatAffineSlabGraphEdges
 import LeanCanny.Encoding.FlatAffineEndpointBranchLabelComplete
+import LeanCanny.Connectivity.FlatAffineSlabGraphBranchLabels
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -396,6 +397,17 @@ example : FlatAffineSlabGraph.edgeLanguage F cone selected ∈ PSPACE :=
 
 example : FlatAffineSlabGraph.connectedLanguage F cone selected ∈ PSPACE :=
   FlatAffineSlabGraph.connected_mem_PSPACE access cone selected selected_unary
+
+-- Context validity uses scalar labels only, including empty interior fibers.
+example : FlatAffineSlabGraphContext.language F cone selected ∈ PSPACE :=
+  FlatAffineSlabGraphContext.mem_PSPACE access cone selected selected_unary
+
+-- The original source supplies complete curves and checked joint references;
+-- no spatial branch family or reference table is assumed.
+example (c : List Bool) (hc : c ∈ FlatAffineSlabGraphContext.language F cone selected) :
+    Finite (LeanCanny.Connectivity.FlatAffineSlabGraphArcs.Index F cone selected c) ∧
+      Nonempty (LeanCanny.Connectivity.FlatAffineSlabGraphBranches.Family F cone selected c) :=
+  LeanCanny.Connectivity.FlatAffineSlabGraphBranches.exists_family F cone selected c hc
 
 end
 end ActualHeightReaderRegression
