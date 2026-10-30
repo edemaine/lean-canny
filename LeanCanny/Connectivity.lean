@@ -56,6 +56,7 @@ import LeanCanny.Connectivity.FlatAffineSlabCoordinateSignReader
 import LeanCanny.Encoding.FlatAffineSingularSliceSamples
 import LeanCanny.Encoding.FlatAffineSingularChildLabels
 import LeanCanny.Encoding.FlatAffineCompactComponentSamples
+import LeanCanny.Connectivity.CoordinateAffineComponentCover
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -338,7 +339,14 @@ compact slice, including singular components, now contains an ancestry-checked
 native critical sample. The number of these components has the native
 next-stage root bound. At a component maximum, regularity gives normalized
 multipliers; singularity gives zero-objective multipliers. No path connectivity
-of singular components is inferred. Symbolic squarefree coordinate
+of singular components is inferred. Accepted complete child labels now index
+a constructed clopen connected cover of each compact affine slice. Its overlap
+tests are exact connections between the sampled points in that slice. The
+generated source proves compactness; actual coordinate-prefix records prove
+normal independence and the cone certificates. Thus these coordinate-slice
+covers have native label validity and unary widths without supplied geometric
+promises. Their sample connection tests still require recursion.
+Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint
 roots come from the original equations. Constructed value annihilators make

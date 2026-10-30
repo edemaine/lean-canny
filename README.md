@@ -792,6 +792,13 @@ The checked ingredients are:
   A maximum on each component is either a regular constrained critical point
   or a retained singular point. This bounds the number of components by the
   native next-stage root bound, without asserting paths through singularities.
+  Accepted child labels now index a constructed clopen connected cover of
+  each such slice. Nonemptiness is precisely native child validity; overlaps
+  are exact connections between their sampled points. For generated
+  coordinate-prefix records, compactness, normal independence, and the cone
+  certificates are derived, with native label validity and unary widths.
+  The zero-objective child filter is also sound: every accepted point lies in
+  the singular locus of its stated parent slice.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

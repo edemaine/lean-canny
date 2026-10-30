@@ -36,6 +36,7 @@ import LeanCanny.Connectivity.FlatAffineSlabBranchParents
 import LeanCanny.Connectivity.FlatAffineSlabCoordinateSignReader
 import LeanCanny.Encoding.FlatAffineSingularSliceSamples
 import LeanCanny.Encoding.FlatAffineSingularChildLabels
+import LeanCanny.Connectivity.CoordinateAffineComponentCover
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -499,6 +500,25 @@ example (u w : List Bool) (hw : FlatAffineCompleteVertices.Valid F cone u w) :
     FlatAffineCompleteRootStages.project F F.depth u (Nat.le_refl (F.depth u))
       (FlatAffineCompleteVertices.vertexEquiv F cone u ⟨w, hw⟩) :=
   FlatAffineAncestorLabels.value_original F cone F.depth (fun u => Nat.le_refl (F.depth u)) u w hw
+
+-- The original generated source supplies compactness at every actual parent.
+example (u : List Bool) (x : FlatAffinePowerSampleInput.OriginalRoots F u) :
+    IsCompact (FlatAffineCompleteComponentSamples.slice F u x) :=
+  FlatAffineSliceCompact.compact F u x
+
+-- Coordinate-prefix cover labels have native validity and widths from the
+-- actual source alone; no compactness or normal-independence oracle is passed.
+example : FlatAffineCompleteChildLabels.language
+    (CoordinateAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => []))
+    (LeanCanny.Connectivity.CoordinateAffineComponentCover.cone F.source F.depth (fun _ => 100) (fun _ => [])) ∈ PSPACE :=
+  LeanCanny.Connectivity.CoordinateAffineComponentCover.valid_mem_PSPACE F.source F.depth (fun _ => 100) (fun _ => [])
+    access.source access.depth (UnaryFn.const 100) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : UnaryFn (FlatAffineCompleteVertices.width
+    (FlatAffineCompleteRootStages.next (CoordinateAffinePrefix.inputs F.source F.depth (fun _ => 100) (fun _ => [])))
+    (LeanCanny.Connectivity.CoordinateAffineComponentCover.cone F.source F.depth (fun _ => 100) (fun _ => []))) :=
+  LeanCanny.Connectivity.CoordinateAffineComponentCover.width_unary F.source F.depth (fun _ => 100) (fun _ => [])
+    access.source access.depth (UnaryFn.const 100) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
 
 end
 end ActualHeightReaderRegression
