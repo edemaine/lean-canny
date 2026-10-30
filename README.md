@@ -715,8 +715,13 @@ The checked ingredients are:
   native coordinate ranks agree with ranks of a complete finite branch family.
   These geometric rank vectors distinguish branch points and stay constant
   along retained branches. A native fixed-width writer packages the coordinate
-  ranks into short descriptors, with source-derived unary lengths. Completing
-  the branch-record graph interface and the recursive cover remains required.
+  ranks into short descriptors, with source-derived unary lengths. The assembled
+  words now identify the same geometric branch across different retained
+  samples. Native algebraic cuts validate each sample's original slab code;
+  bounded native witness search validates the short descriptor labels. The
+  checked branch relation is proved correct from the original affine equations
+  and their computed exceptional polynomial. Endpoint marker interfaces and
+  recursive graph assembly remain required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.

@@ -38,6 +38,7 @@ import LeanCanny.Connectivity.FlatAffineEndpointFiniteIncidence
 import LeanCanny.Connectivity.FlatAffineEndpointCheckedIncidence
 import LeanCanny.Encoding.FlatAffineEndpointRankWord
 import LeanCanny.Encoding.FlatAffineEndpointFiniteRankBranch
+import LeanCanny.Connectivity.FlatAffineEndpointBranchRelation
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -417,8 +418,13 @@ complete sample sets. Fixing just the two retained heights gives exactly
 the actual current spatial fiber. These native coordinate ranks agree with
 geometric finite-branch ranks; the latter are persistent and distinguish
 branch points. A native fixed-width writer packages all coordinates into a
-short descriptor. Completing the branch-record graph interface and the
-recursive cover remains required.
+short descriptor. The assembled words now denote the geometric rank vectors:
+they persist along retained branches and identify the branch across different
+sample heights. Native algebraic cuts check the original slab code, and a
+bounded native witness search validates short descriptor labels. The checked
+branch relation is proved correct from the original equations and the computed
+exceptional polynomial. Endpoint marker interfaces and recursive graph
+assembly remain required.
 Polynomial shifts of row
 constants preserve exclusion at infinity. The full recursive component
 cover and endpoint attachment remain open.

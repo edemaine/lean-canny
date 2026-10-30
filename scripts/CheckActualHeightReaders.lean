@@ -19,6 +19,7 @@ import LeanCanny.Encoding.FlatAffineEndpointFiniteMatching
 import LeanCanny.Encoding.FlatAffineEndpointFiniteEdges
 import LeanCanny.Encoding.FlatAffineEndpointRankWord
 import LeanCanny.Encoding.FlatAffineEndpointFiniteRankBranch
+import LeanCanny.Encoding.FlatAffineEndpointBranchRelation
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -325,6 +326,18 @@ example : SpaceFunction (FlatAffineEndpointRankWord.word F cone selected) :=
 
 example : UnaryFn (fun b => FlatAffineEndpointRankWord.arity F b * FlatAffineEndpointRankWord.width F cone selected b) :=
   FlatAffineEndpointRankWord.length_unary access cone selected selected_unary
+
+example : FlatAffineEndpointRankWordEquality.language F cone selected ∈ PSPACE :=
+  FlatAffineEndpointRankWordEquality.mem_PSPACE access cone selected selected_unary
+
+example : FlatAffineEndpointSampleSlab.language F cone selected ∈ PSPACE :=
+  FlatAffineEndpointSampleSlab.mem_PSPACE access cone selected selected_unary
+
+example : FlatAffineEndpointBranchLabels.language F cone selected ∈ PSPACE :=
+  FlatAffineEndpointBranchLabels.mem_PSPACE access cone selected selected_unary
+
+example : LeanCanny.Encoding.FlatAffineEndpointBranchRelation.language F cone selected ∈ PSPACE :=
+  LeanCanny.Encoding.FlatAffineEndpointBranchRelation.mem_PSPACE access cone selected selected_unary
 
 end
 end ActualHeightReaderRegression
