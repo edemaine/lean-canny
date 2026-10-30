@@ -66,6 +66,8 @@ import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
 import LeanCanny.Connectivity.FlatAffineSlabComponentSampling
 import LeanCanny.Connectivity.FlatAffineSlabParentBranches
+import LeanCanny.Connectivity.FlatAffineSlabParentSections
+import LeanCanny.Geometry.ConstraintLineCharts
 import LeanCanny.Geometry.FrozenAffineBranches
 import LeanCanny.Algebra.FrozenAffineMidpointSpace
 import LeanCanny.Algebra.ProjectiveValueGramSpace
@@ -392,6 +394,13 @@ retained branches sample every component of every interior varying fiber.
 Filtering this finite family by one exact original parent preserves that
 sampling property. Each retained spatial branch stays in the parent's
 varying slice throughout the closed slab, including both endpoint limits.
+Removing the varied constraint constructs an actual compact coarser slice.
+Its height-difference projection is proper, with exactly those shifted
+slices as fibers. Parent branches now construct continuous sections of this
+projection, extending through both endpoints and meeting every fiber
+component. General constraint-line charts are constructed from the full
+constraint derivative's surjectivity; their specialization to this source
+and the resulting component saturation remain required.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

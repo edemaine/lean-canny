@@ -836,6 +836,11 @@ The checked ingredients are:
   Filtering by one exact original parent gives a finite branch family that
   still samples every interior fiber component. Its spatial branches stay
   in that parent's varying slice through both closed-slab endpoints.
+  Removing the varied constraint constructs the compact original coarser
+  slice and its proper height-difference projection. The parent branches
+  supply continuous sections extending through both endpoints and meeting
+  every interior fiber component. Generic constraint-line charts are proved;
+  specializing them to these slices and saturating the components remains.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

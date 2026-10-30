@@ -46,6 +46,7 @@ import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
 import LeanCanny.Connectivity.FlatAffineSlabComponentSampling
 import LeanCanny.Connectivity.FlatAffineSlabParentBranches
+import LeanCanny.Connectivity.FlatAffineSlabParentSections
 
 /-! Actual-source integration, including the depth-zero affine power tower.
 Run with `lake env lean -DwarningAsError=true scripts/CheckActualHeightReaders.lean`.
@@ -693,6 +694,13 @@ example (P : BoundedFullWriter.Readers) (depth objective : List Bool → ℕ)
   B.sample_parent_branch (CoordinateAffinePrefix.inputs P depth objective level) C height c hc h hheight
     (CoordinateAffineSliceControls.normal P depth objective level _ _) hactive
     (CoordinateAffineSliceControls.objective_independent P depth objective level _ _) x t y hy
+
+-- The original native source supplies compact coarser slices and a proper
+-- height map even at singular parents and endpoint levels.
+example (u : List Bool) (x : FlatAffinePowerSampleInput.OriginalRoots F u)
+    (h : Fin (FlatAffineFullSourceTower.arity F u)) :
+    IsProperMap (FlatAffineShiftedSlice.projection F u x h) :=
+  FlatAffineShiftedSlice.projection_proper F u x h
 
 end
 end ActualHeightReaderRegression
