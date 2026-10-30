@@ -47,6 +47,7 @@ import LeanCanny.Connectivity.CoordinateDoubleAffineSweepCover
 import LeanCanny.Encoding.CoordinateDoubleAffineChildOriginalSamples
 import LeanCanny.Encoding.CoordinateDoubleAffineChildBounds
 import LeanCanny.Encoding.CoordinateDoubleAffineChildParentMatch
+import LeanCanny.Encoding.CoordinateDoubleAffineChildHeightGeometry
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -1001,6 +1002,11 @@ example (midpoint : Bool) : SpaceFunction
 example (midpoint : Bool) : CoordinateDoubleAffineChildParentMatch.language midpoint
     F.source F.depth (fun _ => 0) (fun _ => []) ∈ PSPACE :=
   CoordinateDoubleAffineChildParentMatch.mem_PSPACE midpoint access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : SpaceFunction
+    (CoordinateDoubleAffineChildRecords.heightWord F.source F.depth (fun _ => 0) (fun _ => [])) :=
+  CoordinateDoubleAffineChildRecords.heightWord_evaluator access.source access.depth (UnaryFn.const 0)
     (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
 
 example (midpoint : Bool) (u : List Bool) :

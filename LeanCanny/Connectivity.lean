@@ -67,6 +67,7 @@ import LeanCanny.Connectivity.CoordinateDoubleAffineSweepCover
 import LeanCanny.Encoding.CoordinateDoubleAffineChildOriginalSamples
 import LeanCanny.Encoding.CoordinateDoubleAffineChildBounds
 import LeanCanny.Encoding.CoordinateDoubleAffineChildParentMatch
+import LeanCanny.Encoding.CoordinateDoubleAffineChildHeightGeometry
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -474,6 +475,9 @@ parent tuple in the original sampler. Each child decreases the coordinate
 rank, and depth plus twice the remaining rank does not increase.
 Native parent filters select exactly the children of the decoded original
 parent, and rank zero is exactly the existing terminal guard.
+An original next-stage critical sample now constructs its actual fixed-height
+child root and native word. The word retains the entire original tuple and
+freezes the selected coordinate of that sample over its original parent.
 Symbolic squarefree coordinate
 families now have complete finite anchored arcs off explicit finite exceptional
 sets. Their auxiliary spatial regularity suffices; properness and endpoint

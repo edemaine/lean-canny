@@ -889,6 +889,9 @@ The checked ingredients are:
   twice the remaining rank does not increase.
   Native parent filters select precisely the children of the decoded original
   parent. Rank zero is exactly the native terminal guard.
+  An original next-stage critical sample constructs its fixed-height child
+  root and native word, preserving the full tuple and freezing the selected
+  coordinate over the original parent.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
