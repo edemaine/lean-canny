@@ -119,6 +119,7 @@ import LeanCanny.Algebra.IntegralHistoryRelativeCritical
 import LeanCanny.Algebra.IntegralCoefficientBlocks
 import LeanCanny.Algebra.IntegralBlockMomentSpace
 import LeanCanny.Algebra.IntegralBerkowitzBlockSpace
+import LeanCanny.Algebra.IntegralPurePowerActionSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

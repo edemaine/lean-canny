@@ -13220,3 +13220,164 @@ example : (S 0 0 1 1).value [] = BinaryNatCode.encode 1 := by
   decide
 
 end IntegralBerkowitzBlockRegression
+
+
+namespace IntegralReductionActionRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding MatrixPower
+open IntegralReductionActionBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def b : Module.Basis (Fin 2) ℤ (ℤ × ℤ) := Module.Basis.finTwoProd ℤ
+private theorem diagonal (v : ℤ × ℤ) (r t : Fin 2) :
+    Algebra.leftMulMatrix b v r t = if r = t then (if r = 0 then v.1 else v.2) else 0 := by
+  fin_cases r <;> fin_cases t <;>
+    simp [Algebra.leftMulMatrix_eq_repr_mul, b, Module.Basis.coe_finTwoProd_repr]
+
+private noncomputable def S : Source where
+  dimension _ := 2
+  rank _ := 2
+  carrier _ := ℤ × ℤ
+  ring _ := inferInstance
+  nontrivial _ := inferInstance
+  basis _ := b
+  matrix _ _ _ := (2, 3)
+  modulus _ := 10
+  modulus_ne_zero _ := by decide
+  coefficient _ := 1
+  basisRow _ := 1
+  basisCol _ := 1
+  dimension_pos _ := by decide
+  normal _ j := j = 0
+  shift _ _ := 1
+  bound _ := 0
+
+private def reader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisRowCode q) =
+      Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisColCode q) then
+    if Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisRowCode q) = 0 then
+      BinaryNatCode.encode 2 else BinaryNatCode.encode 3 else []
+private theorem reader_FP : reader ∈ FP :=
+  ((BinaryFn.fromBits IntegralBerkowitzBlockBits.basisRowCode_FP).eq
+    (BinaryFn.fromBits IntegralBerkowitzBlockBits.basisColCode_FP)).ite_mem_FP
+    (((BinaryFn.fromBits IntegralBerkowitzBlockBits.basisRowCode_FP).eq (BinaryFn.const 0)).ite_mem_FP
+      (constFn_mem_FP (BinaryNatCode.encode 2)) (constFn_mem_FP (BinaryNatCode.encode 3))) (constFn_mem_FP [])
+
+private noncomputable def access : IntegralBerkowitzBlockBits.Access S.toSource where
+  dimension := BinaryFn.const 2
+  rank := BinaryFn.const 2
+  modulus := BinaryFn.const 10
+  coefficient := BinaryFn.const 1
+  basisRow := BinaryFn.const 1
+  basisCol := BinaryFn.const 1
+  entry := reader
+  entry_eq c i j r t := by
+    change reader _ = residueBits ((Algebra.leftMulMatrix b (2, 3) r t : ℤ) : ZMod 10)
+    rw [diagonal]
+    simp only [reader, IntegralBerkowitzBlockBits.basisRowCode, IntegralBerkowitzBlockBits.basisColCode,
+      IntegralBlockMomentBits.context, pairFst_pair, pairSnd_pair,
+      BinaryNatCode.encode, Nat.fromBitsLE_bits, Fin.ext_iff, Fin.val_zero]
+    fin_cases r <;> fin_cases t <;> norm_num <;> decide
+
+private theorem controls : Controls S where
+  bound := BinaryFn.const 0
+  shift := BinaryFn.const 1
+  normal := by
+    apply ((BinaryFn.fromBits MatrixMoment.EntryBits.colIndex_mem_FP).mod (BinaryFn.const 2)).eq (BinaryFn.const 0) |>.of_iff
+    intro p
+    simp only [normalGuard, outerIndex, S, Fin.ext_iff, Fin.val_zero]
+
+-- Every original source bit and both queried old basis ranks survive the child writer.
+example : sourceQuery (pair (IntegralBlockMomentBits.context
+    (packet [true, false] 1 0 0 1) 1 0) (pair [] [true])) =
+      pair (IntegralBlockMomentBits.context [true, false] 1 0) (pair [] [true]) := by decide
+
+example : SpaceFunction (actionSource S).value := evaluator S access controls (SpaceFunction.ofFP reader reader_FP)
+
+private theorem action_matrix : S.actionMatrix [] =
+    (fun _ j : Fin 2 => if j = 0 then ((2, 3) : ℤ × ℤ) else 0) := by
+  funext i j
+  dsimp only [Source.actionMatrix, GradedReductionAnnihilator.paddedMatrix, S]
+  rw [pow_one]
+  split_ifs <;> rfl
+
+example : entryProgram S (packet [] 1 0 1 1) = BinaryNatCode.encode 3 := by
+  have H := entry_correct S [] (1 : Fin 2) (0 : Fin 2) (1 : Fin 2) (1 : Fin 2)
+  change entryProgram S (packet [] 1 0 1 1) = _ at H
+  rw [H]
+  unfold IntegralBerkowitzBlockBits.Source.entryMatrix actionSource
+  change residueBits ((Algebra.leftMulMatrix b (S.actionMatrix [] (1 : Fin 2) (0 : Fin 2))
+    (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [action_matrix]
+  norm_num [diagonal]
+  decide
+
+-- Nonnormal columns are zero even though their shifted source columns are nonzero.
+example : entryProgram S (packet [] 1 1 1 1) = [] := by
+  have H := entry_correct S [] (1 : Fin 2) (1 : Fin 2) (1 : Fin 2) (1 : Fin 2)
+  change entryProgram S (packet [] 1 1 1 1) = _ at H
+  rw [H]
+  unfold IntegralBerkowitzBlockBits.Source.entryMatrix actionSource
+  change residueBits ((Algebra.leftMulMatrix b (S.actionMatrix [] (1 : Fin 2) (1 : Fin 2))
+    (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [action_matrix]
+  norm_num [diagonal]
+  decide
+
+example : (actionSource S).value [] = BinaryNatCode.encode 7 := by
+  let := S.ring []
+  let := S.nontrivial []
+  change residueBits ((Algebra.leftMulMatrix b ((S.actionMatrix []).charpoly.coeff 1)
+    (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [action_matrix, diagonal, Matrix.charpoly_fin_two]
+  norm_num [Matrix.trace, Matrix.diag, Fin.sum_univ_succ, Matrix.det_fin_two]
+  decide
+
+end IntegralReductionActionRegression
+
+
+namespace PurePowerShiftControlRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open PurePowerReductionShiftBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private def L : Layout where
+  arity _ := 2
+  width _ := 3
+  degree _ _ := 2
+  bound _ := 3
+  grid_le _ := by norm_num [PurePowerReductionMatrix.gridBound, Fin.sum_univ_succ]
+  bound_lt _ := by decide
+  coordinate _ := 1
+
+private theorem controls : L.toLayout.PolyTime :=
+  ⟨UnaryFn.const 2, UnaryFn.const 3, BinaryFn.const 2⟩
+
+example : BinaryFn (shiftValue L) := shiftValue_binary L controls (UnaryFn.const 1)
+example : FPPred (normal L) := normal_fppred L controls
+
+-- Rank nine represents (1,1); multiplying by the second coordinate adds eight.
+example : shiftValue L (pair [] (BinaryNatCode.encode 9)) = 17 := by
+  rw [shiftValue_pair, PurePowerReductionMatrix.shift_value]
+  change (if PurePowerReductionMatrix.Normal (fun _ : Fin 2 => 2)
+    (FixedWidthPolynomial.vector 2 3 ⟨9, by decide⟩) then 17 else 0) = 17
+  have H : PurePowerReductionMatrix.Normal (fun _ : Fin 2 => 2)
+      (FixedWidthPolynomial.vector 2 3 ⟨9, by decide⟩) := by
+    intro i
+    fin_cases i <;> norm_num [FixedWidthPolynomial.vector_apply]
+  rw [ite_eq_left H]
+
+-- Rank two represents (2,0), so it is outside the normal box and maps to zero.
+example : shiftValue L (pair [] (BinaryNatCode.encode 2)) = 0 := by
+  rw [shiftValue_pair, PurePowerReductionMatrix.shift_value]
+  change (if PurePowerReductionMatrix.Normal (fun _ : Fin 2 => 2)
+    (FixedWidthPolynomial.vector 2 3 ⟨2, by decide⟩) then 10 else 0) = 0
+  have H : ¬PurePowerReductionMatrix.Normal (fun _ : Fin 2 => 2)
+      (FixedWidthPolynomial.vector 2 3 ⟨2, by decide⟩) := by
+    intro h
+    have H := h (0 : Fin 2)
+    norm_num [FixedWidthPolynomial.vector_apply] at H
+  rw [ite_eq_right H]
+
+end PurePowerShiftControlRegression

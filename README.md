@@ -1070,6 +1070,12 @@ The checked ingredients are:
   degree. Binary controls retain the original record and caller modulus;
   out-of-range coefficients return zero, and the original reader's full
   space cost is charged.
+  Native relative reduction-action readers now power the original reduction
+  matrix, select shifted normal columns, and zero the padding columns before
+  computing characteristic coefficients. The actual pure-power construction
+  supplies these actions; its normal mask and coordinate shift have derived
+  FP programs over binary state ranks. The action and its characteristic
+  coefficients require no additional matrix readers.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
