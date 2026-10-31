@@ -131,6 +131,7 @@ import LeanCanny.Algebra.FixedWidthCoordinateMulSpace
 import LeanCanny.Algebra.IntegralCriticalGradientSpace
 import LeanCanny.Algebra.IntegralCriticalLeadingSpace
 import LeanCanny.Algebra.IntegralEulerLowerSpace
+import LeanCanny.Algebra.IntegralClearedCriticalSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

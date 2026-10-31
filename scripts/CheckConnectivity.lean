@@ -14582,3 +14582,90 @@ example (c : List Bool) : bothEuler.objectivePolynomial c = MvPolynomial.monomia
     norm_num
   exact H
 end IntegralFrozenPowerRegression
+
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+example : SpaceFunction (IntegralEulerLowBits.value bothEuler) :=
+  IntegralEulerLowBits.evaluator bothEuler bothEulerAccess
+    (SpaceFunction.ofFP _ coefficientReader_FP) (SpaceFunction.ofFP _ heightReader_FP)
+    (SpaceFunction.ofFP _ (constFn_mem_FP _)) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+
+private theorem lower_gradient_one (c : List Bool) : bothEuler.lowerPolynomial c (1 : Fin 2) =
+    MvPolynomial.monomial (Finsupp.single (0 : Fin 2) 2) (80 : ℤ × ℤ) := by
+  unfold IntegralEulerBits.Source.lowerPolynomial
+  dsimp only [bothEuler]
+  rw [ite_eq_right (show (1 : Fin 2) ≠ 0 from by decide)]
+  exact both_gradient_one c
+private theorem exponent_two : RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 2) =
+    Finsupp.single (0 : Fin 2) 2 := by
+  apply Finsupp.ext
+  intro i
+  fin_cases i <;> norm_num [RationalSubstitution.Indexed.exponentVector, FixedWidthPolynomial.entry_eq_digit]
+
+-- The requested rank is independent of the saved original record's target.
+example (c : List Bool) : IntegralEulerLowBits.value bothEuler
+    (pair (IntegralBlockMomentBits.context c 1 1) (pair (BinaryNatCode.encode 1) (BinaryNatCode.encode 2))) =
+      BinaryNatCode.encode 2 := by
+  let g : MvPolynomial (Fin 2) (ℤ × ℤ) := bothEuler.lowerPolynomial c (1 : Fin 2)
+  have HG : g = MvPolynomial.monomial (Finsupp.single (0 : Fin 2) 2) (80 : ℤ × ℤ) := lower_gradient_one c
+  have H := IntegralEulerLowBits.packet bothEuler c (1 : Fin 2) 2 (1 : Fin 2) (1 : Fin 2)
+  have H2 : residueBits ((Algebra.leftMulMatrix b
+      (g.coeff (RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 2)))
+      (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 6) = BinaryNatCode.encode 2 := by
+    rw [HG, exponent_two, MvPolynomial.coeff_monomial, ite_eq_left rfl, matrix_entry]
+    norm_num
+    decide
+  exact H.trans H2
+
+-- Both old basis indices come from the actual reduction query.
+example (c : List Bool) : IntegralEulerLowBits.value bothEuler
+    (pair (IntegralBlockMomentBits.context c 0 1) (pair (BinaryNatCode.encode 1) (BinaryNatCode.encode 2))) = [] := by
+  let g : MvPolynomial (Fin 2) (ℤ × ℤ) := bothEuler.lowerPolynomial c (1 : Fin 2)
+  have HG : g = MvPolynomial.monomial (Finsupp.single (0 : Fin 2) 2) (80 : ℤ × ℤ) := lower_gradient_one c
+  have H := IntegralEulerLowBits.packet bothEuler c (1 : Fin 2) 2 (0 : Fin 2) (1 : Fin 2)
+  have H2 : residueBits ((Algebra.leftMulMatrix b
+      (g.coeff (RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 2)))
+      (0 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 6) = [] := by
+    rw [HG, exponent_two, MvPolynomial.coeff_monomial, ite_eq_left rfl, matrix_entry]
+    norm_num
+    decide
+  exact H.trans H2
+
+private noncomputable def candidateEuler : IntegralEulerBits.Source := { bothEuler with targetWidth := fun _ => 3 }
+private noncomputable def candidateEulerAccess : IntegralEulerBits.Access candidateEuler :=
+  { bothEulerAccess with targetWidth := UnaryFn.const 3 }
+private noncomputable def candidateSource : IntegralClearedCriticalBits.Source where
+  toEuler := candidateEuler
+  bound _ := 6
+  grid_le c := by
+    change PurePowerReductionMatrix.gridBound (fun i : Fin 2 => if i.val = 0 then 4 else 3) + 1 ≤ 6
+    norm_num [PurePowerReductionMatrix.gridBound, Fin.sum_univ_succ]
+  bound_lt c := by change 6 < 2 ^ 3; decide
+  coordinate _ := (1 : Fin 2)
+  coefficientIndex _ := 64
+private noncomputable def candidateAccess : IntegralClearedCriticalBits.Access candidateSource where
+  toEuler := candidateEulerAccess
+  bound := BinaryFn.const 6
+  coordinate := BinaryFn.const 1
+  coefficientIndex := BinaryFn.const 64
+
+-- The complete actual relative polynomial charges the four original FP readers.
+example : SpaceFunction candidateSource.value :=
+  IntegralClearedCriticalBits.evaluator candidateSource candidateAccess
+    (SpaceFunction.ofFP _ coefficientReader_FP) (SpaceFunction.ofFP _ heightReader_FP)
+    (SpaceFunction.ofFP _ (constFn_mem_FP _)) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+
+private def firstRational : (ℤ × ℤ) →+* ℚ := (Int.castRingHom ℚ).comp (RingHom.fst ℤ ℤ)
+
+-- The relative degree is 64, while the old algebra rank is 2.
+-- The requested coordinate is 1 and the Euler objective is 0.
+example (c : List Bool) : ((candidateSource.annihilator c).map firstRational).natDegree = 64 := by
+  have H := IntegralClearedCriticalBits.specialized_degree candidateSource c firstRational (by
+    norm_num [candidateSource, candidateEuler, bothEuler, bothGradient, bothFrozen, S, P, firstRational, RingHom.fst])
+  exact H
+
+end IntegralFrozenPowerRegression

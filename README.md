@@ -1053,8 +1053,8 @@ The checked ingredients are:
   degree determined only by free spatial arity and original source degree.
   Every critical coordinate, including at singular points, extends the same
   full history and is recovered by its canonical height. Native original
-  source and retained-height readers still need to supply the cleared lower
-  coefficients of these relative polynomials.
+  source, retained-height, integer-denominator, and leading readers now
+  construct the cleared critical rows and relative-polynomial coefficients.
   A block representation now expresses multiplication matrices of relative
   characteristic coefficients and matrix moments as integer power entries.
   The characteristic polynomial is taken over the original parameter algebra;
@@ -1121,8 +1121,14 @@ The checked ingredients are:
   feed a streamed sum omitting the objective coordinate. Native scalar
   multiplication and subtraction construct the Euler objective coefficients;
   a native row selector combines these with the remaining cleared gradients.
-  All critical lower rows are computed from the original four readers. Their
-  integration with the relative coordinate-annihilator reader remains required.
+  All critical lower rows are computed from the original four readers.
+  Saved-source queries now supply every critical lower coefficient in the
+  reduction reader's row, spatial-rank, and old-basis protocol. These rows and
+  the common integer leading coefficient feed the actual relative coordinate
+  annihilator internally. Its native evaluator charges those same four
+  original readers; its specialized degree is the spatial grid size,
+  independent of the old rank. The unused fallback coordinate is proved
+  irrelevant to the reduction matrix and relative polynomial.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
