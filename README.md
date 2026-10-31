@@ -899,7 +899,11 @@ The checked ingredients are:
   shared ancestry, including multipliers. A validated compatible pair now
   constructs its actual midpoint child root with one ancestry prefix and
   the appended right critical block. Its original parent and exact midpoint
-  slice are proved. Computing the native midpoint child word remains open.
+  slice are proved. Native projection now computes the midpoint child word
+  from the original readers, retaining the full original root and its exact
+  midpoint slice. The child passes the original parent filter. Every pair
+  of original critical roots with a shared parent has an accepted paired
+  label and yields the constructed child, including at singular roots.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
