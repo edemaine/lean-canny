@@ -1099,6 +1099,12 @@ The checked ingredients are:
   actual multiplication-matrix entry of each frozen-substitution coefficient
   from those same three original readers. No expansion in old parameter
   monomials is required.
+  Native derivative readers now extract actual old basis entries of original
+  partial derivatives from the same coefficient reader. Additive extraction
+  commutes with differentiation and cannot increase spatial degree. The
+  frozen-substitution reader also computes these cleared derivatives while
+  retaining the original clearing allowance and all three original reader
+  costs.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

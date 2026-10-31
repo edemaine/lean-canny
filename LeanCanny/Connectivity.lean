@@ -125,6 +125,7 @@ import LeanCanny.Algebra.ClearedCoordinateExponentControl
 import LeanCanny.Algebra.IntegralPowerProductSpace
 import LeanCanny.Algebra.IntegralMonomialTermSpace
 import LeanCanny.Algebra.IntegralClearedCoefficientSpace
+import LeanCanny.Algebra.IntegralDerivativeClearingSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

@@ -13961,3 +13961,93 @@ example : G.value [] = BinaryNatCode.encode 4 := by
   decide
 
 end IntegralClearedCoefficientRegression
+
+
+namespace IntegralClearedCoefficientRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralClearedCoefficientBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] ClearedCoordinateBlock.specialize
+
+private noncomputable def DS : IntegralDerivativeBits.Source where
+  toSource := S
+  selected _ := (0 : Fin 2)
+  degree _ := 3
+  degree_pos _ := by decide
+  degree_le c := by
+    change p.totalDegree ≤ 3
+    norm_num [p, exponents, Finsupp.sum_add_index]
+  degree_lt c := by
+    change 3 < 2 ^ 2
+    decide
+
+private noncomputable def derivativeAccess : IntegralDerivativeBits.Access DS where
+  toAccess := access
+  selected := UnaryFn.const 0
+  degree := BinaryFn.const 3
+
+private noncomputable def gradientExponent : Fin 2 →₀ ℕ := Finsupp.single (0 : Fin 2) 1 + Finsupp.single (1 : Fin 2) 1
+
+private theorem derivative : MvPolynomial.pderiv (0 : Fin 2) p =
+    MvPolynomial.monomial gradientExponent (10 : ℤ × ℤ) := by
+  rw [p, MvPolynomial.pderiv_monomial]
+  have HE : exponents - Finsupp.single (0 : Fin 2) 1 = gradientExponent := by
+    apply Finsupp.ext
+    intro i
+    fin_cases i <;> norm_num [exponents, gradientExponent, Finsupp.tsub_apply]
+  rw [HE]
+  norm_num [exponents]
+
+private theorem gradient_word : RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 5) =
+    gradientExponent := by
+  apply Finsupp.ext
+  intro i
+  fin_cases i <;> norm_num [RationalSubstitution.Indexed.exponentVector, FixedWidthPolynomial.entry_eq_digit, gradientExponent]
+
+-- One native original-coefficient call computes the multiplication-matrix derivative entry.
+example : SpaceFunction (IntegralDerivativeBits.value DS derivativeAccess) :=
+  IntegralDerivativeBits.evaluator DS derivativeAccess (SpaceFunction.ofFP _ coefficientReader_FP)
+
+example : IntegralDerivativeBits.value DS derivativeAccess
+    (pair (context [] 0 0) (BinaryNatCode.encode 5)) = BinaryNatCode.encode 4 := by
+  have H := IntegralDerivativeBits.packet DS derivativeAccess [] 5 (0 : Fin 2) (0 : Fin 2)
+  change IntegralDerivativeBits.value DS derivativeAccess (pair (context [] 0 0) (BinaryNatCode.encode 5)) = _ at H
+  rw [H]
+  change residueBits ((Algebra.leftMulMatrix b ((MvPolynomial.pderiv (0 : Fin 2) p).coeff
+    (RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 5))) (0 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 6) = _
+  rw [derivative, gradient_word, MvPolynomial.coeff_monomial, ite_eq_left rfl, diagonal]
+  norm_num
+  decide
+
+example : SpaceFunction (IntegralDerivativeBits.clearedSource DS).value :=
+  IntegralDerivativeBits.cleared_evaluator DS derivativeAccess (SpaceFunction.ofFP _ coefficientReader_FP)
+    (SpaceFunction.ofFP _ heightReader_FP) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+
+private theorem cleared_derivative : ClearedCoordinateBlock.specialize 3 (2 : ℤ × ℤ)
+    (fun i => if i = 0 then (3, 4) else (5, 5)) 1 1 (MvPolynomial.pderiv (0 : Fin 2) p) =
+      MvPolynomial.monomial (Finsupp.single (0 : Fin 1) 1) (120, 160) := by
+  rw [derivative, ClearedCoordinateBlock.specialize_monomial]
+  have HE : ClearedCoordinateBlock.freeExponent 1 1 gradientExponent = Finsupp.single (0 : Fin 1) 1 := by
+    apply Finsupp.ext
+    intro j
+    rw [ClearedCoordinateBlock.freeExponent_apply 1 (by decide)]
+    fin_cases j
+    norm_num [gradientExponent]
+  rw [HE]
+  congr 1
+  norm_num [ClearedCoordinateBlock.monomialScalar, ClearedCoordinateBlock.scalarAtom,
+    gradientExponent, Finsupp.degree_eq_sum, Fin.sum_univ_succ, Fin.prod_univ_succ]
+  rfl
+
+-- The original allowance is still three after differentiating the frozen source coordinate.
+example : residueBits ((Algebra.leftMulMatrix b
+    ((ClearedCoordinateBlock.specialize 3 (2 : ℤ × ℤ) (fun i => if i = 0 then (3, 4) else (5, 5)) 1 1
+      (MvPolynomial.pderiv (0 : Fin 2) p)).coeff (Finsupp.single (0 : Fin 1) 1))
+    (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 6) = BinaryNatCode.encode 4 := by
+  rw [cleared_derivative, MvPolynomial.coeff_monomial, ite_eq_left rfl, diagonal]
+  norm_num
+  decide
+
+
+end IntegralClearedCoefficientRegression
