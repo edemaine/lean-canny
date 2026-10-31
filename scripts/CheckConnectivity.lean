@@ -11947,3 +11947,77 @@ example (H : Fin 2 → Polynomial ℤ) :
   CommonIntegerDenominator.numerator_degree _ _ _ _
 
 end ClearedCoordinateRegression
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+
+namespace NativeCommonDenominatorRegression
+set_option backward.isDefEq.respectTransparency false
+
+noncomputable def family : FixedWidthCommonDenominatorBits.Family where
+  sourceArity _ := 1
+  sourceWidth _ := 2
+  targetArity _ := 1
+  targetWidth _ := 2
+  source _ := X 0
+  denominator _ := 2
+  numerator _ _ := X 0
+  source_fit _ i := (degreeOf_le_totalDegree _ i).trans_lt (by rw [totalDegree_X]; decide)
+
+private theorem polynomial (c : List Bool) : family.polynomial c =
+    C (2 ^ 7 : ℤ) * (X 0 : MvPolynomial (Fin 1) ℤ) := by
+  change CommonDenominatorSpecialization.clear 8 (2 : ℤ) (fun _ : Fin 1 => X (0 : Fin 1)) (X 0) = _
+  simpa only [pow_one, Nat.reduceSub] using CommonDenominatorSpecialization.X_pow 8 1 (2 : ℤ)
+    (fun _ : Fin 1 => (X 0 : MvPolynomial (Fin 1) ℤ)) 0
+
+private theorem fit : ∀ c, ∀ e ∈ (family.polynomial c).support, ∀ i, e i < 2 ^ family.targetWidth c := by
+  apply FixedWidthCommonDenominatorBits.Family.support_fit family (fun _ => 1) (fun _ => 1)
+  · intro c; simp [family]
+  · intro c i; simp [family]
+  · intro c; change (1 : ℕ) * 1 < 2 ^ 2; decide
+
+private theorem encodedPolynomial (c : List Bool) : family.univariate.polynomial c = Polynomial.C 128 * Polynomial.X := by
+  rw [← family.encoded c, polynomial, map_mul]
+  simp only [FixedWidthKronecker.encode, eval₂Hom_X', Fin.val_zero, Nat.zero_mul, pow_zero, pow_one]
+  norm_num
+
+example (c : List Bool) : (family.univariate.polynomial c).coeff 1 = 128 := by
+  rw [encodedPolynomial]
+  simp
+
+example : FixedWidthCommonDenominatorBits.prepared family (fun _ => BinaryNatCode.encode 5)
+    (fun _ => BinaryNatCode.encode 9) [] = pair (pair [] (BinaryNatCode.encode 1)) (BinaryNatCode.encode 9) := by decide
+
+example : PrimitivePairBits.coefficient family.univariate.polynomial
+    (FixedWidthCommonDenominatorBits.prepared family (fun _ => BinaryNatCode.encode 5)
+      (fun _ => BinaryNatCode.encode 9) []) = BinaryNatCode.encode 8 := by
+  rw [FixedWidthCommonDenominatorBits.prepared]
+  have HP : BinaryNat.normalize (FixedWidthQuery.repack family.targetArity family.targetWidth
+      family.targetArity family.targetWidth (fun _ => BinaryNatCode.encode 5) []) = BinaryNatCode.encode 1 := by decide
+  rw [HP, FixedWidthCommonDenominatorBits.primitive_packet]
+  simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  rw [encodedPolynomial]
+  norm_num [MatrixPower.residueBits, ZMod.val_ofNat, Nat.fromBitsLE_bits]
+  rfl
+
+example (target : List Bool → List Bool) : PrimitivePairBits.coefficient family.univariate.polynomial
+    (FixedWidthCommonDenominatorBits.prepared family target (fun _ => []) []) = [] := by
+  rw [FixedWidthCommonDenominatorBits.coefficient_packet family target (fun _ => []) fit]
+  unfold FixedWidthRowBits.value
+  calc
+    _ = MatrixPower.residueBits (0 : ZMod 1) := congrArg MatrixPower.residueBits (Subsingleton.elim (α := ZMod 1) _ _)
+    _ = [] := rfl
+
+#guard CommonDenominatorCoordinateBits.value (fun _ => BinaryNatCode.encode 5)
+  (pair (pair [] (pair (BinaryNatCode.encode 17) [])) (BinaryNatCode.encode 7)) == BinaryNatCode.encode 5
+#guard CommonDenominatorCoordinateBits.value (fun _ => BinaryNatCode.encode 5)
+  (pair (pair [] (pair (BinaryNatCode.encode 17) (BinaryNatCode.encode 1))) (BinaryNatCode.encode 7)) == []
+#guard CommonDenominatorCoordinateBits.value (fun _ => []) (pair (pair [] (pair [] [])) []) == []
+
+example (q : ℤ) (v : Fin 1 → MvPolynomial (Fin 1) ℤ) :
+    CommonDenominatorSpecialization.clear 8 q v ((X 0 : MvPolynomial (Fin 1) ℤ) ^ 2) =
+      C (q ^ 6) * CommonDenominatorSpecialization.clear 2 q v (X 0 ^ 2) := by
+  exact CommonDenominatorSpecialization.pad 2 6 q v ((X 0 : MvPolynomial (Fin 1) ℤ) ^ 2)
+    (by rw [totalDegree_X_pow])
+
+end NativeCommonDenominatorRegression

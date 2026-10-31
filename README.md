@@ -964,6 +964,12 @@ The checked ingredients are:
   parameter degree E give lower coefficients of degree at most S+D*E,
   without dependence on the previous parameter-algebra rank. The shared
   denominator construction preserves these parameter degrees.
+  A native multivariate clearing reader now uses fixed-width Kronecker
+  substitution and streams the original source, numerator, and integer
+  denominator readers. Its support bound follows from the original source
+  and numerator degrees. Extra per-coordinate clearing powers are constant
+  integer padding, so no modular division is needed. Target queries discard
+  redundant high exponent bits, and modulus one is supported.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
