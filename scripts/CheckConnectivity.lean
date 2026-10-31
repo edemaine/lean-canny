@@ -13110,3 +13110,113 @@ example : G.value [] = BinaryNatCode.encode 9 := by
   norm_num [borderMoment, dotProduct, Matrix.mulVec, Matrix.mul_apply, pow_two, Fin.sum_univ_succ]; decide
 
 end IntegralBlockMomentRegression
+
+
+namespace IntegralBerkowitzBlockRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding MatrixPower
+open IntegralBerkowitzBlockBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def b : Module.Basis (Fin 2) ℤ (ℤ × ℤ) := Module.Basis.finTwoProd ℤ
+private theorem diagonal (v : ℤ × ℤ) (r t : Fin 2) :
+    Algebra.leftMulMatrix b v r t = if r = t then (if r = 0 then v.1 else v.2) else 0 := by
+  fin_cases r <;> fin_cases t <;>
+    simp [Algebra.leftMulMatrix_eq_repr_mul, b, Module.Basis.coe_finTwoProd_repr]
+
+private noncomputable def S (n k : ℕ) (r t : Fin 2) : Source where
+  dimension _ := n
+  rank _ := 2
+  carrier _ := ℤ × ℤ
+  ring _ := inferInstance
+  nontrivial _ := inferInstance
+  basis _ := b
+  matrix _ _ _ := (2, 3)
+  modulus _ := 10
+  modulus_ne_zero _ := by decide
+  coefficient _ := k
+  basisRow _ := r
+  basisCol _ := t
+
+private def reader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (basisRowCode q) = Nat.fromBitsLE (basisColCode q) then
+    if Nat.fromBitsLE (basisRowCode q) = 0 then BinaryNatCode.encode 2 else BinaryNatCode.encode 3 else []
+private theorem reader_FP : reader ∈ FP :=
+  ((BinaryFn.fromBits basisRowCode_FP).eq (BinaryFn.fromBits basisColCode_FP)).ite_mem_FP
+    (((BinaryFn.fromBits basisRowCode_FP).eq (BinaryFn.const 0)).ite_mem_FP
+      (constFn_mem_FP (BinaryNatCode.encode 2)) (constFn_mem_FP (BinaryNatCode.encode 3))) (constFn_mem_FP [])
+
+private noncomputable def access (n k : ℕ) (r t : Fin 2) : Access (S n k r t) where
+  dimension := BinaryFn.const n
+  rank := BinaryFn.const 2
+  modulus := BinaryFn.const 10
+  coefficient := BinaryFn.const k
+  basisRow := BinaryFn.const r.val
+  basisCol := BinaryFn.const t.val
+  entry := reader
+  entry_eq c i j u v := by
+    change reader _ = residueBits ((Algebra.leftMulMatrix b (2, 3) u v : ℤ) : ZMod 10)
+    rw [diagonal]
+    simp only [reader, basisRowCode, basisColCode, IntegralBlockMomentBits.context,
+      pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, Fin.ext_iff, Fin.val_zero]
+    fin_cases u <;> fin_cases v <;> norm_num <;> decide
+
+private def q (r t i j : ℕ) : List Bool :=
+  pair (IntegralBlockMomentBits.context [true, false, true] r t)
+    (pair (BinaryNatCode.encode i) (BinaryNatCode.encode j))
+
+-- The same original source feeds the diagonal, unit, and genuine trailing-moment branches.
+example : factorValue (S 2 0 0 0) (access 2 0 0 0) (q 0 0 0 3) = BinaryNatCode.encode 8 := by decide
+example : factorValue (S 2 0 0 0) (access 2 0 0 0) (q 1 1 0 3) = BinaryNatCode.encode 7 := by decide
+example : factorValue (S 2 0 0 0) (access 2 0 0 0) (q 0 0 1 3) = BinaryNatCode.encode 1 := by decide
+example : factorValue (S 2 0 0 0) (access 2 0 0 0) (q 0 1 1 3) = [] := by decide
+
+example : factorValue (S 2 0 0 0) (access 2 0 0 0) (q 0 0 0 4) = BinaryNatCode.encode 6 := by
+  rw [factor_reference]
+  change residueBits ((Algebra.leftMulMatrix b
+    (Berkowitz.FactorChild.value (fun _ _ : Fin 2 => ((2, 3) : ℤ × ℤ)) 0 1 0 1)
+    (0 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 10) = _
+  norm_num [Berkowitz.FactorChild.value, Berkowitz.coefficientKernel_cases,
+    Berkowitz.principalBlock, borderMoment, dotProduct, Matrix.mulVec, Fin.sum_univ_succ,
+    diagonal]
+  decide
+
+-- Full coefficient evaluation uses only the original integer block reader.
+example (n k : ℕ) (r t : Fin 2) : SpaceFunction (S n k r t).value :=
+  evaluator (S n k r t) (access n k r t) (SpaceFunction.ofFP reader reader_FP)
+
+private theorem constant_one : (Matrix.charpoly (fun _ _ : Fin 1 => ((2, 3) : ℤ × ℤ))).coeff 0 = -((2, 3) : ℤ × ℤ) := by
+  simp [Matrix.charpoly, Matrix.det_unique, Matrix.charmatrix_apply_eq]
+
+example : (S 1 0 0 0).value [] = BinaryNatCode.encode 8 := by
+  change residueBits ((Algebra.leftMulMatrix b
+    ((Matrix.charpoly (fun _ _ : Fin 1 => ((2, 3) : ℤ × ℤ))).coeff 0) (0 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [constant_one, diagonal]
+  norm_num
+  decide
+
+example : (S 1 0 1 1).value [] = BinaryNatCode.encode 7 := by
+  change residueBits ((Algebra.leftMulMatrix b
+    ((Matrix.charpoly (fun _ _ : Fin 1 => ((2, 3) : ℤ × ℤ))).coeff 0) (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [constant_one, diagonal]
+  norm_num
+  decide
+
+example : (S 1 0 0 1).value [] = [] := by
+  change residueBits ((Algebra.leftMulMatrix b
+    ((Matrix.charpoly (fun _ _ : Fin 1 => ((2, 3) : ℤ × ℤ))).coeff 0) (0 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [diagonal]
+  norm_num
+  decide
+
+example : (S 1 2 0 0).value [] = [] := high_value _ _ (by decide)
+
+-- The empty relative matrix still has constant characteristic coefficient one.
+example : (S 0 0 1 1).value [] = BinaryNatCode.encode 1 := by
+  change residueBits ((Algebra.leftMulMatrix b
+    ((Matrix.charpoly (fun _ _ : Fin 0 => ((2, 3) : ℤ × ℤ))).coeff 0) (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [Matrix.charpoly_isEmpty]
+  norm_num [diagonal]
+  decide
+
+end IntegralBerkowitzBlockRegression

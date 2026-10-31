@@ -1063,6 +1063,13 @@ The checked ingredients are:
   blocks and power them from the original row, column, and matrix coefficient
   readers. Quotient ranks select outer vertices, remainder ranks select old
   basis coordinates, and all three reader costs are charged.
+  Native relative characteristic-coefficient readers now construct Berkowitz
+  factor blocks from the original matrix reader, including algebra-valued
+  trailing moments. Integer block powering computes each coefficient's
+  multiplication-matrix entry without changing the relative characteristic
+  degree. Binary controls retain the original record and caller modulus;
+  out-of-range coefficients return zero, and the original reader's full
+  space cost is charged.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
