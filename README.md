@@ -979,6 +979,19 @@ The checked ingredients are:
   scalar equations with old-coordinate degree at most births*(N-1),
   independent of coefficient heights and old algebra ranks. The padded
   generator matrix is constructed from the original coefficient matrices.
+  One global odd-power schedule preserves every older scalar power as new
+  coordinates are prepended. Canonical heights embedded in later prefixes
+  retain their original physical degree bounds. For actual substituted
+  Fermat critical rows, derived leading forms exclude all physical and
+  multiplier coordinates at infinity whenever an unused coordinate supplies
+  the objective. Appending these blocks preserves exclusion at infinity for
+  the whole system, including singular roots. Every padded scalar root also
+  extends the prefix algebra evaluation, including extra padding roots and
+  nonreduced prefixes.
+  Iterated scalar prefixes now construct their complete square systems,
+  positive row degrees, and nonzero integer coordinate annihilators. Joining
+  a prefix to its actual canonical-height critical block in a finite layout
+  gives a finite root set, with no regularity hypothesis on those roots.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

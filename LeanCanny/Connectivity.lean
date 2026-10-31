@@ -99,6 +99,9 @@ import LeanCanny.Algebra.CommonIntegerDenominator
 import LeanCanny.Algebra.FixedWidthCommonDenominatorSpace
 import LeanCanny.Algebra.PaddedIntegralParameterMatrix
 import LeanCanny.Algebra.IntegralCoordinateCoefficientSpace
+import LeanCanny.Algebra.PaddedIntegralRootLift
+import LeanCanny.Algebra.CanonicalIntegralPhysicalSampler
+import LeanCanny.Algebra.PhysicalPowerCriticalAppend
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

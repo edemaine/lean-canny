@@ -12110,3 +12110,108 @@ example : IntegralCoordinateCoefficientBits.query family (fun _ => BinaryNatCode
     (fun _ => BinaryNatCode.encode 9) [] = pair (pair [] (BinaryNatCode.encode 9)) (pair (BinaryNatCode.encode 1) []) := by decide
 
 end PaddedIntegralRegression
+
+
+namespace PhysicalBlockRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open FlatAffineCriticalStage UniformIntegralPowerSchedule
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+
+-- Appending new heads preserves even a much older scalar's assigned power.
+example : weights 4 4 4 (embed (by decide : 1 ≤ 4) 0) = weights 4 4 1 0 := old_embed 4 4 _ _
+example : birth 4 4 2 = 9409 := by decide
+example : physical 4 4 2 = 2425 := by decide
+example : power (fun _ => 4) (fun _ => 4) (fun _ => 2)
+    (pair [] (BinaryNatCode.encode (2 ^ 100))) = 1 := by decide
+
+-- A nonreduced prefix's heights stay below their ORIGINAL physical power.
+private noncomputable def nilBasis : IntegralCoordinateBasis
+    (AdjoinRoot (Polynomial.X ^ 4 : Polynomial ℤ)) 1 4 :=
+  (IntegralCoordinateBasis.base 4).step (Polynomial.X ^ 4)
+    (Polynomial.monic_X_pow 4) (Polynomial.natDegree_X_pow 4)
+
+example : (CoordinatePowerSubstitution.substitute (weights 4 4 4)
+    (CanonicalPhysicalPowerBlock.heights nilBasis (by decide : 1 ≤ 4)
+      (fun _ : Fin 2 => nilBasis.generator 0) 0)).totalDegree < 25 :=
+  CanonicalPhysicalPowerBlock.height_degree 4 (by decide) nilBasis (by decide) _ _
+
+-- The padding root zero is interpreted even though X-2 has no root at zero.
+private noncomputable def p : Polynomial ℤ := Polynomial.X - Polynomial.C 2
+private noncomputable def intReal : ℤ →ₐ[ℤ] ℝ := Algebra.ofId ℤ ℝ
+
+private theorem paddingRoot :
+    (PaddedIntegralParameterExtension.equation (IntegralCoordinateBasis.base 4) p 1).eval₂
+      (MvPolynomial.aeval (fun i => intReal ((IntegralCoordinateBasis.base 4).generator i))).toRingHom 0 = 0 := by
+  change ((IntegralCoordinateBasis.base 4).polynomial (PaddedIntegralNormalization.polynomial p 1 4)).eval₂ _ 0 = 0
+  rw [IntegralCoordinateBasis.polynomial_eval]
+  simp [PaddedIntegralNormalization.polynomial, FixedDegreeIntegralNormalization.polynomial]
+
+example : PaddedIntegralParameterExtension.liftAtRoot (IntegralCoordinateBasis.base 4) p 1 intReal 0 paddingRoot
+    (AdjoinRoot.root _) = 0 := PaddedIntegralParameterExtension.liftAtRoot_root _ _ _ _ _ _
+
+example : p.eval₂ intReal.toRingHom 0 ≠ 0 := by norm_num [p]
+
+-- Actual two-coordinate critical rows: one active height, an unused objective.
+private noncomputable def low : MvPolynomial (Fin 2) ℤ := C (-8)
+private def normals : Fin 3 → Fin 2 → ℤ := PhysicalPowerCriticalRows.coordinateNormals 3 (fun _ => 2) 1
+
+example (y : Option (Fin 1 ⊕ Variables 2) → ℂ) (hy : y none = 0) :
+    (WeightedHomogenization.homogenize (fun _ => 1) 9
+      (PhysicalPowerCriticalRows.rows (FermatCriticalHomogenization.polynomial low 5 4) {0}
+        normals (fun _ => 0) (fun _ => 97) 4 3 (Sum.inl 1))).eval₂ (Int.castRingHom ℂ) y =
+      (20 : ℂ) * y (some (ambient 1)) ^ 9 -
+        ∑ j, (Int.castRingHom ℂ) (normals j 1) * y (some (multiplier j)) ^ 9 := by
+  convert
+    PhysicalPowerCriticalRows.gradient_infinity (Int.castRingHom ℂ) low 5 {0} normals
+      (fun _ => (0 : MvPolynomial (Fin 1) ℤ)) (fun _ => 97) 4 3 (by decide)
+      (by change (C (-8 : ℤ) : MvPolynomial (Fin 2) ℤ).totalDegree < 4; rw [totalDegree_C]; decide)
+      (by decide) y hy 1 using 1
+  norm_num
+
+example (y : Option (Fin 1 ⊕ Variables 2) → ℂ) :
+    (WeightedHomogenization.homogenize (fun _ => 1) 9
+      (PhysicalPowerCriticalRows.rows (FermatCriticalHomogenization.polynomial low 5 4) {0}
+        normals (fun _ => 0) (fun _ => 97) 4 3 (Sum.inr (1 : Fin 2).succ))).eval₂ (Int.castRingHom ℂ) y =
+      y (some (multiplier (1 : Fin 2).succ)) ^ 9 :=
+  PhysicalPowerCriticalRows.inactive_infinity _ _ _ _ _ _ _ _ _ _ (by decide)
+
+example (y : Option (Fin 1 ⊕ Variables 2) → ℂ) (hy : y none = 0)
+    (hz : ∀ j, (WeightedHomogenization.homogenize (fun _ => 1)
+      (PhysicalPowerCriticalRows.degrees {0} 4 3 j)
+      (PhysicalPowerCriticalRows.rows (FermatCriticalHomogenization.polynomial low 5 4) {0}
+        normals (fun _ => 0) (fun _ => 97) 4 3 j)).eval₂ (Int.castRingHom ℂ) y = 0) :
+    (fun i => y (some (ambient i))) = 0 ∧ (fun j => y (some (multiplier j))) = 0 := by
+  exact PhysicalPowerCriticalRows.physical_zero _ low 5 3 (fun _ => 2) {0} 1 (by decide)
+    (fun _ => 0) (fun _ => 97) 4 3 (by decide) (by decide)
+    (by change (C (-8 : ℤ) : MvPolynomial (Fin 2) ℤ).totalDegree < 4; rw [totalDegree_C]; decide)
+    (by norm_num) (by norm_num) (by intro i; norm_num) (by intro i hi; simp) y hy hz
+
+-- Two actual scalar births, retaining a possibly nonreduced first prefix.
+private noncomputable def prefix₁ : UniformIntegralPrefix.Prefix 4 4 1 :=
+  UniformIntegralPrefix.step (UniformIntegralPrefix.base 4 4) (by decide) (by decide) (Polynomial.X ^ 4) 4
+
+private noncomputable def prefix₂ : UniformIntegralPrefix.Prefix 4 4 2 :=
+  UniformIntegralPrefix.step prefix₁ (by decide) (by decide) (Polynomial.X - Polynomial.C (prefix₁.basis.generator 0)) 1
+
+example : {z : Fin 2 → ℂ | ∀ i, (prefix₂.rows i).eval₂ (Int.castRingHom ℂ) z = 0}.Finite :=
+  UniformIntegralPrefix.finite_roots prefix₂
+
+example : UniformIntegralPrefix.annihilator prefix₂ 0 ≠ 0 :=
+  UniformIntegralPrefix.annihilator_ne_zero prefix₂ 0
+
+example (z : Fin 2 → ℝ) (hz : ∀ i, (prefix₂.rows i).eval₂ (Int.castRingHom ℝ) z = 0) :
+    ∃ φ : prefix₂.carrier →ₐ[ℤ] ℝ, ∀ i, φ (prefix₂.basis.generator i) = z i ^ weights 4 4 2 i :=
+  prefix₂.interpret ℝ z hz
+
+private noncomputable def sampler : Fin 7 → MvPolynomial (Fin 7) ℤ :=
+  CanonicalIntegralPhysicalSampler.rows prefix₂ prefix₂.basis le_rfl
+    (fun _ : Fin 2 => prefix₂.basis.generator 0) low 5 3 (fun _ => 2) {0} 1 4
+
+example : {z : Fin 7 → ℂ | ∀ j, (sampler j).eval₂ (Int.castRingHom ℂ) z = 0}.Finite :=
+  CanonicalIntegralPhysicalSampler.finite_roots prefix₂ (by decide) prefix₂.basis le_rfl
+    (fun _ => prefix₂.basis.generator 0) low 5 3 (fun _ => 2) {0} 1 (by decide) 4
+    (by decide) (by change (C (-8 : ℤ) : MvPolynomial (Fin 2) ℤ).totalDegree < 4; rw [totalDegree_C]; decide)
+    (by decide) (by decide) (by intro i; decide)
+
+end PhysicalBlockRegression
