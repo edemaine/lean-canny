@@ -945,6 +945,17 @@ The checked ingredients are:
   and preserves the specialized degree. Its native coefficient reader
   combines the original coefficient and integer-residue readers using
   modular powers and products, including composite moduli.
+  Concrete fixed-width reduction matrices now construct these annihilators
+  directly from pure-power-leading equations, with no supplied reduction
+  table. Oversized states have zero columns; every valid nonnormal step
+  decreases spatial degree. Native binary-degree controls select a single
+  shifted lower coefficient and preserve its space charge. The explicit
+  spatial dimension has polynomial binary length, independent of earlier
+  parameter-algebra ranks and coordinate powers. An integral Euler row
+  operation puts coordinate-critical Fermat systems in this form without
+  division. For coefficient parameter degree E, the resulting annihilator
+  coefficients have degree at most N*(bound+1)*E. These estimates hold over
+  arbitrary commutative coefficient rings, including nonreduced ones.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

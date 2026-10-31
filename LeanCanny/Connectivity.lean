@@ -90,6 +90,10 @@ import LeanCanny.Algebra.FermatScaledPowerCone
 import LeanCanny.Algebra.GradedReductionAnnihilator
 import LeanCanny.Algebra.ScaledGradedReductionAnnihilator
 import LeanCanny.Algebra.PolynomialConstantScaleSpace
+import LeanCanny.Algebra.PurePowerReductionBounds
+import LeanCanny.Algebra.PurePowerReductionCorrect
+import LeanCanny.Algebra.PurePowerParameterDegree
+import LeanCanny.Algebra.FermatCoordinateCriticalReduction
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

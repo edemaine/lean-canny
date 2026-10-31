@@ -11806,3 +11806,85 @@ example : ((ScaledGradedReductionAnnihilator.polynomial clearedMatrix 2 2).map (
     clearedMatrix 2 2 (Int.castRingHom ℝ) (by norm_num)
 
 end GradedReductionRegression
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical Matrix
+
+namespace PurePowerReductionRegression
+noncomputable def low (_ : Fin 1) : MvPolynomial (Fin 1) ℤ := C (-8)
+
+example : (PurePowerRelativeAnnihilator.polynomial (B := 2) 0 (fun _ : Fin 1 => 2)
+    low 2 2 (by simp [PurePowerReductionMatrix.gridBound]) (by decide) 0).eval₂
+      (Int.castRingHom ℝ) 2 = 0 := by
+  apply PurePowerRelativeAnnihilator.root (x := fun _ => 2)
+    (hd := fun _ => by decide) (hlow := fun _ => by
+      change (C (-8 : ℤ) : MvPolynomial (Fin 1) ℤ).totalDegree < 2
+      rw [totalDegree_C]
+      decide)
+  intro i
+  simp only [low, eval₂_add, eval₂_mul, eval₂_C, eval₂_pow, eval₂_X]
+  norm_num
+
+example : ((PurePowerRelativeAnnihilator.polynomial (B := 2) 0 (fun _ : Fin 1 => 2)
+    low 2 2 (by simp [PurePowerReductionMatrix.gridBound]) (by decide) 0).map
+      (Int.castRingHom ℝ)).natDegree = 4 := by
+  exact PurePowerRelativeAnnihilator.specialized_degree (Int.castRingHom ℝ) 0 _ low 2 (by norm_num)
+    2 (by simp [PurePowerReductionMatrix.gridBound]) (by decide) 0
+
+example : PurePowerReductionMatrix.evaluation (B := 1) (RingHom.id (ZMod 4)) 1
+    (fun _ : Fin 1 => 2) ᵥ* (PurePowerReductionMatrix.matrix (B := 1) 0
+      (fun _ : Fin 1 => 1) (fun _ => C (0 : ZMod 4)) 2 1).map (RingHom.id (ZMod 4)) =
+    (2 : ZMod 4) • PurePowerReductionMatrix.evaluation (B := 1) (RingHom.id (ZMod 4)) 1
+      (fun _ : Fin 1 => 2) := by
+  apply PurePowerReductionMatrix.evaluation_relation
+    (hlow := fun _ => by simp) (hbound := by decide)
+  intro i
+  norm_num
+  decide
+
+def layout : PurePowerReductionBits.Layout := ⟨fun _ => 2, fun _ => 2, fun _ _ => 2⟩
+def query (r s : ℕ) : List Bool := PurePowerReductionBits.packet (pair [] (BinaryNatCode.encode 7)) r s
+def constant (_ : List Bool) : List Bool := BinaryNatCode.encode 6
+def coefficient (_ : List Bool) : List Bool := BinaryNatCode.encode 5
+
+#guard PurePowerReductionBits.pivot layout (query 6 4) == 0
+#guard PurePowerReductionBits.pivot layout (query 8 0) == 1
+#guard PurePowerReductionBits.rowTotal layout (query 15 0) == 6
+#guard PurePowerReductionBits.entry layout (fun _ => 3) constant coefficient (query 6 4) == BinaryNatCode.encode 3
+#guard PurePowerReductionBits.entry layout (fun _ => 3) constant coefficient (query 6 1) == []
+#guard PurePowerReductionBits.entry layout (fun _ => 3) constant coefficient (query 5 5) == BinaryNatCode.encode 6
+#guard PurePowerReductionBits.entry layout (fun _ => 3) constant coefficient (query 5 4) == []
+#guard PurePowerReductionBits.entry layout (fun _ => 3) constant coefficient (query 15 0) == []
+#guard PurePowerReductionBits.differenceWord layout (query 6 4) == [false, false, false, false]
+#guard PurePowerReductionBits.sourceQuery layout (query 6 4) ==
+  PurePowerReductionBits.packet (pair [] (BinaryNatCode.encode 7)) 0 0
+#guard PurePowerReductionBits.entry layout (fun _ => 3) (fun _ => []) (fun _ => [])
+  (PurePowerReductionBits.packet (pair [] []) 6 4) == []
+#guard PurePowerReductionBits.pivot ⟨fun _ => 0, fun _ => 0, fun _ _ => 0⟩ [] == 0
+#guard PurePowerReductionBounds.dimension 2 3 == 64
+#guard PurePowerReductionBounds.dimension 0 0 == 1
+
+noncomputable def parameterLow (_ : Fin 1) : MvPolynomial (Fin 1) (Polynomial ℤ) := C (-Polynomial.X)
+
+example (k : ℕ) : ((PurePowerRelativeAnnihilator.polynomial (B := 2) 0 (fun _ : Fin 1 => 2)
+    parameterLow (Polynomial.C 1) 2 (by simp [PurePowerReductionMatrix.gridBound]) (by decide) 0).coeff k).natDegree ≤ 12 := by
+  apply PurePowerParameterDegree.coefficient (E := 1)
+  intro i e
+  rw [parameterLow, coeff_C]
+  split_ifs <;> simp
+
+-- The coordinate-critical system of the unit circle retains both objective
+-- extrema; no regularity or multiplier independence enters the annihilator.
+example (x : Fin 2 → ℝ) (hp : (FermatCriticalHomogenization.polynomial
+    (C (-1) : MvPolynomial (Fin 2) ℤ) 1 2).eval₂ (Int.castRingHom ℝ) x = 0)
+    (hx : ∀ i, i ≠ (0 : Fin 2) → (pderiv i (FermatCriticalHomogenization.polynomial
+      (C (-1) : MvPolynomial (Fin 2) ℤ) 1 2)).eval₂ (Int.castRingHom ℝ) x = 0) (j : Fin 2) :
+    (PurePowerRelativeAnnihilator.polynomial (B := 2) 0
+      (FermatCoordinateCriticalReduction.degrees 0 2)
+      (FermatCoordinateCriticalReduction.lower (C (-1) : MvPolynomial (Fin 2) ℤ) 2 0)
+      (2 : ℤ) 2 (by decide +kernel)
+      (by decide) j).eval₂ (Int.castRingHom ℝ) (x j) = 0 := by
+  apply FermatCoordinateCriticalReduction.coordinate_annihilator_root (D := 2) (hD := by decide)
+    (hlow := by rw [totalDegree_C]; decide) (hp := hp) (hx := hx)
+
+end PurePowerReductionRegression
