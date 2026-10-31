@@ -1179,6 +1179,13 @@ The checked ingredients are:
   histories yield denominator-only scripts recovering their stored banks.
   Reading these scripts is FP when their metadata has the supplied native
   controls; no algebraic matrix callback is used by the denominator pass.
+  Each retained generator now has an actual creating birth, whose index
+  fixes the binary radix for its embedding in the current prefix. Its matrix
+  entries route to that birth by quotient indices and matching low digits.
+  A resumable companion-root controller computes shifts and padding locally
+  and requests exactly one coefficient for every other entry. Its local
+  controls are FP from the scalar-leading reader, without assuming a native
+  coefficient evaluator. The mixed history reader still needs assembly.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

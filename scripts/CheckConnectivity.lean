@@ -15578,3 +15578,78 @@ example : ∃ s : List IntegralCriticalDenominatorScript.Instruction,
     s.length = 2 ∧ IntegralCriticalDenominatorScript.execute s = List.ofFn rootBank2.denominator :=
   IntegralCriticalDenominatorScript.history_script rootHistory2
 end GlobalCriticalHeightRegression
+
+
+namespace IntegralScalarReaderRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralScalarGeneratorBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private theorem child_correct (c : List Bool) (_hr : request G c) :
+    entry (id (coefficientQuery G c)) = residueBits (G.coefficient c (index G c) (G.oldRow c) (G.oldCol c)) :=
+  generatorAccess.entry_eq c (index G c) (G.oldRow c) (G.oldCol c)
+
+example : (program G id).Controls := program_controls G generatorAccess (constFn_mem_FP _) id id_mem_FP
+example (c : List Bool) : (program G id).value entry c = G.toFamily.value c := program_value G id entry child_correct c
+example (c : List Bool) : (program G id).value entry c = BinaryNatCode.encode 4 := by
+  rw [program_value G id entry child_correct]
+  have H : F.toFamily.negativeValue c = BinaryNatCode.encode 4 := by
+    unfold IntegralNormalizationMatrixBits.Family.negativeValue
+    rw [IntegralScalarNormalizationBits.scalar_entry]
+    have J : residueBits (-((5 : ZMod 6) * (2 : ZMod 6) ^ 2)) = BinaryNatCode.encode 4 := by decide
+    exact J
+  exact H
+example (c child : List Bool) : (program G id).controller.Requests entry (fun _ => 1) c child ↔
+    child = coefficientQuery G c := by
+  rw [program_requests_iff]
+  have H : request G c := by change ¬(3 + 1 < 4) ∧ 4 ≤ 4 ∧ 4 - 4 ≤ 1; decide
+  exact and_iff_right H
+
+private noncomputable def Shift : Family :=
+  { G with
+    row := fun _ => (2 : Fin 4)
+    col := fun _ => (1 : Fin 4)
+    oldRow := fun _ => (0 : Fin 2)
+    oldCol := fun _ => (0 : Fin 2) }
+example (answer : List Bool → List Bool) (c : List Bool) : (program Shift id).value answer c = BinaryNatCode.encode 1 := by
+  change (if decide (request Shift c) then _ else immediate Shift c) = _
+  have H : ¬ request Shift c := by change ¬(¬(1 + 1 < 4) ∧ 4 ≤ 4 ∧ 4 - 4 ≤ 2); decide
+  simp only [show decide (request Shift c) = false from decide_eq_false H, Bool.false_eq_true, ite_false]
+  have J : residueBits (1 : ZMod 6) = BinaryNatCode.encode 1 := by decide
+  exact J
+example (answer : List Bool → List Bool) (c child : List Bool) :
+    ¬(program Shift id).controller.Requests answer (fun _ => 1) c child := by
+  rw [program_requests_iff]
+  have H : ¬ request Shift c := by change ¬(¬(1 + 1 < 4) ∧ 4 ≤ 4 ∧ 4 - 4 ≤ 2); decide
+  exact fun h => H h.1
+
+private noncomputable def Pad : Family := { G with scalarDegree := fun _ => 8, row := fun _ => (1 : Fin 8), col := fun _ => (7 : Fin 8) }
+example (answer : List Bool → List Bool) (c : List Bool) : (program Pad id).value answer c = [] := by
+  change (if decide (request Pad c) then _ else immediate Pad c) = _
+  have H : ¬ request Pad c := by change ¬(¬(7 + 1 < 8) ∧ 4 ≤ 8 ∧ 8 - 4 ≤ 1); decide
+  simp only [show decide (request Pad c) = false from decide_eq_false H, Bool.false_eq_true, ite_false]
+  have J : residueBits (0 : ZMod 6) = [] := by decide
+  exact J
+end IntegralScalarReaderRegression
+
+namespace GlobalCriticalHeightRegression
+open LeanCanny.Algebra IntegralScalarRootHistoryBounds
+example (i : Fin 2) : Nonempty (GeneratorOrigin (B := 2) RP2 rootBank2 i) := rootHistory2.generator_origin i
+example (o : GeneratorOrigin (B := 2) RP2 rootBank2 (0 : Fin 2)) : o.birth = 1 := by
+  have H := o.birth_eq
+  simpa only [Fin.val_zero] using H
+example (o : GeneratorOrigin (B := 2) RP2 rootBank2 (1 : Fin 2)) : o.birth = 0 := by
+  have H := o.birth_eq
+  simpa only [show (1 : Fin 2).val = 1 from rfl] using H
+example (o : GeneratorOrigin (B := 2) RP2 rootBank2 (1 : Fin 2)) : o.chain.radix = 4 := by
+  rw [o.radix_eq]
+  decide
+example (i : Fin 2) (o : GeneratorOrigin (B := 2) RP2 rootBank2 i)
+    (r t : Fin (FixedWidthPolynomial.count 2 2)) :
+    Algebra.leftMulMatrix RP2.basis.finBasis (RP2.basis.generator i) r t =
+      if r.val % o.chain.radix = t.val % o.chain.radix then
+        Algebra.leftMulMatrix
+          (UniformIntegralPrefix.step o.oldPrefix o.birth_bound (Nat.two_pow_pos 2) o.polynomial o.degree).basis.finBasis
+          (AdjoinRoot.root _) (o.chain.oldIndex r) (o.chain.oldIndex t) else 0 := o.matrix r t
+end GlobalCriticalHeightRegression
