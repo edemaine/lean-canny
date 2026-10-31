@@ -12021,3 +12021,92 @@ example (q : ℤ) (v : Fin 1 → MvPolynomial (Fin 1) ℤ) :
     (by rw [totalDegree_X_pow])
 
 end NativeCommonDenominatorRegression
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+
+namespace PaddedIntegralRegression
+
+example (p : Polynomial ℤ) : (PaddedIntegralNormalization.polynomial p 9 4).Monic ∧
+    (PaddedIntegralNormalization.polynomial p 9 4).natDegree = 4 :=
+  ⟨PaddedIntegralNormalization.monic p 9 4, PaddedIntegralNormalization.natDegree p 9 4⟩
+
+example : PaddedIntegralNormalization.polynomial (0 : Polynomial ℤ) 2 4 = Polynomial.X ^ 4 := by
+  simp [PaddedIntegralNormalization.polynomial, FixedDegreeIntegralNormalization.polynomial, ← pow_add]
+
+example (p : Polynomial ℤ) :
+    (PaddedIntegralParameterExtension.equation (IntegralCoordinateBasis.base 4) p 9).Monic ∧
+    (PaddedIntegralParameterExtension.equation (IntegralCoordinateBasis.base 4) p 9).natDegree = 4 :=
+  PaddedIntegralParameterExtension.equation_monic _ _ _ (by decide)
+
+private noncomputable def rationalEquation : Polynomial ℤ := Polynomial.C 2 * Polynomial.X - Polynomial.C 1
+private noncomputable def intReal : ℤ →ₐ[ℤ] ℝ := Algebra.ofId ℤ ℝ
+private theorem rationalDegree : (rationalEquation.map intReal.toRingHom).natDegree = 1 := by
+  simp only [rationalEquation, Polynomial.map_sub, Polynomial.map_mul, Polynomial.map_C, Polynomial.map_X]
+  norm_num [intReal]
+  compute_degree!
+private theorem rationalRoot : rationalEquation.eval₂ intReal.toRingHom (1 / 2 : ℝ) = 0 := by
+  norm_num [rationalEquation, intReal]
+
+example : (PaddedIntegralParameterExtension.numeratorPolynomial (IntegralCoordinateBasis.base 4) rationalEquation 1).totalDegree ≤ 3 :=
+  PaddedIntegralParameterExtension.numeratorPolynomial_degree _ _ _
+
+example : (PaddedIntegralParameterExtension.numeratorPolynomial (IntegralCoordinateBasis.base 4) rationalEquation 1).aeval
+    (fun i => PaddedIntegralParameterExtension.evaluate rationalEquation 1 4 (by decide) intReal (1 / 2)
+      rationalDegree (by decide) rationalRoot
+      ((PaddedIntegralParameterExtension.coordinateBasis (IntegralCoordinateBasis.base 4) rationalEquation 1).generator i)) /
+    ((PaddedIntegralParameterExtension.denominator (IntegralCoordinateBasis.base 4) rationalEquation 1 : ℤ) : ℝ) = 1 / 2 :=
+  PaddedIntegralParameterExtension.numeratorPolynomial_recover _ _ _ (by decide) _ _ rationalDegree (by decide) rationalRoot
+
+section DegreeDrop
+variable {A : Type*} [CommRing A] [Nontrivial A] {m : ℕ}
+private noncomputable def equation (a c : A) : Polynomial A :=
+  Polynomial.C a * Polynomial.X ^ 3 + Polynomial.C c * Polynomial.X ^ 2 - Polynomial.C 4
+
+example (b : IntegralCoordinateBasis A m 4) (a c : A) (φ : A →ₐ[ℤ] ℝ) (ha : φ a = 0) (hc : φ c = 2)
+    (t : ℝ) (ht : 2 * t ^ 2 - 4 = 0) :
+    ∃ (hd : ((equation a c).map φ.toRingHom).natDegree = 2) (hr : (equation a c).eval₂ φ.toRingHom t = 0),
+      PaddedIntegralParameterExtension.evaluate (equation a c) 2 4 (by decide) φ t hd (by decide) hr
+        (PaddedIntegralParameterExtension.numerator b (equation a c) 2) /
+        ((PaddedIntegralParameterExtension.denominator b (equation a c) 2 : ℤ) : ℝ) = t := by
+  have HM : (equation a c).map φ.toRingHom = (Polynomial.C 2 * Polynomial.X ^ 2 - Polynomial.C 4 : Polynomial ℝ) := by
+    simp [equation, ha, hc]
+    exact map_natCast φ 4
+  have hd : ((equation a c).map φ.toRingHom).natDegree = 2 := by rw [HM]; compute_degree!
+  have hr : (equation a c).eval₂ φ.toRingHom t = 0 := by
+    have H := congrArg (fun p : Polynomial ℝ => p.eval t) HM
+    simpa only [Polynomial.eval_map, Polynomial.eval_sub, Polynomial.eval_mul,
+      Polynomial.eval_C, Polynomial.eval_pow, Polynomial.eval_X, ht] using H
+  exact ⟨hd, hr, PaddedIntegralParameterExtension.recover b (equation a c) 2 (by decide) φ t hd (by decide) hr⟩
+end DegreeDrop
+
+private noncomputable def nilpotentBasis : IntegralCoordinateBasis (AdjoinRoot (Polynomial.X ^ 4 : Polynomial ℤ)) 1 4 :=
+  (IntegralCoordinateBasis.base 4).step (Polynomial.X ^ 4) (Polynomial.monic_X_pow 4) (Polynomial.natDegree_X_pow 4)
+
+private theorem nilpotent : nilpotentBasis.generator 0 ^ 4 = 0 := by
+  have H := AdjoinRoot.eval₂_root (Polynomial.X ^ 4 : Polynomial ℤ)
+  simpa [nilpotentBasis, IntegralCoordinateBasis.step] using H
+
+example : nilpotentBasis.representative (nilpotentBasis.generator 0 ^ 4) = 0 := by
+  rw [nilpotent, IntegralCoordinateBasis.representative_zero]
+
+example : (nilpotentBasis.representative (nilpotentBasis.generator 0)).coeff
+    (IntegralCoordinateBasis.exponent (fun _ : Fin 1 => (1 : Fin 4))) = 1 := by
+  have HB : nilpotentBasis.basis (fun _ : Fin 1 => (1 : Fin 4)) = nilpotentBasis.generator 0 := by
+    rw [nilpotentBasis.basis_apply]
+    simp
+  rw [← HB, IntegralCoordinateBasis.representative_coefficient, Module.Basis.repr_self, Finsupp.single_eq_same]
+
+private noncomputable def family : IntegralCoordinateCoefficientBits.Family where
+  arity _ := 1
+  width _ := 2
+  carrier _ := AdjoinRoot (Polynomial.X ^ 4 : Polynomial ℤ)
+  ring _ := inferInstance
+  basis _ := nilpotentBasis
+  element _ := nilpotentBasis.generator 0
+
+example : IntegralCoordinateCoefficientBits.query family (fun _ => BinaryNatCode.encode 5)
+    (fun _ => BinaryNatCode.encode 9) [] = pair (pair [] (BinaryNatCode.encode 9)) (pair (BinaryNatCode.encode 1) []) := by decide
+
+end PaddedIntegralRegression

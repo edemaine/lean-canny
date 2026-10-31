@@ -97,6 +97,8 @@ import LeanCanny.Algebra.FermatCoordinateCriticalReduction
 import LeanCanny.Algebra.ClearedCoordinateParameterDegree
 import LeanCanny.Algebra.CommonIntegerDenominator
 import LeanCanny.Algebra.FixedWidthCommonDenominatorSpace
+import LeanCanny.Algebra.PaddedIntegralParameterMatrix
+import LeanCanny.Algebra.IntegralCoordinateCoefficientSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

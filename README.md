@@ -970,6 +970,15 @@ The checked ingredients are:
   and numerator degrees. Extra per-coordinate clearing powers are constant
   integer padding, so no modular division is needed. Target queries discard
   redundant high exponent bits, and modulus one is supported.
+  Scalar equations can now be padded to one uniform monic degree on every
+  branch, including invalid degree records. Their iterated integer bases
+  consist of bounded coordinate monomials. Each height numerator has an
+  exact representative of degree at most (births+1)*(N-1); its native
+  coefficient reader asks the regular-representation matrix for column
+  zero. Canonical coefficient representatives also give explicit monic
+  scalar equations with old-coordinate degree at most births*(N-1),
+  independent of coefficient heights and old algebra ranks. The padded
+  generator matrix is constructed from the original coefficient matrices.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
