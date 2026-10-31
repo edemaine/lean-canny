@@ -1089,8 +1089,13 @@ The checked ingredients are:
   it never enumerates old parameter monomials. Native products of algebra
   powers now compute the required old basis entries from original factor
   matrix entries, with binary powers, product lengths, and old ranks. The
-  fixed-width coefficient sum and these product readers still need combining
-  with the original source and retained-height readers.
+  A cleared monomial term now constructs every factor program from original
+  coefficient, common-denominator, and retained-height readers. The spatial
+  exponent sum determines its padding power; free coordinates select the
+  denominator and frozen coordinates select retained heights. Their complete
+  space costs are charged, including when the denominator is not invertible
+  modulo the caller's modulus. The fixed-width coefficient sum still needs
+  combining with these term programs and the free-exponent mask.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

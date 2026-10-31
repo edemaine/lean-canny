@@ -13678,3 +13678,115 @@ example : emptyFamily.value [] = [] := by
   decide
 
 end ClearedCoordinateProductsRegression
+
+
+namespace IntegralMonomialTermRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralMonomialTermBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def b : Module.Basis (Fin 2) ℤ (ℤ × ℤ) := Module.Basis.finTwoProd ℤ
+private theorem diagonal (v : ℤ × ℤ) (r t : Fin 2) :
+    Algebra.leftMulMatrix b v r t = if r = t then (if r = 0 then v.1 else v.2) else 0 := by
+  fin_cases r <;> fin_cases t <;>
+    simp [Algebra.leftMulMatrix_eq_repr_mul, b, Module.Basis.coe_finTwoProd_repr]
+
+private noncomputable def S : Source where
+  arity _ := 2
+  rank _ := 2
+  carrier _ := ℤ × ℤ
+  ring _ := inferInstance
+  basis _ := b
+  coefficient _ := 5
+  denominator _ := 2
+  height _ i := if i = 0 then (3, 4) else (5, 5)
+  exponent _ i := if i = 0 then 2 else 1
+  allowance _ := 3
+  offset _ := 1
+  free _ := 1
+  row _ := 0
+  col _ := 0
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+private def coefficientReader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (MatrixMoment.EntryBits.rowIndex q) = Nat.fromBitsLE (MatrixMoment.EntryBits.colIndex q) then
+    BinaryNatCode.encode 5 else []
+private theorem coefficientReader_FP : coefficientReader ∈ FP :=
+  ((BinaryFn.fromBits MatrixMoment.EntryBits.rowIndex_mem_FP).eq (BinaryFn.fromBits MatrixMoment.EntryBits.colIndex_mem_FP)).ite_mem_FP
+    (constFn_mem_FP (BinaryNatCode.encode 5)) (constFn_mem_FP [])
+
+private def heightReader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (IntegralPowerProductBits.rowWord q) = Nat.fromBitsLE (IntegralPowerProductBits.colWord q) then
+    if Nat.fromBitsLE (IntegralPowerProductBits.factorWord q) = 0 then
+      if Nat.fromBitsLE (IntegralPowerProductBits.rowWord q) = 0 then BinaryNatCode.encode 3 else BinaryNatCode.encode 4
+    else BinaryNatCode.encode 5 else []
+private theorem heightReader_FP : heightReader ∈ FP :=
+  ((BinaryFn.fromBits IntegralPowerProductBits.rowWord_FP).eq (BinaryFn.fromBits IntegralPowerProductBits.colWord_FP)).ite_mem_FP
+    (((BinaryFn.fromBits IntegralPowerProductBits.factorWord_FP).eq (BinaryFn.const 0)).ite_mem_FP
+      (((BinaryFn.fromBits IntegralPowerProductBits.rowWord_FP).eq (BinaryFn.const 0)).ite_mem_FP
+        (constFn_mem_FP (BinaryNatCode.encode 3)) (constFn_mem_FP (BinaryNatCode.encode 4)))
+      (constFn_mem_FP (BinaryNatCode.encode 5))) (constFn_mem_FP [])
+
+private noncomputable def access : Access S where
+  arity := UnaryFn.const 2
+  rank := BinaryFn.const 2
+  modulus := BinaryFn.const 6
+  row := BinaryFn.const 0
+  col := BinaryFn.const 0
+  allowance := BinaryFn.const 3
+  offset := BinaryFn.const 1
+  free := BinaryFn.const 1
+  exponent := BinaryFn.ite ((BinaryFn.fromBits pairSnd_mem_FP).eq (BinaryFn.const 0)) (BinaryFn.const 2) (BinaryFn.const 1)
+  coefficient := coefficientReader
+  height := heightReader
+  denominator _ := BinaryNatCode.encode 2
+  coefficient_eq c r t := by
+    change coefficientReader _ = residueBits ((Algebra.leftMulMatrix b (5 : ℤ × ℤ) r t : ℤ) : ZMod 6)
+    rw [diagonal]
+    simp only [coefficientReader, MatrixMoment.EntryBits.rowIndex, MatrixMoment.EntryBits.colIndex,
+      pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    fin_cases r <;> fin_cases t <;> norm_num <;> decide
+  height_eq c i r t := by
+    change heightReader _ = residueBits ((Algebra.leftMulMatrix b (if i = 0 then (3, 4) else (5, 5)) r t : ℤ) : ZMod 6)
+    rw [diagonal]
+    simp only [heightReader, IntegralPowerProductBits.factorWord, IntegralPowerProductBits.rowWord,
+      IntegralPowerProductBits.colWord, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    fin_cases r <;> fin_cases t <;> by_cases hi : i = 0 <;> simp only [hi, ite_true, ite_false] <;> norm_num <;> decide
+  denominator_eq c := by
+    change BinaryNatCode.encode 2 = residueBits ((2 : ℤ) : ZMod 6)
+    decide
+
+private def q (s r t : ℕ) := packet [true, false, true] s r t
+
+example : entryProgram S access (q 0 0 0) = BinaryNatCode.encode 5 := by decide
+example : entryProgram S access (q 1 1 1) = BinaryNatCode.encode 2 := by decide
+example : entryProgram S access (q 2 0 0) = BinaryNatCode.encode 3 := by decide
+example : entryProgram S access (q 2 1 1) = BinaryNatCode.encode 4 := by decide
+-- The free coordinate reads the denominator even though its unused height equals five.
+example : entryProgram S access (q 3 1 1) = BinaryNatCode.encode 2 := by decide
+example : entryProgram S access (q 4 1 1) = BinaryNatCode.encode 1 := by decide
+example : entryProgram S access (q 2 0 1) = [] := by decide
+example : entryProgram S access (q 4 0 1) = [] := by decide
+
+example : SpaceFunction S.value := evaluator S access (SpaceFunction.ofFP _ coefficientReader_FP)
+  (SpaceFunction.ofFP _ heightReader_FP) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+
+-- Five times the square of the frozen height times two, computed modulo a non-coprime modulus.
+example : S.value [] = [] := by
+  unfold Source.value
+  dsimp only [S, Source.scalar]
+  rw [diagonal]
+  norm_num [degree, ClearedCoordinateBlock.scalarAtom, Fin.prod_univ_succ, Finset.sum_range_succ]
+  decide
+
+private noncomputable def G : Source := { S with row := fun _ => (1 : Fin 2), col := fun _ => (1 : Fin 2) }
+example : G.value [] = BinaryNatCode.encode 4 := by
+  unfold Source.value
+  dsimp only [G, S, Source.scalar]
+  rw [diagonal]
+  norm_num [degree, ClearedCoordinateBlock.scalarAtom, Fin.prod_univ_succ, Finset.sum_range_succ]
+  decide
+
+end IntegralMonomialTermRegression

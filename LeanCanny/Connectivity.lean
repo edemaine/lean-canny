@@ -123,6 +123,7 @@ import LeanCanny.Algebra.IntegralPurePowerActionSpace
 import LeanCanny.Algebra.IntegralPurePowerReductionSpace
 import LeanCanny.Algebra.ClearedCoordinateExponentControl
 import LeanCanny.Algebra.IntegralPowerProductSpace
+import LeanCanny.Algebra.IntegralMonomialTermSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
