@@ -14861,3 +14861,145 @@ example (c : List Bool) (k : ℕ) (r t : Fin 2) :
   rw [original_factor, show 40848 * 3 = 122544 by decide] at H
   exact H
 end IntegralFrozenPowerRegression
+
+
+namespace PrefixLiftRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open UniformIntegralPrefix IntegralCoordinateBasis
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def bank0 : HeightBank (B := 2) P0 := HeightBank.base 5 2
+private noncomputable def bank1 : HeightBank (B := 2) P1 := bank0.step (by decide) p0 9
+private noncomputable def bank2 : HeightBank (B := 2) P2 := bank1.step (by decide) 0 9
+
+private theorem original_coefficients (k : ℕ) (r t : Fin 1) :
+    (Algebra.leftMulMatrix (P0.basis.finBasis (B := 2)) (p0.coeff k) r t).natAbs ≤ 2 ^ 0 := by
+  apply IntegralHistoryCriticalBits.integer_entry_height
+  change (((Polynomial.X : Polynomial ℤ).coeff k)).natAbs ≤ 2 ^ 0
+  rw [Polynomial.coeff_X]
+  split_ifs <;> decide
+
+-- Both extensions advertise degree 9 although the padded scalar degree is 4.
+-- Bounds apply to the actual canonical bank even on these invalid records.
+private theorem bank1_bounds : bank1.Bounds 17 := by
+  have H := bank0.step_bounds (by decide) p0 9 0 0 (HeightBank.base_bounds 5 2 0) original_coefficients
+  have HE : max 0 (bankStepHeight 1 4 0) = 17 := by decide
+  simpa only [show FixedWidthPolynomial.count 0 2 = 1 from rfl, show 2 ^ 2 = 4 by decide, HE, bank1, P1, bank0, P0] using H
+
+private theorem bank2_bounds : bank2.Bounds 67 := by
+  have H := bank1.step_bounds (by decide) 0 9 0 17 bank1_bounds (by
+    intro k r t
+    rw [Polynomial.coeff_zero, map_zero, Matrix.zero_apply, Int.natAbs_zero]
+    exact Nat.zero_le _)
+  have HE : max 17 (bankStepHeight 4 4 0) = 67 := by decide
+  simpa only [show FixedWidthPolynomial.count 1 2 = 4 from rfl, show 2 ^ 2 = 4 by decide, HE, bank2, P2] using H
+
+example : (bankGrowth (2 ^ 20) (2 ^ 10) (2 ^ 30)).size < 80 := by decide
+example (i : Fin 2) (r t : Fin 16) :
+    (Algebra.leftMulMatrix (P2.basis.finBasis (B := 2)) (bank2.numerator i) r t).natAbs ≤ 2 ^ 67 :=
+  bank2_bounds.numerator i r t
+
+-- Clearing two selected heights and one zero coordinate includes every scale.
+example : (CoordinateFrozenCriticalElimination.denominator
+    (fun i : Fin 3 => bank2.selectedDenominator (![some 1, none, some 0] i))).natAbs ≤ 2 ^ 201 :=
+  bank2.common_denominator_height 67 bank2_bounds ![some 1, none, some 0]
+example (i : Fin 3) (r t : Fin 16) :
+    (Algebra.leftMulMatrix (P2.basis.finBasis (B := 2))
+      (CoordinateFrozenCriticalElimination.numerators
+        (fun j : Fin 3 => bank2.selectedDenominator (![some 1, none, some 0] j))
+        (fun j : Fin 3 => bank2.selectedNumerator (![some 1, none, some 0] j)) i.val) r t).natAbs ≤ 2 ^ 268 :=
+  by
+    have H := bank2.common_numerator_height 67 bank2_bounds ![some 1, none, some 0] i r t
+    rw [show (2 + 2) * 67 = 268 by decide] at H
+    exact H
+end PrefixLiftRegression
+
+namespace HistorySamplerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralHistorySampler IntegralHistoryCriticalBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def nativeFamily : IntegralHistoryCriticalBits.Family where
+  cap _ := 2
+  width _ := 2
+  birth _ := 1
+  ambient _ := 0
+  free _ := 0
+  scalarPrefix _ := F1.scalarPrefix
+  data _ := data
+  offset _ := 0
+  fit _ := by decide
+  sourceWidth _ := 2
+  degree_lt _ := by change 2 < 2 ^ 2; decide
+  objective _ := 0
+  coordinate _ := 0
+  coefficientIndex _ := 4
+  target _ := 0
+  row _ := ⟨0, by change 0 < 4; decide⟩
+  col _ := ⟨0, by change 0 < 4; decide⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+-- This is the same critical candidate used to extend the retained physical tuple.
+example (c : List Bool) : (source nativeFamily).annihilator c =
+    criticalCandidate F1 data 0 (by decide) (0 : Fin 1) (0 : Fin 1) :=
+  annihilator_eq nativeFamily c
+
+private noncomputable def nativeBounds : Bounds nativeFamily where
+  coefficientHeight _ := 0
+  retainedHeight _ := 0
+  scaleHeight _ := 0
+  leadingHeight _ := 0
+  coefficient c e := by
+    dsimp only [nativeFamily, data]
+    rw [MvPolynomial.coeff_neg, MvPolynomial.coeff_one]
+    split_ifs <;> norm_num
+  retained c i r t := by
+    change (Algebra.leftMulMatrix (F1.scalarPrefix.basis.finBasis (B := 2)) 0 r t).natAbs ≤ 2 ^ 0
+    rw [map_zero, Matrix.zero_apply, Int.natAbs_zero]
+    exact Nat.zero_le _
+  scale c i := by change (1 : ℤ).natAbs ≤ 2 ^ 0; decide
+  leading c := by change (1 : ℤ).natAbs ≤ 2 ^ 0; decide
+
+example (c : List Bool) (k : ℕ) (r t : Fin 4) :
+    (Algebra.leftMulMatrix (F1.scalarPrefix.basis.finBasis (B := 2))
+      ((criticalCandidate F1 data 0 (by decide) (0 : Fin 1) (0 : Fin 1)).coeff k) r t).natAbs ≤
+      2 ^ budget nativeFamily nativeBounds c := by
+  have H := coefficient_height nativeFamily nativeBounds c k r t
+  rw [annihilator_eq] at H
+  exact H
+end HistorySamplerRegression
+
+
+namespace HistorySamplerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralHistorySampler IntegralHistoryCriticalBits UniformIntegralPrefix
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def oldBank : HeightBank (B := 2) F1.scalarPrefix :=
+  (HeightBank.base 2 2).step (by decide) p 1
+private theorem oldBank_bounds : oldBank.Bounds 24 := by
+  have HC (k : ℕ) (r t : Fin 1) :
+      (Algebra.leftMulMatrix (F.scalarPrefix.basis.finBasis (B := 2)) (p.coeff k) r t).natAbs ≤ 2 ^ 1 := by
+    apply integer_entry_height
+    change (((Polynomial.C 2 * Polynomial.X - Polynomial.C 1 : Polynomial ℤ).coeff k)).natAbs ≤ 2 ^ 1
+    simp only [Polynomial.coeff_sub, Polynomial.coeff_C_mul, Polynomial.coeff_X, Polynomial.coeff_C]
+    split_ifs <;> norm_num
+  have H := (HeightBank.base 2 2).step_bounds (by decide) p 1 1 0 (HeightBank.base_bounds 2 2 0) HC
+  have HE : max 0 (bankStepHeight 1 4 1) = 24 := by decide
+  simpa only [show FixedWidthPolynomial.count 0 2 = 1 from rfl, show 2 ^ 2 = 4 by decide, HE, oldBank, F1, scalarStep, F] using H
+
+-- This actual nonunit-leading parent bank feeds the actual critical birth.
+example (c : List Bool) :
+    (oldBank.step data.birth_bound
+      (criticalCandidate F1 data 0 (by decide) (0 : Fin 1) (0 : Fin 1)) 9).Bounds
+      (bankGrowth 4 4 (heightFactor nativeFamily c) * 24) := by
+  have H := bank_step_bounds nativeFamily nativeBounds c 24 4 9 oldBank oldBank_bounds (by decide)
+    (by exact le_rfl) (by change 0 ≤ 24; decide) (by change 0 ≤ 24; decide)
+    (by change 0 ≤ 24; decide) (by change 0 ≤ 24; decide)
+  rw [annihilator_eq] at H
+  exact H
+end HistorySamplerRegression

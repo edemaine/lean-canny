@@ -1140,7 +1140,15 @@ The checked ingredients are:
   from a common positive bound on those four inputs. The canonical native
   constructor derives its reduction bound and spatial width from free arity
   and allowance, matching the sampler's relative degree.
-  Global bounds across all history births still require construction.
+  Actual retained-history data now constructs a native source whose relative
+  polynomial equals the sampler's critical candidate. Its coefficient budget
+  follows from integer source coefficients, retained numerator matrices, and
+  scales, including common-denominator clearing. A constructed height bank
+  prepends each canonical numerator and denominator and embeds all old
+  numerators. A binary factor bounds one complete critical birth, including
+  the next bank normalization; singular selected coefficients and invalid
+  advertised degrees are covered by the height bounds.
+  A uniform bound across all history births still requires construction.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
