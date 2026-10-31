@@ -1047,6 +1047,13 @@ The checked ingredients are:
   have binary computations; one extension's numerator-height budget grows
   at most linearly in the original height, with an explicit polynomial factor
   in the old rank and scalar degree.
+  Actual critical history roots now construct their next relative scalar
+  polynomial. One common integer denominator reconstructs the frozen
+  coordinate block exactly; the resulting annihilator has fixed specialized
+  degree determined only by free spatial arity and original source degree.
+  Every critical coordinate, including at singular points, extends the same
+  full history and is recovered by its canonical height. Native readers for
+  these relative polynomial coefficients still require construction.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

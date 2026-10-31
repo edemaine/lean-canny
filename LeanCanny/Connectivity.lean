@@ -115,6 +115,7 @@ import LeanCanny.Algebra.CanonicalIntegralScalarAppend
 import LeanCanny.Algebra.IntegralHistoryBounds
 import LeanCanny.Algebra.IntegralHistoryRealExtension
 import LeanCanny.Algebra.PaddedIntegralHeightSourceBounds
+import LeanCanny.Algebra.IntegralHistoryRelativeCritical
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

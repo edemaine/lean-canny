@@ -12906,3 +12906,67 @@ example (c : List Bool) : PaddedIntegralHeightSourceBounds.numeratorBudget S B c
   decide
 
 end CanonicalHeightBoundsRegression
+
+
+namespace RelativeCriticalHistoryRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open CoordinateFrozenCriticalElimination IntegralHistorySampler
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private def scales : Fin 2 → ℤ := ![2, 3]
+private def H : Fin 2 → ℤ := ![1, 0]
+private noncomputable def x : Fin 2 → ℝ := ![1 / 2, 1]
+private def phi : ℤ →+* ℝ := Int.castRingHom ℝ
+private theorem hc : ∀ i, scales i ≠ 0 := by decide
+private theorem fit : 1 + (0 + 1) = 1 + 1 := rfl
+private theorem frozen : ∀ i, i.val < 1 → (scales i : ℝ) * x i = phi (H i) := by
+  intro i hi
+  fin_cases i <;> norm_num [scales, H, x, phi] at *
+private noncomputable def low : MvPolynomial (Fin 2) ℤ := C (-5)
+private theorem source : (FermatCriticalHomogenization.polynomial low 4 2).eval₂ phi x = 0 := by
+  norm_num [FermatCriticalHomogenization.polynomial, low, x, phi, Fin.sum_univ_succ]
+
+example : denominator scales = 6 := by decide
+example : numerators scales H 0 = 3 := by decide
+example : numerators scales H 1 = 0 := by decide
+
+-- The frozen coordinate is exactly one half; it is not a normalized scalar coordinate.
+example : ClearedCoordinateBlock.point phi (denominator scales : ℤ) (numerators scales H) 1
+    (fun j : Fin 1 => x (ClearedCoordinateCritical.freeIndex 1 fit.le j)) = x :=
+  point_eq phi scales hc H 1 fit x frozen
+
+private noncomputable def p := CoordinateFrozenCriticalElimination.polynomial 2 scales H 1 fit low 4 (0 : Fin 1) 0
+
+example : p.eval₂ phi 1 = 0 := by
+  exact CoordinateFrozenCriticalElimination.root phi 2 (by decide) scales hc H 1 fit low 4
+    (by rw [low, totalDegree_C]; decide) 0 x frozen source
+    (fun i hi => False.elim (hi (by apply Fin.ext; have := i.isLt; omega))) 0
+
+-- Its specialized degree is fixed independently of the parent algebra rank.
+example : (p.map phi).natDegree = 4 :=
+  specialized_degree phi 2 (by decide) scales hc H 1 fit low 4 (by norm_num [phi]) 0 0
+
+-- A genuine singular critical point is retained by the same construction.
+example : (CoordinateFrozenCriticalElimination.polynomial 2 scales (fun _ => (0 : ℤ)) 1 fit
+    (0 : MvPolynomial (Fin 2) ℤ) 4 (0 : Fin 1) 0).eval₂ phi 0 = 0 := by
+  apply CoordinateFrozenCriticalElimination.root phi 2 (by decide) scales hc (fun _ => 0) 1 fit 0 4
+    (by simp) 0 (fun _ => 0)
+  · intro i hi
+    simp [phi]
+  · simp [FermatCriticalHomogenization.polynomial]
+  · intro i hi
+    exact False.elim (hi (by apply Fin.ext; have := i.isLt; omega))
+
+private noncomputable def F : Sampler 1 4 0 (Fin 0) := IntegralHistorySampler.base 1 4
+
+-- The constructed relative polynomial, of degree four, itself builds a real child history.
+example : ∃ y : (Fin 0 ⊕ Unit) → ℝ,
+    ∀ l, ((scalarStep F (by decide) (by decide) p 4).rows l).eval₂ (Int.castRingHom ℝ) y = 0 := by
+  obtain ⟨y, hy, _htail, _hheight⟩ := relativeCritical_real_extend_recover F (by decide) (by decide)
+    2 (by decide) (by decide) scales hc H 1 fit low 4 (by change low.totalDegree < 2; rw [low, totalDegree_C]; decide) 0 0
+    Fin.elim0 (fun i => Fin.elim0 i) (Algebra.ofId ℤ ℝ) (fun i => Fin.elim0 i)
+    (by change (4 : ℝ) ≠ 0; norm_num) x frozen source (fun i hi => False.elim (hi (by apply Fin.ext; have := i.isLt; omega)))
+  exact ⟨y, hy⟩
+
+end RelativeCriticalHistoryRegression
