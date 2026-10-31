@@ -15502,3 +15502,79 @@ example : ∃ y : (Fin 1 ⊕ Unit) → ℝ,
     2 (by decide) (by norm_num [p, Polynomial.coeff_one]) (fun _ => 77) old_root phi (fun i => Fin.elim0 i)
     (1 / 2) p_degree (by decide) p_root
 end HistorySamplerRegression
+
+
+namespace ForwardDenominatorRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralDenominatorPass
+set_option backward.isDefEq.respectTransparency false
+
+private def F : Family where
+  count _ := 3
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+  arity _ _ := 3
+  leading _ _ := -2
+  degree _ _ := 2
+  exponent _ _ := 1
+  index _ i j := if j < 2 then 0 else i
+
+private theorem controls : Access F where
+  count := UnaryFn.const 3
+  modulus := BinaryFn.const 6
+  arity := UnaryFn.const 3
+  leading := by
+    apply mem_FP_of_eq (constFn_mem_FP (residueBits (-2 : ZMod 6)))
+    intro p
+    rfl
+  degree := BinaryFn.const 2
+  exponent := BinaryFn.const 1
+  index := by
+    have HJ : BinaryFn (fun z => Nat.fromBitsLE (pairSnd z)) := BinaryFn.fromBits pairSnd_mem_FP
+    have HI : BinaryFn (fun z => cursor (pairFst z)) := by
+      have H : BinaryFn cursor := BinaryFn.fromBits BoundedFold.counter_mem_FP
+      exact H.comp pairFst_mem_FP
+    exact BinaryFn.ite (HJ.lt (BinaryFn.const 2)) (BinaryFn.const 0) HI
+
+-- Duplicate old scales multiply twice; the missing scale is the unit.
+example : integers F [] 3 = [-4398046511104, -1024, -4] := by decide
+example : (pass F).values [] 3 = [2, 2, 2] := by decide
+example : ModularHistoryPass.bound (pass F) [] = 24 := by decide
+example : ModularHistoryPass.run (pass F) (access F controls) ∈ FP := table_FP F controls
+example : (fun c => residueBits ((((integers F c (F.count c))[(0 : ℕ)]?).getD (0 : ℤ) : ℤ) : ZMod (F.modulus c))) ∈ FP :=
+  integer_reader_FP F controls (fun _ => 0) (BinaryFn.const 0)
+example : ModularHistoryPass.read (pass F) (access F controls) (fun _ => 0) [] = BinaryNatCode.encode 2 := by
+  rw [reader_eq]
+  decide
+example : ModularHistoryPass.read (pass F) (access F controls) (fun _ => 99) [] = [] := by
+  rw [reader_eq]
+  decide
+example : rawScaleAt F (BoundedFold.packet [] 1 (WordList.encode [BinaryNatCode.encode 2])) 2 = 1 := by
+  unfold rawScaleAt factor
+  simp only [BoundedFold.context_packet, cursor, BoundedFold.counter_packet,
+    BinaryNatCode.encode, Nat.fromBitsLE_bits, F]
+  decide
+
+-- The word reader handles empty words and arbitrary oversized binary indices.
+example : WordList.get (WordList.encode [[], [true], [false, true]]) 1 = [true] := by decide
+example : WordList.get (WordList.encode [[], [true], [false, true]]) 1000 = [] := by decide
+example : WordList.reader ∈ FP := WordList.reader_FP
+
+private def U : Family := { F with modulus := fun _ => 1, modulus_ne_zero := fun _ => by decide }
+example : (pass U).values [] 3 = [0, 0, 0] := by decide
+example : (pass U).values [] 0 = [] := rfl
+
+example {n W D C S B m : ℕ} {P : UniformIntegralPrefix.Prefix S (2 ^ B) m}
+    {bank : UniformIntegralPrefix.HeightBank P}
+    (h : IntegralScalarRootHistoryBounds.History n W D C P bank) :
+    ∃ s : List IntegralCriticalDenominatorScript.Instruction,
+      s.length = m ∧ IntegralCriticalDenominatorScript.execute s = List.ofFn bank.denominator :=
+  IntegralCriticalDenominatorScript.history_script h
+end ForwardDenominatorRegression
+
+namespace GlobalCriticalHeightRegression
+open LeanCanny.Algebra
+example : ∃ s : List IntegralCriticalDenominatorScript.Instruction,
+    s.length = 2 ∧ IntegralCriticalDenominatorScript.execute s = List.ofFn rootBank2.denominator :=
+  IntegralCriticalDenominatorScript.history_script rootHistory2
+end GlobalCriticalHeightRegression

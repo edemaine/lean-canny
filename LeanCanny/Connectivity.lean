@@ -144,6 +144,7 @@ import LeanCanny.Algebra.IntegralHistoryGlobalHeightBounds
 import LeanCanny.Algebra.IntegralClearedCriticalLeadingCoefficient
 import LeanCanny.Algebra.IntegralScalarRootHeightBank
 import LeanCanny.Algebra.IntegralScalarRootHistoryBounds
+import LeanCanny.Algebra.IntegralCriticalDenominatorScript
 import LeanCanny.Algebra.IntegralScalarGeneratorSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels

@@ -1171,6 +1171,14 @@ The checked ingredients are:
   budget. For these integer leading coefficients, native companion-matrix
   normalization reads one coefficient and one leading residue and uses modular
   scalar powering, including for composite moduli and nonunits.
+  A forward modular pass now evaluates the scalar-root denominators from
+  integer leading metadata and earlier denominator indices. Native FP
+  certificates use unary birth and coordinate counts, binary exponents, and
+  bounded residue tables. The cast of the integer recurrence is proved
+  equal to the computed table for every positive modulus. Actual critical
+  histories yield denominator-only scripts recovering their stored banks.
+  Reading these scripts is FP when their metadata has the supplied native
+  controls; no algebraic matrix callback is used by the denominator pass.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
