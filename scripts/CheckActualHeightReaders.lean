@@ -1,4 +1,5 @@
 import LeanCanny.Computation.RecursiveGraphQueryBounds
+import LeanCanny.Algebra.IntegralNormalizationMatrixSpace
 import LeanCanny.Encoding.FlatAffineHeightValues
 import LeanCanny.Connectivity.FlatAffineHeightArcs
 import LeanCanny.Encoding.FlatAffineHeightTrailing
@@ -1123,3 +1124,63 @@ example (midpoint : Bool) (u : List Bool) :
 
 end
 end ActualHeightReaderRegression
+
+namespace IntegralNormalizationReaderRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding
+open LeanCanny.Algebra.MatrixPower
+open scoped Classical
+
+private def F (d : ℕ) : IntegralNormalizationMatrixBits.Family where
+  width _ := 1
+  degree _ := d
+  index _ := 0
+  modulus _ := 5
+  row _ := 0
+  col _ := 0
+  coefficient _ k _ _ := if k = 0 then 3 else 2
+  modulus_ne_zero _ := by decide
+
+private def entry (q : List Bool) : List Bool := BinaryNatCode.encode
+  (if Nat.fromBitsLE (pairFst (pairSnd q)) = 0 then 3 else 2)
+
+private theorem entry_FP : entry ∈ FP := by
+  have hk : BinaryFn (fun q => Nat.fromBitsLE (pairFst (pairSnd q))) :=
+    (BinaryFn.fromBits pairFst_mem_FP).comp pairSnd_mem_FP
+  exact (BinaryFn.ite (hk.eq (BinaryFn.const 0)) (BinaryFn.const 3) (BinaryFn.const 2)).bits_mem_FP
+
+private def access (d : ℕ) : IntegralNormalizationMatrixBits.Access (F d) where
+  width := BinaryFn.const 1
+  degree := BinaryFn.const d
+  index := BinaryFn.const 0
+  modulus := BinaryFn.const 5
+  row := BinaryFn.const 0
+  col := BinaryFn.const 0
+  entry := entry
+  entry_eq c k i j := by
+    change entry (pair c (pair (BinaryNatCode.encode k)
+      (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))) =
+        residueBits (if k = 0 then (3 : ZMod 5) else 2)
+    simp only [entry, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    by_cases hk : k = 0 <;> norm_num [hk, residueBits, BinaryNatCode.encode] <;> decide
+
+-- The final column is computed from the old entry program, including at
+-- exponent zero; no power table or normalized coefficient reader is given.
+example (d : ℕ) : SpaceFunction (F d).negativeValue :=
+  IntegralNormalizationMatrixBits.negative_evaluator (F d) (access d)
+    (SpaceFunction.ofFP entry entry_FP)
+
+example : (F 1).negativeValue [] = BinaryNatCode.encode 2 := by
+  unfold IntegralNormalizationMatrixBits.Family.negativeValue
+  dsimp only [F]
+  norm_num [Matrix.mul_apply, Matrix.one_apply,
+    residueBits, BinaryNatCode.encode]
+  decide
+
+example : (F 2).negativeValue [] = BinaryNatCode.encode 4 := by
+  unfold IntegralNormalizationMatrixBits.Family.negativeValue
+  dsimp only [F]
+  norm_num [Matrix.mul_apply,
+    residueBits, BinaryNatCode.encode]
+  decide
+
+end IntegralNormalizationReaderRegression

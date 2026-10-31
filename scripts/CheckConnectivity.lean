@@ -11656,3 +11656,58 @@ example : ∃ (y : Fin 1 → ℝ) (mu : Fin 2 → ℝ), y ∈ connectedComponent
     exact False.elim (Finset.notMem_empty j hj)
 end
 end SingularCompactComponentRegression
+
+namespace IntegralHeightRegression
+open Polynomial LeanCanny.Algebra
+open scoped Classical
+
+-- An annihilator may have a zero branch. Recovery only requires the
+-- selected scalar value to be nonzero, not invertibility on every branch.
+example (t : ℝ) :
+    (((2 : ℝ) * t) * (IntegralParameterInverse.inverse (Polynomial.X ^ 2 - Polynomial.C 2 * Polynomial.X : ℤ[X])).eval₂
+      (Int.castRingHom ℝ) 2) /
+      ((IntegralParameterInverse.denominator (Polynomial.X ^ 2 - Polynomial.C 2 * Polynomial.X : ℤ[X]) : ℤ) : ℝ) = t := by
+  have hp : (Polynomial.X ^ 2 - Polynomial.C 2 * Polynomial.X : ℤ[X]) ≠ 0 := by
+    intro h
+    have H := congrArg (fun p : ℤ[X] => p.coeff 1) h
+    norm_num at H
+  exact IntegralParameterInverse.recover _ (Int.castRingHom ℝ) 2 (by norm_num) (by norm_num)
+    (Int.cast_ne_zero.mpr (IntegralParameterInverse.denominator_ne_zero _ hp)) t
+
+section DegreeDrop
+variable {A ι : Type*} [CommRing A] [Nontrivial A] [Fintype ι] [DecidableEq ι]
+
+private noncomputable def equation (a c : A) : A[X] := Polynomial.C a * Polynomial.X ^ 3 + Polynomial.C c * Polynomial.X ^ 2 - Polynomial.C 4
+
+-- The formal cubic coefficient vanishes after specialization. The extension
+-- still has relative rank two, and recovers the genuine specialized root.
+example (b : Module.Basis ι ℤ A) (a c : A) (φ : A →ₐ[ℤ] ℝ) (ha : φ a = 0) (hc : φ c = 2)
+    (t : ℝ) (ht : 2 * t ^ 2 - 4 = 0) :
+    ∃ (hd : ((equation a c).map φ.toRingHom).natDegree = 2)
+      (hr : (equation a c).eval₂ φ.toRingHom t = 0),
+      IntegralParameterExtension.evaluate (equation a c) 2 φ t hd (by decide) hr
+        (IntegralParameterExtension.numerator b (equation a c) 2) /
+        ((IntegralParameterExtension.denominator b (equation a c) 2 : ℤ) : ℝ) = t := by
+  have HM : (equation a c).map φ.toRingHom = (Polynomial.C 2 * Polynomial.X ^ 2 - Polynomial.C 4 : ℝ[X]) := by
+    simp [equation, ha, hc]
+    exact map_natCast φ 4
+  have hd : ((equation a c).map φ.toRingHom).natDegree = 2 := by
+    rw [HM]
+    compute_degree!
+  have hr : (equation a c).eval₂ φ.toRingHom t = 0 := by
+    have H := congrArg (fun p : ℝ[X] => p.eval t) HM
+    simpa only [Polynomial.eval_map, Polynomial.eval_sub, Polynomial.eval_mul,
+      Polynomial.eval_C, Polynomial.eval_pow, Polynomial.eval_X, ht] using H
+  exact ⟨hd, hr, IntegralParameterExtension.recover b (equation a c) 2 φ t hd (by decide) hr⟩
+
+end DegreeDrop
+
+-- The new root acts by this companion matrix, with columns in power order.
+example : Algebra.leftMulMatrix
+    (IntegralParameterExtension.relativeBasis (Polynomial.X ^ 2 - Polynomial.C 2 : ℤ[X]) 2)
+    (AdjoinRoot.root _) = !![0, 2; 1, 0] := by
+  ext i j
+  rw [IntegralParameterExtension.root_matrix]
+  fin_cases i <;> fin_cases j <;> norm_num
+
+end IntegralHeightRegression

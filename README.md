@@ -915,6 +915,19 @@ The checked ingredients are:
   are preserved under the coordinate casts. Uniform terminal algorithms
   decide both connectivity tests, with their stopping flag exactly rank zero.
   The full recursive component graph remains required.
+  Scalar height extensions now have monic equations of a fixed selected
+  degree and explicit finite free integer bases. At a valid specialization,
+  including a drop in the formal polynomial degree, the new parameter
+  recovers the requested height with a nonzero constant integer denominator.
+  The construction allows nonreduced algebras and zero branches of the
+  leading coefficient. Native inverse and denominator coefficient readers
+  use the original modular matrix access and derived entry-height bounds.
+  Explicit companion matrices reduce new-generator access to old coefficient
+  matrices. A native streamed product computes their normalization columns,
+  and normalization has binary-readable coefficient-height and matrix-entry
+  bounds, derived from the old rank and coefficient bounds.
+  These algebraic steps still require integration with the exceptional
+  height equations and the recursive sampler.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
   endpoint attachment remain required.
