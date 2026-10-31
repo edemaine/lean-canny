@@ -15139,3 +15139,80 @@ example : (height 2 (2 ^ 40) 2 2 4 3 20).size ≤
   have HE : Nat.size (3 + 1) = 3 := by decide
   simpa only [HE, Nat.add_assoc, show 3 + 1 = 4 from rfl] using H
 end GlobalCriticalHeightRegression
+
+
+namespace RecursiveFoldRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding
+open MatrixPower ModularFold.RecursiveStage
+open scoped BigOperators
+set_option backward.isDefEq.respectTransparency false
+
+private def task (z : List Bool) : List Bool := pair (pairFst z) (pair [true, false] (pairSnd z))
+private theorem task_FP : task ∈ FP :=
+  mem_FP_pair pairFst_mem_FP (mem_FP_pair (constFn_mem_FP [true, false]) pairSnd_mem_FP)
+private def reply (z : List Bool) : List Bool :=
+  BinaryNatCode.encode ((2 * Nat.fromBitsLE (pairSnd (pairSnd z)) + 1) % 6)
+private def a (i : ℕ) : ZMod 6 := ((2 * i + 1 : ℕ) : ZMod 6)
+private theorem entry (c : List Bool) (i : ℕ) :
+    reply (task (pair c (BinaryNatCode.encode i))) = residueBits (a i) := by
+  simp only [reply, task, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits,
+    a, residueBits, ZMod.val_natCast]
+
+private def sum : RecursiveFold.Program := sumProgram (fun _ => 4) (fun _ => BinaryNatCode.encode 6) task
+private def product : RecursiveFold.Program := productProgram (fun _ => 4) (fun _ => BinaryNatCode.encode 6) task
+
+-- No computation certificate for reply is supplied to either controller.
+example : sum.controller.Certificates (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  sum_certificates _ _ _ (BinaryFn.const 4) (constFn_mem_FP _) task_FP
+example : product.controller.Certificates (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  product_certificates _ _ _ (BinaryFn.const 4) (constFn_mem_FP _) task_FP
+
+example (c r : List Bool) : sum.controller.Requests reply (fun _ => 4) c r ↔
+    ∃ i < 4, r = task (pair c (BinaryNatCode.encode i)) :=
+  sum.requests_iff reply c r
+
+-- The sum is 1+3+5+7 = 4 mod 6; it remains halted at the same value.
+example (c : List Bool) : sum.controller.output ((sum.controller.reference reply)^[9] (sum.initial c)) =
+    BinaryNatCode.encode 4 := by
+  have HH : sum.controller.halted ((sum.controller.reference reply)^[9] (sum.initial c)) = true := by
+    rw [sum.reference_iterate]
+    change decide (4 ≤ min 9 4) = true
+    norm_num
+  have H := sum_output (fun _ => 4) (fun _ => BinaryNatCode.encode 6) task reply c a (by
+    change 0 < 6; decide) (fun i _ => entry c i) 9 HH
+  have HE : residueBits (∑ i ∈ Finset.range 4, a i) = BinaryNatCode.encode 4 := by
+    norm_num [a, Finset.sum_range_succ, residueBits, BinaryNatCode.encode]
+    decide
+  exact H.trans HE
+
+-- The product contains the nonunit 3, and is 1*3*5*7 = 3 mod 6.
+example (c : List Bool) : product.controller.output ((product.controller.reference reply)^[4] (product.initial c)) =
+    BinaryNatCode.encode 3 := by
+  have H := product_output (fun _ => 4) (fun _ => BinaryNatCode.encode 6) task reply c a
+    (by change 0 < 6; decide) (fun i _ => entry c i) 4 (product.halted_after reply c)
+  have HE : residueBits (∏ i ∈ Finset.range 4, a i) = BinaryNatCode.encode 3 := by
+    norm_num [a, Finset.prod_range_succ, residueBits, BinaryNatCode.encode]
+    decide
+  exact H.trans HE
+
+example (c : List Bool) (t : ℕ) :
+    (RecursiveFold.encState ((sum.controller.reference reply)^[t] (sum.initial c))).length ≤
+      2 * c.length + 2 * (Turing.MultiTapeTM.encNat 4).length + (BinaryNatCode.encode 6).length + 2 :=
+  sum_orbit_length (fun _ => 4) (fun _ => BinaryNatCode.encode 6) task reply c a
+    (by change 0 < 6; decide) (fun i _ => entry c i) t
+
+-- The empty product modulo one is zero and requests no child at all.
+example (c : List Bool) :
+    (productProgram (fun _ => 0) (fun _ => BinaryNatCode.encode 1) task).controller.output
+      ((productProgram (fun _ => 0) (fun _ => BinaryNatCode.encode 1) task).initial c) = [] := by
+  dsimp only [productProgram, RecursiveFold.Program.controller, RecursiveFold.Program.initial, ModularProduct.seed]
+  rw [ArithmeticBits.one_residueBits]
+  simp only [residueBits, ZMod.val_one_eq_one_mod, BinaryNatCode.encode]
+  decide
+example (answer : List Bool → List Bool) (c r : List Bool) :
+    ¬ (productProgram (fun _ => 0) (fun _ => BinaryNatCode.encode 1) task).controller.Requests answer (fun _ => 0) c r := by
+  intro HR
+  obtain ⟨i, hi, _⟩ := (RecursiveFold.Program.requests_iff
+    (productProgram (fun _ => 0) (fun _ => BinaryNatCode.encode 1) task) answer c r).mp HR
+  exact Nat.not_lt_zero i hi
+end RecursiveFoldRegression

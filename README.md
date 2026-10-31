@@ -1155,7 +1155,11 @@ The checked ingredients are:
   the number of births. The common budget has a native binary computation
   from the original spatial metadata, scalar width, and birth cap.
   Initial scalar input and exceptional births still need integration with
-  this global bound.
+  this global bound. Resumable binary folds now supply local recursive
+  controllers for streamed modular sums and products. Their certificates
+  assume no child evaluator; exact bounded entry requests and accumulator
+  bounds feed the ranked recursive-stack compiler. The combined history
+  reader controller still requires assembly.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
