@@ -1084,6 +1084,13 @@ The checked ingredients are:
   The action, relative characteristic polynomial, and scalar rescaling are
   computed internally, with both supplied reader costs charged. Negative
   scalars, composite moduli, and zero-padding columns are retained.
+  Frozen substitution now has an explicit coefficient sum over the original
+  spatial exponent grid. A native FP mask selects the matching free exponent;
+  it never enumerates old parameter monomials. Native products of algebra
+  powers now compute the required old basis entries from original factor
+  matrix entries, with binary powers, product lengths, and old ranks. The
+  fixed-width coefficient sum and these product readers still need combining
+  with the original source and retained-height readers.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

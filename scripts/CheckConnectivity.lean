@@ -13544,3 +13544,137 @@ example : SpaceFunction S.value := evaluator S access
   (SpaceFunction.ofFP lowReader lowReader_FP) (SpaceFunction.ofFP _ (constFn_mem_FP _))
 
 end IntegralPurePowerReductionRegression
+
+
+namespace ClearedCoordinateProductsRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def exponents : Fin 2 →₀ ℕ := Finsupp.single (0 : Fin 2) 2 + Finsupp.single (1 : Fin 2) 1
+
+private theorem cleared_monomial : ClearedCoordinateBlock.specialize 3 (2 : ℤ) (fun _ => 3) 1 1
+    (MvPolynomial.monomial exponents 5) = MvPolynomial.monomial (Finsupp.single (0 : Fin 1) 1) 90 := by
+  rw [ClearedCoordinateBlock.specialize_monomial]
+  have HE : ClearedCoordinateBlock.freeExponent 1 1 exponents = Finsupp.single (0 : Fin 1) 1 := by
+    apply Finsupp.ext
+    intro j
+    rw [ClearedCoordinateBlock.freeExponent_apply 1 (by decide)]
+    fin_cases j
+    norm_num [exponents]
+  rw [HE]
+  congr 1
+  norm_num [ClearedCoordinateBlock.monomialScalar, ClearedCoordinateBlock.scalarAtom,
+    exponents, Finsupp.degree_eq_sum, Fin.sum_univ_succ, Fin.prod_univ_succ]
+
+-- A nonunit denominator contributes its powers integrally, without modular division.
+example : (ClearedCoordinateBlock.specialize 3 (2 : ℤ) (fun _ => 3) 1 1
+    (MvPolynomial.monomial exponents 5)).coeff (Finsupp.single (0 : Fin 1) 1) = 90 := by
+  rw [cleared_monomial, MvPolynomial.coeff_monomial, ite_eq_left rfl]
+example : (ClearedCoordinateBlock.specialize 3 (2 : ℤ) (fun _ => 3) 1 1
+    (MvPolynomial.monomial exponents 5)).coeff 0 = 0 := by
+  rw [cleared_monomial, MvPolynomial.coeff_monomial]
+  have H : Finsupp.single (0 : Fin 1) 1 ≠ (0 : Fin 1 →₀ ℕ) := by
+    intro h
+    have H := congrArg (fun e : Fin 1 →₀ ℕ => e (0 : Fin 1)) h
+    norm_num at H
+  rw [ite_eq_right H]
+
+private def layout : ClearedCoordinateExponentBits.Layout where
+  arity _ := 2
+  free _ := 1
+  offset _ := 1
+  sourceWidth _ := 2
+  targetWidth _ := 2
+  sourceWord := pairFst
+  targetWord := pairSnd
+
+private theorem controls : ClearedCoordinateExponentBits.Controls layout :=
+  ⟨UnaryFn.const 2, UnaryFn.const 1, UnaryFn.const 1, UnaryFn.const 2, UnaryFn.const 2, pairFst_mem_FP, pairSnd_mem_FP⟩
+
+example : FPPred (ClearedCoordinateExponentBits.mask layout) := ClearedCoordinateExponentBits.mask_fppred layout controls
+example : ClearedCoordinateExponentBits.mask layout (pair (BinaryNatCode.encode 6) (BinaryNatCode.encode 1)) := by decide
+example : ¬ClearedCoordinateExponentBits.mask layout (pair (BinaryNatCode.encode 6) (BinaryNatCode.encode 0)) := by decide
+
+open IntegralPowerProductBits
+
+private noncomputable def b : Module.Basis (Fin 2) ℤ (ℤ × ℤ) := Module.Basis.finTwoProd ℤ
+private theorem diagonal (v : ℤ × ℤ) (r t : Fin 2) :
+    Algebra.leftMulMatrix b v r t = if r = t then (if r = 0 then v.1 else v.2) else 0 := by
+  fin_cases r <;> fin_cases t <;>
+    simp [Algebra.leftMulMatrix_eq_repr_mul, b, Module.Basis.coe_finTwoProd_repr]
+
+private noncomputable def F : Family where
+  rank _ := 2
+  carrier _ := ℤ × ℤ
+  ring _ := inferInstance
+  basis _ := b
+  factor _ s := if s = 0 then (2, 3) else (5, 7)
+  exponent _ s := if s = 0 then 2 else 3
+  count _ := 2
+  row _ := 0
+  col _ := 0
+  modulus _ := 10
+  modulus_ne_zero _ := by decide
+
+private def reader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (rowWord q) = Nat.fromBitsLE (colWord q) then
+    if Nat.fromBitsLE (factorWord q) = 0 then
+      if Nat.fromBitsLE (rowWord q) = 0 then BinaryNatCode.encode 2 else BinaryNatCode.encode 3
+    else if Nat.fromBitsLE (rowWord q) = 0 then BinaryNatCode.encode 5 else BinaryNatCode.encode 7
+  else []
+
+private theorem reader_FP : reader ∈ FP :=
+  ((BinaryFn.fromBits rowWord_FP).eq (BinaryFn.fromBits colWord_FP)).ite_mem_FP
+    (((BinaryFn.fromBits factorWord_FP).eq (BinaryFn.const 0)).ite_mem_FP
+      (((BinaryFn.fromBits rowWord_FP).eq (BinaryFn.const 0)).ite_mem_FP
+        (constFn_mem_FP (BinaryNatCode.encode 2)) (constFn_mem_FP (BinaryNatCode.encode 3)))
+      (((BinaryFn.fromBits rowWord_FP).eq (BinaryFn.const 0)).ite_mem_FP
+        (constFn_mem_FP (BinaryNatCode.encode 5)) (constFn_mem_FP (BinaryNatCode.encode 7)))) (constFn_mem_FP [])
+
+private noncomputable def access : Access F where
+  rank := BinaryFn.const 2
+  count := BinaryFn.const 2
+  modulus := BinaryFn.const 10
+  row := BinaryFn.const 0
+  col := BinaryFn.const 0
+  exponent := BinaryFn.ite ((BinaryFn.fromBits pairSnd_mem_FP).eq (BinaryFn.const 0)) (BinaryFn.const 2) (BinaryFn.const 3)
+  entry := reader
+  entry_eq c s r t := by
+    change reader _ = residueBits ((Algebra.leftMulMatrix b (if s = 0 then (2, 3) else (5, 7)) r t : ℤ) : ZMod 10)
+    rw [diagonal]
+    simp only [reader, factorWord, rowWord, colWord, pairFst_pair, pairSnd_pair,
+      BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    fin_cases r <;> fin_cases t <;> by_cases hs : s = 0 <;> simp only [hs, ite_true, ite_false] <;> norm_num <;> decide
+
+example : SpaceFunction F.value := evaluator F access (SpaceFunction.ofFP reader reader_FP)
+
+-- Normalizing the factor position retains the source payload and the newly requested basis pair.
+example : entryQuery (pair (pair [true, false, true] (pair [true, false, false] (pair [] [])))
+    (pair [true] [])) = pair [true, false, true] (pair [true] (pair [true] [])) := by decide
+
+example : F.value [] = [] := by
+  unfold Family.value
+  dsimp only [F, ordered]
+  rw [diagonal]
+  norm_num
+  decide
+
+private noncomputable def G : Family := { F with row := fun _ => (1 : Fin 2), col := fun _ => (1 : Fin 2) }
+example : G.value [] = BinaryNatCode.encode 7 := by
+  unfold Family.value
+  dsimp only [G, F, ordered]
+  rw [diagonal]
+  norm_num
+  decide
+
+-- The empty product is the old algebra's unit, including its off-diagonal zero entries.
+private noncomputable def emptyFamily : Family := { F with count := fun _ => 0, col := fun _ => (1 : Fin 2) }
+example : emptyFamily.value [] = [] := by
+  unfold Family.value
+  dsimp only [emptyFamily, F, ordered]
+  rw [diagonal]
+  norm_num
+  decide
+
+end ClearedCoordinateProductsRegression
