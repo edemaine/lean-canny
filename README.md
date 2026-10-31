@@ -1159,7 +1159,11 @@ The checked ingredients are:
   controllers for streamed modular sums and products. Their certificates
   assume no child evaluator; exact bounded entry requests and accumulator
   bounds feed the ranked recursive-stack compiler. The combined history
-  reader controller still requires assembly.
+  reader controller still requires assembly. Flat history task words now
+  retain one root record while replacing birth, phase, and query fields.
+  Their ranks decrease on an earlier birth or local phase. Bounded query
+  fields give a polynomial word allowance independent of the number of
+  retargeting steps.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

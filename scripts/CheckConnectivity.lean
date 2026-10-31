@@ -15216,3 +15216,35 @@ example (answer : List Bool → List Bool) (c r : List Bool) :
     (productProgram (fun _ => 0) (fun _ => BinaryNatCode.encode 1) task) answer c r).mp HR
   exact Nat.not_lt_zero i hi
 end RecursiveFoldRegression
+
+
+namespace RankedHistoryTaskRegression
+open LeanCanny LeanCanny.Encoding
+open RankedHistoryTask
+set_option backward.isDefEq.respectTransparency false
+private def cap (r : List Bool) : ℕ := r.length
+private def q : List Bool := pack [true, false, true] 2 7 [false]
+private def nextBirth (x : List Bool) : ℕ := birth cap x
+private def next : List Bool → List Bool := retarget nextBirth (fun _ => 0) (fun _ => [true, false])
+
+example : UnaryFn (rank cap 8) := rank_unary cap (UnaryFn.length id_mem_FP) 8
+example : next ∈ FP := retarget_FP (BinaryFn.ofUnary (birth_unary cap (UnaryFn.length id_mem_FP)))
+  (BinaryFn.const 0) (constFn_mem_FP [true, false])
+example : rank cap 8 q = 23 := by decide
+-- Noncanonical birth and phase indices are clipped before unary arithmetic.
+example : rank cap 8 (pack [true, false, true] 100 100 [false]) = 31 := by decide
+example : rank cap 8 (pack (root q) 1 7 []) < rank cap 8 q :=
+  lower_birth cap 8 q 1 7 [] (by change 1 < 2; decide) (by decide)
+example : rank cap 8 (pack (root q) (birth cap q) 0 []) < rank cap 8 q :=
+  lower_phase cap 8 q 0 [] (by change 0 < 7; decide)
+
+-- The root record and word allowance stay fixed after arbitrarily many rewrites.
+example (n : ℕ) : root (next^[n] q) = [true, false, true] := by
+  exact retarget_iterate_root nextBirth (fun _ => 0) (fun _ => [true, false]) q n
+example (n : ℕ) : (next^[n] q).length ≤ 49 := by
+  have H := retarget_iterate_length cap 8 (fun _ => 2) nextBirth (fun _ => 0) (fun _ => [true, false])
+    (fun _ => min_le_right _ _) (fun _ => by decide) (fun _ => le_rfl) q n
+  have HE : q.length + wordBudget cap 8 (fun _ => 2) q = 49 := by decide
+  rw [HE] at H
+  exact H
+end RankedHistoryTaskRegression

@@ -1,5 +1,6 @@
 import LeanCanny.Computation.RecursiveGraphQueryBounds
 import LeanCanny.Computation.RecursiveFoldSpace
+import LeanCanny.Encoding.RankedHistoryTask
 import LeanCanny.Algebra.ModularFoldRecursiveController
 import LeanCanny.Connectivity.Encoding
 import LeanCanny.Connectivity.FormulaPathCover
