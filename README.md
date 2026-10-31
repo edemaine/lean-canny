@@ -1032,6 +1032,15 @@ The checked ingredients are:
   slots. A scalar birth can also retain arbitrary ancestral physical and
   multiplier coordinates: only scalar slots enter its new equation, and
   exclusion at infinity and exact algebra interpretation are preserved.
+  Constructed history samplers now alternate actual scalar and critical
+  extensions while retaining the whole parent tuple. Every root interprets
+  the scalar algebra and satisfies the original critical equations at its
+  actual heights. Their full root sets are finite, including singular roots.
+  One global degree bound has a native binary computation; each critical
+  block followed by a scalar birth adds exactly 2n+4 coordinates. Every
+  selected real scalar root extends the same full parent, and every child
+  interpretation recovers its exact height, including nonunit leading
+  coefficients. Uniform native history queries still need construction.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

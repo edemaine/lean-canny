@@ -12749,3 +12749,102 @@ example {A K : Type*} [CommRing A] [CommRing K] {N : ℕ}
   norm_num
 
 end ScalarPhysicalRetentionRegression
+
+
+namespace HistorySamplerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial WeightedHomogenization
+open IntegralHistorySampler
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def q : MvPolynomial (Fin 1) ℤ := X 0 - C 77
+
+private theorem q_degree : q.totalDegree ≤ 1 := by
+  apply (totalDegree_sub (X (0 : Fin 1)) (C (77 : ℤ))).trans
+  apply max_le
+  · simp
+  · rw [totalDegree_C]
+    omega
+
+private theorem q_infinity (y : Option (Fin 1) → ℂ) (hy : y none = 0) :
+    (homogenize (fun _ => 1) 1 q).eval₂ (Int.castRingHom ℂ) y = y (some 0) := by
+  have HL : (-C (77 : ℤ) : MvPolynomial (Fin 1) ℤ).totalDegree < 1 := by
+    rw [totalDegree_neg, totalDegree_C]
+    decide
+  have HE := HomogenizationAtInfinity.eval_leading (Int.castRingHom ℂ)
+    (-C (77 : ℤ) : MvPolynomial (Fin 1) ℤ) (X (0 : Fin 1)) 1 HL (isHomogeneous_X (R := ℤ) 0) y hy
+  simpa only [q, sub_eq_add_neg, eval₂_X, Function.comp_apply] using HE
+
+private noncomputable def F : Sampler 2 4 0 (Fin 1) where
+  scalarPrefix := UniformIntegralPrefix.base 2 4
+  scalar := Fin.elim0
+  rows _ := q
+  degrees _ := 1
+  row_degree _ := q_degree
+  degree_pos _ := by decide
+  noInfinity := by
+    intro y hy hz
+    have Hzero : y (some 0) = 0 := (q_infinity y hy).symm.trans (hz 0)
+    funext j
+    cases j with
+    | none => exact hy
+    | some i =>
+      have HI : i = 0 := Subsingleton.elim _ _
+      subst i
+      exact Hzero
+  interpret := by
+    intro K instK z _hz
+    exact ⟨Algebra.ofId ℤ K, fun i => Fin.elim0 i⟩
+
+private noncomputable def p : Polynomial ℤ := Polynomial.C 2 * Polynomial.X - Polynomial.C 1
+private noncomputable def phi : ℤ →ₐ[ℤ] ℝ := Algebra.ofId ℤ ℝ
+private theorem p_degree : (p.map phi.toRingHom).natDegree = 1 := by
+  simp only [p, Polynomial.map_sub, Polynomial.map_mul, Polynomial.map_C, Polynomial.map_X]
+  norm_num [phi]
+  compute_degree!
+private theorem p_root : p.eval₂ phi.toRingHom (1 / 2 : ℝ) = 0 := by norm_num [p, phi]
+private theorem old_root : ∀ i, (F.rows i).eval₂ (Int.castRingHom ℝ) (fun _ => 77) = 0 := by
+  intro i
+  norm_num [F, q]
+
+-- A nonunit selected leading coefficient retains the actual physical parent at 77.
+example : ∃ y : (Fin 1 ⊕ Unit) → ℝ,
+    (∀ j, ((scalarStep F (by decide) (by decide) p 1).rows j).eval₂ (Int.castRingHom ℝ) y = 0) ∧
+    (∀ i, y (Sum.inl i) = 77) ∧
+    ∀ psi : (scalarStep F (by decide) (by decide) p 1).scalarPrefix.carrier →ₐ[ℤ] ℝ,
+      (∀ i, psi ((scalarStep F (by decide) (by decide) p 1).scalarPrefix.basis.generator i) =
+        y ((scalarStep F (by decide) (by decide) p 1).scalar i) ^ UniformIntegralPowerSchedule.weights 2 4 1 i) →
+      psi (PaddedIntegralParameterExtension.numerator F.scalarPrefix.basis p 1) /
+        ((PaddedIntegralParameterExtension.denominator F.scalarPrefix.basis p 1 : ℤ) : ℝ) = 1 / 2 :=
+  scalarStep_real_extend_recover F (by decide) (by decide) p 1 (by decide) (fun _ => 77) old_root phi
+    (fun i => Fin.elim0 i) (1 / 2) p_degree (by decide) p_root
+
+private noncomputable def F1 := scalarStep F (by decide) (by decide) p 1
+private noncomputable def data : CriticalData F1.scalarPrefix 0 where
+  heights _ := 0
+  low := -1
+  leading := 1
+  objective := 2
+  scales _ := 1
+  frozen := ∅
+  free := 0
+  degree := 2
+  birth_bound := by decide
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne := by decide
+  objective_ne := by decide
+  scales_ne _ := by decide
+  free_not_frozen := by simp
+
+private noncomputable def F2 := criticalStep F1 data
+private noncomputable def F3 := scalarStep F2 (by decide) (by decide) (Polynomial.X : Polynomial F2.scalarPrefix.carrier) 9
+
+-- All original, scalar, physical, and multiplier coordinates belong to one finite root system.
+example : {z | ∀ i, (F3.rows i).eval₂ (Int.castRingHom ℝ) z = 0}.Finite := finite_roots F3
+example : Fintype.card ((Fin 1 ⊕ Unit) ⊕ FlatAffineCriticalStage.Variables 1) = 5 := by decide
+example : degreeBudget 1 4 2 = 450 := by decide
+example : Fintype.card ((Fin 7 ⊕ FlatAffineCriticalStage.Variables 4) ⊕ Unit) = 7 + (2 * 3 + 4) :=
+  criticalScalarStep_card (ι := Fin 7) (n := 3)
+
+end HistorySamplerRegression
