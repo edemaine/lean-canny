@@ -133,6 +133,7 @@ import LeanCanny.Algebra.IntegralCriticalLeadingSpace
 import LeanCanny.Algebra.IntegralEulerLowerSpace
 import LeanCanny.Algebra.IntegralClearedCriticalSpace
 import LeanCanny.Algebra.IntegralClearedCriticalBounds
+import LeanCanny.Algebra.IntegralOriginalCriticalBounds
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

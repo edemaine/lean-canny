@@ -14745,3 +14745,68 @@ example (c : List Bool) (k : ℕ) (r t : Fin 2) :
   exact H
 
 end IntegralFrozenPowerRegression
+
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private theorem original_coefficient_height (e : Fin 2 →₀ ℕ) (r t : Fin 2) :
+    (Algebra.leftMulMatrix b (p.coeff e) r t).natAbs ≤ 2 ^ 3 := by
+  rw [p, MvPolynomial.coeff_monomial]
+  split_ifs
+  · rw [matrix_entry]
+    fin_cases r <;> fin_cases t <;> norm_num
+  · rw [map_zero, Matrix.zero_apply, Int.natAbs_zero]
+    exact Nat.zero_le _
+private theorem original_retained_height (i : ℕ) (r t : Fin 2) :
+    (Algebra.leftMulMatrix b (if i = 0 then (-2, -3) else (5, 5)) r t).natAbs ≤ 2 ^ 3 := by
+  rw [matrix_entry]
+  by_cases hi : i = 0 <;> simp only [hi, ite_true, ite_false] <;>
+    fin_cases r <;> fin_cases t <;> norm_num
+
+-- Only the four original numerical inputs are bounded here.
+private noncomputable def originalInputs : IntegralOriginalCriticalBounds.Inputs heightSource where
+  coefficientHeight _ := 3
+  retainedHeight _ := 3
+  denominatorHeight _ := 1
+  leadingHeight _ := 1
+  coefficient c e r t := original_coefficient_height e r t
+  retained c i r t := original_retained_height i.val r t
+  denominator c := by change (-2 : ℤ).natAbs ≤ 2 ^ 1; decide
+  leading c := by change (2 : ℤ).natAbs ≤ 2 ^ 1; decide
+
+example : BinaryFn (IntegralOriginalCriticalBounds.budget heightSource originalInputs) :=
+  IntegralOriginalCriticalBounds.budget_binary heightSource originalInputs heightAccess
+    (BinaryFn.const 3) (BinaryFn.const 3) (BinaryFn.const 1) (BinaryFn.const 1)
+
+private theorem original_budget (c : List Bool) : IntegralOriginalCriticalBounds.budget heightSource originalInputs c = 7496 := by
+  have HG : IntegralOriginalCriticalBounds.gradientBudget heightSource originalInputs c = 69 := by
+    change IntegralFrozenCoefficientBounds.coefficientHeight 2 2 2 4 (3 + 2) 3 1 = 69
+    decide
+  have HS : IntegralOriginalCriticalBounds.sourceBudget heightSource originalInputs c = 91 := by
+    change IntegralFrozenConstantBounds.lowerHeight 2 2 2 4 3 3 1 1 = 91
+    decide
+  have HL : IntegralOriginalCriticalBounds.lowerBudget heightSource originalInputs c = 165 := by
+    unfold IntegralOriginalCriticalBounds.lowerBudget
+    rw [HG, HS]
+    change 91 + Nat.size 4 + 69 + Nat.size 1 + 1 = 165
+    decide
+  have HP : IntegralOriginalCriticalBounds.leadingBudget heightSource originalInputs c = 8 := by
+    change 1 + 4 * 1 + Nat.size 4 = 8
+    decide
+  unfold IntegralOriginalCriticalBounds.budget IntegralClearedCriticalBounds.budget
+  dsimp only [IntegralOriginalCriticalBounds.derived]
+  rw [HL, HP]
+  change IntegralActionHeightBounds.criticalHeight 8 2 4 (165 + 8) 8 = 7496
+  decide
+
+attribute [local irreducible] IntegralClearedCriticalBits.Source.annihilator
+-- Every actual relative coefficient now has a budget from those original bounds.
+example (c : List Bool) (k : ℕ) (r t : Fin 2) :
+    (Algebra.leftMulMatrix b ((show Polynomial (ℤ × ℤ) from heightSource.annihilator c).coeff k) r t).natAbs ≤ 2 ^ 7496 := by
+  have H := IntegralOriginalCriticalBounds.coefficient_height heightSource originalInputs c k r t
+  rw [original_budget] at H
+  exact H
+end IntegralFrozenPowerRegression

@@ -1133,8 +1133,10 @@ The checked ingredients are:
   give binary budgets for every coefficient matrix of this constructed
   annihilator. These budgets are linear in the two input heights, with a
   factor depending on the spatial grid, reduction bound, and binary size of
-  the old rank. Uniform bounds from the original four inputs still require
-  construction.
+  the old rank. Bounds from the same four original inputs now derive those
+  lower-row and leading budgets, including original derivatives and frozen
+  Fermat constants. The original spatial grid controls coefficient sums.
+  Global bounds across all history births still require construction.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
