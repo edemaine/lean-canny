@@ -13381,3 +13381,166 @@ example : shiftValue L (pair [] (BinaryNatCode.encode 2)) = 0 := by
   rw [ite_eq_right H]
 
 end PurePowerShiftControlRegression
+
+
+namespace IntegralReductionActionRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding MatrixPower
+open IntegralReductionActionBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+-- Rescaling retains negative integer scalars and arbitrary composite moduli.
+example : BinaryNat.powMod (pair (residueBits ((-3 : ℤ) : ZMod 10))
+    (pair (BinaryNatCode.encode 7) (BinaryNatCode.encode 9))) = BinaryNatCode.encode 3 := by
+  rw [IntegralScaledCharacteristicBits.pow_residue 10 7 (by decide)]
+  norm_num
+  decide
+example : BinaryNat.powMod (pair (residueBits ((-3 : ℤ) : ZMod 1))
+    (pair (BinaryNatCode.encode 0) (BinaryNatCode.encode 0))) = [] := by decide
+
+example (A : IntegralBerkowitzBlockBits.Source) (a : IntegralBerkowitzBlockBits.Access A)
+    (E : SpaceFunction a.entry)
+    (EC : SpaceFunction (fun c => residueBits ((-2 : ℤ) : ZMod (A.modulus c)))) :
+    SpaceFunction (IntegralScaledCharacteristicBits.value A (fun _ => -2) (fun _ => 2)) := by
+  exact IntegralScaledCharacteristicBits.evaluator A a (fun _ => -2) (fun _ => 2) (BinaryFn.const 2) E EC
+
+example : residueBits ((Algebra.leftMulMatrix b
+    ((ScaledGradedReductionAnnihilator.polynomial
+      (fun _ j : Fin 2 => if j = 0 then ((2, 3) : ℤ × ℤ) else 0)
+      (-2 : ℤ × ℤ) 2).coeff 1) (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = BinaryNatCode.encode 8 := by
+  rw [ScaledGradedReductionAnnihilator.coefficient, diagonal, Matrix.charpoly_fin_two]
+  norm_num [Matrix.trace, Matrix.diag, Fin.sum_univ_succ, Matrix.det_fin_two]
+  decide
+
+
+end IntegralReductionActionRegression
+
+
+namespace IntegralPurePowerReductionRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding MatrixPower
+open IntegralPurePowerReductionBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def b : Module.Basis (Fin 2) ℤ (ℤ × ℤ) := Module.Basis.finTwoProd ℤ
+private theorem diagonal (v : ℤ × ℤ) (r t : Fin 2) :
+    Algebra.leftMulMatrix b v r t = if r = t then (if r = 0 then v.1 else v.2) else 0 := by
+  fin_cases r <;> fin_cases t <;>
+    simp [Algebra.leftMulMatrix_eq_repr_mul, b, Module.Basis.coe_finTwoProd_repr]
+
+-- Additive coefficient transport also works for a map that fails to preserve one.
+private def sumHom : ℤ × ℤ →+ ℤ where
+  toFun x := x.1 + x.2
+  map_zero' := by norm_num
+  map_add' x y := by dsimp; ring
+
+example : sumHom 1 = 2 := rfl
+example : (PurePowerReductionBits.coefficientPolynomial sumHom
+    (MvPolynomial.C ((2, 3) : ℤ × ℤ) : MvPolynomial (Fin 1) (ℤ × ℤ))).coeff 0 = 5 := by
+  rw [PurePowerReductionBits.coefficientPolynomial_coeff, MvPolynomial.coeff_C, ite_eq_left rfl]
+  rfl
+
+private def L : PurePowerReductionShiftBits.Layout where
+  arity _ := 1
+  width _ := 2
+  degree _ _ := 2
+  bound _ := 3
+  grid_le _ := by norm_num [PurePowerReductionMatrix.gridBound, Fin.sum_univ_succ]
+  bound_lt _ := by decide
+  coordinate _ := 0
+
+private noncomputable def S : IntegralPurePowerActionBits.Source where
+  layout := L
+  rank _ := 2
+  carrier _ := ℤ × ℤ
+  ring _ := inferInstance
+  nontrivial _ := inferInstance
+  basis _ := b
+  low _ _ := MvPolynomial.C (2, 3)
+  leading _ := 7
+  modulus _ := 10
+  modulus_ne_zero _ := by decide
+  coefficient _ := 2
+  basisRow _ := 1
+  basisCol _ := 1
+
+private def lowReader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisRowCode q) =
+      Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisColCode q) then
+    if Nat.fromBitsLE (MatrixMoment.EntryBits.colIndex q) % 4 = 0 then
+      if Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisRowCode q) = 0 then
+        BinaryNatCode.encode 2 else BinaryNatCode.encode 3 else [] else []
+
+private theorem lowReader_FP : lowReader ∈ FP :=
+  ((BinaryFn.fromBits IntegralBerkowitzBlockBits.basisRowCode_FP).eq
+    (BinaryFn.fromBits IntegralBerkowitzBlockBits.basisColCode_FP)).ite_mem_FP
+    ((((BinaryFn.fromBits MatrixMoment.EntryBits.colIndex_mem_FP).mod (BinaryFn.const 4)).eq (BinaryFn.const 0)).ite_mem_FP
+      (((BinaryFn.fromBits IntegralBerkowitzBlockBits.basisRowCode_FP).eq (BinaryFn.const 0)).ite_mem_FP
+        (constFn_mem_FP (BinaryNatCode.encode 2)) (constFn_mem_FP (BinaryNatCode.encode 3)))
+      (constFn_mem_FP [])) (constFn_mem_FP [])
+
+private theorem exponent_zero (k : ℕ) :
+    RationalSubstitution.Indexed.exponentVector 1 (FixedWidthPolynomial.entry 2 k) = 0 ↔ k % 4 = 0 := by
+  constructor
+  · intro h
+    have H := congrArg (fun e : Fin 1 →₀ ℕ => e (0 : Fin 1)) h
+    simpa only [RationalSubstitution.Indexed.exponentVector, Finsupp.coe_equivFunOnFinite_symm,
+      FixedWidthPolynomial.entry_eq_digit, Fin.val_zero, Nat.zero_mul, pow_zero, Nat.div_one,
+      Finsupp.zero_apply, show 2 ^ 2 = 4 by rfl] using H
+  · intro h
+    apply Finsupp.ext
+    intro i
+    fin_cases i
+    simpa only [RationalSubstitution.Indexed.exponentVector, Finsupp.coe_equivFunOnFinite_symm,
+      FixedWidthPolynomial.entry_eq_digit, Fin.val_zero, Nat.zero_mul, pow_zero, Nat.div_one,
+      Finsupp.zero_apply, show 2 ^ 2 = 4 by rfl] using h
+
+private noncomputable def access : Access S where
+  layout := ⟨UnaryFn.const 1, UnaryFn.const 2, BinaryFn.const 2⟩
+  coordinate := UnaryFn.const 0
+  bound := BinaryFn.const 3
+  rank := BinaryFn.const 2
+  modulus := BinaryFn.const 10
+  coefficient := BinaryFn.const 2
+  basisRow := BinaryFn.const 1
+  basisCol := BinaryFn.const 1
+  low := lowReader
+  leading _ := BinaryNatCode.encode 7
+  leading_eq c := by
+    change BinaryNatCode.encode 7 = residueBits ((7 : ℤ) : ZMod 10)
+    decide
+  low_eq c i k r t := by
+    change lowReader _ = residueBits ((Algebra.leftMulMatrix b
+      ((MvPolynomial.C ((2, 3) : ℤ × ℤ) : MvPolynomial (Fin 1) (ℤ × ℤ)).coeff
+        (RationalSubstitution.Indexed.exponentVector 1 (FixedWidthPolynomial.entry 2 k))) r t : ℤ) : ZMod 10)
+    have HC : (MvPolynomial.C ((2, 3) : ℤ × ℤ) : MvPolynomial (Fin 1) (ℤ × ℤ)).coeff
+        (RationalSubstitution.Indexed.exponentVector 1 (FixedWidthPolynomial.entry 2 k)) =
+        if k % 4 = 0 then (2, 3) else 0 := by
+      have HE : (0 : Fin 1 →₀ ℕ) =
+          RationalSubstitution.Indexed.exponentVector 1 (FixedWidthPolynomial.entry 2 k) ↔ k % 4 = 0 :=
+        eq_comm.trans (exponent_zero k)
+      rw [MvPolynomial.coeff_C]
+      simp only [HE]
+    rw [HC, diagonal]
+    simp only [lowReader, IntegralBerkowitzBlockBits.basisRowCode, IntegralBerkowitzBlockBits.basisColCode,
+      MatrixMoment.EntryBits.colIndex, IntegralBlockMomentBits.context,
+      pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    fin_cases r <;> fin_cases t <;> by_cases hk : k % 4 = 0 <;> simp only [hk, ite_true, ite_false] <;> norm_num <;> decide
+
+private def q (i j r t : ℕ) : List Bool := IntegralReductionActionBits.packet [true, false, true] i j r t
+
+-- The first index is the target row; the native integer program receives the source column first.
+example : entryProgram S access (q 0 0 0 0) = BinaryNatCode.encode 7 := by decide
+example : entryProgram S access (q 1 1 1 1) = BinaryNatCode.encode 7 := by decide
+example : entryProgram S access (q 0 2 0 0) = BinaryNatCode.encode 8 := by decide
+example : entryProgram S access (q 0 2 1 1) = BinaryNatCode.encode 7 := by decide
+example : entryProgram S access (q 1 3 1 1) = BinaryNatCode.encode 7 := by decide
+example : entryProgram S access (q 1 2 1 1) = [] := by decide
+example : entryProgram S access (q 0 2 0 1) = [] := by decide
+example : entryProgram S access (q 2 2 1 1) = [] := by decide
+
+-- The full actual coordinate polynomial uses only the original two coefficient readers.
+example : SpaceFunction S.value := evaluator S access
+  (SpaceFunction.ofFP lowReader lowReader_FP) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+
+end IntegralPurePowerReductionRegression

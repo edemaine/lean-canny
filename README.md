@@ -1052,8 +1052,9 @@ The checked ingredients are:
   coordinate block exactly; the resulting annihilator has fixed specialized
   degree determined only by free spatial arity and original source degree.
   Every critical coordinate, including at singular points, extends the same
-  full history and is recovered by its canonical height. Native readers for
-  these relative polynomial coefficients still require construction.
+  full history and is recovered by its canonical height. Native original
+  source and retained-height readers still need to supply the cleared lower
+  coefficients of these relative polynomials.
   A block representation now expresses multiplication matrices of relative
   characteristic coefficients and matrix moments as integer power entries.
   The characteristic polynomial is taken over the original parameter algebra;
@@ -1076,6 +1077,13 @@ The checked ingredients are:
   supplies these actions; its normal mask and coordinate shift have derived
   FP programs over binary state ranks. The action and its characteristic
   coefficients require no additional matrix readers.
+  Original lower-polynomial and common integer-leading readers now construct
+  the actual relative coordinate annihilator's coefficient matrices. Native
+  reduction entries select or negate one lower coefficient, using additive
+  multiplication-matrix entry maps; no multiplicativity assumption is made.
+  The action, relative characteristic polynomial, and scalar rescaling are
+  computed internally, with both supplied reader costs charged. Negative
+  scalars, composite moduli, and zero-padding columns are retained.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
