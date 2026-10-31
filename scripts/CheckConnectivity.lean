@@ -12215,3 +12215,123 @@ example : {z : Fin 7 → ℂ | ∀ j, (sampler j).eval₂ (Int.castRingHom ℂ) 
     (by decide) (by decide) (by intro i; decide)
 
 end PhysicalBlockRegression
+
+
+namespace PoweredCanonicalRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open IntegralCoordinateCoefficientBits UniformIntegralPowerSchedule
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def P₁ : UniformIntegralPrefix.Prefix 4 4 1 :=
+  UniformIntegralPrefix.step (UniformIntegralPrefix.base 4 4) (by decide) (by decide) (Polynomial.X ^ 4) 4
+private noncomputable def P : UniformIntegralPrefix.Prefix 4 4 2 :=
+  UniformIntegralPrefix.step P₁ (by decide) (by decide) (Polynomial.X ^ 4) 4
+attribute [local irreducible] P P₁
+private def e : Fin 2 → Fin 4 := Fin.cons 1 (fun _ => 0)
+
+private noncomputable def F : Family where
+  arity _ := 2
+  width _ := 2
+  carrier _ := P.carrier
+  ring _ := inferInstance
+  basis _ := P.basis
+  element _ := P.basis.basis e
+
+private theorem poly (c : List Bool) : F.polynomial c = (X 0 : MvPolynomial (Fin 2) ℤ) := by
+  change P.basis.representative (P.basis.basis e) = X 0
+  rw [IntegralCoordinateBasis.representative_basis]
+  have HE : IntegralCoordinateBasis.exponent e = Finsupp.single 0 1 := by
+    ext i; fin_cases i <;> simp [IntegralCoordinateBasis.exponent, e]
+  rw [HE]
+  rfl
+
+example : Fits F (fun _ => 7) (fun _ => BinaryNatCode.encode 1) [] := by decide
+example : ¬Fits F (fun _ => 7) (fun _ => BinaryNatCode.encode 4) [] := by decide
+example : Fits F (fun _ => 0) (fun _ => List.replicate 200 true) [] := by decide
+
+-- The wider queried exponent is checked before narrowing to basis digits.
+example : (F.polynomial []).coeff (FixedWidthPolynomial.nativeExponent (Equiv.refl _) 7 4) = 0 := by
+  have H := wide_coefficient F (fun _ => 7) (fun _ => BinaryNatCode.encode 4) []
+  rw [ite_eq_right (by decide)] at H
+  simpa only [BinaryNatCode.encode, Nat.fromBitsLE_bits] using H
+
+private theorem powered (c : List Bool) : F.poweredPolynomial (fun _ => 4) c = (X 0 ^ 97 : MvPolynomial (Fin 2) ℤ) := by
+  rw [Family.poweredPolynomial, poly, CoordinatePowerSubstitution.substitute_X]
+  rfl
+
+-- The new coordinate's exponent is 97, though basis exponents stay below 4.
+private theorem poweredCoeff : (F.poweredPolynomial (fun _ => 4) []).coeff
+    (FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin 2)) 7 97) = 1 := by
+  have HE : FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin 2)) 7 97 = Finsupp.single 0 97 := by
+    ext i; fin_cases i <;> norm_num [FixedWidthPolynomial.nativeExponent, FixedWidthPolynomial.entry_eq_digit]
+  calc
+    _ = ((X 0 : MvPolynomial (Fin 2) ℤ) ^ 97).coeff
+        (FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin 2)) 7 97) :=
+      congrArg (fun p : MvPolynomial (Fin 2) ℤ => p.coeff
+        (FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin 2)) 7 97)) (powered [])
+    _ = 1 := by rw [HE, coeff_X_pow, ite_eq_left rfl]
+
+example : ¬FixedWidthCoordinatePowerBits.Divisible F.arity (fun _ => 7)
+    (power (fun _ => 4) (fun _ => 4) F.arity) (fun _ => BinaryNatCode.encode 98) [] := by decide
+
+example : FixedWidthCoordinatePowerBits.quotientTarget F.arity (fun _ => 7)
+    (power (fun _ => 4) (fun _ => 4) F.arity) (fun _ => BinaryNatCode.encode 97) [] =
+      FixedWidthQuery.repack (fun _ => 2) (fun _ => 7) (fun _ => 2) (fun _ => 7)
+        (fun _ => BinaryNatCode.encode 1) [] := by decide
+
+-- Modulus one and a composite modulus use the actual collected coefficient.
+example : FixedWidthRowBits.value F.arity (fun _ => 7) (F.poweredPolynomial (fun _ => 4))
+    (fun _ => BinaryNatCode.encode 97) (fun _ => []) [] = [] := by
+  change LeanCanny.Algebra.MatrixPower.residueBits
+    ((((F.poweredPolynomial (fun _ => 4) []).coeff
+      (FixedWidthPolynomial.nativeExponent (Equiv.refl _) 7 (Nat.fromBitsLE (BinaryNatCode.encode 97)))) : ℤ) : ZMod 1) = []
+  have HZ (a : ZMod 1) : LeanCanny.Algebra.MatrixPower.residueBits a = [] := by
+    rw [Subsingleton.elim a 0]
+    rfl
+  exact HZ _
+
+example : FixedWidthRowBits.value F.arity (fun _ => 7) (F.poweredPolynomial (fun _ => 4))
+    (fun _ => BinaryNatCode.encode 97) (fun _ => BinaryNatCode.encode 9) [] = BinaryNatCode.encode 1 := by
+  change LeanCanny.Algebra.MatrixPower.residueBits
+    ((((F.poweredPolynomial (fun _ => 4) []).coeff
+      (FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin 2)) 7 (Nat.fromBitsLE (BinaryNatCode.encode 97)))) : ℤ) :
+      ZMod (Nat.fromBitsLE (BinaryNatCode.encode 9) + 1)) = _
+  rw [show Nat.fromBitsLE (BinaryNatCode.encode 97) = 97 from Nat.fromBitsLE_bits _, poweredCoeff]
+  norm_num [LeanCanny.Algebra.MatrixPower.residueBits, BinaryNatCode.encode, Nat.fromBitsLE_bits, ZMod.val_ofNat]
+  rfl
+
+example (z : Fin 2 → ℝ) (hz : ∀ i, (P.rows i).eval₂ (Int.castRingHom ℝ) z = 0) :
+    ∃! φ : P.carrier →ₐ[ℤ] ℝ, ∀ i, φ (P.basis.generator i) = z i ^ weights 4 4 2 i :=
+  UniformIntegralPrefix.interpret_unique P z hz
+
+end PoweredCanonicalRegression
+
+namespace ParentHeightRecoveryRegression
+open LeanCanny LeanCanny.Algebra MvPolynomial UniformIntegralPowerSchedule
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def P : UniformIntegralPrefix.Prefix 4 4 0 := UniformIntegralPrefix.base 4 4
+private noncomputable def p : Polynomial P.carrier := Polynomial.C 2 * Polynomial.X - Polynomial.C 1
+private noncomputable def φ : P.carrier →ₐ[ℤ] ℝ := Algebra.ofId ℤ ℝ
+private theorem φ_two : φ (2 : P.carrier) = (2 : ℝ) := by
+  change ((2 : ℤ) : ℝ) = 2
+  norm_num
+
+example : ∃ y : Fin 1 → ℝ,
+    (∀ j, ((UniformIntegralPrefix.step P (by decide) (by decide) p 1).rows j).eval₂ (Int.castRingHom ℝ) y = 0) ∧
+    (∀ i : Fin 0, y i.succ = (Fin.elim0 i : ℝ)) ∧
+    ∀ ψ : (UniformIntegralPrefix.step P (by decide) (by decide) p 1).carrier →ₐ[ℤ] ℝ,
+      (∀ i, ψ ((UniformIntegralPrefix.step P (by decide) (by decide) p 1).basis.generator i) = y i ^ weights 4 4 1 i) →
+      ψ (PaddedIntegralParameterExtension.numerator P.basis p 1) /
+        ((PaddedIntegralParameterExtension.denominator P.basis p 1 : ℤ) : ℝ) = 1 / 2 := by
+  apply UniformIntegralPrefix.real_extend_recover P (by decide) (by decide) p 1 (by decide) Fin.elim0
+    (fun i => Fin.elim0 i) φ (fun i => Fin.elim0 i) (1 / 2)
+  · have HM : p.map φ.toRingHom = (Polynomial.C 2 * Polynomial.X - Polynomial.C 1 : Polynomial ℝ) := by simp [p, φ_two]
+    rw [HM]
+    compute_degree!
+  · decide
+  · norm_num [p, Polynomial.eval₂_sub, Polynomial.eval₂_mul, Polynomial.eval₂_C, Polynomial.eval₂_X, φ_two]
+
+end ParentHeightRecoveryRegression

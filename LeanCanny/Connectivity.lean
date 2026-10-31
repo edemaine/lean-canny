@@ -102,6 +102,8 @@ import LeanCanny.Algebra.IntegralCoordinateCoefficientSpace
 import LeanCanny.Algebra.PaddedIntegralRootLift
 import LeanCanny.Algebra.CanonicalIntegralPhysicalSampler
 import LeanCanny.Algebra.PhysicalPowerCriticalAppend
+import LeanCanny.Algebra.IntegralCoordinatePoweredSpace
+import LeanCanny.Algebra.UniformIntegralHeightRecovery
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

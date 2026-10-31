@@ -992,6 +992,14 @@ The checked ingredients are:
   positive row degrees, and nonzero integer coordinate annihilators. Joining
   a prefix to its actual canonical-height critical block in a finite layout
   gives a finite root set, with no regularity hypothesis on those roots.
+  Prefix coordinates determine a unique algebra evaluation. Undoing the
+  physical powers gives the original critical equations at the actual
+  retained heights. Every selected real scalar root extends the same
+  parent coordinates, and its canonical numerator and integer denominator
+  recover the exact height at every interpreting evaluation. Native
+  canonical coefficient readers now accept independent exponent widths,
+  reject exponents outside the basis box before narrowing, and undo the
+  fixed coordinate powers while charging the original matrix reader.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
