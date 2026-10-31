@@ -13010,3 +13010,103 @@ example : dimension (2 ^ 20) (2 ^ 10) = ((2 ^ 20 + 1) * (2 ^ 20 + 1)) * 2 ^ 10 :
 example : (dimension (2 ^ 20) (2 ^ 10)).size < 64 := by decide
 
 end IntegralCoefficientBlocksRegression
+
+
+namespace IntegralBlockMomentRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding MatrixPower
+open IntegralBlockMomentBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def b : Module.Basis (Fin 2) ℤ (ℤ × ℤ) := Module.Basis.finTwoProd ℤ
+private theorem diagonal (v : ℤ × ℤ) (r t : Fin 2) :
+    Algebra.leftMulMatrix b v r t = if r = t then (if r = 0 then v.1 else v.2) else 0 := by
+  fin_cases r <;> fin_cases t <;>
+    simp [Algebra.leftMulMatrix_eq_repr_mul, b, Module.Basis.coe_finTwoProd_repr]
+
+private noncomputable def F : Family where
+  dimension _ := 1
+  rank _ := 2
+  carrier _ := ℤ × ℤ
+  ring _ := inferInstance
+  basis _ := b
+  row _ _ := (2, 3)
+  column _ _ := (5, 7)
+  matrix _ _ _ := (11, 13)
+  modulus _ := 10
+  modulus_ne_zero _ := by decide
+  exponent _ := 2
+  basisRow _ := 0
+  basisCol _ := 0
+
+private def rowCode (q : List Bool) := pairFst (pairSnd (pairFst q))
+private def colCode (q : List Bool) := pairSnd (pairSnd (pairFst q))
+private theorem rowCode_FP : rowCode ∈ FP :=
+  mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairFst_mem_FP
+private theorem colCode_FP : colCode ∈ FP :=
+  mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairSnd_mem_FP
+private def reader (a b : ℕ) (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (rowCode q) = Nat.fromBitsLE (colCode q) then
+    if Nat.fromBitsLE (rowCode q) = 0 then BinaryNatCode.encode a else BinaryNatCode.encode b else []
+private theorem reader_FP (a b : ℕ) : reader a b ∈ FP :=
+  ((BinaryFn.fromBits rowCode_FP).eq (BinaryFn.fromBits colCode_FP)).ite_mem_FP
+    (((BinaryFn.fromBits rowCode_FP).eq (BinaryFn.const 0)).ite_mem_FP
+      (constFn_mem_FP (BinaryNatCode.encode a)) (constFn_mem_FP (BinaryNatCode.encode b))) (constFn_mem_FP [])
+
+private noncomputable def access : Access F where
+  dimension := BinaryFn.const 1
+  rank := BinaryFn.const 2
+  modulus := BinaryFn.const 10
+  exponent := BinaryFn.const 2
+  basisRow := BinaryFn.const 0
+  basisCol := BinaryFn.const 0
+  row := reader 2 3
+  column := reader 5 7
+  entry := reader 1 3
+  row_eq c i r t := by
+    change reader 2 3 _ = residueBits ((Algebra.leftMulMatrix b (2, 3) r t : ℤ) : ZMod 10)
+    rw [diagonal]
+    simp only [reader, rowCode, colCode, context, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, Fin.ext_iff, Fin.val_zero]
+    fin_cases r <;> fin_cases t <;> norm_num <;> decide
+  column_eq c i r t := by
+    change reader 5 7 _ = residueBits ((Algebra.leftMulMatrix b (5, 7) r t : ℤ) : ZMod 10)
+    rw [diagonal]
+    simp only [reader, rowCode, colCode, context, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, Fin.ext_iff, Fin.val_zero]
+    fin_cases r <;> fin_cases t <;> norm_num <;> decide
+  entry_eq c i j r t := by
+    change reader 1 3 _ = residueBits ((Algebra.leftMulMatrix b (11, 13) r t : ℤ) : ZMod 10)
+    rw [diagonal]
+    simp only [reader, rowCode, colCode, context, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, Fin.ext_iff, Fin.val_zero]
+    fin_cases r <;> fin_cases t <;> norm_num <;> decide
+
+private def q (i j : ℕ) : List Bool := pair [true, false, true] (pair (BinaryNatCode.encode i) (BinaryNatCode.encode j))
+
+-- Six integer vertices consist of three outer vertices, each carrying two old basis ranks.
+example : outerPacket F (q 1 3) = pair (context [true, false, true] 1 1) (pair [] (BinaryNatCode.encode 1)) := by decide
+example : entryProgram F access (q 0 2) = BinaryNatCode.encode 2 := by decide
+example : entryProgram F access (q 1 3) = BinaryNatCode.encode 3 := by decide
+example : entryProgram F access (q 2 4) = BinaryNatCode.encode 5 := by decide
+example : entryProgram F access (q 3 5) = BinaryNatCode.encode 7 := by decide
+example : entryProgram F access (q 2 2) = BinaryNatCode.encode 1 := by decide
+example : entryProgram F access (q 3 3) = BinaryNatCode.encode 3 := by decide
+example : entryProgram F access (q 0 3) = [] := by decide
+example : entryProgram F access (q 4 2) = [] := by decide
+
+-- The complete native moment program charges only the original three readers.
+example : SpaceFunction F.value := evaluator F access
+  (SpaceFunction.ofFP _ (reader_FP 2 3)) (SpaceFunction.ofFP _ (reader_FP 5 7)) (SpaceFunction.ofFP _ (reader_FP 1 3))
+
+example : F.value [] = [] := by
+  change residueBits ((Algebra.leftMulMatrix b (borderMoment (fun _ : Fin 1 => (2, 3))
+    (fun _ => (5, 7)) (fun _ _ => (11, 13)) 2) (0 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 10) = []
+  rw [diagonal]
+  norm_num [borderMoment, dotProduct, Matrix.mulVec, Matrix.mul_apply, pow_two, Fin.sum_univ_succ]; decide
+
+private noncomputable def G : Family := { F with basisRow := fun _ => (1 : Fin 2), basisCol := fun _ => (1 : Fin 2) }
+example : G.value [] = BinaryNatCode.encode 9 := by
+  change residueBits ((Algebra.leftMulMatrix b (borderMoment (fun _ : Fin 1 => (2, 3))
+    (fun _ => (5, 7)) (fun _ _ => (11, 13)) 2) (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = BinaryNatCode.encode 9
+  rw [diagonal]
+  norm_num [borderMoment, dotProduct, Matrix.mulVec, Matrix.mul_apply, pow_two, Fin.sum_univ_succ]; decide
+
+end IntegralBlockMomentRegression

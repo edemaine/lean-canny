@@ -1059,6 +1059,10 @@ The checked ingredients are:
   The characteristic polynomial is taken over the original parameter algebra;
   its degree stays independent of the old algebra rank. Binary block sizes
   account for that rank in the integer computation.
+  Native algebra-valued moment readers now construct the augmented integer
+  blocks and power them from the original row, column, and matrix coefficient
+  readers. Quotient ranks select outer vertices, remainder ranks select old
+  basis coordinates, and all three reader costs are charged.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
