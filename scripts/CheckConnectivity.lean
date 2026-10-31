@@ -12848,3 +12848,61 @@ example : Fintype.card ((Fin 7 ⊕ FlatAffineCriticalStage.Variables 4) ⊕ Unit
   criticalScalarStep_card (ι := Fin 7) (n := 3)
 
 end HistorySamplerRegression
+
+
+namespace CanonicalHeightBoundsRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open PaddedIntegralGeneratorSource
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private def A : Matrix (Fin 2) (Fin 2) ℤ := !![0, 0; 0, 2]
+private theorem A_bound : ∀ i j, (A i j).natAbs ≤ 2 ^ 2 := by decide
+
+-- A singular matrix is covered by the constructed inverse-polynomial budget.
+example (i j : Fin 2) :
+    (Polynomial.aeval A (IntegralParameterInverse.inverse A.charpoly) i j).natAbs ≤
+      2 ^ IntegralInverseMatrixBounds.height 2 2 :=
+  IntegralInverseMatrixBounds.inverse_height A 2 A_bound i j
+example : (IntegralParameterInverse.denominator A.charpoly).natAbs ≤ 2 ^ CharacteristicIntegerBounds.budget 2 2 :=
+  IntegralInverseMatrixBounds.denominator_height A 2 A_bound
+example : IntegralInverseMatrixBounds.height 2 2 = 21 := by decide
+example : PaddedIntegralParameterExtension.numeratorHeight 1 4 0 = 13 := by decide
+example : PaddedIntegralParameterExtension.numeratorHeight 1 1 0 = 8 := by decide
+
+-- Large ranks and output-height exponents remain binary metadata.
+example : (PaddedIntegralParameterExtension.numeratorHeight (2 ^ 20) (2 ^ 10) (2 ^ 30)).size < 64 := by decide
+
+private noncomputable def S : Source where
+  arity _ := 0
+  width _ := 2
+  carrier _ := ℤ
+  ring _ := inferInstance
+  nontrivial _ := inferInstance
+  basis _ := IntegralCoordinateBasis.base 4
+  polynomial _ := 0
+  degree _ := 9
+
+private noncomputable def B : PaddedIntegralHeightSourceBounds.Bounds S where
+  height _ := 0
+  coefficient c k i j := by
+    change (Algebra.leftMulMatrix (IntegralCoordinateBasis.base 4).finBasis
+      ((0 : Polynomial ℤ).coeff k) i j).natAbs ≤ 2 ^ 0
+    rw [Polynomial.coeff_zero, map_zero]
+    exact Nat.zero_le _
+
+-- Even invalid degree records and identically zero selected coefficients have derived bounds.
+example (c : List Bool) (r : Fin 4) :
+    (((PaddedIntegralHeightCoefficientBits.family S).polynomial c).coeff (FixedWidthPolynomial.vector 1 2 r)).natAbs ≤
+      2 ^ PaddedIntegralHeightSourceBounds.numeratorBudget S B c :=
+  PaddedIntegralHeightSourceBounds.coefficient_height S B c r
+example (c : List Bool) : (PaddedIntegralHeightSourceMatrix.denominator S c).natAbs ≤
+    2 ^ PaddedIntegralHeightSourceBounds.denominatorBudget S B c :=
+  PaddedIntegralHeightSourceBounds.denominator_height S B c
+example (c : List Bool) : PaddedIntegralHeightSourceMatrix.denominator S c ≠ 0 :=
+  PaddedIntegralHeightSourceMatrix.denominator_ne_zero S c
+example (c : List Bool) : PaddedIntegralHeightSourceBounds.numeratorBudget S B c = 13 := by
+  change PaddedIntegralParameterExtension.numeratorHeight 1 4 0 = 13
+  decide
+
+end CanonicalHeightBoundsRegression

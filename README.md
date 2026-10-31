@@ -1041,6 +1041,12 @@ The checked ingredients are:
   selected real scalar root extends the same full parent, and every child
   interpretation recovers its exact height, including nonunit leading
   coefficients. Uniform native history queries still need construction.
+  Original coefficient-matrix heights now derive budgets for the constructed
+  generator, singular inverse, canonical numerator, and integer denominator.
+  The native coefficient reader uses these same source bounds. All budgets
+  have binary computations; one extension's numerator-height budget grows
+  at most linearly in the original height, with an explicit polynomial factor
+  in the old rank and scalar degree.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
