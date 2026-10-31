@@ -1088,7 +1088,7 @@ The checked ingredients are:
   spatial exponent grid. A native FP mask selects the matching free exponent;
   it never enumerates old parameter monomials. Native products of algebra
   powers now compute the required old basis entries from original factor
-  matrix entries, with binary powers, product lengths, and old ranks. The
+  matrix entries, with binary powers, product lengths, and old ranks.
   A cleared monomial term now constructs every factor program from original
   coefficient, common-denominator, and retained-height readers. The spatial
   exponent sum determines its padding power; free coordinates select the
@@ -1105,6 +1105,13 @@ The checked ingredients are:
   frozen-substitution reader also computes these cleared derivatives while
   retaining the original clearing allowance and all three original reader
   costs.
+  The frozen Fermat constant now has a native reader from the original
+  retained-height matrices and integer leading coefficient. Full matrix
+  powers are summed outside the free block; a fixed-width guard selects
+  the constant spatial coefficient. Adding this constant computes the actual
+  cleared lower polynomial from the same original readers, including signed
+  heights and denominators over composite moduli. Euler critical rows still
+  need construction.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
