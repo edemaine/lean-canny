@@ -154,6 +154,7 @@ import LeanCanny.Algebra.IntegralBerkowitzRecursiveStage
 import LeanCanny.Algebra.IntegralBlockMomentRecursiveStage
 import LeanCanny.Algebra.IntegralReductionActionController
 import LeanCanny.Algebra.IntegralScaledCharacteristicController
+import LeanCanny.Algebra.IntegralPurePowerReductionController
 import LeanCanny.Algebra.IntegralScalarGeneratorSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels

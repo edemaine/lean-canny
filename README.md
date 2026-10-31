@@ -1201,6 +1201,11 @@ The checked ingredients are:
   normal entry requests the constructed algebra-valued reduction power;
   rescaling requests one characteristic coefficient and finishes with FP
   scalar powering, including negative nonunits modulo composite moduli.
+  Pure-power reduction entries also have native resumable controls. The
+  actual parameter-algebra adapter retains both old basis ranks and the
+  required spatial-index transpose. Normal diagonal entries read the local
+  integer leading residue; each admissible nonnormal entry requests one
+  lower coefficient, and invalid entries request nothing.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

@@ -16014,3 +16014,61 @@ example (c : List Bool) : (IntegralScaledCharacteristicBits.program (S 1 1 0 0) 
   exact J
 
 end IntegralBerkowitzBlockRegression
+
+
+namespace IntegralPurePowerReductionRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralPurePowerReductionBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+example : (program S access id).Controls := program_controls S access (constFn_mem_FP _) id id_mem_FP
+private theorem controllerValue (p : List Bool) : (program S access id).value lowReader p = entryProgram S access p :=
+  program_value S access id lowReader (fun _ => rfl) p
+-- Actual source columns are transposed before the native reduction protocol.
+example : (program S access id).value lowReader (q 0 2 0 0) = BinaryNatCode.encode 8 := by
+  rw [controllerValue]
+  decide
+example : (program S access id).value lowReader (q 0 2 1 1) = BinaryNatCode.encode 7 := by
+  rw [controllerValue]
+  decide
+example : (program S access id).value lowReader (q 1 3 1 1) = BinaryNatCode.encode 7 := by
+  rw [controllerValue]
+  decide
+example : (program S access id).value lowReader (q 0 2 0 1) = [] := by
+  rw [controllerValue]
+  decide
+-- This nonnormal source column is admissible and asks for exactly one shifted coefficient.
+example : (program S access id).controller.Requests lowReader (fun _ => 1) (q 0 2 1 1)
+    (lowQuery (PurePowerReductionBits.sourceQuery (layout S) (writer S (q 0 2 1 1)))) := by
+  rw [program_requests_iff]
+  constructor
+  · unfold PurePowerReductionBits.request
+    decide
+  · rfl
+attribute [local irreducible] PurePowerReductionBits.negate PurePowerReductionBits.sourceQuery
+-- Normal diagonal entries ignore the answer routine and return the integer leading value.
+example (answer : List Bool → List Bool) : (program S access id).value answer (q 1 1 1 1) = BinaryNatCode.encode 7 := by
+  have H : ¬ PurePowerReductionBits.request (layout S) (fun z => S.layout.bound (pairFst z)) (writer S (q 1 1 1 1)) := by
+    unfold PurePowerReductionBits.request
+    decide
+  simp only [SingleCall.Program.value, program, PurePowerReductionBits.program,
+    show decide (PurePowerReductionBits.request (layout S) (fun z => S.layout.bound (pairFst z))
+      (writer S (q 1 1 1 1))) = false from decide_eq_false H, Bool.false_eq_true, ite_false]
+  have J : PurePowerReductionBits.immediate (layout S) (constant access) (writer S (q 1 1 1 1)) = BinaryNatCode.encode 7 := by
+    unfold PurePowerReductionBits.immediate
+    decide
+  exact J
+-- Below the shifted remainder, no child request can occur.
+example (answer : List Bool → List Bool) (child : List Bool) :
+    ¬(program S access id).controller.Requests answer (fun _ => 1) (q 0 3 1 1) child := by
+  rw [program_requests_iff]
+  have H : ¬ PurePowerReductionBits.request (layout S) (fun z => S.layout.bound (pairFst z)) (writer S (q 0 3 1 1)) := by
+    unfold PurePowerReductionBits.request
+    decide
+  exact fun h => H h.1
+example (c : List Bool) (i j : Fin ((IntegralPurePowerActionBits.reductionSource S).dimension c))
+    (r t : Fin (S.rank c)) :
+    (program S access id).value lowReader (IntegralReductionActionBits.packet c i.val j.val r.val t.val) =
+      residueBits ((((IntegralPurePowerActionBits.reductionSource S).toSource.entryMatrix c i j r t) : ℤ) : ZMod (S.modulus c)) :=
+  program_packet S access id lowReader (fun _ => rfl) c i j r t
+end IntegralPurePowerReductionRegression
