@@ -54,6 +54,8 @@ import LeanCanny.Encoding.CoordinateDoubleAffineMidpointPairRoots
 import LeanCanny.Encoding.CoordinateDoubleAffineMidpointWordGeometry
 import LeanCanny.Encoding.CoordinateDoubleAffineTraceBounds
 import LeanCanny.Encoding.CoordinateDoubleAffineTraceFactories
+import LeanCanny.Connectivity.CoordinateDoubleAffineTraceChildConnectivity
+import LeanCanny.Connectivity.CoordinateDoubleAffineTraceTerminal
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -1083,6 +1085,16 @@ example : SpaceFunction
     (CoordinateDoubleAffineTrace.midpointFrameWord F.source F.depth (fun _ => 0) (fun _ => [])) :=
   CoordinateDoubleAffineTrace.midpointFrameWord_evaluator access.source access.depth (UnaryFn.const 0)
     (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : LeanCanny.Connectivity.CoordinateDoubleAffineTraceTerminal.connectedLanguage
+    F.source F.depth (fun _ => 0) (fun _ => []) ∈ PSPACE :=
+  LeanCanny.Connectivity.CoordinateDoubleAffineTraceTerminal.connected_mem_PSPACE
+    access.source access.depth (UnaryFn.const 0) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : LeanCanny.Connectivity.CoordinateDoubleAffineTraceTerminal.reachableLanguage
+    F.source F.depth (fun _ => 0) (fun _ => []) ∈ PSPACE :=
+  LeanCanny.Connectivity.CoordinateDoubleAffineTraceTerminal.reachable_mem_PSPACE
+    access.source access.depth (UnaryFn.const 0) (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
 
 -- A depth-one native shared-parent packet constructs the actual child root;
 -- no separately supplied equation, regularity, or ancestry promise is used.

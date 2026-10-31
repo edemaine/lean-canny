@@ -910,7 +910,10 @@ The checked ingredients are:
   stage. Frames and complete vertex words have one polynomial bound in the
   original source length across all valid histories. Native context search
   returns fixed-height and midpoint child labels to that same family,
-  preserving every powered coordinate.
+  preserving every powered coordinate and the decoded original root.
+  Exact slice membership, whole-slice connectivity, and paths between points
+  are preserved under the coordinate casts. Uniform terminal algorithms
+  decide both connectivity tests, with their stopping flag exactly rank zero.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
