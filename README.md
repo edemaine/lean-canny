@@ -1000,6 +1000,12 @@ The checked ingredients are:
   canonical coefficient readers now accept independent exponent widths,
   reject exponents outside the basis box before narrowing, and undo the
   fixed coordinate powers while charging the original matrix reader.
+  Padded scalar-generator matrices now have native entry readers built
+  from the original coefficient matrices. Binary identity tests handle
+  shift columns; padding and invalid degrees give zero blocks. The
+  canonical new-head basis puts its new digit in the least significant
+  position, so binary division supplies the old rank and new digit without
+  a permutation table. Lifted old elements have diagonal scalar blocks.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

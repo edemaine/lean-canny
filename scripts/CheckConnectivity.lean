@@ -12335,3 +12335,85 @@ example : ∃ y : Fin 1 → ℝ,
   · norm_num [p, Polynomial.eval₂_sub, Polynomial.eval₂_mul, Polynomial.eval₂_C, Polynomial.eval₂_X, φ_two]
 
 end ParentHeightRecoveryRegression
+
+
+namespace PaddedGeneratorRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open IntegralCoordinateBasis FixedWidthPolynomial MatrixPower
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+-- The first scalar digit is the low digit, independently of old rank.
+example : (pairIndex 1 2 (⟨2, by decide⟩, 3)).val = 11 := by decide
+example : ((pairIndex 1 2).symm ⟨11, by decide⟩).1.val = 2 := by decide
+example : ((pairIndex 1 2).symm ⟨11, by decide⟩).2.val = 3 := by decide
+example (e : Fin 2 → Fin 1) : boxEquiv 3 0 (Fin.cons 0 e) = pairIndex 2 0 (boxEquiv 2 0 e, 0) := box_head 2 0 e 0
+
+private def coefficient (k : ℕ) : ZMod 10 := if k = 0 then 5 else if k = 1 then 3 else if k = 2 then 2 else 0
+private def mcoeff (k : ℕ) : Matrix (Fin 1) (Fin 1) (ZMod 10) := Matrix.of (fun _ _ => coefficient k)
+
+private noncomputable def raw (d : ℕ) (i j : Fin 4) : PaddedIntegralGeneratorBits.Family where
+  width _ := 1
+  scalarDegree _ := 4
+  selectedDegree _ := d
+  modulus _ := 10
+  oldRow _ := 0
+  oldCol _ := 0
+  row _ := i
+  col _ := j
+  coefficient _ k := mcoeff k
+  modulus_ne_zero _ := by decide
+
+-- Padding X²*(X²+3X+10): its normalization column has -10 and -3.
+example : (raw 2 2 3).value [] = [] := by decide
+
+example : (raw 2 3 3).value [] = BinaryNatCode.encode 7 := by decide
+
+example : (raw 2 0 3).value [] = [] := by
+  change residueBits (0 : ZMod 10) = []
+  rfl
+
+-- Invalid degrees still have the pure-power companion shifts.
+example : (raw 9 1 0).value [] = BinaryNatCode.encode 1 := by
+  change residueBits (1 : ZMod 10) = BinaryNatCode.encode 1
+  rfl
+
+example : (raw 9 0 3).value [] = [] := by
+  change residueBits (0 : ZMod 10) = []
+  rfl
+
+private noncomputable def p : Polynomial ℤ :=
+  Polynomial.C 2 * Polynomial.X ^ 2 + Polynomial.C 3 * Polynomial.X + Polynomial.C 5
+
+private noncomputable def actual (d : ℕ) (i j : Fin 4) : PaddedIntegralGeneratorFinBits.Family where
+  arity _ := 0
+  width _ := 2
+  carrier _ := ℤ
+  ring _ := inferInstance
+  nontrivial _ := inferInstance
+  basis _ := IntegralCoordinateBasis.base 4
+  polynomial _ := p
+  degree _ := d
+  modulus _ := 10
+  modulus_ne_zero _ := by decide
+  row _ := ⟨i.val, i.isLt⟩
+  col _ := ⟨j.val, j.isLt⟩
+
+-- Canonical queries split into the same old rank and new digit.
+example : ((PaddedIntegralGeneratorFinBits.rawFamily (actual 2 2 3)).oldRow []).val = 0 := by decide
+example : ((PaddedIntegralGeneratorFinBits.rawFamily (actual 2 2 3)).row []).val = 2 := by decide
+example : ((PaddedIntegralGeneratorFinBits.rawFamily (actual 2 2 3)).col []).val = 3 := by decide
+
+example (d : ℕ) (i j : Fin 4) :
+    (PaddedIntegralGeneratorFinBits.rawFamily (actual d i j)).value [] = (actual d i j).value [] :=
+  congrFun (PaddedIntegralGeneratorFinBits.value_eq (actual d i j)) []
+
+-- Lifting an old element uses diagonal scalar blocks in the actual basis.
+example {A : Type*} [CommRing A] [Nontrivial A] {m B : ℕ}
+    (b : IntegralCoordinateBasis A m (2 ^ B)) (p : Polynomial A) (hp : p.Monic) (hd : p.natDegree = 2 ^ B)
+    (x : A) (r t : Fin (count m B)) (i j : Fin (2 ^ B)) (h : i ≠ j) :
+    Algebra.leftMulMatrix (b.step p hp hd).finBasis (AdjoinRoot.of p x)
+      (pairIndex m B (r, i)) (pairIndex m B (t, j)) = 0 := by
+  rw [finBasis_of_matrix, ite_eq_right h]
+
+end PaddedGeneratorRegression
