@@ -14669,3 +14669,79 @@ example (c : List Bool) : ((candidateSource.annihilator c).map firstRational).na
   exact H
 
 end IntegralFrozenPowerRegression
+
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+-- This retains a genuinely non-scalar frozen height in the old dense basis.
+private noncomputable def heightEuler : IntegralEulerBits.Source := { eulerSource with targetWidth := fun _ => 3 }
+private noncomputable def heightEulerAccess : IntegralEulerBits.Access heightEuler :=
+  { eulerAccess with targetWidth := UnaryFn.const 3 }
+private noncomputable def heightSource : IntegralClearedCriticalBits.Source where
+  toEuler := heightEuler
+  bound _ := 4
+  grid_le c := by
+    change PurePowerReductionMatrix.gridBound (fun i : Fin 1 => if i.val = 0 then 4 else 3) + 1 ≤ 4
+    norm_num [PurePowerReductionMatrix.gridBound, Fin.sum_univ_succ]
+  bound_lt c := by change 4 < 2 ^ 3; decide
+  coordinate _ := (0 : Fin 1)
+  coefficientIndex _ := 0
+private noncomputable def heightAccess : IntegralClearedCriticalBits.Access heightSource where
+  toEuler := heightEulerAccess
+  bound := BinaryFn.const 4
+  coordinate := BinaryFn.const 0
+  coefficientIndex := BinaryFn.const 0
+
+private theorem height_lower (c : List Bool) : heightSource.toEuler.lowerPolynomial c (0 : Fin 1) =
+    MvPolynomial.monomial (Finsupp.single (0 : Fin 1) 1) (320, 720) + MvPolynomial.C (128, 648) := by
+  let low : MvPolynomial (Fin 1) (ℤ × ℤ) := S.lowerPolynomial c
+  let other : MvPolynomial (Fin 1) (ℤ × ℤ) := eulerSource.sumPolynomial c
+  have HL : low = MvPolynomial.monomial (Finsupp.single (0 : Fin 1) 1) (80, 180) + MvPolynomial.C (32, 162) := lower_polynomial c
+  have HO : other = 0 := one_free_sum c
+  have H : MvPolynomial.C (4 : ℤ × ℤ) * low - other =
+      MvPolynomial.monomial (Finsupp.single (0 : Fin 1) 1) (320, 720) + MvPolynomial.C (128, 648) := by
+    rw [HO, sub_zero, HL, mul_add, MvPolynomial.C_mul_monomial, ← MvPolynomial.C_mul]
+    rfl
+  exact H
+
+private theorem concrete_lower_height (e : Fin 1 →₀ ℕ) (r t : Fin 2) :
+    (Algebra.leftMulMatrix b
+      (((MvPolynomial.monomial (Finsupp.single (0 : Fin 1) 1) (320, 720) + MvPolynomial.C (128, 648)) :
+        MvPolynomial (Fin 1) (ℤ × ℤ)).coeff e) r t).natAbs ≤ 2 ^ 13 := by
+  rw [AddMonoidAlgebra.coeff_add, Finsupp.add_apply, MvPolynomial.coeff_monomial, MvPolynomial.coeff_C]
+  by_cases h1 : Finsupp.single (0 : Fin 1) 1 = e <;> by_cases h0 : (0 : Fin 1 →₀ ℕ) = e <;>
+    simp only [h1, h0, ite_true, ite_false] <;> rw [matrix_entry] <;>
+    fin_cases r <;> fin_cases t <;> norm_num
+
+private noncomputable def heightBounds : IntegralClearedCriticalBounds.Bounds heightSource where
+  lowerHeight _ := 13
+  leadingHeight _ := 7
+  lower c i e r t := by
+    let := heightSource.ring c
+    have HI : i = (0 : Fin 1) := Subsingleton.elim (α := Fin 1) _ _
+    subst i
+    have HE := congrArg (fun p : MvPolynomial (Fin 1) (ℤ × ℤ) =>
+      (Algebra.leftMulMatrix b (p.coeff e) r t).natAbs) (height_lower c)
+    exact HE.trans_le (concrete_lower_height e r t)
+  leading c := by
+    norm_num [IntegralClearedCriticalBounds.commonLeading, heightSource, heightEuler, eulerSource, criticalSource, S, P]
+
+-- The budget is derived from the same actual dense lower-coefficient matrices.
+example : BinaryFn (IntegralClearedCriticalBounds.budget heightSource heightBounds) :=
+  IntegralClearedCriticalBounds.budget_binary heightSource heightBounds heightAccess (BinaryFn.const 13) (BinaryFn.const 7)
+
+private theorem height_budget (c : List Bool) : IntegralClearedCriticalBounds.budget heightSource heightBounds c = 1336 := by
+  change IntegralActionHeightBounds.criticalHeight 8 2 4 (13 + 7) 7 = 1336
+  decide
+
+attribute [local irreducible] IntegralClearedCriticalBits.Source.annihilator
+example (c : List Bool) (k : ℕ) (r t : Fin 2) :
+    (Algebra.leftMulMatrix b ((show Polynomial (ℤ × ℤ) from heightSource.annihilator c).coeff k) r t).natAbs ≤ 2 ^ 1336 := by
+  have H := IntegralClearedCriticalBounds.coefficient_height heightSource heightBounds c k r t
+  rw [height_budget] at H
+  exact H
+
+end IntegralFrozenPowerRegression

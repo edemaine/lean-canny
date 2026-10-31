@@ -1129,6 +1129,12 @@ The checked ingredients are:
   original readers; its specialized degree is the spatial grid size,
   independent of the old rank. The unused fallback coordinate is proved
   irrelevant to the reduction matrix and relative polynomial.
+  Bounds on the actual lower rows and common integer leading coefficient now
+  give binary budgets for every coefficient matrix of this constructed
+  annihilator. These budgets are linear in the two input heights, with a
+  factor depending on the spatial grid, reduction bound, and binary size of
+  the old rank. Uniform bounds from the original four inputs still require
+  construction.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
