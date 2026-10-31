@@ -1,4 +1,5 @@
 import LeanCanny.Connectivity
+import Mathlib.LinearAlgebra.Basis.Fin
 import LeanCanny.Geometry.SingularParameterBounds
 import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Topology.Connected.TotallyDisconnected
@@ -12970,3 +12971,42 @@ example : ∃ y : (Fin 0 ⊕ Unit) → ℝ,
   exact ⟨y, hy⟩
 
 end RelativeCriticalHistoryRegression
+
+
+namespace IntegralCoefficientBlocksRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open IntegralCoefficientBlocks
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def b : Module.Basis (Fin 2) ℤ (ℤ × ℤ) := Module.Basis.finTwoProd ℤ
+private def T : Matrix (Fin 1) (Fin 1) (ℤ × ℤ) := 1
+private theorem constant : T.charpoly.coeff 0 = -(1 : ℤ × ℤ) := by
+  simp [T, Matrix.charpoly_one]
+
+-- Taking the characteristic polynomial after integer flattening would double the degree.
+example : T.charpoly.natDegree = 1 := by simp [Matrix.charpoly_natDegree_eq_dim]
+example : (blockHom b 1 T).charpoly.natDegree = 2 := by simp [Matrix.charpoly_natDegree_eq_dim]
+
+-- Mapping the relative coefficient instead retains the correct degree and both basis entries.
+example (r t : Fin 2) :
+    (blockHom b 4 (Berkowitz.powerMatrix T) ^ 1)
+      (finProdFinEquiv ((Berkowitz.powerQuery 1 (0 : Fin 2)).row, r))
+      (finProdFinEquiv ((Berkowitz.powerQuery 1 (0 : Fin 2)).col, t)) =
+      if r = t then -1 else 0 := by
+  calc
+    _ = Algebra.leftMulMatrix b (T.charpoly.coeff 0) r t := characteristic_coefficient b T (0 : Fin 2) r t
+    _ = _ := by
+      rw [constant, map_neg, map_one, Matrix.neg_apply, Matrix.one_apply]
+      split_ifs <;> norm_num
+
+example (r t : Fin 2) :
+    (blockHom b 3 (MatrixMoment.matrixFin (fun _ : Fin 1 => (1 : ℤ × ℤ)) (fun _ => 1) T) ^ 5)
+      (finProdFinEquiv ((0 : Fin 3), r)) (finProdFinEquiv ((Fin.last 2), t)) =
+      Algebra.leftMulMatrix b (borderMoment (fun _ : Fin 1 => 1) (fun _ => 1) T 3) r t :=
+  moment_coefficient b T (fun _ => 1) (fun _ => 1) 3 r t
+
+example : dimension (2 ^ 20) (2 ^ 10) = ((2 ^ 20 + 1) * (2 ^ 20 + 1)) * 2 ^ 10 := rfl
+example : (dimension (2 ^ 20) (2 ^ 10)).size < 64 := by decide
+
+end IntegralCoefficientBlocksRegression

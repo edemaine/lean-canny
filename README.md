@@ -1054,6 +1054,11 @@ The checked ingredients are:
   Every critical coordinate, including at singular points, extends the same
   full history and is recovered by its canonical height. Native readers for
   these relative polynomial coefficients still require construction.
+  A block representation now expresses multiplication matrices of relative
+  characteristic coefficients and matrix moments as integer power entries.
+  The characteristic polynomial is taken over the original parameter algebra;
+  its degree stays independent of the old algebra rank. Binary block sizes
+  account for that rank in the integer computation.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
