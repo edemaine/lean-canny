@@ -11888,3 +11888,62 @@ example (x : Fin 2 → ℝ) (hp : (FermatCriticalHomogenization.polynomial
     (hlow := by rw [totalDegree_C]; decide) (hp := hp) (hx := hx)
 
 end PurePowerReductionRegression
+
+open LeanCanny LeanCanny.Algebra MvPolynomial
+open scoped Classical BigOperators
+
+namespace ClearedCoordinateRegression
+
+example (x : ℝ) (hx : x ^ 2 = 3 / 4) :
+    (ClearedCoordinateCritical.annihilator 2 (2 : ℤ) (fun _ => 1) 1 (by decide : 1 + (0 + 1) ≤ 1 + 1)
+      (C (-1) : MvPolynomial (Fin 2) ℤ) 1 0 0).eval₂ (Int.castRingHom ℝ) x = 0 := by
+  apply ClearedCoordinateCritical.annihilator_root (x := fun _ => x) (hD := by decide)
+    (hlow := by rw [totalDegree_C]; decide) (hq := by norm_num)
+  · norm_num [FermatCriticalHomogenization.polynomial, eval₂_sum, Fin.sum_univ_succ, ClearedCoordinateBlock.point]
+    nlinarith
+  · intro i hi
+    apply False.elim
+    apply hi
+    apply Fin.ext
+    have := i.isLt
+    omega
+
+example : ((ClearedCoordinateCritical.annihilator 2 (-2 : ℤ) (fun _ => 1) 1
+    (by decide : 1 + (0 + 1) ≤ 1 + 1) (C (-1) : MvPolynomial (Fin 2) ℤ) 1 0 0).map
+      (Int.castRingHom ℝ)).natDegree = 4 := by
+  exact ClearedCoordinateCritical.annihilator_specialized_degree (Int.castRingHom ℝ)
+    2 (-2) (fun _ => 1) 1 (by decide) (C (-1)) 1 (by decide) (by norm_num) (by norm_num) 0 0
+
+example (t : ℕ) : ((ClearedCoordinateCritical.annihilator 2 (Polynomial.C (2 : ℤ))
+    (fun _ => Polynomial.X) 1 (by decide : 1 + (0 + 1) ≤ 1 + 1)
+    (C (Polynomial.C (-1)) : MvPolynomial (Fin 2) (Polynomial ℤ)) (Polynomial.C 1) 0 0).coeff t).natDegree ≤ 24 := by
+  apply ClearedCoordinateParameterDegree.coefficient (S := 0) (E := 1)
+  · rw [totalDegree_C]
+    decide
+  · apply PolynomialCoefficientDegree.C
+    rw [Polynomial.natDegree_C]
+  · intro i
+    simp
+
+example (φ : (ZMod 4) →+* ZMod 4) (q : ZMod 4) :
+    (CommonDenominatorSpecialization.clear 2 q (fun _ : Fin 1 => C q * X (0 : Fin 1))
+      ((X 0 : MvPolynomial (Fin 1) (ZMod 4)) ^ 2)).eval₂ φ (fun _ => 1) = φ (q ^ 2) := by
+  rw [CommonDenominatorSpecialization.X_pow]
+  simp
+
+example : CommonIntegerDenominator.denominator (∅ : Finset (Fin 2)) (fun _ => 0) = 1 := rfl
+
+def scalars (i : Fin 2) : ℤ := if i = 0 then -2 else 3
+
+example : CommonIntegerDenominator.denominator Finset.univ scalars = -6 := by decide
+
+example (t : ℝ) : CommonIntegerDenominator.numerator Finset.univ scalars (fun _ => t) (0 : Fin 2) /
+    (CommonIntegerDenominator.denominator Finset.univ scalars : ℝ) = t / (-2) := by
+  simpa [scalars] using CommonIntegerDenominator.recover (RingHom.id ℝ)
+    Finset.univ scalars (fun _ => t) (by intro i _; fin_cases i <;> decide) 0 (Finset.mem_univ _)
+
+example (H : Fin 2 → Polynomial ℤ) :
+    (CommonIntegerDenominator.numerator Finset.univ scalars H 0).natDegree ≤ (H 0).natDegree :=
+  CommonIntegerDenominator.numerator_degree _ _ _ _
+
+end ClearedCoordinateRegression

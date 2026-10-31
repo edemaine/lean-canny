@@ -956,6 +956,14 @@ The checked ingredients are:
   division. For coefficient parameter degree E, the resulting annihilator
   coefficients have degree at most N*(bound+1)*E. These estimates hold over
   arbitrary commutative coefficient rings, including nonreduced ones.
+  Frozen rational slices now use one common integer denominator. Integral
+  substitution preserves the original free spatial degree and puts the
+  actual cleared critical rows into the same pure-power system. Constructed
+  annihilators vanish at every such critical root and retain their explicit
+  degree under characteristic-zero specialization. Frozen numerators of
+  parameter degree E give lower coefficients of degree at most S+D*E,
+  without dependence on the previous parameter-algebra rank. The shared
+  denominator construction preserves these parameter degrees.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
