@@ -15003,3 +15003,139 @@ example (c : List Bool) :
   rw [annihilator_eq] at H
   exact H
 end HistorySamplerRegression
+
+
+namespace GlobalCriticalHeightRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open UniformIntegralPrefix IntegralHistoryCriticalBits IntegralHistoryGlobalHeightBounds
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def P0 : Prefix 2 4 0 := UniformIntegralPrefix.base 2 4
+private noncomputable def bank0 : HeightBank (B := 2) P0 := HeightBank.base 2 2
+private noncomputable def data0 : IntegralHistorySampler.CriticalData P0 0 where
+  heights _ := 0
+  low := -1
+  leading := 1
+  objective := 1
+  scales _ := 1
+  frozen := ∅
+  free := 0
+  degree := 2
+  birth_bound := by decide
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne := by decide
+  objective_ne := by decide
+  scales_ne _ := by decide
+  free_not_frozen := by simp
+private noncomputable def F0 : Family where
+  cap _ := 2
+  width _ := 2
+  birth _ := 0
+  ambient _ := 0
+  free _ := 0
+  scalarPrefix _ := P0
+  data _ := data0
+  offset _ := 0
+  fit _ := by decide
+  sourceWidth _ := 2
+  degree_lt _ := by change 2 < 2 ^ 2; decide
+  objective _ := 0
+  coordinate _ := 0
+  coefficientIndex _ := 4
+  target _ := 0
+  row _ := ⟨0, by change 0 < 1; decide⟩
+  col _ := ⟨0, by change 0 < 1; decide⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+private noncomputable def p0 : Polynomial P0.carrier := (source F0).annihilator []
+private noncomputable def P1 : Prefix 2 4 1 := UniformIntegralPrefix.step P0 (by decide) (by decide) p0 4
+private noncomputable def bank1 : HeightBank (B := 2) P1 := bank0.step (by decide) p0 4
+
+private theorem history1 : CriticalHistory 2 2 2 0 (B := 2) P1 bank1 := by
+  apply CriticalHistory.step F0 [] bank0 (CriticalHistory.base 2 2) (fun _ => none)
+  · intro i; rfl
+  · intro i; rfl
+  · intro e
+    dsimp only [F0, data0]
+    rw [MvPolynomial.coeff_neg, MvPolynomial.coeff_one]
+    split_ifs <;> norm_num
+  · change (1 : ℤ).natAbs ≤ 2 ^ 0; decide
+  · change 0 + 1 ≤ 2; decide
+  · change 2 ≤ 2; decide
+  · change 2 ≤ 2; decide
+
+private noncomputable def data1 : IntegralHistorySampler.CriticalData P1 1 where
+  heights i := if i.val = 0 then bank1.numerator 0 else 0
+  low := -1
+  leading := 1
+  objective := 2
+  scales i := if i.val = 0 then bank1.denominator 0 else 1
+  frozen := {0}
+  free := 1
+  degree := 2
+  birth_bound := by decide
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne := by decide
+  objective_ne := by decide
+  scales_ne i := by
+    by_cases hi : i.val = 0
+    · simp only [hi, ite_true]
+      exact PaddedIntegralParameterExtension.denominator_ne_zero P0.basis p0 4
+    · simp only [hi, ite_false, ne_eq, one_ne_zero, not_false_eq_true]
+  free_not_frozen := by simp
+private noncomputable def F1 : Family where
+  cap _ := 2
+  width _ := 2
+  birth _ := 1
+  ambient _ := 1
+  free _ := 0
+  scalarPrefix _ := P1
+  data _ := data1
+  offset _ := 1
+  fit _ := by decide
+  sourceWidth _ := 2
+  degree_lt _ := by change 2 < 2 ^ 2; decide
+  objective _ := 0
+  coordinate _ := 0
+  coefficientIndex _ := 4
+  target _ := 0
+  row _ := ⟨0, by change 0 < 4; decide⟩
+  col _ := ⟨0, by change 0 < 4; decide⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+private noncomputable def p1 : Polynomial P1.carrier := (source F1).annihilator []
+private noncomputable def P2 : Prefix 2 4 2 := UniformIntegralPrefix.step P1 (by decide) (by decide) p1 4
+private noncomputable def bank2 : HeightBank (B := 2) P2 := bank1.step (by decide) p1 4
+
+-- The second critical birth retains the first constructed numerator and scale.
+private theorem history2 : CriticalHistory 2 2 2 0 (B := 2) P2 bank2 := by
+  apply CriticalHistory.step F1 [] bank1 history1 (fun i => if i.val = 0 then some (⟨0, by change 0 < 1; decide⟩ : Fin (F1.birth [])) else none)
+  · intro i
+    by_cases hi : i.val = 0 <;> simp only [F1, data1, hi, ite_true, ite_false, HeightBank.selectedNumerator]; rfl
+  · intro i
+    by_cases hi : i.val = 0 <;> simp only [F1, data1, hi, ite_true, ite_false, HeightBank.selectedDenominator]; rfl
+  · intro e
+    dsimp only [F1, data1]
+    rw [MvPolynomial.coeff_neg, MvPolynomial.coeff_one]
+    split_ifs <;> norm_num
+  · change (1 : ℤ).natAbs ≤ 2 ^ 0; decide
+  · change 1 + 1 ≤ 2; decide
+  · change 2 ≤ 2; decide
+  · change 2 ≤ 2; decide
+
+-- Every retained numerator, including the copied first birth, shares one budget.
+example : bank2.Bounds (height 2 (FixedWidthPolynomial.count 2 2) 2 2 (2 ^ 2) 0 (2 + 1)) :=
+  history2.uniform_bounds
+
+example : BinaryFn (fun _ => height 2 (FixedWidthPolynomial.count 20 2) 2 2 4 3 (20 + 1)) :=
+  uniform_height_binary (UnaryFn.const 2) (UnaryFn.const 2) (BinaryFn.const 2) (BinaryFn.const 3)
+    (UnaryFn.const 20) (UnaryFn.const 2)
+example : (height 2 (2 ^ 40) 2 2 4 3 20).size ≤
+    (growth 2 (2 ^ 40) 2 2 4).size * 20 + 4 := by
+  have H := height_bits 2 (2 ^ 40) 2 2 4 3 20
+  have HE : Nat.size (3 + 1) = 3 := by decide
+  simpa only [HE, Nat.add_assoc, show 3 + 1 = 4 from rfl] using H
+end GlobalCriticalHeightRegression

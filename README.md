@@ -1148,7 +1148,14 @@ The checked ingredients are:
   numerators. A binary factor bounds one complete critical birth, including
   the next bank normalization; singular selected coefficients and invalid
   advertised degrees are covered by the height bounds.
-  A uniform bound across all history births still requires construction.
+  Critical histories now have a derived common bound on all retained
+  numerator matrices and denominators. One metadata ceiling controls every
+  critical reduction below the birth cap. Induction on the actual history
+  gives a geometric height budget, whose binary length grows linearly with
+  the number of births. The common budget has a native binary computation
+  from the original spatial metadata, scalar width, and birth cap.
+  Initial scalar input and exceptional births still need integration with
+  this global bound.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
