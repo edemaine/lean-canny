@@ -147,6 +147,9 @@ import LeanCanny.Algebra.IntegralScalarRootHistoryBounds
 import LeanCanny.Algebra.IntegralCriticalDenominatorScript
 import LeanCanny.Algebra.IntegralScalarGeneratorController
 import LeanCanny.Algebra.IntegralScalarGeneratorOrigin
+import LeanCanny.Algebra.MatrixDigitLiftController
+import LeanCanny.Algebra.IntegralBerkowitzBlockController
+import LeanCanny.Algebra.IntegralBlockMomentController
 import LeanCanny.Algebra.IntegralScalarGeneratorSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels

@@ -1186,6 +1186,11 @@ The checked ingredients are:
   and requests exactly one coefficient for every other entry. Its local
   controls are FP from the scalar-leading reader, without assuming a native
   coefficient evaluator. The mixed history reader still needs assembly.
+  Retained-digit routing and relative Berkowitz factor and moment-block
+  entry selection now have resumable controllers too. Local zero and unit
+  cases request nothing; each other entry requests one selected child.
+  Their native controls assume no child evaluator, and their outputs match
+  the actual integer block matrices used for the relative polynomial.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

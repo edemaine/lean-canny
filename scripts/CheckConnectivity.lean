@@ -15653,3 +15653,144 @@ example (i : Fin 2) (o : GeneratorOrigin (B := 2) RP2 rootBank2 i)
           (UniformIntegralPrefix.step o.oldPrefix o.birth_bound (Nat.two_pow_pos 2) o.polynomial o.degree).basis.finBasis
           (AdjoinRoot.root _) (o.chain.oldIndex r) (o.chain.oldIndex t) else 0 := o.matrix r t
 end GlobalCriticalHeightRegression
+
+
+namespace IntegralBerkowitzBlockRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralBerkowitzBlockBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private def diagonalTask (p : List Bool) : List Bool := pair [false] p
+private def momentTask (p : List Bool) : List Bool := pair [true] p
+private noncomputable def answer (p : List Bool) : List Bool :=
+  if pairFst p = [false] then reader (pairSnd p) else (momentFamily (S 2 0 0 0)).value (pairSnd p)
+private theorem diagonalReply (p : List Bool) (_h : selector (S 2 0 0 0) p = [false, true]) :
+    answer (diagonalTask (diagonalQuery (S 2 0 0 0) p)) = (access 2 0 0 0).entry (diagonalQuery (S 2 0 0 0) p) := by
+  simp only [answer, diagonalTask, pairFst_pair, pairSnd_pair, ite_true]
+  dsimp only [access]
+private theorem momentReply (p : List Bool) (_h : selector (S 2 0 0 0) p = [true, true]) :
+    answer (momentTask p) = (momentFamily (S 2 0 0 0)).value p := by
+  simp only [answer, momentTask, pairFst_pair, pairSnd_pair]
+  exact ite_eq_right (by decide)
+example : (program (S 2 0 0 0) diagonalTask momentTask).Controls :=
+  program_controls _ (access 2 0 0 0) _ _
+    (mem_FP_pair (constFn_mem_FP _) id_mem_FP) (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+example : (entryController (S 2 0 0 0) diagonalTask momentTask).Controls :=
+  entryController_controls _ (access 2 0 0 0) _ _
+    (mem_FP_pair (constFn_mem_FP _) id_mem_FP) (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+example : (program (S 2 0 0 0) diagonalTask momentTask).value answer (q 0 0 0 3) = BinaryNatCode.encode 8 := by
+  rw [program_value _ (access 2 0 0 0) _ _ _ diagonalReply momentReply]
+  decide
+example : (program (S 2 0 0 0) diagonalTask momentTask).value answer (q 1 1 0 3) = BinaryNatCode.encode 7 := by
+  rw [program_value _ (access 2 0 0 0) _ _ _ diagonalReply momentReply]
+  decide
+example (p child : List Bool) : (program (S 2 0 0 0) diagonalTask momentTask).controller.Requests answer (fun _ => 1) p child ↔
+    request (S 2 0 0 0) p ∧ child = IntegralBerkowitzBlockBits.child (S 2 0 0 0) diagonalTask momentTask p :=
+  program_requests_iff _ _ _ _ _ _ _
+-- A unit factor never needs a child, regardless of the supplied answer.
+example (a : List Bool → List Bool) (child : List Bool) :
+    ¬(program (S 2 0 0 0) diagonalTask momentTask).controller.Requests a (fun _ => 1) (q 0 0 1 3) child := by
+  rw [program_requests_iff]
+  have H : ¬ request (S 2 0 0 0) (q 0 0 1 3) := by
+    unfold request
+    rw [selector_eq]
+    decide
+  exact fun h => H h.1
+-- A genuine trailing moment asks for the moment task with unchanged context.
+example : (program (S 2 0 0 0) diagonalTask momentTask).controller.Requests answer (fun _ => 1)
+    (q 0 0 0 4) (momentTask (q 0 0 0 4)) := by
+  rw [program_requests_iff]
+  constructor
+  · unfold request
+    rw [selector_eq]
+    decide
+  · unfold IntegralBerkowitzBlockBits.child
+    have H : ¬ selector (S 2 0 0 0) (q 0 0 0 4) = [false, true] := by
+      rw [selector_eq]
+      decide
+    rw [ite_eq_right H]
+example (c : List Bool) (i j : Fin (powerDimension (S 2 0 0 0) c)) :
+    (entryController (S 2 0 0 0) diagonalTask momentTask).value answer
+      (pair c (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val))) =
+      residueBits (((S 2 0 0 0).powerMatrix c i j : ℤ) : ZMod 10) :=
+  entryController_packet _ (access 2 0 0 0) _ _ _ diagonalReply momentReply c i j
+end IntegralBerkowitzBlockRegression
+
+namespace IntegralBlockMomentRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralBlockMomentBits
+set_option backward.isDefEq.respectTransparency false
+private def rowTask (p : List Bool) : List Bool := pair [false] p
+private def columnTask (p : List Bool) : List Bool := pair [true, false] p
+private def matrixTask (p : List Bool) : List Bool := pair [true, true] p
+private def answer (p : List Bool) : List Bool :=
+  if pairFst p = [false] then reader 2 3 (pairSnd p)
+  else if pairFst p = [true, false] then reader 5 7 (pairSnd p) else reader 1 3 (pairSnd p)
+private theorem rowReply (p : List Bool) : answer (rowTask p) = access.row p := by
+  simp only [answer, rowTask, pairFst_pair, pairSnd_pair, ite_true]
+  rfl
+private theorem columnReply (p : List Bool) : answer (columnTask p) = access.column p := by
+  simp only [answer, columnTask, pairFst_pair, pairSnd_pair]
+  have H : [true, false] ≠ [false] := by decide
+  simp only [H, ite_false, ite_true]
+  rfl
+private theorem matrixReply (p : List Bool) : answer (matrixTask p) = access.entry p := by
+  simp only [answer, matrixTask, pairFst_pair, pairSnd_pair]
+  have H : [true, true] ≠ [false] := by decide
+  have J : [true, true] ≠ [true, false] := by decide
+  rw [ite_eq_right H, ite_eq_right J]
+  rfl
+example : (program F access rowTask columnTask matrixTask).Controls :=
+  program_controls F access _ _ _ (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+    (mem_FP_pair (constFn_mem_FP _) id_mem_FP) (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+example : (program F access rowTask columnTask matrixTask).value answer (q 1 3) = BinaryNatCode.encode 3 := by
+  rw [program_value F access _ _ _ answer rowReply columnReply matrixReply]
+  decide
+example : (program F access rowTask columnTask matrixTask).value answer (q 3 5) = BinaryNatCode.encode 7 := by
+  rw [program_value F access _ _ _ answer rowReply columnReply matrixReply]
+  decide
+example : (program F access rowTask columnTask matrixTask).value answer (q 3 3) = BinaryNatCode.encode 3 := by
+  rw [program_value F access _ _ _ answer rowReply columnReply matrixReply]
+  decide
+example (a : List Bool → List Bool) : (program F access rowTask columnTask matrixTask).value a (q 4 2) = [] := by
+  change (if decide (MatrixMoment.EntryBits.entry (MatrixMoment.EntryBits.marked (bitsAccess F access))
+    (outerPacket F (q 4 2)) = [true]) then _ else []) = []
+  have H : MatrixMoment.EntryBits.entry (MatrixMoment.EntryBits.marked (bitsAccess F access))
+      (outerPacket F (q 4 2)) ≠ [true] := by decide
+  rw [show decide (_) = false from decide_eq_false H]
+  rfl
+example (c : List Bool) (i j : Fin ((F.dimension c + 2) * F.rank c)) :
+    (program F access rowTask columnTask matrixTask).value answer
+      (pair c (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val))) =
+      residueBits ((F.powerMatrix c i j : ℤ) : ZMod (F.modulus c)) :=
+  program_packet F access _ _ _ answer rowReply columnReply matrixReply c i j
+end IntegralBlockMomentRegression
+
+namespace RetainedDigitControllerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open MatrixDigitLiftBits
+set_option backward.isDefEq.respectTransparency false
+private def F : Family where
+  dimension _ := 2
+  radix _ := 4
+  modulus _ := 6
+  matrix _ _ _ := 5
+  row _ := (5 : Fin 8)
+  col _ := (1 : Fin 8)
+private def access : Access F where
+  radix := BinaryFn.const 4
+  row := BinaryFn.const 5
+  col := BinaryFn.const 1
+  entry _ := BinaryNatCode.encode 5
+  entry_eq _ _ _ := by
+    have H : BinaryNatCode.encode 5 = residueBits (5 : ZMod 6) := by decide
+    exact H
+example : (program F id).Controls := program_controls F access id id_mem_FP
+example : (program F id).value (fun _ => BinaryNatCode.encode 5) [] = BinaryNatCode.encode 5 := by decide
+private def G : Family := { F with col := fun _ => (2 : Fin 8) }
+example (a : List Bool → List Bool) : (program G id).value a [] = [] := by
+  change (if decide ((G.row []).modNat = (G.col []).modNat) then _ else []) = []
+  have H : (G.row []).modNat ≠ (G.col []).modNat := by decide
+  rw [show decide (_) = false from decide_eq_false H]
+  rfl
+end RetainedDigitControllerRegression
