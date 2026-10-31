@@ -1117,8 +1117,12 @@ The checked ingredients are:
   A native coordinate-product reader decrements one spatial exponent and calls
   the original coefficient reader once; its correctness needs only additive
   extraction. The common critical-row leading coefficient a*D*q^D also has a
-  constructed native modular reader. Euler critical-row assembly still needs
-  construction.
+  constructed native modular reader. Actual coordinate-gradient products now
+  feed a streamed sum omitting the objective coordinate. Native scalar
+  multiplication and subtraction construct the Euler objective coefficients;
+  a native row selector combines these with the remaining cleared gradients.
+  All critical lower rows are computed from the original four readers. Their
+  integration with the relative coordinate-annihilator reader remains required.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

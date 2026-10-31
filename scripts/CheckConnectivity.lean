@@ -14428,3 +14428,157 @@ example : IntegralCriticalLeadingBits.value zeroAllowance [] = [] := by
   change residueBits ((0 : ℤ) : ZMod 6) = []
   decide
 end IntegralFrozenPowerRegression
+
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralFrozenPowerBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+example : SpaceFunction (IntegralCriticalCoordinateProductBits.value criticalSource) :=
+  IntegralCriticalCoordinateProductBits.evaluator criticalSource criticalAccess
+    (SpaceFunction.ofFP _ coefficientReader_FP) (SpaceFunction.ofFP _ heightReader_FP)
+    (SpaceFunction.ofFP _ (constFn_mem_FP _))
+
+attribute [local irreducible] ClearedCoordinateBlock.specialize IntegralCriticalCoordinateProductBits.value
+example : IntegralCriticalCoordinateProductBits.value criticalSource
+    (pair [true, false, true] (pair (BinaryNatCode.encode 0) (BinaryNatCode.encode 1))) = BinaryNatCode.encode 4 := by
+  let g : MvPolynomial (Fin 1) (ℤ × ℤ) := IntegralCriticalGradientBits.polynomial criticalSource [true, false, true] (0 : Fin 1)
+  have HG : g = MvPolynomial.monomial 0 (80, 180) := free_derivative_cleared
+  have H := IntegralCriticalCoordinateProductBits.packet criticalSource [true, false, true] (0 : Fin 1) 1
+  have H2 : residueBits ((Algebra.leftMulMatrix b
+      ((MvPolynomial.X (0 : Fin 1) * g).coeff
+        (RationalSubstitution.Indexed.exponentVector 1 (FixedWidthPolynomial.entry 2 1)))
+      (1 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 6) = BinaryNatCode.encode 4 := by
+    rw [HG, target_one, MvPolynomial.coeff_X_mul']
+    norm_num [MvPolynomial.coeff_monomial]
+    rw [matrix_entry]
+    norm_num
+    decide
+  exact H.trans H2
+
+private noncomputable def eulerSource : IntegralEulerBits.Source where
+  toGradient := criticalSource
+  objective _ := (0 : Fin 1)
+private noncomputable def eulerAccess : IntegralEulerBits.Access eulerSource where
+  toGradient := criticalAccess
+  objective := BinaryFn.const 0
+
+example : SpaceFunction eulerSource.objectiveValue :=
+  IntegralEulerBits.objective_evaluator eulerSource eulerAccess
+    (SpaceFunction.ofFP _ coefficientReader_FP) (SpaceFunction.ofFP _ heightReader_FP)
+    (SpaceFunction.ofFP _ (constFn_mem_FP _)) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+example : SpaceFunction (eulerSource.lowerValue (fun _ => (0 : Fin 1))) :=
+  IntegralEulerBits.lower_evaluator eulerSource eulerAccess _ (BinaryFn.const 0)
+    (SpaceFunction.ofFP _ coefficientReader_FP) (SpaceFunction.ofFP _ heightReader_FP)
+    (SpaceFunction.ofFP _ (constFn_mem_FP _)) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+
+private theorem one_free_sum (c : List Bool) : eulerSource.sumPolynomial c = 0 := by
+  change (∑ j : Fin 1, if j = 0 then (0 : MvPolynomial (Fin 1) (ℤ × ℤ)) else
+    (MvPolynomial.X j : MvPolynomial (Fin 1) (ℤ × ℤ)) *
+      (show MvPolynomial (Fin 1) (ℤ × ℤ) from IntegralCriticalGradientBits.polynomial criticalSource c j)) = 0
+  norm_num [Fin.sum_univ_succ]
+
+example (c : List Bool) : eulerSource.objectivePolynomial c =
+    MvPolynomial.monomial (Finsupp.single (0 : Fin 1) 1) (320, 720) + MvPolynomial.C (128, 648) := by
+  let low : MvPolynomial (Fin 1) (ℤ × ℤ) := S.lowerPolynomial c
+  let other : MvPolynomial (Fin 1) (ℤ × ℤ) := eulerSource.sumPolynomial c
+  have HL : low = MvPolynomial.monomial (Finsupp.single (0 : Fin 1) 1) (80, 180) + MvPolynomial.C (32, 162) := lower_polynomial c
+  have HO : other = 0 := one_free_sum c
+  have H : MvPolynomial.C (4 : ℤ × ℤ) * low - other =
+      MvPolynomial.monomial (Finsupp.single (0 : Fin 1) 1) (320, 720) + MvPolynomial.C (128, 648) := by
+    rw [HO, sub_zero, HL, mul_add, MvPolynomial.C_mul_monomial, ← MvPolynomial.C_mul]
+    rfl
+  exact H
+
+-- Two free coordinates leave a nonempty Euler sum.
+private noncomputable def bothFrozen : IntegralFrozenPowerBits.Source :=
+  { S with
+    free := fun _ => 2
+    offset := fun _ => 0
+    fit := fun _ => by change 0 + 2 ≤ 2; decide
+    col := fun _ => (1 : Fin 2) }
+private noncomputable def bothFrozenAccess : IntegralFrozenPowerBits.Access bothFrozen :=
+  { access with free := UnaryFn.const 2, offset := UnaryFn.const 0, col := BinaryFn.const 1 }
+private noncomputable def bothGradient : IntegralCriticalGradientBits.Source where
+  toFrozen := bothFrozen
+  free_pos _ := by change 0 < 2; decide
+  degree _ := 3
+  degree_pos _ := by decide
+  degree_le c := by
+    change p.totalDegree ≤ 3
+    norm_num [p, exponents, Finsupp.sum_add_index]
+  degree_lt c := by change 3 < 2 ^ 2; decide
+private noncomputable def bothGradientAccess : IntegralCriticalGradientBits.Access bothGradient where
+  toFrozen := bothFrozenAccess
+  degree := BinaryFn.const 3
+private noncomputable def bothEuler : IntegralEulerBits.Source where
+  toGradient := bothGradient
+  objective _ := (0 : Fin 2)
+private noncomputable def bothEulerAccess : IntegralEulerBits.Access bothEuler where
+  toGradient := bothGradientAccess
+  objective := BinaryFn.const 0
+
+example : SpaceFunction (bothEuler.lowerValue (fun _ => (1 : Fin 2))) :=
+  IntegralEulerBits.lower_evaluator bothEuler bothEulerAccess _ (BinaryFn.const 1)
+    (SpaceFunction.ofFP _ coefficientReader_FP) (SpaceFunction.ofFP _ heightReader_FP)
+    (SpaceFunction.ofFP _ (constFn_mem_FP _)) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+
+private theorem both_gradient_one (c : List Bool) : IntegralCriticalGradientBits.polynomial bothGradient c (1 : Fin 2) =
+    MvPolynomial.monomial (Finsupp.single (0 : Fin 2) 2) (80 : ℤ × ℤ) := by
+  change ClearedCoordinateBlock.specialize 4 (-2 : ℤ × ℤ)
+    (fun i => if i = 0 then (-2, -3) else (5, 5)) 0 2 (MvPolynomial.pderiv (1 : Fin 2) p) = _
+  rw [original_free_derivative, ClearedCoordinateBlock.specialize_monomial]
+  have HE : ClearedCoordinateBlock.freeExponent 0 2 (Finsupp.single (0 : Fin 2) 2) = Finsupp.single (0 : Fin 2) 2 := by
+    apply Finsupp.ext
+    intro j
+    rw [ClearedCoordinateBlock.freeExponent_apply 0 (by decide)]
+    fin_cases j <;> norm_num
+  rw [HE]
+  congr 1
+  norm_num [ClearedCoordinateBlock.monomialScalar, ClearedCoordinateBlock.scalarAtom,
+    Finsupp.degree_eq_sum, Fin.sum_univ_succ, Fin.prod_univ_succ]
+
+private theorem both_sum (c : List Bool) : bothEuler.sumPolynomial c = MvPolynomial.monomial exponents (80 : ℤ × ℤ) := by
+  let g : Fin 2 → MvPolynomial (Fin 2) (ℤ × ℤ) := fun j => IntegralCriticalGradientBits.polynomial bothGradient c j
+  have HG : g (1 : Fin 2) = MvPolynomial.monomial (Finsupp.single (0 : Fin 2) 2) (80 : ℤ × ℤ) := both_gradient_one c
+  have H : (∑ j : Fin 2, if j = 0 then 0 else MvPolynomial.X j * g j) = MvPolynomial.monomial exponents (80 : ℤ × ℤ) := by
+    norm_num [Fin.sum_univ_succ]
+    rw [HG, MvPolynomial.X, MvPolynomial.monomial_mul_monomial]
+    simp only [one_mul]
+    have HE : Finsupp.single (1 : Fin 2) 1 + Finsupp.single (0 : Fin 2) 2 = exponents := by
+      apply Finsupp.ext
+      intro j
+      fin_cases j <;> norm_num [exponents]
+    rw [HE]
+  exact H
+
+private theorem both_lower (c : List Bool) : bothFrozen.lowerPolynomial c = MvPolynomial.monomial exponents (80 : ℤ × ℤ) := by
+  change ClearedCoordinateBlock.lower 4 (-2 : ℤ × ℤ)
+    (fun i => if i = 0 then (-2, -3) else (5, 5)) 0 2 p 2 = _
+  rw [ClearedCoordinateBlock.lower]
+  have HF : CoordinateBlockSpecialization.frozenPower (n := 2)
+      (fun i => if i = 0 then (-2, -3) else (5, 5) : ℕ → ℤ × ℤ) 0 2 4 = 0 := by
+    norm_num [CoordinateBlockSpecialization.frozenPower, Fin.sum_univ_succ]
+  rw [HF, mul_zero, map_zero, add_zero, p, ClearedCoordinateBlock.specialize_monomial]
+  have HE : ClearedCoordinateBlock.freeExponent 0 2 exponents = exponents := by
+    apply Finsupp.ext
+    intro j
+    rw [ClearedCoordinateBlock.freeExponent_apply 0 (by decide)]
+    simp
+  rw [HE]
+  congr 1
+  norm_num [ClearedCoordinateBlock.monomialScalar, ClearedCoordinateBlock.scalarAtom,
+    exponents, Finsupp.degree_eq_sum, Fin.sum_univ_succ, Fin.prod_univ_succ]
+
+example (c : List Bool) : bothEuler.objectivePolynomial c = MvPolynomial.monomial exponents (240 : ℤ × ℤ) := by
+  let low : MvPolynomial (Fin 2) (ℤ × ℤ) := bothFrozen.lowerPolynomial c
+  let other : MvPolynomial (Fin 2) (ℤ × ℤ) := bothEuler.sumPolynomial c
+  have HL : low = MvPolynomial.monomial exponents (80 : ℤ × ℤ) := both_lower c
+  have HO : other = MvPolynomial.monomial exponents (80 : ℤ × ℤ) := both_sum c
+  have H : MvPolynomial.C (4 : ℤ × ℤ) * low - other = MvPolynomial.monomial exponents (240 : ℤ × ℤ) := by
+    rw [HL, HO, MvPolynomial.C_mul_monomial, ← map_sub]
+    norm_num
+  exact H
+end IntegralFrozenPowerRegression
