@@ -15940,3 +15940,77 @@ example : (RecursiveStage.controller F access id).output
   norm_num [borderMoment, dotProduct, Matrix.mulVec, Matrix.mul_apply, pow_two, Fin.sum_univ_succ]
   decide
 end IntegralBlockMomentRegression
+
+
+namespace IntegralReductionActionRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralReductionActionBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+example : (program S id).Controls := program_controls S controls id id_mem_FP
+private theorem actionValue (p : List Bool) :
+    (program S id).value (powerFamily S).value p = entryProgram S p := program_value S id _ (fun _ _ => rfl) p
+example : (program S id).value (powerFamily S).value (packet [] 1 0 1 1) = BinaryNatCode.encode 3 := by
+  have H := entry_correct S [] (1 : Fin 2) (0 : Fin 2) (1 : Fin 2) (1 : Fin 2)
+  change entryProgram S (packet [] 1 0 1 1) = _ at H
+  rw [actionValue, H]
+  unfold IntegralBerkowitzBlockBits.Source.entryMatrix actionSource
+  change residueBits ((Algebra.leftMulMatrix b (S.actionMatrix [] (1 : Fin 2) (0 : Fin 2))
+    (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [action_matrix]
+  norm_num [diagonal]
+  decide
+-- A nonnormal column returns zero even if a child would return a nonzero word.
+example (answer : List Bool → List Bool) : (program S id).value answer (packet [] 1 1 1 1) = [] := by
+  have H : ¬ normalGuard S (packet [] 1 1 1 1) := by change ¬((1 : Fin 2) = 0); decide
+  simp only [SingleCall.Program.value, program, show decide (normalGuard S (packet [] 1 1 1 1)) = false from decide_eq_false H,
+    Bool.false_eq_true, ite_false]
+example (answer : List Bool → List Bool) (q : List Bool) :
+    ¬(program S id).controller.Requests answer (fun _ => 1) (packet [] 1 1 1 1) q := by
+  rw [program_requests_iff]
+  have H : ¬ normalGuard S (packet [] 1 1 1 1) := by change ¬((1 : Fin 2) = 0); decide
+  exact fun h => H h.1
+-- The actual reduction power has a native resumable controller, with no entry certificate.
+example : (IntegralBlockPowerBits.RecursiveStage.controller (powerFamily S) (powerAccess S access controls) id).Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := Turing.MultiTapeTM.encBits) :=
+  IntegralBlockPowerBits.RecursiveStage.certificates _ (powerAccess S access controls) id id_mem_FP
+example : BinaryFn (ModularRecursiveStage.clock (IntegralBlockPowerBits.powerFamily (powerFamily S))) :=
+  IntegralBlockPowerBits.RecursiveStage.clock_binary _ (powerAccess S access controls)
+end IntegralReductionActionRegression
+
+namespace IntegralBerkowitzBlockRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralBerkowitzBlockBits
+set_option backward.isDefEq.respectTransparency false
+private theorem top_one (c : List Bool) : (S 1 1 0 0).value c = BinaryNatCode.encode 1 := by
+  change residueBits ((Algebra.leftMulMatrix b
+    ((Matrix.charpoly (fun _ _ : Fin 1 => ((2, 3) : ℤ × ℤ))).coeff 1) (0 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 10) = _
+  have H : (Matrix.charpoly (fun _ _ : Fin 1 => ((2, 3) : ℤ × ℤ))).coeff 1 = 1 := by
+    have HC := (Matrix.charpoly_monic (fun _ _ : Fin 1 => ((2, 3) : ℤ × ℤ))).coeff_natDegree
+    simpa only [Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin] using HC
+  rw [H, diagonal]
+  norm_num
+  decide
+example : (IntegralScaledCharacteristicBits.program (S 1 1 0 0) (fun _ => -2) (fun _ => 3) id).Controls := by
+  apply IntegralScaledCharacteristicBits.program_controls _ (access 1 1 0 0) _ _ (BinaryFn.const 3) _ id id_mem_FP
+  apply mem_FP_of_eq (constFn_mem_FP (residueBits (-2 : ZMod 10)))
+  intro c
+  rfl
+-- The characteristic top coefficient is one; scaling by (-2)^3 yields 2 modulo 10.
+example (c : List Bool) : (IntegralScaledCharacteristicBits.program (S 1 1 0 0) (fun _ => -2) (fun _ => 3) id).value
+    (S 1 1 0 0).value c = BinaryNatCode.encode 2 := by
+  rw [IntegralScaledCharacteristicBits.program_value _ _ _ id _ (fun _ => rfl), IntegralScaledCharacteristicBits.value_eq]
+  have HI : ((S 1 1 0 0).coefficientMatrix c 1 (0 : Fin 2) (0 : Fin 2) : ℤ) = 1 := by
+    change Algebra.leftMulMatrix b
+      ((Matrix.charpoly (fun _ _ : Fin 1 => ((2, 3) : ℤ × ℤ))).coeff 1) (0 : Fin 2) (0 : Fin 2) = 1
+    have HC := (Matrix.charpoly_monic (fun _ _ : Fin 1 => ((2, 3) : ℤ × ℤ))).coeff_natDegree
+    rw [Matrix.charpoly_natDegree_eq_dim, Fintype.card_fin] at HC
+    rw [HC, diagonal]
+    norm_num
+  have HI' : (S 1 1 0 0).coefficientMatrix c ((S 1 1 0 0).coefficient c)
+      ((S 1 1 0 0).basisRow c) ((S 1 1 0 0).basisCol c) = 1 := HI
+  rw [HI']
+  have J : residueBits ((1 : ZMod 10) * (-2 : ZMod 10) ^ (3 * 1)) = BinaryNatCode.encode 2 := by decide
+  exact J
+
+end IntegralBerkowitzBlockRegression

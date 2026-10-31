@@ -1196,6 +1196,11 @@ The checked ingredients are:
   preserved input contexts. Specializations evaluate actual relative
   characteristic coefficients and algebra-valued moments without child
   evaluator certificates. Coefficients above the spatial degree return zero.
+  Shifted reduction-action entries and scalar rescaling now suspend through
+  the same task interface. Nonnormal columns return zero immediately. A
+  normal entry requests the constructed algebra-valued reduction power;
+  rescaling requests one characteristic coefficient and finishes with FP
+  scalar powering, including negative nonunits modulo composite moduli.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
