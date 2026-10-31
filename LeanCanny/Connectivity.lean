@@ -81,6 +81,10 @@ import LeanCanny.Algebra.IntegralParameterInverseSpace
 import LeanCanny.Algebra.IntegralNormalizationMatrixSpace
 import LeanCanny.Algebra.IntegralNormalizationBounds
 import LeanCanny.Algebra.IntegralParameterMatrixBounds
+import LeanCanny.Algebra.MonicParameterPowerSchedule
+import LeanCanny.Algebra.MonicParameterAppend
+import LeanCanny.Algebra.CoordinatePowerReal
+import LeanCanny.Algebra.FixedWidthCoordinatePowerSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

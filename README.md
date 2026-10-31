@@ -926,6 +926,13 @@ The checked ingredients are:
   matrices. A native streamed product computes their normalization columns,
   and normalization has binary-readable coefficient-height and matrix-entry
   bounds, derived from the old rank and coefficient bounds.
+  A geometric odd-power schedule now keeps old scalar powers fixed and gives
+  each new monic parameter row a pure-power leading term. Appending it
+  preserves exclusion at infinity, including degenerate branches. Different
+  odd coordinate powers preserve real connectivity through an ambient
+  homeomorphism. Native coefficient access divides requested exponents
+  coordinate by coordinate and retains the original reader's space charge;
+  power substitution does not increase coefficient mass.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

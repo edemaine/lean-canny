@@ -11711,3 +11711,33 @@ example : Algebra.leftMulMatrix
   fin_cases i <;> fin_cases j <;> norm_num
 
 end IntegralHeightRegression
+
+namespace MonicParameterInfinityRegression
+open LeanCanny.Algebra
+open scoped Classical
+
+#guard MonicParameterPowerSchedule.weight 2 1 0 == 1
+#guard MonicParameterPowerSchedule.weight 2 1 1 == 5
+#guard MonicParameterPowerSchedule.weight 2 1 2 == 25
+#guard MonicParameterPowerSchedule.weight 2 0 5 == 1
+
+-- The selected leading coefficient is itself an old coordinate and can
+-- vanish. The new infinity equation still has leading term new^10.
+private noncomputable def equation : Polynomial (MvPolynomial (Fin 1) ℤ) :=
+  Polynomial.monomial 2 (MvPolynomial.X 0) + Polynomial.C (MvPolynomial.C (-2))
+
+example (y : Option (Fin 1 ⊕ Unit) → ℂ) (hy : y none = 0) :
+    (WeightedHomogenization.homogenize (fun _ => 1) 10
+      (MonicParameterRows.row equation 2 (fun _ => 1) 5)).eval₂ (Int.castRingHom ℂ) y =
+        y (some (Sum.inr ())) ^ 10 := by
+  apply MonicParameterRows.eval_infinity (Int.castRingHom ℂ) equation 2 1 (fun _ => 1) 5
+    (by decide) (by decide) ?_ y hy
+  intro k
+  apply (CoordinatePowerSubstitution.degree_le (fun _ : Fin 1 => 1) (equation.coeff k) 1 (by simp)).trans
+  simp only [Nat.one_mul]
+  simp only [equation, Polynomial.coeff_add, Polynomial.coeff_monomial, Polynomial.coeff_C]
+  split_ifs <;> first | omega | norm_num
+  rw [← map_ofNat (MvPolynomial.C : ℤ →+* MvPolynomial (Fin 1) ℤ) 2, MvPolynomial.totalDegree_C]
+  omega
+
+end MonicParameterInfinityRegression

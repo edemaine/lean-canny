@@ -1,5 +1,6 @@
 import LeanCanny.Computation.RecursiveGraphQueryBounds
 import LeanCanny.Algebra.IntegralNormalizationMatrixSpace
+import LeanCanny.Algebra.FixedWidthCoordinatePowerSpace
 import LeanCanny.Encoding.FlatAffineHeightValues
 import LeanCanny.Connectivity.FlatAffineHeightArcs
 import LeanCanny.Encoding.FlatAffineHeightTrailing
@@ -1184,3 +1185,32 @@ example : (F 2).negativeValue [] = BinaryNatCode.encode 4 := by
   decide
 
 end IntegralNormalizationReaderRegression
+
+namespace CoordinatePowerReaderRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding
+
+private def power (q : List Bool) : ℕ := if Nat.fromBitsLE (pairSnd q) = 0 then 3 else 5
+private def target (good : Bool) : List Bool :=
+  FixedWidthNatVector.encode 2 4 (fun i => if i = 0 then 6 else if good then 5 else 4)
+
+#guard decide (FixedWidthCoordinatePowerBits.Divisible (fun _ => 2) (fun _ => 4) power (fun _ => target true) [])
+#guard !decide (FixedWidthCoordinatePowerBits.Divisible (fun _ => 2) (fun _ => 4) power (fun _ => target false) [])
+#guard FixedWidthCoordinatePowerBits.quotientTarget (fun _ => 2) (fun _ => 4) power (fun _ => target true) [] ==
+  FixedWidthNatVector.encode 2 4 (fun i => if i = 0 then 2 else 1)
+
+private theorem power_binary : BinaryFn power :=
+  BinaryFn.ite ((BinaryFn.fromBits pairSnd_mem_FP).eq (BinaryFn.const 0)) (BinaryFn.const 3) (BinaryFn.const 5)
+
+example (p : (c : List Bool) → MvPolynomial (Fin 2) ℤ) (modulus : List Bool → List Bool)
+    (E : SpaceFunction (FixedWidthRowBits.value (fun _ => 2) (fun _ => 4) p
+      (FixedWidthCoordinatePowerBits.quotientTarget (fun _ => 2) (fun _ => 4) power (fun _ => target true)) modulus)) :
+    SpaceFunction (FixedWidthRowBits.value (fun _ => 2) (fun _ => 4)
+      (fun c => CoordinatePowerSubstitution.substitute (fun i : Fin 2 => power (pair c (BinaryNatCode.encode i.val))) (p c))
+      (fun _ => target true) modulus) := by
+  apply FixedWidthCoordinatePowerBits.evaluator (fun _ => 2) (fun _ => 4) power (fun _ => target true) p modulus
+    ?_ (UnaryFn.const 2) (UnaryFn.const 4) power_binary (constFn_mem_FP _) E
+  intro c i
+  simp only [power]
+  split_ifs <;> omega
+
+end CoordinatePowerReaderRegression
