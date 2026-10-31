@@ -933,6 +933,13 @@ The checked ingredients are:
   homeomorphism. Native coefficient access divides requested exponents
   coordinate by coordinate and retains the original reader's space charge;
   power substitution does not increase coefficient mass.
+  Physical critical equations now take derivatives before applying the new
+  coordinate and multiplier powers, with an exact equivalence on all real
+  critical roots. Their coordinate leading cone permits independent source,
+  gradient, and height powers. Bounded degree-decreasing reduction matrices
+  yield relative characteristic annihilators from finite spanning relations,
+  including dependent spanning families, with degree equal to the normal
+  state count rather than the old parameter-algebra rank.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

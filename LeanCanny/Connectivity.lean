@@ -85,6 +85,9 @@ import LeanCanny.Algebra.MonicParameterPowerSchedule
 import LeanCanny.Algebra.MonicParameterAppend
 import LeanCanny.Algebra.CoordinatePowerReal
 import LeanCanny.Algebra.FixedWidthCoordinatePowerSpace
+import LeanCanny.Algebra.PhysicalPowerCriticalRows
+import LeanCanny.Algebra.FermatScaledPowerCone
+import LeanCanny.Algebra.GradedReductionAnnihilator
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

@@ -11741,3 +11741,40 @@ example (y : Option (Fin 1 ⊕ Unit) → ℂ) (hy : y none = 0) :
   omega
 
 end MonicParameterInfinityRegression
+
+namespace GradedReductionRegression
+open LeanCanny.Algebra Matrix
+open scoped Classical BigOperators
+
+private def T : Matrix (Fin 3) (Fin 3) ℤ := !![1, 0, 3; 0, 1, -1; 0, 0, 0]
+private def normal (i : Fin 3) : Prop := i.val < 2
+private def degree (i : Fin 3) : ℕ := if i.val = 2 then 1 else 0
+private def v : Fin 3 → ℝ := ![1, 1, 2]
+private def shift (_ : {i : Fin 3 // normal i}) : Fin 3 := 2
+
+-- Two normal states have the same evaluation. Independence is unnecessary:
+-- the reduced multiplication relations still annihilate the selected value.
+example : (GradedReductionAnnihilator.matrix T normal 1 shift).charpoly.eval₂ (Int.castRingHom ℝ) 2 = 0 := by
+  apply GradedReductionAnnihilator.charpoly_root T normal degree ?_ ?_ 1 ?_ shift
+    (Int.castRingHom ℝ) v ?_ 2 ?_ ?_
+  · intro j hj i
+    fin_cases j <;> fin_cases i <;> norm_num [T, normal] at *
+  · intro i j hj hT
+    fin_cases i <;> fin_cases j <;> norm_num [T, normal, degree] at *
+  · intro i
+    fin_cases i <;> norm_num [degree]
+  · ext j
+    fin_cases j <;> norm_num [T, v, Matrix.vecMul, dotProduct, Fin.sum_univ_succ]
+  · rintro ⟨j, hj⟩
+    change j.val < 2 at hj
+    have H : j.val = 0 ∨ j.val = 1 := by omega
+    rcases H with h0 | h1
+    · have h : j = 0 := Fin.ext h0
+      subst j
+      norm_num [shift, v]
+    · have h : j = 1 := Fin.ext h1
+      subst j
+      norm_num [shift, v]
+  · exact ⟨⟨0, by change (0 : ℕ) < 2; omega⟩, by norm_num [v]⟩
+
+end GradedReductionRegression
