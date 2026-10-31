@@ -1025,6 +1025,13 @@ The checked ingredients are:
   zero supplies the actual canonical height coefficients, including wider
   exponent queries and the fixed power substitution. No separate numerator
   matrix reader is assumed.
+  Retained algebra elements now lift through chains of actual scalar
+  extensions. Their native matrix readers compare the whole new digit block
+  and divide by its combined binary radix, charging the original old reader.
+  Old generators and representative evaluations keep their exact coordinate
+  slots. A scalar birth can also retain arbitrary ancestral physical and
+  multiplier coordinates: only scalar slots enter its new equation, and
+  exclusion at infinity and exact algebra interpretation are preserved.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

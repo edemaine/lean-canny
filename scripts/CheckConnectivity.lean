@@ -12645,3 +12645,107 @@ example (S : Source) (B : PaddedIntegralSelectedMatrixSource.Bounds S) (a : Acce
   PaddedIntegralHeightCoefficientBits.powered_evaluator S B a hh E G V target modulus hG hV ht hm
 
 end HeightSourceRegression
+
+
+namespace PrefixLiftRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding MatrixPower
+open UniformIntegralPrefix IntegralCoordinateBasis
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def P0 : Prefix 5 4 0 := UniformIntegralPrefix.base 5 4
+private noncomputable def p0 : Polynomial P0.carrier := Polynomial.X
+private noncomputable def P1 : Prefix 5 4 1 := step P0 (by decide) (by decide) p0 9
+private noncomputable def P2 : Prefix 5 4 2 := step P1 (by decide) (by decide) 0 9
+private noncomputable def P3 : Prefix 5 4 3 := step P2 (by decide) (by decide) 0 9
+private noncomputable def C : Chain 5 2 P1 P3 :=
+  ((@Chain.refl 5 2 1 P1).step (show 1 ≤ 5 by decide) (0 : Polynomial P1.carrier) 9).step
+    (show 2 ≤ 5 by decide) (0 : Polynomial P2.carrier) 9
+private noncomputable def x : P1.carrier :=
+  AdjoinRoot.root (PaddedIntegralNormalization.polynomial p0 9 4)
+
+example : C.length = 2 := by decide
+example : C.radix = 16 := by decide
+example : (C.oldIndex (21 : Fin 64)).val = 1 := by decide
+example : (C.oldIndex (5 : Fin 64)).val = 0 := by decide
+example : (C.oldIndex (63 : Fin 64)).val = 3 := by decide
+
+-- The original prefix is nonreduced: its relation is the padded pure fourth power.
+example : PaddedIntegralNormalization.polynomial p0 9 4 = Polynomial.X ^ 4 := by
+  rw [PaddedIntegralNormalization.polynomial, ite_eq_right (by decide)]
+
+private theorem old_shift : Algebra.leftMulMatrix (P1.basis.finBasis (B := 2)) x (1 : Fin 4) (0 : Fin 4) = 1 := by
+  have H := finBasis_root_matrix (m := 0) (B := 2) (IntegralCoordinateBasis.base 4)
+    (PaddedIntegralNormalization.polynomial p0 9 4)
+    (PaddedIntegralNormalization.monic p0 9 4) (PaddedIntegralNormalization.natDegree p0 9 4)
+    (0 : Fin 1) (0 : Fin 1) (1 : Fin 4) (0 : Fin 4)
+  change Algebra.leftMulMatrix (P1.basis.finBasis (B := 2)) x (1 : Fin 4) (0 : Fin 4) = _ at H
+  norm_num at H
+  exact H
+
+private theorem C_radix : C.radix = 16 := by decide
+private theorem old_21 : C.oldIndex (21 : Fin 64) = (1 : Fin 4) := Fin.ext (by decide)
+private theorem old_5 : C.oldIndex (5 : Fin 64) = (0 : Fin 4) := Fin.ext (by decide)
+
+attribute [local irreducible] P0 P1 P2 P3
+
+private noncomputable def F : UniformIntegralPrefixLiftBits.Family where
+  cap _ := 5
+  width _ := 2
+  start _ := 1
+  finish _ := 3
+  oldPrefix _ := P1
+  newPrefix _ := P3
+  chain _ := C
+  element _ := x
+  modulus _ := 10
+  row _ := (21 : Fin 64)
+  col _ := (5 : Fin 64)
+
+-- Sixteen new-digit blocks collapse to one old query, retaining the entire input.
+example (c : List Bool) : MatrixDigitLiftBits.query F.raw c =
+    pair c (pair (BinaryNatCode.encode 1) []) := by
+  change pair c (pair (BinaryNatCode.encode (21 / C.radix)) (BinaryNatCode.encode (5 / C.radix))) = _
+  rw [C_radix]
+  congr 1
+
+example : F.value [] = BinaryNatCode.encode 1 := by
+  have H := congrArg (fun z : ℤ => residueBits (z : ZMod 10))
+    (C.matrix x (21 : Fin 64) (5 : Fin 64))
+  simp only [C_radix, old_21, old_5, old_shift] at H
+  exact H.trans (by decide)
+
+private noncomputable def G : UniformIntegralPrefixLiftBits.Family :=
+  { F with col := fun _ => (4 : Fin 64) }
+
+example : G.value [] = [] := by
+  have H := congrArg (fun z : ℤ => residueBits (z : ZMod 10))
+    (C.matrix x (21 : Fin 64) (4 : Fin 64))
+  simp only [C_radix] at H
+  exact H.trans (by decide)
+
+-- Evaluation of the retained representative uses the original coordinate slot.
+example (y : P1.carrier) : (P1.basis.representative y).aeval
+    (fun i => P3.basis.generator (UniformIntegralPowerSchedule.embed C.le i)) = C.embed y :=
+  C.representative_eval y
+
+end PrefixLiftRegression
+
+namespace ScalarPhysicalRetentionRegression
+open LeanCanny.Algebra MvPolynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def q (i : Fin 2) : MvPolynomial (Fin 2) ℤ :=
+  if i = 0 then X 0 else X 1 - C 77
+
+-- The scalar uses slot zero; an independent ancestral physical coordinate is retained.
+example {A K : Type*} [CommRing A] [CommRing K] {N : ℕ}
+    (b : IntegralCoordinateBasis A 1 N) (p : Polynomial A) (d : ℕ) (z : (Fin 2 ⊕ Unit) → K) :
+    (CanonicalIntegralScalarAppend.rows 5 q (fun _ => (0 : Fin 2)) b p d (Sum.inl 1)).eval₂
+      (Int.castRingHom K) z = z (Sum.inl 1) - 77 := by
+  change ((rename Sum.inl) (X (1 : Fin 2) - C (77 : ℤ))).eval₂ (Int.castRingHom K) z = _
+  rw [eval₂_rename, eval₂_sub, eval₂_X, eval₂_C]
+  norm_num
+
+end ScalarPhysicalRetentionRegression
