@@ -14810,3 +14810,54 @@ example (c : List Bool) (k : ℕ) (r t : Fin 2) :
   rw [original_budget] at H
   exact H
 end IntegralFrozenPowerRegression
+
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def canonicalSource : IntegralClearedCriticalBits.Source :=
+  IntegralCanonicalCriticalBits.source bothEuler (fun _ => (1 : Fin 2)) (fun _ => 256)
+private noncomputable def canonicalAccess : IntegralClearedCriticalBits.Access canonicalSource :=
+  IntegralCanonicalCriticalBits.access bothEuler bothEulerAccess (fun _ => (1 : Fin 2)) (fun _ => 256)
+    (BinaryFn.const 1) (BinaryFn.const 256)
+
+-- Free arity 2 and allowance 4 determine the layout: no supplied bound or width.
+example (c : List Bool) : canonicalSource.bound c = 7 ∧ canonicalSource.targetWidth c = 4 := by
+  dsimp only [canonicalSource, IntegralCanonicalCriticalBits.source, IntegralCanonicalCriticalBits.normalized, bothEuler, bothGradient, bothFrozen, S, P]
+  decide
+example : SpaceFunction canonicalSource.value :=
+  IntegralCanonicalCriticalBits.evaluator bothEuler bothEulerAccess (fun _ => (1 : Fin 2)) (fun _ => 256)
+    (BinaryFn.const 1) (BinaryFn.const 256)
+    (SpaceFunction.ofFP _ coefficientReader_FP) (SpaceFunction.ofFP _ heightReader_FP)
+    (SpaceFunction.ofFP _ (constFn_mem_FP _)) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+
+-- The canonical degree is the spatial dimension 256, with old rank still 2.
+example (c : List Bool) : ((canonicalSource.annihilator c).map firstRational).natDegree = 256 := by
+  have H := IntegralCanonicalCriticalBits.specialized_degree bothEuler (fun _ => (1 : Fin 2)) (fun _ => 256)
+    c firstRational (by norm_num [bothEuler, bothGradient, bothFrozen, S, P, firstRational, RingHom.fst])
+  have HD : PurePowerReductionBounds.dimension 2 4 = 256 := by decide
+  simpa only [canonicalSource, show bothEuler.free c = 2 from rfl, show bothEuler.allowance c = 4 from rfl, HD] using H
+
+example : BinaryFn (IntegralOriginalCriticalFactorBounds.factor heightSource) :=
+  IntegralOriginalCriticalFactorBounds.factor_binary heightSource heightAccess
+
+private theorem original_factor (c : List Bool) :
+    IntegralOriginalCriticalFactorBounds.factor heightSource c = 40848 := by
+  change IntegralActionHeightBounds.criticalFactor 8 2 4 *
+    ((IntegralFrozenConstantBounds.lowerHeight 2 2 2 4 1 1 1 1 + Nat.size 4 +
+      IntegralFrozenCoefficientBounds.coefficientHeight 2 2 2 4 (1 + 2) 1 1 + Nat.size 1 + 1) +
+      2 * (1 + 4 + Nat.size 4) + 1) = 40848
+  decide
+
+attribute [local irreducible] IntegralClearedCriticalBits.Source.annihilator
+-- A single input-height bound controls every actual old-matrix coefficient.
+example (c : List Bool) (k : ℕ) (r t : Fin 2) :
+    (Algebra.leftMulMatrix b ((show Polynomial (ℤ × ℤ) from heightSource.annihilator c).coeff k) r t).natAbs ≤
+      2 ^ 122544 := by
+  have H := IntegralOriginalCriticalFactorBounds.coefficient_height_scaled heightSource originalInputs c 3
+    (by decide) (by exact le_rfl) (by exact le_rfl) (by change 1 ≤ 3; decide) (by change 1 ≤ 3; decide) k r t
+  rw [original_factor, show 40848 * 3 = 122544 by decide] at H
+  exact H
+end IntegralFrozenPowerRegression

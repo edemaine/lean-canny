@@ -134,6 +134,8 @@ import LeanCanny.Algebra.IntegralEulerLowerSpace
 import LeanCanny.Algebra.IntegralClearedCriticalSpace
 import LeanCanny.Algebra.IntegralClearedCriticalBounds
 import LeanCanny.Algebra.IntegralOriginalCriticalBounds
+import LeanCanny.Algebra.IntegralOriginalCriticalFactorBounds
+import LeanCanny.Algebra.IntegralCanonicalCriticalSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

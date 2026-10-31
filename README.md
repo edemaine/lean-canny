@@ -1136,6 +1136,10 @@ The checked ingredients are:
   the old rank. Bounds from the same four original inputs now derive those
   lower-row and leading budgets, including original derivatives and frozen
   Fermat constants. The original spatial grid controls coefficient sums.
+  A height-independent binary factor now bounds the whole critical budget
+  from a common positive bound on those four inputs. The canonical native
+  constructor derives its reduction bound and spatial width from free arity
+  and allowance, matching the sampler's relative degree.
   Global bounds across all history births still require construction.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
