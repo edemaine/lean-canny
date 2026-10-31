@@ -1163,7 +1163,14 @@ The checked ingredients are:
   retain one root record while replacing birth, phase, and query fields.
   Their ranks decrease on an earlier birth or local phase. Bounded query
   fields give a polynomial word allowance independent of the number of
-  retargeting steps.
+  retargeting steps. The constructed critical polynomial's top coefficient
+  is an explicit nonzero integer power. A second height representation uses
+  the actual monic scalar root divided by that integer, preserving the same
+  full physical parent. Its retained numerators are exactly the canonical
+  prefix generators, and a history induction supplies the same common height
+  budget. For these integer leading coefficients, native companion-matrix
+  normalization reads one coefficient and one leading residue and uses modular
+  scalar powering, including for composite moduli and nonunits.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

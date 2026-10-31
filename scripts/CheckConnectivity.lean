@@ -15248,3 +15248,257 @@ example (n : ℕ) : (next^[n] q).length ≤ 49 := by
   rw [HE] at H
   exact H
 end RankedHistoryTaskRegression
+
+
+namespace IntegralScalarReaderRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def F : IntegralScalarNormalizationBits.Family where
+  width _ := 2
+  degree _ := 4
+  index _ := 1
+  modulus _ := 6
+  row _ := (1 : Fin 2)
+  col _ := (0 : Fin 2)
+  coefficient _ k := if k = 4 then (2 : ZMod 6) • 1
+    else if k = 1 then fun i j => ((1 + 4 * i.val + 2 * j.val : ℕ) : ZMod 6) else 0
+  modulus_ne_zero _ := by decide
+  leading _ := 2
+  leading_eq _ := by simp only [ite_true]
+
+private def K (q : List Bool) : ℕ := Nat.fromBitsLE (pairFst (pairSnd q))
+private def R (q : List Bool) : ℕ := Nat.fromBitsLE (pairFst (pairSnd (pairSnd q)))
+private def T (q : List Bool) : ℕ := Nat.fromBitsLE (pairSnd (pairSnd (pairSnd q)))
+private def entry (q : List Bool) : List Bool :=
+  if K q = 4 then if R q = T q then BinaryNatCode.encode 2 else []
+  else if K q = 1 then BinaryNatCode.encode ((1 + 4 * R q + 2 * T q) % 6) else []
+private theorem entry_FP : entry ∈ FP := by
+  have HK : BinaryFn K := BinaryFn.fromBits (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP)
+  have HR : BinaryFn R := BinaryFn.fromBits (mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairFst_mem_FP)
+  have HT : BinaryFn T := BinaryFn.fromBits (mem_FP_comp (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP) pairSnd_mem_FP)
+  have HL : BinaryFn (fun q => (1 + 4 * R q + 2 * T q) % 6) :=
+    (((BinaryFn.const 1).add ((BinaryFn.const 4).mul HR)).add ((BinaryFn.const 2).mul HT)).mod (BinaryFn.const 6)
+  exact (HK.eq (BinaryFn.const 4)).ite_mem_FP
+    ((HR.eq HT).ite_mem_FP (constFn_mem_FP _) (constFn_mem_FP []))
+    ((HK.eq (BinaryFn.const 1)).ite_mem_FP HL.bits_mem_FP (constFn_mem_FP []))
+
+private noncomputable def access : IntegralScalarNormalizationBits.Access F where
+  width := BinaryFn.const 2
+  degree := BinaryFn.const 4
+  index := BinaryFn.const 1
+  modulus := BinaryFn.const 6
+  row := BinaryFn.const 1
+  col := BinaryFn.const 0
+  entry := entry
+  entry_eq c k i j := by
+    dsimp only [F] at i j ⊢
+    simp only [entry, K, R, T, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    by_cases hk : k = 4
+    · subst k
+      fin_cases i <;> fin_cases j <;> decide
+    · by_cases hk' : k = 1
+      · subst k
+        fin_cases i <;> fin_cases j <;> decide
+      · simp only [hk, hk', ite_false, Matrix.zero_apply, residueBits, ZMod.val_zero,
+          BinaryNatCode.encode, Nat.zero_bits]
+  leading _ := BinaryNatCode.encode 2
+  leading_eq _ := by change BinaryNatCode.encode 2 = residueBits (2 : ZMod 6); decide
+
+-- The selected leading matrix is the nonunit scalar 2 times the identity.
+-- The lower matrix is dense and its (1,0) entry is 5.
+example : SpaceFunction F.toFamily.value :=
+  IntegralScalarNormalizationBits.evaluator F access (SpaceFunction.ofFP _ entry_FP)
+    (SpaceFunction.ofFP _ (constFn_mem_FP _))
+example : SpaceFunction F.toFamily.negativeValue :=
+  IntegralScalarNormalizationBits.negative_evaluator F access (SpaceFunction.ofFP _ entry_FP)
+    (SpaceFunction.ofFP _ (constFn_mem_FP _))
+example (c : List Bool) : F.toFamily.value c = BinaryNatCode.encode 2 := by
+  unfold IntegralNormalizationMatrixBits.Family.value
+  rw [IntegralScalarNormalizationBits.scalar_entry]
+  have H : residueBits ((5 : ZMod 6) * (2 : ZMod 6) ^ 2) = BinaryNatCode.encode 2 := by decide
+  exact H
+example (c : List Bool) : F.toFamily.negativeValue c = BinaryNatCode.encode 4 := by
+  unfold IntegralNormalizationMatrixBits.Family.negativeValue
+  rw [IntegralScalarNormalizationBits.scalar_entry]
+  have H : residueBits (-((5 : ZMod 6) * (2 : ZMod 6) ^ 2)) = BinaryNatCode.encode 4 := by decide
+  exact H
+
+private noncomputable def G : IntegralScalarGeneratorBits.Family where
+  width _ := 2
+  scalarDegree _ := 4
+  selectedDegree _ := 4
+  modulus _ := 6
+  oldRow _ := (1 : Fin 2)
+  oldCol _ := (0 : Fin 2)
+  row _ := (1 : Fin 4)
+  col _ := (3 : Fin 4)
+  coefficient := F.coefficient
+  modulus_ne_zero _ := by decide
+  leading := F.leading
+  leading_eq := F.leading_eq
+private noncomputable def generatorAccess : IntegralScalarGeneratorBits.Access G where
+  width := BinaryFn.const 2
+  scalarDegree := BinaryFn.const 4
+  selectedDegree := BinaryFn.const 4
+  modulus := BinaryFn.const 6
+  oldRow := BinaryFn.const 1
+  oldCol := BinaryFn.const 0
+  row := BinaryFn.const 1
+  col := BinaryFn.const 3
+  entry := entry
+  entry_eq := access.entry_eq
+  leading := access.leading
+  leading_eq := access.leading_eq
+example : SpaceFunction G.toFamily.value :=
+  IntegralScalarGeneratorBits.evaluator G generatorAccess (SpaceFunction.ofFP _ entry_FP)
+    (SpaceFunction.ofFP _ (constFn_mem_FP _))
+-- Last companion column uses that same scalar normalization, including nonunits.
+example (c : List Bool) : G.toFamily.value c = BinaryNatCode.encode 4 := by
+  have H := (show F.toFamily.negativeValue c = BinaryNatCode.encode 4 from by
+    unfold IntegralNormalizationMatrixBits.Family.negativeValue
+    rw [IntegralScalarNormalizationBits.scalar_entry]
+    have H : residueBits (-((5 : ZMod 6) * (2 : ZMod 6) ^ 2)) = BinaryNatCode.encode 4 := by decide
+    exact H)
+  exact H
+end IntegralScalarReaderRegression
+
+
+namespace GlobalCriticalHeightRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open UniformIntegralPrefix IntegralHistoryCriticalBits IntegralHistoryGlobalHeightBounds
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def RP1 : Prefix 2 4 1 := UniformIntegralPrefix.step P0 (by decide) (by decide) p0
+  (IntegralScalarRootHistoryBounds.degree F0 [])
+private noncomputable def rootBank1 : HeightBank (B := 2) RP1 := bank0.rootStep (by decide) p0
+  (IntegralScalarRootHistoryBounds.degree F0 []) (IntegralClearedCriticalLeadingBits.integer (source F0) [])
+private theorem rootHistory1 : IntegralScalarRootHistoryBounds.History 2 2 2 0 (B := 2) RP1 rootBank1 := by
+  apply IntegralScalarRootHistoryBounds.History.step F0 [] bank0
+    (IntegralScalarRootHistoryBounds.History.base 2 2) (fun _ => none)
+  · intro i; rfl
+  · intro i; rfl
+  · intro e
+    dsimp only [F0, data0]
+    rw [MvPolynomial.coeff_neg, MvPolynomial.coeff_one]
+    split_ifs <;> norm_num
+  · change (1 : ℤ).natAbs ≤ 2 ^ 0; decide
+  · change 0 + 1 ≤ 2; decide
+  · change 2 ≤ 2; decide
+  · change 2 ≤ 2; decide
+  · change PurePowerReductionBounds.dimension 1 2 ≤ 2 ^ 2; decide
+
+private noncomputable def rootData1 : IntegralHistorySampler.CriticalData RP1 1 where
+  heights i := if i.val = 0 then rootBank1.numerator 0 else 0
+  low := -1
+  leading := 1
+  objective := 2
+  scales i := if i.val = 0 then rootBank1.denominator 0 else 1
+  frozen := {0}
+  free := 1
+  degree := 2
+  birth_bound := by decide
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne := by decide
+  objective_ne := by decide
+  scales_ne i := by
+    by_cases hi : i.val = 0
+    · simp only [hi, ite_true]
+      exact rootHistory1.denominators_ne_zero 0
+    · simp only [hi, ite_false, ne_eq, one_ne_zero, not_false_eq_true]
+  free_not_frozen := by simp
+private noncomputable def RF1 : Family where
+  cap _ := 2
+  width _ := 2
+  birth _ := 1
+  ambient _ := 1
+  free _ := 0
+  scalarPrefix _ := RP1
+  data _ := rootData1
+  offset _ := 1
+  fit _ := by decide
+  sourceWidth _ := 2
+  degree_lt _ := by change 2 < 2 ^ 2; decide
+  objective _ := 0
+  coordinate _ := 0
+  coefficientIndex _ := 4
+  target _ := 0
+  row _ := ⟨0, by change 0 < 4; decide⟩
+  col _ := ⟨0, by change 0 < 4; decide⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+private noncomputable def rootP1 : Polynomial RP1.carrier := (source RF1).annihilator []
+private noncomputable def RP2 : Prefix 2 4 2 := UniformIntegralPrefix.step RP1 (by decide) (by decide) rootP1
+  (IntegralScalarRootHistoryBounds.degree RF1 [])
+private noncomputable def rootBank2 : HeightBank (B := 2) RP2 := rootBank1.rootStep (by decide) rootP1
+  (IntegralScalarRootHistoryBounds.degree RF1 []) (IntegralClearedCriticalLeadingBits.integer (source RF1) [])
+private theorem rootHistory2 : IntegralScalarRootHistoryBounds.History 2 2 2 0 (B := 2) RP2 rootBank2 := by
+  apply IntegralScalarRootHistoryBounds.History.step RF1 [] rootBank1 rootHistory1
+    (fun i => if i.val = 0 then some (⟨0, by change 0 < 1; decide⟩ : Fin (RF1.birth [])) else none)
+  · intro i
+    by_cases hi : i.val = 0 <;> simp only [RF1, rootData1, hi, ite_true, ite_false, HeightBank.selectedNumerator]; rfl
+  · intro i
+    by_cases hi : i.val = 0 <;> simp only [RF1, rootData1, hi, ite_true, ite_false, HeightBank.selectedDenominator]; rfl
+  · intro e
+    dsimp only [RF1, rootData1]
+    rw [MvPolynomial.coeff_neg, MvPolynomial.coeff_one]
+    split_ifs <;> norm_num
+  · change (1 : ℤ).natAbs ≤ 2 ^ 0; decide
+  · change 1 + 1 ≤ 2; decide
+  · change 2 ≤ 2; decide
+  · change 2 ≤ 2; decide
+  · change PurePowerReductionBounds.dimension 1 2 ≤ 2 ^ 2; decide
+
+-- Two actual births retain exactly the canonical scalar generators.
+example (i : Fin 2) : rootBank2.numerator i = RP2.basis.generator i := rootHistory2.generators i
+example (i : Fin 2) : rootBank2.denominator i ≠ 0 := rootHistory2.denominators_ne_zero i
+example : rootBank2.Bounds (height 2 (FixedWidthPolynomial.count 2 2) 2 2 (2 ^ 2) 0 (2 + 1)) :=
+  rootHistory2.uniform_bounds
+end GlobalCriticalHeightRegression
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+example : SpaceFunction (IntegralClearedCriticalLeadingBits.value heightSource) :=
+  IntegralClearedCriticalLeadingBits.evaluator heightSource heightAccess
+    (SpaceFunction.ofFP _ (constFn_mem_FP _)) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+-- The top power uses spatial dimension 8, independently of old rank 2.
+example (c : List Bool) : IntegralClearedCriticalLeadingBits.exponent heightSource c = 40 := by
+  change (4 + 1) * FixedWidthPolynomial.count 1 3 = 40
+  decide
+example (c : List Bool) : IntegralClearedCriticalLeadingBits.value heightSource c = BinaryNatCode.encode 4 := by
+  have HE : IntegralClearedCriticalLeadingBits.exponent heightSource c = 40 := by
+    change (4 + 1) * FixedWidthPolynomial.count 1 3 = 40
+    decide
+  have HC : IntegralClearedCriticalBounds.commonLeading heightSource c = 128 := by
+    change (2 : ℤ) * (-2) ^ 4 * 4 = 128
+    decide
+  unfold IntegralClearedCriticalLeadingBits.value IntegralClearedCriticalLeadingBits.integer
+  rw [HE, HC]
+  have H : residueBits (((128 : ℤ) ^ 40 : ℤ) : ZMod 6) = BinaryNatCode.encode 4 := by
+    rw [Int.cast_pow]
+    decide
+  exact H
+end IntegralFrozenPowerRegression
+
+namespace HistorySamplerRegression
+open LeanCanny.Algebra IntegralHistorySampler
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+-- The same nonunit-leading scalar now recovers from the monic root divided by 2.
+-- Every old physical coordinate, including the independent coordinate 77, stays fixed.
+example : ∃ y : (Fin 1 ⊕ Unit) → ℝ,
+    (∀ j, ((scalarStep F (by decide) (by decide) p 1).rows j).eval₂ (Int.castRingHom ℝ) y = 0) ∧
+    (∀ i, y (Sum.inl i) = 77) ∧
+    ∀ psi : (scalarStep F (by decide) (by decide) p 1).scalarPrefix.carrier →ₐ[ℤ] ℝ,
+      (∀ i, psi ((scalarStep F (by decide) (by decide) p 1).scalarPrefix.basis.generator i) =
+        y ((scalarStep F (by decide) (by decide) p 1).scalar i) ^ UniformIntegralPowerSchedule.weights 2 4 1 i) →
+      psi (AdjoinRoot.root _) / 2 = 1 / 2 := by
+  exact scalarStep_real_extend_recover_root_integer F (by decide) (by decide) p 1 (by decide)
+    2 (by decide) (by norm_num [p, Polynomial.coeff_one]) (fun _ => 77) old_root phi (fun i => Fin.elim0 i)
+    (1 / 2) p_degree (by decide) p_root
+end HistorySamplerRegression

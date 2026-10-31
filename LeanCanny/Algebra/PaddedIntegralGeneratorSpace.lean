@@ -77,8 +77,8 @@ noncomputable def normalizationAccess (F : Family) (a : Access F) :
   entry := a.entry
   entry_eq := a.entry_eq
 
-theorem evaluator (F : Family) (a : Access F) (E : SpaceFunction a.entry) : SpaceFunction F.value := by
-  have HN := IntegralNormalizationMatrixBits.negative_evaluator (normalizationFamily F) (normalizationAccess F a) E
+theorem evaluator_with_normalization (F : Family) (a : Access F)
+    (HN : SpaceFunction (normalizationFamily F).negativeValue) : SpaceFunction F.value := by
   have HZ : SpaceFunction (fun c => residueBits (0 : ZMod (F.modulus c))) :=
     (SpaceFunction.ofFP _ (constFn_mem_FP [])).congr (by funext c; simp [residueBits, BinaryNatCode.encode])
   have HO : SpaceFunction (fun c => residueBits (1 : ZMod (F.modulus c))) :=
@@ -111,5 +111,9 @@ theorem value_packet {A : Type*} [CommRing A] [Nontrivial A] (F : Family) (c : L
   rw [hc, hc, ← Matrix.map_pow, ← Matrix.map_mul]
   simp only [Matrix.map_apply, Int.cast_neg]
   rfl
+
+theorem evaluator (F : Family) (a : Access F) (E : SpaceFunction a.entry) : SpaceFunction F.value :=
+  evaluator_with_normalization F a
+    (IntegralNormalizationMatrixBits.negative_evaluator (normalizationFamily F) (normalizationAccess F a) E)
 
 end LeanCanny.Algebra.PaddedIntegralGeneratorBits
