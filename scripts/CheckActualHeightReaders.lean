@@ -52,6 +52,7 @@ import LeanCanny.Encoding.CoordinateDoubleAffineCriticalPairs
 import LeanCanny.Encoding.CoordinateDoubleAffineSharedCriticalPairs
 import LeanCanny.Encoding.CoordinateDoubleAffineMidpointPairRoots
 import LeanCanny.Encoding.CoordinateDoubleAffineMidpointWordGeometry
+import LeanCanny.Encoding.CoordinateDoubleAffineTraceBounds
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -1044,6 +1045,32 @@ example : CoordinateDoubleAffineCriticalPairs.sharedLanguage F.source (fun _ => 
 example : SpaceFunction
     (CoordinateDoubleAffineCriticalPairs.midpointWord F.source (fun _ => 1) (fun _ => 0) (fun _ => [])) :=
   CoordinateDoubleAffineCriticalPairs.midpointWord_evaluator access.source (UnaryFn.const 1) (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+-- Both child types share one source frame and one uniform native sampler.
+#guard CoordinateDoubleAffineTrace.offset [false, true, false, true] == 6
+#guard CoordinateDoubleAffineTrace.completed 2 [false, true, false] 4 == 1
+#guard CoordinateDoubleAffineTrace.completed 2 [false, true, false] 5 == 2
+#guard (CoordinateDoubleAffineTrace.append true (CoordinateDoubleAffineTrace.frame [true, false] [false])).length ==
+  (CoordinateDoubleAffineTrace.frame [true, false] [false]).length + 1
+
+example :
+    (CoordinateDoubleAffineTrace.inputs F.source F.depth (fun _ => 0) (fun _ => [])).Access :=
+  CoordinateDoubleAffineTrace.access access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : FlatAffinePowerPositive.ConeCertificate
+    (CoordinateDoubleAffineTrace.inputs F.source F.depth (fun _ => 0) (fun _ => [])) :=
+  CoordinateDoubleAffineTrace.cone F.source F.depth (fun _ => 0) (fun _ => [])
+
+example : ∃ p : Polynomial ℕ, ∀ u trace w,
+    CoordinateDoubleAffineTrace.Valid F.source (CoordinateDoubleAffineTrace.seedCoordinate F.depth (fun _ => 0))
+      (CoordinateDoubleAffineTrace.frame u trace) →
+    FlatAffineCompleteVertices.Valid
+      (CoordinateDoubleAffineTrace.inputs F.source F.depth (fun _ => 0) (fun _ => []))
+      (CoordinateDoubleAffineTrace.cone F.source F.depth (fun _ => 0) (fun _ => []))
+      (CoordinateDoubleAffineTrace.frame u trace) w → w.length ≤ p.eval u.length :=
+  CoordinateDoubleAffineTrace.vertex_frame_polynomial access.source access.depth (UnaryFn.const 0)
     (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
 
 -- A depth-one native shared-parent packet constructs the actual child root;

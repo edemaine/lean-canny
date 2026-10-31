@@ -904,6 +904,12 @@ The checked ingredients are:
   midpoint slice. The child passes the original parent filter. Every pair
   of original critical roots with a shared parent has an accepted paired
   label and yields the constructed child, including at singular roots.
+  A shared-source history now records each child choice with one bit. Native
+  depth, objective, and level readers form a single complete sampler family.
+  Appending history reproduces the existing child records on every retained
+  stage. Frames and complete vertex words have one polynomial bound in the
+  original source length across all valid histories. Transporting child
+  labels into appended frame contexts remains required.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and
