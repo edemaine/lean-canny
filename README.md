@@ -1013,6 +1013,13 @@ The checked ingredients are:
   Fixed-width basis changes preserve the characteristic denominator.
   Exact numerator-matrix identities combine the new generator and lifted
   inverse matrices; native digit guards supply the lifted entries.
+  Native generator, selected-inverse, and denominator queries now share the
+  original source record and caller modulus. Every internal coefficient
+  scan forwards its own requested modulus to the original reader. Valid
+  basis ranks retain their exact meanings; binary clipping supplies total
+  defaults for other ranks. Original entry-height bounds derive the
+  determinant and characteristic budgets, and the source-level numerator
+  identity uses the same constructed generator and inverse matrices.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

@@ -12517,3 +12517,69 @@ example {A : Type*} [CommRing A] [Nontrivial A] {m B : ℕ}
   PaddedIntegralParameterExtension.denominator_finBasis b p d
 
 end MatrixFunctionRegression
+
+
+namespace IntegralSourceRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MatrixPower
+open PaddedIntegralGeneratorSource
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def S : Source where
+  arity _ := 0
+  width _ := 2
+  carrier _ := ℤ
+  ring _ := inferInstance
+  nontrivial _ := inferInstance
+  basis _ := IntegralCoordinateBasis.base 4
+  polynomial _ := Polynomial.C 2 * Polynomial.X ^ 2 + Polynomial.C 3 * Polynomial.X + Polynomial.C 5
+  degree _ := 2
+
+private def c : List Bool := [true, false, true]
+private def q : List Bool := pair (pair c (BinaryNatCode.encode 9)) (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 3))
+
+example : base q = c := by decide
+example : modulus q = BinaryNatCode.encode 9 := by decide
+example : (index S row q).val = 2 := by decide
+example : (index S col q).val = 3 := by decide
+
+-- Large invalid ranks reduce in binary, without a unary conversion.
+example : (index S row (pair (pair c []) (pair (BinaryNatCode.encode (2 ^ 40 + 3)) []))).val = 3 := by decide
+
+-- Normalization requests retain the original record and caller modulus.
+example : coefficientQuery (pair q (pair (BinaryNatCode.encode 1) (pair [] []))) =
+    pair (pair c (BinaryNatCode.encode 9)) (pair (BinaryNatCode.encode 1) (pair [] [])) := by decide
+
+-- Internal characteristic scans can request a DIFFERENT modulus.
+example : PaddedIntegralSelectedMatrixSource.query S
+    (pair (pair q (BinaryNatCode.encode 12)) (pair [] [])) =
+      pair (pair c (BinaryNatCode.encode 12)) (pair (BinaryNatCode.encode 2) (pair [] [])) := by decide
+
+example (B : PaddedIntegralSelectedMatrixSource.Bounds S) :
+    (PaddedIntegralSelectedMatrixSource.index S B row
+      (pair (pair c []) (pair (BinaryNatCode.encode (2 ^ 100)) []))).val = 0 := by
+  change Nat.fromBitsLE (row _) % 1 = 0
+  exact Nat.mod_one _
+
+example (c mw : List Bool) (i j : Fin 4) :
+    value S (pair (pair c mw) (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val))) =
+      residueBits ((S.matrix c i j : ℤ) : ZMod (Nat.fromBitsLE mw + 1)) := value_packet S c mw i j
+
+example (B : PaddedIntegralSelectedMatrixSource.Bounds S) (c mw : List Bool) (i j : Fin 1) :
+    PaddedIntegralSelectedMatrixSource.value S B
+      (pair (pair c mw) (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val))) =
+      residueBits ((PaddedIntegralSelectedMatrixSource.matrix S c i j : ℤ) : ZMod (Nat.fromBitsLE mw + 1)) :=
+  PaddedIntegralSelectedMatrixSource.value_packet S B c mw i j
+
+example (c : List Bool) : PaddedIntegralHeightSourceMatrix.matrix S c =
+    S.matrix c * PaddedIntegralHeightSourceMatrix.liftMatrix S c := PaddedIntegralHeightSourceMatrix.matrix_eq S c
+
+example (B : PaddedIntegralSelectedMatrixSource.Bounds S) (q : List Bool) :
+    PaddedIntegralSelectedMatrixSource.denominatorValue S B q =
+      residueBits ((PaddedIntegralHeightSourceMatrix.denominator S (base q) : ℤ) : ZMod (Nat.fromBitsLE (modulus q) + 1)) :=
+  PaddedIntegralHeightSourceMatrix.denominator_value S B q
+
+example (c : List Bool) : PaddedIntegralHeightSourceMatrix.denominator S c ≠ 0 :=
+  PaddedIntegralHeightSourceMatrix.denominator_ne_zero S c
+
+end IntegralSourceRegression
