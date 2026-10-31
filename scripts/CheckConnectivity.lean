@@ -14271,3 +14271,160 @@ example : S.lowerPolynomial [true] =
   lower_polynomial [true]
 
 end IntegralFrozenPowerRegression
+
+
+namespace CoordinateMulRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation MatrixPower
+open FixedWidthCoordinateMulBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private def extract : ℤ →+ ℤ where
+  toFun z := 2 * z
+  map_zero' := by simp
+  map_add' x y := by ring
+private noncomputable def e : Fin 2 →₀ ℕ := Finsupp.single (1 : Fin 2) 1
+private noncomputable def p : MvPolynomial (Fin 2) ℤ := MvPolynomial.monomial e 5
+private theorem exponent_eq (k : ℕ) : e = FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin 2)) 2 k ↔
+    k % 4 = 0 ∧ k / 4 % 4 = 1 := by
+  constructor
+  · intro h
+    have H0 := congrArg (fun v : Fin 2 →₀ ℕ => v (0 : Fin 2)) h
+    have H1 := congrArg (fun v : Fin 2 →₀ ℕ => v (1 : Fin 2)) h
+    norm_num [e, FixedWidthPolynomial.nativeExponent, FixedWidthPolynomial.entry_eq_digit] at H0 H1
+    exact ⟨H0.symm, H1.symm⟩
+  · intro h
+    apply Finsupp.ext
+    intro i
+    fin_cases i <;> norm_num [e, FixedWidthPolynomial.nativeExponent, FixedWidthPolynomial.entry_eq_digit] <;> omega
+private def coefficient (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (pairSnd q) % 4 = 0 ∧ Nat.fromBitsLE (pairSnd q) / 4 % 4 = 1 then BinaryNatCode.encode 4 else []
+private theorem coefficient_FP : coefficient ∈ FP :=
+  ((((BinaryFn.fromBits pairSnd_mem_FP).mod (BinaryFn.const 4)).eq (BinaryFn.const 0)).and
+    ((((BinaryFn.fromBits pairSnd_mem_FP).div (BinaryFn.const 4)).mod (BinaryFn.const 4)).eq (BinaryFn.const 1))).ite_mem_FP
+      (constFn_mem_FP (BinaryNatCode.encode 4)) (constFn_mem_FP [])
+private theorem coefficient_packet (c : List Bool) (k : ℕ) : coefficient (pair c (BinaryNatCode.encode k)) =
+    residueBits ((extract (p.coeff (FixedWidthPolynomial.nativeExponent (Equiv.refl (Fin 2)) 2 k)) : ℤ) : ZMod 6) := by
+  rw [p, MvPolynomial.coeff_monomial]
+  simp only [exponent_eq, coefficient, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  by_cases h : k % 4 = 0 ∧ k / 4 % 4 = 1 <;> simp only [h, ite_false] <;> norm_num [extract] <;> decide
+example : extract (1 * 1) ≠ extract 1 * extract 1 := by norm_num [extract]
+example : SpaceFunction (value (fun _ => 2) (fun _ => 2) (fun _ => 0) id coefficient) :=
+  evaluator _ _ _ _ (SpaceFunction.ofFP _ coefficient_FP) (UnaryFn.const 2) (UnaryFn.const 2) (BinaryFn.const 0) id_mem_FP
+example (c : List Bool) : value (fun _ => 2) (fun _ => 2) (fun _ => 0) id coefficient c =
+    residueBits ((extract ((MvPolynomial.X (0 : Fin 2) * p).coeff
+      (FixedWidthDerivativeBits.exponent (fun _ => 2) id (Equiv.refl (Fin 2)) c)) : ℤ) : ZMod 6) :=
+  packet _ _ _ _ (Equiv.refl (Fin 2)) extract coefficient c p (0 : Fin 2) 6 rfl rfl (coefficient_packet c)
+example : query (fun _ => 2) (fun _ => 2) (fun _ => 0) id [true, false, true, false, false] =
+    pair [true, false, true, false, false] (BinaryNatCode.encode 4) := by decide
+example : value (fun _ => 2) (fun _ => 2) (fun _ => 0) id coefficient (BinaryNatCode.encode 5) = BinaryNatCode.encode 4 := by
+  unfold FixedWidthCoordinateMulBits.value
+  rw [ite_eq_left (show positive (fun _ => 2) (fun _ => 2) (fun _ => 0) id (BinaryNatCode.encode 5) by decide)]
+  decide
+example : value (fun _ => 2) (fun _ => 2) (fun _ => 0) id coefficient (BinaryNatCode.encode 4) = [] := by
+  unfold FixedWidthCoordinateMulBits.value
+  rw [ite_eq_right (show ¬ positive (fun _ => 2) (fun _ => 2) (fun _ => 0) id (BinaryNatCode.encode 4) by decide)]
+example (c : List Bool) (j e k r t : ℕ) :
+    IntegralClearedCoefficientBits.coefficientRequery pairFst
+      (pair (IntegralClearedCoefficientBits.context (pair c (pair (BinaryNatCode.encode j) (BinaryNatCode.encode e))) r t)
+        (BinaryNatCode.encode k)) = pair (IntegralClearedCoefficientBits.context c r t) (BinaryNatCode.encode k) := by
+  simp only [IntegralClearedCoefficientBits.coefficientRequery, IntegralClearedCoefficientBits.context,
+    pairFst_pair, pairSnd_pair]
+example (c : List Bool) (j e i r t : ℕ) :
+    IntegralClearedCoefficientBits.heightRequery pairFst
+      (pair (pair c (pair (BinaryNatCode.encode j) (BinaryNatCode.encode e)))
+        (pair (BinaryNatCode.encode i) (pair (BinaryNatCode.encode r) (BinaryNatCode.encode t)))) =
+      pair c (pair (BinaryNatCode.encode i) (pair (BinaryNatCode.encode r) (BinaryNatCode.encode t))) := by
+  simp only [IntegralClearedCoefficientBits.heightRequery, pairFst_pair, pairSnd_pair]
+end CoordinateMulRegression
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralFrozenPowerBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def criticalSource : IntegralCriticalGradientBits.Source where
+  toFrozen := S
+  free_pos _ := by change 0 < 1; decide
+  degree _ := 3
+  degree_pos _ := by decide
+  degree_le c := by
+    change p.totalDegree ≤ 3
+    norm_num [p, exponents, Finsupp.sum_add_index]
+  degree_lt c := by
+    change 3 < 2 ^ 2
+    decide
+private noncomputable def criticalAccess : IntegralCriticalGradientBits.Access criticalSource where
+  toFrozen := access
+  degree := BinaryFn.const 3
+example : SpaceFunction (IntegralCriticalGradientBits.family criticalSource).value :=
+  IntegralCriticalGradientBits.evaluator criticalSource criticalAccess
+    (SpaceFunction.ofFP _ coefficientReader_FP) (SpaceFunction.ofFP _ heightReader_FP)
+    (SpaceFunction.ofFP _ (constFn_mem_FP _))
+
+-- The selected original derivative is offset plus the local free rank.
+example : (IntegralCriticalGradientBits.selected criticalSource
+    (pair [true, false, true] (pair (BinaryNatCode.encode 0) (BinaryNatCode.encode 1)))).val = 1 := by
+  decide
+-- Invalid local ranks are clipped before conversion to unary metadata.
+example : (IntegralCriticalGradientBits.selected criticalSource
+    (pair [true, false, true] (pair (BinaryNatCode.encode 17) (BinaryNatCode.encode 1)))).val = 1 := by
+  decide
+
+private theorem original_free_derivative : MvPolynomial.pderiv (1 : Fin 2) p =
+    MvPolynomial.monomial (Finsupp.single (0 : Fin 2) 2) (5 : ℤ × ℤ) := by
+  rw [p, MvPolynomial.pderiv_monomial]
+  have HE : exponents - Finsupp.single (1 : Fin 2) 1 = Finsupp.single (0 : Fin 2) 2 := by
+    apply Finsupp.ext
+    intro i
+    fin_cases i <;> norm_num [exponents, Finsupp.tsub_apply]
+  rw [HE]
+  norm_num [exponents]
+
+private theorem free_derivative_cleared : ClearedCoordinateBlock.specialize 4 (-2 : ℤ × ℤ)
+    (fun i => if i = 0 then (-2, -3) else (5, 5)) 1 1 (MvPolynomial.pderiv (1 : Fin 2) p) =
+      MvPolynomial.monomial 0 (80, 180) := by
+  rw [original_free_derivative, ClearedCoordinateBlock.specialize_monomial]
+  have HE : ClearedCoordinateBlock.freeExponent 1 1 (Finsupp.single (0 : Fin 2) 2) = 0 := by
+    apply Finsupp.ext
+    intro j
+    rw [ClearedCoordinateBlock.freeExponent_apply 1 (by decide)]
+    fin_cases j
+    norm_num
+  rw [HE]
+  congr 1
+  norm_num [ClearedCoordinateBlock.monomialScalar, ClearedCoordinateBlock.scalarAtom,
+    Finsupp.degree_eq_sum, Fin.sum_univ_succ, Fin.prod_univ_succ]
+  rfl
+
+attribute [local irreducible] ClearedCoordinateBlock.specialize
+example : (IntegralCriticalGradientBits.family criticalSource).value
+    (pair [true, false, true] (pair (BinaryNatCode.encode 0) (BinaryNatCode.encode 0))) = BinaryNatCode.encode 4 := by
+  have H := IntegralCriticalGradientBits.packet criticalSource [true, false, true] (0 : Fin 1) 0
+  change (IntegralCriticalGradientBits.family criticalSource).value
+    (pair [true, false, true] (pair (BinaryNatCode.encode 0) (BinaryNatCode.encode 0))) = _ at H
+  rw [H]
+  change residueBits ((Algebra.leftMulMatrix b
+    ((ClearedCoordinateBlock.specialize 4 (-2 : ℤ × ℤ) (fun i => if i = 0 then (-2, -3) else (5, 5)) 1 1
+      (MvPolynomial.pderiv (1 : Fin 2) p)).coeff
+        (RationalSubstitution.Indexed.exponentVector 1 (FixedWidthPolynomial.entry 2 0)))
+      (1 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 6) = _
+  rw [free_derivative_cleared, target_zero, MvPolynomial.coeff_monomial, ite_eq_left rfl, matrix_entry]
+  norm_num
+  decide
+end IntegralFrozenPowerRegression
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open scoped Classical
+example : SpaceFunction (IntegralCriticalLeadingBits.value S) :=
+  IntegralCriticalLeadingBits.evaluator S access
+    (SpaceFunction.ofFP _ (constFn_mem_FP _)) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+-- The actual common leading coefficient is 2*(-2)^4*4 = 128.
+example : IntegralCriticalLeadingBits.value S [true, false, true] = BinaryNatCode.encode 2 := by
+  change residueBits ((128 : ℤ) : ZMod 6) = BinaryNatCode.encode 2
+  decide
+private noncomputable def zeroAllowance : IntegralFrozenPowerBits.Source := { S with allowance := fun _ => 0 }
+example : IntegralCriticalLeadingBits.value zeroAllowance [] = [] := by
+  change residueBits ((0 : ℤ) : ZMod 6) = []
+  decide
+end IntegralFrozenPowerRegression

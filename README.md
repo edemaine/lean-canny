@@ -1110,8 +1110,15 @@ The checked ingredients are:
   powers are summed outside the free block; a fixed-width guard selects
   the constant spatial coefficient. Adding this constant computes the actual
   cleared lower polynomial from the same original readers, including signed
-  heights and denominators over composite moduli. Euler critical rows still
-  need construction.
+  heights and denominators over composite moduli. Saved-source query writers
+  now separate the original family from new exponent and basis queries. Native
+  free-coordinate gradient readers select the original index offset plus the
+  local rank, differentiate before clearing, and retain the original allowance.
+  A native coordinate-product reader decrements one spatial exponent and calls
+  the original coefficient reader once; its correctness needs only additive
+  extraction. The common critical-row leading coefficient a*D*q^D also has a
+  constructed native modular reader. Euler critical-row assembly still needs
+  construction.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

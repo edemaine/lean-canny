@@ -127,6 +127,9 @@ import LeanCanny.Algebra.IntegralMonomialTermSpace
 import LeanCanny.Algebra.IntegralClearedCoefficientSpace
 import LeanCanny.Algebra.IntegralDerivativeClearingSpace
 import LeanCanny.Algebra.IntegralClearedLowerSpace
+import LeanCanny.Algebra.FixedWidthCoordinateMulSpace
+import LeanCanny.Algebra.IntegralCriticalGradientSpace
+import LeanCanny.Algebra.IntegralCriticalLeadingSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
