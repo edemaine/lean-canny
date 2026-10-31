@@ -908,8 +908,9 @@ The checked ingredients are:
   depth, objective, and level readers form a single complete sampler family.
   Appending history reproduces the existing child records on every retained
   stage. Frames and complete vertex words have one polynomial bound in the
-  original source length across all valid histories. Transporting child
-  labels into appended frame contexts remains required.
+  original source length across all valid histories. Native context search
+  returns fixed-height and midpoint child labels to that same family,
+  preserving every powered coordinate.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

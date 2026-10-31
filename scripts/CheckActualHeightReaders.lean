@@ -53,6 +53,7 @@ import LeanCanny.Encoding.CoordinateDoubleAffineSharedCriticalPairs
 import LeanCanny.Encoding.CoordinateDoubleAffineMidpointPairRoots
 import LeanCanny.Encoding.CoordinateDoubleAffineMidpointWordGeometry
 import LeanCanny.Encoding.CoordinateDoubleAffineTraceBounds
+import LeanCanny.Encoding.CoordinateDoubleAffineTraceFactories
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -1071,6 +1072,16 @@ example : ∃ p : Polynomial ℕ, ∀ u trace w,
       (CoordinateDoubleAffineTrace.cone F.source F.depth (fun _ => 0) (fun _ => []))
       (CoordinateDoubleAffineTrace.frame u trace) w → w.length ≤ p.eval u.length :=
   CoordinateDoubleAffineTrace.vertex_frame_polynomial access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : SpaceFunction
+    (CoordinateDoubleAffineTrace.heightFrameWord F.source F.depth (fun _ => 0) (fun _ => [])) :=
+  CoordinateDoubleAffineTrace.heightFrameWord_evaluator access.source access.depth (UnaryFn.const 0)
+    (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+example : SpaceFunction
+    (CoordinateDoubleAffineTrace.midpointFrameWord F.source F.depth (fun _ => 0) (fun _ => [])) :=
+  CoordinateDoubleAffineTrace.midpointFrameWord_evaluator access.source access.depth (UnaryFn.const 0)
     (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
 
 -- A depth-one native shared-parent packet constructs the actual child root;
