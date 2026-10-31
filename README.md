@@ -940,6 +940,11 @@ The checked ingredients are:
   yield relative characteristic annihilators from finite spanning relations,
   including dependent spanning families, with degree equal to the normal
   state count rather than the old parameter-algebra rank.
+  Clearing a constant denominator keeps the reduction matrix integral.
+  Rescaling its characteristic polynomial annihilates the original value
+  and preserves the specialized degree. Its native coefficient reader
+  combines the original coefficient and integer-residue readers using
+  modular powers and products, including composite moduli.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

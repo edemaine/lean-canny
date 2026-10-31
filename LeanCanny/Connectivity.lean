@@ -88,6 +88,8 @@ import LeanCanny.Algebra.FixedWidthCoordinatePowerSpace
 import LeanCanny.Algebra.PhysicalPowerCriticalRows
 import LeanCanny.Algebra.FermatScaledPowerCone
 import LeanCanny.Algebra.GradedReductionAnnihilator
+import LeanCanny.Algebra.ScaledGradedReductionAnnihilator
+import LeanCanny.Algebra.PolynomialConstantScaleSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity

@@ -11752,6 +11752,17 @@ private def degree (i : Fin 3) : ℕ := if i.val = 2 then 1 else 0
 private def v : Fin 3 → ℝ := ![1, 1, 2]
 private def shift (_ : {i : Fin 3 // normal i}) : Fin 3 := 2
 
+private theorem shift_value (j : Fin 3) (hj : normal j) : v 2 = 2 * v j := by
+  change j.val < 2 at hj
+  have H : j.val = 0 ∨ j.val = 1 := by omega
+  rcases H with h0 | h1
+  · have h : j = 0 := Fin.ext h0
+    subst j
+    norm_num [v]
+  · have h : j = 1 := Fin.ext h1
+    subst j
+    norm_num [v]
+
 -- Two normal states have the same evaluation. Independence is unnecessary:
 -- the reduced multiplication relations still annihilate the selected value.
 example : (GradedReductionAnnihilator.matrix T normal 1 shift).charpoly.eval₂ (Int.castRingHom ℝ) 2 = 0 := by
@@ -11765,16 +11776,33 @@ example : (GradedReductionAnnihilator.matrix T normal 1 shift).charpoly.eval₂ 
     fin_cases i <;> norm_num [degree]
   · ext j
     fin_cases j <;> norm_num [T, v, Matrix.vecMul, dotProduct, Fin.sum_univ_succ]
-  · rintro ⟨j, hj⟩
-    change j.val < 2 at hj
-    have H : j.val = 0 ∨ j.val = 1 := by omega
-    rcases H with h0 | h1
-    · have h : j = 0 := Fin.ext h0
-      subst j
-      norm_num [shift, v]
-    · have h : j = 1 := Fin.ext h1
-      subst j
-      norm_num [shift, v]
+  · intro j
+    exact shift_value j.val j.property
   · exact ⟨⟨0, by change (0 : ℕ) < 2; omega⟩, by norm_num [v]⟩
+
+private def S : Matrix (Fin 3) (Fin 3) ℤ := (2 : ℤ) • T
+private noncomputable def clearedMatrix : Matrix (Fin 3) (Fin 3) ℤ :=
+  GradedReductionAnnihilator.paddedMatrix S normal 1 (fun _ => 2)
+
+-- Clearing denominator two scales a two-step reduction by four. Scaling
+-- the characteristic variable back by four recovers the original value two.
+example : (ScaledGradedReductionAnnihilator.polynomial clearedMatrix 2 2).eval₂ (Int.castRingHom ℝ) 2 = 0 := by
+  apply ScaledGradedReductionAnnihilator.root
+  apply ScaledGradedReductionAnnihilator.padded_charpoly_root S normal degree (2 : ℤ)
+    ?_ ?_ 1 ?_ (fun _ => 2) (Int.castRingHom ℝ) v ?_ 2 ?_ ?_
+  · intro j hj i
+    fin_cases j <;> fin_cases i <;> norm_num [S, T, normal, Matrix.smul_apply] at *
+  · intro i j hj hS
+    fin_cases i <;> fin_cases j <;> norm_num [S, T, normal, degree, Matrix.smul_apply] at *
+  · intro i
+    fin_cases i <;> norm_num [degree]
+  · ext j
+    fin_cases j <;> norm_num [S, T, v, Matrix.smul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_succ]
+  · exact shift_value
+  · exact ⟨0, by change (0 : ℕ) < 2; omega, by norm_num [v]⟩
+
+example : ((ScaledGradedReductionAnnihilator.polynomial clearedMatrix 2 2).map (Int.castRingHom ℝ)).natDegree = 3 := by
+  simpa only [Fintype.card_fin] using ScaledGradedReductionAnnihilator.specialized_degree
+    clearedMatrix 2 2 (Int.castRingHom ℝ) (by norm_num)
 
 end GradedReductionRegression

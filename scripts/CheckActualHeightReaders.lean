@@ -1,6 +1,8 @@
 import LeanCanny.Computation.RecursiveGraphQueryBounds
 import LeanCanny.Algebra.IntegralNormalizationMatrixSpace
 import LeanCanny.Algebra.FixedWidthCoordinatePowerSpace
+import LeanCanny.Algebra.PolynomialConstantScaleSpace
+import LeanCanny.Algebra.SignedIntegerResidue
 import LeanCanny.Encoding.FlatAffineHeightValues
 import LeanCanny.Connectivity.FlatAffineHeightArcs
 import LeanCanny.Encoding.FlatAffineHeightTrailing
@@ -1214,3 +1216,31 @@ example (p : (c : List Bool) → MvPolynomial (Fin 2) ℤ) (modulus : List Bool 
   split_ifs <;> omega
 
 end CoordinatePowerReaderRegression
+
+namespace ConstantScaleReaderRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding
+open LeanCanny.Algebra.MatrixPower
+
+private theorem constant_evaluator : SpaceFunction (PolynomialConstantScaleBits.constantValue (fun _ => -2)) := by
+  have H := SignedIntegerResidue.evaluator
+    (z := fun _ : List Bool => (-2 : ℤ))
+    (SpaceFunction.ofFP _ (constFn_mem_FP (SignStatisticBits.integerCode (-2)))) pairSnd_mem_FP
+  exact H
+
+example : SpaceFunction (PolynomialConstantScaleBits.powerValue (fun _ => -2) (fun _ => 3)) :=
+  PolynomialConstantScaleBits.power_evaluator _ (BinaryFn.const 3) constant_evaluator
+
+-- The clearing constant is not invertible modulo eight. Only powering is
+-- used: (-2)^(3*2) has canonical residue zero. Modulus one works too.
+example : PolynomialConstantScaleBits.powerValue (fun _ => -2) (fun _ => 3)
+    (pair (pair [] (BinaryNatCode.encode 2)) (BinaryNatCode.encode 7)) = [] := by
+  change residueBits (((-2 : ℤ) : ZMod 8) ^ 6) = []
+  norm_num [residueBits, BinaryNatCode.encode]
+  decide
+
+example : PolynomialConstantScaleBits.powerValue (fun _ => -2) (fun _ => 3) [] = [] := by
+  change residueBits (((-2 : ℤ) : ZMod 1) ^ 0) = []
+  norm_num [residueBits, BinaryNatCode.encode]
+  exact Subsingleton.elim (α := ZMod 1) _ _
+
+end ConstantScaleReaderRegression
