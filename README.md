@@ -896,7 +896,10 @@ The checked ingredients are:
   native coefficient readers. Their labels retain every pair of critical
   roots, and native projection recovers both original-context member words,
   including at singular roots. Computed parent-word comparison tests exact
-  shared ancestry, including multipliers. Midpoint assembly remains open.
+  shared ancestry, including multipliers. A validated compatible pair now
+  constructs its actual midpoint child root with one ancestry prefix and
+  the appended right critical block. Its original parent and exact midpoint
+  slice are proved. Computing the native midpoint child word remains open.
   The full recursive component graph remains required.
   Polynomial shifts of
   row constants preserve exclusion at infinity. The full recursive component cover and

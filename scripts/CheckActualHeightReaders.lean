@@ -50,6 +50,7 @@ import LeanCanny.Encoding.CoordinateDoubleAffineChildParentMatch
 import LeanCanny.Encoding.CoordinateDoubleAffineChildHeightGeometry
 import LeanCanny.Encoding.CoordinateDoubleAffineCriticalPairs
 import LeanCanny.Encoding.CoordinateDoubleAffineSharedCriticalPairs
+import LeanCanny.Encoding.CoordinateDoubleAffineMidpointPairRoots
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
@@ -1033,6 +1034,14 @@ example : CoordinateDoubleAffineCriticalPairs.sharedLanguage F.source (fun _ => 
     (fun _ => 0) (fun _ => []) ∈ PSPACE :=
   CoordinateDoubleAffineCriticalPairs.shared_mem_PSPACE access.source (UnaryFn.const 1) (UnaryFn.const 0)
     (SpaceFunction.ofFP _ (constFn_mem_FP [])) access.sourceArity
+
+-- A depth-one native shared-parent packet constructs the actual child root;
+-- no separately supplied equation, regularity, or ancestry promise is used.
+private def midpointOfValidatedPair (u w : List Bool)
+    (hw : SquareSampleCompleteVertices.Valid
+      (CoordinateDoubleAffineCriticalPairs.input F.source (fun _ => 1) (fun _ => 0) (fun _ => [])) u w)
+    (hs : pair u w ∈ CoordinateDoubleAffineCriticalPairs.sharedLanguage F.source (fun _ => 1) (fun _ => 0) (fun _ => [])) :=
+  CoordinateDoubleAffineCriticalPairs.midpointRoot F.source (fun _ => 1) (fun _ => 0) (fun _ => []) u w hw hs
 
 example (midpoint : Bool) (u : List Bool) :
     CoordinateDoubleAffineChildRecords.rank F.source
