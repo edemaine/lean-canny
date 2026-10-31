@@ -1020,6 +1020,11 @@ The checked ingredients are:
   defaults for other ranks. Original entry-height bounds derive the
   determinant and characteristic budgets, and the source-level numerator
   identity uses the same constructed generator and inverse matrices.
+  The native numerator reader now multiplies those matrices internally,
+  forwarding every factor query to the original scalar source. Its column
+  zero supplies the actual canonical height coefficients, including wider
+  exponent queries and the fixed power substitution. No separate numerator
+  matrix reader is assumed.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

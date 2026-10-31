@@ -12583,3 +12583,65 @@ example (c : List Bool) : PaddedIntegralHeightSourceMatrix.denominator S c ≠ 0
   PaddedIntegralHeightSourceMatrix.denominator_ne_zero S c
 
 end IntegralSourceRegression
+
+
+
+namespace HeightSourceRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding MatrixPower
+open PaddedIntegralGeneratorSource
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def S : Source where
+  arity _ := 0
+  width _ := 2
+  carrier _ := ℤ
+  ring _ := inferInstance
+  nontrivial _ := inferInstance
+  basis _ := IntegralCoordinateBasis.base 4
+  polynomial _ := Polynomial.C 2 * Polynomial.X ^ 2 + Polynomial.C 3 * Polynomial.X + Polynomial.C 5
+  degree _ := 2
+
+private def c : List Bool := [true, false, true]
+private def q : List Bool := pair (pair c (BinaryNatCode.encode 9)) (pair [] [])
+private def factorQuery (k i j : ℕ) : List Bool :=
+  pair q (pair (BinaryNatCode.encode k) (pair (BinaryNatCode.encode i) (BinaryNatCode.encode j)))
+
+-- Product factors keep the original record and caller modulus, even for nonzero factor indices.
+example : PaddedIntegralHeightEntryBits.rootQuery (factorQuery 0 2 3) =
+    pair (pair c (BinaryNatCode.encode 9)) (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 3)) := by decide
+example : PaddedIntegralHeightEntryBits.oldQuery S (factorQuery 7 3 3) =
+    pair (pair c (BinaryNatCode.encode 9)) (pair [] []) := by decide
+example : PaddedIntegralHeightEntryBits.guard S (factorQuery 7 3 3) := by decide
+example : ¬ PaddedIntegralHeightEntryBits.guard S (factorQuery 7 2 3) := by decide
+
+-- A rejected digit pair contributes zero without evaluating the inverse.
+example (B : PaddedIntegralSelectedMatrixSource.Bounds S) :
+    PaddedIntegralHeightEntryBits.liftEntry S B (factorQuery 1 2 3) = [] := by
+  rw [PaddedIntegralHeightEntryBits.liftEntry, ite_eq_right (by decide)]
+
+example (c mw : List Bool) (i j : Fin 4) :
+    PaddedIntegralHeightSourceBits.value S
+      (pair (pair c mw) (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val))) =
+      residueBits (((PaddedIntegralHeightCoefficientBits.family S).matrix c i j : ℤ) : ZMod (Nat.fromBitsLE mw + 1)) :=
+  PaddedIntegralHeightCoefficientBits.entry_packet S c mw i j
+
+example (c : List Bool) : ((PaddedIntegralHeightCoefficientBits.family S).polynomial c).totalDegree ≤ 3 :=
+  PaddedIntegralHeightCoefficientBits.degree S c
+
+-- The resulting native program starts with the original coefficient reader.
+example (S : Source) (B : PaddedIntegralSelectedMatrixSource.Bounds S) (a : Access S)
+    (hh : BinaryFn B.height) (E : SpaceFunction a.entry) :
+    SpaceFunction (PaddedIntegralHeightSourceBits.value S) :=
+  PaddedIntegralHeightSourceBits.evaluator S B a hh E
+
+-- Independent exponent widths and coordinate powers do not add a matrix oracle.
+example (S : Source) (B : PaddedIntegralSelectedMatrixSource.Bounds S) (a : Access S)
+    (hh : BinaryFn B.height) (E : SpaceFunction a.entry)
+    (G V : List Bool → ℕ) (target modulus : List Bool → List Bool)
+    (hG : UnaryFn G) (hV : UnaryFn V) (ht : target ∈ FP) (hm : modulus ∈ FP) :
+    SpaceFunction (FixedWidthRowBits.value (PaddedIntegralHeightCoefficientBits.family S).arity V
+      ((PaddedIntegralHeightCoefficientBits.family S).poweredPolynomial G) target modulus) :=
+  PaddedIntegralHeightCoefficientBits.powered_evaluator S B a hh E G V target modulus hG hV ht hm
+
+end HeightSourceRegression

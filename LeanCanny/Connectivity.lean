@@ -109,6 +109,7 @@ import LeanCanny.Algebra.PaddedIntegralHeightMatrix
 import LeanCanny.Algebra.IntegralInverseMatrixSpace
 import LeanCanny.Algebra.MatrixDigitLiftSpace
 import LeanCanny.Algebra.PaddedIntegralHeightSourceMatrix
+import LeanCanny.Algebra.PaddedIntegralHeightCoefficientSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
