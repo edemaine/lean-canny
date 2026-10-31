@@ -13790,3 +13790,174 @@ example : G.value [] = BinaryNatCode.encode 4 := by
   decide
 
 end IntegralMonomialTermRegression
+
+
+namespace IntegralClearedCoefficientRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralClearedCoefficientBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def b : Module.Basis (Fin 2) ℤ (ℤ × ℤ) := Module.Basis.finTwoProd ℤ
+private theorem diagonal (v : ℤ × ℤ) (r t : Fin 2) :
+    Algebra.leftMulMatrix b v r t = if r = t then (if r = 0 then v.1 else v.2) else 0 := by
+  fin_cases r <;> fin_cases t <;>
+    simp [Algebra.leftMulMatrix_eq_repr_mul, b, Module.Basis.coe_finTwoProd_repr]
+
+private noncomputable def exponents : Fin 2 →₀ ℕ := Finsupp.single (0 : Fin 2) 2 + Finsupp.single (1 : Fin 2) 1
+private noncomputable def p : MvPolynomial (Fin 2) (ℤ × ℤ) := MvPolynomial.monomial exponents 5
+
+private theorem exponent_eq (k : ℕ) : exponents =
+    RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 k) ↔ k % 4 = 2 ∧ k / 4 % 4 = 1 := by
+  constructor
+  · intro h
+    have H0 := congrArg (fun e : Fin 2 →₀ ℕ => e (0 : Fin 2)) h
+    have H1 := congrArg (fun e : Fin 2 →₀ ℕ => e (1 : Fin 2)) h
+    norm_num [exponents, RationalSubstitution.Indexed.exponentVector, FixedWidthPolynomial.entry_eq_digit] at H0 H1
+    exact ⟨H0.symm, H1.symm⟩
+  · intro h
+    apply Finsupp.ext
+    intro i
+    fin_cases i <;>
+      norm_num [exponents, RationalSubstitution.Indexed.exponentVector, FixedWidthPolynomial.entry_eq_digit] <;> omega
+
+private noncomputable def S : Source where
+  arity _ := 2
+  free _ := 1
+  offset _ := 1
+  fit _ := by decide
+  sourceWidth _ := 2
+  targetWidth _ := 2
+  rank _ := 2
+  carrier _ := ℤ × ℤ
+  ring _ := inferInstance
+  basis _ := b
+  polynomial _ := p
+  support c e he i := by
+    change e ∈ p.support at he
+    have H := MvPolynomial.mem_support_iff.mp he
+    by_cases h : exponents = e
+    · subst e
+      fin_cases i <;> norm_num [exponents]
+    · exact False.elim (H (by rw [p, MvPolynomial.coeff_monomial, ite_eq_right h]))
+  denominator _ := 2
+  height _ i := if i = 0 then (3, 4) else (5, 5)
+  allowance _ := 3
+  target _ := 1
+  row _ := 0
+  col _ := 0
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+private def rowCode (q : List Bool) := pairFst (pairSnd (pairFst q))
+private def colCode (q : List Bool) := pairSnd (pairSnd (pairFst q))
+private theorem rowCode_FP : rowCode ∈ FP := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairFst_mem_FP
+private theorem colCode_FP : colCode ∈ FP := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairSnd_mem_FP
+
+private def coefficientReader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (rowCode q) = Nat.fromBitsLE (colCode q) then
+    if Nat.fromBitsLE (pairSnd q) % 4 = 2 ∧ Nat.fromBitsLE (pairSnd q) / 4 % 4 = 1 then BinaryNatCode.encode 5 else []
+  else []
+private theorem coefficientReader_FP : coefficientReader ∈ FP :=
+  ((BinaryFn.fromBits rowCode_FP).eq (BinaryFn.fromBits colCode_FP)).ite_mem_FP
+    (((((BinaryFn.fromBits pairSnd_mem_FP).mod (BinaryFn.const 4)).eq (BinaryFn.const 2)).and
+      ((((BinaryFn.fromBits pairSnd_mem_FP).div (BinaryFn.const 4)).mod (BinaryFn.const 4)).eq (BinaryFn.const 1))).ite_mem_FP
+      (constFn_mem_FP (BinaryNatCode.encode 5)) (constFn_mem_FP [])) (constFn_mem_FP [])
+
+private def heightReader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (IntegralPowerProductBits.rowWord q) = Nat.fromBitsLE (IntegralPowerProductBits.colWord q) then
+    if Nat.fromBitsLE (IntegralPowerProductBits.factorWord q) = 0 then
+      if Nat.fromBitsLE (IntegralPowerProductBits.rowWord q) = 0 then BinaryNatCode.encode 3 else BinaryNatCode.encode 4
+    else BinaryNatCode.encode 5 else []
+private theorem heightReader_FP : heightReader ∈ FP :=
+  ((BinaryFn.fromBits IntegralPowerProductBits.rowWord_FP).eq (BinaryFn.fromBits IntegralPowerProductBits.colWord_FP)).ite_mem_FP
+    (((BinaryFn.fromBits IntegralPowerProductBits.factorWord_FP).eq (BinaryFn.const 0)).ite_mem_FP
+      (((BinaryFn.fromBits IntegralPowerProductBits.rowWord_FP).eq (BinaryFn.const 0)).ite_mem_FP
+        (constFn_mem_FP (BinaryNatCode.encode 3)) (constFn_mem_FP (BinaryNatCode.encode 4)))
+      (constFn_mem_FP (BinaryNatCode.encode 5))) (constFn_mem_FP [])
+
+private noncomputable def access : Access S where
+  arity := UnaryFn.const 2
+  free := UnaryFn.const 1
+  offset := UnaryFn.const 1
+  sourceWidth := UnaryFn.const 2
+  targetWidth := UnaryFn.const 2
+  rank := BinaryFn.const 2
+  allowance := BinaryFn.const 3
+  target := BinaryFn.const 1
+  row := BinaryFn.const 0
+  col := BinaryFn.const 0
+  modulus := BinaryFn.const 6
+  coefficient := coefficientReader
+  height := heightReader
+  denominator _ := BinaryNatCode.encode 2
+  coefficient_eq c k r t := by
+    change coefficientReader _ = residueBits ((Algebra.leftMulMatrix b
+      (p.coeff (RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 k))) r t : ℤ) : ZMod 6)
+    have HC : p.coeff (RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 k)) =
+        if k % 4 = 2 ∧ k / 4 % 4 = 1 then (5 : ℤ × ℤ) else 0 := by
+      rw [p, MvPolynomial.coeff_monomial]
+      simp only [exponent_eq]
+    rw [HC, diagonal]
+    simp only [coefficientReader, rowCode, colCode, context, pairFst_pair, pairSnd_pair,
+      BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    fin_cases r <;> fin_cases t <;> by_cases hk : k % 4 = 2 ∧ k / 4 % 4 = 1 <;> simp only [hk, ite_true, ite_false] <;> norm_num <;> decide
+  height_eq c i r t := by
+    change heightReader _ = residueBits ((Algebra.leftMulMatrix b (if i = 0 then (3, 4) else (5, 5)) r t : ℤ) : ZMod 6)
+    rw [diagonal]
+    simp only [heightReader, IntegralPowerProductBits.factorWord, IntegralPowerProductBits.rowWord,
+      IntegralPowerProductBits.colWord, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    fin_cases r <;> fin_cases t <;> by_cases hi : i = 0 <;> simp only [hi, ite_true, ite_false] <;> norm_num <;> decide
+  denominator_eq c := by
+    change BinaryNatCode.encode 2 = residueBits ((2 : ℤ) : ZMod 6)
+    decide
+
+-- The complete cleared coefficient program charges only the original three FP readers.
+example : SpaceFunction S.value := evaluator S access (SpaceFunction.ofFP _ coefficientReader_FP)
+  (SpaceFunction.ofFP _ heightReader_FP) (SpaceFunction.ofFP _ (constFn_mem_FP _))
+
+private theorem cleared : ClearedCoordinateBlock.specialize 3 (2 : ℤ × ℤ)
+    (fun i => if i = 0 then (3, 4) else (5, 5)) 1 1 p =
+      MvPolynomial.monomial (Finsupp.single (0 : Fin 1) 1) (90, 160) := by
+  rw [p, ClearedCoordinateBlock.specialize_monomial]
+  have HE : ClearedCoordinateBlock.freeExponent 1 1 exponents = Finsupp.single (0 : Fin 1) 1 := by
+    apply Finsupp.ext
+    intro j
+    rw [ClearedCoordinateBlock.freeExponent_apply 1 (by decide)]
+    fin_cases j
+    norm_num [exponents]
+  rw [HE]
+  congr 1
+  norm_num [ClearedCoordinateBlock.monomialScalar, ClearedCoordinateBlock.scalarAtom,
+    exponents, Finsupp.degree_eq_sum, Fin.sum_univ_succ, Fin.prod_univ_succ]
+  rfl
+
+private theorem target_one : RationalSubstitution.Indexed.exponentVector 1 (FixedWidthPolynomial.entry 2 1) =
+    Finsupp.single (0 : Fin 1) 1 := by
+  apply Finsupp.ext
+  intro i
+  fin_cases i
+  norm_num [RationalSubstitution.Indexed.exponentVector, FixedWidthPolynomial.entry_eq_digit]
+
+attribute [local irreducible] ClearedCoordinateBlock.specialize
+
+example : S.value [] = [] := by
+  unfold Source.value
+  change residueBits ((Algebra.leftMulMatrix b
+    ((ClearedCoordinateBlock.specialize 3 (2 : ℤ × ℤ) (fun i => if i = 0 then (3, 4) else (5, 5)) 1 1 p).coeff
+      (RationalSubstitution.Indexed.exponentVector 1 (FixedWidthPolynomial.entry 2 1))) (0 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 6) = []
+  rw [cleared, target_one, MvPolynomial.coeff_monomial, ite_eq_left rfl, diagonal]
+  norm_num
+  decide
+
+private noncomputable def G : Source := { S with row := fun _ => (1 : Fin 2), col := fun _ => (1 : Fin 2) }
+example : G.value [] = BinaryNatCode.encode 4 := by
+  unfold Source.value
+  change residueBits ((Algebra.leftMulMatrix b
+    ((ClearedCoordinateBlock.specialize 3 (2 : ℤ × ℤ) (fun i => if i = 0 then (3, 4) else (5, 5)) 1 1 p).coeff
+      (RationalSubstitution.Indexed.exponentVector 1 (FixedWidthPolynomial.entry 2 1))) (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 6) = _
+  rw [cleared, target_one, MvPolynomial.coeff_monomial, ite_eq_left rfl, diagonal]
+  norm_num
+  decide
+
+end IntegralClearedCoefficientRegression

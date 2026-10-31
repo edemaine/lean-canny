@@ -1094,8 +1094,11 @@ The checked ingredients are:
   exponent sum determines its padding power; free coordinates select the
   denominator and frozen coordinates select retained heights. Their complete
   space costs are charged, including when the denominator is not invertible
-  modulo the caller's modulus. The fixed-width coefficient sum still needs
-  combining with these term programs and the free-exponent mask.
+  modulo the caller's modulus. A native fixed-width coefficient sum now
+  combines these term programs with the free-exponent mask and computes the
+  actual multiplication-matrix entry of each frozen-substitution coefficient
+  from those same three original readers. No expansion in old parameter
+  monomials is required.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of
