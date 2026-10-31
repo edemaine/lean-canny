@@ -150,6 +150,8 @@ import LeanCanny.Algebra.IntegralScalarGeneratorOrigin
 import LeanCanny.Algebra.MatrixDigitLiftController
 import LeanCanny.Algebra.IntegralBerkowitzBlockController
 import LeanCanny.Algebra.IntegralBlockMomentController
+import LeanCanny.Algebra.IntegralBerkowitzRecursiveStage
+import LeanCanny.Algebra.IntegralBlockMomentRecursiveStage
 import LeanCanny.Algebra.IntegralScalarGeneratorSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels

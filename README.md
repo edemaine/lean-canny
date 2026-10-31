@@ -1191,6 +1191,11 @@ The checked ingredients are:
   cases request nothing; each other entry requests one selected child.
   Their native controls assume no child evaluator, and their outputs match
   the actual integer block matrices used for the relative polynomial.
+  Modular matrix-power stages now derive native binary stopping allowances
+  and unary state bounds from metadata, with valid-index child requests and
+  preserved input contexts. Specializations evaluate actual relative
+  characteristic coefficients and algebra-valued moments without child
+  evaluator certificates. Coefficients above the spatial degree return zero.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

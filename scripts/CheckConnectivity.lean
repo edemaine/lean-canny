@@ -15794,3 +15794,149 @@ example (a : List Bool → List Bool) : (program G id).value a [] = [] := by
   rw [show decide (_) = false from decide_eq_false H]
   rfl
 end RetainedDigitControllerRegression
+
+
+namespace ModularRecursivePowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open MatrixPower.ModularRecursiveStage
+set_option backward.isDefEq.respectTransparency false
+private def F : ModularFamily where
+  dimension _ := 1
+  modulus _ := 6
+  exponent := Nat.fromBitsLE
+  row _ := 0
+  col _ := 0
+  matrix _ _ _ := 2
+  modulus_ne_zero _ := by decide
+private def a : ModularAccess F where
+  dimension _ := BinaryNatCode.encode 1
+  modulus _ := BinaryNatCode.encode 6
+  exponent := BinaryNat.normalize
+  row _ := []
+  col _ := []
+  entry _ := BinaryNatCode.encode 2
+  dimension_eq _ := rfl
+  modulus_eq _ := rfl
+  exponent_eq c := BinaryNat.normalize_eq_bits c
+  row_eq _ := rfl
+  col_eq _ := rfl
+  entry_eq _ _ _ := by
+    have H : BinaryNatCode.encode 2 = residueBits (2 : ZMod 6) := by decide
+    exact H
+private theorem controls : a.ControlsPolyTime :=
+  ⟨constFn_mem_FP _, constFn_mem_FP _, BinaryNat.normalize_mem_FP, constFn_mem_FP [], constFn_mem_FP []⟩
+private def task (q : List Bool) : List Bool := pair [true] q
+private def answer (_ : List Bool) : List Bool := BinaryNatCode.encode 2
+private theorem reply (c : List Bool) (i j : Fin (F.dimension c)) :
+    answer (task (pair c (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))) = residueBits (F.matrix c i j) := by
+  have H : BinaryNatCode.encode 2 = residueBits (2 : ZMod 6) := by decide
+  exact H
+
+-- Exponents are binary input, not a fixed bound on recursion depth.
+example : (stage a task).Certificates (encQ := Turing.MultiTapeTM.encBits) (encS := Turing.MultiTapeTM.encBits) :=
+  certificates a controls task (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+example : BinaryFn (clock F) := clock_binary a controls
+example : UnaryFn (stateBound F) := stateBound_unary a controls
+example : clock F [true, false, true] = 1024 := by decide
+example : clock F [] = 2 := by decide
+example : stateBound F [true, false, true] = 4104 := by decide
+example (c : List Bool) : (stage a task).halted
+    (((stage a task).reference answer)^[clock F c] ((stage a task).initial c)) = true :=
+  halted_after a task answer reply c
+example (c : List Bool) (t : ℕ) :
+    (((stage a task).reference answer)^[t] ((stage a task).initial c)).length ≤ stateBound F c :=
+  state_length a task answer reply c t
+example : (stage a task).output (((stage a task).reference answer)^[clock F [true, false, true]]
+    ((stage a task).initial [true, false, true])) = BinaryNatCode.encode 2 := by
+  rw [output_when_halted a task answer reply _ _ (halted_after a task answer reply _)]
+  decide
+example : (stage a task).output (((stage a task).reference answer)^[clock F []] ((stage a task).initial [])) =
+    BinaryNatCode.encode 1 := by
+  rw [output_when_halted a task answer reply _ _ (halted_after a task answer reply _)]
+  decide
+-- Exponent zero starts with no entry request.
+example : Controller.needsEntry (initial a []) = false := by decide
+example (c child : List Bool) (h : (stage a task).Requests answer (clock F) c child) :
+    child = task (pair c (pair [] [])) := by
+  obtain ⟨i, j, he⟩ := requests_in_bounds a task answer reply (clock F) c child h
+  have HI : i = (0 : Fin 1) := Subsingleton.elim (α := Fin 1) _ _
+  have HJ : j = (0 : Fin 1) := Subsingleton.elim (α := Fin 1) _ _
+  subst i; subst j
+  exact he
+end ModularRecursivePowerRegression
+
+namespace IntegralBerkowitzBlockRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding MatrixPower
+open IntegralBerkowitzBlockBits
+set_option backward.isDefEq.respectTransparency false
+private theorem stageReply (n k : ℕ) (r t : Fin 2) (c : List Bool) (i j : Fin (powerDimension (S n k r t) c)) :
+    entryProgram (S n k r t) (access n k r t) (id (pair c (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))) =
+      residueBits (((S n k r t).powerMatrix c i j : ℤ) : ZMod ((S n k r t).modulus c)) :=
+  entry_correct _ (access n k r t) c i j
+example (n k : ℕ) (r t : Fin 2) : (RecursiveStage.controller (S n k r t) (access n k r t) id).Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := Turing.MultiTapeTM.encBits) :=
+  RecursiveStage.certificates _ (access n k r t) id id_mem_FP
+example (n k : ℕ) (r t : Fin 2) : BinaryFn (ModularRecursiveStage.clock (powerFamily (S n k r t))) :=
+  RecursiveStage.clock_binary _ (access n k r t)
+example (n k : ℕ) (r t : Fin 2) : UnaryFn (ModularRecursiveStage.stateBound (powerFamily (S n k r t))) :=
+  RecursiveStage.stateBound_unary _ (access n k r t)
+private theorem stageValue (n k : ℕ) (r t : Fin 2) (c : List Bool) :
+    (RecursiveStage.controller (S n k r t) (access n k r t) id).output
+      (((RecursiveStage.controller (S n k r t) (access n k r t) id).reference (entryProgram (S n k r t) (access n k r t)))^[
+        ModularRecursiveStage.clock (powerFamily (S n k r t)) c]
+        ((RecursiveStage.controller (S n k r t) (access n k r t) id).initial c)) = (S n k r t).value c :=
+  RecursiveStage.output_when_halted _ (access n k r t) id _ (stageReply n k r t) c _
+    (RecursiveStage.halted_after _ (access n k r t) id _ (stageReply n k r t) c)
+-- Spatial dimension one, old coefficient algebra rank two: exponent stays one.
+example : (powerFamily (S 1 0 0 0)).exponent [] = 1 := rfl
+example : (powerFamily (S 1 0 0 0)).dimension [] = 8 := by decide
+example : (S 1 0 0 0).value [] = BinaryNatCode.encode 8 := by
+  change residueBits ((Algebra.leftMulMatrix b
+    ((Matrix.charpoly (fun _ _ : Fin 1 => ((2, 3) : ℤ × ℤ))).coeff 0) (0 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [constant_one, diagonal]
+  norm_num
+  decide
+-- The same total stage masks coefficients above the spatial degree.
+example : (RecursiveStage.controller (S 1 2 0 0) (access 1 2 0 0) id).output
+    (((RecursiveStage.controller (S 1 2 0 0) (access 1 2 0 0) id).reference (entryProgram (S 1 2 0 0) (access 1 2 0 0)))^[
+      ModularRecursiveStage.clock (powerFamily (S 1 2 0 0)) []]
+      ((RecursiveStage.controller (S 1 2 0 0) (access 1 2 0 0) id).initial [])) = [] := by
+  rw [stageValue]
+  exact high_value _ _ (by decide)
+-- The empty spatial matrix retains characteristic polynomial one.
+example : (RecursiveStage.controller (S 0 0 1 1) (access 0 0 1 1) id).output
+    (((RecursiveStage.controller (S 0 0 1 1) (access 0 0 1 1) id).reference (entryProgram (S 0 0 1 1) (access 0 0 1 1)))^[
+      ModularRecursiveStage.clock (powerFamily (S 0 0 1 1)) []]
+      ((RecursiveStage.controller (S 0 0 1 1) (access 0 0 1 1) id).initial [])) = BinaryNatCode.encode 1 := by
+  rw [stageValue]
+  change residueBits ((Algebra.leftMulMatrix b
+    ((Matrix.charpoly (fun _ _ : Fin 0 => ((2, 3) : ℤ × ℤ))).coeff 0) (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [Matrix.charpoly_isEmpty]
+  norm_num [diagonal]
+  decide
+end IntegralBerkowitzBlockRegression
+
+namespace IntegralBlockMomentRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding MatrixPower
+open IntegralBlockMomentBits
+set_option backward.isDefEq.respectTransparency false
+private theorem stageReply (c : List Bool) (i j : Fin ((F.dimension c + 2) * F.rank c)) :
+    entryProgram F access (id (pair c (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))) =
+      residueBits ((F.powerMatrix c i j : ℤ) : ZMod (F.modulus c)) := entry_correct F access c i j
+example : (RecursiveStage.controller F access id).Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := Turing.MultiTapeTM.encBits) :=
+  RecursiveStage.certificates F access id id_mem_FP
+example (c : List Bool) (t : ℕ) :
+    (((RecursiveStage.controller F access id).reference (entryProgram F access))^[t]
+      ((RecursiveStage.controller F access id).initial c)).length ≤ ModularRecursiveStage.stateBound (powerFamily F) c :=
+  RecursiveStage.state_length F access id _ stageReply c t
+example : (RecursiveStage.controller F access id).output
+    (((RecursiveStage.controller F access id).reference (entryProgram F access))^[ModularRecursiveStage.clock (powerFamily F) []]
+      ((RecursiveStage.controller F access id).initial [])) = [] := by
+  rw [RecursiveStage.output_when_halted F access id _ stageReply _ _ (RecursiveStage.halted_after F access id _ stageReply _)]
+  change residueBits ((Algebra.leftMulMatrix b (borderMoment (fun _ : Fin 1 => (2, 3))
+    (fun _ => (5, 7)) (fun _ _ => (11, 13)) 2) (0 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 10) = []
+  rw [diagonal]
+  norm_num [borderMoment, dotProduct, Matrix.mulVec, Matrix.mul_apply, pow_two, Fin.sum_univ_succ]
+  decide
+end IntegralBlockMomentRegression
