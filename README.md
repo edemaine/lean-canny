@@ -1006,6 +1006,13 @@ The checked ingredients are:
   canonical new-head basis puts its new digit in the least significant
   position, so binary division supplies the old rank and new digit without
   a permutation table. Lifted old elements have diagonal scalar blocks.
+  Native matrix-polynomial entries now stream binary matrix powers and a
+  modular sum, charging both original entry and coefficient readers.
+  Characteristic-coefficient scans internally construct the inverse
+  polynomial and its evaluated matrix, including singular branches.
+  Fixed-width basis changes preserve the characteristic denominator.
+  Exact numerator-matrix identities combine the new generator and lifted
+  inverse matrices; native digit guards supply the lifted entries.
   These algebraic steps still require integration with the exceptional
   height equations and the recursive sampler.
   Polynomial shifts of

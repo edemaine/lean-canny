@@ -12417,3 +12417,103 @@ example {A : Type*} [CommRing A] [Nontrivial A] {m B : ℕ}
   rw [finBasis_of_matrix, ite_eq_right h]
 
 end PaddedGeneratorRegression
+
+
+namespace MatrixFunctionRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open MatrixPower MatrixPolynomialEntryBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private def J : Matrix (Fin 2) (Fin 2) (ZMod 10) := Matrix.of (fun i j => if i = 0 ∧ j = 1 then 1 else 0)
+private noncomputable def series (count : ℕ) (i j : Fin 2) : MatrixPolynomialEntryBits.Family where
+  dimension _ := 2
+  count _ := count
+  modulus _ := 10
+  row _ := i
+  col _ := j
+  matrix _ := J
+  coefficient _ k := if k = 0 then 3 else if k = 1 then 2 else 0
+  modulus_ne_zero _ := by decide
+
+example : (series 3 0 1).value [] = BinaryNatCode.encode 2 := by decide
+example : (series 3 0 0).value [] = BinaryNatCode.encode 3 := by decide
+example : (series 0 0 0).value [] = [] := by decide
+example : (series 1 0 1).value [] = [] := by decide
+
+private noncomputable def lift (r s : Fin 8) : MatrixDigitLiftBits.Family where
+  dimension _ := 2
+  radix _ := 4
+  modulus _ := 10
+  matrix _ i j := if i = 0 then (if j = 0 then 2 else 3) else (if j = 0 then 4 else 5)
+  row _ := r
+  col _ := s
+
+example : (lift 1 5).value [] = BinaryNatCode.encode 3 := by decide
+example : (lift 1 4).value [] = [] := by decide
+example : MatrixDigitLiftBits.query (lift 1 5) [] = pair [] (pair [] (BinaryNatCode.encode 1)) := by decide
+
+-- The integer inverse polynomial is defined on zero-divisor branches too.
+private def D : Matrix (Fin 2) (Fin 2) ℤ := Matrix.of (fun i j => if i = 1 ∧ j = 1 then 2 else 0)
+private theorem charpoly_D : D.charpoly = Polynomial.X ^ 2 - Polynomial.C 2 * Polynomial.X := by
+  rw [Matrix.charpoly_fin_two]
+  norm_num [D, Matrix.trace, Matrix.det_fin_two, Fin.sum_univ_two]
+
+private theorem inverse_D : IntegralParameterInverse.inverse D.charpoly = -1 := by
+  rw [charpoly_D]
+  have HC : (Polynomial.X - Polynomial.C 2 : Polynomial ℤ).coeff 0 ≠ 0 := by norm_num
+  have HT : (Polynomial.X - Polynomial.C 2 : Polynomial ℤ).natTrailingDegree = 0 :=
+    Polynomial.natTrailingDegree_eq_zero.mpr (Or.inr HC)
+  have HF : (Polynomial.X ^ 2 - Polynomial.C 2 * Polynomial.X : Polynomial ℤ) =
+      (Polynomial.X - Polynomial.C 2) * Polynomial.X ^ 1 := by ring
+  have HN : (Polynomial.X - Polynomial.C 2 : Polynomial ℤ) ≠ 0 :=
+    fun h => HC (congrArg (fun q : Polynomial ℤ => q.coeff 0) h)
+  have HD : (Polynomial.X ^ 2 - Polynomial.C 2 * Polynomial.X : Polynomial ℤ).natTrailingDegree = 1 := by
+    rw [HF, Polynomial.natTrailingDegree_mul_X_pow HN, HT]
+  ext k
+  rw [IntegralParameterInverse.coeff_inverse, HD]
+  simp only [Polynomial.coeff_sub, Polynomial.coeff_X_pow, Polynomial.coeff_C_mul, Polynomial.coeff_X,
+    Polynomial.coeff_neg, Polynomial.coeff_one]
+  by_cases hk : k = 0
+  · subst k; norm_num
+  · have H₂ : k + 1 + 1 ≠ 2 := by omega
+    simp [hk, H₂]
+
+private noncomputable def F : Berkowitz.IntegerFamily where
+  dimension _ := 2
+  matrix _ := D
+  budget _ := 1
+  determinant_bits _ := by norm_num [D, Matrix.det_fin_two]
+
+private theorem inverse_F (c : List Bool) : IntegralInverseMatrixBits.polynomial F c = -1 := inverse_D
+
+example : IntegralInverseMatrixBits.value F (fun _ => (0 : Fin 2)) (fun _ => (0 : Fin 2)) (fun _ => BinaryNatCode.encode 9) [] =
+    BinaryNatCode.encode 9 := by
+  rw [IntegralInverseMatrixBits.value, inverse_F]
+  simp only [Polynomial.eval₂_neg, Polynomial.eval₂_one, Matrix.neg_apply, Matrix.one_apply]
+  change residueBits ((-1 : ℤ) : ZMod 10) = BinaryNatCode.encode 9
+  decide
+
+example : IntegralInverseMatrixBits.value F (fun _ => (0 : Fin 2)) (fun _ => (1 : Fin 2)) (fun _ => BinaryNatCode.encode 9) [] = [] := by
+  rw [IntegralInverseMatrixBits.value, inverse_F]
+  simp only [Polynomial.eval₂_neg, Polynomial.eval₂_one, Matrix.neg_apply, Matrix.one_apply]
+  change residueBits ((0 : ℤ) : ZMod 10) = []
+  rfl
+
+example : IntegralInverseMatrixBits.value F (fun _ => (1 : Fin 2)) (fun _ => (1 : Fin 2)) (fun _ => []) [] = [] := by
+  rw [IntegralInverseMatrixBits.value, inverse_F]
+  simp only [Polynomial.eval₂_neg, Polynomial.eval₂_one, Matrix.neg_apply, Matrix.one_apply]
+  change residueBits ((-1 : ℤ) : ZMod 1) = []
+  decide
+
+-- The characteristic denominator is nonzero without inverting the matrix.
+example : IntegralParameterInverse.denominator D.charpoly ≠ 0 :=
+  IntegralParameterInverse.denominator_ne_zero _ (Matrix.charpoly_monic _).ne_zero
+
+example {A : Type*} [CommRing A] [Nontrivial A] {m B : ℕ}
+    (b : IntegralCoordinateBasis A m (2 ^ B)) (p : Polynomial A) (d : ℕ) :
+    PaddedIntegralParameterExtension.denominator b p d = IntegralParameterInverse.denominator
+      (Algebra.leftMulMatrix b.finBasis (p.coeff d)).charpoly :=
+  PaddedIntegralParameterExtension.denominator_finBasis b p d
+
+end MatrixFunctionRegression

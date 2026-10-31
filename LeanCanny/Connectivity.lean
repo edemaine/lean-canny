@@ -105,6 +105,9 @@ import LeanCanny.Algebra.PhysicalPowerCriticalAppend
 import LeanCanny.Algebra.IntegralCoordinatePoweredSpace
 import LeanCanny.Algebra.UniformIntegralHeightRecovery
 import LeanCanny.Algebra.PaddedIntegralGeneratorFinSpace
+import LeanCanny.Algebra.PaddedIntegralHeightMatrix
+import LeanCanny.Algebra.IntegralInverseMatrixSpace
+import LeanCanny.Algebra.MatrixDigitLiftSpace
 import LeanCanny.Connectivity.FlatAffineSlabFrozenPrefixes
 import LeanCanny.Connectivity.FlatAffineSlabPrefixLabels
 import LeanCanny.Connectivity.FlatAffineSlabSliceRegularity
