@@ -1519,6 +1519,20 @@ The checked ingredients are:
   two points. Point queries include singleton validation and endpoint
   membership, retaining irrational endpoints and rejecting invalid descriptions.
 
+Flat relative factor tasks now preserve both old-basis ranks and spatial
+indices in fresh records. Their native controller handles local zero/unit
+entries and emits only lower-phase action or moment children; the semantic
+bridge is the actual relative characteristic power matrix. This still needs
+the remaining middle arithmetic stages and the complete history dispatcher.
+
+Independent exceptional frames now retain an original-parent label and an
+exceptional-scalar label, including endpoint-only and empty fibers. Their exact
+fiber homeomorphisms transfer recursive covers, and native record bounds count
+one additional frozen parameter. These frames still need the extended sampler
+readers and recursive graph assembly. Flat original/derivative grid sums now
+stream phase8-to7 terms and phase7-to6 monomial requests with native local
+certificates, rank decrease, and bounded task records.
+
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove
 component preservation, and bound the vertex records and all graph routines.
