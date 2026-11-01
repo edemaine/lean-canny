@@ -1223,6 +1223,10 @@ The checked ingredients are:
   older prefix. A truncated forward pass clips a binary birth request to
   the unary history count and reuses the same metadata fields. Native
   instruction access therefore gives FP residues of the interpreted banks.
+  Every retained generator now has a deterministic creating command and
+  older suffix. The constructed embedding supplies its actual matrix and
+  preserves the same integer denominator. A prefix lookup selects the same
+  creating family in the full script, supporting queries with one root.
   Reading these scripts is FP when their metadata has the supplied native
   controls; no algebraic matrix callback is used by the denominator pass.
   Each retained generator now has an actual creating birth, whose index

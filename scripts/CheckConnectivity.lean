@@ -16705,3 +16705,35 @@ example : ModularHistoryPass.read (pass (truncate F Nat.fromBitsLE))
   rw [reader_eq, integers_truncate]
   decide
 end ForwardDenominatorRegression
+
+
+namespace CriticalScriptRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open IntegralCriticalScript UniformIntegralPrefix
+open scoped Classical
+private noncomputable def o0 := origin (S := 2) rules widthBound (by decide) (0 : Fin 2)
+private noncomputable def o1 := origin (S := 2) rules widthBound (by decide) (1 : Fin 2)
+example : chosen rules (0 : Fin 2) = second := rfl
+example : chosen rules (1 : Fin 2) = first := rfl
+example : older rules (0 : Fin 2) = [first] := rfl
+example : older rules (1 : Fin 2) = [] := rfl
+example : o0.toGeneratorOrigin.birth = 1 := rfl
+example : o1.toGeneratorOrigin.birth = 0 := rfl
+example : o0.chain.length = 0 := o0.toGeneratorOrigin.length_eq
+example : o1.chain.length = 1 := o1.toGeneratorOrigin.length_eq
+example : o1.chain.radix = 4 := o1.toGeneratorOrigin.radix_eq
+example : (birthState (S := 2) (B := 2) rules (by decide) widthBound (0 : Fin 2)).scalarPrefix =
+    (run (S := 2) (B := 2) [first] (by decide) widthBound).scalarPrefix := rfl
+example : x.bank.denominator (0 : Fin 2) =
+    IntegralClearedCriticalLeadingBits.integer (IntegralHistoryCriticalBits.source
+      (birthFamily (S := 2) (B := 2) rules (by decide) widthBound (0 : Fin 2))) [] := o0.denominator_eq
+example (r : Fin (FixedWidthPolynomial.count 2 2)) : (o1.chain.oldIndex r).val = r.val / 4 := by
+  change r.val / o1.chain.radix = r.val / 4
+  rw [show o1.chain.radix = 4 from o1.toGeneratorOrigin.radix_eq]
+example : (pastIndex rules 1 (by decide) (0 : Fin 1)).val = 1 := rfl
+example : older (past rules 1) (0 : Fin 1) = older rules (1 : Fin 2) :=
+  older_past rules 1 (by decide) (0 : Fin 1)
+example : birthFamily (S := 2) (B := 2) (past rules 1) (past_bound (S := 2) rules (by decide) 1) widthBound (0 : Fin 1) =
+    birthFamily (S := 2) (B := 2) rules (by decide) widthBound (1 : Fin 2) :=
+  birthFamily_past (S := 2) (B := 2) rules (by decide) widthBound 1 (by decide) (0 : Fin 1)
+end CriticalScriptRegression
