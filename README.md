@@ -1539,19 +1539,27 @@ denominator leaves come from primitive critical-script metadata.
 
 A tagged mixed history retains an initial integer bank through physical
 critical births, with exact generator origins and common clearing. Its modular
-denominator pass charges space for exact-leading leaves. Relative scalar
-normalization preserves selected roots, and nilpotent scalar births retain
-formal parameter coefficients. Mixed-history height estimates use one
-original-source growth factor and a binary-size bound. Extending the native
-script backend to normalized exceptional-factor births and their charged
-scalar requests remains required.
+denominator pass charges space for exact-leading leaves. Relative coordinate,
+validated squarefree, and Gram factors are constructed over the selected old
+parent ring, with bounds at the original spatial degree. Scalar normalization
+preserves selected roots even when the old regular-representation matrix is
+singular. Nilpotent extensions expose formal parameter coefficients, and
+normalized-cut companion readers reduce to concrete raw factor matrices.
+Their native arithmetic stages still need to be joined to the mixed backend.
+
+Mixed-history heights use one original-source growth factor. The actual
+virtual coordinate and squarefree sources have binary height bounds derived
+from the original source and old bank. Resumable cofactor folds request older
+producer-leading residues; these scalar leaves remain charged computations.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
-labels, including endpoint-only and empty fibers. Correlation guards recover
-the selected parent slice at the original spatial degree. Their fiber
-homeomorphisms transfer recursive covers, and native record bounds account
-for the additional frozen parameter. The mixed sampler access, full recursive
-slice covers, and graph assembly remain open.
+labels, including endpoint-only and empty fibers. Selected-parent relative
+factors now give complete physical critical arcs and finite cuts. Exact
+endpoint incidence joins these arcs to supplied endpoint covers, and selected
+coordinate nonvanishing propagates along the arcs. These are covers of the
+critical-point slabs. Correlated frame adapters, saturation to full exceptional
+level slices, the mixed sampler access, and recursive graph assembly remain
+open.
 
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove

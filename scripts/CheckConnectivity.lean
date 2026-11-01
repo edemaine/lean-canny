@@ -25656,3 +25656,586 @@ example (F : Scripts) (q : List Bool) :
 
 end ActualNativeSamplerRegression
 end Group11ActualNativeSampler
+
+
+namespace Group12Regression0
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCriticalSweep
+open scoped Classical
+
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+
+noncomputable def emptyCircle : State circle 1 6 0 (Fin 0) :=
+  IntegralMixedHistory.base circle (IntegralHistorySampler.base 1 (2 ^ 6))
+    (by norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, FixedWidthPolynomial.count, circle]; decide)
+
+noncomputable def circleSweep : Rule 1 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => 1
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant 0 }
+  height := 0
+  height_frozen := by decide
+  slope := 1
+  slope_ne_zero := by decide
+
+noncomputable def realEmbedding : emptyCircle.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ :=
+  (Int.castRingHom ℝ).toIntAlgHom
+
+-- The relative coordinate equation annihilates an actual point on the
+-- circle cut x=t. No integer norm root or supplied coordinate equation occurs.
+example (t a : ℝ) (h : t ^ 2 + a ^ 2 = 1) :
+    (selected emptyCircle (by decide) circleSweep 0 realEmbedding).eval₂ (Polynomial.evalRingHom t) a = 0 := by
+  have HQ : commonDenominator emptyCircle = 1 := by
+    simp [commonDenominator, emptyCircle, IntegralMixedHistory.base, CommonIntegerDenominator.denominator]
+  have H := coordinate_root emptyCircle (by decide) circleSweep (0 : Fin 1) realEmbedding t
+    (Fin.cons t (fun _ : Fin 1 => a))
+  apply H
+  · intro i hi
+    have HE : i = 0 := Fin.ext (by change i.val = 0; change i.val < 1 at hi; omega)
+    subst i
+    simp [data, circleSweep, heightValue, expression, HQ]
+  · have HE : (FermatCriticalHomogenization.polynomial circle.low circle.leading circle.degree).eval₂
+        (Int.castRingHom ℝ) (Fin.cons t (fun _ : Fin 1 => a)) = -1 + (t ^ 2 + a ^ 2) := by
+      simp [circle, FermatCriticalHomogenization.polynomial, Fin.sum_univ_succ]
+    rw [HE]
+    linarith
+  · intro i hi
+    exact False.elim (hi (Fin.eq_zero i))
+
+end Group12Regression0
+
+
+namespace Group12Regression1
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open Polynomial
+open scoped Classical
+
+-- The old coefficient ring can have zero divisors and the selected hom can
+-- kill nonzero elements. A repeated root still gets a separable, root-exact
+-- scaled quotient over that original ring via a bounded validated PSC choice.
+example {R : Type*} [CommRing R] [Nontrivial R] (φ : R →+* ℝ) (a : R)
+    (_hnoninjective : ∃ z : R, z ≠ 0 ∧ φ z = 0) :
+    ∃ k : Fin 2,
+      ((ValidatedSquarefreeSpecialization.polynomial ((Polynomial.X - Polynomial.C a) ^ 2) 2 k.val).map φ).Separable ∧
+      ∀ t : ℝ, (ValidatedSquarefreeSpecialization.polynomial ((Polynomial.X - Polynomial.C a) ^ 2) 2 k.val).eval₂ φ t = 0 ↔ t = φ a := by
+  have HD : (((Polynomial.X - Polynomial.C a) ^ 2).map φ).natDegree = 2 := by
+    rw [Polynomial.map_pow, Polynomial.map_sub, Polynomial.map_X, Polynomial.map_C,
+      Polynomial.natDegree_pow, Polynomial.natDegree_X_sub_C, Nat.mul_one]
+  have HB : ((Polynomial.X - Polynomial.C a) ^ 2).natDegree ≤ 2 :=
+    Polynomial.natDegree_pow_le.trans (by rw [Polynomial.natDegree_X_sub_C])
+  obtain ⟨k, hk⟩ := ValidatedSquarefreeSpecialization.exists_valid φ ((Polynomial.X - Polynomial.C a) ^ 2) 2 HD (by decide)
+  refine ⟨k, ValidatedSquarefreeSpecialization.separable φ _ 2 k.val HB hk, fun t => ?_⟩
+  rw [ValidatedSquarefreeSpecialization.roots_iff φ _ 2 k.val HB hk,
+    Polynomial.eval₂_pow, Polynomial.eval₂_sub, Polynomial.eval₂_X, Polynomial.eval₂_C]
+  exact (pow_eq_zero_iff (by decide : (2 : ℕ) ≠ 0)).trans sub_eq_zero
+
+end Group12Regression1
+
+
+namespace Group12Regression2
+
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+
+noncomputable def repeatedGrid (_ : Fin 1) : Polynomial (Polynomial ℤ) := Polynomial.X ^ 2
+noncomputable def sweepTest : MvPolynomial (Fin 1) (Polynomial ℤ) :=
+  MvPolynomial.X 0 - MvPolynomial.C Polynomial.X
+
+-- The actual Gram construction, rather than a supplied certificate,
+-- annihilates the test value on a grid with a repeated root.
+example (t : ℝ) :
+    (RelativeAffineGridValueGram.annihilator repeatedGrid sweepTest (fun _ => 2) 1).eval₂
+      (Polynomial.eval₂RingHom (Int.castRingHom ℝ) t) (-t) = 0 := by
+  have H := RelativeAffineGridValueGram.root repeatedGrid sweepTest (fun _ => 2) 1
+    (fun _ => by simp [repeatedGrid])
+    (by
+      unfold sweepTest
+      exact (MvPolynomial.totalDegree_sub _ _).trans
+        (max_le (by simp) (by simp)))
+    (Polynomial.eval₂RingHom (Int.castRingHom ℝ) t) (fun _ => 0)
+    (fun _ => by simp [repeatedGrid])
+  simpa [sweepTest] using H
+
+example :
+    (RelativeAffineGridValueGram.annihilator repeatedGrid sweepTest (fun _ => 2) 1).map
+      (Polynomial.mapRingHom (Int.castRingHom ℝ)) ≠ 0 := by
+  apply RelativeAffineGridValueGram.selected_ne_zero repeatedGrid sweepTest (fun _ => 2) 1
+    (fun _ => by simp [repeatedGrid]) (fun _ => by decide) (by decide) (Int.castRingHom ℝ) 0
+  intro i
+  simp [repeatedGrid]
+
+end Group12Regression2
+
+
+namespace Group12Regression3
+
+open LeanCanny.Algebra Polynomial
+open scoped Classical
+
+noncomputable def b : Module.Basis (Fin 2) ℤ (Fin 2 → ℤ) := Pi.basisFun ℤ (Fin 2)
+def a : Fin 2 → ℤ := ![2, 0]
+noncomputable def p : Polynomial (Fin 2 → ℤ) := Polynomial.C a * Polynomial.X - Polynomial.C (fun _ => 6)
+
+example : Algebra.leftMulMatrix b (p.coeff 1) = !![2, 0; 0, 0] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Algebra.leftMulMatrix_eq_repr_mul, b, p, Pi.basisFun_repr, Pi.basisFun_apply, a]
+
+example : IntegralRelativeLeadingNormalization.denominator b (p.coeff 1) = -2 := by
+  have HM : Algebra.leftMulMatrix b (p.coeff 1) = !![2, 0; 0, 0] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [Algebra.leftMulMatrix_eq_repr_mul, b, p, Pi.basisFun_repr, Pi.basisFun_apply, a]
+  let M := Algebra.leftMulMatrix b (p.coeff 1)
+  have H0 : M.charpoly.coeff 0 = 0 := by
+    rw [show M = !![2, 0; 0, 0] from HM, Matrix.charpoly_fin_two]
+    norm_num [Matrix.trace, Matrix.det_fin_two, Fin.sum_univ_succ]
+  have H1 : M.charpoly.coeff 1 = -2 := by
+    rw [show M = !![2, 0; 0, 0] from HM, Matrix.charpoly_fin_two]
+    norm_num [Matrix.trace, Matrix.det_fin_two, Fin.sum_univ_succ]
+  have HDle : M.charpoly.natTrailingDegree ≤ 1 :=
+    Polynomial.natTrailingDegree_le_of_ne_zero (by rw [H1]; norm_num)
+  have HDne : M.charpoly.natTrailingDegree ≠ 0 :=
+    Polynomial.natTrailingDegree_ne_zero.mpr ⟨M.charpoly_monic.ne_zero, H0⟩
+  have HD : M.charpoly.natTrailingDegree = 1 := by omega
+  change M.charpoly.coeff M.charpoly.natTrailingDegree = -2
+  rw [HD, H1]
+
+-- The selected top coefficient is nonzero on the first component although
+-- its full regular-representation matrix is singular.
+example : (Algebra.leftMulMatrix b (p.coeff 1)).det = 0 := by
+  have HM : Algebra.leftMulMatrix b (p.coeff 1) = !![2, 0; 0, 0] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [Algebra.leftMulMatrix_eq_repr_mul, b, p, Pi.basisFun_repr, Pi.basisFun_apply, a]
+  rw [HM, Matrix.det_fin_two]
+  norm_num
+
+example :
+    (IntegralRelativeLeadingNormalization.normalize b p 1).eval₂
+      ((Int.castRingHom ℝ).comp (Pi.evalRingHom (fun _ : Fin 2 => ℤ) 0)) 3 = 0 := by
+  let φ : (Fin 2 → ℤ) →ₐ[ℤ] ℝ :=
+    { toRingHom := (Int.castRingHom ℝ).comp (Pi.evalRingHom (fun _ : Fin 2 => ℤ) 0)
+      commutes' := by intro z; rfl }
+  have HA : φ (p.coeff 1) ≠ 0 := by
+    change ((p.coeff 1) 0 : ℝ) ≠ 0
+    norm_num [p, a]
+  apply (IntegralRelativeLeadingNormalization.root_iff b p 1 φ HA 3).mpr
+  norm_num [p, φ, a]
+
+end Group12Regression3
+
+
+namespace Group12Regression4
+
+open LeanCanny.Algebra Polynomial
+
+-- High nilpotent terms disappear without wrapping, and a nonzero column
+-- digit reads the coefficient at the row/column difference.
+example : Algebra.leftMulMatrix
+    (IntegralCoordinateBasis.relativeBasis (Polynomial.X ^ 4 : Polynomial ℤ) (monic_X_pow 4) (natDegree_X_pow 4))
+    (AdjoinRoot.mk (Polynomial.X ^ 4 : Polynomial ℤ) (Polynomial.C 3 + Polynomial.C 7 * Polynomial.X + Polynomial.C 9 * Polynomial.X ^ 2 + Polynomial.C 11 * Polynomial.X ^ 9))
+    (3 : Fin 4) (2 : Fin 4) = 7 := by
+  rw [IntegralNilpotentMatrix.relative]
+  norm_num
+
+example : Algebra.leftMulMatrix
+    (IntegralCoordinateBasis.relativeBasis (Polynomial.X ^ 4 : Polynomial ℤ) (monic_X_pow 4) (natDegree_X_pow 4))
+    (AdjoinRoot.mk (Polynomial.X ^ 4 : Polynomial ℤ) (Polynomial.C 3 + Polynomial.C 7 * Polynomial.X + Polynomial.C 9 * Polynomial.X ^ 2 + Polynomial.C 11 * Polynomial.X ^ 9))
+    (0 : Fin 4) (3 : Fin 4) = 0 := by
+  rw [IntegralNilpotentMatrix.relative]
+  norm_num
+
+noncomputable def low (_ : Fin 1) : MvPolynomial (Fin 1) (Polynomial ℤ) := MvPolynomial.C (Polynomial.X ^ 4 - 1)
+theorem grid : PurePowerReductionMatrix.gridBound (fun _ : Fin 1 => 2) + 1 ≤ 2 := by
+  simp [PurePowerReductionMatrix.gridBound]
+
+-- The literal reduction/characteristic construction commutes with a
+-- noninjective nilpotent map even when a spatial coefficient drops.
+example :
+    (PurePowerRelativeAnnihilator.polynomial (0 : Fin 1) (fun _ => 2) low 1 2 grid
+      (by decide : 2 < 2 ^ 2) 0).map (AdjoinRoot.mk (Polynomial.X ^ 4 : Polynomial ℤ)) =
+    PurePowerRelativeAnnihilator.polynomial (0 : Fin 1) (fun _ => 2)
+      (fun _ => MvPolynomial.C (-1 : AdjoinRoot (Polynomial.X ^ 4 : Polynomial ℤ))) 1 2 grid
+      (by decide : 2 < 2 ^ 2) 0 := by
+  rw [PurePowerAnnihilatorMap.polynomial]
+  have HL : (fun i => (low i).map (AdjoinRoot.mk (Polynomial.X ^ 4 : Polynomial ℤ))) =
+      (fun _ : Fin 1 => MvPolynomial.C (-1 : AdjoinRoot (Polynomial.X ^ 4 : Polynomial ℤ))) := by
+    funext i
+    simp only [low, MvPolynomial.map_C, map_sub, AdjoinRoot.mk_self, map_one, map_zero, zero_sub, map_neg]
+  rw [HL, map_one]
+
+end Group12Regression4
+
+
+namespace Group12Regression5
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower
+
+def scalars : CommonHeightBits.Scalars where
+  count _ := 2
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+  scale _ i := if i = 0 then -2 else 3
+  selected _ := 0
+
+noncomputable def answer (q : List Bool) : List Bool :=
+  residueBits ((if Nat.fromBitsLE (pairSnd (pairSnd q)) = 0 then -2 else 3 : ℤ) : ZMod 6)
+
+example (q : List Bool) :
+    (CommonHeightRecursivePass.program scalars id).value answer q = residueBits (3 : ZMod 6) := by
+  have HR : ∀ i < scalars.count q, answer (id (pair q
+      (pair (BinaryNatCode.encode (scalars.count q - 1 - i)) (BinaryNatCode.encode i)))) =
+        residueBits (scalars.scale q i : ZMod (scalars.modulus q)) := by
+    intro i hi
+    simp only [id_eq, answer, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    rfl
+  rw [CommonHeightRecursivePass.value_eq scalars id answer q HR]
+  norm_num [CommonHeightBits.Scalars.cofactor, scalars, Finset.prod_range_succ]
+
+-- Local certificates do not assume a space evaluator for the recursive
+-- negative, nonunit producer-leading residues.
+example : (CommonHeightRecursivePass.program scalars id).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  CommonHeightRecursivePass.certificates scalars
+    ⟨UnaryFn.const 2, BinaryFn.const 6, BinaryFn.const 0⟩ id id_mem_FP
+
+def emptyScalars : CommonHeightBits.Scalars where
+  count _ := 0
+  modulus _ := 1
+  modulus_ne_zero _ := by decide
+  scale _ _ := -2
+  selected _ := 0
+
+example (reply : List Bool → List Bool) (q : List Bool) :
+    (CommonHeightRecursivePass.program emptyScalars id).value reply q = [] := by
+  rw [CommonHeightRecursivePass.value_eq emptyScalars id reply q (fun i hi => by cases hi)]
+  change residueBits (1 : ZMod 1) = []
+  rw [show (1 : ZMod 1) = 0 from Subsingleton.elim _ _]
+  rfl
+
+end Group12Regression5
+
+
+namespace Group12Regression6
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCriticalSweep FixedWidthPolynomial
+open scoped Classical
+
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+
+noncomputable def initial : State circle 1 64 0 (Fin 0) :=
+  IntegralMixedHistory.base circle (IntegralHistorySampler.base 1 (2 ^ 64))
+    (by norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, count, circle]; decide)
+
+noncomputable def sweep : Rule 1 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => -2
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant (-5) }
+  height := 0
+  height_frozen := by decide
+  slope := -3
+  slope_ne_zero := by decide
+
+noncomputable def family : IntegralMixedCutSource.Family where
+  ambient _ := 1
+  cap _ := 1
+  width _ := 64
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := circle
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := sweep
+  kind _ := .coordinate 0 0
+  degree _ := 0
+  degree_bound _ := Nat.zero_le _
+  scalar_cap _ := by
+    norm_num [IntegralMixedExceptionalBounds.auxiliaryCap, IntegralMixedExceptionalBounds.K,
+      IntegralMixedExceptionalBounds.E, IntegralMixedExceptionalBounds.regularCap,
+      IntegralMixedExceptionalBounds.valueCap, IntegralMixedExceptionalBounds.valueDimension,
+      IntegralMixedExceptionalBounds.boxWidth, IntegralMixedExceptionalBounds.boxBase,
+      IntegralMixedSweepBounds.parameterCap, IntegralMixedSweepBounds.coordinateCap, PurePowerReductionBounds.dimension,
+      PurePowerReductionBounds.width, PurePowerReductionBounds.bound, count, circle]
+    decide
+
+noncomputable def indices : IntegralMixedVirtualSweepSource.Indices family where
+  coordinate _ := 0
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  col _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+noncomputable def originalBounds : IntegralMixedCoordinateBounds.OriginalBounds family where
+  bankHeight _ := 4
+  sourceHeight _ := 3
+  rank _ := count 1 64
+  sourceWidth _ := 2
+  spatialDegree _ := 2
+  nodes _ := 1
+  bank _ := UniformIntegralPrefix.HeightBank.base_bounds _ _ _
+  coefficient _ e := by
+    change Fin 2 →₀ ℕ at e
+    change ((MvPolynomial.C (-1 : ℤ) : MvPolynomial (Fin 2) ℤ).coeff e).natAbs ≤ 2 ^ 3
+    rw [MvPolynomial.coeff_C]
+    split_ifs <;> norm_num
+  rank_bound _ := Nat.le_refl _
+  width_bound _ := by change (2 : ℕ).size ≤ 2; decide
+  degree_bound _ := by change (2 : ℕ) ≤ 2; decide
+  leading _ := by change (1 : ℤ).natAbs.size ≤ 3; decide
+  expression_nodes _ _ := by change (AffineExpr.constant (-5)).nodes ≤ 1; decide
+  expression_coefficients _ _ := by change (-5 : ℤ).natAbs.size ≤ 3; decide
+  scales _ _ := by change (-2 : ℤ).natAbs.size ≤ 3; decide
+  slope _ := by change (-3 : ℤ).natAbs.size ≤ 3; decide
+  source_le_bank _ := by decide
+
+-- Negative integer scales and a nonunit sweep slope feed the actual
+-- relative coordinate construction, with no raw-factor height premise.
+example (q : List Bool) (k : ℕ) (u v : Fin (count 0 64)) :
+    (IntegralMixedCutMatrix.coefficientMatrix initial (by decide) sweep
+      (.coordinate 0 0) k u v).natAbs ≤
+        2 ^ IntegralMixedCoordinateBounds.height 1 (count 1 64) 2 2 1 1 4 :=
+  (IntegralMixedCoordinateBounds.rawBounds family indices originalBounds (fun _ => 0) (fun _ => rfl)).bound q k u v
+
+example : BinaryFn
+    (IntegralMixedCoordinateBounds.rawBounds family indices originalBounds (fun _ => 0) (fun _ => rfl)).height :=
+  IntegralMixedCoordinateBounds.rawBounds_height_binary family indices originalBounds (fun _ => 0) (fun _ => rfl)
+    (UnaryFn.const 1) (BinaryFn.const (count 1 64)) (UnaryFn.const 2) (BinaryFn.const 2)
+    (BinaryFn.const 1) (BinaryFn.const 1) (BinaryFn.const 4)
+
+-- Above-cap indices vanish rather than wrap into a different coefficient.
+example (k : ℕ) (hk : 2 ^ 64 ≤ k) :
+    IntegralMixedCutMatrix.coefficientMatrix initial (by decide) sweep (.coordinate 0 0) k = 0 :=
+  IntegralMixedCutNilpotent.coefficient_outside initial (by decide) sweep (.coordinate 0 0)
+    (family.scalar_cap []) k hk
+
+
+
+def sfi : Fin (IntegralMixedCoordinateSquarefree.coordinateDegree circle sweep) :=
+  ⟨0, by change 0 < PurePowerReductionBounds.dimension 1 2; unfold PurePowerReductionBounds.dimension count; positivity⟩
+
+noncomputable def squarefreeFamily : IntegralMixedCutSource.Family :=
+  { Group12Regression6.family with kind _ := .squarefree 0 sfi }
+
+noncomputable def squarefreeIndices : IntegralMixedVirtualSweepSource.Indices squarefreeFamily where
+  coordinate _ := 0
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  col _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+noncomputable def squarefreeBounds : IntegralMixedCoordinateBounds.OriginalBounds squarefreeFamily where
+  bankHeight := originalBounds.bankHeight
+  sourceHeight := originalBounds.sourceHeight
+  rank := originalBounds.rank
+  sourceWidth := originalBounds.sourceWidth
+  spatialDegree := originalBounds.spatialDegree
+  nodes := originalBounds.nodes
+  bank := originalBounds.bank
+  coefficient := originalBounds.coefficient
+  rank_bound := originalBounds.rank_bound
+  width_bound := originalBounds.width_bound
+  degree_bound := originalBounds.degree_bound
+  leading := originalBounds.leading
+  expression_nodes := originalBounds.expression_nodes
+  expression_coefficients := originalBounds.expression_coefficients
+  scales := originalBounds.scales
+  slope := originalBounds.slope
+  source_le_bank := originalBounds.source_le_bank
+
+example (q : List Bool) (k : ℕ) (u v : Fin (count 0 64)) :
+    (IntegralMixedCutMatrix.coefficientMatrix initial (by decide) sweep
+      (.squarefree 0 sfi) k u v).natAbs ≤
+        2 ^ IntegralMixedSquarefreeHeightBounds.height 1 (count 1 64) 2 2 1 1 4 :=
+  (IntegralMixedSquarefreeHeightBounds.rawBounds squarefreeFamily squarefreeIndices squarefreeBounds
+    (fun _ => sfi) (fun _ => rfl)).bound q k u v
+
+example : BinaryFn
+    (IntegralMixedSquarefreeHeightBounds.rawBounds squarefreeFamily squarefreeIndices squarefreeBounds
+      (fun _ => sfi) (fun _ => rfl)).height :=
+  IntegralMixedSquarefreeHeightBounds.rawBounds_height_binary squarefreeFamily squarefreeIndices squarefreeBounds
+    (fun _ => sfi) (fun _ => rfl) (UnaryFn.const 1) (BinaryFn.const (count 1 64)) (UnaryFn.const 2)
+    (BinaryFn.const 2) (BinaryFn.const 1) (BinaryFn.const 1) (BinaryFn.const 4)
+
+end Group12Regression6
+
+
+namespace Group12Regression7
+namespace MixedScriptHeightRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation FixedWidthPolynomial UniformIntegralPrefix
+open IntegralMixedHistory IntegralMixedHistoryScript IntegralMixedScriptHeightBounds
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def P : SpatialSource 0 where
+  low := 0
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+private def r : CriticalRule 0 where
+  offset := 0
+  objective := 0
+  coordinate := 0
+  scales _ := -3
+  scales_ne_zero _ := by decide
+  heights _ := .add (.scale (-2) (.reference 0)) (.constant 5)
+private noncomputable def p : Polynomial ℤ := Polynomial.C (-3) * Polynomial.X + Polynomial.C 5
+private theorem p_ne : p ≠ 0 := by
+  intro h
+  have H := congrArg (fun q : Polynomial ℤ => q.coeff 1) h
+  norm_num [p] at H
+private theorem p_cap : p.natDegree ≤ 2 ^ 2 := by
+  have HM : (Polynomial.C (-3) * Polynomial.X : Polynomial ℤ).natDegree ≤ 1 := by
+    calc
+      _ ≤ (Polynomial.C (-3) : Polynomial ℤ).natDegree + (Polynomial.X : Polynomial ℤ).natDegree := Polynomial.natDegree_mul_le
+      _ = 1 := by simp
+  unfold p
+  calc
+    _ ≤ max (Polynomial.C (-3) * Polynomial.X : Polynomial ℤ).natDegree (Polynomial.C (5 : ℤ)).natDegree := Polynomial.natDegree_add_le _ _
+    _ ≤ 1 := max_le HM (by simp)
+    _ ≤ 2 ^ 2 := by decide
+private noncomputable def script : List (Command 0 2) := [.critical r, .integer p p_ne p_cap]
+private theorem script_bound : ∀ c ∈ script, CommandBounds 3 4 c := by
+  intro c hc
+  have H : c = .critical r ∨ c = .integer p p_ne p_cap := by simpa [script] using hc
+  rcases H with rfl | rfl
+  · refine ⟨fun _ => by change 4 ≤ 4; decide, fun _ => ?_, fun _ => by change (3 : ℕ).size ≤ 3; decide⟩
+    change ((2 : ℕ).size ≤ 3 ∧ True) ∧ (5 : ℕ).size ≤ 3
+    decide
+  · intro k
+    simp only [p, Polynomial.coeff_add, Polynomial.coeff_C_mul, Polynomial.coeff_X, Polynomial.coeff_C]
+    split_ifs <;> norm_num
+
+example {ι : Type} [Fintype ι] (initial : State P 1 2 0 ι) :
+    (continueRun initial script (by change 0 + 2 ≤ 1 + 1; decide)).bank.Bounds (scriptHeight 0 1 2 2 2 4 3 2) := by
+  exact continueRun_from_empty_bounds initial 2 2 4 3 (by intro e; simp [P])
+    (by decide) (by decide) (by decide) script (by change 2 ≤ 2; decide) script_bound
+
+example : BinaryFn (fun q : List Bool => scriptHeight 0 1 2 2 2 4 3 q.length) :=
+  scriptHeight_binary (UnaryFn.const 0) (UnaryFn.const 1) (UnaryFn.const 2) (UnaryFn.const 2)
+    (BinaryFn.const 2) (BinaryFn.const 4) (BinaryFn.const 3) (UnaryFn.length id_mem_FP)
+
+end MixedScriptHeightRegression
+end Group12Regression7
+
+
+namespace Group12Regression8
+namespace SelectedPhysicalRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.Connectivity
+open IntegralMixedHistory IntegralMixedCriticalSweep IntegralMixedSelectedGeometry IntegralMixedSelectedCriticalCuts
+open IntegralMixedSelectedPhysicalFiber IntegralMixedSelectedPhysicalArcs IntegralMixedSelectedSlabCover
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+
+noncomputable def emptyCircle : State circle 1 6 0 (Fin 0) :=
+  IntegralMixedHistory.base circle (IntegralHistorySampler.base 1 (2 ^ 6))
+    (by norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, FixedWidthPolynomial.count, circle]; decide)
+
+noncomputable def circleSweep : Rule 1 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => -3
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant 0 }
+  height := 0
+  height_frozen := by decide
+  slope := -3
+  slope_ne_zero := by decide
+
+noncomputable def realEmbedding : emptyCircle.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ :=
+  (Int.castRingHom ℝ).toIntAlgHom
+
+
+private theorem point_zero (t a : ℝ) : IntegralMixedSweepRows.point emptyCircle (by decide) circleSweep realEmbedding t (fun _ => a) 0 = t := by
+  have H := point_frozen emptyCircle (by decide) circleSweep realEmbedding t (fun _ => a) 0 (by decide)
+  have HQ : commonDenominator emptyCircle = 1 := by
+    simp [commonDenominator, emptyCircle, IntegralMixedHistory.base, CommonIntegerDenominator.denominator]
+  simp [data, circleSweep, heightValue, expression, HQ] at H
+  exact H
+
+private theorem point_one (t a : ℝ) : IntegralMixedSweepRows.point emptyCircle (by decide) circleSweep realEmbedding t (fun _ => a) 1 = a :=
+  point_free emptyCircle (by decide) circleSweep realEmbedding t (fun _ => a) 0
+
+private theorem point_mem (t a : ℝ) (h : t^2 + a^2 = 1) :
+    IntegralMixedSweepRows.point emptyCircle (by decide) circleSweep realEmbedding t (fun _ => a) ∈
+      physical emptyCircle (by decide) circleSweep realEmbedding t := by
+  constructor
+  · intro i hi
+    exact point_frozen emptyCircle (by decide) circleSweep realEmbedding t (fun _ => a) i hi
+  · intro j
+    have Hj : j = objective circleSweep := Fin.eq_zero j
+    rw [IntegralMixedSweepRows.integerRow, ite_eq_left Hj]
+    have HT := point_zero t a
+    have HA := point_one t a
+    simp [circle, FermatCriticalHomogenization.polynomial, Fin.sum_univ_succ, HT, HA]
+    nlinarith
+
+-- The squarefree exclusion is only an interior condition: this singular
+-- endpoint is still a root of the original physical equations.
+example : IntegralMixedSweepRows.point emptyCircle (by decide) circleSweep realEmbedding 1 (fun _ => 0) ∈
+    physical emptyCircle (by decide) circleSweep realEmbedding 1 := point_mem 1 0 (by norm_num)
+
+example : physical emptyCircle (by decide) circleSweep realEmbedding 2 = ∅ := by
+  apply Set.eq_empty_iff_forall_notMem.mpr
+  intro y hy
+  have H0 := hy.1 (0 : Fin 2) (by decide)
+  have HQ : commonDenominator emptyCircle = 1 := by
+    simp [commonDenominator, emptyCircle, IntegralMixedHistory.base, CommonIntegerDenominator.denominator]
+  simp [data, circleSweep, heightValue, expression, HQ] at H0
+  have HS := IntegralMixedSelectedCoordinateStatus.source_zero emptyCircle (by decide) circleSweep realEmbedding 2 y hy
+  simp [circle, FermatCriticalHomogenization.polynomial, Fin.sum_univ_succ] at HS
+  nlinarith [sq_nonneg (y 1)]
+
+-- The literal physical tuple is recovered, including at the singular endpoint.
+example (y : Fin 2 → ℝ) (hy : y ∈ physical emptyCircle (by decide) circleSweep realEmbedding 1) :
+    IntegralMixedSweepRows.point emptyCircle (by decide) circleSweep realEmbedding 1 (freeCoordinates circleSweep y) = y :=
+  reconstruct emptyCircle (by decide) circleSweep realEmbedding 1 y hy.1
+
+example : ∃ c : IntegralMixedRelativeCuts.Choices emptyCircle (by decide) circleSweep realEmbedding,
+    (bad emptyCircle (by decide) circleSweep realEmbedding c).Finite ∧ ∀ (a b : ℝ) (t₀ : Set.Ioo a b),
+      (∀ t ∈ Set.Ioo a b, t ∉ bad emptyCircle (by decide) circleSweep realEmbedding c) →
+        AnchoredPhysical emptyCircle (by decide) circleSweep realEmbedding a b t₀ :=
+  exists_anchored_physical_arcs emptyCircle (by decide) circleSweep realEmbedding
+
+end SelectedPhysicalRegression
+end Group12Regression8
