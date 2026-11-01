@@ -1577,7 +1577,9 @@ homogeneous reply, including the negative identity chart and invalid-label zeros
 Native Macaulay entries now request only their selected current reciprocal
 coefficient; invalid second-basis labels are rejected before padding. A native
 negative Gram product and streamed sum return the literal matrix entry, with
-loop counts bounded by the original retained-grid cap. The source decoder,
+loop counts bounded by the original retained-grid cap. One native row dispatcher
+now closes all six value-matrix stages against their literal current model;
+its external boundaries name only the lower critical and scalar stages. The source decoder,
 scalar callbacks, determinant routing, and producer companions still need
 to be joined into one mixed evaluator.
 
@@ -1626,8 +1628,12 @@ Its scalar callbacks remain charged. Native physical scalar controllers compute
 common leading and original scale from their current children. The physical
 denominator is reconstructed from earlier producer leading values and original
 rule scales; a physical producer-leading phase requests common leading and
-raises it to the exact derived exponent. Creating companions, complete mixed
-dispatch, and original input-codec binding remain required.
+raises it to the exact derived exponent. A native physical companion dispatcher
+now requests the actual critical coefficient and producer leading, with both
+replies closed against current models. Its polynomial is the creating physical
+command polynomial. Cut and physical readers also interpret the identical full
+mixed-history state and denominator bank. Integer producer branches, complete
+mixed dispatch, and original input-codec binding remain required.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
 coordinate, squarefree, and Gram sources have binary height bounds derived from
@@ -1679,10 +1685,12 @@ Every individual path fits a bounded closed ball, but this does not provide
 an effective uniform radius. General Boolean mixtures across open and closed
 boundaries and component-preserving compactification remain required. Arbitrary
 formulas now have an exact finite sign partition using their original atomic
-terms. Boundary tuples lift to closures of the corresponding selected pieces
-in the bounded compiler of each closed weak envelope. Relative incidence is
-expressed by equality of every retained original coordinate. Connected component
-refinement and native traversal of these pieces remain separate obligations.
+terms. Fixed-width labels, a native accepted-label circuit, and native strict
+stratum and weak-envelope writers establish this decomposition for arbitrary
+NOT, AND, and OR formulas. Boundary tuples lift to closures of selected pieces
+in each properly projected bounded envelope. Relative incidence is expressed
+by equality of every retained original coordinate. Connected component
+refinement and native adjacency of these pieces remain separate obligations.
 
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove
