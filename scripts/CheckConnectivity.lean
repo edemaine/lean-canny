@@ -16072,3 +16072,96 @@ example (c : List Bool) (i j : Fin ((IntegralPurePowerActionBits.reductionSource
       residueBits ((((IntegralPurePowerActionBits.reductionSource S).toSource.entryMatrix c i j r t) : ℤ) : ZMod (S.modulus c)) :=
   program_packet S access id lowReader (fun _ => rfl) c i j r t
 end IntegralPurePowerReductionRegression
+
+
+namespace TwoCallControllerRegression
+open LeanCanny LeanCanny.Computation LeanCanny.Encoding
+open TwoCall
+private def left (q : List Bool) : List Bool := pair [false] q
+private def right (q : List Bool) : List Bool := pair [true] q
+private def answer (q : List Bool) : List Bool := if pairFst q = [false] then BinaryNatCode.encode 2 else BinaryNatCode.encode 5
+example : (program left right pairSnd).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  certificates _ _ _ (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+    (mem_FP_pair (constFn_mem_FP _) id_mem_FP) pairSnd_mem_FP
+example : (program left right pairSnd).value answer [true, false] = pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 5) := by
+  rw [value_eq]
+  decide
+example (q child : List Bool) : (program left right pairSnd).controller.Requests answer (fun _ => 2) q child ↔
+    child = left q ∨ child = right q := requests_iff _ _ _ _ q child
+example : (program left right pairSnd).controller.halted
+    (((program left right pairSnd).controller.reference answer)^[2] ((program left right pairSnd).initial [])) = true :=
+  halted_after _ _ _ _ []
+example (q : List Bool) (t : ℕ) :
+    (((program left right pairSnd).controller.reference answer)^[t] ((program left right pairSnd).initial q)).1 = q := by
+  rw [RecursiveFold.Program.reference_iterate]
+example : (((program left right pairSnd).controller.reference answer)^[5] ((program left right pairSnd).initial [])) =
+    (((program left right pairSnd).controller.reference answer)^[2] ((program left right pairSnd).initial [])) := by decide
+example (q : List Bool) (t : ℕ) :
+    (RecursiveFold.encState (((program left right pairSnd).controller.reference answer)^[t] ((program left right pairSnd).initial q))).length ≤
+      2 * q.length + 2 * (Turing.MultiTapeTM.encNat 2).length +
+      max (answer (left q)).length (pairSnd (pair q (pair (answer (left q)) (answer (right q))))).length + 2 :=
+  state_length _ _ _ _ q t
+end TwoCallControllerRegression
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralEulerBits.ObjectiveStage
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private def lowerTask (q : List Bool) : List Bool := pair [false] q
+private def sumTask (q : List Bool) : List Bool := pair [true] q
+private noncomputable def objectiveAnswer (q : List Bool) : List Bool :=
+  if pairFst q = [false] then bothFrozen.lowerValue (pairSnd q) else bothEuler.sumValue (pairSnd q)
+attribute [local irreducible] IntegralFrozenPowerBits.Source.lowerValue IntegralEulerBits.Source.sumValue
+private theorem lowerReply (c : List Bool) : objectiveAnswer (lowerTask c) = bothFrozen.lowerValue c := by
+  simp only [objectiveAnswer, lowerTask, pairFst_pair, pairSnd_pair, ite_true]
+private theorem sumReply (c : List Bool) : objectiveAnswer (sumTask c) = bothEuler.sumValue c := by
+  simp only [objectiveAnswer, sumTask, pairFst_pair, pairSnd_pair]
+  exact ite_eq_right (by decide)
+example : (program bothEuler lowerTask sumTask).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  certificates bothEuler bothEulerAccess _ _ (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+    (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+example (c : List Bool) : (program bothEuler lowerTask sumTask).value objectiveAnswer c = bothEuler.objectiveValue c :=
+  value_eq bothEuler _ _ _ lowerReply sumReply c
+-- Distinct replies test multiplication and subtraction order modulo a composite modulus.
+example : post bothEuler (pair [] (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 5))) = BinaryNatCode.encode 3 := by decide
+example (c child : List Bool) : (program bothEuler lowerTask sumTask).controller.Requests objectiveAnswer (fun _ => 2) c child ↔
+    child = lowerTask c ∨ child = sumTask c := requests_iff bothEuler _ _ _ c child
+example (c : List Bool) (t : ℕ) :
+    (RecursiveFold.encState (((program bothEuler lowerTask sumTask).controller.reference objectiveAnswer)^[t]
+      ((program bothEuler lowerTask sumTask).initial c))).length ≤
+      2 * c.length + 2 * (Turing.MultiTapeTM.encNat 2).length + (BinaryNatCode.encode (bothEuler.modulus c)).length + 2 :=
+  state_length bothEuler _ _ _ lowerReply sumReply c t
+private theorem target_six : RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 6) = exponents := by
+  apply Finsupp.ext
+  intro i
+  fin_cases i <;> norm_num [RationalSubstitution.Indexed.exponentVector, FixedWidthPolynomial.entry_eq_digit, exponents]
+-- The actual nonempty Euler sum contributes 80 = 2 modulo 6 in the dense old basis.
+example : bothEuler.sumValue (BinaryNatCode.encode 6) = BinaryNatCode.encode 2 := by
+  unfold IntegralEulerBits.Source.sumValue
+  change residueBits ((Algebra.leftMulMatrix b
+    ((show MvPolynomial (Fin 2) (ℤ × ℤ) from bothEuler.sumPolynomial (BinaryNatCode.encode 6)).coeff
+      (RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 6))) (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 6) = _
+  rw [both_sum, target_six, MvPolynomial.coeff_monomial, ite_eq_left rfl, matrix_entry]
+  norm_num
+  decide
+example : (program bothEuler lowerTask sumTask).value objectiveAnswer (BinaryNatCode.encode 6) = [] := by
+  rw [value_eq bothEuler _ _ _ lowerReply sumReply, IntegralEulerBits.Source.objectiveValue]
+  have HP : bothEuler.objectivePolynomial (BinaryNatCode.encode 6) = MvPolynomial.monomial exponents (240 : ℤ × ℤ) := by
+    let low : MvPolynomial (Fin 2) (ℤ × ℤ) := bothFrozen.lowerPolynomial (BinaryNatCode.encode 6)
+    let other : MvPolynomial (Fin 2) (ℤ × ℤ) := bothEuler.sumPolynomial (BinaryNatCode.encode 6)
+    have HL : low = MvPolynomial.monomial exponents (80 : ℤ × ℤ) := both_lower _
+    have HO : other = MvPolynomial.monomial exponents (80 : ℤ × ℤ) := both_sum _
+    have H : MvPolynomial.C (4 : ℤ × ℤ) * low - other = MvPolynomial.monomial exponents (240 : ℤ × ℤ) := by
+      rw [HL, HO, MvPolynomial.C_mul_monomial, ← map_sub]
+      norm_num
+    exact H
+  change residueBits ((Algebra.leftMulMatrix b
+    ((show MvPolynomial (Fin 2) (ℤ × ℤ) from bothEuler.objectivePolynomial (BinaryNatCode.encode 6)).coeff
+      (RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 6))) (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 6) = _
+  rw [HP, target_six, MvPolynomial.coeff_monomial, ite_eq_left rfl, matrix_entry]
+  norm_num
+  decide
+end IntegralFrozenPowerRegression

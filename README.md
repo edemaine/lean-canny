@@ -1122,6 +1122,10 @@ The checked ingredients are:
   multiplication and subtraction construct the Euler objective coefficients;
   a native row selector combines these with the remaining cleared gradients.
   All critical lower rows are computed from the original four readers.
+  A two-call recursive controller now constructs the Euler objective from
+  the frozen lower coefficient and the Euler sum. Its native certificate
+  assumes no child evaluator, and its stored state retains one context and
+  one modular reply, with exact two-child requests and a two-step clock.
   Saved-source queries now supply every critical lower coefficient in the
   reduction reader's row, spatial-rank, and old-basis protocol. These rows and
   the common integer leading coefficient feed the actual relative coordinate

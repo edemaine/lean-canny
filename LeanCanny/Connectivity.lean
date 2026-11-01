@@ -1,3 +1,5 @@
+import LeanCanny.Computation.TwoCallController
+import LeanCanny.Algebra.IntegralEulerObjectiveController
 import LeanCanny.Computation.RecursiveGraphQueryBounds
 import LeanCanny.Computation.RecursiveFoldSpace
 import LeanCanny.Encoding.RankedHistoryTask
