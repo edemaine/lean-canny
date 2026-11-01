@@ -1566,8 +1566,11 @@ virtual critical arithmetic phases zero through twenty-five, including the
 grid, product, and factor operations. One matching predicate and exact scalar
 callbacks discharge the lower dispatcher's current reply contracts. Native
 Gram and Macaulay controllers are tied to actual mapped system coefficients.
-The source decoder, scalar callback provenance, determinant routing, and
-normalized companions still need to be joined into one mixed evaluator.
+Native homogeneous queries restore the actual full Fermat rows, retaining the
+original scale separately from the derivative scale at composite moduli. Their
+flat writers preserve the source context and both old-bank indices. The source
+decoder, scalar callbacks, determinant routing, and normalized companions still
+need to be joined into one mixed evaluator.
 
 Native integer-zero and trailing-degree scans keep binary counters and request
 small-modulus residues or coefficient-zero flags recursively. Their local
@@ -1575,6 +1578,21 @@ certificates assume no child evaluator. Output postprocessing preserves the
 request relation, and an adaptive two-call controller lets the first reply
 select the second query. These controllers supply the scans needed for
 leading normalization without materializing a large integer leading value.
+The actual raw cut's leading matrix now supplies an integer characteristic
+source of coefficient rank one. Native entry and characteristic controllers
+use its literal matrix values; integer-zero and trailing-index controllers
+use current characteristic replies and an explicit integer height bound.
+Zero flags carry modulus two, and trailing indices carry a modulus larger
+than the matrix dimension, so every answer remains a canonical residue.
+These normalization stages still need their remaining moment, factor,
+inverse-polynomial, and final coefficient controllers assembled.
+
+A full mixed command history includes normalized cuts alongside integer and
+physical critical births. Padded earlier prefixes preserve exact generator
+origins and denominators. A native cofactor fold requests earlier producer
+leading values. A separate physical source backend supports ambient dimension
+zero and offset zero without a frozen-height coordinate or formal digit.
+Its matrix controllers and original input-codec binding remain required.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
 coordinate, squarefree, and Gram sources have binary height bounds derived from
@@ -1601,9 +1619,15 @@ polynomial equation while preserving point connectivity and whole-set
 preconnectedness, including for unbounded sets. Shared circular witnesses give
 a continuous section across disjunction boundaries. A strict conjunct also has
 a connected circular witness lift, with native formula and endpoint writers.
-The general open Boolean reduction, native closed-reduction coefficient writers,
-and component-preserving compactification remain required; nonemptiness
-equivalence alone does not supply them.
+Native gate metadata and arithmetic writers now derive the closed reduction
+from the actual input formula. A polynomial-size shared gate construction and
+canonical endpoint extension preserve both whole-set and point connectivity,
+with the original singleton validation retained. Finite unions of strict
+inequalities also have a native equation reduction: simplex weights and
+circular witnesses give a continuous section and connected fibers.
+Every individual path fits a bounded closed ball, but this does not provide
+an effective uniform radius. General Boolean mixtures across open and closed
+boundaries and component-preserving compactification remain required.
 
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove
