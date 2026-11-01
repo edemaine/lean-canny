@@ -1217,6 +1217,12 @@ The checked ingredients are:
   bounded residue tables. The cast of the integer recurrence is proved
   equal to the computed table for every positive modulus. Actual critical
   histories yield denominator-only scripts recovering their stored banks.
+  Algebra-independent critical commands now construct the actual scalar
+  prefixes and height banks with one fixed physical schedule. Their derived
+  denominator instructions recover those banks exactly, including each
+  older prefix. A truncated forward pass clips a binary birth request to
+  the unary history count and reuses the same metadata fields. Native
+  instruction access therefore gives FP residues of the interpreted banks.
   Reading these scripts is FP when their metadata has the supplied native
   controls; no algebraic matrix callback is used by the denominator pass.
   Each retained generator now has an actual creating birth, whose index

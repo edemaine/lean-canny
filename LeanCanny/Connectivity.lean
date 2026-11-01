@@ -1,3 +1,4 @@
+import LeanCanny.Algebra.IntegralCriticalScript
 import LeanCanny.Algebra.IntegralCriticalQueryBounds
 import LeanCanny.Encoding.RankedHistoryFields
 import LeanCanny.Algebra.IntegralDerivativeController

@@ -16634,3 +16634,74 @@ example : (RankedHistoryFields.write (fun _ => cap 20 2 4 2 4 4 (2 ^ 100) 6) 6 (
   rw [RankedHistoryFields.write_length]
   decide
 end CriticalQueryBoundsRegression
+
+
+namespace CriticalScriptRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open IntegralCriticalScript
+open scoped Classical
+private noncomputable def first : Command 0 2 2 0 where
+  low := MvPolynomial.C (-1)
+  leading := -1
+  degree := 2
+  degree_two := by decide
+  degree_le := by decide
+  degree_lt := by decide
+  low_degree := by norm_num
+  leading_ne := by decide
+  low_height e := by
+    rw [MvPolynomial.coeff_C]
+    split_ifs <;> norm_num
+  leading_height := by decide
+  offset := 0
+  objective := 0
+  coordinate := 0
+  selected _ := 100
+private noncomputable def second : Command 0 2 2 0 := { first with selected := fun _ => 0 }
+private noncomputable def rules := [second, first]
+private theorem widthBound : PurePowerReductionBounds.dimension (0 + 1) 2 ≤ 2 ^ 2 := by decide
+private noncomputable def x := run (S := 2) (B := 2) rules (by decide) widthBound
+example : first.select 0 (0 : Fin 1) = none := by decide
+example : second.select 1 (0 : Fin 1) = some 0 := by decide
+example : instructions rules =
+    [⟨-1, 2, 12, [0]⟩, ⟨-1, 2, 12, [0]⟩] := by rfl
+example : (instructions rules).length = 2 := instructions_length rules
+example (i : Fin rules.length) : x.bank.numerator i = x.scalarPrefix.basis.generator i :=
+  run_generators rules (by decide) widthBound i
+example (i : Fin rules.length) : x.bank.denominator i ≠ 0 := run_denominators_ne_zero rules (by decide) widthBound i
+example : x.bank.Bounds (IntegralHistoryGlobalHeightBounds.height (0 + 1) (FixedWidthPolynomial.count 2 2) 2 2 (2 ^ 2) 0 (2 + 1)) :=
+  run_bounds rules (by decide) widthBound
+example : IntegralCriticalDenominatorScript.execute (instructions rules) = List.ofFn x.bank.denominator :=
+  execute_instructions rules widthBound (by decide)
+-- The second command genuinely reuses the first denominator, 2^12.
+example : x.bank.denominator (1 : Fin 2) = 4096 := by decide
+example : x.bank.denominator (0 : Fin 2) = 2 ^ 150 * 2 ^ 150 := by decide
+example : MatrixPower.residueBits (x.bank.denominator (0 : Fin 2) : ZMod 6) = BinaryNatCode.encode 4 := by decide
+example : (IntegralCriticalDenominatorScript.execute (instructions rules)).map
+    (fun z : ℤ => MatrixPower.residueBits (z : ZMod 6)) = [BinaryNatCode.encode 4, BinaryNatCode.encode 4] := by decide
+example : past rules 1 = [first] := by rfl
+example : (stateAt (S := 2) (B := 2) rules (by decide) widthBound 1).bank.denominator (0 : Fin 1) = 4096 := by decide
+example : (stateAt (S := 2) (B := 2) rules (by decide) widthBound 100).bank.denominator (0 : Fin 2) = 2 ^ 150 * 2 ^ 150 := by decide
+example : IntegralCriticalDenominatorScript.execute ((instructions rules).take 1) =
+    List.ofFn (stateAt (S := 2) (B := 2) rules (by decide) widthBound 1).bank.denominator :=
+  execute_take rules (by decide) widthBound 1
+end CriticalScriptRegression
+
+namespace ForwardDenominatorRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralDenominatorPass
+example : Access (truncate F Nat.fromBitsLE) := controls.truncate F Nat.fromBitsLE (BinaryFn.fromBits id_mem_FP)
+example : (truncate F Nat.fromBitsLE).count (BinaryNatCode.encode 1000) = 3 := by decide
+example : (fun c => residueBits (((integers F c (min (Nat.fromBitsLE c) (F.count c)))[(0 : ℕ)]?).getD 0 : ZMod (F.modulus c))) ∈ FP :=
+  prefix_reader_FP F controls Nat.fromBitsLE (BinaryFn.fromBits id_mem_FP) (fun _ => 0) (BinaryFn.const 0)
+example : ModularHistoryPass.read (pass (truncate F Nat.fromBitsLE))
+    (access (truncate F Nat.fromBitsLE) (controls.truncate F Nat.fromBitsLE (BinaryFn.fromBits id_mem_FP)))
+    (fun _ => 0) (BinaryNatCode.encode 1) = BinaryNatCode.encode 2 := by
+  rw [reader_eq, integers_truncate]
+  decide
+example : ModularHistoryPass.read (pass (truncate F Nat.fromBitsLE))
+    (access (truncate F Nat.fromBitsLE) (controls.truncate F Nat.fromBitsLE (BinaryFn.fromBits id_mem_FP)))
+    (fun _ => 0) [] = [] := by
+  rw [reader_eq, integers_truncate]
+  decide
+end ForwardDenominatorRegression
