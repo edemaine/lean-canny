@@ -1561,9 +1561,20 @@ The scalar multiplier remains a charged recursive request, including at composit
 moduli. Canonical residue witnesses cover all lower phases zero through sixteen.
 Fresh context queries retain the original root while selecting an earlier scalar
 birth and the actual source kind. The original-row scale and critical leading
-scale have separate native controllers. The remaining grid/product/factor arithmetic,
-determinant entries, and normalized companions still need to be joined into
-one mixed evaluator.
+scale have separate native controllers. Two native dispatchers now cover all
+virtual critical arithmetic phases zero through twenty-five, including the
+grid, product, and factor operations. One matching predicate and exact scalar
+callbacks discharge the lower dispatcher's current reply contracts. Native
+Gram and Macaulay controllers are tied to actual mapped system coefficients.
+The source decoder, scalar callback provenance, determinant routing, and
+normalized companions still need to be joined into one mixed evaluator.
+
+Native integer-zero and trailing-degree scans keep binary counters and request
+small-modulus residues or coefficient-zero flags recursively. Their local
+certificates assume no child evaluator. Output postprocessing preserves the
+request relation, and an adaptive two-call controller lets the first reply
+select the second query. These controllers supply the scans needed for
+leading normalization without materializing a large integer leading value.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
 coordinate, squarefree, and Gram sources have binary height bounds derived from
