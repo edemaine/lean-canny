@@ -1568,7 +1568,10 @@ callbacks discharge the lower dispatcher's current reply contracts. Native
 Gram and Macaulay controllers are tied to actual mapped system coefficients.
 Native homogeneous queries restore the actual full Fermat rows, retaining the
 original scale separately from the derivative scale at composite moduli. Their
-flat writers preserve the source context and both old-bank indices. The source
+flat writers preserve the source context and both old-bank indices. Actual
+restored-row and homogeneous-row branches return zero on invalid row,
+monomial, and basis labels. Their child contracts name the existing lower-row,
+scalar, and critical-coordinate models. The source
 decoder, scalar callbacks, determinant routing, and normalized companions still
 need to be joined into one mixed evaluator.
 
@@ -1584,15 +1587,23 @@ use its literal matrix values; integer-zero and trailing-index controllers
 use current characteristic replies and an explicit integer height bound.
 Zero flags carry modulus two, and trailing indices carry a modulus larger
 than the matrix dimension, so every answer remains a canonical residue.
-These normalization stages still need their remaining moment, factor,
-inverse-polynomial, and final coefficient controllers assembled.
+Native powers, augmented entries and moments, and relative factors now use
+current replies for this actual leading matrix. An adaptive inverse-coefficient
+controller first requests the exact trailing index, then the selected
+characteristic coefficient at the restored caller modulus. Both requests have
+native certificates and strictly decreasing mixed ranks. The inverse-matrix
+sum, raw-coefficient product, and final normalized branch remain required.
 
 A full mixed command history includes normalized cuts alongside integer and
 physical critical births. Padded earlier prefixes preserve exact generator
 origins and denominators. A native cofactor fold requests earlier producer
 leading values. A separate physical source backend supports ambient dimension
 zero and offset zero without a frozen-height coordinate or formal digit.
-Its matrix controllers and original input-codec binding remain required.
+Its original and derivative controllers now use an immutable original scalar
+reader. Native physical height and monomial controllers use exact current
+lower-stage replies and scalar callbacks, including signed composite-modulus
+regressions. Their complete context dispatch and original input-codec binding
+remain required.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
 coordinate, squarefree, and Gram sources have binary height bounds derived from
@@ -1624,7 +1635,11 @@ from the actual input formula. A polynomial-size shared gate construction and
 canonical endpoint extension preserve both whole-set and point connectivity,
 with the original singleton validation retained. Finite unions of strict
 inequalities also have a native equation reduction: simplex weights and
-circular witnesses give a continuous section and connected fibers.
+circular witnesses give a continuous section and connected fibers. A bounded
+native traversal now derives that finite term list from actual input formulas
+whose Boolean constructors are disjunctions of strict atoms. The resulting
+equation writer preserves whole-set connectivity of the canonical input,
+including disconnected unbounded sets.
 Every individual path fits a bounded closed ball, but this does not provide
 an effective uniform radius. General Boolean mixtures across open and closed
 boundaries and component-preserving compactification remain required.

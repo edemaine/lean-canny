@@ -1,0 +1,85 @@
+/-
+Copyright (c) 2026 lean-canny contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+module
+public import LeanCanny.Algebra.IntegralMixedNormalizationMomentTasks
+/-! # The typed normalization blocks use actual phase-two top entries -/
+@[expose] public section
+namespace LeanCanny.Algebra.IntegralMixedNormalizationTopBits
+open LeanCanny.Encoding LeanCanny.Computation MatrixPower IntegralCriticalHistoryTask
+open IntegralMixedCutSource IntegralBerkowitzBlockBits
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] access
+
+theorem rowTask_value (P : Parameters) (a : Access P) (F : Family) (h : IntegralMixedVirtualQueryBits.InputMetadata F)
+    (g : IntegralMixedVirtualCaps.RootGeometry P F) (c : List Bool) (hv : IntegralMixedVirtualCaps.valid P c)
+    (i : Fin ((moment P F).dimension c)) (r t : Fin ((moment P F).rank c)) :
+    value P F (IntegralMixedNormalizationMomentTasks.rowTask P (source P F)
+      (pair (IntegralBlockMomentBits.context c r.val t.val) (BinaryNatCode.encode i.val))) =
+      (momentAccess P a F h).row (pair (IntegralBlockMomentBits.context c r.val t.val) (BinaryNatCode.encode i.val)) := by
+  let s := stage (source P F) (IntegralCriticalFlatMomentBits.packet P c)
+  let parent := original (IntegralCriticalFlatMomentBits.packet P c)
+  have HV : IntegralMixedVirtualCaps.valid P parent := by
+    change IntegralMixedVirtualCaps.valid P (original (IntegralCriticalFlatMomentBits.packet P c))
+    rw [IntegralCriticalFlatMomentBits.packet_parent]
+    exact hv
+  have HI : i.val < (source P F).dimension parent - s - 1 := i.isLt
+  let u : Fin ((source P F).dimension parent) := ⟨s, by omega⟩
+  let v : Fin ((source P F).dimension parent) := ⟨s + 1 + i.val, by omega⟩
+  change value P F (entryTask P .clearedHeight
+    (rowQuery (source P F) (IntegralBlockPowerBits.requeryEntry (IntegralCriticalFlatMomentBits.packet P)
+      (pair (IntegralBlockMomentBits.context c r.val t.val) (BinaryNatCode.encode i.val))))) = _
+  rw [IntegralBlockMomentBits.requery_context, rowQuery_packet ]
+  rw [(momentAccess P a F h).row_eq]
+  exact entryTask_value P F g .clearedHeight parent HV u v r t
+
+theorem columnTask_value (P : Parameters) (a : Access P) (F : Family) (h : IntegralMixedVirtualQueryBits.InputMetadata F)
+    (g : IntegralMixedVirtualCaps.RootGeometry P F) (c : List Bool) (hv : IntegralMixedVirtualCaps.valid P c)
+    (i : Fin ((moment P F).dimension c)) (r t : Fin ((moment P F).rank c)) :
+    value P F (IntegralMixedNormalizationMomentTasks.columnTask P (source P F)
+      (pair (IntegralBlockMomentBits.context c r.val t.val) (BinaryNatCode.encode i.val))) =
+      (momentAccess P a F h).column (pair (IntegralBlockMomentBits.context c r.val t.val) (BinaryNatCode.encode i.val)) := by
+  let s := stage (source P F) (IntegralCriticalFlatMomentBits.packet P c)
+  let parent := original (IntegralCriticalFlatMomentBits.packet P c)
+  have HV : IntegralMixedVirtualCaps.valid P parent := by
+    change IntegralMixedVirtualCaps.valid P (original (IntegralCriticalFlatMomentBits.packet P c))
+    rw [IntegralCriticalFlatMomentBits.packet_parent]
+    exact hv
+  have HI : i.val < (source P F).dimension parent - s - 1 := i.isLt
+  let u : Fin ((source P F).dimension parent) := ⟨s, by omega⟩
+  let v : Fin ((source P F).dimension parent) := ⟨s + 1 + i.val, by omega⟩
+  change value P F (entryTask P .clearedHeight
+    (columnQuery (source P F) (IntegralBlockPowerBits.requeryEntry (IntegralCriticalFlatMomentBits.packet P)
+      (pair (IntegralBlockMomentBits.context c r.val t.val) (BinaryNatCode.encode i.val))))) = _
+  rw [IntegralBlockMomentBits.requery_context, columnQuery_packet ]
+  rw [(momentAccess P a F h).column_eq]
+  exact entryTask_value P F g .clearedHeight parent HV v u r t
+
+theorem matrixTask_value (P : Parameters) (a : Access P) (F : Family) (h : IntegralMixedVirtualQueryBits.InputMetadata F)
+    (g : IntegralMixedVirtualCaps.RootGeometry P F) (c : List Bool) (hv : IntegralMixedVirtualCaps.valid P c)
+    (i j : Fin ((moment P F).dimension c)) (r t : Fin ((moment P F).rank c)) :
+    value P F (IntegralMixedNormalizationMomentTasks.matrixTask P (source P F)
+      (pair (IntegralBlockMomentBits.context c r.val t.val)
+        (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))) =
+      (momentAccess P a F h).entry (pair (IntegralBlockMomentBits.context c r.val t.val)
+        (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val))) := by
+  let s := stage (source P F) (IntegralCriticalFlatMomentBits.packet P c)
+  let parent := original (IntegralCriticalFlatMomentBits.packet P c)
+  have HV : IntegralMixedVirtualCaps.valid P parent := by
+    change IntegralMixedVirtualCaps.valid P (original (IntegralCriticalFlatMomentBits.packet P c))
+    rw [IntegralCriticalFlatMomentBits.packet_parent]
+    exact hv
+  have HI : i.val < (source P F).dimension parent - s - 1 := i.isLt
+  have HJ : j.val < (source P F).dimension parent - s - 1 := j.isLt
+  let u : Fin ((source P F).dimension parent) := ⟨s + 1 + i.val, by omega⟩
+  let v : Fin ((source P F).dimension parent) := ⟨s + 1 + j.val, by omega⟩
+  change value P F (entryTask P .clearedHeight
+    (matrixQuery (source P F) (IntegralBlockPowerBits.requeryEntry (IntegralCriticalFlatMomentBits.packet P)
+      (pair (IntegralBlockMomentBits.context c r.val t.val)
+        (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))))) = _
+  rw [IntegralBlockMomentBits.requery_context, matrixQuery_packet ]
+  rw [(momentAccess P a F h).entry_eq]
+  exact entryTask_value P F g .clearedHeight parent HV u v r t
+
+end LeanCanny.Algebra.IntegralMixedNormalizationTopBits
