@@ -1519,6 +1519,16 @@ The checked ingredients are:
   two points. Point queries include singleton validation and endpoint
   membership, retaining irrational endpoints and rejecting invalid descriptions.
 
+Actual flat task values now connect frozen and Euler arithmetic to the creating
+source. Finite child transports cover grid sums, layered products and factor
+powers, with source data preserved under fresh task records. The middle
+matrix stages now connect moment powers to action entries and reduction
+powers to lower coefficients. Shifted action tasks consume the actual retained
+reduction power at the next phase. Their controllers have local correctness,
+native certificates, binary clocks, and explicit state and request bounds.
+The remaining original/derivative leaf bindings, relative-factor replies, and
+complete history dispatcher still require assembly.
+
 A tagged mixed history now retains an initial integer bank through physical
 critical births, with exact generator origins and common clearing. Its native
 modular denominator pass charges space for exact-leading leaves. Relative
