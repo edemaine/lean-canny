@@ -16366,3 +16366,89 @@ example : (FactorStage.controller F access id).output
   norm_num
   decide
 end ClearedCoordinateProductsRegression
+
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralFrozenPowerBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def maskedAnswer := IntegralClearedCoefficientBits.maskedProgram S.toSource
+private noncomputable def powerTermAnswer := termProgram S
+example : BinaryFn (IntegralClearedCoefficientBits.RecursiveStage.count S.toSource) :=
+  IntegralClearedCoefficientBits.RecursiveStage.count_binary S.toSource access.toAccess
+example : IntegralClearedCoefficientBits.RecursiveStage.count S.toSource [] = 16 := by rfl
+example : (IntegralClearedCoefficientBits.RecursiveStage.term S.toSource id).Controls :=
+  IntegralClearedCoefficientBits.RecursiveStage.term_controls S.toSource access.toAccess _ id_mem_FP
+example : (IntegralClearedCoefficientBits.RecursiveStage.program S.toSource id).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  IntegralClearedCoefficientBits.RecursiveStage.certificates S.toSource access.toAccess _ id_mem_FP
+example (c : List Bool) : (IntegralClearedCoefficientBits.RecursiveStage.program S.toSource id).value maskedAnswer c = S.toSource.value c :=
+  IntegralClearedCoefficientBits.RecursiveStage.value_eq S.toSource _ _ (fun _ => rfl) c
+example (c : List Bool) (t : ℕ) :
+    (RecursiveFold.encState (((IntegralClearedCoefficientBits.RecursiveStage.program S.toSource id).controller.reference maskedAnswer)^[t]
+      ((IntegralClearedCoefficientBits.RecursiveStage.program S.toSource id).initial c))).length ≤
+      2 * c.length + 2 * (Turing.MultiTapeTM.encNat (IntegralClearedCoefficientBits.RecursiveStage.count S.toSource c)).length +
+        (BinaryNatCode.encode (S.modulus c)).length + 2 :=
+  IntegralClearedCoefficientBits.RecursiveStage.state_length S.toSource _ _ (fun _ => rfl) c t
+example : (SumStage.program S id).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) := SumStage.certificates S access _ id_mem_FP
+example : (SumStage.term S id).Controls := SumStage.term_controls S access _ id_mem_FP
+example (c : List Bool) : (SumStage.program S id).value powerTermAnswer c = S.sumValue c :=
+  SumStage.value_eq S _ _ (fun _ => rfl) c
+example (answer : List Bool → List Bool) (budget : List Bool → ℕ) (c child : List Bool) :
+    ¬(SumStage.term S id).controller.Requests answer budget (pair c (BinaryNatCode.encode 1)) child := by
+  rw [SumStage.term_requests_iff]
+  have H : freePosition S (pair c (BinaryNatCode.encode 1)) := by
+    simp only [freePosition, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    change (1 : ℕ) ≤ 1 ∧ 1 < 1 + 1
+    decide
+  exact fun h => h.1 H
+example : (SumStage.program S id).value powerTermAnswer [] = BinaryNatCode.encode 5 := by
+  rw [SumStage.value_eq S id powerTermAnswer (fun _ => rfl)]
+  unfold Source.sumValue
+  change residueBits ((Algebra.leftMulMatrix b
+    (CoordinateBlockSpecialization.frozenPower (n := 2) (fun i => if i = 0 then (-2, -3) else (5, 5)) 1 1 4)
+      (1 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 6) = _
+  rw [matrix_entry]
+  norm_num [CoordinateBlockSpecialization.frozenPower, Fin.sum_univ_succ]
+  decide
+example : (ConstantStage.program S access id).Controls := ConstantStage.controls S access (constFn_mem_FP _) _ id_mem_FP
+example : (ConstantStage.program S access id).value S.sumValue [] = BinaryNatCode.encode 4 := by
+  rw [ConstantStage.value_eq S access id S.sumValue (fun _ => rfl)]
+  unfold Source.constantValue
+  change residueBits ((Algebra.leftMulMatrix b
+    ((MvPolynomial.C ((2 : ℤ × ℤ) * CoordinateBlockSpecialization.frozenPower (n := 2)
+      (fun i => if i = 0 then (-2, -3) else (5, 5)) 1 1 4) : MvPolynomial (Fin 1) (ℤ × ℤ)).coeff
+      (RationalSubstitution.Indexed.exponentVector 1 (FixedWidthPolynomial.entry 2 0))) (1 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 6) = _
+  rw [target_zero, MvPolynomial.coeff_C, ite_eq_left rfl, matrix_entry]
+  norm_num [CoordinateBlockSpecialization.frozenPower, Fin.sum_univ_succ]
+  decide
+example (answer : List Bool → List Bool) (budget : List Bool → ℕ) (child : List Bool) :
+    ¬(ConstantStage.program S access id).controller.Requests answer budget [true] child := by
+  rw [ConstantStage.requests_iff]
+  intro h
+  have H := h.1 0 (by decide)
+  change 1 ≤ 0 at H
+  omega
+private def clearedTask (p : List Bool) := pair [false] p
+private def constantTask (p : List Bool) := pair [true] p
+private noncomputable def lowerAnswer (q : List Bool) :=
+  if pairFst q = [false] then S.toSource.value (pairSnd q) else S.constantValue (pairSnd q)
+attribute [local irreducible] Source.lowerValue Source.constantValue IntegralClearedCoefficientBits.Source.value
+private theorem clearedReply (c : List Bool) : lowerAnswer (clearedTask c) = S.toSource.value c := by
+  simp only [lowerAnswer, clearedTask, pairFst_pair, pairSnd_pair, ite_true]
+private theorem constantReply (c : List Bool) : lowerAnswer (constantTask c) = S.constantValue c := by
+  simp only [lowerAnswer, constantTask, pairFst_pair, pairSnd_pair]
+  exact ite_eq_right (by decide)
+example : (LowerStage.program S clearedTask constantTask).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  LowerStage.certificates S access _ _ (mem_FP_pair (constFn_mem_FP _) id_mem_FP) (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+example (c : List Bool) : (LowerStage.program S clearedTask constantTask).value lowerAnswer c = S.lowerValue c :=
+  LowerStage.value_eq S _ _ _ clearedReply constantReply c
+example (c : List Bool) (t : ℕ) :
+    (RecursiveFold.encState (((LowerStage.program S clearedTask constantTask).controller.reference lowerAnswer)^[t]
+      ((LowerStage.program S clearedTask constantTask).initial c))).length ≤
+      2 * c.length + 2 * (Turing.MultiTapeTM.encNat 2).length + (BinaryNatCode.encode (S.modulus c)).length + 2 :=
+  LowerStage.state_length S _ _ _ clearedReply constantReply c t
+end IntegralFrozenPowerRegression

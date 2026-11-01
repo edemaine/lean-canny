@@ -1,3 +1,5 @@
+import LeanCanny.Algebra.IntegralClearedCoefficientController
+import LeanCanny.Algebra.IntegralFrozenLowerController
 import LeanCanny.Algebra.IntegralPowerProductRecursiveStage
 import LeanCanny.Algebra.IntegralEulerLowerController
 import LeanCanny.Algebra.IntegralEulerSumController

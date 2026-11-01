@@ -1136,6 +1136,12 @@ The checked ingredients are:
   power stack; adjacent layers request valid factor positions and old basis
   pairs. Separate factor-power stages preserve the original factor source.
   Both native certificates use metadata without a factor evaluator.
+  Frozen substitution now has a resumable sum over the original spatial
+  exponent grid and a local mask for compatible free exponents. Another
+  sum omits free coordinates from the frozen Fermat powers. The constant
+  coefficient scales that sum by the FP leading residue, and a two-call
+  controller adds it to the actual cleared source coefficient. Each local
+  certificate avoids assuming the recursively requested evaluator.
   Saved-source queries now supply every critical lower coefficient in the
   reduction reader's row, spatial-rank, and old-basis protocol. These rows and
   the common integer leading coefficient feed the actual relative coordinate
