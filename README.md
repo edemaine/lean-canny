@@ -1519,6 +1519,17 @@ The checked ingredients are:
   two points. Point queries include singleton validation and endpoint
   membership, retaining irrational endpoints and rejecting invalid descriptions.
 
+For arbitrary Boolean sign pieces, a native product margin is positive exactly
+on the strict stratum inside its closed weak envelope. Its bounded graph
+retains the original tuple and has a unique margin coordinate. Adding the
+old squared norm makes radial fibers affine. Each relatively closed positive
+component has same-label local margin maxima on arbitrarily small radial
+slices. Any continuous positive critical branch with squared radius equal to
+the parameter converges to the prescribed original center, and its projected
+component joins that center. Constructing and covering these branches for the
+actual regularized producer, and bounding a uniform effective radius, remain
+open.
+
 The complete 27-phase evaluator for critical-only scripts has a native
 polynomial-space proof. One canonical residue model connects the actual leaf,
 arithmetic, matrix, and creating-companion values. The concrete dispatchers
@@ -1584,7 +1595,9 @@ now closes all six value-matrix stages against their literal current model;
 its external boundaries name only the lower critical and scalar stages. A native
 Gram characteristic source now supplies the determinant routine's integer block
 entries and augmented moment entry/power stages. These requests preserve
-natural invalid labels and use only current value-row or block replies. The source decoder,
+natural invalid labels and use only current value-row or block replies. Native
+relative factors and powers now compute the literal characteristic coefficient
+matrix, guarding invalid output basis labels explicitly. The source decoder,
 scalar callbacks, determinant routing, and producer companions still need
 to be joined into one mixed evaluator.
 
@@ -1622,7 +1635,14 @@ mixed-reader assembly remain to be connected.
 A full mixed command history includes normalized cuts alongside integer and
 physical critical births. Padded earlier prefixes preserve exact generator
 origins and denominators. A native cofactor fold requests earlier producer
-leading values. A separate physical source backend supports ambient dimension
+leading values. A native retained-height controller now reconstructs the exact
+old-bank multiplication entry from those leading values and the literal fresh
+creating companion. Its query restores the creating context and coordinate;
+unequal younger radix digits return zero. Affine height matrices are finite
+integer combinations of these cleared references. Their spatial cofactors are
+the common bank denominator to the ambient power times the product of original
+scales omitting the selected coordinate; swept virtual heights use the same
+constant block and an explicit slope block. A separate physical source backend supports ambient dimension
 zero and offset zero without a frozen-height coordinate or formal digit.
 Its original and derivative controllers now use an immutable original scalar
 reader. Native physical height and monomial controllers use exact current

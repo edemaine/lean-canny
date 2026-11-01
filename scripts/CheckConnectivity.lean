@@ -33210,3 +33210,421 @@ example (P : Parameters) (F : IntegralMixedCutSource.Family) (q : List Bool)
 #print axioms IntegralMixedGramUpperBits.freeze_moment
 #print axioms IntegralMixedGramUpperBits.moment_child_bounded
 end Group23Regression5
+
+namespace Group24Regression0
+namespace MixedAffineHeightRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open IntegralMixedHistory IntegralMixedAffineCoefficients
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+
+def e : AffineExpr := .add (.scale (-3) (.reference 1)) (.add (.constant 4) (.reference 1))
+example : constantCoefficient e = 4 := by decide
+example : referenceCoefficient e 1 = -2 := by decide
+example : referenceCoefficient e 0 = 0 := by decide
+example : referenceCoefficient e 2 = 0 := by decide
+
+noncomputable def spatial : SpatialSource 1 where
+  low := 0
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+noncomputable def initial : State spatial 2 6 0 (Fin 0) :=
+  IntegralMixedHistory.base spatial (IntegralHistorySampler.base 2 (2 ^ 6)) (by decide)
+noncomputable def rule : CriticalRule 1 where
+  offset := 0
+  objective := 0
+  coordinate := 0
+  scales i := if i.val = 0 then 4 else -3
+  scales_ne_zero i := by split_ifs <;> norm_num
+  heights _ := .constant (-2)
+theorem original_zero : IntegralMixedHeightCofactor.original rule 0 = -3 := by
+  have he : (Finset.univ : Finset (Fin 2)).erase 0 = {1} := by decide
+  rw [IntegralMixedHeightCofactor.original, he, Finset.prod_singleton]
+  rfl
+theorem denominator_initial : commonDenominator initial = 1 := by
+  simp [commonDenominator, initial, IntegralMixedHistory.base, CommonIntegerDenominator.denominator]
+example : IntegralMixedHeightCofactor.value initial rule 0 = -3 := by
+  rw [IntegralMixedHeightCofactor.value, denominator_initial, original_zero]
+  norm_num
+def z : Fin (FixedWidthPolynomial.count 0 6) := ⟨0, by decide⟩
+example : IntegralMixedHeightMatrix.affineEntry initial (.constant (-2)) z z = -2 := by
+  simp [IntegralMixedHeightMatrix.affineEntry, denominator_initial, constantCoefficient]
+example : letI := initial.sampler.scalarPrefix.ring
+    Algebra.leftMulMatrix initial.sampler.scalarPrefix.basis.finBasis
+    (CoordinateFrozenCriticalElimination.numerators (data initial (by decide) rule).scales
+      (data initial (by decide) rule).heights 0) z z = 6 := by
+  let _ := initial.sampler.scalarPrefix.ring
+  calc
+    _ = IntegralMixedHeightCofactor.value initial rule 0 *
+        IntegralMixedHeightMatrix.affineEntry initial (rule.heights 0) z z :=
+      IntegralMixedHeightMatrix.entry initial (by decide) rule (0 : Fin 2) z z
+    _ = 6 := by
+      rw [IntegralMixedHeightCofactor.value, denominator_initial, original_zero]
+      norm_num [IntegralMixedHeightMatrix.affineEntry, rule, constantCoefficient, denominator_initial]
+#print axioms IntegralMixedAffineCoefficients.reference_sum
+#print axioms IntegralMixedAffineCoefficients.expression_linear
+#print axioms IntegralMixedAffineMatrix.entry
+#print axioms IntegralMixedHeightCofactor.erased_scales
+#print axioms IntegralMixedHeightCofactor.height
+#print axioms IntegralMixedHeightMatrix.entry
+#print axioms IntegralMixedHeightMatrix.virtual_constant
+#print axioms IntegralMixedHeightMatrix.virtual_slope
+end MixedAffineHeightRegression
+end Group24Regression0
+
+namespace Group24Regression1
+namespace MixedOldHeightRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower
+open IntegralCriticalHistoryTask IntegralMixedFullHistoryScript IntegralMixedHistory
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+noncomputable def spatial : SpatialSource 0 where
+  low := 0
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+noncomputable def initial : State spatial 2 2 0 (Fin 0) :=
+  IntegralMixedHistory.base spatial (IntegralHistorySampler.base 2 (2 ^ 2)) (by decide)
+noncomputable def cs : List (Command spatial 2) :=
+  [.integer (Polynomial.C (-2)) (by simp) (by simp), .integer (Polynomial.C 3) (by simp) (by simp)]
+noncomputable def final := run initial cs (by decide)
+def retained : Fin cs.length := ⟨1, by decide⟩
+noncomputable def o := origin initial cs (by decide) retained
+private theorem canonical : Canonical final := by
+  apply run_canonical
+  intro i
+  exact Fin.elim0 i
+-- The actual bank contains a negative nonunit cofactor.
+example : CommonIntegerDenominator.denominator (Finset.univ.erase retained) final.bank.denominator = -2 := by
+  have HE : (Finset.univ : Finset (Fin cs.length)).erase retained = {⟨0, by decide⟩} := by decide
+  rw [HE]
+  simp only [CommonIntegerDenominator.denominator, Finset.prod_singleton]
+  change (Polynomial.C (-2) : Polynomial ℤ).leadingCoeff = -2
+  exact Polynomial.leadingCoeff_C _
+-- Concrete low digits 1 and 0 at radix 4 yield the literal zero height.
+example (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P)
+    (R : IntegralMixedOldBankCofactorBits.Routing) (q : List Bool)
+    (hb : birth P q = 2) (hi : get P .sourceIndex q = 1)
+    (hw : P.width (RankedHistoryTask.root q) = 2) (hr : get P .row q = 1) (ht : get P .col q = 0) :
+    IntegralMixedOldHeightBits.value P D q = [] := by
+  apply IntegralMixedOldHeightBits.value_not_request P D R q
+  intro H
+  have HE := H.2
+  simp only [IntegralMixedOldHeightBits.radix, IntegralMixedOldHeightBits.index, hb, hi, hw, hr, ht,
+    min_eq_left (by decide : 1 ≤ 2), FixedWidthPolynomial.count, Nat.reducePow, Nat.reduceMod, Nat.reduceEqDiff] at HE
+
+noncomputable def scalars : CommonHeightBits.Scalars where
+  count _ := 3
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+  scale _ j := if j = 0 then -2 else if j = 1 then 3 else 5
+  selected _ := 1
+noncomputable def chargedReply (z : List Bool) :=
+  residueBits (scalars.scale (pairFst z) (Nat.fromBitsLE (pairSnd (pairSnd z))) : ZMod 6)
+-- Actual resumable charged replies multiply -2 and 5 modulo composite modulus 6;
+-- the selected factor 3 is masked rather than inverted.
+example : (CommonHeightRecursivePass.program scalars id).value chargedReply [] = residueBits (2 : ZMod 6) := by
+  rw [CommonHeightRecursivePass.value_eq]
+  · decide
+  · intro j _
+    simp only [id_eq, chargedReply, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+
+example (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P)
+    (a : Access P) (h : IntegralMixedFullHistoryFamilyBits.Metadata P D) (reply : List Bool → List Bool)
+    (he : ∀ q, IntegralMixedNativeOldHeightBits.selected P q = true →
+      IntegralMixedOldHeightBits.PassRepliesAt P D (IntegralMixedFullHistoryFamilyBits.routing P D) reply q) :
+    NativeControllerBranch.Correct (IntegralMixedFullOldHeightBits.machine P a D h) reply (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedFullOldHeightBits.correct P a D h reply he
+
+example (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P) (q : List Bool) :
+    get P .slot15 (IntegralMixedOldHeightBits.writer P (IntegralMixedFullHistoryFamilyBits.routing P D) q) =
+      (IntegralMixedFullHistoryFamilyBits.creatingCommand P D (IntegralMixedVirtualTaskBits.saved P
+        (IntegralMixedOldHeightBits.writer P (IntegralMixedFullHistoryFamilyBits.routing P D) q))).context :=
+  IntegralMixedFullOldHeightBits.child_context P D q
+#print axioms IntegralMixedFullHistoryScript.Origin.cleared_matrix
+#print axioms IntegralMixedOldHeightBits.writer_frame
+#print axioms IntegralMixedOldHeightBits.writer_get
+#print axioms IntegralMixedOldHeightBits.sourceEntry_root
+#print axioms IntegralMixedOldHeightBits.sourceEntry_invariance
+#print axioms IntegralMixedOldHeightBits.origin_entry
+#print axioms IntegralMixedOldHeightBits.companionInteger_root
+#print axioms IntegralMixedOldHeightBits.entry_formula
+#print axioms IntegralMixedOldHeightBits.value_request
+#print axioms IntegralMixedOldHeightBits.value_not_request
+#print axioms IntegralMixedOldHeightBits.passCertificates
+#print axioms IntegralMixedOldHeightBits.passReplies_scale
+#print axioms IntegralMixedOldHeightBits.pass_cofactor
+#print axioms IntegralMixedOldHeightBits.pass_requests_frame
+#print axioms IntegralMixedOldHeightBits.pass_state_length
+#print axioms IntegralMixedNativeOldHeightBits.correct
+#print axioms IntegralMixedFullOldHeightBits.child_context
+#print axioms IntegralMixedFullOldHeightBits.child_coordinate
+#print axioms IntegralMixedFullOldHeightBits.correct
+#print axioms IntegralMixedOldBankLeadingBits.retained_root
+#print axioms IntegralMixedOldBankLeadingBits.child_leading
+#print axioms IntegralMixedFullOldHeightBits.producer_replies
+#print axioms IntegralMixedFullOldHeightBits.correct_of_producers
+end MixedOldHeightRegression
+end Group24Regression1
+
+namespace Group24Regression2
+namespace SignMarginComponentRegression
+open LeanCanny LeanCanny.ETR LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.Geometry
+open Set FormulaSignSlotMarginProjection FormulaSignSlotMarginMaxima FormulaSignSlotComponentMaxima
+open scoped Classical
+
+private def ts : List Term := [.mul (.const (-2)) (.var 0), .add (.var 0) (.const 3)]
+example : (TermProduct.accumulate ts (.const 1)).eval (fun _ => (-1 : ℝ))=4 := by
+  norm_num [ts,TermProduct.accumulate,Term.eval]
+example : (TermProduct.accumulate ts (.const 1)).eval (fun _ => (0 : ℝ))=0 := by
+  norm_num [ts,TermProduct.accumulate,Term.eval]
+example : (TermProduct.accumulate ts (.const 1)).eval (fun _ => (1 : ℝ))<0 := by
+  norm_num [ts,TermProduct.accumulate,Term.eval]
+example : TermProduct.collapse (SumSquares.listBits ts)=
+    (TermProduct.accumulate ts (.const 1)).toData.toBits := TermProduct.collapse_listBits ts
+
+example (c : List Bool) (env : ℕ → ℝ) :
+    0 < (FormulaSignSlotMargin.margin (pair c (FormulaSignSlotSource.pointLabel c env))).eval env := by
+  apply (FormulaSignSlotMargin.margin_positive_iff _ env (FormulaSignSlotSource.pointLabel_envelope c env)).mpr
+  exact FormulaSignSlotSource.pointLabel_stratum c env
+example : FormulaSignSlotMargin.writer∈FP := FormulaSignSlotMargin.writer_FP
+example : UnaryFn FormulaSignSlotMargin.initialDegree :=
+  FormulaSignSlotMargin.initialDegree_unary
+example (c : List Bool) : (FormulaSignSlotMargin.initialPolynomial c).toPolynomial.totalDegree ≤
+    FormulaSignSlotMargin.initialDegree c := FormulaSignSlotMargin.initialPolynomial_degree c
+example (c : List Bool) (y : Source c) (i : Fin (FormulaSignSlotSource.dimension c)) :
+    (projection c y).val i=y.val (oldIndex c i) := projection_coordinate c y i
+example (c : List Bool) (y : Source c) :
+    y.val (objectiveIndex c)=
+      (FormulaSignSlotMargin.margin c).eval (Formula.extend (projection c y).val) := value_eq c y
+example (c : List Bool) (s : Set (Positive c)) (hs : IsClosed s) {x : Source c}
+    (hx : x∈closure (ambient c s)) (hn : x∉ambient c s) : value c x=0 := boundary_zero c s hs hx hn
+example (c : List Bool) {I : Type*} (C : ClopenPathCover (Positive c) I) (i : I)
+    (x : Source c) (hx : x∈closure (ambient c (C.piece i))) (hn : x∉ambient c (C.piece i)) :
+    ∃ r : ℝ, 0 < r ∧ r < 1 ∧ ∃ y : Source c,
+      y∈ambient c (C.piece i) ∧ y∈sourceSphere c (projection c x).val r ∧
+      IsLocalMaxOn (value c) (sourceSphere c (projection c x).val r) y ∧ 0 < value c y :=
+  FormulaSignSlotLocalMaxima.cover_boundary_maxima c C i x hx hn 1 zero_lt_one
+example (x : Fin 2 → ℝ) : SquaredDistanceFibers.value (fun _ => 0) x=x 0^2+x 1^2 := by
+  simp [SquaredDistanceFibers.value,Fin.sum_univ_two]
+example (center : Fin 2 → ℝ) : IsProperMap (SquaredDistanceFibers.value center) :=
+  SquaredDistanceFibers.proper_value center
+example (c : List Bool) (center : Fin (FormulaSignSlotSource.dimension c) → ℝ) :
+    IsProperMap (FormulaSignSlotRadialSweep.radial c center) := FormulaSignSlotRadialSweep.proper_radial c center
+example (c : List Bool) (s : Set (Source c)) (center : Fin (FormulaSignSlotSource.dimension c) → ℝ)
+    {y : Source c} (hy : y∈closure s ∩ FormulaSignSlotRadialSweep.radial c center ⁻¹' {0}) :
+    ∀ i, y.val (oldIndex c i)=center i := FormulaSignSlotRadialSweep.endpoint_coordinates c center s hy
+
+#print axioms TermProduct.collapse_mem_FP
+#print axioms TermProduct.eval_accumulate
+#print axioms FormulaSignSlotMargin.margin_positive_iff
+#print axioms TermCoordinateGraph.homeomorph
+#print axioms FormulaSignSlotMargin.writer_FP
+#print axioms FormulaSignSlotMargin.initialPolynomial_degree
+#print axioms FormulaSignSlotMarginProjection.proper_projection
+#print axioms FormulaSignSlotMarginProjection.projection_coordinate
+#print axioms FormulaSignSlotComponentMaxima.arbitrarily_small_maxima
+#print axioms FormulaSignSlotLocalMaxima.cover_boundary_maxima
+#print axioms SquaredDistanceFibers.proper_value
+#print axioms FormulaSignSlotRadialSweep.connected_endpoint
+end SignMarginComponentRegression
+end Group24Regression2
+
+namespace Group24Regression3
+namespace SignRadialFeatureRegression
+open LeanCanny LeanCanny.ETR LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.Geometry Set
+open FormulaSignSlotMarginProjection FormulaSignSlotMarginMaxima FormulaSignSlotComponentMaxima
+open FormulaSignSlotRadialFeature
+open scoped Classical BigOperators
+set_option backward.isDefEq.respectTransparency false
+
+example : (SquaredNormTerm.term 2).eval (fun i => if i=0 then (-3 : ℝ) else 4)=25 := by
+  rw [SquaredNormTerm.eval]
+  norm_num [Fin.sum_univ_two]
+example : (SquaredNormTerm.term 0).eval (fun _ => (100 : ℝ))=0 := by
+  simp [SquaredNormTerm.eval]
+example {N : List Bool → ℕ} (hN : UnaryFn N) : (fun c => (SquaredNormTerm.term (N c)).toData.toBits)∈FP :=
+  SquaredNormTerm.term_FP hN
+example (n : ℕ) : (SquaredNormTerm.term n).degreeBound≤2 := SquaredNormTerm.degree n
+example : SquaredDistanceLinearization.affine (fun _ : Fin 1 => (-2 : ℝ)) 9 (fun _ => 3)=25 := by
+  norm_num [SquaredDistanceLinearization.affine]
+example (center x : Fin 2 → ℝ) (v r : ℝ) (hv : v=SquaredDistanceLinearization.feature x) :
+    (-6 : ℝ)^2*v-2*(∑ i, ((-6 : ℝ)*center i)*((-6 : ℝ)*x i))+
+      (∑ i, ((-6 : ℝ)*center i)^2)=(-6 : ℝ)^2*r ↔ SquaredDistanceFibers.value center x=r :=
+  SquaredDistanceLinearization.cleared_affine center x (-6) (by norm_num) v r hv
+example (c : List Bool) (y : Lifted c) (i : Fin (FormulaSignSlotMargin.initialDimension c)) :
+    (homeomorph c y).val i=y.val (Fin.castAdd 1 i) := old_coordinate c y i
+example (c : List Bool) (y : Lifted c) (center : Fin (FormulaSignSlotSource.dimension c) → ℝ) (r : ℝ) :
+    y∈liftedSphere c center r ↔ SquaredDistanceLinearization.affine center
+      (y.val (Fin.last (FormulaSignSlotMargin.initialDimension c))) (oldTuple c y)=r :=
+  sphere_affine c center r y
+example : FormulaSignSlotRadialFeatureSource.writer∈FP := FormulaSignSlotRadialFeatureSource.writer_FP
+example (c : List Bool) : (FormulaSignSlotRadialFeatureSource.initialPolynomial c).toPolynomial.totalDegree ≤
+    FormulaSignSlotRadialFeatureSource.initialDegree c := FormulaSignSlotRadialFeatureSource.initialPolynomial_degree c
+example (c : List Bool) {I : Type*} (C : ClopenPathCover (Positive c) I) (i : I) (x : Source c)
+    (hx : x∈closure (ambient c (C.piece i))) (hn : x∉ambient c (C.piece i)) :
+    ∃ r : ℝ, 0 < r ∧ r < 1 ∧ ∃ y : Lifted c,
+      homeomorph c y∈ambient c (C.piece i) ∧ y∈FormulaSignSlotAffineRadialMaxima.affineSphere c (projection c x).val r ∧
+      IsLocalMaxOn (fun z : Lifted c => z.val (Fin.castAdd 1 (objectiveIndex c)))
+        (FormulaSignSlotAffineRadialMaxima.affineSphere c (projection c x).val r) y ∧
+      0 < y.val (Fin.castAdd 1 (objectiveIndex c)) :=
+  FormulaSignSlotAffineRadialMaxima.cover_boundary_maxima c C i x hx hn 1 zero_lt_one
+
+#print axioms SquaredNormTerm.term_FP
+#print axioms SquaredNormTerm.eval
+#print axioms SquaredNormTerm.degree
+#print axioms SquaredDistanceLinearization.cleared_affine
+#print axioms FormulaSignSlotRadialFeature.homeomorph
+#print axioms FormulaSignSlotRadialFeature.radial_affine
+#print axioms FormulaSignSlotRadialFeature.local_maximum
+#print axioms FormulaSignSlotRadialFeatureSource.writer_FP
+#print axioms FormulaSignSlotRadialFeatureSource.initialPolynomial_degree
+#print axioms FormulaSignSlotAffineRadialMaxima.cover_boundary_maxima
+end SignRadialFeatureRegression
+end Group24Regression3
+
+namespace Group24Regression4
+namespace SignRadialAccessRegression
+open LeanCanny LeanCanny.Geometry LeanCanny.Connectivity LeanCanny.Encoding Set Filter
+open FormulaSignSlotMarginProjection FormulaSignSlotComponentMaxima
+open scoped Topology Classical
+
+private noncomputable def f (t : ℝ) : Fin 1 → ℝ := fun _ => Real.sqrt t
+private theorem Hrad : ∀ t∈Ioo (0 : ℝ) 2, SquaredDistanceFibers.value (fun _ : Fin 1 => 0) (f t)=t := by
+  intro t ht
+  simpa only [SquaredDistanceFibers.value,Fin.sum_univ_one,f,sub_zero] using Real.sq_sqrt ht.1.le
+example : Tendsto f (𝓝[>] (0 : ℝ)) (𝓝 (fun _ : Fin 1 => (0 : ℝ))) :=
+  RadialArcAccess.tendsto_center _ 2 (by norm_num) f Hrad
+example : JoinedIn (insert (fun _ : Fin 1 => (0 : ℝ)) {x : Fin 1 → ℝ | 0 < x 0})
+    (fun _ => 0) (f 1) := by
+  apply RadialArcAccess.joined_center _ 2 f (by unfold f; fun_prop) Hrad _ _ 1 (by norm_num)
+  intro t ht
+  exact Real.sqrt_pos.mpr ht.1
+example (c : List Bool) {I : Type*} (C : ClopenPathCover (Positive c) I) (i : I)
+    (center : Fin (FormulaSignSlotSource.dimension c) → ℝ) (b : ℝ) (γ : ℝ → Source c)
+    (hc : ContinuousOn γ (Ioo 0 b)) (hp : ∀ t∈Ioo 0 b, 0 < value c (γ t))
+    (hr : ∀ t∈Ioo 0 b, SquaredDistanceFibers.value center (projection c (γ t)).val=t)
+    (a : ℝ) (ha : a∈Ioo 0 b) (hi : γ a∈ambient c (C.piece i))
+    (y : Fin (FormulaSignSlotSource.dimension c) → ℝ)
+    (hy : y∈FormulaSignSlotRadialAccess.projectedPiece c (C.piece i)) :
+    JoinedIn (insert center (FormulaSignSlotRadialAccess.projectedPiece c (C.piece i))) center y :=
+  FormulaSignSlotRadialAccess.joined_center_piece c C i center b γ hc hp hr a ha hi y hy
+
+#print axioms RadialArcAccess.tendsto_center
+#print axioms RadialArcAccess.joined_center
+#print axioms FormulaSignSlotRadialAccess.projectedPiece_selected
+#print axioms FormulaSignSlotRadialAccess.arc_label
+#print axioms FormulaSignSlotRadialAccess.piece_paths
+#print axioms FormulaSignSlotRadialAccess.joined_center_piece
+end SignRadialAccessRegression
+end Group24Regression4
+
+namespace Group24Regression5
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCriticalSweep FixedWidthPolynomial
+open scoped Classical
+
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+
+noncomputable def initial : State circle 1 64 0 (Fin 0) :=
+  IntegralMixedHistory.base circle (IntegralHistorySampler.base 1 (2 ^ 64))
+    (by norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, count, circle]; decide)
+
+noncomputable def sweep : Rule 1 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => -2
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant (-5) }
+  height := 0
+  height_frozen := by decide
+  slope := -3
+  slope_ne_zero := by decide
+
+noncomputable def family : IntegralMixedCutSource.Family where
+  ambient _ := 1
+  cap _ := 1
+  width _ := 64
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := circle
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := sweep
+  kind _ := .coordinate 0 0
+  degree _ := 0
+  degree_bound _ := Nat.zero_le _
+  scalar_cap _ := by
+    norm_num [IntegralMixedExceptionalBounds.auxiliaryCap, IntegralMixedExceptionalBounds.K,
+      IntegralMixedExceptionalBounds.E, IntegralMixedExceptionalBounds.regularCap,
+      IntegralMixedExceptionalBounds.valueCap, IntegralMixedExceptionalBounds.valueDimension,
+      IntegralMixedExceptionalBounds.boxWidth, IntegralMixedExceptionalBounds.boxBase,
+      IntegralMixedSweepBounds.parameterCap, IntegralMixedSweepBounds.coordinateCap, PurePowerReductionBounds.dimension,
+      PurePowerReductionBounds.width, PurePowerReductionBounds.bound, count, circle]
+    decide
+
+noncomputable def indices : IntegralMixedVirtualSweepSource.Indices family where
+  coordinate _ := 0
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  col _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+
+
+
+open IntegralCriticalHistoryTask MatrixPower
+private def taskParams : Parameters := ⟨fun _ => 2, fun _ => 2, fun _ => 0, fun _ => 2, fun _ => 2, fun _ => 0, fun _ => 6⟩
+private theorem taskControls : Access taskParams :=
+  ⟨UnaryFn.const 2, UnaryFn.const 2, UnaryFn.const 0, UnaryFn.const 2,
+    BinaryFn.const 2, BinaryFn.const 0, BinaryFn.const 6⟩
+private theorem inputControls : IntegralMixedVirtualQueryBits.InputMetadata _root_.Group24Regression5.family :=
+  ⟨UnaryFn.const 1, UnaryFn.const 0, UnaryFn.const 64, UnaryFn.const 1, BinaryFn.const 2, BinaryFn.const 0⟩
+
+example : (IntegralMixedGramUpperBits.stage23 taskParams taskControls _root_.Group24Regression5.family inputControls).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits)
+    (encS := (IntegralMixedGramUpperBits.stage23 taskParams taskControls _root_.Group24Regression5.family inputControls).encoding) :=
+  (IntegralMixedGramUpperBits.stage23 taskParams taskControls _root_.Group24Regression5.family inputControls).certificates
+example : (IntegralMixedGramUpperBits.stage24 taskParams taskControls _root_.Group24Regression5.family inputControls).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits)
+    (encS := (IntegralMixedGramUpperBits.stage24 taskParams taskControls _root_.Group24Regression5.family inputControls).encoding) :=
+  (IntegralMixedGramUpperBits.stage24 taskParams taskControls _root_.Group24Regression5.family inputControls).certificates
+-- Invalid output-basis labels remain zero at the public characteristic entry.
+example (P : Parameters) (F : IntegralMixedCutSource.Family) (q : List Bool)
+    (hr : get P .row q = (IntegralMixedGramUpperBits.characteristic P F).rank q) :
+    IntegralMixedGramUpperBits.characteristicValue P F q = [] := by
+  unfold IntegralMixedGramUpperBits.characteristicValue
+  have HN : ¬get P .row q < (IntegralMixedGramUpperBits.characteristic P F).rank q := by
+    rw [hr]
+    exact Nat.lt_irrefl _
+  rw [IntegralCriticalTotalSnapshotBits.integerEntry, dite_eq_right HN]
+  simp only [Int.cast_zero, residueBits, ZMod.val_zero, BinaryNatCode.encode, Nat.zero_bits]
+#print axioms IntegralMixedGramUpperBits.selectedFinite_FP
+#print axioms IntegralMixedGramUpperBits.relativeFactor_child
+#print axioms IntegralMixedGramUpperBits.diagonal_child
+#print axioms IntegralMixedGramUpperBits.relative_moment_child
+#print axioms IntegralMixedGramUpperBits.value23
+#print axioms IntegralMixedGramUpperBits.factorSize_binary
+#print axioms IntegralMixedGramUpperBits.frame23
+#print axioms IntegralMixedGramUpperBits.correct23
+#print axioms IntegralMixedGramUpperBits.characteristic_value_finite
+#print axioms IntegralMixedGramUpperBits.factor_replies
+#print axioms IntegralMixedGramUpperBits.correct24
+end Group24Regression5

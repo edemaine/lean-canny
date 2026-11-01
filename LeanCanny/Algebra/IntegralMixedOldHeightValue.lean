@@ -1,0 +1,46 @@
+/-
+Copyright (c) 2026 lean-canny contributors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+-/
+module
+public import LeanCanny.Algebra.IntegralMixedOldHeightTransport
+/-! # Literal old-height values equal cofactor-scaled earlier companion entries -/
+@[expose] public section
+namespace LeanCanny.Algebra.IntegralMixedOldHeightBits
+open LeanCanny.Encoding LeanCanny.Computation MatrixPower IntegralCriticalHistoryTask
+open IntegralMixedFullHistoryScript IntegralMixedHistory
+open IntegralMixedOldBankCofactorBits (Routing)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+theorem entry_formula (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P) (R : Routing)
+    (q : List Bool) (hv : valid P q) :
+    Algebra.leftMulMatrix (state P D q).sampler.scalarPrefix.basis.finBasis
+      (cleared (state P D q) (bankIndex P D q hv.1)) (rowIndex P D q hv.2.1) (colIndex P D q hv.2.2) =
+    cofactor P D q * (if get P .row q % radix P q = get P .col q % radix P q then companionInteger P D R q else 0) := by
+  let key := IntegralMixedVirtualTaskBits.saved P q
+  let i := bankIndex P D q hv.1
+  let r := rowIndex P D q hv.2.1
+  let t := colIndex P D q hv.2.2
+  have H := (IntegralMixedFullHistoryFamilyBits.origin P D key i).cleared_matrix
+    (IntegralMixedFullHistoryFamilyBits.canonical P D key) r t
+  rw [origin_entry P D key i r t] at H
+  rw [cofactor_eq P D q hv.1, companionInteger_root]
+  simpa only [state, bankFamily, IntegralMixedFullHistoryFamilyBits.family, key, i, r, t, bankIndex, rowIndex, colIndex,
+    IntegralMixedFullHistoryFamilyBits.saved_root, IntegralMixedFullHistoryFamilyBits.saved_prefix,
+    radix, producerBirth, index, min_eq_left hv.1.le] using H
+
+theorem value_request (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P) (R : Routing)
+    (q : List Bool) (hq : request P q) :
+    value P D q = residueBits (cofactor P D q * companionInteger P D R q : ZMod (modulus P q)) := by
+  rw [value, dite_eq_left hq.1, entry_formula P D R q hq.1, ite_eq_left hq.2, Int.cast_mul]
+
+theorem value_not_request (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P) (R : Routing)
+    (q : List Bool) (hq : ¬ request P q) : value P D q = [] := by
+  by_cases hv : valid P q
+  · have HD : ¬ get P .row q % radix P q = get P .col q % radix P q := fun he => hq ⟨hv, he⟩
+    rw [value, dite_eq_left hv, entry_formula P D R q hv, ite_eq_right HD, mul_zero, Int.cast_zero]
+    exact (ArithmeticBits.zero_residueBits _).symm
+  · exact value_invalid P D q hv
+
+end LeanCanny.Algebra.IntegralMixedOldHeightBits
