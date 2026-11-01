@@ -1,3 +1,7 @@
+import LeanCanny.Algebra.IntegralCriticalHistoryEvaluator
+import LeanCanny.Algebra.IntegralCriticalFlatCompanion
+import LeanCanny.Algebra.IntegralCriticalOriginalCoefficient
+import LeanCanny.Connectivity.FiniteSlabBitAlgorithms
 import LeanCanny.Algebra.IntegralCriticalScriptQuery
 import LeanCanny.Algebra.IntegralCriticalHistoryTask
 import LeanCanny.Algebra.IntegralCriticalScriptFP

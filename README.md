@@ -1236,6 +1236,17 @@ The checked ingredients are:
   Finite closed-slab covers now assemble into a global component cover.
   Its paths are exactly finite overlap walks; adjacent edges are endpoint
   fiber intersections, and empty labels remain empty after saturation.
+  The flat-history stack compiler now derives task closure, a unary rank
+  bound, modular reply sizes, and a polynomial frame budget from local
+  controller contracts, without assuming any recursive child evaluator.
+  The companion stage now writes actual flat critical-coefficient requests,
+  preserving the caller modulus and decreasing phase. Its controller is
+  certified from original command metadata without a coefficient evaluator.
+  A bounded binary slab tag now packs the actual local bit covers into one
+  graph. Local edges and adjacent endpoint tests construct its PSPACE graph
+  routines; unused tags remain empty even after component saturation.
+  The original coefficient leaf now inserts its integer residue diagonally
+  in the actual old basis, with its original FP or space cost charged.
   Critical query parameters now preserve the actual creating polynomial,
   carrier, and basis while changing the coefficient, matrix indices, target,
   and modulus. Original integer coefficients act diagonally in that basis.
