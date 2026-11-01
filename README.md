@@ -1236,6 +1236,18 @@ The checked ingredients are:
   Finite closed-slab covers now assemble into a global component cover.
   Its paths are exactly finite overlap walks; adjacent edges are endpoint
   fiber intersections, and empty labels remain empty after saturation.
+  Flat retained-generator requests now descend to the exact creating
+  companion using quotient indices; unequal retained digits and invalid
+  selectors return zero without a child. Actual queried source common
+  denominators also have native FP readers from the script metadata.
+  Original creating-command leading residues now have a native reader with
+  chronological lookup. The common leading scalar `a * Q^D * D` is FP from
+  the original leading and denominator residues. Actual normalized Euler
+  source access supplies the flat two-call objective stage, with decreasing
+  phases and preserved bounded fields.
+  Validated trace height requests now emit actual lower-rank child frames,
+  with query sizes bounded in the original input and exact frozen-fiber
+  connectivity semantics. These requests still need a complete dispatcher.
   The flat-history stack compiler now derives task closure, a unary rank
   bound, modular reply sizes, and a polynomial frame budget from local
   controller contracts, without assuming any recursive child evaluator.
