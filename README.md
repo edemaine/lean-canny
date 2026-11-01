@@ -1236,6 +1236,27 @@ The checked ingredients are:
   Finite closed-slab covers now assemble into a global component cover.
   Its paths are exactly finite overlap walks; adjacent edges are endpoint
   fiber intersections, and empty labels remain empty after saturation.
+  The actual common-cleared height stage now fuses its native cofactor
+  with the raw generator route, requesting the earlier creating companion
+  directly. It preserves invalid/empty zero cases and introduces no extra
+  same-birth recursive phase, including for composite moduli and nonunits.
+  The retained-point terminal algorithm now searches complete terminal
+  children for endpoint membership and equality, with exact path semantics
+  in the finite slice. A native tagged leaf dispatches fresh child labels
+  and retained references and handles invalid records.
+  A shared matrix-entry writer now replaces row/column fields while keeping
+  the same root, birth, modulus, and other bounded fields. The actual
+  relative-characteristic power stage uses these fresh entry requests.
+  Flat Euler Lower, Sum, and coordinate-gradient stages now select concrete
+  children with normalized derivative ranks and guarded exponent decrements.
+  Native local clock/state certificates also give common allowances over
+  all short descendants, deriving the global recursive-stack resource bound.
+  Actual flat critical coefficients now request one relative characteristic
+  coefficient and rescale it locally using the derived FP common scalar.
+  Point-pair trace requests retain both original endpoints by stage
+  references. Their checked lower-rank query has exactly the original
+  common-fiber path relation, including singular fibers; retained points
+  are not assumed to be new critical samples.
   Flat retained-generator requests now descend to the exact creating
   companion using quotient indices; unequal retained digits and invalid
   selectors return zero without a child. Actual queried source common
