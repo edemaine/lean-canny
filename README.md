@@ -1233,6 +1233,19 @@ The checked ingredients are:
   while the requested critical coefficient remains a recursive child.
   Reading these scripts is FP when their metadata has the supplied native
   controls; no algebraic matrix callback is used by the denominator pass.
+  Finite closed-slab covers now assemble into a global component cover.
+  Its paths are exactly finite overlap walks; adjacent edges are endpoint
+  fiber intersections, and empty labels remain empty after saturation.
+  Critical query parameters now preserve the actual creating polynomial,
+  carrier, and basis while changing the coefficient, matrix indices, target,
+  and modulus. Original integer coefficients act diagonally in that basis.
+  Original command metadata now derives all denominator-pass instructions,
+  including the canonical exponent and clipped old selectors. Common-cleared
+  height entries multiply one recursive generator entry by an FP cofactor;
+  this works for negative scales and nonunits modulo composite integers.
+  The critical stages share a flat task format with twenty-seven ranked
+  phases and sixteen bounded fields. Its numeric cap includes the full
+  born-prefix rank and the derived uniform height budget.
   Each retained generator now has an actual creating birth, whose index
   fixes the binary radix for its embedding in the current prefix. Its matrix
   entries route to that birth by quotient indices and matching low digits.

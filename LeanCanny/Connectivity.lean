@@ -1,3 +1,8 @@
+import LeanCanny.Algebra.IntegralCriticalScriptQuery
+import LeanCanny.Algebra.IntegralCriticalHistoryTask
+import LeanCanny.Algebra.IntegralCriticalScriptFP
+import LeanCanny.Algebra.IntegralCriticalScriptHeight
+import LeanCanny.Connectivity.FiniteSlabCover
 import LeanCanny.Algebra.IntegralCriticalScriptGenerator
 import LeanCanny.Algebra.IntegralCriticalScriptOrigin
 import LeanCanny.Algebra.IntegralCriticalScript

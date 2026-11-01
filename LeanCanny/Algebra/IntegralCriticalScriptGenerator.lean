@@ -158,4 +158,3 @@ theorem program_value (F : Queries) (task answer : List Bool → List Bool)
 
 
 end LeanCanny.Algebra.IntegralCriticalScriptGeneratorBits
-

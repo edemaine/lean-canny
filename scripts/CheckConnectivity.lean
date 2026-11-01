@@ -1,3 +1,5 @@
+import Mathlib.Tactic.NormNum
+import Mathlib.Analysis.Convex.PathConnected
 import LeanCanny.Connectivity
 import Mathlib.LinearAlgebra.Basis.Fin
 import LeanCanny.Geometry.SingularParameterBounds
@@ -16869,3 +16871,538 @@ example : (program G id).value (fun _ => BinaryNatCode.encode 5) [] = BinaryNatC
   change residueBits (-((5 : ZMod 6) * ((2 ^ 150 * 2 ^ 150 : ℤ) : ZMod 6) ^ 1)) = BinaryNatCode.encode 4
   decide
 end CriticalScriptRegression
+
+
+namespace NativeCriticalScriptRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralCriticalScript
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def first : Command 0 2 2 0 where
+  low := MvPolynomial.C (-1)
+  leading := -1
+  degree := 2
+  degree_two := by decide
+  degree_le := by decide
+  degree_lt := by decide
+  low_degree := by norm_num
+  leading_ne := by decide
+  low_height e := by
+    rw [MvPolynomial.coeff_C]
+    split_ifs <;> norm_num
+  leading_height := by decide
+  offset := 0
+  objective := 0
+  coordinate := 0
+  selected _ := 100
+private noncomputable def second : Command 0 2 2 0 := { first with selected := fun _ => 0 }
+private noncomputable def rules := [second, first]
+
+private noncomputable def F : IntegralCriticalScriptFP.Family where
+  ambient _ := 0
+  sourceWidth _ := 2
+  degreeBound _ := 2
+  height _ := 0
+  rules _ := rules
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+private theorem leading_eq (c : List Bool) (i : ℕ) :
+    IntegralCriticalScriptFP.leading F c i = if i < 2 then -1 else 0 := by
+  cases i with
+  | zero => rfl
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralCriticalScriptFP.leading, IntegralCriticalScriptFP.commandAt, F, rules]
+
+private theorem degree_eq (c : List Bool) (i : ℕ) :
+    IntegralCriticalScriptFP.degree F c i = if i < 2 then 2 else 0 := by
+  cases i with
+  | zero => rfl
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralCriticalScriptFP.degree, IntegralCriticalScriptFP.commandAt, F, rules]
+
+private theorem offset_eq (c : List Bool) (i : ℕ) : IntegralCriticalScriptFP.offset F c i = 0 := by
+  cases i with
+  | zero => rfl
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralCriticalScriptFP.offset, IntegralCriticalScriptFP.commandAt, F, rules]
+
+private theorem selector_eq (c : List Bool) (i j : ℕ) :
+    IntegralCriticalScriptFP.selector F c i j =
+      if j < 1 then (if i = 0 then 100 else if i = 1 then 0 else i) else i := by
+  cases i with
+  | zero =>
+    change (if h : j < 1 then first.selected ⟨j, h⟩ else 0) = _
+    by_cases hj : j < 1 <;> simp [first, hj]
+  | succ i => cases i with
+    | zero =>
+      change (if h : j < 1 then second.selected ⟨j, h⟩ else 1) = _
+      by_cases hj : j < 1 <;> simp [second, hj]
+    | succ i => simp [IntegralCriticalScriptFP.selector, IntegralCriticalScriptFP.commandAt, F, rules]
+
+private theorem controls : IntegralCriticalScriptFP.Access F where
+  count := UnaryFn.const 2
+  ambient := UnaryFn.const 0
+  modulus := BinaryFn.const 6
+  leading := by
+    have H := (IntegralCriticalScriptFP.cursor_binary.lt (BinaryFn.const 2)).computable.ite_decide
+      (constFn_mem_FP (residueBits (-1 : ZMod 6))) (constFn_mem_FP (residueBits (0 : ZMod 6)))
+    exact mem_FP_of_eq H (fun p => by rw [leading_eq]; split_ifs <;> rfl)
+  degree := (BinaryFn.ite (IntegralCriticalScriptFP.cursor_binary.lt (BinaryFn.const 2))
+    (BinaryFn.const 2) (BinaryFn.const 0)).of_eq (fun p => (degree_eq _ _).symm)
+  offset := (BinaryFn.const 0).of_eq (fun p => (offset_eq _ _).symm)
+  selector := by
+    have HI : BinaryFn (fun z => IntegralDenominatorPass.cursor (pairFst z)) := IntegralCriticalScriptFP.cursor_binary.comp pairFst_mem_FP
+    have HJ : BinaryFn (fun z => Nat.fromBitsLE (pairSnd z)) := BinaryFn.fromBits pairSnd_mem_FP
+    exact (BinaryFn.ite (HJ.lt (BinaryFn.const 1))
+      (BinaryFn.ite (HI.eq (BinaryFn.const 0)) (BinaryFn.const 100)
+        (BinaryFn.ite (HI.eq (BinaryFn.const 1)) (BinaryFn.const 0) HI)) HI).of_eq
+      (fun z => (selector_eq _ _ _).symm)
+
+private theorem length_bound (c : List Bool) : (F.rules c).length ≤ 2 + 1 := by change 2 ≤ 3; decide
+private theorem width_bound (c : List Bool) : PurePowerReductionBounds.dimension (F.ambient c + 1) (F.degreeBound c) ≤ 2 ^ 2 := by
+  change PurePowerReductionBounds.dimension 1 2 ≤ 2 ^ 2
+  decide
+
+-- Native primitive metadata suffices for the whole actual bank and every prefix.
+example : IntegralDenominatorPass.Access (IntegralCriticalScriptFP.program F) :=
+  IntegralCriticalScriptFP.access F controls
+example : (fun c => residueBits
+    ((((List.ofFn (run (S := 2) (B := 2) (F.rules c) (length_bound c) (width_bound c)).bank.denominator)[Nat.fromBitsLE c]?).getD (0 : ℤ) : ℤ) : ZMod 6)) ∈ FP :=
+  bank_denominator_reader_FP (fun _ => 2) (fun _ => 2) F.ambient F.sourceWidth F.degreeBound F.height F.rules
+    length_bound width_bound F.modulus F.modulus_ne_zero
+    (IntegralCriticalScriptFP.access F controls) Nat.fromBitsLE (BinaryFn.fromBits id_mem_FP)
+example : (fun c => residueBits
+    ((((List.ofFn (stateAt (S := 2) (B := 2) (F.rules c) (length_bound c) (width_bound c) (Nat.fromBitsLE c)).bank.denominator)[0]?).getD (0 : ℤ) : ℤ) : ZMod 6)) ∈ FP :=
+  bank_prefix_denominator_reader_FP (fun _ => 2) (fun _ => 2) F.ambient F.sourceWidth F.degreeBound F.height F.rules
+    length_bound width_bound F.modulus F.modulus_ne_zero
+    (IntegralCriticalScriptFP.access F controls) Nat.fromBitsLE (BinaryFn.fromBits id_mem_FP) (fun _ => 0) (BinaryFn.const 0)
+
+-- Canonical exponent and total defaults are computed internally.
+example : (IntegralCriticalScriptFP.program F).exponent [] 0 = 12 := by decide
+example : (IntegralCriticalScriptFP.program F).exponent [true] 1 = 12 := by decide
+example : (IntegralCriticalScriptFP.program F).exponent [] 1000 = 0 := by decide
+example : (IntegralCriticalScriptFP.program F).arity [] 1000 = 0 := by decide
+example : (IntegralCriticalScriptFP.program F).degree [] 1000 = 0 := by decide
+example : (IntegralCriticalScriptFP.program F).leading [] 1000 = 0 := by decide
+example : IntegralCriticalScriptFP.selector F [] 0 0 = 100 := by decide
+example : (IntegralCriticalScriptFP.program F).index [] 0 0 = 0 := by decide
+example : (IntegralCriticalScriptFP.program F).index [] 1 0 = 0 := by decide
+example : (IntegralCriticalScriptFP.program F).index [] 1 1000 = 1 := by decide
+example : (IntegralCriticalScriptFP.program F).index [] 1000 0 = 1000 := by decide
+example : (IntegralDenominatorPass.pass (IntegralCriticalScriptFP.program F)).values [] 2 = [4, 4] := by decide
+example : (IntegralDenominatorPass.pass (IntegralCriticalScriptFP.program F)).values [true] 2 = [4, 4] := by decide
+
+end NativeCriticalScriptRegression
+
+
+namespace CommonClearedHeightRegression
+
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open MatrixPower CommonHeightBits
+open scoped Classical BigOperators
+
+noncomputable def scalesTest : Scalars where
+  count _ := 2
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+  scale _ i := if i = 0 then -2 else 3
+  selected _ := 0
+
+noncomputable def scalesAccess : Access scalesTest where
+  count := UnaryFn.const 2
+  modulus := BinaryFn.const 6
+  selected := BinaryFn.const 0
+  scalar p := if Nat.fromBitsLE (pairSnd p) = 0 then residueBits (-2 : ZMod 6) else residueBits (3 : ZMod 6)
+  scalar_FP := ((BinaryFn.fromBits pairSnd_mem_FP).eq (BinaryFn.const 0)).ite_mem_FP
+    (constFn_mem_FP _) (constFn_mem_FP _)
+  scalar_eq c i _ := by
+    simp only [pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    change (if i = 0 then residueBits (-2 : ZMod 6) else residueBits (3 : ZMod 6)) = residueBits ((if i = 0 then -2 else 3 : ℤ) : ZMod 6)
+    split_ifs <;> norm_num
+
+example : scalesTest.denominator [] = -6 := by
+  norm_num [Scalars.denominator, scalesTest, Finset.prod_range_succ]
+
+example : scalesTest.cofactor [] = 3 := by
+  norm_num [Scalars.cofactor, scalesTest, Finset.prod_range_succ]
+
+example : residueBits (scalesTest.denominator [] : ZMod 6) = [] := by
+  have HD : scalesTest.denominator [] = -6 := by norm_num [Scalars.denominator, scalesTest, Finset.prod_range_succ]
+  rw [HD]
+  decide
+
+example : residueBits (scalesTest.cofactor [] : ZMod 6) = [true, true] := by
+  have HD : scalesTest.cofactor [] = 3 := by norm_num [Scalars.cofactor, scalesTest, Finset.prod_range_succ]
+  rw [HD]
+  decide
+
+example : (fun c => residueBits (scalesTest.denominator c : ZMod 6)) ∈ FP :=
+  denominator_FP scalesTest scalesAccess
+example : (fun c => residueBits (scalesTest.cofactor c : ZMod 6)) ∈ FP :=
+  cofactor_FP scalesTest scalesAccess
+
+noncomputable def sourceTest : Source where
+  toScalars := scalesTest
+  rank _ := 1
+  carrier _ := ℤ
+  ring _ := inferInstance
+  basis _ := Module.Basis.singleton (Fin 1) ℤ
+  numerator _ := 2
+  row _ := 0
+  col _ := 0
+
+example : finish sourceTest (pair [] (residueBits (2 : ZMod 6))) = [] := by
+  unfold finish
+  rw [pairFst_pair, pairSnd_pair]
+  change BinaryNat.mulMod (pair (BinaryNatCode.encode 6) (pair (residueBits (3 : ZMod 6)) (residueBits (2 : ZMod 6)))) = []
+  rw [ArithmeticBits.mulMod_residueBits]
+  decide
+
+example : (program sourceTest (fun _ => true) id).Controls :=
+  controls sourceTest scalesAccess _ (constFn_mem_FP [true]) _ id_mem_FP
+
+example (answer : List Bool → List Bool) (budget : List Bool → ℕ) :
+    ¬ (program sourceTest (fun _ => false) id).controller.Requests answer budget [] [] := by
+  rw [requests_iff]
+  simp only [Bool.false_eq_true, false_and, not_false_eq_true]
+
+
+open IntegralCriticalScriptHeightBits FixedWidthPolynomial
+
+noncomputable def emptyHeight : IntegralCriticalScriptHeightBits.Queries where
+  cap _ := 0
+  width _ := 6
+  ambient _ := 1
+  sourceWidth _ := 2
+  degreeBound _ := 2
+  height _ := 0
+  rules _ := []
+  length_le _ := by decide
+  scalar_bound _ := by decide
+  prefixLength _ := 100
+  selector _ _ := 5
+  coordinate _ := 0
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+  row _ := ⟨0, by decide⟩
+  col _ := ⟨0, by decide⟩
+
+example : present emptyHeight [] = false := by decide
+example : rawNumerator emptyHeight [] = 0 := numerator_zero _ _ (by decide)
+example : cleared emptyHeight [] = 0 := by
+  rw [cleared_eq, numerator_zero _ _ (by decide), zero_mul]
+
+example (answer : List Bool → List Bool) (budget : List Bool → ℕ) (child : List Bool) :
+    ¬ (IntegralCriticalScriptHeightBits.program emptyHeight id).controller.Requests answer budget [] child := by
+  rw [IntegralCriticalScriptHeightBits.requests_iff]
+  simp only [show present emptyHeight [] = false from by decide, Bool.false_eq_true, false_and, not_false_eq_true]
+
+end CommonClearedHeightRegression
+
+
+
+open Set LeanCanny.Connectivity
+open FiniteSlabCover
+
+namespace FiniteSlabCoverRegression
+
+instance : TopologicalSpace Bool := ⊥
+instance : DiscreteTopology Bool := ⟨rfl⟩
+
+def height (x : Bool) : ℝ := if x then 2 else 0
+def cut (i : ℕ) : ℝ := i
+
+def sliceCover (S : Set Bool) : ClopenPathCover S Bool where
+  piece := fun i => {x | x.val = i}
+  clopen := fun _ => ⟨isClosed_discrete _, isOpen_discrete _⟩
+  cover := fun x => ⟨x.val, rfl⟩
+  paths := by
+    intro i x hx y hy
+    have he : x = y := Subtype.ext (hx.trans hy.symm)
+    subst y
+    exact JoinedIn.refl hx
+
+def covers (i : Fin 3) : ClopenPathCover
+    (height ⁻¹' Icc (cut i.val) (cut (i.val + 1))) Bool := sliceCover _
+
+theorem height_bound (x : Bool) : height x ∈ Icc (cut 0) (cut (2 + 1)) := by
+  cases x <;> norm_num [height, cut]
+
+def assembled : ClopenPathCover Bool (Σ _ : Fin 3, Bool) :=
+  componentCover height cut covers continuous_of_discreteTopology height_bound
+
+-- A graph edge joins the two copies of the actual endpoint at height two.
+example : ClosedPathCover.Overlap (piece height cut covers)
+    ⟨1, true⟩ ⟨2, true⟩ := by
+  apply (overlap_adjacent_iff height cut covers (1 : Fin 2) true true).mpr
+  refine ⟨⟨true, by norm_num [height, cut]⟩, ?_, ?_⟩
+  · exact ⟨⟨true, by norm_num [height, cut]⟩, rfl, rfl⟩
+  · exact ⟨⟨true, by norm_num [height, cut]⟩, rfl, rfl⟩
+
+-- The same recursive labels in separated slabs cannot create an edge.
+example : ¬ ClosedPathCover.Overlap (piece height cut covers)
+    ⟨0, false⟩ ⟨2, true⟩ :=
+  not_overlap_of_separated height cut covers 0 2 (by norm_num [cut]) false true
+
+-- Saturation preserves an invalid word: the point true is outside slab zero.
+example : ¬ (assembled.piece ⟨0, true⟩).Nonempty := by
+  rw [assembled, componentCover_nonempty_iff]
+  rintro ⟨x, z, hz, rfl⟩
+  change z.val = true at hz
+  have hp := z.property.2
+  change height z.val ≤ cut (0 + 1) at hp
+  rw [hz] at hp
+  norm_num [height, cut] at hp
+
+-- Covering each point does not invent a path between the two components.
+example : ¬ Relation.ReflTransGen
+    (ClosedPathCover.Overlap (piece height cut covers))
+    (⟨0, false⟩ : Σ _ : Fin 3, Bool) ⟨2, true⟩ := by
+  intro hr
+  have edge : ∀ i j : Σ _ : Fin 3, Bool,
+      ClosedPathCover.Overlap (piece height cut covers) i j → i.2 = j.2 := by
+    rintro i j ⟨x, ⟨y, hy, rfl⟩, z, hz, he⟩
+    change y.val = i.2 at hy
+    change z.val = j.2 at hz
+    exact hy.symm.trans (he.symm.trans hz)
+  have labels : ∀ {i j : Σ _ : Fin 3, Bool},
+      Relation.ReflTransGen (ClosedPathCover.Overlap (piece height cut covers)) i j →
+        i.2 = j.2 := by
+    intro i j h
+    induction h with
+    | refl => rfl
+    | tail _ he ih => exact ih.trans (edge _ _ he)
+  have := labels hr
+  contradiction
+
+-- A constant cut sequence still covers its (degenerate) full height range.
+example : ∃ i : Fin 4, (7 : ℝ) ∈ Icc ((fun _ => 7) i.val)
+    ((fun _ => 7) (i.val + 1)) :=
+  exists_adjacent_interval (fun _ => 7) 3 ⟨le_rfl, le_rfl⟩
+
+-- Nonmonotone cuts are also safe: interval coverage is proved, not assumed.
+example : ∃ i : Fin 3, (2 : ℝ) ∈
+    Icc ((fun k => if k = 0 then 0 else if k = 1 then -2 else 3) i.val)
+      ((fun k => if k = 0 then 0 else if k = 1 then -2 else 3) (i.val + 1)) := by
+  apply exists_adjacent_interval
+    (fun k => if k = 0 then 0 else if k = 1 then -2 else 3) 2 (x := 2)
+  norm_num
+
+abbrev Interval := Icc (0 : ℝ) 3
+
+-- Positive-dimensional covers: each of the three actual closed subintervals
+-- has a single component, with its paths constructed by convexity.
+def intervalCovers (i : Fin 3) : ClopenPathCover
+    ((Subtype.val : Interval → ℝ) ⁻¹' Icc (cut i.val) (cut (i.val + 1))) Unit where
+  piece := fun _ => univ
+  clopen := fun _ => isClopen_univ
+  cover := fun _ => ⟨(), trivial⟩
+  paths := by
+    intro _ x _ y _
+    have hj := (((convex_Icc (0 : ℝ) 3).inter
+      (convex_Icc (cut i.val) (cut (i.val + 1)))).isPathConnected
+        ⟨x.val.val, x.val.property, x.property⟩).joinedIn
+          x.val.val ⟨x.val.property, x.property⟩ y.val.val ⟨y.val.property, y.property⟩
+    obtain ⟨γ, hγ⟩ := hj
+    exact ⟨{
+      toFun := fun t => ⟨⟨γ t, (hγ t).1⟩, (hγ t).2⟩
+      continuous_toFun := (γ.continuous.subtype_mk (fun t => (hγ t).1)).subtype_mk
+        (fun t => (hγ t).2)
+      source' := Subtype.ext (Subtype.ext γ.source)
+      target' := Subtype.ext (Subtype.ext γ.target)
+    }, fun _ => trivial⟩
+
+-- The assembled graph really carries a path across two exceptional fibers.
+example : Relation.ReflTransGen
+    (ClosedPathCover.Overlap (piece (Subtype.val : Interval → ℝ) cut intervalCovers))
+    (⟨0, ()⟩ : Σ _ : Fin 3, Unit) ⟨2, ()⟩ := by
+  have hb (x : Interval) : x.val ∈ Icc (cut 0) (cut (2 + 1)) := by
+    simp [cut, Interval]
+  have hx : (⟨0, by norm_num⟩ : Interval) ∈
+      piece (Subtype.val : Interval → ℝ) cut intervalCovers ⟨0, ()⟩ :=
+    ⟨⟨⟨0, by norm_num⟩, by norm_num [cut]⟩, trivial, rfl⟩
+  have hy : (⟨3, by norm_num⟩ : Interval) ∈
+      piece (Subtype.val : Interval → ℝ) cut intervalCovers ⟨2, ()⟩ :=
+    ⟨⟨⟨3, by norm_num⟩, by norm_num [cut]⟩, trivial, rfl⟩
+  apply (joinedIn_iff_reachable _ cut intervalCovers continuous_subtype_val hb hx hy).mp
+  have hj : JoinedIn (Icc (0 : ℝ) 3) 0 3 :=
+    ((convex_Icc 0 3).isPathConnected ⟨0, by norm_num⟩).joinedIn
+      0 (by norm_num) 3 (by norm_num)
+  exact joinedIn_univ.mpr hj.joined_subtype
+
+
+end FiniteSlabCoverRegression
+
+
+namespace CriticalHistoryTaskRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralCriticalHistoryTask
+private def F : Parameters where
+  cap _ := 2
+  width _ := 2
+  ambient _ := 0
+  sourceWidth _ := 2
+  degree _ := 2
+  height _ := 0
+  modulusBound _ := 6
+private theorem controls : Access F where
+  cap := UnaryFn.const 2
+  width := UnaryFn.const 2
+  ambient := UnaryFn.const 0
+  sourceWidth := UnaryFn.const 2
+  degree := BinaryFn.const 2
+  height := BinaryFn.const 0
+  modulusBound := BinaryFn.const 6
+private def root : List Bool := [true, false, true]
+-- Arbitrary stale padding is replaced, even underneath a local controller wrapper.
+private def q := RankedHistoryTask.pack root 2 Phase.companion.code (List.replicate 100 true)
+private def packet := pair q [false, true]
+private def childWord := child F pairFst (fun z => birth F (pairFst z)) .criticalCoefficient (fun _ => BinaryNatCode.encode 6) packet
+private theorem six_le : 6 ≤ numericCap F root :=
+  (IntegralCriticalQueryBounds.metadata_le _ _ _ _ _ _ _ _).2.2.2.2.2.2.2
+example : BinaryFn (numericCap F) := numericCap_binary F controls
+example : UnaryFn (taskBudget F) := taskBudget_unary F controls
+example : UnaryFn (rankBudget F) := rankBudget_unary F controls
+example : child F pairFst (fun z => birth F (pairFst z)) .criticalCoefficient
+    (fun _ => BinaryNatCode.encode 6) ∈ FP :=
+  child_FP F controls pairFst pairFst_mem_FP _
+    (BinaryFn.ofUnary ((RankedHistoryTask.birth_unary _ (birthCap_unary F controls)).comp pairFst_mem_FP))
+    .criticalCoefficient _ (constFn_mem_FP _)
+example : RankedHistoryTask.root childWord = root := by
+  rw [childWord, child_root]
+  simp only [packet, pairFst_pair, q, RankedHistoryTask.root_pack]
+example : get F .row childWord = 6 := by
+  rw [childWord, child_get]
+  simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits, packet, pairFst_pair, q, RankedHistoryTask.root_pack]
+  exact min_eq_left six_le
+example : modulus F childWord = 6 := by
+  have H : get F .modulus childWord = 6 := by
+    rw [childWord, child_get]
+    simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits, packet, pairFst_pair, q, RankedHistoryTask.root_pack]
+    exact min_eq_left six_le
+  simp only [modulus, H, show ¬(6 = 0) by decide, ite_false]
+example : rank F childWord < rank F q := by
+  apply child_lower_phase F pairFst _ .criticalCoefficient _ packet rfl
+  change 25 < RankedHistoryTask.phase 27 (pairFst packet)
+  simp only [packet, pairFst_pair, q]
+  rw [RankedHistoryTask.phase_pack _ _ _ _ _ (by decide)]
+  decide
+example : Tasks F q childWord := by
+  apply child_tasks F pairFst _ .criticalCoefficient _ q packet
+  · simp only [packet, pairFst_pair]
+    exact tasks_self F q
+  · exact min_le_right _ _
+example : childWord.length ≤ wordBudget F q := by
+  apply child_length F pairFst _ .criticalCoefficient _ packet
+  exact min_le_right _ _
+-- A height request may reset the local phase only at an earlier birth.
+private def h := RankedHistoryTask.pack root 2 Phase.clearedHeight.code []
+example : rank F (child F id (fun _ => 1) .companion (fun _ => []) h) < rank F h := by
+  apply child_lower_birth F id (fun _ => 1) .companion _ h
+  change 1 < RankedHistoryTask.birth (birthCap F) h
+  rw [h, RankedHistoryTask.birth_pack _ _ _ _ _ (by decide)]
+  decide
+-- Malformed phases and zero moduli have bounded total interpretations.
+example : phase (RankedHistoryTask.pack root 2 100 []) = 26 := by decide
+example : modulus F (RankedHistoryTask.pack root 100 100 []) = 1 := by
+  have HZ : Nat.fromBitsLE ([] : List Bool) = 0 := rfl
+  simp [modulus, IntegralCriticalHistoryTask.get, Field.code, RankedHistoryFields.get, FixedWidthQuery.entry, FixedWidthQuery.coordinate, HZ]
+end CriticalHistoryTaskRegression
+
+
+namespace CriticalScriptQueryRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower FixedWidthPolynomial
+open IntegralCriticalScript IntegralCriticalScriptQueryBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def first : Command 0 2 2 0 where
+  low := MvPolynomial.C (-1)
+  leading := -1
+  degree := 2
+  degree_two := by decide
+  degree_le := by decide
+  degree_lt := by decide
+  low_degree := by norm_num
+  leading_ne := by decide
+  low_height e := by
+    rw [MvPolynomial.coeff_C]
+    split_ifs <;> norm_num
+  leading_height := by decide
+  offset := 0
+  objective := 0
+  coordinate := 0
+  selected _ := 100
+private noncomputable def second : Command 0 2 2 0 := { first with selected := fun _ => 0 }
+private noncomputable def rules := [second, first]
+
+
+private noncomputable def G : IntegralCriticalScriptGeneratorBits.Queries where
+  cap _ := 2
+  width _ := 2
+  ambient _ := 0
+  sourceWidth _ := 2
+  degreeBound _ := 2
+  height _ := 0
+  rules _ := rules
+  length_le _ := by change 2 ≤ 3; decide
+  scalar_bound _ := by change PurePowerReductionBounds.dimension 1 2 ≤ 4; decide
+  selected _ := (0 : Fin 2)
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+  row _ := (6 : Fin 16)
+  col _ := (7 : Fin 16)
+
+private noncomputable def q : GeneratorQueries G where
+  coefficientIndex _ := 4
+  target := Nat.fromBitsLE
+  row _ := (1 : Fin 4)
+  col _ := (1 : Fin 4)
+
+private noncomputable def off : GeneratorQueries G := { q with col := fun _ => (2 : Fin 4) }
+
+-- Query data preserve the creating algebra and polynomial even when target changes.
+example (c : List Bool) : (generatorSource G q).annihilator c =
+    (IntegralCriticalScriptGeneratorBits.generatorFamily G).polynomial c := generator_polynomial G q c
+example (c : List Bool) : IntegralClearedCriticalLeadingBits.integer (generatorSource G q) c =
+    IntegralCriticalScriptGeneratorBits.leading G c := generator_leading G q c
+example (c : List Bool) : (generatorSource G q).value c = residueBits
+    ((IntegralCriticalScriptGeneratorBits.generatorFamily G).coefficient c 4 (1 : Fin 4) (1 : Fin 4)) :=
+  generator_value G q c
+
+-- The birth family has modulus 1; the queried source uses caller modulus 6.
+example : (IntegralHistoryCriticalBits.source (IntegralCriticalScriptGeneratorBits.birthSource G [])).modulus [] = 1 := rfl
+example : (generatorSource G q).modulus [] = 6 := rfl
+example : (generatorFamily G q).target (BinaryNatCode.encode 1000) = 1000 := by decide
+
+-- Top coefficient is the actual nonunit denominator, with the actual basis delta.
+example : (generatorSource G q).value [] = BinaryNatCode.encode 4 := by
+  rw [show (generatorSource G q).value [] = (source (birthFamilies G) q.toQueries).value [] by rfl]
+  rw [top_value (birthFamilies G) q.toQueries [] (by rfl)]
+  decide
+example : (generatorSource G q).value (BinaryNatCode.encode 1000) = BinaryNatCode.encode 4 := by
+  rw [show (generatorSource G q).value (BinaryNatCode.encode 1000) =
+    (source (birthFamilies G) q.toQueries).value (BinaryNatCode.encode 1000) by rfl]
+  rw [top_value (birthFamilies G) q.toQueries (BinaryNatCode.encode 1000) (by rfl)]
+  decide
+example : (generatorSource G off).value [] = [] := by
+  rw [show (generatorSource G off).value [] = (source (birthFamilies G) off.toQueries).value [] by rfl]
+  rw [top_value (birthFamilies G) off.toQueries [] (by rfl)]
+  decide
+
+-- The original low polynomial's integer coefficient uses the same old basis.
+example :
+    letI := (IntegralHistoryCriticalBits.original (generatorFamily G q)).ring []
+    Algebra.leftMulMatrix ((IntegralHistoryCriticalBits.original (generatorFamily G q)).basis [])
+      (((IntegralHistoryCriticalBits.original (generatorFamily G q)).polynomial []).coeff 0) (1 : Fin 4) (1 : Fin 4) = -1 := by
+  let := (IntegralHistoryCriticalBits.original (family (birthFamilies G) q.toQueries)).ring []
+  change Algebra.leftMulMatrix ((IntegralHistoryCriticalBits.original (family (birthFamilies G) q.toQueries)).basis [])
+    (((IntegralHistoryCriticalBits.original (family (birthFamilies G) q.toQueries)).polynomial []).coeff 0) (1 : Fin 4) (1 : Fin 4) = -1
+  rw [original_coefficient_matrix (birthFamilies G) q.toQueries [] 0]
+  change (MvPolynomial.C (-1 : ℤ) : MvPolynomial (Fin 1) ℤ).coeff 0 = -1
+  simp
+
+end CriticalScriptQueryRegression
