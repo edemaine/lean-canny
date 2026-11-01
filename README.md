@@ -1531,7 +1531,14 @@ actual regularized producer, and bounding a uniform effective radius, remain
 open. The radial graph now has a concrete native regularized source, a literal
 integer spatial polynomial, and a degree cap independent of the radius. Marked
 points recover the original tuple, margin, radial coordinate, and component
-label; the critical branch argument must still preserve that marking.
+label; the critical branch argument must still preserve that marking. A universal
+centered radial graph instead stores the center and squared distance as literal
+coordinates, giving compact coordinate-frozen slices. For compact singular
+polynomial zero sets, a constructed coercive critical-point limit stays in any
+chosen clopen piece. Parametric eliminants produce nonzero trailing-coordinate
+polynomials whose finite Cartesian root grid meets every such piece. Keeping
+strict positive-margin labels isolated, constructing continuous branch coverage,
+and proving effective uniform radius bounds remain required.
 
 The complete 27-phase evaluator for critical-only scripts has a native
 polynomial-space proof. One canonical residue model connects the actual leaf,
@@ -1603,8 +1610,11 @@ relative factors and powers now compute the literal characteristic coefficient
 matrix, guarding invalid output basis labels explicitly. One native Gram
 determinant dispatcher closes all its internal current replies; its external
 arithmetic boundary is the existing value-row model. The source decoder,
-scalar callbacks, determinant routing, and producer companions still need
-to be joined into one mixed evaluator.
+scalar callbacks, remaining raw coordinate/PSC branches, and final decoder
+binding still need to be joined into one mixed evaluator. The raw value-factor
+branch now reads the actual Gram characteristic coefficient; its coefficient
+branch extracts the first nilpotent digit, retains natural invalid-label zeros,
+and supplies the existing normalization raw-cut value after truncation.
 
 Native integer-zero and trailing-degree scans keep binary counters and request
 small-modulus residues or coefficient-zero flags recursively. Their local
@@ -1669,7 +1679,12 @@ births, are identified with one literal creating-command companion and leading
 scalar. One guarded native dispatcher now joins all three producer kinds,
 with canonical replies and zero for invalid births, routines, and contexts.
 Its current model closes the chronological producer replies used by the literal
-retained-height controller. Complete mixed dispatch and original input-codec
+retained-height controller. The physical and virtual critical routines now
+also have one guarded native dispatcher with canonical replies. A joint
+critical/producer dispatcher closes the physical critical-coefficient callback
+internally; its remaining boundaries are the scalar and normalized-coefficient
+models. Natural-index height identities connect actual callbacks to the finite
+affine formulas, including zero beyond the spatial coordinate range. Complete mixed dispatch and original input-codec
 binding remain required.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
