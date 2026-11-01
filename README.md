@@ -1528,7 +1528,10 @@ slices. Any continuous positive critical branch with squared radius equal to
 the parameter converges to the prescribed original center, and its projected
 component joins that center. Constructing and covering these branches for the
 actual regularized producer, and bounding a uniform effective radius, remain
-open.
+open. The radial graph now has a concrete native regularized source, a literal
+integer spatial polynomial, and a degree cap independent of the radius. Marked
+points recover the original tuple, margin, radial coordinate, and component
+label; the critical branch argument must still preserve that marking.
 
 The complete 27-phase evaluator for critical-only scripts has a native
 polynomial-space proof. One canonical residue model connects the actual leaf,
@@ -1597,7 +1600,9 @@ Gram characteristic source now supplies the determinant routine's integer block
 entries and augmented moment entry/power stages. These requests preserve
 natural invalid labels and use only current value-row or block replies. Native
 relative factors and powers now compute the literal characteristic coefficient
-matrix, guarding invalid output basis labels explicitly. The source decoder,
+matrix, guarding invalid output basis labels explicitly. One native Gram
+determinant dispatcher closes all its internal current replies; its external
+arithmetic boundary is the existing value-row model. The source decoder,
 scalar callbacks, determinant routing, and producer companions still need
 to be joined into one mixed evaluator.
 
@@ -1661,7 +1666,11 @@ mixed-history state and denominator bank. Integer producers now have native
 leading, coefficient, and companion branches using only original scalar cells
 and degree metadata. All three producer kinds, including padded integer-X
 births, are identified with one literal creating-command companion and leading
-scalar. Complete mixed dispatch and original input-codec binding remain required.
+scalar. One guarded native dispatcher now joins all three producer kinds,
+with canonical replies and zero for invalid births, routines, and contexts.
+Its current model closes the chronological producer replies used by the literal
+retained-height controller. Complete mixed dispatch and original input-codec
+binding remain required.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
 coordinate, squarefree, and Gram sources have binary height bounds derived from

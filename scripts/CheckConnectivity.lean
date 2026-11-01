@@ -33628,3 +33628,228 @@ example (P : Parameters) (F : IntegralMixedCutSource.Family) (q : List Bool)
 #print axioms IntegralMixedGramUpperBits.factor_replies
 #print axioms IntegralMixedGramUpperBits.correct24
 end Group24Regression5
+
+namespace Group25Regression0
+namespace MixedCurrentProducerRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower
+open IntegralCriticalHistoryTask IntegralMixedProducerActualBits
+set_option backward.isDefEq.respectTransparency false
+
+example (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P) (q : List Bool)
+    (h : get P .slot15 q = 0) : leading P D q = IntegralMixedIntegerProducerBits.leadingValue P D q := by
+  simp only [leading, h, ite_true]
+example (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P) (q : List Bool)
+    (h : get P .slot15 q = 1) : companion P D q =
+      IntegralMixedPhysicalCompanionBits.companionValue P (IntegralMixedPhysicalCompanionBits.fullFamily P D) q := by
+  simp only [companion, h, Nat.one_ne_zero, ite_false, ite_true]
+example (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P) (q : List Bool)
+    (h : get P .slot15 q = 4) : companion P D q =
+      IntegralMixedNormalizedCompanionBits.companionValue P (IntegralMixedNormalizedCompanionBits.fullFamily P D) q := by
+  simp only [companion, h, Nat.reduceEqDiff, ite_false]
+-- One current reply relation suffices for the actual native retained-height controller.
+example (P : Parameters) (a : Access P) (D : IntegralMixedFullHistoryFamilyBits.Data P)
+    (h : IntegralMixedFullHistoryFamilyBits.Metadata P D) (answer : List Bool → List Bool)
+    (hm : Matches P D answer) :
+    NativeControllerBranch.Correct (IntegralMixedFullOldHeightBits.machine P a D h) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  old_height_correct P a D h answer hm
+-- Canonical residues exist at every query, including malformed context tags.
+example (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P) (q : List Bool) :
+    ∃ z : ZMod (modulus P q), residueBits z = companion P D q := companion_canonical P D q
+#print axioms IntegralMixedProducerActualBits.leading_actual
+#print axioms IntegralMixedProducerActualBits.companion_actual
+#print axioms IntegralMixedProducerActualBits.leading_query_context
+#print axioms IntegralMixedProducerActualBits.old_height_replies
+#print axioms IntegralMixedProducerActualBits.old_height_correct
+#print axioms IntegralMixedProducerActualBits.leading_canonical
+#print axioms IntegralMixedProducerActualBits.companion_canonical
+end MixedCurrentProducerRegression
+end Group25Regression0
+
+namespace Group25Regression1
+namespace MixedFullProducerRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower
+open IntegralCriticalHistoryTask IntegralMixedFullProducerDispatcherBits
+set_option backward.isDefEq.respectTransparency false
+
+example (P : Parameters) (a : Access P) (D : IntegralMixedFullHistoryFamilyBits.Data P) (h : Controls P D) :
+    (machine P a D h).controller.Certificates (encQ := Turing.MultiTapeTM.encBits) (encS := (machine P a D h).encoding) :=
+  (machine P a D h).certificates
+example (P : Parameters) (a : Access P) (D : IntegralMixedFullHistoryFamilyBits.Data P) (h : Controls P D)
+    (answer : List Bool → List Bool) (hm : Matches P a D h answer) :
+    NativeControllerBranch.Correct (IntegralMixedFullOldHeightBits.machine P a D h.full) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  old_height_correct P a D h answer hm
+example (P : Parameters) (a : Access P) (D : IntegralMixedFullHistoryFamilyBits.Data P) (h : Controls P D)
+    (q : List Bool) (hx : get P .slot15 q = 5) : (machine P a D h).model q = [] :=
+  model_other_context P a D h q (by omega)
+example (P : Parameters) (a : Access P) (D : IntegralMixedFullHistoryFamilyBits.Data P) (h : Controls P D)
+    (q : List Bool) (hr : IntegralMixedRoutineTaskBits.routine P q = 0) : (machine P a D h).model q = [] :=
+  model_other_routine P a D h q (by omega)
+example (P : Parameters) (a : Access P) (D : IntegralMixedFullHistoryFamilyBits.Data P) (h : Controls P D)
+    (q : List Bool) (hb : birth P q = P.cap (RankedHistoryTask.root q)) : (machine P a D h).model q = [] := by
+  apply model_invalid
+  unfold IntegralMixedVirtualCaps.valid
+  omega
+example (P : Parameters) (q : List Bool) (hx : get P .slot15 q = 1) : ¬InContext P 2 4 q := by
+  intro hc
+  have := hc.2.2.1
+  omega
+#print axioms IntegralMixedFullProducerDispatcherBits.context_FP
+#print axioms IntegralMixedFullProducerDispatcherBits.model_integer
+#print axioms IntegralMixedFullProducerDispatcherBits.model_physical
+#print axioms IntegralMixedFullProducerDispatcherBits.model_cut
+#print axioms IntegralMixedFullProducerDispatcherBits.integer_matches
+#print axioms IntegralMixedFullProducerDispatcherBits.physical_matches
+#print axioms IntegralMixedFullProducerDispatcherBits.cut_matches
+#print axioms IntegralMixedFullProducerDispatcherBits.correct
+#print axioms IntegralMixedFullProducerDispatcherBits.model_leading
+#print axioms IntegralMixedFullProducerDispatcherBits.model_companion
+#print axioms IntegralMixedFullProducerDispatcherBits.producer_matches
+#print axioms IntegralMixedFullProducerDispatcherBits.old_height_correct
+#print axioms IntegralMixedFullProducerDispatcherBits.canonical
+#print axioms IntegralMixedFullProducerDispatcherBits.model_other_context
+end MixedFullProducerRegression
+end Group25Regression1
+
+namespace Group25Regression2
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCriticalSweep FixedWidthPolynomial
+open scoped Classical
+
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+
+noncomputable def initial : State circle 1 64 0 (Fin 0) :=
+  IntegralMixedHistory.base circle (IntegralHistorySampler.base 1 (2 ^ 64))
+    (by norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, count, circle]; decide)
+
+noncomputable def sweep : Rule 1 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => -2
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant (-5) }
+  height := 0
+  height_frozen := by decide
+  slope := -3
+  slope_ne_zero := by decide
+
+noncomputable def family : IntegralMixedCutSource.Family where
+  ambient _ := 1
+  cap _ := 1
+  width _ := 64
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := circle
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := sweep
+  kind _ := .coordinate 0 0
+  degree _ := 0
+  degree_bound _ := Nat.zero_le _
+  scalar_cap _ := by
+    norm_num [IntegralMixedExceptionalBounds.auxiliaryCap, IntegralMixedExceptionalBounds.K,
+      IntegralMixedExceptionalBounds.E, IntegralMixedExceptionalBounds.regularCap,
+      IntegralMixedExceptionalBounds.valueCap, IntegralMixedExceptionalBounds.valueDimension,
+      IntegralMixedExceptionalBounds.boxWidth, IntegralMixedExceptionalBounds.boxBase,
+      IntegralMixedSweepBounds.parameterCap, IntegralMixedSweepBounds.coordinateCap, PurePowerReductionBounds.dimension,
+      PurePowerReductionBounds.width, PurePowerReductionBounds.bound, count, circle]
+    decide
+
+noncomputable def indices : IntegralMixedVirtualSweepSource.Indices family where
+  coordinate _ := 0
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  col _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+
+
+
+open IntegralCriticalHistoryTask MatrixPower
+private def taskParams : Parameters := ⟨fun _ => 2, fun _ => 2, fun _ => 0, fun _ => 2, fun _ => 2, fun _ => 0, fun _ => 6⟩
+private theorem taskControls : Access taskParams :=
+  ⟨UnaryFn.const 2, UnaryFn.const 2, UnaryFn.const 0, UnaryFn.const 2,
+    BinaryFn.const 2, BinaryFn.const 0, BinaryFn.const 6⟩
+private theorem inputControls : IntegralMixedVirtualQueryBits.InputMetadata _root_.Group25Regression2.family :=
+  ⟨UnaryFn.const 1, UnaryFn.const 0, UnaryFn.const 64, UnaryFn.const 1, BinaryFn.const 2, BinaryFn.const 0⟩
+
+example : (IntegralMixedGramUpperDispatcher.machine taskParams taskControls _root_.Group25Regression2.family inputControls).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits)
+    (encS := (IntegralMixedGramUpperDispatcher.machine taskParams taskControls _root_.Group25Regression2.family inputControls).encoding) :=
+  (IntegralMixedGramUpperDispatcher.machine taskParams taskControls _root_.Group25Regression2.family inputControls).certificates
+example (q : List Bool) :
+    (IntegralMixedGramUpperDispatcher.machine taskParams taskControls _root_.Group25Regression2.family inputControls).selected q = true :=
+  IntegralMixedGramUpperDispatcher.machine_selected _ _ _ _ q
+example (P : Parameters) (F : IntegralMixedCutSource.Family) (q : List Bool)
+    (h : ¬ get P .row q < (IntegralMixedGramUpperBits.characteristic P F).rank q) :
+    IntegralMixedGramUpperBits.characteristicValue P F q = [] :=
+  IntegralMixedGramUpperBits.characteristic_outside P F q (fun H => h H.1)
+#print axioms IntegralMixedGramUpperBits.entry_outside
+#print axioms IntegralMixedGramUpperBits.factor_outside
+#print axioms IntegralMixedGramUpperBits.characteristic_outside
+#print axioms IntegralMixedGramUpperModel.value_phase
+#print axioms IntegralMixedGramUpperModel.canonical
+#print axioms IntegralMixedGramUpperModel.value_matches
+#print axioms IntegralMixedGramUpperDispatcher.machine_model
+#print axioms IntegralMixedGramUpperDispatcher.machine_selected
+#print axioms IntegralMixedGramUpperDispatcher.canonical
+#print axioms IntegralMixedGramUpperDispatcher.action_matches
+#print axioms IntegralMixedGramUpperDispatcher.moment_matches
+#print axioms IntegralMixedGramUpperDispatcher.moment_power_matches
+#print axioms IntegralMixedGramUpperDispatcher.factor_matches
+#print axioms IntegralMixedGramUpperDispatcher.correct
+end Group25Regression2
+
+namespace Group25Regression3
+namespace SignRadialProducerRegression
+open LeanCanny LeanCanny.Geometry LeanCanny.Connectivity LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR Set
+open FormulaSignSlotRadialProducer FormulaSignSlotRadialMarkedProducer
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+example (c : List Bool) (env : ℕ → ℝ) : (FormulaSignSlotRadialEquation.equation c).eval env=0 ↔
+    (FormulaSignSlotRadialFeature.description c).formula.Holds env := FormulaSignSlotRadialEquation.zero_iff c env
+example : readers.PolyTime := access
+example (q : List Bool) : (TermView.term (readers.source q)).arity≤readers.dim q := source_scope q
+example : BinaryFn (BoundedFullWriter.degree readers) := degree_binary
+example (q r : List Bool) (h : root q=root r) :
+    (FormulaSignSlotRadialSpatialSource.spatial q).degree=(FormulaSignSlotRadialSpatialSource.spatial r).degree :=
+  FormulaSignSlotRadialSpatialSource.degree_same_root q r h
+example (q : List Bool) : PurePowerReductionBounds.dimension (readers.dim q+4)
+    (FormulaSignSlotRadialSpatialSource.spatial q).degree=2^FormulaSignSlotRadialSpatialSource.scalarWidth q :=
+  FormulaSignSlotRadialSpatialSource.scalar_cap q
+example (q : List Bool) (z : Marked q) (i : Fin (readers.dim q)) :
+    (graphPoint q z).val i=z.val.val (physicalIndex q i) := graphPoint_coordinate q z i
+example (q : List Bool) (z : Marked q) (center : Fin (FormulaSignSlotSource.dimension (root q)) → ℝ) :
+    SquaredDistanceLinearization.affine center (quadratic q z)
+      (FormulaSignSlotRadialFeature.oldTuple (root q) (graphPoint q z))=
+      SquaredDistanceFibers.value center (FormulaSignSlotRadialFeature.oldTuple (root q) (graphPoint q z)) :=
+  radial_affine q z center
+example (q : List Bool) (y : FormulaSignSlotRadialFeature.Lifted (root q))
+    (hy : BoundedZeroSource.radial y.val≤(BoundedZeroSource.radiusSquared (radius q) : ℝ)) :
+    graphPoint q (FormulaSignSlotRadialMarkedProducer.lift q y hy)=y := graphPoint_lift q y hy
+example (q : List Bool) (z v : Marked q) : v.val∈connectedComponent z.val ↔
+    (boundedPoint q v).val∈connectedComponentIn (BoundedZeroSource.Bounded (original q) (radius q)) (boundedPoint q z).val :=
+  component_iff q z v
+#print axioms FormulaSignSlotRadialEquation.zero_iff
+#print axioms FormulaSignSlotRadialProducer.source_scope
+#print axioms FormulaSignSlotRadialProducer.source_identity
+#print axioms FormulaSignSlotRadialProducer.source_regular
+#print axioms FormulaSignSlotRadialProducer.finite_components
+#print axioms FormulaSignSlotRadialSpatialSource.polynomial_eq
+#print axioms FormulaSignSlotRadialSpatialSource.scalar_cap
+#print axioms FormulaSignSlotRadialMarkedProducer.graphPoint_coordinate
+#print axioms FormulaSignSlotRadialMarkedProducer.component_iff
+#print axioms FormulaSignSlotRadialMarkedProducer.graphPoint_lift
+end SignRadialProducerRegression
+end Group25Regression3
