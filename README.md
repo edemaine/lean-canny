@@ -1554,15 +1554,23 @@ scalar recursively, preserving both old-basis indices. A native stack compiler
 accepts the mixed birth/routine/phase rank and includes local processing costs.
 Native current-reply controllers cover derivative, retained-height,
 frozen and Euler operations, reduction entries and powers, action entries,
-and moment and relative powering. Their guards, clocks, state bounds, and
-mixed-rank requests are proved. The remaining grid/product/factor arithmetic,
+augmented entries and moments, relative factors and powers, and scaled critical
+coefficients. Their guards, clocks, state bounds, and mixed-rank requests are
+proved. Actual action and moment children discharge the matrix reply contracts.
+The scalar multiplier remains a charged recursive request, including at composite
+moduli. Canonical residue witnesses cover all lower phases zero through sixteen.
+Fresh context queries retain the original root while selecting an earlier scalar
+birth and the actual source kind. The original-row scale and critical leading
+scale have separate native controllers. The remaining grid/product/factor arithmetic,
 determinant entries, and normalized companions still need to be joined into
 one mixed evaluator.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
-coordinate and squarefree sources have binary height bounds derived from the
-original source and old bank. Resumable cofactor folds request older producer
-leading residues; these scalar leaves remain charged computations.
+coordinate, squarefree, and Gram sources have binary height bounds derived from
+the original source and old bank. The Gram bounds include the actual reciprocal
+system, Macaulay entries, determinant, and both formal nilpotent digits.
+Resumable cofactor folds request older producer leading residues; these scalar
+leaves remain charged computations.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
@@ -1571,10 +1579,20 @@ parent. Exact fiber homeomorphisms preserve the original degree and bank.
 Finite critical sections meet every connected component of each full frame
 slice. An additional coarse critical-height cut gives regularity between cuts,
 at the original degree and initial cap. Path saturation then gives full
-closed-slab component covers from recursive endpoint covers. The mixed sampler,
-uniform endpoint recursion, cut ordering, label packing, and graph assembly
-remain open. The general Boolean and noncompact component-preserving reduction
-also remains required; nonemptiness equivalence alone does not supply it.
+closed-slab component covers from recursive endpoint covers. Compactness and
+finite exceptional values now produce an ordered finite sweep and a cover of
+the entire selected coarse slice, assuming covers only at its finitely many
+endpoint fibers. The mixed sampler, uniform endpoint recursion, native cut
+ordering, label packing, and graph assembly remain open.
+
+Closed Boolean combinations of weak inequalities now reduce to one integer
+polynomial equation while preserving point connectivity and whole-set
+preconnectedness, including for unbounded sets. Shared circular witnesses give
+a continuous section across disjunction boundaries. A strict conjunct also has
+a connected circular witness lift, with native formula and endpoint writers.
+The general open Boolean reduction, native closed-reduction coefficient writers,
+and component-preserving compactification remain required; nonemptiness
+equivalence alone does not supply them.
 
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove

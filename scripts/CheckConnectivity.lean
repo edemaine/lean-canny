@@ -27578,3 +27578,985 @@ example : (criticalPolynomial x (by decide) r).natDegree ≤ 2^2 :=
 
 end CoarseCriticalHeightRegression
 end Group14Regression4
+
+
+namespace Group15Regression1
+
+namespace ChargedCharacteristicRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding MatrixPower
+open IntegralReductionActionBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def b : Module.Basis (Fin 2) ℤ (ℤ × ℤ) := Module.Basis.finTwoProd ℤ
+private theorem diagonal (v : ℤ × ℤ) (r t : Fin 2) :
+    Algebra.leftMulMatrix b v r t = if r = t then (if r = 0 then v.1 else v.2) else 0 := by
+  fin_cases r <;> fin_cases t <;>
+    simp [Algebra.leftMulMatrix_eq_repr_mul, b, Module.Basis.coe_finTwoProd_repr]
+
+private noncomputable def S : Source where
+  dimension _ := 2
+  rank _ := 2
+  carrier _ := ℤ × ℤ
+  ring _ := inferInstance
+  nontrivial _ := inferInstance
+  basis _ := b
+  matrix _ _ _ := (2, 3)
+  modulus _ := 10
+  modulus_ne_zero _ := by decide
+  coefficient _ := 1
+  basisRow _ := 1
+  basisCol _ := 1
+  dimension_pos _ := by decide
+  normal _ j := j = 0
+  shift _ _ := 1
+  bound _ := 0
+
+private def reader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisRowCode q) =
+      Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisColCode q) then
+    if Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisRowCode q) = 0 then
+      BinaryNatCode.encode 2 else BinaryNatCode.encode 3 else []
+private theorem reader_FP : reader ∈ FP :=
+  ((BinaryFn.fromBits IntegralBerkowitzBlockBits.basisRowCode_FP).eq
+    (BinaryFn.fromBits IntegralBerkowitzBlockBits.basisColCode_FP)).ite_mem_FP
+    (((BinaryFn.fromBits IntegralBerkowitzBlockBits.basisRowCode_FP).eq (BinaryFn.const 0)).ite_mem_FP
+      (constFn_mem_FP (BinaryNatCode.encode 2)) (constFn_mem_FP (BinaryNatCode.encode 3))) (constFn_mem_FP [])
+
+private noncomputable def access : IntegralBerkowitzBlockBits.Access S.toSource where
+  dimension := BinaryFn.const 2
+  rank := BinaryFn.const 2
+  modulus := BinaryFn.const 10
+  coefficient := BinaryFn.const 1
+  basisRow := BinaryFn.const 1
+  basisCol := BinaryFn.const 1
+  entry := reader
+  entry_eq c i j r t := by
+    change reader _ = residueBits ((Algebra.leftMulMatrix b (2, 3) r t : ℤ) : ZMod 10)
+    rw [diagonal]
+    simp only [reader, IntegralBerkowitzBlockBits.basisRowCode, IntegralBerkowitzBlockBits.basisColCode,
+      IntegralBlockMomentBits.context, pairFst_pair, pairSnd_pair,
+      BinaryNatCode.encode, Nat.fromBitsLE_bits, Fin.ext_iff, Fin.val_zero]
+    fin_cases r <;> fin_cases t <;> norm_num <;> decide
+
+private theorem controls : Controls S where
+  bound := BinaryFn.const 0
+  shift := BinaryFn.const 1
+  normal := by
+    apply ((BinaryFn.fromBits MatrixMoment.EntryBits.colIndex_mem_FP).mod (BinaryFn.const 2)).eq (BinaryFn.const 0) |>.of_iff
+    intro p
+    simp only [normalGuard, outerIndex, S, Fin.ext_iff, Fin.val_zero]
+
+-- Every original source bit and both queried old basis ranks survive the child writer.
+example : sourceQuery (pair (IntegralBlockMomentBits.context
+    (packet [true, false] 1 0 0 1) 1 0) (pair [] [true])) =
+      pair (IntegralBlockMomentBits.context [true, false] 1 0) (pair [] [true]) := by decide
+
+example : SpaceFunction (actionSource S).value := evaluator S access controls (SpaceFunction.ofFP reader reader_FP)
+
+private theorem action_matrix : S.actionMatrix [] =
+    (fun _ j : Fin 2 => if j = 0 then ((2, 3) : ℤ × ℤ) else 0) := by
+  funext i j
+  dsimp only [Source.actionMatrix, GradedReductionAnnihilator.paddedMatrix, S]
+  rw [pow_one]
+  split_ifs <;> rfl
+
+example : entryProgram S (packet [] 1 0 1 1) = BinaryNatCode.encode 3 := by
+  have H := entry_correct S [] (1 : Fin 2) (0 : Fin 2) (1 : Fin 2) (1 : Fin 2)
+  change entryProgram S (packet [] 1 0 1 1) = _ at H
+  rw [H]
+  unfold IntegralBerkowitzBlockBits.Source.entryMatrix actionSource
+  change residueBits ((Algebra.leftMulMatrix b (S.actionMatrix [] (1 : Fin 2) (0 : Fin 2))
+    (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [action_matrix]
+  norm_num [diagonal]
+  decide
+
+-- Nonnormal columns are zero even though their shifted source columns are nonzero.
+example : entryProgram S (packet [] 1 1 1 1) = [] := by
+  have H := entry_correct S [] (1 : Fin 2) (1 : Fin 2) (1 : Fin 2) (1 : Fin 2)
+  change entryProgram S (packet [] 1 1 1 1) = _ at H
+  rw [H]
+  unfold IntegralBerkowitzBlockBits.Source.entryMatrix actionSource
+  change residueBits ((Algebra.leftMulMatrix b (S.actionMatrix [] (1 : Fin 2) (1 : Fin 2))
+    (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [action_matrix]
+  norm_num [diagonal]
+  decide
+
+private theorem action_value : (actionSource S).value [] = BinaryNatCode.encode 7 := by
+  let := S.ring []
+  let := S.nontrivial []
+  change residueBits ((Algebra.leftMulMatrix b ((S.actionMatrix []).charpoly.coeff 1)
+    (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [action_matrix, diagonal, Matrix.charpoly_fin_two]
+  norm_num [Matrix.trace, Matrix.diag, Fin.sum_univ_succ, Matrix.det_fin_two]
+  decide
+
+
+private def coefficientTask (_ : List Bool) : List Bool := [false]
+private def leadingTask (_ : List Bool) : List Bool := [true]
+private def reply (q : List Bool) : List Bool := if q = [false] then BinaryNatCode.encode 7 else BinaryNatCode.encode 8
+private def exponent (_ : List Bool) : ℕ := 3
+private noncomputable def chargedProgram := IntegralScaledCharacteristicBits.Charged.program
+  (actionSource S) exponent coefficientTask leadingTask
+
+-- The actual characteristic coefficient and the negative nonunit leading
+-- scalar are separate replies; the local certificate needs neither evaluator.
+example : chargedProgram.controller.Certificates (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  IntegralScaledCharacteristicBits.Charged.certificates (actionSource S) (actionAccess S access)
+    exponent (BinaryFn.const 3) coefficientTask leadingTask (constFn_mem_FP _) (constFn_mem_FP _)
+example : chargedProgram.value reply [] = IntegralScaledCharacteristicBits.value (actionSource S) (fun _ => -2) exponent [] := by
+  apply IntegralScaledCharacteristicBits.Charged.value_at
+  · exact (show reply (coefficientTask []) = BinaryNatCode.encode 7 from by rfl).trans action_value.symm
+  · change BinaryNatCode.encode 8 = residueBits ((-2 : ℤ) : ZMod 10)
+    decide
+example : chargedProgram.value reply [] = BinaryNatCode.encode 4 := by
+  rw [chargedProgram, IntegralScaledCharacteristicBits.Charged.program, TwoCall.value_eq]
+  have H := IntegralScaledCharacteristicBits.Charged.post_packet (actionSource S) exponent []
+    (7 : ZMod 10) ((-2 : ℤ) : ZMod 10)
+  change IntegralScaledCharacteristicBits.Charged.post (actionSource S) exponent
+    (pair [] (pair (BinaryNatCode.encode 7) (BinaryNatCode.encode 8))) = _
+  have H7 : residueBits (7 : ZMod 10) = BinaryNatCode.encode 7 := by decide
+  have H8 : residueBits ((-2 : ℤ) : ZMod 10) = BinaryNatCode.encode 8 := by decide
+  rw [H7, H8] at H
+  exact H.trans (by decide)
+example (budget : List Bool → ℕ) (q c : List Bool)
+    (hc : chargedProgram.controller.Requests reply budget q c) : c = [false] ∨ c = [true] :=
+  IntegralScaledCharacteristicBits.Charged.requests_cases (actionSource S) exponent coefficientTask leadingTask reply budget q c hc
+
+#print axioms IntegralScaledCharacteristicBits.Charged.certificates
+#print axioms IntegralScaledCharacteristicBits.Charged.value_at
+#print axioms IntegralScaledCharacteristicBits.Charged.requests_cases
+#print axioms IntegralScaledCharacteristicBits.Charged.state_length_at
+end ChargedCharacteristicRegression
+end Group15Regression1
+
+
+namespace Group15Regression2
+namespace VirtualUpperCompleteRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralCriticalHistoryTask IntegralMixedVirtualUpperBits NativeControllerBranch
+
+-- Matrix stages use semantic replies of their preceding actual branches;
+-- no SpaceFunction for a matrix or leading scalar is a premise.
+example (P : Parameters) (a : Access P) (F : IntegralMixedCutSource.Family)
+    (h : IntegralMixedVirtualQueryBits.InputMetadata F) (g : IntegralMixedVirtualCaps.RootGeometry P F)
+    (x : (q : List Bool) → ZMod (modulus P q)) (ha : ActionMatches P F (fun q => residueBits (x q))) :
+    Correct (stage21 P a F h) (fun q => residueBits (x q)) (IntegralMixedRoutineTaskBits.Frame P) :=
+  correct21_of_matches P a F h g x ha
+example (P : Parameters) (a : Access P) (F : IntegralMixedCutSource.Family)
+    (h : IntegralMixedVirtualQueryBits.InputMetadata F) (g : IntegralMixedVirtualCaps.RootGeometry P F)
+    (answer : List Bool → List Bool) (hx : MomentMatches P F answer) :
+    Correct (stage22 P a F h) answer (IntegralMixedRoutineTaskBits.Frame P) := correct22_of_matches P a F h g answer hx
+example (P : Parameters) (a : Access P) (F : IntegralMixedCutSource.Family)
+    (h : IntegralMixedVirtualQueryBits.InputMetadata F) (g : IntegralMixedVirtualCaps.RootGeometry P F)
+    (x : (q : List Bool) → ZMod (modulus P q))
+    (ha : ActionMatches P F (fun q => residueBits (x q))) (hm : MomentPowerMatches P F (fun q => residueBits (x q))) :
+    Correct (stage23 P a F h) (fun q => residueBits (x q)) (IntegralMixedRoutineTaskBits.Frame P) := correct23 P a F h g x ha hm
+example (P : Parameters) (a : Access P) (F : IntegralMixedCutSource.Family)
+    (h : IntegralMixedVirtualQueryBits.InputMetadata F) (answer : List Bool → List Bool)
+    (hx : RelativePowerMatches P F answer) (hl : LeadingMatches P F answer) :
+    Correct (stage25 P a F h) answer (IntegralMixedRoutineTaskBits.Frame P) := correct25_of_matches P a F h answer hx hl
+
+-- A typed action child preserves independent spatial and old-basis indices.
+example (P : Parameters) (F : IntegralMixedCutSource.Family) (g : IntegralMixedVirtualCaps.RootGeometry P F)
+    (q : List Bool) (hv : IntegralMixedVirtualCaps.valid P q)
+    (i j : Fin ((characteristic P F).dimension q)) (r t : Fin ((characteristic P F).rank q)) :
+    IntegralMixedVirtualMatrixBits.actionEntry P F (IntegralCriticalFlatBerkowitzQuery.entryWriter P (characteristic P F)
+      (pair (IntegralBlockMomentBits.context q r.val t.val) (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))) =
+      residueBits (((characteristic P F).entryMatrix q i j r t : ℤ) : ZMod ((characteristic P F).modulus q)) :=
+  actionChild_value P F g q hv i j r t
+
+#print axioms IntegralMixedVirtualUpperBits.actionChild_value
+#print axioms IntegralMixedVirtualUpperBits.rowTask_value
+#print axioms IntegralMixedVirtualUpperBits.columnTask_value
+#print axioms IntegralMixedVirtualUpperBits.matrixTask_value
+#print axioms IntegralMixedVirtualUpperBits.action_replies21
+#print axioms IntegralMixedVirtualUpperBits.moment_entry_child
+#print axioms IntegralMixedVirtualUpperBits.moment_replies_of_action
+#print axioms IntegralMixedVirtualUpperBits.correct21_of_matches
+#print axioms IntegralMixedVirtualUpperBits.correct22_of_matches
+#print axioms IntegralMixedVirtualUpperBits.relative_moment_child
+#print axioms IntegralMixedVirtualUpperBits.value23
+#print axioms IntegralMixedVirtualUpperBits.frame23
+#print axioms IntegralMixedVirtualUpperBits.correct23
+#print axioms IntegralMixedVirtualUpperBits.coefficient_replies
+#print axioms IntegralMixedVirtualUpperBits.correct25_of_matches
+end VirtualUpperCompleteRegression
+end Group15Regression2
+
+
+namespace Group15Regression3
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCriticalSweep FixedWidthPolynomial
+open scoped Classical
+
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+
+noncomputable def initial : State circle 1 64 0 (Fin 0) :=
+  IntegralMixedHistory.base circle (IntegralHistorySampler.base 1 (2 ^ 64))
+    (by norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, count, circle]; decide)
+
+noncomputable def sweep : Rule 1 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => -2
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant (-5) }
+  height := 0
+  height_frozen := by decide
+  slope := -3
+  slope_ne_zero := by decide
+
+noncomputable def family : IntegralMixedCutSource.Family where
+  ambient _ := 1
+  cap _ := 1
+  width _ := 64
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := circle
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := sweep
+  kind _ := .coordinate 0 0
+  degree _ := 0
+  degree_bound _ := Nat.zero_le _
+  scalar_cap _ := by
+    norm_num [IntegralMixedExceptionalBounds.auxiliaryCap, IntegralMixedExceptionalBounds.K,
+      IntegralMixedExceptionalBounds.E, IntegralMixedExceptionalBounds.regularCap,
+      IntegralMixedExceptionalBounds.valueCap, IntegralMixedExceptionalBounds.valueDimension,
+      IntegralMixedExceptionalBounds.boxWidth, IntegralMixedExceptionalBounds.boxBase,
+      IntegralMixedSweepBounds.parameterCap, IntegralMixedSweepBounds.coordinateCap, PurePowerReductionBounds.dimension,
+      PurePowerReductionBounds.width, PurePowerReductionBounds.bound, count, circle]
+    decide
+
+noncomputable def indices : IntegralMixedVirtualSweepSource.Indices family where
+  coordinate _ := 0
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  col _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+noncomputable def originalBounds : IntegralMixedCoordinateBounds.OriginalBounds family where
+  bankHeight _ := 4
+  sourceHeight _ := 3
+  rank _ := count 1 64
+  sourceWidth _ := 2
+  spatialDegree _ := 2
+  nodes _ := 1
+  bank _ := UniformIntegralPrefix.HeightBank.base_bounds _ _ _
+  coefficient _ e := by
+    change Fin 2 →₀ ℕ at e
+    change ((MvPolynomial.C (-1 : ℤ) : MvPolynomial (Fin 2) ℤ).coeff e).natAbs ≤ 2 ^ 3
+    rw [MvPolynomial.coeff_C]
+    split_ifs <;> norm_num
+  rank_bound _ := Nat.le_refl _
+  width_bound _ := by change (2 : ℕ).size ≤ 2; decide
+  degree_bound _ := by change (2 : ℕ) ≤ 2; decide
+  leading _ := by change (1 : ℤ).natAbs.size ≤ 3; decide
+  expression_nodes _ _ := by change (AffineExpr.constant (-5)).nodes ≤ 1; decide
+  expression_coefficients _ _ := by change (-5 : ℤ).natAbs.size ≤ 3; decide
+  scales _ _ := by change (-2 : ℤ).natAbs.size ≤ 3; decide
+  slope _ := by change (-3 : ℤ).natAbs.size ≤ 3; decide
+  source_le_bank _ := by decide
+
+-- Negative integer scales and a nonunit sweep slope feed the actual
+-- relative coordinate construction, with no raw-factor height premise.
+example (q : List Bool) (k : ℕ) (u v : Fin (count 0 64)) :
+    (IntegralMixedCutMatrix.coefficientMatrix initial (by decide) sweep
+      (.coordinate 0 0) k u v).natAbs ≤
+        2 ^ IntegralMixedCoordinateBounds.height 1 (count 1 64) 2 2 1 1 4 :=
+  (IntegralMixedCoordinateBounds.rawBounds family indices originalBounds (fun _ => 0) (fun _ => rfl)).bound q k u v
+
+example : BinaryFn
+    (IntegralMixedCoordinateBounds.rawBounds family indices originalBounds (fun _ => 0) (fun _ => rfl)).height :=
+  IntegralMixedCoordinateBounds.rawBounds_height_binary family indices originalBounds (fun _ => 0) (fun _ => rfl)
+    (UnaryFn.const 1) (BinaryFn.const (count 1 64)) (UnaryFn.const 2) (BinaryFn.const 2)
+    (BinaryFn.const 1) (BinaryFn.const 1) (BinaryFn.const 4)
+
+-- Above-cap indices vanish rather than wrap into a different coefficient.
+example (k : ℕ) (hk : 2 ^ 64 ≤ k) :
+    IntegralMixedCutMatrix.coefficientMatrix initial (by decide) sweep (.coordinate 0 0) k = 0 :=
+  IntegralMixedCutNilpotent.coefficient_outside initial (by decide) sweep (.coordinate 0 0)
+    (family.scalar_cap []) k hk
+
+#print axioms IntegralMixedVirtualBounds.slope_height
+#print axioms IntegralMixedVirtualBounds.inputs
+#print axioms IntegralMixedVirtualBounds.coefficient_height
+#print axioms IntegralMixedCoordinateBounds.budget_le
+#print axioms IntegralMixedCoordinateBounds.coefficient_height
+#print axioms IntegralMixedCoordinateBounds.rawBounds
+#print axioms IntegralMixedCoordinateBounds.rawBounds_height_binary
+
+
+open IntegralMixedValueDeterminantSource MatrixPower
+
+def valueChoice : Fin (IntegralMixedValueTrailing.ChoiceBound circle sweep) :=
+  ⟨1, by change 1 < IntegralMixedGridValue.dimension circle sweep + 2; omega⟩
+
+-- This is the actual negative Gram source, not an assumed annihilator.
+example (q : List Bool) :
+    (source Group15Regression3.family indices (fun _ => valueChoice)).value q = residueBits
+      ((Algebra.leftMulMatrix (IntegralMixedCutNilpotent.basis initial).finBasis
+        (IntegralMixedCutNilpotent.value initial (by decide) sweep (.value 0 valueChoice))
+          (indices.row q) (indices.col q) : ℤ) : ZMod 6) :=
+  source_value Group15Regression3.family indices (fun _ => valueChoice) q (by change 0 < 1; decide)
+
+-- The zero value label is returned immediately and does not read the matrix.
+example (q : List Bool) : value Group15Regression3.family indices (fun _ => 0) q = [] := rfl
+
+example (q : List Bool) :
+    ((source Group15Regression3.family indices (fun _ => valueChoice)).rank q).size ≤ 64 * (1 + 2) + 1 :=
+  source_rank_bits Group15Regression3.family indices (fun _ => valueChoice) q
+
+-- The literal scalar coefficient is recovered by the two zero-column selections.
+example (e : Fin (2 ^ 64)) (u v : Fin (count 0 64)) :
+    Algebra.leftMulMatrix (IntegralMixedValueDoubleNilpotent.basis initial)
+      (IntegralMixedValueDoubleNilpotent.matrix initial (by decide) sweep 0).det
+      (IntegralCoordinateBasis.pairIndex 1 64
+        (IntegralCoordinateBasis.pairIndex 0 64 (u, e),
+          ⟨IntegralMixedValueDoubleNilpotent.reflectedIndex circle sweep valueChoice,
+            IntegralMixedValueDoubleNilpotent.reflectedIndex_lt circle sweep valueChoice (family.scalar_cap [])⟩))
+      (IntegralCoordinateBasis.pairIndex 1 64 (IntegralCoordinateBasis.pairIndex 0 64 (v, 0), 0)) =
+      IntegralMixedCutMatrix.coefficientMatrix initial (by decide) sweep (.value 0 valueChoice) e.val u v :=
+  IntegralMixedValueDoubleNilpotent.raw_coefficient initial (by decide) sweep 0 valueChoice
+    (by change 0 < 1; decide) (family.scalar_cap []) e u v
+
+-- Negating the source matrix absorbs the characteristic determinant sign.
+example : (- (!![2, 3; 5, 7] : Matrix (Fin 2) (Fin 2) ℤ)).charpoly.coeff 0 = -1 := by
+  rw [negative_charpoly_constant, Matrix.det_fin_two]
+  norm_num
+
+theorem metadata : IntegralMixedVirtualNativeBits.Metadata family indices where
+  ambient := UnaryFn.const 1
+  birth := UnaryFn.const 0
+  width := UnaryFn.const 64
+  offset := UnaryFn.const 1
+  degree := BinaryFn.const 2
+  objective := BinaryFn.const 0
+  target := BinaryFn.const 0
+  row := BinaryFn.const 0
+  col := BinaryFn.const 0
+  modulus := BinaryFn.const 6
+  coordinate := BinaryFn.const 0
+  coefficientIndex := BinaryFn.const 0
+
+example : IntegralMixedValueDeterminantMetadata.address family indices (fun _ => valueChoice) ∈ FP :=
+  IntegralMixedValueDeterminantMetadata.address_FP family indices metadata (fun _ => valueChoice) (BinaryFn.const 1)
+
+example (q : List Bool) :
+    pairFst (IntegralMixedValueDeterminantMetadata.address family indices (fun _ => valueChoice) q) = q :=
+  IntegralMixedValueDeterminantMetadata.address_original family indices (fun _ => valueChoice) q
+
+#print axioms IntegralMixedValueDoubleNilpotent.raw_coefficient
+#print axioms IntegralMixedValueDoubleNilpotent.rank_bits
+#print axioms IntegralMixedValueDeterminantSource.negative_charpoly_constant
+#print axioms IntegralMixedValueDeterminantSource.value_eq
+#print axioms IntegralMixedValueDeterminantMetadata.level_eq
+#print axioms IntegralMixedValueDeterminantMetadata.address_FP
+
+#print axioms IntegralMixedValueDeterminantSource.cut_packet
+
+#print axioms IntegralMixedValueDeterminantSource.source_dimension_cap
+
+
+-- The actual double-nilpotent matrix has literal homogeneous coordinate
+-- rows and the full original mapped test row.
+example (q : List Bool) :
+    IntegralMixedValueDoubleNilpotent.matrix (family.state q) (family.birth_bound q) (family.rule q) (indices.coordinate q) =
+      ProjectiveGramEliminant.gram (MacaulayFullBox.matrix
+        (IntegralMixedValueDoubleSystem.mappedSystem family q (indices.coordinate q))
+        (RelativeProjectiveValueGram.degrees (fun _ =>
+          IntegralMixedCoordinateSquarefree.coordinateDegree (family.spatial q) (family.rule q)) (family.spatial q).degree)
+        (IntegralMixedGridValue.width (family.spatial q) (family.rule q))) :=
+  IntegralMixedValueDoubleSystem.matrix_eq family q (indices.coordinate q)
+
+noncomputable def testRow : MvPolynomial (Fin 2) (Polynomial ℤ) :=
+  MvPolynomial.C (Polynomial.X ^ 4 - 1) + MvPolynomial.X 1
+
+-- The noninjective sweep map kills η^4 but preserves the independent
+-- reciprocal-value polynomial variable.
+example (H : Fin 1 → MvPolynomial (Fin 2) (Polynomial ℤ)) :
+    (RelativeValueSystemMap.reciprocal H testRow 2 0).map
+        (Polynomial.mapRingHom (AdjoinRoot.mk (Polynomial.X ^ 4 : Polynomial ℤ))) =
+      RelativeValueSystemMap.reciprocal
+        (fun j => (H j).map (AdjoinRoot.mk (Polynomial.X ^ 4 : Polynomial ℤ)))
+        (MvPolynomial.C (-1) + MvPolynomial.X 1) 2 0 := by
+  rw [RelativeValueSystemMap.system]
+  have HP : testRow.map (AdjoinRoot.mk (Polynomial.X ^ 4 : Polynomial ℤ)) =
+      MvPolynomial.C (-1 : AdjoinRoot (Polynomial.X ^ 4 : Polynomial ℤ)) + MvPolynomial.X 1 := by
+    simp only [testRow, map_add, MvPolynomial.map_C, map_sub, AdjoinRoot.mk_self,
+      map_one, map_zero, zero_sub, map_neg, MvPolynomial.map_X]
+  rw [HP]
+
+#print axioms RelativeValueSystemMap.coordinate
+#print axioms RelativeValueSystemMap.system
+#print axioms RelativeValueSystemMap.existing_system
+#print axioms IntegralMixedValueDoubleSystem.first_system
+#print axioms IntegralMixedValueDoubleSystem.matrix_eq
+
+
+example (q : List Bool)
+    (j : Fin (family.ambient q - (family.rule q).critical.offset.val + 1))
+    (e : Fin (family.ambient q - (family.rule q).critical.offset.val + 1) →₀ ℕ)
+    (u v : Fin (count (family.birth q + 1) (family.width q))) :
+    (Algebra.leftMulMatrix (IntegralMixedCutNilpotent.basis (family.state q)).finBasis
+      ((IntegralMixedVirtualOriginalRows.row family q j).coeff e) u v).natAbs ≤
+        2 ^ IntegralMixedVirtualOriginalRowBounds.height family indices originalBounds q :=
+  IntegralMixedVirtualOriginalRowBounds.coefficient_height family indices originalBounds q j e u v
+
+example : BinaryFn (IntegralMixedVirtualOriginalRowBounds.height family indices originalBounds) :=
+  IntegralMixedVirtualOriginalRowBounds.height_binary family indices originalBounds metadata
+    (BinaryFn.const 1) (BinaryFn.const 1) (BinaryFn.const 4)
+
+#print axioms IntegralMixedUniformVirtualInputs.inputs
+#print axioms IntegralMixedUniformVirtualInputs.height_binary
+#print axioms IntegralMixedVirtualOriginalRowBounds.scalar_height
+#print axioms IntegralMixedVirtualOriginalRowBounds.coefficient_height
+#print axioms IntegralMixedVirtualOriginalRowBounds.height_binary
+
+
+noncomputable def valueFamily : IntegralMixedCutSource.Family :=
+  { Group15Regression3.family with kind _ := .value 0 valueChoice }
+
+noncomputable def valueIndices : IntegralMixedVirtualSweepSource.Indices valueFamily where
+  coordinate _ := 0
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  col _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+noncomputable def valueOriginalBounds : IntegralMixedCoordinateBounds.OriginalBounds valueFamily where
+  bankHeight := originalBounds.bankHeight
+  sourceHeight := originalBounds.sourceHeight
+  rank := originalBounds.rank
+  sourceWidth := originalBounds.sourceWidth
+  spatialDegree := originalBounds.spatialDegree
+  nodes := originalBounds.nodes
+  bank := originalBounds.bank
+  coefficient := originalBounds.coefficient
+  rank_bound := originalBounds.rank_bound
+  width_bound := originalBounds.width_bound
+  degree_bound := originalBounds.degree_bound
+  leading := originalBounds.leading
+  expression_nodes := originalBounds.expression_nodes
+  expression_coefficients := originalBounds.expression_coefficients
+  scales := originalBounds.scales
+  slope := originalBounds.slope
+  source_le_bank := originalBounds.source_le_bank
+
+theorem valueMetadata : IntegralMixedVirtualNativeBits.Metadata valueFamily valueIndices where
+  ambient := UnaryFn.const 1
+  birth := UnaryFn.const 0
+  width := UnaryFn.const 64
+  offset := UnaryFn.const 1
+  degree := BinaryFn.const 2
+  objective := BinaryFn.const 0
+  target := BinaryFn.const 0
+  row := BinaryFn.const 0
+  col := BinaryFn.const 0
+  modulus := BinaryFn.const 6
+  coordinate := BinaryFn.const 0
+  coefficientIndex := BinaryFn.const 0
+
+-- The entire original-row, homogenization, reciprocal, Macaulay, Gram,
+-- determinant and coefficient-extraction chain supplies this RawBounds.
+example (q : List Bool) (k : ℕ) (u v : Fin (count 0 64)) :
+    (IntegralMixedCutMatrix.coefficientMatrix (valueFamily.state q) (valueFamily.birth_bound q)
+      (valueFamily.rule q) (valueFamily.kind q) k u v).natAbs ≤
+        2 ^ IntegralMixedValueHeightBounds.height valueFamily valueIndices valueOriginalBounds q :=
+  (IntegralMixedValueHeightBounds.rawBounds valueFamily valueIndices valueOriginalBounds
+    (fun _ => valueChoice) (fun _ => rfl)).bound q k u v
+
+example : BinaryFn (IntegralMixedValueHeightBounds.rawBounds valueFamily valueIndices valueOriginalBounds
+    (fun _ => valueChoice) (fun _ => rfl)).height :=
+  IntegralMixedValueHeightBounds.rawBounds_height_binary valueFamily valueIndices valueOriginalBounds
+    (fun _ => valueChoice) (fun _ => rfl) valueMetadata (BinaryFn.const (count 1 64)) (UnaryFn.const 2)
+    (BinaryFn.const 2) (BinaryFn.const 1) (BinaryFn.const 1) (BinaryFn.const 4)
+
+-- Label zero is included in the raw bound instead of being substituted
+-- for a positive label. Out-of-cap coefficients remain zero.
+example (q : List Bool) (k : ℕ) (u v : Fin (count 0 64)) :
+    (IntegralMixedCutMatrix.coefficientMatrix (valueFamily.state q) (valueFamily.birth_bound q)
+      (valueFamily.rule q) (.value (valueIndices.coordinate q) 0) k u v).natAbs ≤
+        2 ^ IntegralMixedValueHeightBounds.height valueFamily valueIndices valueOriginalBounds q :=
+  IntegralMixedValueHeightBounds.coefficient_height valueFamily valueIndices valueOriginalBounds q 0 k u v
+
+#print axioms IntegralMacaulayGramBounds.determinant_height
+#print axioms IntegralReciprocalSystemBounds.coefficient_height
+#print axioms IntegralMixedVirtualCoordinateBounds.coefficient_height
+#print axioms IntegralMixedValueSystemBounds.mapped_coefficient_height
+#print axioms IntegralMixedValueHeightBounds.coefficient_height
+#print axioms IntegralMixedValueHeightBounds.rawBounds
+#print axioms IntegralMixedValueHeightBounds.height_binary
+end Group15Regression3
+
+
+namespace Group15Regression4
+namespace ExceptionalRecursiveSweepRegression
+open Set LeanCanny.Connectivity
+open scoped Classical
+
+-- The finite cut construction handles exterior critical values and a
+-- disconnected compact image without a supplied ordering or bounding box.
+example : ∃ n : ℕ, ∃ cut : Fin (n+2) → ℝ, StrictMono cut ∧
+    (∃ j, cut j = -7) ∧ (∃ j, cut j = 1) ∧ (∃ j, cut j = 9) ∧
+    (∀ i : Fin 2, (if i=0 then (-2 : ℝ) else 5) ∈ Icc (cut 0) (cut (Fin.last (n+1)))) ∧
+    ∀ i : Fin (n+1), ∀ t ∈ Ioo (cut i.castSucc) (cut i.succ), t ∉ ({-7,1,9} : Set ℝ) := by
+  have HB : ({-7,1,9} : Set ℝ).Finite := by simp
+  obtain ⟨n,cut,HM,HR,HBnd,HA⟩ := FiniteCriticalSweepCuts.exists_cuts
+    (fun i : Fin 2 => if i=0 then (-2 : ℝ) else 5) continuous_of_discreteTopology ({-7,1,9} : Set ℝ) HB
+  exact ⟨n,cut,HM,HR _ (by simp),HR _ (by simp),HR _ (by simp),HBnd,HA⟩
+
+-- Empty spaces and empty exceptional sets still receive two ordered outer cuts.
+example : ∃ n : ℕ, ∃ cut : Fin (n+2) → ℝ, StrictMono cut := by
+  obtain ⟨n,cut,HM,_,_,_⟩ := FiniteCriticalSweepCuts.exists_cuts
+    (fun i : Fin 0 => Fin.elim0 i) continuous_of_discreteTopology (∅ : Set ℝ) finite_empty
+  exact ⟨n,cut,HM⟩
+
+#print axioms FiniteCriticalSweepCuts.exists_cuts
+#print axioms FlatAffineExceptionalSelectedSweepCover.exists_local_covers
+#print axioms FlatAffineExceptionalSelectedSweepCover.exists_component_cover
+#print axioms FlatAffineExceptionalRecursiveSweep.exists_sweep
+end ExceptionalRecursiveSweepRegression
+end Group15Regression4
+
+
+namespace Group15Regression5
+namespace StrictWitnessRegression
+open Set LeanCanny LeanCanny.Geometry LeanCanny.Connectivity ETR
+open CircularWitness
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def plus : StrictInequalityWitness.equation (fun _ : Unit => (1 : ℝ)) :=
+  ⟨((),unit),by simp [StrictInequalityWitness.equation,unit_norm]⟩
+private noncomputable def minus : StrictInequalityWitness.equation (fun _ : Unit => (1 : ℝ)) :=
+  ⟨((),-unit),by simp [StrictInequalityWitness.equation,unit_norm]⟩
+
+-- Both square-root signs are in ONE fiber component, unlike a single-square lift.
+example : JoinedIn univ plus minus := by
+  apply (StrictInequalityWitness.joined_iff _ continuous_const plus minus).mpr
+  have HE : StrictInequalityWitness.projection _ plus = StrictInequalityWitness.projection _ minus := Subtype.ext rfl
+  rw [HE]
+  exact JoinedIn.refl (mem_univ _)
+
+-- No boundedness or compactness promise is used for this unbounded half-line.
+example : IsPreconnected (StrictInequalityWitness.equation (fun x : ℝ => x)) := by
+  apply (StrictInequalityWitness.preconnected_iff _ continuous_id).mpr
+  exact isPreconnected_Ioi
+
+example : StrictInequalityWitness.equation (fun _ : Unit => (-1 : ℝ)) = ∅ := by
+  ext z
+  constructor
+  · intro H
+    have HP := ((StrictInequalityWitness.norm_iff _ _).mp H).1
+    norm_num at HP
+  · exact False.elim
+
+open FormulaStrictWitness
+private def p : Formula := .not .falsum
+private def t : Term := .mul (.const (-1)) (.var 0)
+private def s (a : ℤ) : Formula := .eqZero (.add (.var 0) (.const (-a)))
+private noncomputable def x : (original 1 p t).realization :=
+  ⟨fun _ => 1,by norm_num [original,Description.realization,p,t,Formula.Holds,Term.eval,Formula.extend]⟩
+private noncomputable def y : (original 1 p t).realization :=
+  ⟨fun _ => 2,by norm_num [original,Description.realization,p,t,Formula.Holds,Term.eval,Formula.extend]⟩
+private theorem hs (a : ℤ) : Denotes 1 (s a) (fun _ => (a : ℝ)) := by
+  refine ⟨by simp [s,Formula.arity,Term.arity],?_⟩
+  intro z
+  constructor
+  · intro H
+    have HZ : z 0 = (a : ℝ) := by
+      have HE : z 0 + -(a : ℝ) = 0 := by simpa [s,Formula.Holds,Term.eval,Formula.extend] using H
+      linarith
+    funext i
+    have HI : i = 0 := Subsingleton.elim _ _
+    simpa only [HI] using HZ
+  · rintro rfl
+    simp [s,Formula.Holds,Term.eval,Formula.extend]
+
+-- Canonical endpoint formulas encode the irrational radius at base point 2.
+example : Denotes 3 (endpoint 1 (s 2) t) (point 1 p t (by decide) (by decide) y).val :=
+  endpoint_denotes 1 p (s 2) t (by decide) (by decide) y (by change Denotes 1 (s 2) (fun _ : Fin 1 => (2 : ℝ)); convert hs 2 using 1)
+example : (Input.point (PointQuery.mk (lifted 1 p t) (endpoint 1 (s 1) t) (endpoint 1 (s 2) t))).encode ∈ pointLanguage ↔
+    (Input.point (PointQuery.mk (original 1 p t) (s 1) (s 2))).encode ∈ pointLanguage :=
+  point_language_iff 1 p (s 1) (s 2) t (by decide) (by decide) x y (by change Denotes 1 (s 1) (fun _ : Fin 1 => (1 : ℝ)); convert hs 1 using 1; norm_num) (by change Denotes 1 (s 2) (fun _ : Fin 1 => (2 : ℝ)); convert hs 2 using 1)
+example : (Input.whole (lifted 1 p t)).encode ∈ connectedLanguage ↔
+    (Input.whole (original 1 p t)).encode ∈ connectedLanguage :=
+  whole_language_iff 1 p t (by decide) (by decide)
+
+#print axioms ConnectedWitnessProjection.preconnected_iff
+#print axioms CircularWitness.fiber_joined
+#print axioms StrictInequalityWitness.preconnected_iff
+#print axioms FormulaStrictWitness.joined_iff
+#print axioms endpoint_denotes
+#print axioms reachable_iff
+#print axioms whole_record_FP
+#print axioms point_record_FP
+#print axioms point_language_iff
+#print axioms point_language_guarded_iff
+end StrictWitnessRegression
+end Group15Regression5
+
+
+namespace Group15Regression6
+namespace WeakBooleanWitnessRegression
+open LeanCanny.Geometry Set CircularWitness
+open scoped Classical
+private def P (a : Bool → Prop) := a false ∨ a true
+private theorem mono : ∀ a b : Bool → Prop, (∀ i, a i → b i) → P a → P b := by
+  intro a b H
+  exact Or.imp (H false) (H true)
+private noncomputable def left : WeakBooleanWitness.Space (fun _ : Bool => fun _ : Unit => (0 : ℝ)) P :=
+  ⟨((),fun b => if b then unit else 0),Or.inl (by simp)⟩
+private noncomputable def right : WeakBooleanWitness.Space (fun _ : Bool => fun _ : Unit => (0 : ℝ)) P :=
+  ⟨((),fun b => if b then 0 else unit),Or.inr (by simp)⟩
+
+-- The two different OR clauses share the zero canonical witness at the boundary.
+example : JoinedIn univ left right := by
+  apply (WeakBooleanWitness.joined_iff _ P mono (fun _ => continuous_const) left right).mpr
+  have HE : WeakBooleanWitness.projection _ P mono left = WeakBooleanWitness.projection _ P mono right := Subtype.ext rfl
+  rw [HE]
+  exact JoinedIn.refl (mem_univ _)
+
+-- Closed half-lines meet at their boundary and cover the unbounded real line.
+private def f (b : Bool) (x : ℝ) := if b then x else -x
+example : IsPreconnected (univ : Set (WeakBooleanWitness.Space f P)) := by
+  apply (WeakBooleanWitness.preconnected_iff f P mono (fun b => by cases b; exact continuous_id.neg; exact continuous_id)).mpr
+  have HE : {x : ℝ | P (fun i => 0≤f i x)} = univ := by
+    ext x
+    simp only [mem_ofPred_eq,mem_univ,iff_true,P,f,Bool.false_eq_true,ite_false,ite_true]
+    rcases le_total 0 x with H | H
+    · exact Or.inr H
+    · exact Or.inl (by linarith)
+  have HS : IsPreconnected {x : ℝ | P (fun i => 0≤f i x)} := by rw [HE]; exact isPreconnected_univ
+  exact preconnectedSpace_iff_univ.mp (isPreconnected_iff_preconnectedSpace.mp HS)
+
+#print axioms WeakBooleanWitness.coordinate_path
+#print axioms WeakBooleanWitness.joined_iff
+#print axioms WeakBooleanWitness.preconnected_iff
+#print axioms LeanCanny.Connectivity.ClosedFormulaWitness.base_holds
+#print axioms LeanCanny.Connectivity.ClosedFormulaWitness.joined_iff
+#print axioms LeanCanny.Connectivity.ClosedFormulaWitness.preconnected_iff
+#print axioms LeanCanny.Connectivity.ClosedFormulaWitness.polynomial_zero_iff
+end WeakBooleanWitnessRegression
+end Group15Regression6
+
+
+namespace Group15Regression7
+namespace ClosedSingleRegression
+open LeanCanny LeanCanny.Connectivity LeanCanny.Geometry ETR Set
+open ClosedFormulaWitness
+open scoped Classical
+private def p : Formula := .or (.not (.ltZero (.var 0)))
+  (.not (.ltZero (.mul (.const (-1)) (.var 0))))
+private theorem closed_p : Closed p := .or (.nonnegative _) (.nonnegative _)
+
+-- Actual original ETR syntax, closed half-lines meeting at their common boundary.
+example : IsPreconnected (univ : Set (ZeroSet 1 p)) := by
+  apply (algebraic_preconnected_iff closed_p 1).mpr
+  have HE : (Description.mk 1 p).realization = univ := by
+    ext x
+    simp only [Description.realization,mem_ofPred_eq,mem_univ,iff_true,p,Formula.Holds,Term.eval,
+      Int.cast_neg,Int.cast_one,neg_one_mul]
+    exact le_total 0 (Formula.extend x 0) |>.imp (fun H => not_lt.mpr H) (fun H => by linarith)
+  rw [HE]
+  exact isPreconnected_univ
+
+example : 1+2*Nat.card (Slot p) ≤ dimensionBudget 1 p := dimension_le closed_p 1
+example (i : Slot p) : (polynomial 1 p i).totalDegree ≤ max (2*p.toData.size) 2 :=
+  polynomial_original_degree closed_p 1 i
+
+example : (aggregate 1 p p).totalDegree ≤ equationDegreeBudget p := equation_degree closed_p 1
+
+-- The negative constant weak inequality has no algebraic witness.
+example : ¬ Nonempty (ZeroSet 0 (.not (.ltZero (.const (-1))))) := by
+  rintro ⟨z⟩
+  have H := (algebraicProjection (.nonnegative (.const (-1))) 0 z).property
+  norm_num [Description.realization,Formula.Holds,Term.eval] at H
+
+#print axioms ClosedFormulaWitness.single_zero_iff
+#print axioms ClosedFormulaWitness.algebraic_joined_iff
+#print axioms ClosedFormulaWitness.algebraic_preconnected_iff
+#print axioms ClosedFormulaWitness.dimension_le
+#print axioms ClosedFormulaWitness.polynomial_original_degree
+#print axioms ClosedFormulaWitness.dimensionBudget_unary
+#print axioms ClosedFormulaWitness.equation_degree
+#print axioms ClosedFormulaWitness.equationDegreeBudget_binary
+end ClosedSingleRegression
+end Group15Regression7
+
+
+namespace Group15Regression8
+namespace CriticalLeadingFPRegression
+noncomputable section
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralFrozenPowerBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private def changeBasis : (ℤ × ℤ) ≃ₗ[ℤ] (ℤ × ℤ) where
+  toFun v := (v.1 + 2 * v.2, v.1 + 3 * v.2)
+  invFun v := (3 * v.1 - 2 * v.2, v.2 - v.1)
+  left_inv v := by ext <;> dsimp <;> ring
+  right_inv v := by ext <;> dsimp <;> ring
+  map_add' v w := by ext <;> dsimp <;> ring
+  map_smul' c v := by ext <;> simp only [Prod.smul_fst, Prod.smul_snd, smul_eq_mul, RingHom.id_apply] <;> ring
+private noncomputable def b : Module.Basis (Fin 2) ℤ (ℤ × ℤ) := (Module.Basis.finTwoProd ℤ).map changeBasis
+private theorem matrix_entry (v : ℤ × ℤ) (r t : Fin 2) :
+    Algebra.leftMulMatrix b v r t =
+      if r = 0 then (if t = 0 then 3 * v.1 - 2 * v.2 else 6 * v.1 - 6 * v.2)
+      else (if t = 0 then v.2 - v.1 else 3 * v.2 - 2 * v.1) := by
+  fin_cases r <;> fin_cases t <;>
+    simp [Algebra.leftMulMatrix_eq_repr_mul, b, changeBasis, Module.Basis.coe_finTwoProd_repr] <;> ring
+private noncomputable def exponents : Fin 2 →₀ ℕ := Finsupp.single (0 : Fin 2) 2 + Finsupp.single (1 : Fin 2) 1
+private noncomputable def p : MvPolynomial (Fin 2) (ℤ × ℤ) := MvPolynomial.monomial exponents 5
+
+private theorem exponent_eq (k : ℕ) : exponents =
+    RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 k) ↔ k % 4 = 2 ∧ k / 4 % 4 = 1 := by
+  constructor
+  · intro h
+    have H0 := congrArg (fun e : Fin 2 →₀ ℕ => e (0 : Fin 2)) h
+    have H1 := congrArg (fun e : Fin 2 →₀ ℕ => e (1 : Fin 2)) h
+    norm_num [exponents, RationalSubstitution.Indexed.exponentVector, FixedWidthPolynomial.entry_eq_digit] at H0 H1
+    exact ⟨H0.symm, H1.symm⟩
+  · intro h
+    apply Finsupp.ext
+    intro i
+    fin_cases i <;>
+      norm_num [exponents, RationalSubstitution.Indexed.exponentVector, FixedWidthPolynomial.entry_eq_digit] <;> omega
+
+private noncomputable def P : IntegralClearedCoefficientBits.Source where
+  arity _ := 2
+  free _ := 1
+  offset _ := 1
+  fit _ := by decide
+  sourceWidth _ := 2
+  targetWidth _ := 2
+  rank _ := 2
+  carrier _ := ℤ × ℤ
+  ring _ := inferInstance
+  basis _ := b
+  polynomial _ := p
+  support c e he i := by
+    change e ∈ p.support at he
+    have H := MvPolynomial.mem_support_iff.mp he
+    by_cases h : exponents = e
+    · subst e
+      fin_cases i <;> norm_num [exponents]
+    · exact False.elim (H (by rw [p, MvPolynomial.coeff_monomial, ite_eq_right h]))
+  denominator _ := -2
+  height _ i := if i = 0 then (-2, -3) else (5, 5)
+  allowance _ := 4
+  target c := Nat.fromBitsLE c
+  row _ := 1
+  col _ := 0
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+private def rowCode (q : List Bool) := pairFst (pairSnd (pairFst q))
+private def colCode (q : List Bool) := pairSnd (pairSnd (pairFst q))
+private theorem rowCode_FP : rowCode ∈ FP := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairFst_mem_FP
+private theorem colCode_FP : colCode ∈ FP := mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairSnd_mem_FP
+
+private def coefficientReader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (rowCode q) = Nat.fromBitsLE (colCode q) then
+    if Nat.fromBitsLE (pairSnd q) % 4 = 2 ∧ Nat.fromBitsLE (pairSnd q) / 4 % 4 = 1 then BinaryNatCode.encode 5 else []
+  else []
+private theorem coefficientReader_FP : coefficientReader ∈ FP :=
+  ((BinaryFn.fromBits rowCode_FP).eq (BinaryFn.fromBits colCode_FP)).ite_mem_FP
+    (((((BinaryFn.fromBits pairSnd_mem_FP).mod (BinaryFn.const 4)).eq (BinaryFn.const 2)).and
+      ((((BinaryFn.fromBits pairSnd_mem_FP).div (BinaryFn.const 4)).mod (BinaryFn.const 4)).eq (BinaryFn.const 1))).ite_mem_FP
+      (constFn_mem_FP (BinaryNatCode.encode 5)) (constFn_mem_FP [])) (constFn_mem_FP [])
+
+private def heightReader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (IntegralPowerProductBits.factorWord q) = 0 then
+    if Nat.fromBitsLE (IntegralPowerProductBits.rowWord q) = 0 then []
+    else if Nat.fromBitsLE (IntegralPowerProductBits.colWord q) = 0 then BinaryNatCode.encode 5 else BinaryNatCode.encode 1
+  else if Nat.fromBitsLE (IntegralPowerProductBits.rowWord q) = Nat.fromBitsLE (IntegralPowerProductBits.colWord q) then
+    BinaryNatCode.encode 5 else []
+private theorem heightReader_FP : heightReader ∈ FP :=
+  ((BinaryFn.fromBits IntegralPowerProductBits.factorWord_FP).eq (BinaryFn.const 0)).ite_mem_FP
+    (((BinaryFn.fromBits IntegralPowerProductBits.rowWord_FP).eq (BinaryFn.const 0)).ite_mem_FP
+      (constFn_mem_FP [])
+      (((BinaryFn.fromBits IntegralPowerProductBits.colWord_FP).eq (BinaryFn.const 0)).ite_mem_FP
+        (constFn_mem_FP (BinaryNatCode.encode 5)) (constFn_mem_FP (BinaryNatCode.encode 1))))
+    (((BinaryFn.fromBits IntegralPowerProductBits.rowWord_FP).eq (BinaryFn.fromBits IntegralPowerProductBits.colWord_FP)).ite_mem_FP
+      (constFn_mem_FP (BinaryNatCode.encode 5)) (constFn_mem_FP []))
+
+private noncomputable def parentAccess : IntegralClearedCoefficientBits.Access P where
+  arity := UnaryFn.const 2
+  free := UnaryFn.const 1
+  offset := UnaryFn.const 1
+  sourceWidth := UnaryFn.const 2
+  targetWidth := UnaryFn.const 2
+  rank := BinaryFn.const 2
+  allowance := BinaryFn.const 4
+  target := BinaryFn.fromBits id_mem_FP
+  row := BinaryFn.const 1
+  col := BinaryFn.const 0
+  modulus := BinaryFn.const 6
+  coefficient := coefficientReader
+  height := heightReader
+  denominator _ := BinaryNatCode.encode 4
+  coefficient_eq c k r t := by
+    change coefficientReader _ = residueBits ((Algebra.leftMulMatrix b
+      (p.coeff (RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 k))) r t : ℤ) : ZMod 6)
+    have HC : p.coeff (RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 k)) =
+        if k % 4 = 2 ∧ k / 4 % 4 = 1 then (5 : ℤ × ℤ) else 0 := by
+      rw [p, MvPolynomial.coeff_monomial]
+      simp only [exponent_eq]
+    rw [HC, matrix_entry]
+    simp only [coefficientReader, rowCode, colCode, IntegralClearedCoefficientBits.context, pairFst_pair, pairSnd_pair,
+      BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    fin_cases r <;> fin_cases t <;> by_cases hk : k % 4 = 2 ∧ k / 4 % 4 = 1 <;> simp only [hk, ite_true, ite_false] <;> norm_num <;> decide
+  height_eq c i r t := by
+    change heightReader _ = residueBits ((Algebra.leftMulMatrix b (if i = 0 then (-2, -3) else (5, 5)) r t : ℤ) : ZMod 6)
+    rw [matrix_entry]
+    simp only [heightReader, IntegralPowerProductBits.factorWord, IntegralPowerProductBits.rowWord,
+      IntegralPowerProductBits.colWord, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    fin_cases r <;> fin_cases t <;> by_cases hi : i = 0 <;> simp only [hi, ite_true, ite_false] <;> norm_num <;> decide
+  denominator_eq c := by
+    change BinaryNatCode.encode 4 = residueBits ((-2 : ℤ) : ZMod 6)
+    decide
+
+private noncomputable def S : Source := { P with leading := fun _ => 2 }
+private noncomputable def access : Access S :=
+  { parentAccess with leading := fun _ => BinaryNatCode.encode 2, leading_eq := fun _ => by change BinaryNatCode.encode 2 = residueBits (2 : ZMod 6); decide }
+
+
+-- Native local postprocessing remains correct for a nonunit denominator.
+example : IntegralMixedVirtualLeadingRequestBits.post S
+    (pair [] (pair (residueBits (2 : ZMod 6)) (residueBits ((-2 : ℤ) : ZMod 6)))) = BinaryNatCode.encode 2 := by
+  rw [IntegralMixedVirtualLeadingRequestBits.post_packet]
+  decide
+private def reply (q : List Bool) : List Bool := if q = [false] then BinaryNatCode.encode 2 else BinaryNatCode.encode 4
+example : (IntegralMixedVirtualLeadingRequestBits.program S (fun _ => [false]) (fun _ => [true])).value reply [] =
+    BinaryNatCode.encode 2 := by
+  calc
+    _ = IntegralCriticalLeadingBits.value S [] :=
+      IntegralMixedVirtualLeadingRequestBits.value_at S access _ _ reply [] (by rfl) (by decide)
+    _ = _ := by decide
+-- Nonzero target requests neither scalar nor frozen-power sum.
+example (c : List Bool) : ¬ (IntegralMixedVirtualFrozenRequestBits.program S (fun _ => [false]) (fun _ => [true])).controller.Requests
+    reply (IntegralMixedVirtualFrozenRequestBits.program S (fun _ => [false]) (fun _ => [true])).count [true] c := by
+  rw [IntegralMixedVirtualFrozenRequestBits.requests_iff]
+  rintro ⟨hz, _⟩
+  have H := hz 0 (by decide)
+  change FixedWidthQuery.coordinate _ _ _ _ ≤ 0 at H
+  norm_num [FixedWidthQuery.coordinate, S, P, FixedWidthPolynomial.entry_eq_digit] at H
+  exact (by decide : ¬(Nat.fromBitsLE (List.take 2 (BinaryNatCode.encode (Nat.fromBitsLE [true]))) = 0)) H
+
+example (F : IntegralMixedCutSource.Family) (I : IntegralMixedVirtualSweepSource.Indices F)
+    (h : IntegralMixedVirtualNativeBits.Metadata F I) :
+    IntegralClearedCriticalBits.Access (IntegralMixedVirtualSweepSource.source F I) :=
+  IntegralMixedVirtualNativeBits.criticalAccess F I h
+example (F : IntegralMixedCutSource.Family) (I : IntegralMixedVirtualSweepSource.Indices F)
+    (q : List Bool) (k : ℕ) (r t : Fin (FixedWidthPolynomial.count (F.birth q + 1) (F.width q))) :
+    IntegralCriticalOriginalCoefficientBits.reader (IntegralMixedVirtualOriginalBits.scalar F I)
+      (pair (IntegralClearedCoefficientBits.context q r.val t.val) (BinaryNatCode.encode k)) =
+      residueBits ((Algebra.leftMulMatrix (IntegralMixedCutNilpotent.basis (F.state q)).finBasis
+        (((F.spatial q).low.map (Int.castRingHom (IntegralMixedVirtualSweepSource.Coefficient F q))).coeff
+          (RationalSubstitution.Indexed.exponentVector (F.ambient q + 1)
+            (FixedWidthPolynomial.entry (F.spatial q).degree.size k))) r t : ℤ) : ZMod (I.modulus q)) :=
+  IntegralMixedVirtualOriginalBits.reader_packet F I q k r t
+
+open IntegralCriticalHistoryTask
+private def taskP : Parameters where
+  cap _ := 3
+  width _ := 2
+  ambient _ := 1
+  sourceWidth _ := 2
+  degree _ := 2
+  height _ := 1
+  modulusBound _ := 6
+private def parent := IntegralMixedRoutineTaskBits.query taskP (fun _ => 2) .pscEntry .originalCoefficient []
+example : IntegralMixedRoutineTaskBits.Frame taskP parent
+    (IntegralMixedRoutineTaskBits.query taskP (birth taskP) .critical .criticalCoefficient parent) := by
+  apply IntegralMixedRoutineTaskBits.query_frame_routine
+  rw [parent, IntegralMixedRoutineTaskBits.query_routine]
+  decide
+private def scalarParent := IntegralMixedRoutineTaskBits.query taskP (fun _ => 2) .scalar .originalCoefficient []
+-- Earlier prefixes can call the highest routine even from scalar routine zero.
+example : IntegralMixedRoutineTaskBits.Frame taskP scalarParent
+    (IntegralMixedRoutineTaskBits.query taskP (fun _ => 1) .companion .companion scalarParent) := by
+  apply IntegralMixedRoutineTaskBits.query_frame_birth
+  rw [scalarParent, IntegralMixedRoutineTaskBits.query_birth taskP _ _ _ [] (by decide)]
+  decide
+
+#print axioms IntegralMixedVirtualNativeBits.criticalAccess
+#print axioms IntegralMixedVirtualOriginalBits.reader_packet
+#print axioms IntegralMixedVirtualOriginalBits.value_space
+#print axioms IntegralMixedVirtualQueryBits.value_invariance
+#print axioms IntegralMixedVirtualTaskBits.matrix_value
+#print axioms IntegralMixedVirtualLeadingRequestBits.certificates
+#print axioms IntegralMixedVirtualLeadingRequestBits.value_at
+#print axioms IntegralMixedVirtualLeadingRequestBits.state_length_at
+#print axioms IntegralMixedVirtualMonomialRequestBits.controls
+#print axioms IntegralMixedVirtualMonomialRequestBits.actual_value_at
+#print axioms IntegralMixedVirtualMonomialRequestBits.state_length_packet
+#print axioms IntegralMixedVirtualFrozenRequestBits.certificates
+#print axioms IntegralMixedVirtualFrozenRequestBits.value_at
+#print axioms IntegralMixedVirtualFrozenRequestBits.state_length_at
+#print axioms IntegralMixedRoutineTaskBits.rank_unary
+#print axioms IntegralMixedRoutineTaskBits.query_frame_birth
+#print axioms IntegralMixedRoutineTaskBits.query_frame_routine
+#print axioms IntegralMixedScalarQueryBits.commonLeading_certificates
+#print axioms IntegralMixedScalarQueryBits.commonLeading_requests_frame
+
+private noncomputable def S2 : IntegralFrozenPowerBits.Source := { S with allowance := fun _ => 2 }
+example : IntegralMixedVirtualScaleRequestBits.post S2
+    (pair [] (pair (residueBits (2 : ZMod 6)) (residueBits (-2 : ZMod 6)))) = residueBits (2 : ZMod 6) := by
+  rw [IntegralMixedVirtualScaleRequestBits.post_packet]
+  decide
+example : IntegralCriticalLeadingBits.value S2 [] = residueBits (4 : ZMod 6) := by decide
+example : get taskP .slot13 (IntegralMixedRoutineContextQuery.query taskP pairFst (fun _ => 1)
+    .companion .companion (fun _ => 2) (fun _ => 3) (pair scalarParent [true])) = 2 := by
+  apply IntegralMixedRoutineContextQuery.query_coordinate
+  exact (by decide : 2 ≤ 6).trans (IntegralMixedRoutineTaskBits.routine_cap taskP _)
+example : get taskP .slot15 (IntegralMixedRoutineContextQuery.query taskP pairFst (fun _ => 1)
+    .companion .companion (fun _ => 2) (fun _ => 3) (pair scalarParent [true])) = 3 := by
+  apply IntegralMixedRoutineContextQuery.query_context
+  exact (by decide : 3 ≤ 6).trans (IntegralMixedRoutineTaskBits.routine_cap taskP _)
+example : IntegralMixedRoutineTaskBits.Frame taskP scalarParent
+    (IntegralMixedRoutineContextQuery.query taskP pairFst (fun _ => 1)
+      .companion .companion (fun _ => 2) (fun _ => 3) (pair scalarParent [true])) := by
+  have HB : 1 < birth taskP (pairFst (pair scalarParent [true])) := by
+    rw [pairFst_pair, scalarParent, IntegralMixedRoutineTaskBits.query_birth taskP _ _ _ [] (by decide)]
+    decide
+  simpa only [pairFst_pair] using IntegralMixedRoutineContextQuery.query_frame_birth taskP pairFst
+    (fun _ => 1) .companion .companion (fun _ => 2) (fun _ => 3) (pair scalarParent [true]) HB
+#print axioms IntegralMixedRoutineContextQuery.query_FP
+#print axioms IntegralMixedRoutineContextQuery.query_frame_birth
+#print axioms IntegralMixedOriginalScaleBits.value_at
+#print axioms IntegralMixedOriginalScaleBits.certificates
+#print axioms IntegralMixedOriginalScaleBits.requests_frame
+#print axioms IntegralMixedVirtualDenominatorBits.scalar_child
+#print axioms IntegralMixedVirtualMonomialHeightBits.height_child
+#print axioms IntegralMixedVirtualCanonicalBits.productEntry_canonical
+end
+end CriticalLeadingFPRegression
+
+#print axioms LeanCanny.Algebra.IntegralMixedVirtualMonomialLeafBits.coefficient_child
+#print axioms LeanCanny.Algebra.IntegralMixedVirtualFactorBits.monomial_child
+#print axioms LeanCanny.Algebra.IntegralMixedVirtualLayeredBits.product_replies
+#print axioms LeanCanny.Algebra.IntegralMixedVirtualProductEntryBits.entry_replies
+#print axioms LeanCanny.Algebra.IntegralMixedVirtualCanonicalBits.monomial_canonical
+#print axioms LeanCanny.Algebra.IntegralMixedVirtualCanonicalBits.cleared_canonical
+#print axioms LeanCanny.Algebra.IntegralMixedVirtualCanonicalBits.coordinateProduct_canonical
+end Group15Regression8
