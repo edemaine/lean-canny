@@ -1519,6 +1519,16 @@ The checked ingredients are:
   two points. Point queries include singleton validation and endpoint
   membership, retaining irrational endpoints and rejecting invalid descriptions.
 
+Actual creating sources now support guarded coefficient rescaling and relative
+characteristic powering, with replies confined to the current finite matrix.
+Augmented moment tasks route their nonzero entries to fresh action tasks and
+have explicit state and request bounds. Source snapshots preserve integer
+matrix entries under query-field changes; actual valid dimensions fit the
+native field cap. Original and derivative coefficient leaves and integer-bank
+companions have charged polynomial-space evaluators. Exceptional-bank
+correlation guards recover the selected parent slice at the original spatial
+degree. The remaining child transports and complete dispatcher are still open.
+
 A total creating-source adapter now supplies native scalar metadata over every
 flat word, with the exact creating family on valid births and a fixed base
 integer algebra otherwise. Its leading and denominator leaves are derived
