@@ -1519,6 +1519,26 @@ The checked ingredients are:
   two points. Point queries include singleton validation and endpoint
   membership, retaining irrational endpoints and rejecting invalid descriptions.
 
+A total creating-source adapter now supplies native scalar metadata over every
+flat word, with the exact creating family on valid births and a fixed base
+integer algebra otherwise. Its leading and denominator leaves are derived
+from primitive script metadata. Independent exceptional frames now construct
+an integral bank for the retained parent coordinates and exceptional scalar,
+with common clearing and actual CriticalData at the original spatial degree.
+The source coefficient and exact-leading leaves have charged polynomial-space
+readers. One initial cap also covers later relative critical births; mixed
+sampler access, correlation guards, and the complete dispatcher remain required.
+The one-request stack compiler now also accepts local space certificates.
+
+Flat monomial stages now connect product powers, layered product entries,
+factor powers, and actual coefficient/height factors with native local
+controllers and bounded decreasing requests. Reduction entries now emit
+phase16 lower-row coefficient tasks with the original transpose and both
+old-basis ranks. The reduction and relative-factor correctness rules require
+only the actual guarded reply; unrelated oversized legacy packets add no
+semantic obligations. The complete mixed-history evaluator still requires
+the remaining stages and uniform source integration.
+
 Total flat companion control now reads the actual root script on every word,
 returns zero at missing births, and proves its coefficient-child target equals
 the actual creating polynomial entry. Canonical creating, Euler, reduction,
