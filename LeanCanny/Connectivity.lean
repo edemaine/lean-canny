@@ -1,3 +1,6 @@
+import LeanCanny.Algebra.IntegralEulerLowerController
+import LeanCanny.Algebra.IntegralEulerSumController
+import LeanCanny.Algebra.IntegralCriticalCoordinateProductController
 import LeanCanny.Computation.TwoCallController
 import LeanCanny.Algebra.IntegralEulerObjectiveController
 import LeanCanny.Computation.RecursiveGraphQueryBounds

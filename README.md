@@ -1126,6 +1126,11 @@ The checked ingredients are:
   the frozen lower coefficient and the Euler sum. Its native certificate
   assumes no child evaluator, and its stored state retains one context and
   one modular reply, with exact two-child requests and a two-step clock.
+  The recursive lower-row selector preserves the source and old basis
+  indices. A streamed Euler sum scans the free coordinates, omits the
+  objective term locally, and bounds its modular accumulator. Coordinate
+  multiplication requests one decremented gradient coefficient when the
+  selected exponent is positive, and returns zero otherwise.
   Saved-source queries now supply every critical lower coefficient in the
   reduction reader's row, spatial-rank, and old-basis protocol. These rows and
   the common integer leading coefficient feed the actual relative coordinate

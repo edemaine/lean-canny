@@ -16165,3 +16165,97 @@ example : (program bothEuler lowerTask sumTask).value objectiveAnswer (BinaryNat
   norm_num
   decide
 end IntegralFrozenPowerRegression
+
+
+namespace CoordinateProductControllerRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open FixedWidthCoordinateMulBits
+private def c : List Bool := [true, false]
+private def task (q : List Bool) := pair [true] q
+example : (program (fun _ => 2) (fun _ => 2) (fun _ => 1) (fun _ => BinaryNatCode.encode 6) task).Controls :=
+  program_controls _ _ _ _ _ (UnaryFn.const 2) (UnaryFn.const 2) (BinaryFn.const 1)
+    (constFn_mem_FP _) (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+-- (2,1) is decremented to (2,0); a missing selected coordinate returns zero.
+example : (program (fun _ => 2) (fun _ => 2) (fun _ => 1) (fun _ => BinaryNatCode.encode 6) task).query c =
+    task (pair c (BinaryNatCode.encode 2)) := by decide
+example : (program (fun _ => 2) (fun _ => 2) (fun _ => 1) (fun _ => BinaryNatCode.encode 2) task).value
+    (fun _ => [true]) c = [] := by decide
+example : (program (fun _ => 0) (fun _ => 2) (fun _ => 0) (fun _ => BinaryNatCode.encode 6) task).request c = false := by decide
+example (answer : List Bool → List Bool) (budget : List Bool → ℕ) (child : List Bool) :
+    ¬(program (fun _ => 2) (fun _ => 2) (fun _ => 1) (fun _ => BinaryNatCode.encode 2) task).controller.Requests answer budget c child := by
+  rw [program_requests_iff]
+  have H : ¬positive (fun _ => 2) (fun _ => 2) (fun _ => 1) (fun _ => BinaryNatCode.encode 2) c := by
+    unfold positive
+    decide
+  exact fun h => H h.1
+end CoordinateProductControllerRegression
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private def sumTermTask (p : List Bool) := pair [false] p
+private noncomputable def sumTermAnswer (q : List Bool) := IntegralEulerBits.termProgram bothEuler (pairSnd q)
+private theorem sumTermReply (p : List Bool) : sumTermAnswer (sumTermTask p) = IntegralEulerBits.termProgram bothEuler p := by
+  simp only [sumTermAnswer, sumTermTask, pairSnd_pair]
+example : (IntegralEulerBits.SumStage.program bothEuler sumTermTask).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  IntegralEulerBits.SumStage.certificates bothEuler bothEulerAccess _ (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+example (c : List Bool) : (IntegralEulerBits.SumStage.program bothEuler sumTermTask).value sumTermAnswer c = bothEuler.sumValue c :=
+  IntegralEulerBits.SumStage.value_eq bothEuler _ _ sumTermReply c
+example (c : List Bool) (t : ℕ) :
+    (RecursiveFold.encState (((IntegralEulerBits.SumStage.program bothEuler sumTermTask).controller.reference sumTermAnswer)^[t]
+      ((IntegralEulerBits.SumStage.program bothEuler sumTermTask).initial c))).length ≤
+      2 * c.length + 2 * (Turing.MultiTapeTM.encNat (bothEuler.free c)).length +
+        (BinaryNatCode.encode (bothEuler.modulus c)).length + 2 :=
+  IntegralEulerBits.SumStage.state_length bothEuler _ _ sumTermReply c t
+example (c child : List Bool) : (IntegralEulerBits.SumStage.program bothEuler sumTermTask).controller.Requests sumTermAnswer bothEuler.free c child ↔
+    ∃ i < 2, child = sumTermTask (pair c (BinaryNatCode.encode i)) :=
+  IntegralEulerBits.SumStage.requests_iff bothEuler _ _ c child
+example : (IntegralEulerBits.SumStage.term bothEuler id).Controls :=
+  IntegralEulerBits.SumStage.term_controls bothEuler bothEulerAccess _ id_mem_FP
+example (answer : List Bool → List Bool) (budget : List Bool → ℕ) (c child : List Bool) :
+    ¬(IntegralEulerBits.SumStage.term bothEuler id).controller.Requests answer budget
+      (pair c (BinaryNatCode.encode 0)) child := by
+  rw [IntegralEulerBits.SumStage.term_requests_iff]
+  have H : IntegralEulerBits.excluded bothEuler (pair c (BinaryNatCode.encode 0)) := by
+    simp only [IntegralEulerBits.excluded, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+    rfl
+  exact fun h => h.1 H
+example : (IntegralCriticalCoordinateProductBits.program bothGradient id).Controls :=
+  IntegralCriticalCoordinateProductBits.program_controls bothGradient bothGradientAccess _ id_mem_FP
+example (p : List Bool) : (IntegralCriticalCoordinateProductBits.program bothGradient id).value
+    (IntegralCriticalGradientBits.family bothGradient).value p = IntegralCriticalCoordinateProductBits.value bothGradient p :=
+  IntegralCriticalCoordinateProductBits.program_value bothGradient _ _ (fun _ => rfl) p
+
+private def objectiveRowTask (p : List Bool) := pair [false] p
+private def gradientRowTask (p : List Bool) := pair [true] p
+private noncomputable def rowAnswer (q : List Bool) :=
+  if pairFst q = [false] then bothEuler.objectiveValue (pairSnd q)
+  else (IntegralCriticalGradientBits.family bothGradient).value (pairSnd q)
+attribute [local irreducible] IntegralEulerBits.Source.objectiveValue IntegralClearedCoefficientBits.Source.value
+private theorem objectiveRowReply (p : List Bool) : rowAnswer (objectiveRowTask p) = bothEuler.objectiveValue p := by
+  simp only [rowAnswer, objectiveRowTask, pairFst_pair, pairSnd_pair, ite_true]
+private theorem gradientRowReply (p : List Bool) : rowAnswer (gradientRowTask p) = (IntegralCriticalGradientBits.family bothGradient).value p := by
+  simp only [rowAnswer, gradientRowTask, pairFst_pair, pairSnd_pair]
+  exact ite_eq_right (by decide)
+example : (IntegralEulerBits.LowerStage.program bothEuler (fun _ => (1 : Fin 2)) objectiveRowTask gradientRowTask).Controls :=
+  IntegralEulerBits.LowerStage.controls bothEuler bothEulerAccess _ (BinaryFn.const 1) _ _
+    (mem_FP_pair (constFn_mem_FP _) id_mem_FP) (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+example (c : List Bool) :
+    (IntegralEulerBits.LowerStage.program bothEuler (fun _ => (1 : Fin 2)) objectiveRowTask gradientRowTask).value rowAnswer c =
+      bothEuler.lowerValue (fun _ => (1 : Fin 2)) c :=
+  IntegralEulerBits.LowerStage.value_eq bothEuler _ _ _ _ objectiveRowReply gradientRowReply c
+example (c : List Bool) :
+    (IntegralEulerBits.LowerStage.program bothEuler (fun _ => (0 : Fin 2)) objectiveRowTask gradientRowTask).value rowAnswer c =
+      bothEuler.lowerValue (fun _ => (0 : Fin 2)) c :=
+  IntegralEulerBits.LowerStage.value_eq bothEuler _ _ _ _ objectiveRowReply gradientRowReply c
+example (c : List Bool) :
+    (IntegralEulerBits.LowerStage.program bothEuler (fun _ => (0 : Fin 2)) objectiveRowTask gradientRowTask).query c = objectiveRowTask c := by rfl
+example (c : List Bool) :
+    (IntegralEulerBits.LowerStage.program bothEuler (fun _ => (1 : Fin 2)) objectiveRowTask gradientRowTask).query c =
+      gradientRowTask (pair c (pair (BinaryNatCode.encode 1) (BinaryNatCode.encode (bothEuler.target c)))) := by rfl
+example : (IntegralEulerLowBits.program bothEuler objectiveRowTask gradientRowTask).Controls :=
+  IntegralEulerLowBits.program_controls bothEuler bothEulerAccess _ _
+    (mem_FP_pair (constFn_mem_FP _) id_mem_FP) (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+end IntegralFrozenPowerRegression

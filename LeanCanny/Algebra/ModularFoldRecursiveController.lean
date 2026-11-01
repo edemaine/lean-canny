@@ -57,6 +57,26 @@ theorem product_partialValue (c : List Bool) (a : ℕ → ZMod (Nat.fromBitsLE (
     (productProgram count modulus entryTask).partialValue answer c k = residueBits (∏ i ∈ Finset.range k, a i) :=
   ModularProduct.fold_eq_product modulus (answer ∘ entryTask) c (count c) a hpos ha k hk
 
+
+/-- Keep the semantic residue modulus independent of its binary packet. -/
+theorem sum_partialValueWithModulus (m : List Bool → ℕ)
+    (hvalue : (fun c => Nat.fromBitsLE (modulus c)) = m) (c : List Bool) (a : ℕ → ZMod (m c))
+    (hpos : 0 < m c)
+    (ha : ∀ i < count c, answer (entryTask (pair c (BinaryNatCode.encode i))) = residueBits (a i))
+    (k : ℕ) (hk : k ≤ count c) :
+    (sumProgram count modulus entryTask).partialValue answer c k = residueBits (∑ i ∈ Finset.range k, a i) := by
+  subst m
+  exact sum_partialValue count modulus entryTask answer c a hpos ha k hk
+
+theorem product_partialValueWithModulus (m : List Bool → ℕ)
+    (hvalue : (fun c => Nat.fromBitsLE (modulus c)) = m) (c : List Bool) (a : ℕ → ZMod (m c))
+    (hpos : 0 < m c)
+    (ha : ∀ i < count c, answer (entryTask (pair c (BinaryNatCode.encode i))) = residueBits (a i))
+    (k : ℕ) (hk : k ≤ count c) :
+    (productProgram count modulus entryTask).partialValue answer c k = residueBits (∏ i ∈ Finset.range k, a i) := by
+  subst m
+  exact product_partialValue count modulus entryTask answer c a hpos ha k hk
+
 theorem residue_length (c : List Bool) (hpos : 0 < Nat.fromBitsLE (modulus c))
     (x : ZMod (Nat.fromBitsLE (modulus c))) : (residueBits x).length ≤ (modulus c).length := by
   let : NeZero (Nat.fromBitsLE (modulus c)) := ⟨hpos.ne'⟩
