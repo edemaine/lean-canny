@@ -1564,7 +1564,9 @@ birth and the actual source kind. The original-row scale and critical leading
 scale have separate native controllers. Two native dispatchers now cover all
 virtual critical arithmetic phases zero through twenty-five, including the
 grid, product, and factor operations. One matching predicate and exact scalar
-callbacks discharge the lower dispatcher's current reply contracts. Native
+callbacks discharge the lower dispatcher's current reply contracts. Context
+two through four now have scoped dispatchers and current scalar contracts;
+physical-context answers impose no virtual reply obligations. Native
 Gram and Macaulay controllers are tied to actual mapped system coefficients.
 Native homogeneous queries restore the actual full Fermat rows, retaining the
 original scale separately from the derivative scale at composite moduli. Their
@@ -1579,7 +1581,10 @@ coefficient; invalid second-basis labels are rejected before padding. A native
 negative Gram product and streamed sum return the literal matrix entry, with
 loop counts bounded by the original retained-grid cap. One native row dispatcher
 now closes all six value-matrix stages against their literal current model;
-its external boundaries name only the lower critical and scalar stages. The source decoder,
+its external boundaries name only the lower critical and scalar stages. A native
+Gram characteristic source now supplies the determinant routine's integer block
+entries and augmented moment entry/power stages. These requests preserve
+natural invalid labels and use only current value-row or block replies. The source decoder,
 scalar callbacks, determinant routing, and producer companions still need
 to be joined into one mixed evaluator.
 
@@ -1632,8 +1637,11 @@ raises it to the exact derived exponent. A native physical companion dispatcher
 now requests the actual critical coefficient and producer leading, with both
 replies closed against current models. Its polynomial is the creating physical
 command polynomial. Cut and physical readers also interpret the identical full
-mixed-history state and denominator bank. Integer producer branches, complete
-mixed dispatch, and original input-codec binding remain required.
+mixed-history state and denominator bank. Integer producers now have native
+leading, coefficient, and companion branches using only original scalar cells
+and degree metadata. All three producer kinds, including padded integer-X
+births, are identified with one literal creating-command companion and leading
+scalar. Complete mixed dispatch and original input-codec binding remain required.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
 coordinate, squarefree, and Gram sources have binary height bounds derived from
@@ -1691,6 +1699,9 @@ NOT, AND, and OR formulas. Boundary tuples lift to closures of selected pieces
 in each properly projected bounded envelope. Relative incidence is expressed
 by equality of every retained original coordinate. Connected component
 refinement and native adjacency of these pieces remain separate obligations.
+Original atomic rows also have native syntax readers, degree/mass/coefficient
+bounds, zero extension, and padding/reindexing adapters that preserve their
+literal evaluation on retained coordinates.
 
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove
