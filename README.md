@@ -1558,6 +1558,14 @@ Both old-basis indices and the original transpose convention are retained.
 The creating-source adapter returns zero at missing births. Its leading and
 denominator leaves come from primitive critical-script metadata.
 
+Tilted coercive sampling now stays in the selected positive clopen piece.
+One radius-parameter family supplies finite grids and boundary-attaching branches;
+actual Gram certificates prune extraneous Cartesian roots. A literal integer
+circle equation transfers closed-source covers to the positive-margin sets,
+so projected pieces are accessible without a supplied branch hypothesis.
+Producing the finite recursive covers, effective bounds, and a native evaluator
+for the tilted family remains open.
+
 A tagged mixed history retains an initial integer bank through physical
 critical births, with exact generator origins and common clearing. Relative
 coordinate, validated squarefree, and Gram factors are constructed over the
@@ -1686,6 +1694,17 @@ internally; its remaining boundaries are the scalar and normalized-coefficient
 models. Natural-index height identities connect actual callbacks to the finite
 affine formulas, including zero beyond the spatial coordinate range. Complete mixed dispatch and original input-codec
 binding remain required.
+
+A native scalar dispatcher now computes all six scalar phases from original
+syntax cells and current producer replies. Fixed-width table passes reconstruct
+the literal affine heights. The combined scalar, critical, and producer machine
+closes their mutual callbacks against one current model; normalized coefficients
+remain its external arithmetic boundary. Coordinate and value raw-coefficient
+controllers restore the actual cut coordinate and choice before evaluation.
+The PSC backend now computes actual matrix entries, powers, factors, and constant
+characteristic coefficients with preserved cut indices. Context-restricted
+normalization correctness uses proved request invariance to avoid imposing
+virtual-source meanings on physical contexts. Full raw dispatch remains open.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
 coordinate, squarefree, and Gram sources have binary height bounds derived from
