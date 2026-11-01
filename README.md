@@ -1600,8 +1600,11 @@ branch returns the trailing scalar on the diagonal at the selected degree,
 the inverse/raw product below it, and zero for invalid indices or higher degrees.
 One native dispatcher covers all fifteen normalization phases with a canonical
 residue model. Its hypotheses are exact current child replies, an integer
-entry-height bound, and the small-modulus loop bound. The raw-factor dispatcher
-and complete mixed-reader assembly remain to be connected.
+entry-height bound, and the small-modulus loop bound. Distinct native phase
+nodes now derive every internal reply contract from this one dispatcher model,
+including zero outside the factor matrix. The final branch is the literal
+normalized coefficient matrix. The raw-factor dispatcher and complete
+mixed-reader assembly remain to be connected.
 
 A full mixed command history includes normalized cuts alongside integer and
 physical critical births. Padded earlier prefixes preserve exact generator
@@ -1611,9 +1614,10 @@ zero and offset zero without a frozen-height coordinate or formal digit.
 Its original and derivative controllers now use an immutable original scalar
 reader. Native physical height and monomial controllers use exact current
 lower-stage replies and scalar callbacks, including signed composite-modulus
-regressions. Context-restricted physical controllers now cover phases zero through eight,
-with exact current-reply closure and canonical values. The remaining physical
-phases, complete mixed dispatch, and original input-codec binding remain required.
+regressions. One context-restricted physical dispatcher now covers phases zero
+through twenty-five, with exact current-reply closure and canonical values.
+Its scalar callbacks remain charged. Creating companions, complete mixed
+dispatch, and original input-codec binding remain required.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
 coordinate, squarefree, and Gram sources have binary height bounds derived from
@@ -1643,7 +1647,10 @@ a connected circular witness lift, with native formula and endpoint writers.
 Native gate metadata and arithmetic writers now derive the closed reduction
 from the actual input formula. A polynomial-size shared gate construction and
 canonical endpoint extension preserve both whole-set and point connectivity,
-with the original singleton validation retained. Finite unions of strict
+with the original singleton validation retained. A bounded circular replacement
+also gives a proper closed projection with compact connected fibers. Its native
+source and endpoint writers use dimension n + 5m and degree at most four times
+the maximum of the original atom degree and two. Finite unions of strict
 inequalities also have a native equation reduction: simplex weights and
 circular witnesses give a continuous section and connected fibers. A bounded
 native traversal now derives that finite term list from actual input formulas

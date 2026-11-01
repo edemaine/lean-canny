@@ -31439,3 +31439,435 @@ example (y : Fin 1 → ℝ) : ¬(PositiveMarginSource.source EmptyF []).Holds (F
 #print axioms OpenFormulaMarginValues.pointDegreeBudget_unary
 end OpenMarginPointRegression
 end Group19Regression4
+
+namespace Group20Regression0
+namespace MixedNormalizationRepliesRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralCriticalHistoryTask IntegralMixedNormalizationTopBits
+set_option backward.isDefEq.respectTransparency false
+example (P : Parameters) (F : IntegralMixedCutSource.Family) (q : List Bool)
+    (hr : factorSize P F q ≤ get P .row q) : factorValue P F q = [] :=
+  factorValue_outside P F q (fun h => Nat.not_lt.mpr hr h.1)
+example (P : Parameters) (F : IntegralMixedCutSource.Family) (q : List Bool)
+    (hc : factorSize P F q ≤ get P .col q) : factorValue P F q = [] :=
+  factorValue_outside P F q (fun h => Nat.not_lt.mpr hc h.2)
+variable (P : Parameters) (a : Access P) (F : IntegralMixedCutSource.Family)
+  (h : IntegralMixedVirtualQueryBits.InputMetadata F) (hd : BinaryFn F.degree)
+  (height : List Bool → ℕ) (hb : BinaryFn height)
+example : (IntegralMixedNormalizationDispatcherBits.nodeAt P a F h hd height hb ⟨13, by decide⟩).code = 13 := rfl
+example (answer : List Bool → List Bool)
+    (hm : IntegralMixedNormalizationDispatcherBits.Matches P a F h hd height hb answer)
+    (hr : RawMatches P F answer) : IntegralMixedNormalizationDispatcherBits.Replies P F answer :=
+  IntegralMixedNormalizationDispatcherBits.replies P a F h hd height hb answer hm hr
+example (q : List Bool) (hv : IntegralMixedVirtualCaps.valid P q)
+    (hr : IntegralMixedRoutineTaskBits.routine P q = 5) (hp : isPhase .eulerSum q) :
+    (IntegralMixedNormalizationDispatcherBits.machine P a F h hd height hb).model q = normalizedValue P F q :=
+  IntegralMixedNormalizationDispatcherBits.model_phase14 P a F h hd height hb q hv hr hp
+example (q : List Bool) (hv : IntegralMixedVirtualCaps.valid P q)
+    (hr : IntegralMixedRoutineTaskBits.routine P q = 5) (hp : isPhase .productEntry q) :
+    (IntegralMixedNormalizationDispatcherBits.machine P a F h hd height hb).model q = factorValue P F q :=
+  IntegralMixedNormalizationDispatcherBits.model_factor P a F h hd height hb q hv hr hp
+#print axioms NativeControllerBranch.phaseDispatch_correct
+#print axioms NativeControllerBranch.phaseDispatch_model_selected
+#print axioms NativeControllerBranch.phaseDispatch_model_at_code
+#print axioms IntegralMixedNormalizationDispatcherBits.model_selected_index
+#print axioms IntegralMixedNormalizationDispatcherBits.model_phase14
+#print axioms IntegralMixedNormalizationDispatcherBits.model_factor
+#print axioms factorValue_outside
+#print axioms IntegralMixedNormalizationDispatcherBits.replies
+#print axioms IntegralMixedNormalizationDispatcherBits.correct_of_matches
+end MixedNormalizationRepliesRegression
+end Group20Regression0
+
+namespace Group20Regression1
+namespace PhysicalMiddleRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower
+open IntegralMixedHistory IntegralMixedPhysicalCriticalBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+noncomputable def spatial : SpatialSource 1 where
+  low := 0
+  leading := -2
+  degree := 3
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+noncomputable def initial : State spatial 2 16 0 (Fin 0) :=
+  IntegralMixedHistory.base spatial (IntegralHistorySampler.base 2 (2 ^ 16)) (by decide)
+def rule : CriticalRule 1 where
+  offset := ⟨1, by decide⟩
+  objective := 0
+  coordinate := 0
+  scales i := if i = 0 then -3 else 3
+  scales_ne_zero i := by split_ifs <;> decide
+  heights _ := .constant 1
+noncomputable def F : Family where
+  ambient _ := 1
+  cap _ := 2
+  width _ := 16
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := spatial
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := rule
+noncomputable def I : Indices F where
+  coordinate _ := ⟨0, by change 0 < 1; decide⟩
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < 1; decide⟩
+  col _ := ⟨0, by change 0 < 1; decide⟩
+  modulus _ := 8
+  modulus_ne_zero _ := by decide
+noncomputable def S := (source F I).toEuler.toGradient.toFrozen
+private theorem height_three : letI := S.ring []; S.height [] 0 = (3 : S.carrier []) := by
+  let E : ℤ := expression initial (.constant 1)
+  change CoordinateFrozenCriticalElimination.numerators
+    (fun i : Fin 2 => commonDenominator initial * rule.scales i)
+    (fun _ : Fin 2 => E) 0 = (3 : ℤ)
+  rw [CoordinateFrozenCriticalElimination.numerators, dite_eq_left (by decide)]
+  unfold CommonIntegerDenominator.numerator
+  change E * CommonIntegerDenominator.denominator
+    ((Finset.univ : Finset (Fin 2)).erase (0 : Fin 2)) (fun i => commonDenominator initial * rule.scales i) = 3
+  have HF : (Finset.univ : Finset (Fin 2)).erase 0 = {1} := by decide
+  rw [HF]
+  norm_num [E, CommonIntegerDenominator.denominator, expression, commonDenominator, initial, IntegralMixedHistory.base, rule]
+
+example : letI := S.ring []; S.height [] 0 = (3 : S.carrier []) := height_three
+
+example : IntegralFrozenPowerBits.multiplyPost S
+    (pair [] (pair (residueBits (-2 : ZMod 8)) (residueBits (3 : ZMod 8)))) = residueBits (2 : ZMod 8) := by decide
+example : IntegralEulerBits.ObjectiveStage.post (source F I).toEuler
+    (pair [] (pair (residueBits (2 : ZMod 8)) (residueBits (0 : ZMod 8)))) = residueBits (6 : ZMod 8) := by decide
+example (P : IntegralCriticalHistoryTask.Parameters) (a : IntegralCriticalHistoryTask.Access P)
+    (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G)
+    (g : IntegralMixedPhysicalCaps.RootGeometry P G) (answer : List Bool → List Bool) (hm : IntegralMixedPhysicalContextLowerModelBits.Matches P G answer) :
+    NativeControllerBranch.Correct (IntegralMixedPhysicalContextBits.frozenPowerMachine P a G h) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedPhysicalContextLowerReplyBits.frozenPower_correct P a G h g answer hm
+example (P : IntegralCriticalHistoryTask.Parameters) (a : IntegralCriticalHistoryTask.Access P)
+    (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G)
+    (g : IntegralMixedPhysicalCaps.RootGeometry P G) (answer : List Bool → List Bool) (hm : IntegralMixedPhysicalContextLowerModelBits.Matches P G answer) :
+    NativeControllerBranch.Correct (IntegralMixedPhysicalContextBits.frozenSumMachine P a G h) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedPhysicalContextLowerReplyBits.frozenSum_correct P a G h g answer hm
+example (P : IntegralCriticalHistoryTask.Parameters) (a : IntegralCriticalHistoryTask.Access P)
+    (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G)
+    (answer : List Bool → List Bool) (hm : IntegralMixedPhysicalContextLowerModelBits.Matches P G answer)
+    (hs : IntegralMixedPhysicalContextLowerReplyBits.Callbacks P G answer) :
+    NativeControllerBranch.Correct (IntegralMixedPhysicalContextBits.frozenConstantMachine P a G h) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedPhysicalContextLowerReplyBits.frozenConstant_correct P a G h answer hm hs
+example (P : IntegralCriticalHistoryTask.Parameters) (a : IntegralCriticalHistoryTask.Access P)
+    (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G)
+    (answer : List Bool → List Bool) (hm : IntegralMixedPhysicalContextLowerModelBits.Matches P G answer) :
+    NativeControllerBranch.Correct (IntegralMixedPhysicalContextBits.frozenLowerMachine P a G h) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedPhysicalContextLowerReplyBits.frozenLower_correct P a G h answer hm
+example (P : IntegralCriticalHistoryTask.Parameters) (a : IntegralCriticalHistoryTask.Access P)
+    (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G)
+    (g : IntegralMixedPhysicalCaps.RootGeometry P G) (answer : List Bool → List Bool) (hm : IntegralMixedPhysicalContextLowerModelBits.Matches P G answer) :
+    NativeControllerBranch.Correct (IntegralMixedPhysicalContextBits.coordinateMachine P a G h) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedPhysicalContextLowerReplyBits.coordinate_correct P a G h g answer hm
+example (P : IntegralCriticalHistoryTask.Parameters) (a : IntegralCriticalHistoryTask.Access P)
+    (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G)
+    (g : IntegralMixedPhysicalCaps.RootGeometry P G) (answer : List Bool → List Bool) (hm : IntegralMixedPhysicalContextLowerModelBits.Matches P G answer) :
+    NativeControllerBranch.Correct (IntegralMixedPhysicalContextBits.sumMachine P a G h) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedPhysicalContextLowerReplyBits.sum_correct P a G h g answer hm
+example (P : IntegralCriticalHistoryTask.Parameters) (a : IntegralCriticalHistoryTask.Access P)
+    (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G)
+    (answer : List Bool → List Bool) (hm : IntegralMixedPhysicalContextLowerModelBits.Matches P G answer) :
+    NativeControllerBranch.Correct (IntegralMixedPhysicalContextBits.objectiveMachine P a G h) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedPhysicalContextLowerReplyBits.objective_correct P a G h answer hm
+example (P : IntegralCriticalHistoryTask.Parameters) (a : IntegralCriticalHistoryTask.Access P)
+    (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G)
+    (answer : List Bool → List Bool) (hm : IntegralMixedPhysicalContextLowerModelBits.Matches P G answer) :
+    NativeControllerBranch.Correct (IntegralMixedPhysicalContextBits.lowerMachine P a G h) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedPhysicalContextLowerReplyBits.lower_correct P a G h answer hm
+#print axioms IntegralMixedPhysicalContextBits.frozenPower_correct
+#print axioms IntegralMixedPhysicalContextBits.frozenSum_correct
+#print axioms IntegralMixedPhysicalContextBits.frozenConstant_correct
+#print axioms IntegralMixedPhysicalContextBits.frozenLower_correct
+#print axioms IntegralMixedPhysicalContextBits.coordinate_correct
+#print axioms IntegralMixedPhysicalContextBits.sum_correct
+#print axioms IntegralMixedPhysicalContextBits.objective_correct
+#print axioms IntegralMixedPhysicalContextBits.lower_correct
+#print axioms IntegralMixedPhysicalContextLowerModelBits.component_canonical
+#print axioms IntegralMixedPhysicalContextLowerModelBits.low_matches
+#print axioms IntegralMixedPhysicalContextLowerReplyBits.frozenPower_current
+#print axioms IntegralMixedPhysicalContextLowerReplyBits.frozenSum_current
+#print axioms IntegralMixedPhysicalContextLowerReplyBits.frozenConstant_current
+#print axioms IntegralMixedPhysicalContextLowerReplyBits.frozenLower_current
+#print axioms IntegralMixedPhysicalContextLowerReplyBits.coordinate_current
+#print axioms IntegralMixedPhysicalContextLowerReplyBits.sum_current
+#print axioms IntegralMixedPhysicalContextLowerReplyBits.objective_current
+#print axioms IntegralMixedPhysicalContextLowerReplyBits.lower_current
+end PhysicalMiddleRegression
+end Group20Regression1
+
+namespace Group20Regression2
+namespace PhysicalUpperRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower
+open IntegralMixedHistory IntegralMixedPhysicalCriticalBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+noncomputable def spatial : SpatialSource 1 where
+  low := 0
+  leading := -2
+  degree := 3
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+noncomputable def initial : State spatial 2 16 0 (Fin 0) :=
+  IntegralMixedHistory.base spatial (IntegralHistorySampler.base 2 (2 ^ 16)) (by decide)
+def rule : CriticalRule 1 where
+  offset := ⟨1, by decide⟩
+  objective := 0
+  coordinate := 0
+  scales i := if i = 0 then -3 else 3
+  scales_ne_zero i := by split_ifs <;> decide
+  heights _ := .constant 1
+noncomputable def F : Family where
+  ambient _ := 1
+  cap _ := 2
+  width _ := 16
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := spatial
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := rule
+noncomputable def I : Indices F where
+  coordinate _ := ⟨0, by change 0 < 1; decide⟩
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < 1; decide⟩
+  col _ := ⟨0, by change 0 < 1; decide⟩
+  modulus _ := 8
+  modulus_ne_zero _ := by decide
+noncomputable def S := (source F I).toEuler.toGradient.toFrozen
+private theorem height_three : letI := S.ring []; S.height [] 0 = (3 : S.carrier []) := by
+  let E : ℤ := expression initial (.constant 1)
+  change CoordinateFrozenCriticalElimination.numerators
+    (fun i : Fin 2 => commonDenominator initial * rule.scales i)
+    (fun _ : Fin 2 => E) 0 = (3 : ℤ)
+  rw [CoordinateFrozenCriticalElimination.numerators, dite_eq_left (by decide)]
+  unfold CommonIntegerDenominator.numerator
+  change E * CommonIntegerDenominator.denominator
+    ((Finset.univ : Finset (Fin 2)).erase (0 : Fin 2)) (fun i => commonDenominator initial * rule.scales i) = 3
+  have HF : (Finset.univ : Finset (Fin 2)).erase 0 = {1} := by decide
+  rw [HF]
+  norm_num [E, CommonIntegerDenominator.denominator, expression, commonDenominator, initial, IntegralMixedHistory.base, rule]
+
+example : IntegralCriticalLeadingBits.value S [] = residueBits (6 : ZMod 8) := by decide
+example : IntegralFrozenPowerBits.multiplyPost S
+    (pair [] (pair (residueBits (-2 : ZMod 8)) (residueBits (3 : ZMod 8)))) = residueBits (2 : ZMod 8) := by decide
+example (P : IntegralCriticalHistoryTask.Parameters) (G : Family) (q : List Bool) :
+    ∃ z : ZMod (IntegralCriticalHistoryTask.modulus P q), residueBits z = IntegralMixedPhysicalComponentBits.component P G .criticalCoefficient q :=
+  IntegralMixedPhysicalComponentBits.component_canonical P G _ q
+example (P : IntegralCriticalHistoryTask.Parameters) (a : IntegralCriticalHistoryTask.Access P)
+    (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G) (g : IntegralMixedPhysicalCaps.RootGeometry P G)
+    (x : (q : List Bool) → ZMod (IntegralCriticalHistoryTask.modulus P q))
+    (hm : IntegralMixedPhysicalComponentBits.Matches P G (fun q => residueBits (x q)))
+    (hl : IntegralMixedPhysicalUpperReplyBits.LeadingCallback P G (fun q => residueBits (x q))) :
+    NativeControllerBranch.Correct (IntegralMixedPhysicalUpperDispatcherBits.machine P a G h)
+      (fun q => residueBits (x q)) (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedPhysicalUpperReplyBits.correct P a G h g x hm hl
+#print axioms IntegralMixedPhysicalUpperBits.correct17
+#print axioms IntegralMixedPhysicalUpperBits.correct18
+#print axioms IntegralMixedPhysicalUpperBits.correct19
+#print axioms IntegralMixedPhysicalUpperBits.correct21
+#print axioms IntegralMixedPhysicalUpperBits.correct22
+#print axioms IntegralMixedPhysicalUpperBits.correct23
+#print axioms IntegralMixedPhysicalUpperBits.correct24
+#print axioms IntegralMixedPhysicalUpperBits.correct25
+#print axioms IntegralMixedPhysicalUpperBits.actionChild_value
+#print axioms IntegralMixedPhysicalUpperBits.rowTask_value
+#print axioms IntegralMixedPhysicalUpperBits.columnTask_value
+#print axioms IntegralMixedPhysicalUpperBits.matrixTask_value
+#print axioms IntegralMixedPhysicalUpperBits.moment_entry_child
+#print axioms IntegralMixedPhysicalUpperBits.relativeFactor_child
+#print axioms IntegralMixedPhysicalUpperBits.commonLeading_child
+#print axioms IntegralMixedPhysicalUpperBits.value23
+#print axioms IntegralMixedPhysicalUpperReplyBits.entry_current
+#print axioms IntegralMixedPhysicalUpperReplyBits.reduction_current
+#print axioms IntegralMixedPhysicalUpperReplyBits.power_current
+#print axioms IntegralMixedPhysicalUpperReplyBits.moment_current
+#print axioms IntegralMixedPhysicalUpperReplyBits.action_current
+#print axioms IntegralMixedPhysicalUpperReplyBits.relative_current
+#print axioms IntegralMixedPhysicalUpperReplyBits.factor_current
+#print axioms IntegralMixedPhysicalUpperReplyBits.coefficient_current
+#print axioms IntegralMixedPhysicalUpperReplyBits.replies
+#print axioms IntegralMixedPhysicalUpperReplyBits.correct
+#print axioms IntegralMixedPhysicalComponentBits.component_canonical
+end PhysicalUpperRegression
+end Group20Regression2
+
+namespace Group20Regression3
+namespace PhysicalDispatcherRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower
+open IntegralMixedHistory IntegralMixedPhysicalCriticalBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+noncomputable def spatial : SpatialSource 1 where
+  low := 0
+  leading := -2
+  degree := 3
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+noncomputable def initial : State spatial 2 16 0 (Fin 0) :=
+  IntegralMixedHistory.base spatial (IntegralHistorySampler.base 2 (2 ^ 16)) (by decide)
+def rule : CriticalRule 1 where
+  offset := ⟨1, by decide⟩
+  objective := 0
+  coordinate := 0
+  scales i := if i = 0 then -3 else 3
+  scales_ne_zero i := by split_ifs <;> decide
+  heights _ := .constant 1
+noncomputable def F : Family where
+  ambient _ := 1
+  cap _ := 2
+  width _ := 16
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := spatial
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := rule
+noncomputable def I : Indices F where
+  coordinate _ := ⟨0, by change 0 < 1; decide⟩
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < 1; decide⟩
+  col _ := ⟨0, by change 0 < 1; decide⟩
+  modulus _ := 8
+  modulus_ne_zero _ := by decide
+noncomputable def S := (source F I).toEuler.toGradient.toFrozen
+private theorem height_three : letI := S.ring []; S.height [] 0 = (3 : S.carrier []) := by
+  let E : ℤ := expression initial (.constant 1)
+  change CoordinateFrozenCriticalElimination.numerators
+    (fun i : Fin 2 => commonDenominator initial * rule.scales i)
+    (fun _ : Fin 2 => E) 0 = (3 : ℤ)
+  rw [CoordinateFrozenCriticalElimination.numerators, dite_eq_left (by decide)]
+  unfold CommonIntegerDenominator.numerator
+  change E * CommonIntegerDenominator.denominator
+    ((Finset.univ : Finset (Fin 2)).erase (0 : Fin 2)) (fun i => commonDenominator initial * rule.scales i) = 3
+  have HF : (Finset.univ : Finset (Fin 2)).erase 0 = {1} := by decide
+  rw [HF]
+  norm_num [E, CommonIntegerDenominator.denominator, expression, commonDenominator, initial, IntegralMixedHistory.base, rule]
+
+example : IntegralCriticalLeadingBits.value S [] = residueBits (6 : ZMod 8) := by decide
+example : IntegralFrozenPowerBits.multiplyPost S
+    (pair [] (pair (residueBits (-2 : ZMod 8)) (residueBits (3 : ZMod 8)))) = residueBits (2 : ZMod 8) := by decide
+open IntegralCriticalHistoryTask
+example (P : Parameters) (a : Access P) (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G)
+    (ha : SpaceFunction (IntegralMixedPhysicalNativeLowerBits.originalScalar P G))
+    (g : IntegralMixedPhysicalCaps.RootGeometry P G) (x : (q : List Bool) → ZMod (modulus P q))
+    (hm : IntegralMixedPhysicalComponentBits.Matches P G (fun q => residueBits (x q)))
+    (hc : IntegralMixedPhysicalContextLowerReplyBits.Callbacks P G (fun q => residueBits (x q)))
+    (hl : IntegralMixedPhysicalUpperReplyBits.LeadingCallback P G (fun q => residueBits (x q))) :
+    NativeControllerBranch.Correct (IntegralMixedPhysicalDispatcherBits.machine P a G h ha)
+      (fun q => residueBits (x q)) (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedPhysicalDispatcherBits.correct P a G h ha g x hm hc hl
+example (P : Parameters) (a : Access P) (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G)
+    (ha : SpaceFunction (IntegralMixedPhysicalNativeLowerBits.originalScalar P G))
+    (p : Phase) (q : List Bool) (hp25 : p.code ≤ 25) (hv : IntegralMixedVirtualCaps.valid P q)
+    (hr : IntegralMixedRoutineTaskBits.routine P q = 1) (hx : get P .slot15 q = 1) (hp : isPhase p q) :
+    (IntegralMixedPhysicalDispatcherBits.machine P a G h ha).model q = IntegralMixedPhysicalComponentBits.component P G p q :=
+  IntegralMixedPhysicalDispatcherBits.model_phase P a G h ha p q hp25 hv hr hx hp
+example (P : Parameters) (a : Access P) (G : Family) (h : IntegralMixedPhysicalQueryBits.InputMetadata G)
+    (ha : SpaceFunction (IntegralMixedPhysicalNativeLowerBits.originalScalar P G)) (q : List Bool) (hx : get P .slot15 q = 2) :
+    (IntegralMixedPhysicalDispatcherBits.machine P a G h ha).model q = [] :=
+  IntegralMixedPhysicalDispatcherBits.model_other_context P a G h ha q (by omega)
+#print axioms IntegralMixedPhysicalLowerDispatcherBits.correct
+#print axioms IntegralMixedPhysicalLowerDispatcherBits.model_phase
+#print axioms IntegralMixedPhysicalLowerDispatcherBits.model_invalid
+#print axioms IntegralMixedPhysicalLowerDispatcherBits.model_other_context
+#print axioms IntegralMixedPhysicalLowerDispatcherBits.codes_nodup
+#print axioms IntegralMixedPhysicalDispatcherBits.correct
+#print axioms IntegralMixedPhysicalDispatcherBits.model_phase
+#print axioms IntegralMixedPhysicalDispatcherBits.model_invalid
+#print axioms IntegralMixedPhysicalDispatcherBits.model_other_context
+end PhysicalDispatcherRegression
+end Group20Regression3
+
+namespace Group20Regression4
+namespace BoundedSlackRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.ETR LeanCanny.Connectivity LeanCanny.Geometry LeanCanny.Computation Set
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private def F : MonotoneGateSource.Family where
+  dimension _ := 1
+  count _ := 1
+  kind _ := 1
+  left _ := 0
+  right _ := 0
+  atom _ := .const 0
+private theorem access : MonotoneGateSource.Access F :=
+  ⟨UnaryFn.const 1,UnaryFn.const 1,BinaryFn.const 1,UnaryFn.const 0,UnaryFn.const 0,
+    constFn_mem_FP (Term.const 0).toData.toBits⟩
+private theorem scope : ∀ i < F.count [], (F.atom (BoundedMonotoneGateSource.query [] i)).arity≤F.dimension [] :=
+  fun _ _ => Nat.zero_le 1
+private theorem positive : ∀ q, F.kind q≠3 := fun _ => by change (1 : ℕ)≠3; decide
+private def bad : Fin (MonotoneGateGraph.total F []) → ℝ := fun i => if i.val=1 then 100 else 0
+private def good : Fin (BoundedMonotoneGateSource.total F []) → ℝ := fun i => if i.val=4 then 1 else 0
+-- An unused old circle used to be unbounded even over the original coordinate 0.
+example : (MonotoneGateSource.polynomial F []).eval (Formula.extend bad)=0 := by
+  norm_num [MonotoneGateSource.polynomial,MonotoneGateSource.terms,MonotoneGateSource.root,
+    MonotoneGateSource.constraint,MonotoneGateSource.valueIndex,MonotoneGateSource.dimension,
+    MonotoneGateSource.count,MonotoneGateSource.index,MonotoneGateSource.body,
+    SumSquares.accumulate,Term.square,Term.eval,F,pairFst_pair,pairSnd_pair,bad,
+    Formula.extend,MonotoneGateGraph.total,MonotoneGateGraph.base]
+-- The new output retains that original coordinate and bounds both circles.
+example : (BoundedMonotoneGateSource.polynomial F []).eval (Formula.extend good)=0 := by
+  norm_num [BoundedMonotoneGateSource.polynomial,BoundedMonotoneGateSource.slacks,
+    BoundedMonotoneGateSource.slack,BoundedMonotoneGateSource.slackIndex,
+    BoundedMonotoneGateSource.budget,BoundedMonotoneGateSource.atoms,BoundedMonotoneGateSource.query,
+    MonotoneGateSource.polynomial,MonotoneGateSource.terms,MonotoneGateSource.root,
+    MonotoneGateSource.constraint,MonotoneGateSource.valueIndex,MonotoneGateSource.dimension,
+    MonotoneGateSource.count,MonotoneGateSource.index,MonotoneGateSource.body,MonotoneGateSource.witnessIndex,
+    SumSquares.accumulate,Term.square,Term.eval,F,pairFst_pair,pairSnd_pair,good,
+    Formula.extend,BoundedMonotoneGateSource.total]
+-- The same unused large witness is rejected by the bounded equation.
+example : (BoundedMonotoneGateSource.slack F (BoundedMonotoneGateSource.query [] 0)).eval
+    (fun i => if i=1 then (100 : ℝ) else 0)≠0 := by
+  norm_num [BoundedMonotoneGateSource.slack,BoundedMonotoneGateSource.slackIndex,
+    BoundedMonotoneGateSource.budget,BoundedMonotoneGateSource.atoms,BoundedMonotoneGateSource.query,
+    MonotoneGateSource.dimension,MonotoneGateSource.count,MonotoneGateSource.index,MonotoneGateSource.witnessIndex,
+    F,Term.eval,SumSquares.accumulate,Term.square]
+example : IsProperMap (BoundedGateCoordinates.projection F [] scope positive) :=
+  BoundedGateCoordinates.proper_projection F [] scope positive
+example (y z : BoundedGateCoordinates.NativeZero F []) :
+    JoinedIn univ y z ↔ JoinedIn univ
+      (BoundedGateCoordinates.projection F [] scope positive y)
+      (BoundedGateCoordinates.projection F [] scope positive z) :=
+  BoundedGateCoordinates.joined_iff F [] scope positive y z
+example : (fun c => (Input.whole (BoundedMonotoneGateSource.description F c)).encode) ∈ FP :=
+  BoundedMonotoneGateSource.whole_record_FP F access
+example : UnaryFn (BoundedMonotoneGateSource.degreeBudget F) :=
+  BoundedMonotoneGateSource.degreeBudget_unary F access
+example : (BoundedMonotoneGateSource.polynomial F []).toPolynomial.totalDegree≤
+    BoundedMonotoneGateSource.degreeBudget F [] :=
+  BoundedMonotoneGateSource.polynomial_totalDegree_budget F []
+-- The old singleton still extends uniquely, including when outside the original source.
+example (s : Formula) (x : Fin (F.dimension []) → ℝ) (hs : Denotes (F.dimension []) s x) :
+    Denotes (BoundedMonotoneGateSource.total F []) (BoundedMonotoneGateEndpoint.endpoint F s [])
+      (BoundedGateCoordinates.extendPoint F [] (MonotoneGateCanonicalPoint.point F [] x)) :=
+  BoundedGateCoordinates.endpoint_denotes F [] s scope x hs
+private def p : Formula := .or (.not (.ltZero (.var 0))) (.not (.ltZero (.mul (.const (-1)) (.var 0))))
+private def d : Description := ⟨1,p⟩
+private theorem hp : ClosedFormulaWitness.Closed p := .or (.nonnegative _) (.nonnegative _)
+private theorem hd : d.WellFormed := by simp [d,p,Description.WellFormed,Formula.arity,Term.arity]
+example : ClosedFormulaBoundedGate.writer (Input.whole d).encode∈connectedLanguage ↔
+    (Input.whole d).encode∈connectedLanguage :=
+  ClosedFormulaBoundedGate.canonical_language_iff d hp hd
+#print axioms BoundedCircularCoordinates.coordinate_joined
+#print axioms BoundedWeakBooleanWitness.joined_iff
+#print axioms BoundedWeakBooleanWitness.proper_projection
+#print axioms FiniteMonotoneClosed.isClosed
+#print axioms BoundedMonotoneGateSource.polynomial_FP
+#print axioms BoundedMonotoneGateSource.polynomial_totalDegree_budget
+#print axioms BoundedGateCoordinates.zeroWitnessHomeomorph
+#print axioms BoundedGateCoordinates.proper_projection
+#print axioms BoundedGateCoordinates.endpoint_denotes
+#print axioms BoundedGateCoordinates.canonical_source
+#print axioms ClosedFormulaBoundedGate.canonical_language_iff
+end BoundedSlackRegression
+end Group20Regression4
