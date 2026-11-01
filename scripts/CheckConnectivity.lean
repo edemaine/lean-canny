@@ -22851,3 +22851,839 @@ example (answer : List Bool → List Bool) :
   exact (IntegralCriticalFlatMomentEntryBits.requests_frame P control A a answer (fun _ => 1) q _ phase_q
     (((IntegralCriticalFlatMomentEntryBits.program P control A a).requests_iff _ _ _ _).mpr ⟨requested, rfl⟩)).2.2
 end FlatMomentEntryRegression
+
+
+namespace Group9IntegralMixedHistory
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedHistoryScript
+open scoped Classical
+
+-- A negative nonunit integer leading coefficient is retained literally.
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type} [Fintype ι]
+    (x : State P S B m ι) (hm : m ≤ S) (p : Polynomial ℤ)
+    (hp : p ≠ 0) (hc : p.natDegree ≤ 2 ^ B) (hl : p.leadingCoeff = -2) :
+    (step x hm (.integer p hp hc)).bank.denominator 0 = -2 :=
+  (step_denominator_zero x hm (.integer p hp hc)).trans hl
+
+-- Invalid retained references evaluate to zero, not a fresh sample.
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type}
+    (x : State P S B m ι) (j : ℕ) (hj : m ≤ j) : expression x (.reference j) = 0 := by
+  simp only [expression, show ¬j < m by omega, dite_false]
+
+-- Correlated affine levels keep precisely one common denominator.
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type}
+    (x : State P S B m ι) (φ : x.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ) (v : Fin m → ℝ)
+    (hv : ∀ i, φ (x.bank.numerator i) / (x.bank.denominator i : ℝ) = v i) (i : Fin m) :
+    φ (expression x (.add (.scale (-2) (.reference i.val)) (.constant 3))) =
+      (commonDenominator x : ℝ) * (-2 * v i + 3) := by
+  simpa only [AffineExpr.evaluate, i.isLt, dite_true, Fin.eta, Int.cast_neg, Int.cast_ofNat] using
+    expression_recover x φ v hv (.add (.scale (-2) (.reference i.val)) (.constant 3))
+
+-- Creating ranks and discarded low digits are exact for mixed command lists.
+example {n S B : ℕ} {P : SpatialSource n} {ι : Type} [Fintype ι]
+    (initial : State P S B 0 ι) (cs : List (Command n B))
+    (hc : cs.length ≤ S + 1) (i : Fin cs.length) :
+    (origin initial cs hc i).chain.radix = (2 ^ B) ^ i.val := by
+  rw [UniformIntegralPrefix.Chain.radix, Origin.length_eq]
+end Group9IntegralMixedHistory
+
+
+namespace Group9ExceptionalMixedHistory
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open FlatAffineExceptionalMixedHistory
+open IntegralMixedHistory IntegralMixedHistoryScript
+open scoped Classical
+
+-- The mixed initial state keeps the literal previously correlated bank.
+example (F : FlatAffineFullSourceTower.Inputs) (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F))
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (S : ℕ) (u : List Bool) (hb : FlatAffineExceptionalBankSource.births F u ≤ S + 1) :
+    (initial F C h S u hb).bank = (FlatAffineExceptionalParentBank.bank F C h S u hb).bank := rfl
+
+-- New relative spatial problems still use the original spatial degree.
+example (F : FlatAffineFullSourceTower.Inputs) (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F))
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (S : ℕ) (u : List Bool) (hb : FlatAffineExceptionalBankSource.births F u ≤ S)
+    (r : CriticalRule (F.source.dim u + 3)) :
+    (data (initial F C h S u (hb.trans (Nat.le_succ S))) hb r).degree =
+      FlatAffinePowerControls.degree F u := rfl
+
+-- Every initial companion reads its original integer polynomial and actual degree.
+example (F : FlatAffineFullSourceTower.Inputs) (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F))
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (S : ℕ) (u : List Bool) (hb : FlatAffineExceptionalBankSource.births F u ≤ S + 1)
+    (i : Fin (FlatAffineExceptionalBankSource.births F u)) :
+    (initialOrigin F C h S u hb i).polynomial =
+      (FlatAffineExceptionalBankSource.finitePolynomial F C h u i).map (Int.castRingHom (initialOrigin F C h S u hb i).oldPrefix.carrier) ∧
+      (initialOrigin F C h S u hb i).degree = (FlatAffineExceptionalBankSource.finitePolynomial F C h u i).natDegree :=
+  ⟨(initialOrigin F C h S u hb i).original, (initialOrigin F C h S u hb i).actual_degree⟩
+end Group9ExceptionalMixedHistory
+
+
+namespace Group9MixedRelativeScalar
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralRelativeLeadingNormalization
+open scoped Classical
+
+-- The normalized degree stays d although the inverse uses the full old algebra.
+example {A ι : Type*} [CommRing A] [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℤ A) (p : Polynomial A) (d : ℕ) (hd : p.natDegree ≤ d)
+    (φ : A →ₐ[ℤ] ℝ) : ((normalize b p d).map φ.toRingHom).natDegree = d :=
+  specialized_degree b p d hd φ
+
+-- The original algebra-valued leading need only be nonzero on this branch.
+example {A ι : Type*} [CommRing A] [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℤ A) (p : Polynomial A) (d : ℕ) (φ : A →ₐ[ℤ] ℝ)
+    (ha : φ (p.coeff d) ≠ 0) (t : ℝ)
+    (_hzeroDivisor : ∃ x : A, x ≠ 0 ∧ p.coeff d * x = 0) :
+    (normalize b p d).eval₂ φ.toRingHom t = 0 ↔ p.eval₂ φ.toRingHom t = 0 :=
+  root_iff b p d φ ha t
+
+-- No physical critical-root hypothesis occurs in the scalar-only extension.
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type} [Fintype ι]
+    (x : State P S B m ι) (hm : m ≤ S) (r : CriticalRule n)
+    (φ : x.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ) :
+    ((criticalPolynomial x hm r).map φ.toRingHom).natDegree = criticalDegree x hm r :=
+  criticalPolynomial_specialized_degree x hm r φ
+end Group9MixedRelativeScalar
+
+
+namespace Group9NilpotentParameter
+open LeanCanny LeanCanny.Algebra
+open Polynomial IntegralNilpotentParameter
+open scoped Classical
+
+-- Pure-power padding is literal even for a negative nonunit selected leading.
+example : PaddedIntegralNormalization.polynomial (monomial 3 (-2 : ℤ)) 3 8 = Polynomial.X ^ 8 :=
+  purePower_normalization (-2) 3 8 (by decide)
+
+-- The real point is zero, while the degree-3 formal coefficient survives.
+example (φ : AdjoinRoot (Polynomial.X ^ 8 : Polynomial ℤ) →+* ℝ) : φ (AdjoinRoot.root _) = 0 :=
+  real_value_zero 8 φ
+
+example : Algebra.leftMulMatrix
+    (IntegralCoordinateBasis.relativeBasis (Polynomial.X ^ 8 : Polynomial ℤ) (monic_X_pow 8) (natDegree_X_pow 8))
+    (AdjoinRoot.mk (Polynomial.X ^ 8) (monomial 3 (-2 : ℤ))) (3 : Fin 8) (0 : Fin 8) = -2 := by
+  have H : (monomial 3 (-2 : ℤ)).natDegree < 8 := (natDegree_monomial_le (-2 : ℤ)).trans_lt (by decide)
+  convert relative_coefficient 8 (monomial 3 (-2 : ℤ)) H (3 : Fin 8) using 1 <;> norm_num [Polynomial.coeff_monomial]
+end Group9NilpotentParameter
+
+
+namespace Group9MixedWave
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open Polynomial
+open scoped Classical
+
+-- A vanishing cubic leading leaves a linear selected branch; truncation
+-- preserves that branch before integer-leading normalization.
+example {A ι : Type*} [CommRing A] [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℤ A) (a : A) (φ : A →ₐ[ℤ] ℝ) (ha : φ a = 0) (t : ℝ) :
+    (IntegralRelativeTruncation.normalized b (Polynomial.C a * Polynomial.X ^ 3 + (Polynomial.X - Polynomial.C 2)) 1).eval₂ φ.toRingHom t = 0 ↔
+      (Polynomial.C a * Polynomial.X ^ 3 + (Polynomial.X - Polynomial.C 2)).eval₂ φ.toRingHom t = 0 := by
+  have HE : (Polynomial.C a * Polynomial.X ^ 3 + (Polynomial.X - Polynomial.C 2)).map φ.toRingHom = Polynomial.X - Polynomial.C 2 := by
+    rw [Polynomial.map_add, Polynomial.map_mul, Polynomial.map_pow, Polynomial.map_C,
+      Polynomial.map_X, Polynomial.map_sub, Polynomial.map_X, Polynomial.map_C]
+    change Polynomial.C (φ a) * Polynomial.X ^ 3 + (Polynomial.X - Polynomial.C (φ (2 : A))) = Polynomial.X - Polynomial.C 2
+    rw [ha, map_ofNat, Polynomial.C_0, zero_mul, zero_add]
+  apply IntegralRelativeTruncation.root_iff b _ 1 φ
+  · rw [HE, natDegree_X_sub_C]
+  · rw [HE]
+    exact X_sub_C_ne_zero 2
+
+-- Nilpotent coefficient extraction is a genuine base-change identity,
+-- with cap controlled only by the relative matrix size and entry degree.
+example {A σ ι : Type*} [CommRing A] [Nontrivial A]
+    [Fintype σ] [DecidableEq σ] [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℤ A) (M : Matrix σ σ (Polynomial A)) (E N : ℕ)
+    (hM : RelativeMatrixDegree.Bound M E) (hN : Fintype.card σ * E < N)
+    (k : ℕ) (e : Fin N) (r t : ι) :
+    Algebra.leftMulMatrix
+      (b.smulTower (IntegralCoordinateBasis.relativeBasis (Polynomial.X ^ N) (monic_X_pow N) (natDegree_X_pow N)))
+      ((M.map (AdjoinRoot.mk (Polynomial.X ^ N))).charpoly.coeff k)
+      (r, e) (t, ⟨0, by have H := e.isLt; omega⟩) =
+        Algebra.leftMulMatrix b ((M.charpoly.coeff k).coeff e.val) r t :=
+  IntegralNilpotentCharacteristic.coefficient b M E N hM hN k e r t
+end Group9MixedWave
+
+
+namespace Group9MixedExpressionBounds
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory UniformIntegralPrefix FixedWidthPolynomial
+
+-- Parsed affine coefficients have a linear bound in retained height,
+-- independent of the old coefficient algebra's rank.
+example (m G : ℕ) :
+    (AffineExpr.add (.scale (-2) (.reference 0)) (.constant 3)).height m G ≤
+      4 * ((m + 1) * G + 2 + 1) := by
+  exact AffineExpr.height_le _ m G 2 ⟨⟨by change (2 : ℕ).size ≤ 2; decide, trivial⟩, by change (3 : ℕ).size ≤ 2; decide⟩
+
+-- Relative critical polynomial coefficients need no additional height oracle:
+-- actual prior bank bounds and original integer source coefficients suffice.
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type} [Fintype ι]
+    (x : State P S B m ι) (hm : m ≤ S) (r : CriticalRule n) (G C : ℕ)
+    (HG : x.bank.Bounds G) (HC : ∀ e, (P.low.coeff e).natAbs ≤ 2 ^ C) :
+    (criticalStep x hm r).bank.Bounds
+      (max G (bankStepHeight (count m B) (2 ^ B) (criticalHeight x hm r G C HG HC))) :=
+  criticalStep_bank_bounds x hm r G C HG HC
+end Group9MixedExpressionBounds
+
+
+namespace Group9MixedDenominator
+namespace MixedDenominatorRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralMixedHistory IntegralMixedHistoryScript IntegralMixedDenominatorBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def P : SpatialSource 0 where
+  low := 0
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+private def r : CriticalRule 0 where
+  offset := 0
+  objective := 0
+  coordinate := 0
+  scales _ := -3
+  scales_ne_zero _ := by decide
+  heights _ := .constant 0
+example : (instruction P (Command.critical (B := 2) r) 1).value [-2] = 72 ^ 12 := by
+  unfold instruction Instruction.value P r criticalExponent
+  decide +kernel
+example : residueBits (((instruction P (Command.critical (B := 2) r) 1).value [-2] : ℤ) : ZMod 6) = [] := by
+  unfold instruction Instruction.value P r criticalExponent residueBits
+  decide +kernel
+example : IntegralDenominatorPass.scale ([-2, -3] : List ℤ) 0 = -2 := rfl
+example : (∏ j ∈ Finset.range (2 * 3), IntegralDenominatorPass.scale ([-2,-3] : List ℤ) (j / 3)) = 6 ^ 3 := by
+  have H := repeated_scale_product ([-2,-3] : List ℤ) 3
+  exact H
+example {S B : ℕ} {ι : Type} (x : State P S B 1 ι) (hm : 1 ≤ S) (hx : bankList x = [-2]) :
+    criticalLeading x hm r = 72 ^ 12 := by
+  rw [criticalLeading_eq, ← bankList_prod, hx]
+  unfold criticalDenominator criticalExponent P r
+  decide +kernel
+example {S B : ℕ} {ι : Type} [Fintype ι] (x : State P S B 1 ι) (hm : 1 ≤ S) (hx : bankList x = [-2]) :
+    (step x hm (.critical r)).bank.denominator 0 = 72 ^ 12 := by
+  rw [step_denominator_zero]
+  change criticalLeading x hm r = _
+  rw [criticalLeading_eq, ← bankList_prod, hx]
+  unfold criticalDenominator criticalExponent P r
+  decide +kernel
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type} [Fintype ι]
+    (initial : State P S B m ι) (cs : List (Command n B)) (h : m + cs.length ≤ S + 1) :
+    bankList (continueRun initial cs h) = denominators P (bankList initial) cs := bankList_continueRun initial cs h
+end MixedDenominatorRegression
+end Group9MixedDenominator
+
+
+namespace Group9MixedDenominatorNative
+namespace MixedDenominatorNativeRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralMixedHistory IntegralMixedHistoryScript IntegralMixedDenominatorBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def P : SpatialSource 0 where
+  low := 0
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+private def r : CriticalRule 0 where
+  offset := 0
+  objective := 0
+  coordinate := 0
+  scales _ := -3
+  scales_ne_zero _ := by decide
+  heights _ := .constant 0
+private noncomputable def p : Polynomial ℤ := Polynomial.C (-2) * Polynomial.X + 1
+private theorem pdegree : p.natDegree = 1 := by unfold p; compute_degree; norm_num
+private theorem pleading : p.leadingCoeff = -2 := by
+  rw [Polynomial.leadingCoeff, pdegree]
+  norm_num [p, Polynomial.coeff_X, Polynomial.coeff_one]
+private theorem pne : p ≠ 0 := by
+  intro h
+  have H := congrArg (fun q : Polynomial ℤ => q.coeff 1) h
+  norm_num [p, Polynomial.coeff_X, Polynomial.coeff_one] at H
+private noncomputable def intCommand : Command 0 2 := .integer p pne (by rw [pdegree]; decide)
+private noncomputable def M : IntegralMixedDenominatorScriptBits.Family where
+  ambient _ := 0
+  width _ := 2
+  spatial _ := P
+  rules _ := [.critical r, intCommand]
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+private theorem critical_eq (c : List Bool) (i : ℕ) : IntegralMixedDenominatorScriptBits.critical M c i ↔ i = 1 := by
+  cases i with
+  | zero => simp [IntegralMixedDenominatorScriptBits.critical, IntegralMixedDenominatorScriptBits.commandAt, M, intCommand, List.getElem?_cons_zero, Command.isCritical]
+  | succ i => cases i with
+    | zero => simp [IntegralMixedDenominatorScriptBits.critical, IntegralMixedDenominatorScriptBits.commandAt, M, Command.isCritical]
+    | succ i => simp [IntegralMixedDenominatorScriptBits.critical, IntegralMixedDenominatorScriptBits.commandAt, M]
+private theorem offset_eq (c : List Bool) (i : ℕ) : IntegralMixedDenominatorScriptBits.offset M c i = 0 := by
+  cases i with
+  | zero => rfl
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralMixedDenominatorScriptBits.offset, IntegralMixedDenominatorScriptBits.commandAt, M]
+private theorem integer_eq (c : List Bool) (i : ℕ) : IntegralMixedDenominatorScriptBits.integerLeading M c i = if i = 0 then -2 else 0 := by
+  cases i with
+  | zero => exact pleading
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralMixedDenominatorScriptBits.integerLeading, IntegralMixedDenominatorScriptBits.commandAt, M]
+private theorem scale_eq (c : List Bool) (i j : ℕ) : IntegralMixedDenominatorScriptBits.scale M c i j = if i = 1 ∧ j = 0 then -3 else 1 := by
+  cases i with
+  | zero => simp [IntegralMixedDenominatorScriptBits.scale, IntegralMixedDenominatorScriptBits.commandAt, M, intCommand, List.getElem?_cons_zero]
+  | succ i => cases i with
+    | zero => simp [IntegralMixedDenominatorScriptBits.scale, IntegralMixedDenominatorScriptBits.commandAt, M, r]
+    | succ i => simp [IntegralMixedDenominatorScriptBits.scale, IntegralMixedDenominatorScriptBits.commandAt, M]
+private theorem integer_space : SpaceFunction (IntegralMixedDenominatorScriptBits.integerLeadingReader M) := by
+  have HI : BinaryFn IntegralDenominatorPass.cursor := BinaryFn.fromBits BoundedFold.counter_mem_FP
+  have H := (HI.eq (BinaryFn.const 0)).ite_mem_FP (constFn_mem_FP [false,false,true]) (constFn_mem_FP [])
+  apply SpaceFunction.ofFP
+  apply mem_FP_of_eq H
+  intro z
+  unfold IntegralMixedDenominatorScriptBits.integerLeadingReader
+  rw [integer_eq]
+  change (if IntegralDenominatorPass.cursor z = 0 then [false,false,true] else []) =
+    residueBits ((if IntegralDenominatorPass.cursor z = 0 then -2 else 0 : ℤ) : ZMod 6)
+  split_ifs <;> unfold residueBits <;> decide
+private theorem spatial_space : SpaceFunction (IntegralMixedDenominatorScriptBits.spatialLeadingReader M) := by
+  apply SpaceFunction.ofFP
+  apply mem_FP_of_eq (constFn_mem_FP [true])
+  intro z
+  change [true] = residueBits (1 : ZMod 6)
+  unfold residueBits
+  decide
+private theorem scales_space : SpaceFunction (IntegralMixedDenominatorScriptBits.scaleReader M) := by
+  have HI : BinaryFn (fun z => IntegralDenominatorPass.cursor (pairFst z)) :=
+    (BinaryFn.fromBits BoundedFold.counter_mem_FP).comp pairFst_mem_FP
+  have HJ := BinaryFn.fromBits pairSnd_mem_FP
+  have H := ((HI.eq (BinaryFn.const 1)).and (HJ.eq (BinaryFn.const 0))).ite_mem_FP (constFn_mem_FP [true,true]) (constFn_mem_FP [true])
+  apply SpaceFunction.ofFP
+  apply mem_FP_of_eq H
+  intro z
+  unfold IntegralMixedDenominatorScriptBits.scaleReader IntegralMixedDenominatorScriptBits.scaleAt
+  rw [scale_eq]
+  change (if IntegralDenominatorPass.cursor (pairFst z) = 1 ∧ Nat.fromBitsLE (pairSnd z) = 0 then [true,true] else [true]) =
+    residueBits ((if IntegralDenominatorPass.cursor (pairFst z) = 1 ∧ Nat.fromBitsLE (pairSnd z) = 0 then -3 else 1 : ℤ) : ZMod 6)
+  split_ifs <;> unfold residueBits <;> decide
+private theorem access : IntegralMixedDenominatorScriptBits.Access M where
+  count := UnaryFn.const 2
+  ambient := UnaryFn.const 0
+  modulus := BinaryFn.const 6
+  degree := BinaryFn.const 2
+  critical := ((BinaryFn.fromBits BoundedFold.counter_mem_FP).eq (BinaryFn.const 1)).of_iff (fun z => (critical_eq (pairFst z) (IntegralDenominatorPass.cursor z)).symm)
+  offset := (BinaryFn.const 0).of_eq (fun z => (offset_eq (pairFst z) (IntegralDenominatorPass.cursor z)).symm)
+  integerLeading := integer_space
+  spatialLeading := spatial_space
+  scales := scales_space
+example : SpaceFunction (fun c => residueBits ((((denominators (M.spatial c) [] (M.rules c))[0]?).getD 0 : ℤ) : ZMod (M.modulus c))) :=
+  IntegralMixedDenominatorScriptBits.denominator_evaluator M access (fun _ => 0) (BinaryFn.const 0)
+private theorem table : denominators (M.spatial []) [] (M.rules []) = [72 ^ 12, -2] := by
+  change denominators P [] [.critical r, intCommand] = _
+  simp only [denominators, intCommand, scalarLeading, pleading]
+  change [criticalDenominator P r (-2), -2] = _
+  have H : criticalDenominator P r (-2) = 72 ^ 12 := by
+    unfold criticalDenominator criticalExponent P r
+    decide +kernel
+  rw [H]
+example : residueBits ((((denominators (M.spatial []) [] (M.rules []))[0]?).getD 0 : ℤ) : ZMod 6) = [] := by rw [table]; decide +kernel
+example {S : ℕ} {ι : Type} [Fintype ι] (x : State P S 2 1 ι) (hm : 1 ≤ S) (hx : bankList x = [-2]) :
+    bankList (continueRun x [.critical r] (by simp only [List.length_cons, List.length_nil]; omega)) =
+      IntegralDenominatorPass.integers (IntegralMixedDenominatorScriptBits.program M) [] 2 := by
+  apply IntegralMixedDenominatorScriptBits.actual_continue M [] x [.critical r] [intCommand] (by simp only [List.length_cons, List.length_nil]; omega)
+  · rfl
+  · rw [hx]
+    simp only [denominators, intCommand, scalarLeading, pleading]
+end MixedDenominatorNativeRegression
+end Group9MixedDenominatorNative
+
+
+namespace Group9MixedDenominatorPrefix
+namespace MixedDenominatorPrefixRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralMixedHistory IntegralMixedHistoryScript IntegralMixedDenominatorBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def P : SpatialSource 0 where
+  low := 0
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+private def r : CriticalRule 0 where
+  offset := 0
+  objective := 0
+  coordinate := 0
+  scales _ := -3
+  scales_ne_zero _ := by decide
+  heights _ := .constant 0
+private noncomputable def p : Polynomial ℤ := Polynomial.C (-2) * Polynomial.X + 1
+private theorem pdegree : p.natDegree = 1 := by unfold p; compute_degree; norm_num
+private theorem pleading : p.leadingCoeff = -2 := by
+  rw [Polynomial.leadingCoeff, pdegree]
+  norm_num [p, Polynomial.coeff_X, Polynomial.coeff_one]
+private theorem pne : p ≠ 0 := by
+  intro h
+  have H := congrArg (fun q : Polynomial ℤ => q.coeff 1) h
+  norm_num [p, Polynomial.coeff_X, Polynomial.coeff_one] at H
+private noncomputable def intCommand : Command 0 2 := .integer p pne (by rw [pdegree]; decide)
+private noncomputable def M : IntegralMixedDenominatorScriptBits.Family where
+  ambient _ := 0
+  width _ := 2
+  spatial _ := P
+  rules _ := [.critical r, intCommand]
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+private theorem critical_eq (c : List Bool) (i : ℕ) : IntegralMixedDenominatorScriptBits.critical M c i ↔ i = 1 := by
+  cases i with
+  | zero => simp [IntegralMixedDenominatorScriptBits.critical, IntegralMixedDenominatorScriptBits.commandAt, M, intCommand, List.getElem?_cons_zero, Command.isCritical]
+  | succ i => cases i with
+    | zero => simp [IntegralMixedDenominatorScriptBits.critical, IntegralMixedDenominatorScriptBits.commandAt, M, Command.isCritical]
+    | succ i => simp [IntegralMixedDenominatorScriptBits.critical, IntegralMixedDenominatorScriptBits.commandAt, M]
+private theorem offset_eq (c : List Bool) (i : ℕ) : IntegralMixedDenominatorScriptBits.offset M c i = 0 := by
+  cases i with
+  | zero => rfl
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralMixedDenominatorScriptBits.offset, IntegralMixedDenominatorScriptBits.commandAt, M]
+private theorem integer_eq (c : List Bool) (i : ℕ) : IntegralMixedDenominatorScriptBits.integerLeading M c i = if i = 0 then -2 else 0 := by
+  cases i with
+  | zero => exact pleading
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralMixedDenominatorScriptBits.integerLeading, IntegralMixedDenominatorScriptBits.commandAt, M]
+private theorem scale_eq (c : List Bool) (i j : ℕ) : IntegralMixedDenominatorScriptBits.scale M c i j = if i = 1 ∧ j = 0 then -3 else 1 := by
+  cases i with
+  | zero => simp [IntegralMixedDenominatorScriptBits.scale, IntegralMixedDenominatorScriptBits.commandAt, M, intCommand, List.getElem?_cons_zero]
+  | succ i => cases i with
+    | zero => simp [IntegralMixedDenominatorScriptBits.scale, IntegralMixedDenominatorScriptBits.commandAt, M, r]
+    | succ i => simp [IntegralMixedDenominatorScriptBits.scale, IntegralMixedDenominatorScriptBits.commandAt, M]
+private theorem integer_space : SpaceFunction (IntegralMixedDenominatorScriptBits.integerLeadingReader M) := by
+  have HI : BinaryFn IntegralDenominatorPass.cursor := BinaryFn.fromBits BoundedFold.counter_mem_FP
+  have H := (HI.eq (BinaryFn.const 0)).ite_mem_FP (constFn_mem_FP [false,false,true]) (constFn_mem_FP [])
+  apply SpaceFunction.ofFP
+  apply mem_FP_of_eq H
+  intro z
+  unfold IntegralMixedDenominatorScriptBits.integerLeadingReader
+  rw [integer_eq]
+  change (if IntegralDenominatorPass.cursor z = 0 then [false,false,true] else []) =
+    residueBits ((if IntegralDenominatorPass.cursor z = 0 then -2 else 0 : ℤ) : ZMod 6)
+  split_ifs <;> unfold residueBits <;> decide
+private theorem spatial_space : SpaceFunction (IntegralMixedDenominatorScriptBits.spatialLeadingReader M) := by
+  apply SpaceFunction.ofFP
+  apply mem_FP_of_eq (constFn_mem_FP [true])
+  intro z
+  change [true] = residueBits (1 : ZMod 6)
+  unfold residueBits
+  decide
+private theorem scales_space : SpaceFunction (IntegralMixedDenominatorScriptBits.scaleReader M) := by
+  have HI : BinaryFn (fun z => IntegralDenominatorPass.cursor (pairFst z)) :=
+    (BinaryFn.fromBits BoundedFold.counter_mem_FP).comp pairFst_mem_FP
+  have HJ := BinaryFn.fromBits pairSnd_mem_FP
+  have H := ((HI.eq (BinaryFn.const 1)).and (HJ.eq (BinaryFn.const 0))).ite_mem_FP (constFn_mem_FP [true,true]) (constFn_mem_FP [true])
+  apply SpaceFunction.ofFP
+  apply mem_FP_of_eq H
+  intro z
+  unfold IntegralMixedDenominatorScriptBits.scaleReader IntegralMixedDenominatorScriptBits.scaleAt
+  rw [scale_eq]
+  change (if IntegralDenominatorPass.cursor (pairFst z) = 1 ∧ Nat.fromBitsLE (pairSnd z) = 0 then [true,true] else [true]) =
+    residueBits ((if IntegralDenominatorPass.cursor (pairFst z) = 1 ∧ Nat.fromBitsLE (pairSnd z) = 0 then -3 else 1 : ℤ) : ZMod 6)
+  split_ifs <;> unfold residueBits <;> decide
+private theorem access : IntegralMixedDenominatorScriptBits.Access M where
+  count := UnaryFn.const 2
+  ambient := UnaryFn.const 0
+  modulus := BinaryFn.const 6
+  degree := BinaryFn.const 2
+  critical := ((BinaryFn.fromBits BoundedFold.counter_mem_FP).eq (BinaryFn.const 1)).of_iff (fun z => (critical_eq (pairFst z) (IntegralDenominatorPass.cursor z)).symm)
+  offset := (BinaryFn.const 0).of_eq (fun z => (offset_eq (pairFst z) (IntegralDenominatorPass.cursor z)).symm)
+  integerLeading := integer_space
+  spatialLeading := spatial_space
+  scales := scales_space
+example : SpaceFunction (fun c => residueBits ((((denominators (M.spatial c) [] (M.rules c))[0]?).getD 0 : ℤ) : ZMod (M.modulus c))) :=
+  IntegralMixedDenominatorScriptBits.denominator_evaluator M access (fun _ => 0) (BinaryFn.const 0)
+private theorem table : denominators (M.spatial []) [] (M.rules []) = [72 ^ 12, -2] := by
+  change denominators P [] [.critical r, intCommand] = _
+  simp only [denominators, intCommand, scalarLeading, pleading]
+  change [criticalDenominator P r (-2), -2] = _
+  have H : criticalDenominator P r (-2) = 72 ^ 12 := by
+    unfold criticalDenominator criticalExponent P r
+    decide +kernel
+  rw [H]
+example : residueBits ((((denominators (M.spatial []) [] (M.rules []))[0]?).getD 0 : ℤ) : ZMod 6) = [] := by rw [table]; decide +kernel
+example {S : ℕ} {ι : Type} [Fintype ι] (x : State P S 2 1 ι) (hm : 1 ≤ S) (hx : bankList x = [-2]) :
+    bankList (continueRun x [.critical r] (by simp only [List.length_cons, List.length_nil]; omega)) =
+      IntegralDenominatorPass.integers (IntegralMixedDenominatorScriptBits.program M) [] 2 := by
+  apply IntegralMixedDenominatorScriptBits.actual_continue M [] x [.critical r] [intCommand] (by simp only [List.length_cons, List.length_nil]; omega)
+  · rfl
+  · rw [hx]
+    simp only [denominators, intCommand, scalarLeading, pleading]
+private theorem initial_table (c : List Bool) : IntegralDenominatorPass.integers (IntegralMixedDenominatorScriptBits.program M) c 1 = [-2] := by
+  rw [IntegralMixedDenominatorScriptBits.integers_prefix_denominators M c 1 (by change 1 ≤ 2; decide)]
+  change denominators P [] [intCommand] = _
+  simp only [denominators, intCommand, scalarLeading, pleading]
+example : SpaceFunction (IntegralMixedDenominatorScriptBits.prefixTable M (fun _ => 1)) :=
+  IntegralMixedDenominatorScriptBits.prefix_table_evaluator M access (fun _ => 1) (UnaryFn.const 1)
+example : SpaceFunction (fun c => residueBits ((IntegralDenominatorPass.integers (IntegralMixedDenominatorScriptBits.program M) c
+    (IntegralMixedDenominatorScriptBits.prefixCount M (fun _ => 1) c)).prod : ZMod (M.modulus c))) :=
+  IntegralMixedDenominatorScriptBits.prefix_product_evaluator M access (fun _ => 1) (UnaryFn.const 1)
+example {S : ℕ} {ι : Type} (x : List Bool → State P S 2 1 ι) (hx : ∀ c, bankList (x c) = [-2]) :
+    SpaceFunction (fun c => residueBits (commonDenominator (x c) : ZMod (M.modulus c))) := by
+  apply IntegralMixedDenominatorScriptBits.actual_common_evaluator M access (fun _ => 1) (UnaryFn.const 1) (fun _ => S) (fun _ => 1) (fun _ => ι) x
+  intro c
+  change bankList (x c) = IntegralDenominatorPass.integers (IntegralMixedDenominatorScriptBits.program M) c 1
+  rw [hx c, initial_table]
+example : SpaceFunction (fun c => residueBits (IntegralMixedDenominatorScriptBits.creatingLeading M (fun _ => 1) c : ZMod (M.modulus c))) :=
+  IntegralMixedDenominatorScriptBits.creating_leading_evaluator M access (fun _ => 1) (UnaryFn.const 1)
+example : IntegralMixedDenominatorScriptBits.creatingLeading M (fun _ => 1) [] = 72 ^ 12 := by
+  unfold IntegralMixedDenominatorScriptBits.creatingLeading
+  rw [ite_eq_left (by change 1 < 2; decide), initial_table]
+  change (instruction P (Command.critical (B := 2) r) 1).value [-2] = _
+  unfold instruction Instruction.value P r criticalExponent
+  decide +kernel
+example : IntegralMixedDenominatorScriptBits.creatingLeading M (fun _ => 2) [] = 0 := by
+  unfold IntegralMixedDenominatorScriptBits.creatingLeading
+  exact ite_eq_right (by change ¬ 2 < 2; decide)
+example (F : IntegralScalarGeneratorBits.Family) (a : IntegralScalarGeneratorBits.Access F)
+    (EL : SpaceFunction a.leading) (task : List Bool → List Bool) (ht : task ∈ FP) :
+    (IntegralScalarGeneratorBits.program F task).controller.Certificates (encQ := Turing.MultiTapeTM.encBits) (encS := SingleCall.encState) :=
+  IntegralScalarGeneratorBits.program_certificates_of_leading_space F a EL task ht
+end MixedDenominatorPrefixRegression
+end Group9MixedDenominatorPrefix
+
+
+namespace Group9TotalHeight
+namespace TotalHeightRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower FixedWidthPolynomial
+open IntegralCriticalScript IntegralCriticalFlatHeightBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] residueBits CommonHeightBits.Scalars.cofactor
+
+private noncomputable def first : Command 1 2 2 0 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  degree_le := by decide
+  degree_lt := by decide
+  low_degree := by norm_num
+  leading_ne := by decide
+  low_height e := by
+    rw [MvPolynomial.coeff_C]
+    split_ifs <;> norm_num
+  leading_height := by decide
+  offset := 0
+  objective := 0
+  coordinate := 0
+  selected _ := 100
+private noncomputable def second : Command 1 2 2 0 := { first with selected := fun _ => 0 }
+
+private noncomputable def F : Scripts where
+  cap _ := 1
+  width _ := 6
+  ambient _ := 1
+  sourceWidth _ := 2
+  degree _ := 2
+  height _ := 0
+  modulusBound _ := 6
+  rules _ := [second, first]
+  length_le _ := by decide
+  scalar_bound _ := by decide
+
+private theorem access : Access F where
+  cap := UnaryFn.const 1
+  width := UnaryFn.const 6
+  ambient := UnaryFn.const 1
+  sourceWidth := UnaryFn.const 2
+  degree := BinaryFn.const 2
+  height := BinaryFn.const 0
+  modulusBound := BinaryFn.const 6
+  count := UnaryFn.const 2
+
+private theorem leading_eq (c : List Bool) (i : ℕ) :
+    IntegralCriticalScriptFP.leading (IntegralCriticalFlatClearedHeightBits.metadata F) c i = if i < 2 then 1 else 0 := by
+  cases i with
+  | zero => rfl
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralCriticalScriptFP.leading, IntegralCriticalScriptFP.commandAt,
+        IntegralCriticalFlatClearedHeightBits.metadata, F]
+
+private theorem degree_eq (c : List Bool) (i : ℕ) :
+    IntegralCriticalScriptFP.degree (IntegralCriticalFlatClearedHeightBits.metadata F) c i = if i < 2 then 2 else 0 := by
+  cases i with
+  | zero => rfl
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralCriticalScriptFP.degree, IntegralCriticalScriptFP.commandAt,
+        IntegralCriticalFlatClearedHeightBits.metadata, F]
+
+private theorem offset_eq (c : List Bool) (i : ℕ) :
+    IntegralCriticalScriptFP.offset (IntegralCriticalFlatClearedHeightBits.metadata F) c i = 0 := by
+  cases i with
+  | zero => rfl
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralCriticalScriptFP.offset, IntegralCriticalScriptFP.commandAt,
+        IntegralCriticalFlatClearedHeightBits.metadata, F]
+
+private theorem selector_eq (c : List Bool) (i j : ℕ) :
+    IntegralCriticalScriptFP.selector (IntegralCriticalFlatClearedHeightBits.metadata F) c i j =
+      if j < 2 then (if i = 0 then 100 else if i = 1 then 0 else i) else i := by
+  cases i with
+  | zero =>
+    change (if h : j < 2 then first.selected ⟨j, h⟩ else 0) = _
+    by_cases hj : j < 2 <;> simp [first, hj]
+  | succ i => cases i with
+    | zero =>
+      change (if h : j < 2 then second.selected ⟨j, h⟩ else 1) = _
+      by_cases hj : j < 2 <;> simp [second, hj]
+    | succ i => simp [IntegralCriticalScriptFP.selector, IntegralCriticalScriptFP.commandAt,
+        IntegralCriticalFlatClearedHeightBits.metadata, F]
+
+attribute [local irreducible] IntegralCriticalScriptFP.leading IntegralCriticalScriptFP.degree
+  IntegralCriticalScriptFP.offset IntegralCriticalScriptFP.selector IntegralCriticalHistoryTask.modulus
+  IntegralCriticalHistoryTask.get IntegralCriticalHistoryTask.numericCap
+
+private theorem metadataAccess : IntegralCriticalScriptFP.Access (IntegralCriticalFlatClearedHeightBits.metadata F) where
+  count := UnaryFn.const 2
+  ambient := UnaryFn.const 1
+  modulus := IntegralCriticalHistoryTask.modulus_binary _ access.toAccess
+  leading := by
+    have HM : BinaryFn (fun p => IntegralCriticalHistoryTask.modulus F.toParameters (pairFst p)) :=
+      (IntegralCriticalHistoryTask.modulus_binary _ access.toAccess).comp pairFst_mem_FP
+    have HN := BinaryFn.ite (IntegralCriticalScriptFP.cursor_binary.lt (BinaryFn.const 2)) (BinaryFn.const 1) (BinaryFn.const 0)
+    have H := ModularScalarFP.natCast HM (fun p => if IntegralDenominatorPass.cursor p < 2 then 1 else 0) HN
+    apply mem_FP_of_eq H
+    intro p
+    calc
+      _ = residueBits ((if IntegralDenominatorPass.cursor p < 2 then 1 else 0 : ℤ) :
+          ZMod (IntegralCriticalHistoryTask.modulus F.toParameters (pairFst p))) := by
+        split_ifs <;> simp only [Nat.cast_one, Nat.cast_zero, Int.cast_one, Int.cast_zero]
+      _ = _ := congrArg (fun z : ℤ => residueBits (z :
+        ZMod (IntegralCriticalHistoryTask.modulus F.toParameters (pairFst p))))
+        (leading_eq (pairFst p) (IntegralDenominatorPass.cursor p)).symm
+  degree := (BinaryFn.ite (IntegralCriticalScriptFP.cursor_binary.lt (BinaryFn.const 2))
+    (BinaryFn.const 2) (BinaryFn.const 0)).of_eq (fun p => (degree_eq _ _).symm)
+  offset := (BinaryFn.const 0).of_eq (fun p => (offset_eq _ _).symm)
+  selector := by
+    have HI : BinaryFn (fun z => IntegralDenominatorPass.cursor (pairFst z)) := IntegralCriticalScriptFP.cursor_binary.comp pairFst_mem_FP
+    have HJ : BinaryFn (fun z => Nat.fromBitsLE (pairSnd z)) := BinaryFn.fromBits pairSnd_mem_FP
+    exact BinaryFn.of_eq (BinaryFn.ite (HJ.lt (BinaryFn.const 2))
+      (BinaryFn.ite (HI.eq (BinaryFn.const 0)) (BinaryFn.const 100)
+        (BinaryFn.ite (HI.eq (BinaryFn.const 1)) (BinaryFn.const 0) HI)) HI)
+      (fun z => (selector_eq _ _ _).symm)
+
+example : (IntegralCriticalFlatClearedHeightBits.program F).Controls :=
+  IntegralCriticalFlatClearedHeightBits.program_controls F access metadataAccess
+
+example : (fun q => residueBits
+    ((IntegralCriticalScriptHeightBits.scalars (IntegralCriticalFlatClearedHeightBits.queries F)).cofactor q :
+      ZMod (IntegralCriticalHistoryTask.modulus F.toParameters q))) ∈ FP :=
+  IntegralCriticalFlatClearedHeightBits.cofactor_FP F access metadataAccess
+
+example : (run (S := 1) (B := 6) [first] (by decide) (by decide)).bank.denominator ⟨0, by decide⟩ = 2 ^ 256 := by decide
+example : residueBits ((2 ^ 256 : ℤ) : ZMod 6) = [false, false, true] := by unfold residueBits; decide
+
+
+private def fields (i : ℕ) (p : List Bool) : List Bool :=
+  BinaryNatCode.encode (if Nat.fromBitsLE (pairSnd p) = 0 then 6 else
+    if Nat.fromBitsLE (pairSnd p) = 1 then 1 else
+    if Nat.fromBitsLE (pairSnd p) = 8 then i else 0)
+
+private noncomputable def q (i : ℕ) : List Bool :=
+  IntegralCriticalHistoryTask.child F.toParameters id (fun _ => 1) .clearedHeight (fields i) []
+
+private theorem six_le : 6 ≤ IntegralCriticalHistoryTask.numericCap F.toParameters [] := by
+  unfold IntegralCriticalHistoryTask.numericCap
+  exact (IntegralCriticalQueryBounds.metadata_le _ _ _ _ _ _ _ _).2.2.2.2.2.2.2
+
+private theorem qroot (i : ℕ) : root (q i) = [] := by
+  unfold root q
+  rw [IntegralCriticalHistoryTask.child_root]
+  rfl
+
+private theorem qbirth (i : ℕ) : IntegralCriticalHistoryTask.birth F.toParameters (q i) = 1 := by
+  unfold q IntegralCriticalHistoryTask.child
+  rw [RankedHistoryFields.flatten_eq_pack]
+  exact RankedHistoryTask.birth_pack _ _ _ _ _ (by decide)
+
+private theorem qget (i : ℕ) (f : IntegralCriticalHistoryTask.Field) :
+    IntegralCriticalHistoryTask.get F.toParameters f (q i) =
+      min (if f.code = 0 then 6 else if f.code = 1 then 1 else if f.code = 8 then i else 0)
+        (IntegralCriticalHistoryTask.numericCap F.toParameters []) := by
+  unfold q
+  rw [IntegralCriticalHistoryTask.child_get]
+  simp only [fields, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  rfl
+
+private theorem qcoord (i : ℕ) (hi : i ≤ 6) : IntegralCriticalFlatClearedHeightBits.coordinate F (q i) = i := by
+  unfold IntegralCriticalFlatClearedHeightBits.coordinate
+  rw [qget]
+  change min i _ = i
+  exact min_eq_left (hi.trans six_le)
+
+private theorem qlength (i : ℕ) : length F (q i) = 1 := by
+  rw [length, past_length, qroot, qbirth]
+  rfl
+
+private theorem selected_good : IntegralCriticalFlatClearedHeightBits.selected F (q 0) = 0 := by
+  unfold IntegralCriticalFlatClearedHeightBits.selected IntegralCriticalFlatClearedHeightBits.selector
+  rw [qcoord 0 (by decide), qbirth, selector_eq]
+  rfl
+
+private theorem qrow (i : ℕ) : row F (q i) = 1 := by
+  unfold row dimension
+  rw [qget, qlength, qroot]
+  change min 1 _ % 64 = 1
+  rw [min_eq_left ((by decide : 1 ≤ 6).trans six_le)]
+
+private theorem qcol (i : ℕ) : col F (q i) = 0 := by
+  unfold col dimension
+  rw [qget, qlength, qroot]
+  rfl
+
+private theorem rawradix : radix F (IntegralCriticalFlatClearedHeightBits.rawTask F (q 0)) = 1 := by
+  unfold radix
+  rw [IntegralCriticalFlatClearedHeightBits.rawTask_index, selected_good, qlength]
+  rfl
+
+private theorem good : request F (IntegralCriticalFlatClearedHeightBits.rawTask F (q 0)) := by
+  refine ⟨(IntegralCriticalFlatClearedHeightBits.rawTask_valid F (q 0)).mpr ?_, ?_⟩
+  · rw [selected_good, qlength]
+    decide
+  · rw [IntegralCriticalFlatClearedHeightBits.rawTask_row, IntegralCriticalFlatClearedHeightBits.rawTask_col,
+      qrow, qcol, rawradix]
+
+example : IntegralCriticalHistoryTask.rank F.toParameters (IntegralCriticalFlatClearedHeightBits.earlierChild F (q 0)) <
+    IntegralCriticalHistoryTask.rank F.toParameters (q 0) := IntegralCriticalFlatClearedHeightBits.earlierChild_rank F _ good.1
+
+example : (IntegralCriticalFlatClearedHeightBits.earlierChild F (q 0)).length ≤
+    IntegralCriticalHistoryTask.wordBudget F.toParameters (q 0) := IntegralCriticalFlatClearedHeightBits.earlierChild_length F _
+
+example (answer : List Bool → List Bool) (budget : List Bool → ℕ) (child : List Bool) :
+    ¬ (IntegralCriticalFlatClearedHeightBits.program F).controller.Requests answer budget (q 2) child := by
+  rw [IntegralCriticalFlatClearedHeightBits.requests_iff]
+  intro h
+  apply IntegralCriticalFlatClearedHeightBits.outside_request F (q 2) ?_ h.1
+  rw [qcoord 2 (by decide)]
+  change ¬ 2 < 2
+  decide
+
+example : (IntegralCriticalFlatClearedHeightBits.program F).value (companionValue F) (q 0) =
+    IntegralHistoryCriticalBits.heightValue (creatingFamily F (q 0) (by rw [qbirth, qroot]; decide))
+      0 1 0 (IntegralCriticalHistoryTask.modulus F.toParameters (q 0)) := by
+  have H := IntegralCriticalFlatClearedHeightBits.program_original_height F (companionValue F) (fun _ _ => rfl)
+    (q 0) (by rw [qbirth, qroot]; decide)
+  simpa only [qcoord 0 (by decide), qrow, qcol] using H
+
+
+example : (IntegralCriticalTotalHeightBits.program F).Controls :=
+  IntegralCriticalTotalHeightBits.program_controls F access metadataAccess
+
+example (answer : List Bool → List Bool)
+    (ha : ∀ w, request F (IntegralCriticalFlatClearedHeightBits.rawTask F w) →
+      answer (IntegralCriticalFlatClearedHeightBits.earlierChild F w) =
+      companionValue F (IntegralCriticalFlatClearedHeightBits.earlierChild F w)) :
+    (IntegralCriticalTotalHeightBits.program F).value answer (q 0) =
+      IntegralCriticalScriptEulerBits.heightAt
+        (IntegralCriticalTotalCreatingBits.euler F).toGradient.toFrozen.toSource (q 0) 0 1 0 := by
+  rw [IntegralCriticalTotalHeightBits.program_value F answer ha, IntegralCriticalTotalHeightBits.value_eq_heightAt]
+  have HR : IntegralCriticalHistoryTask.get F.toParameters .row (q 0) = 1 := by
+    rw [qget]
+    exact min_eq_left ((by decide : 1 ≤ 6).trans six_le)
+  have HT : IntegralCriticalHistoryTask.get F.toParameters .col (q 0) = 0 := by
+    rw [qget]
+    rfl
+  have HI : IntegralCriticalHistoryTask.get F.toParameters .slot8 (q 0) = 0 := qcoord 0 (by decide)
+  rw [HR, HT, HI]
+
+private noncomputable def missing : List Bool :=
+  IntegralCriticalHistoryTask.child F.toParameters id (fun _ => 2) .clearedHeight (fields 0) []
+private theorem missing_invalid : ¬ IntegralCriticalTotalCompanionBits.valid F missing := by
+  change ¬ IntegralCriticalHistoryTask.birth F.toParameters missing < (F.rules (root missing)).length
+  have HR : root missing = [] := by
+    unfold root missing
+    rw [IntegralCriticalHistoryTask.child_root]
+    rfl
+  have HB : IntegralCriticalHistoryTask.birth F.toParameters missing = 2 := by
+    unfold missing IntegralCriticalHistoryTask.child
+    rw [RankedHistoryFields.flatten_eq_pack]
+    exact RankedHistoryTask.birth_pack _ _ _ _ _ (by decide)
+  rw [HR, HB]
+  decide
+
+example : IntegralCriticalTotalHeightBits.value F missing = [] :=
+  IntegralCriticalTotalHeightBits.value_invalid F missing missing_invalid
+
+example (answer : List Bool → List Bool) :
+    (IntegralCriticalTotalHeightBits.program F).value answer missing = [] :=
+  IntegralCriticalFlatClearedHeightBits.missing_value F answer missing missing_invalid
+
+example (answer : List Bool → List Bool) (budget : List Bool → ℕ) (c : List Bool)
+    (h : (IntegralCriticalTotalHeightBits.program F).controller.Requests answer budget (q 0) c) :
+    IntegralCriticalHistoryTask.isPhase .companion c ∧
+      IntegralCriticalTotalCompanionBits.valid F c ∧ root c = root (q 0) ∧
+      IntegralCriticalHistoryTask.birth F.toParameters c < IntegralCriticalHistoryTask.birth F.toParameters (q 0) :=
+  ⟨IntegralCriticalTotalHeightBits.requests_phase F answer budget _ c h,
+   IntegralCriticalTotalHeightBits.requests_valid F answer budget _ c h,
+   IntegralCriticalTotalHeightBits.requests_root F answer budget _ c h,
+   IntegralCriticalTotalHeightBits.requests_birth F answer budget _ c h⟩
+
+example (answer : List Bool → List Bool)
+    (ha : request F (IntegralCriticalFlatClearedHeightBits.rawTask F (q 0)) →
+      answer (IntegralCriticalFlatClearedHeightBits.earlierChild F (q 0)) =
+        companionValue F (IntegralCriticalFlatClearedHeightBits.earlierChild F (q 0))) :
+    (IntegralCriticalTotalHeightBits.program F).value answer (q 0) = IntegralCriticalTotalHeightBits.value F (q 0) :=
+  IntegralCriticalTotalHeightBits.program_value_local F answer (q 0) ha
+
+end TotalHeightRegression
+end Group9TotalHeight
+
+
+namespace Group9MixedGlobalHeight
+namespace MixedGlobalHeightRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation FixedWidthPolynomial UniformIntegralPrefix
+open IntegralMixedHistory IntegralMixedGlobalHeightBounds
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def P : SpatialSource 0 where
+  low := 0
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+private def r : CriticalRule 0 where
+  offset := 0
+  objective := 0
+  coordinate := 0
+  scales _ := -3
+  scales_ne_zero _ := by decide
+  heights _ := .add (.scale (-2) (.reference 0)) (.constant 5)
+
+example : (r.heights 0).nodes = 4 := rfl
+example : (r.heights 0).CoefficientsBound 3 := by
+  change ((2 : ℕ).size ≤ 3 ∧ True) ∧ (5 : ℕ).size ≤ 3
+  decide
+example : (r.heights 0).height 1 4 ≤ expressionFactor 1 4 * 4 :=
+  expression_height_scaled _ 1 1 4 3 4 (by decide) (by decide)
+    (by change ((2 : ℕ).size ≤ 3 ∧ True) ∧ (5 : ℕ).size ≤ 3; decide) (by decide)
+
+example {S : ℕ} {ι : Type} [Fintype ι] (x : State P S 2 1 ι) (hm : 1 ≤ S) (HG : x.bank.Bounds 4) :
+    (criticalStep x hm r).bank.Bounds (growth 0 4 2 2 4 S 4 * 4) := by
+  exact criticalStep_scaled_bounds x hm r 4 3 4 2 2 4 HG
+    (by intro e; simp [P]) (by decide) (by decide) (by decide) (by decide)
+    (by intro i; exact Nat.le_refl 4) (by intro i; change ((2 : ℕ).size ≤ 3 ∧ True) ∧ (5 : ℕ).size ≤ 3; decide) (by intro i; change (3 : ℕ).size ≤ 3; decide) (by decide)
+
+example : BinaryFn (fun q : List Bool => height 0 4 2 2 4 2 4 3 q.length) :=
+  height_binary (UnaryFn.const 0) (BinaryFn.const 4) (UnaryFn.const 2) (BinaryFn.const 2)
+    (BinaryFn.const 4) (BinaryFn.const 2) (BinaryFn.const 4) (BinaryFn.const 3) (UnaryFn.length id_mem_FP)
+
+example (j : ℕ) : (height 0 4 2 2 4 2 4 3 j).size ≤ (growth 0 4 2 2 4 2 4).size * j + (4 : ℕ).size + 1 :=
+  height_bits _ _ _ _ _ _ _ _ _
+example (G : ℕ → ℕ) (h0 : G 0 ≤ 4) (hs : ∀ j, G (j + 1) ≤ growth 0 4 2 2 4 2 4 * G j) (j : ℕ) :
+    G j ≤ height 0 4 2 2 4 2 4 3 j := height_iterate _ _ _ _ _ _ _ _ G h0 hs j
+end MixedGlobalHeightRegression
+end Group9MixedGlobalHeight

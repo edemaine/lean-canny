@@ -1519,6 +1519,17 @@ The checked ingredients are:
   two points. Point queries include singleton validation and endpoint
   membership, retaining irrational endpoints and rejecting invalid descriptions.
 
+A tagged mixed history now retains an initial integer bank through physical
+critical births, with exact generator origins and common clearing. Its native
+modular denominator pass charges space for exact-leading leaves. Relative
+scalar normalization preserves selected roots, and nilpotent scalar births
+retain formal parameter coefficients. Local mixed-history height estimates
+use a single original-source growth factor with a binary-size bound.
+The total height controller for critical-only scripts now requests the actual
+earlier companion and recovers the cleared retained-height matrix. Extending
+the tagged interpreter to the relative exceptional-factor births and assembling
+the complete recursive dispatcher remain required.
+
 Actual creating sources now support guarded coefficient rescaling and relative
 characteristic powering, with replies confined to the current finite matrix.
 Augmented moment tasks route their nonzero entries to fresh action tasks and
