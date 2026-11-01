@@ -1192,7 +1192,13 @@ The checked ingredients are:
   retain one root record while replacing birth, phase, and query fields.
   Their ranks decrease on an earlier birth or local phase. Bounded query
   fields give a polynomial word allowance independent of the number of
-  retargeting steps. The constructed critical polynomial's top coefficient
+  retargeting steps.
+  Numeric task fields now use a fixed count of binary blocks sized by a
+  root-dependent cap. Native writers clip malformed values and recover
+  valid fields exactly. A flattening writer extracts the original task
+  from local matrix query wrappers; its stored result retains one root,
+  fresh fields, and a derived unary word bound. Earlier births and lower
+  phases preserve the decreasing rank through this writer. The constructed critical polynomial's top coefficient
   is an explicit nonzero integer power. A second height representation uses
   the actual monic scalar root divided by that integer, preserving the same
   full physical parent. Its retained numerators are exactly the canonical

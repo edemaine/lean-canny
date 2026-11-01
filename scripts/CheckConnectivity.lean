@@ -16548,3 +16548,61 @@ example : (IntegralClearedCoefficientBits.RecursiveStage.program (IntegralCritic
   IntegralClearedCoefficientBits.RecursiveStage.certificates _
     (IntegralDerivativeBits.clearedAccess derivativeSource derivativeSourceAccess) id id_mem_FP
 end IntegralFrozenPowerRegression
+
+
+namespace RankedHistoryFieldsRegression
+open LeanCanny LeanCanny.Encoding
+open RankedHistoryFields
+private def cap := Nat.fromBitsLE
+private def b (q : List Bool) := RankedHistoryTask.birth (fun _ => 10) (pairFst q)
+private def phase (_ : List Bool) := 2
+private def reader (z : List Bool) :=
+  if Nat.fromBitsLE (pairSnd z) = 0 then pairFst (pairSnd (pairFst z))
+  else if Nat.fromBitsLE (pairSnd z) = 1 then pairSnd (pairSnd (pairFst z)) else BinaryNatCode.encode 7
+private def parent := RankedHistoryTask.pack [true, true, true] 3 4 [true]
+private def query := pair parent (pair (BinaryNatCode.encode 2) (BinaryNatCode.encode 100))
+private def child := flatten cap 3 pairFst b phase reader query
+private theorem reader_FP : reader ∈ FP :=
+  ((BinaryFn.fromBits pairSnd_mem_FP).eq (BinaryFn.const 0)).ite_mem_FP
+    (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairFst_mem_FP)
+    (((BinaryFn.fromBits pairSnd_mem_FP).eq (BinaryFn.const 1)).ite_mem_FP
+      (mem_FP_comp (mem_FP_comp pairFst_mem_FP pairSnd_mem_FP) pairSnd_mem_FP) (constFn_mem_FP _))
+example : flatten cap 3 pairFst b phase reader ∈ FP := by
+  have HB : UnaryFn b := (RankedHistoryTask.birth_unary (fun _ => 10) (UnaryFn.const 10)).comp pairFst_mem_FP
+  exact flatten_FP cap 3 (BinaryFn.fromBits id_mem_FP) pairFst pairFst_mem_FP b phase
+    (BinaryFn.ofUnary HB) (BinaryFn.const 2) reader reader_FP
+example : UnaryFn (bound cap 3) := bound_unary cap 3 (BinaryFn.fromBits id_mem_FP)
+example : RankedHistoryTask.root child = [true, true, true] := by
+  rw [child, root_flatten]
+  decide
+example : get cap 3 child 0 = 2 := by decide
+example : get cap 3 child 1 = 7 := by decide
+example : get cap 3 child 2 = 7 := by decide
+example : get cap 3 child 100 = 0 := by decide
+example : child.length = 29 := by
+  rw [child, flatten_length]
+  decide
+example : RankedHistoryTask.rank (fun _ => 10) 5 child < RankedHistoryTask.rank (fun _ => 10) 5 parent := by
+  apply flatten_lower_phase cap 3 (fun _ => 10) 5 pairFst b phase reader query
+  · rfl
+  · decide
+example : RankedHistoryTask.rank (fun _ => 10) 5
+    (flatten cap 3 pairFst (fun _ => 1) (fun _ => 4) reader query) < RankedHistoryTask.rank (fun _ => 10) 5 parent := by
+  apply flatten_lower_birth cap 3 (fun _ => 10) 5 pairFst (fun _ => 1) (fun _ => 4) reader query
+  · decide
+  · decide
+-- Clipping to zero uses zero bits for every field.
+example : (write (fun _ => 0) 3 reader query).length = 0 := by rw [write_length]; decide
+example : get (fun _ => 0) 3 (flatten (fun _ => 0) 3 pairFst b phase reader query) 1 = 0 := by decide
+-- Exponential numeric caps need only their binary width in the stored fields.
+example : (write (fun _ => 2 ^ 100) 3 reader query).length = 303 := by rw [write_length]; decide
+example (q : List Bool) (n : ℕ) :
+    ((RankedHistoryTask.retarget (fun _ => 3) (fun _ => 2) (write cap 3 reader))^[n] q).length ≤
+      q.length + RankedHistoryTask.wordBudget (fun _ => 10) 5 (bound cap 3) q :=
+  retarget_iterate_length cap 3 (fun _ => 10) (fun _ => 3) (fun _ => 2) 5 reader
+    (fun _ => by decide) (fun _ => by decide) q n
+example : UnaryFn (RankedHistoryTask.wordBudget (fun _ => 10) 5 (bound cap 3)) :=
+  wordBudget_unary cap 3 (fun _ => 10) 5 (UnaryFn.const 10) (BinaryFn.fromBits id_mem_FP)
+example : child.length ≤ RankedHistoryTask.wordBudget (fun _ => 10) 5 (bound cap 3) parent :=
+  flatten_length_le cap 3 (fun _ => 10) 5 pairFst b phase reader query (by decide) (by decide)
+end RankedHistoryFieldsRegression

@@ -1,3 +1,4 @@
+import LeanCanny.Encoding.RankedHistoryFields
 import LeanCanny.Algebra.IntegralDerivativeController
 import LeanCanny.Algebra.IntegralMonomialTermController
 import LeanCanny.Algebra.IntegralClearedCoefficientController
