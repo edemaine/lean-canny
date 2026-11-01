@@ -16490,3 +16490,61 @@ example : (ProductStage.controller S access id).Certificates
     (encQ := Turing.MultiTapeTM.encBits) (encS := Turing.MultiTapeTM.encBits) :=
   ProductStage.certificates S access _ id_mem_FP
 end IntegralMonomialTermRegression
+
+
+namespace DerivativeControllerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open FixedWidthDerivativeBits
+open scoped Classical
+private def task (q : List Bool) := pair [true] q
+private noncomputable def P := program (fun _ => 2) (fun _ => 2) (fun _ => 2) (fun _ => 4)
+  (fun _ => 0) (fun _ => BinaryNatCode.encode 2) (fun _ => BinaryNatCode.encode 6) task
+example : P.Controls := program_controls _ _ _ _ _ _ _ _ (UnaryFn.const 2) (UnaryFn.const 2) (UnaryFn.const 2)
+  (BinaryFn.const 4) (UnaryFn.const 0) (constFn_mem_FP _) (constFn_mem_FP _) (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+-- (2,0) becomes (3,0); coefficient five is multiplied by three modulo six.
+example : P.query [true, false] = task (pair [true, false] (BinaryNatCode.encode 3)) := by decide
+example : P.value (fun _ => BinaryNatCode.encode 5) [true, false] = BinaryNatCode.encode 3 := by
+  have HB : FixedWidthQuery.Bounded (fun _ => 2) (fun _ => 2) (fun _ => BinaryNatCode.encode 2) (fun _ => 4 - 1) [true, false] := by
+    intro i hi
+    interval_cases i <;> decide
+  simp only [P, SingleCall.Program.value, program, decide_eq_true_eq, HB, ite_true]
+  decide
+example : (program (fun _ => 2) (fun _ => 2) (fun _ => 2) (fun _ => 2) (fun _ => 0)
+    (fun _ => BinaryNatCode.encode 2) (fun _ => BinaryNatCode.encode 6) task).request [] = false := by
+  change decide (FixedWidthQuery.Bounded (fun _ => 2) (fun _ => 2) (fun _ => BinaryNatCode.encode 2) (fun _ => 2 - 1) []) = false
+  apply decide_eq_false_iff_not.mpr
+  intro h
+  have H := h 0 (by decide)
+  change 2 ≤ 1 at H
+  omega
+example (coefficient answer : List Bool → List Bool) (he : ∀ q, answer (task q) = coefficient q) (c : List Bool) :
+    P.value answer c = value (fun _ => 2) (fun _ => 2) (fun _ => 2) (fun _ => 4) (fun _ => 0)
+      (fun _ => BinaryNatCode.encode 2) (fun _ => BinaryNatCode.encode 6) coefficient c :=
+  program_value _ _ _ _ _ _ _ _ coefficient answer he c
+end DerivativeControllerRegression
+
+namespace IntegralFrozenPowerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def derivativeSource := IntegralCriticalGradientBits.derivativeFamily criticalSource
+private noncomputable def derivativeSourceAccess := IntegralCriticalGradientBits.derivativeAccess criticalSource criticalAccess
+example : (IntegralDerivativeBits.program derivativeSource id).Controls :=
+  IntegralDerivativeBits.program_controls derivativeSource derivativeSourceAccess _ id_mem_FP
+example (p : List Bool) : (IntegralDerivativeBits.program derivativeSource id).value derivativeSourceAccess.coefficient p =
+    IntegralDerivativeBits.value derivativeSource derivativeSourceAccess p :=
+  IntegralDerivativeBits.program_value derivativeSource derivativeSourceAccess _ _ (fun _ => rfl) p
+example (c : List Bool) (k : ℕ) (r t : Fin (derivativeSource.rank c)) :
+    letI := derivativeSource.ring c
+    (IntegralDerivativeBits.program derivativeSource id).value derivativeSourceAccess.coefficient
+      (pair (IntegralClearedCoefficientBits.context c r.val t.val) (BinaryNatCode.encode k)) =
+        residueBits ((Algebra.leftMulMatrix (derivativeSource.basis c)
+          ((MvPolynomial.pderiv (derivativeSource.selected c) (derivativeSource.polynomial c)).coeff
+            (RationalSubstitution.Indexed.exponentVector (derivativeSource.arity c)
+              (FixedWidthPolynomial.entry (derivativeSource.sourceWidth c) k))) r t : ℤ) : ZMod (derivativeSource.modulus c)) :=
+  IntegralDerivativeBits.program_packet derivativeSource derivativeSourceAccess _ _ (fun _ => rfl) c k r t
+example : (IntegralClearedCoefficientBits.RecursiveStage.program (IntegralCriticalGradientBits.family criticalSource) id).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  IntegralClearedCoefficientBits.RecursiveStage.certificates _
+    (IntegralDerivativeBits.clearedAccess derivativeSource derivativeSourceAccess) id id_mem_FP
+end IntegralFrozenPowerRegression

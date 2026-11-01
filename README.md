@@ -1146,6 +1146,11 @@ The checked ingredients are:
   child tasks. Scalar, free-coordinate, and padding entries use the FP
   denominator residue locally. The actual monomial product uses the same
   resumable power-product stages.
+  Derivative coefficients also suspend for one bumped original coefficient,
+  then apply native exponent multiplication modulo the caller modulus.
+  A binary degree guard returns zero outside the derivative support. The
+  actual cleared-gradient source has native local certificates through
+  these same stages, retaining both old basis indices.
   Saved-source queries now supply every critical lower coefficient in the
   reduction reader's row, spatial-rank, and old-basis protocol. These rows and
   the common integer leading coefficient feed the actual relative coordinate
