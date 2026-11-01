@@ -20001,3 +20001,424 @@ example (c : List Bool) :
   decide
 
 end FlatRelativeFactorRegression
+
+
+
+namespace TotalCompanionRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower FixedWidthPolynomial
+open IntegralCriticalScript IntegralCriticalFlatHeightBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] residueBits CommonHeightBits.Scalars.cofactor
+
+private noncomputable def first : Command 1 2 2 0 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  degree_le := by decide
+  degree_lt := by decide
+  low_degree := by norm_num
+  leading_ne := by decide
+  low_height e := by
+    rw [MvPolynomial.coeff_C]
+    split_ifs <;> norm_num
+  leading_height := by decide
+  offset := 0
+  objective := 0
+  coordinate := 0
+  selected _ := 100
+private noncomputable def second : Command 1 2 2 0 := { first with selected := fun _ => 0 }
+
+private noncomputable def F : Scripts where
+  cap _ := 1
+  width _ := 6
+  ambient _ := 1
+  sourceWidth _ := 2
+  degree _ := 2
+  height _ := 0
+  modulusBound _ := 6
+  rules _ := [second, first]
+  length_le _ := by decide
+  scalar_bound _ := by decide
+
+private theorem access : Access F where
+  cap := UnaryFn.const 1
+  width := UnaryFn.const 6
+  ambient := UnaryFn.const 1
+  sourceWidth := UnaryFn.const 2
+  degree := BinaryFn.const 2
+  height := BinaryFn.const 0
+  modulusBound := BinaryFn.const 6
+  count := UnaryFn.const 2
+
+private theorem leading_eq (c : List Bool) (i : ℕ) :
+    IntegralCriticalScriptFP.leading (IntegralCriticalFlatClearedHeightBits.metadata F) c i = if i < 2 then 1 else 0 := by
+  cases i with
+  | zero => rfl
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralCriticalScriptFP.leading, IntegralCriticalScriptFP.commandAt,
+        IntegralCriticalFlatClearedHeightBits.metadata, F]
+
+private theorem degree_eq (c : List Bool) (i : ℕ) :
+    IntegralCriticalScriptFP.degree (IntegralCriticalFlatClearedHeightBits.metadata F) c i = if i < 2 then 2 else 0 := by
+  cases i with
+  | zero => rfl
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralCriticalScriptFP.degree, IntegralCriticalScriptFP.commandAt,
+        IntegralCriticalFlatClearedHeightBits.metadata, F]
+
+private theorem offset_eq (c : List Bool) (i : ℕ) :
+    IntegralCriticalScriptFP.offset (IntegralCriticalFlatClearedHeightBits.metadata F) c i = 0 := by
+  cases i with
+  | zero => rfl
+  | succ i => cases i with
+    | zero => rfl
+    | succ i => simp [IntegralCriticalScriptFP.offset, IntegralCriticalScriptFP.commandAt,
+        IntegralCriticalFlatClearedHeightBits.metadata, F]
+
+private theorem selector_eq (c : List Bool) (i j : ℕ) :
+    IntegralCriticalScriptFP.selector (IntegralCriticalFlatClearedHeightBits.metadata F) c i j =
+      if j < 2 then (if i = 0 then 100 else if i = 1 then 0 else i) else i := by
+  cases i with
+  | zero =>
+    change (if h : j < 2 then first.selected ⟨j, h⟩ else 0) = _
+    by_cases hj : j < 2 <;> simp [first, hj]
+  | succ i => cases i with
+    | zero =>
+      change (if h : j < 2 then second.selected ⟨j, h⟩ else 1) = _
+      by_cases hj : j < 2 <;> simp [second, hj]
+    | succ i => simp [IntegralCriticalScriptFP.selector, IntegralCriticalScriptFP.commandAt,
+        IntegralCriticalFlatClearedHeightBits.metadata, F]
+
+attribute [local irreducible] IntegralCriticalScriptFP.leading IntegralCriticalScriptFP.degree
+  IntegralCriticalScriptFP.offset IntegralCriticalScriptFP.selector IntegralCriticalHistoryTask.modulus
+  IntegralCriticalHistoryTask.get IntegralCriticalHistoryTask.numericCap
+
+private theorem metadataAccess : IntegralCriticalScriptFP.Access (IntegralCriticalFlatClearedHeightBits.metadata F) where
+  count := UnaryFn.const 2
+  ambient := UnaryFn.const 1
+  modulus := IntegralCriticalHistoryTask.modulus_binary _ access.toAccess
+  leading := by
+    have HM : BinaryFn (fun p => IntegralCriticalHistoryTask.modulus F.toParameters (pairFst p)) :=
+      (IntegralCriticalHistoryTask.modulus_binary _ access.toAccess).comp pairFst_mem_FP
+    have HN := BinaryFn.ite (IntegralCriticalScriptFP.cursor_binary.lt (BinaryFn.const 2)) (BinaryFn.const 1) (BinaryFn.const 0)
+    have H := ModularScalarFP.natCast HM (fun p => if IntegralDenominatorPass.cursor p < 2 then 1 else 0) HN
+    apply mem_FP_of_eq H
+    intro p
+    calc
+      _ = residueBits ((if IntegralDenominatorPass.cursor p < 2 then 1 else 0 : ℤ) :
+          ZMod (IntegralCriticalHistoryTask.modulus F.toParameters (pairFst p))) := by
+        split_ifs <;> simp only [Nat.cast_one, Nat.cast_zero, Int.cast_one, Int.cast_zero]
+      _ = _ := congrArg (fun z : ℤ => residueBits (z :
+        ZMod (IntegralCriticalHistoryTask.modulus F.toParameters (pairFst p))))
+        (leading_eq (pairFst p) (IntegralDenominatorPass.cursor p)).symm
+  degree := (BinaryFn.ite (IntegralCriticalScriptFP.cursor_binary.lt (BinaryFn.const 2))
+    (BinaryFn.const 2) (BinaryFn.const 0)).of_eq (fun p => (degree_eq _ _).symm)
+  offset := (BinaryFn.const 0).of_eq (fun p => (offset_eq _ _).symm)
+  selector := by
+    have HI : BinaryFn (fun z => IntegralDenominatorPass.cursor (pairFst z)) := IntegralCriticalScriptFP.cursor_binary.comp pairFst_mem_FP
+    have HJ : BinaryFn (fun z => Nat.fromBitsLE (pairSnd z)) := BinaryFn.fromBits pairSnd_mem_FP
+    exact BinaryFn.of_eq (BinaryFn.ite (HJ.lt (BinaryFn.const 2))
+      (BinaryFn.ite (HI.eq (BinaryFn.const 0)) (BinaryFn.const 100)
+        (BinaryFn.ite (HI.eq (BinaryFn.const 1)) (BinaryFn.const 0) HI)) HI)
+      (fun z => (selector_eq _ _ _).symm)
+
+
+example : (IntegralCriticalTotalCompanionBits.program F).Controls :=
+  IntegralCriticalTotalCompanionBits.program_controls F access metadataAccess
+
+private def fields (r t : ℕ) (p : List Bool) : List Bool :=
+  BinaryNatCode.encode (if Nat.fromBitsLE (pairSnd p) = 0 then 6 else
+    if Nat.fromBitsLE (pairSnd p) = 1 then r else
+    if Nat.fromBitsLE (pairSnd p) = 2 then t else 0)
+private noncomputable def q (b r t : ℕ) : List Bool :=
+  IntegralCriticalHistoryTask.child F.toParameters id (fun _ => b) .companion (fields r t) []
+private theorem qroot (b r t : ℕ) : root (q b r t) = [] := by
+  unfold root q
+  rw [IntegralCriticalHistoryTask.child_root]
+  rfl
+private theorem qbirth (b r t : ℕ) (hb : b ≤ 2) : IntegralCriticalHistoryTask.birth F.toParameters (q b r t) = b := by
+  unfold q IntegralCriticalHistoryTask.child
+  rw [RankedHistoryFields.flatten_eq_pack]
+  exact RankedHistoryTask.birth_pack _ _ _ _ _ hb
+private theorem qget (b r t : ℕ) (f : IntegralCriticalHistoryTask.Field) :
+    IntegralCriticalHistoryTask.get F.toParameters f (q b r t) =
+      min (if f.code = 0 then 6 else if f.code = 1 then r else if f.code = 2 then t else 0)
+        (IntegralCriticalHistoryTask.numericCap F.toParameters []) := by
+  unfold q
+  rw [IntegralCriticalHistoryTask.child_get]
+  simp only [fields, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  rfl
+private theorem sixtyfour_le : 64 ≤ IntegralCriticalHistoryTask.numericCap F.toParameters [] := by
+  unfold IntegralCriticalHistoryTask.numericCap
+  exact (IntegralCriticalQueryBounds.metadata_le _ _ _ _ _ _ _ _).2.2.2.2.2.1
+private theorem qvalid (b r t : ℕ) (hb : b < 2) : IntegralCriticalTotalCompanionBits.valid F (q b r t) := by
+  change IntegralCriticalHistoryTask.birth F.toParameters (q b r t) < (F.rules (root (q b r t))).length
+  rw [qroot, qbirth b r t hb.le]
+  exact hb
+private theorem qmodulus (b r t : ℕ) : IntegralCriticalHistoryTask.modulus F.toParameters (q b r t) = 6 := by
+  have HG : IntegralCriticalHistoryTask.get F.toParameters .modulus (q b r t) = 6 := by
+    rw [qget]
+    exact min_eq_left ((by decide : 6 ≤ 64).trans sixtyfour_le)
+  simp only [IntegralCriticalHistoryTask.modulus, HG]
+  rfl
+private theorem qphase (b r t : ℕ) : IntegralCriticalHistoryTask.isPhase .companion (q b r t) := by
+  change IntegralCriticalHistoryTask.phase (q b r t) = 26
+  unfold q IntegralCriticalHistoryTask.child IntegralCriticalHistoryTask.phase
+  rw [RankedHistoryFields.flatten_eq_pack, RankedHistoryTask.phase_pack]
+  · rfl
+  · decide
+
+private theorem qrootTotal (b r t : ℕ) : IntegralCriticalTotalCompanionBits.root (q b r t) = [] := qroot b r t
+private theorem qrowTotal (r t : ℕ) (hr : r < 64) : IntegralCriticalTotalCompanionBits.row F (q 0 r t) = r := by
+  unfold IntegralCriticalTotalCompanionBits.row IntegralCriticalTotalCompanionBits.bornRank
+  rw [qget, qbirth 0 r t (by decide), qrootTotal]
+  change min r _ % 64 = r
+  rw [min_eq_left (hr.le.trans sixtyfour_le), Nat.mod_eq_of_lt hr]
+private theorem qcolTotal (r t : ℕ) (ht : t < 64) : IntegralCriticalTotalCompanionBits.col F (q 0 r t) = t := by
+  unfold IntegralCriticalTotalCompanionBits.col IntegralCriticalTotalCompanionBits.bornRank
+  rw [qget, qbirth 0 r t (by decide), qrootTotal]
+  change min t _ % 64 = t
+  rw [min_eq_left (ht.le.trans sixtyfour_le), Nat.mod_eq_of_lt ht]
+private theorem qscalarDegree (r t : ℕ) : IntegralCriticalTotalCompanionBits.scalarDegree F (q 0 r t) = 64 := by
+  unfold IntegralCriticalTotalCompanionBits.scalarDegree
+  rw [qrootTotal]
+  rfl
+private theorem qselectedDegree (r t : ℕ) : IntegralCriticalTotalCompanionBits.selectedDegree F (q 0 r t) = 64 := by
+  unfold IntegralCriticalTotalCompanionBits.selectedDegree
+  rw [ite_eq_left (qvalid 0 r t (by decide))]
+  unfold IntegralCriticalTotalCompanionBits.commandDegree IntegralCriticalTotalCompanionBits.commandOffset
+  rw [qbirth 0 r t (by decide), degree_eq, offset_eq, qrootTotal]
+  rfl
+example : IntegralScalarGeneratorBits.request (IntegralCriticalTotalCompanionBits.family F) (q 0 60 63) := by
+  unfold IntegralScalarGeneratorBits.request
+  change ¬ ((IntegralCriticalTotalCompanionBits.scalarCol F (q 0 60 63)).val + 1 < IntegralCriticalTotalCompanionBits.scalarDegree F (q 0 60 63)) ∧
+    IntegralCriticalTotalCompanionBits.selectedDegree F (q 0 60 63) ≤ IntegralCriticalTotalCompanionBits.scalarDegree F (q 0 60 63) ∧
+    IntegralCriticalTotalCompanionBits.scalarDegree F (q 0 60 63) - IntegralCriticalTotalCompanionBits.selectedDegree F (q 0 60 63) ≤ (IntegralCriticalTotalCompanionBits.scalarRow F (q 0 60 63)).val
+  simp only [IntegralCriticalTotalCompanionBits.scalarCol, IntegralCriticalTotalCompanionBits.scalarRow,
+    qscalarDegree, qselectedDegree, qrowTotal 60 63 (by decide), qcolTotal 60 63 (by decide)]
+  decide
+example (answer : List Bool → List Bool) : (IntegralCriticalTotalCompanionBits.program F).value answer (q 0 1 0) = [true] := by
+  rw [IntegralCriticalTotalCompanionBits.valid_value F answer _ (qvalid 0 1 0 (by decide)), IntegralScalarGeneratorBits.program_view]
+  change IntegralScalarGeneratorBits.viewValue _ (IntegralCriticalTotalCompanionBits.scalarDegree F (q 0 1 0))
+    (IntegralCriticalTotalCompanionBits.selectedDegree F (q 0 1 0))
+    (IntegralCriticalTotalCompanionBits.scalarRow F (q 0 1 0)).val
+    (IntegralCriticalTotalCompanionBits.scalarCol F (q 0 1 0)).val
+    (IntegralCriticalTotalCompanionBits.oldRow F (q 0 1 0)).val
+    (IntegralCriticalTotalCompanionBits.oldCol F (q 0 1 0)).val _ _ = _
+  unfold IntegralCriticalTotalCompanionBits.scalarRow IntegralCriticalTotalCompanionBits.scalarCol
+    IntegralCriticalTotalCompanionBits.oldRow IntegralCriticalTotalCompanionBits.oldCol
+  simp only [qscalarDegree, qselectedDegree, qrowTotal 1 0 (by decide), qcolTotal 1 0 (by decide)]
+  unfold IntegralScalarGeneratorBits.viewValue
+  change residueBits (1 : ZMod (IntegralCriticalHistoryTask.modulus F.toParameters (q 0 1 0))) = [true]
+  exact (congrArg (fun m => residueBits (1 : ZMod m)) (qmodulus 0 1 0)).trans (by unfold residueBits; decide)
+
+example : IntegralCriticalHistoryTask.rank F.toParameters (IntegralCriticalTotalCompanionBits.child F (q 0 60 63)) <
+    IntegralCriticalHistoryTask.rank F.toParameters (q 0 60 63) := IntegralCriticalTotalCompanionBits.child_rank F _ (qphase _ _ _)
+example : (IntegralCriticalTotalCompanionBits.child F (q 0 60 63)).length ≤
+    IntegralCriticalHistoryTask.wordBudget F.toParameters (q 0 60 63) := IntegralCriticalTotalCompanionBits.child_length F _
+example : IntegralCriticalTotalCompanionBits.coefficientValue F (IntegralCriticalTotalCompanionBits.child F (q 0 60 63)) =
+    residueBits (IntegralCriticalTotalCompanionBits.coefficient F (q 0 60 63)
+      (IntegralScalarGeneratorBits.index (IntegralCriticalTotalCompanionBits.family F) (q 0 60 63))
+      (IntegralCriticalTotalCompanionBits.oldRow F (q 0 60 63)) (IntegralCriticalTotalCompanionBits.oldCol F (q 0 60 63))) :=
+  IntegralCriticalTotalCompanionBits.child_coefficient_value F _ (qvalid _ _ _ (by decide))
+
+private theorem missing : ¬ IntegralCriticalTotalCompanionBits.valid F (q 2 1 0) := by
+  change ¬ IntegralCriticalHistoryTask.birth F.toParameters (q 2 1 0) < (F.rules (root (q 2 1 0))).length
+  rw [qroot, qbirth 2 1 0 (by decide)]
+  decide
+example (answer : List Bool → List Bool) : (IntegralCriticalTotalCompanionBits.program F).value answer (q 2 1 0) = [] :=
+  IntegralCriticalTotalCompanionBits.missing_value F answer _ missing
+example : IntegralCriticalTotalCompanionBits.coefficientValue F (q 2 1 0) = [] :=
+  IntegralCriticalTotalCompanionBits.coefficientValue_invalid F _ missing
+example : IntegralCriticalCreatingRetargetBits.reduction F (q 0 60 63) (qvalid _ _ _ (by decide)) =
+    IntegralCriticalCreatingRetargetBits.reduction F (q 0 1 0) (qvalid _ _ _ (by decide)) := by
+  apply IntegralCriticalCreatingRetargetBits.reduction_invariance
+  · change root (q 0 60 63) = root (q 0 1 0)
+    rw [qroot, qroot]
+  · rw [qbirth 0 60 63 (by decide), qbirth 0 1 0 (by decide)]
+  · rw [qmodulus, qmodulus]
+
+example : (IntegralCriticalTotalCompanionBits.program F).value (IntegralCriticalTotalCompanionBits.coefficientValue F) (q 0 60 63) =
+    companionValue F (q 0 60 63) := IntegralCriticalTotalCompanionBits.program_coefficientValue F _ (fun _ _ _ => rfl) _
+end TotalCompanionRegression
+
+
+namespace FlatActionReductionRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding MatrixPower
+open IntegralReductionActionBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+private noncomputable def b : Module.Basis (Fin 2) ℤ (ℤ × ℤ) := Module.Basis.finTwoProd ℤ
+private theorem diagonal (v : ℤ × ℤ) (r t : Fin 2) :
+    Algebra.leftMulMatrix b v r t = if r = t then (if r = 0 then v.1 else v.2) else 0 := by
+  fin_cases r <;> fin_cases t <;>
+    simp [Algebra.leftMulMatrix_eq_repr_mul, b, Module.Basis.coe_finTwoProd_repr]
+
+private noncomputable def S : Source where
+  dimension _ := 2
+  rank _ := 2
+  carrier _ := ℤ × ℤ
+  ring _ := inferInstance
+  nontrivial _ := inferInstance
+  basis _ := b
+  matrix _ _ _ := (2, 3)
+  modulus _ := 10
+  modulus_ne_zero _ := by decide
+  coefficient _ := 1
+  basisRow _ := 1
+  basisCol _ := 1
+  dimension_pos _ := by decide
+  normal _ j := j = 0
+  shift _ _ := 1
+  bound _ := 0
+
+private def reader (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisRowCode q) =
+      Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisColCode q) then
+    if Nat.fromBitsLE (IntegralBerkowitzBlockBits.basisRowCode q) = 0 then
+      BinaryNatCode.encode 2 else BinaryNatCode.encode 3 else []
+private theorem reader_FP : reader ∈ FP :=
+  ((BinaryFn.fromBits IntegralBerkowitzBlockBits.basisRowCode_FP).eq
+    (BinaryFn.fromBits IntegralBerkowitzBlockBits.basisColCode_FP)).ite_mem_FP
+    (((BinaryFn.fromBits IntegralBerkowitzBlockBits.basisRowCode_FP).eq (BinaryFn.const 0)).ite_mem_FP
+      (constFn_mem_FP (BinaryNatCode.encode 2)) (constFn_mem_FP (BinaryNatCode.encode 3))) (constFn_mem_FP [])
+
+private noncomputable def access : IntegralBerkowitzBlockBits.Access S.toSource where
+  dimension := BinaryFn.const 2
+  rank := BinaryFn.const 2
+  modulus := BinaryFn.const 10
+  coefficient := BinaryFn.const 1
+  basisRow := BinaryFn.const 1
+  basisCol := BinaryFn.const 1
+  entry := reader
+  entry_eq c i j r t := by
+    change reader _ = residueBits ((Algebra.leftMulMatrix b (2, 3) r t : ℤ) : ZMod 10)
+    rw [diagonal]
+    simp only [reader, IntegralBerkowitzBlockBits.basisRowCode, IntegralBerkowitzBlockBits.basisColCode,
+      IntegralBlockMomentBits.context, pairFst_pair, pairSnd_pair,
+      BinaryNatCode.encode, Nat.fromBitsLE_bits, Fin.ext_iff, Fin.val_zero]
+    fin_cases r <;> fin_cases t <;> norm_num <;> decide
+
+private theorem controls : Controls S where
+  bound := BinaryFn.const 0
+  shift := BinaryFn.const 1
+  normal := by
+    apply ((BinaryFn.fromBits MatrixMoment.EntryBits.colIndex_mem_FP).mod (BinaryFn.const 2)).eq (BinaryFn.const 0) |>.of_iff
+    intro p
+    simp only [normalGuard, outerIndex, S, Fin.ext_iff, Fin.val_zero]
+
+private def P : IntegralCriticalHistoryTask.Parameters where
+  cap _ := 2
+  width _ := 2
+  ambient _ := 0
+  sourceWidth _ := 2
+  degree _ := 2
+  height _ := 0
+  modulusBound _ := 10
+private theorem metadata : IntegralCriticalHistoryTask.Access P where
+  cap := UnaryFn.const 2
+  width := UnaryFn.const 2
+  ambient := UnaryFn.const 0
+  sourceWidth := UnaryFn.const 2
+  degree := BinaryFn.const 2
+  height := BinaryFn.const 0
+  modulusBound := BinaryFn.const 10
+
+example : (IntegralCriticalFlatActionBits.program P S).Controls :=
+  IntegralCriticalFlatActionBits.controls P metadata S access controls
+example : (IntegralCriticalFlatReductionPowerBits.controller P metadata S access controls).Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := Turing.MultiTapeTM.encBits) :=
+  IntegralCriticalFlatReductionPowerBits.certificates P metadata S access controls
+example : BinaryFn (IntegralCriticalFlatReductionPowerBits.clock P S) :=
+  IntegralCriticalFlatReductionPowerBits.clock_binary P metadata S access controls
+example : UnaryFn (IntegralCriticalFlatReductionPowerBits.stateBound P S) :=
+  IntegralCriticalFlatReductionPowerBits.stateBound_unary P metadata S access controls
+
+private theorem packet_eq (c : List Bool)
+    (hr : IntegralCriticalHistoryTask.get P .row c = 3) (hc : IntegralCriticalHistoryTask.get P .col c = 1) :
+    IntegralCriticalFlatActionBits.packet P S c = packet c 1 0 1 1 := by
+  simp only [IntegralCriticalFlatActionBits.packet, IntegralBerkowitzBlockBits.outerPacket,
+    IntegralCriticalFlatRelativeFactorBits.packet, MatrixMoment.EntryBits.rowIndex,
+    MatrixMoment.EntryBits.colIndex, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits,
+    hr, hc, S, packet]
+
+private theorem action_matrix (c : List Bool) : S.actionMatrix c =
+    (fun _ j : Fin 2 => if j = 0 then ((2, 3) : ℤ × ℤ) else 0) := by
+  funext i j
+  dsimp only [Source.actionMatrix, GradedReductionAnnihilator.paddedMatrix, S]
+  rw [pow_one]
+  split_ifs <;> rfl
+
+example (c : List Bool) (hr : IntegralCriticalHistoryTask.get P .row c = 3)
+    (hc : IntegralCriticalHistoryTask.get P .col c = 1)
+    (answer : List Bool → List Bool)
+    (he : ∀ c, normalGuard S (IntegralCriticalFlatActionBits.packet P S c) →
+      answer (IntegralCriticalFlatEulerBits.next P .reductionPower c) =
+        (powerFamily S).value (IntegralCriticalFlatActionBits.packet P S c)) :
+    (IntegralCriticalFlatActionBits.program P S).value answer c = BinaryNatCode.encode 3 := by
+  rw [IntegralCriticalFlatActionBits.value P S answer he c, packet_eq c hr hc]
+  have H := entry_correct S c (1 : Fin 2) (0 : Fin 2) (1 : Fin 2) (1 : Fin 2)
+  change entryProgram S (packet c 1 0 1 1) = _ at H
+  rw [H]
+  unfold IntegralBerkowitzBlockBits.Source.entryMatrix actionSource
+  change residueBits ((Algebra.leftMulMatrix b (S.actionMatrix c (1 : Fin 2) (0 : Fin 2))
+    (1 : Fin 2) (1 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [action_matrix]
+  norm_num [diagonal]
+  decide
+
+-- A nonnormal high column digit emits no child despite a nonzero shifted column.
+example (c child : List Bool) (hc : IntegralCriticalHistoryTask.get P .col c = 3)
+    (answer : List Bool → List Bool) (budget : List Bool → ℕ) :
+    ¬ (IntegralCriticalFlatActionBits.program P S).controller.Requests answer budget c child := by
+  rw [IntegralCriticalFlatActionBits.requests_iff]
+  intro h
+  have H : ¬ normalGuard S (IntegralCriticalFlatActionBits.packet P S c) := by
+    simp only [normalGuard, outerIndex, IntegralCriticalFlatActionBits.packet,
+      IntegralBerkowitzBlockBits.outerPacket, IntegralCriticalFlatRelativeFactorBits.packet,
+      MatrixMoment.EntryBits.colIndex, pairFst_pair, pairSnd_pair,
+      BinaryNatCode.encode, Nat.fromBitsLE_bits, hc, S, Fin.ext_iff, Fin.val_zero]
+    decide
+  exact H h.1
+
+end FlatActionReductionRegression
+
+
+namespace CriticalSingleCallRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower Turing.MultiTapeTM
+open IntegralCriticalHistoryTask
+set_option backward.isDefEq.respectTransparency false
+variable (F : Parameters) (a : Access F)
+private def next : List Bool → List Bool := child F id (birth F) .originalCoefficient (fun _ => [])
+private def P : SingleCall.Program where
+  request q := decide (0 < phase q)
+  query := next F
+  immediate _ := []
+  finish := pairSnd
+private theorem controls (a : Access F) : (P F).Controls where
+  request := ((BinaryFn.const 0).lt (BinaryFn.ofUnary (RankedHistoryTask.phase_unary 27))).flag_mem_FP
+  query := child_FP F a id id_mem_FP _
+    (BinaryFn.ofUnary (RankedHistoryTask.birth_unary _ (birthCap_unary F a))) _ _ (constFn_mem_FP [])
+  immediate := constFn_mem_FP []
+  finish := pairSnd_mem_FP
+private def x (q : List Bool) : ZMod (IntegralCriticalHistoryTask.modulus F q) := 0
+private theorem residue_zero (q : List Bool) : residueBits (x F q) = [] := by
+  simp [x, residueBits, BinaryNatCode.encode]
+-- Every nonzero phase calls the zero phase and resumes with its actual reply.
+-- The uniform stack compiler receives no child evaluator or child space proof.
+example : SpaceFunction (fun q => residueBits (x F q)) := by
+  apply IntegralCriticalHistoryEvaluator.evaluator_of_singleCall F a (P F) (controls F a) (x F)
+  · intro q
+    simp only [SingleCall.Program.value, P, pairSnd_pair, residue_zero, ite_self]
+  · intro q hg
+    change decide (0 < phase q) = true at hg
+    have hg' : 0 < phase q := of_decide_eq_true hg
+    refine ⟨child_root F id (birth F) .originalCoefficient (fun _ => []) q,
+      child_length F id (birth F) .originalCoefficient (fun _ => []) q (min_le_right _ _), ?_⟩
+    exact child_lower_phase F id (birth F) .originalCoefficient (fun _ => []) q rfl hg'
+end CriticalSingleCallRegression

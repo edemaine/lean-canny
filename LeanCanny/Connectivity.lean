@@ -1,3 +1,7 @@
+import LeanCanny.Algebra.IntegralCriticalTotalCompanionChild
+import LeanCanny.Algebra.IntegralCriticalCreatingRetarget
+import LeanCanny.Algebra.IntegralCriticalFlatReductionPower
+import LeanCanny.Algebra.IntegralCriticalSingleCallEvaluator
 import LeanCanny.Algebra.IntegralCriticalFlatRelativeFactor
 import LeanCanny.Algebra.IntegralCriticalFlatGrid
 import LeanCanny.Connectivity.FlatAffineExceptionalSliceRepresentation

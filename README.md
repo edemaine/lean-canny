@@ -1519,6 +1519,17 @@ The checked ingredients are:
   two points. Point queries include singleton validation and endpoint
   membership, retaining irrational endpoints and rejecting invalid descriptions.
 
+Total flat companion control now reads the actual root script on every word,
+returns zero at missing births, and proves its coefficient-child target equals
+the actual creating polynomial entry. Canonical creating, Euler, reduction,
+and action sources depend only on root, birth, and caller modulus; changing
+query fields preserves those whole sources. Guarded action entries request
+flat reduction powers, whose native controllers stream phase17 entries with
+binary clocks and unary state bounds. Uniform creating-source access and the
+remaining stages still need integration into the complete history dispatcher.
+A one-request stack adapter now derives its clock and stored-answer bound
+from native controls and guarded decreasing child tasks.
+
 Flat relative factor tasks now preserve both old-basis ranks and spatial
 indices in fresh records. Their native controller handles local zero/unit
 entries and emits only lower-phase action or moment children; the semantic
