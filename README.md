@@ -1142,6 +1142,10 @@ The checked ingredients are:
   coefficient scales that sum by the FP leading residue, and a two-call
   controller adds it to the actual cleared source coefficient. Each local
   certificate avoids assuming the recursively requested evaluator.
+  Monomial factors now route coefficient and frozen-height entries to
+  child tasks. Scalar, free-coordinate, and padding entries use the FP
+  denominator residue locally. The actual monomial product uses the same
+  resumable power-product stages.
   Saved-source queries now supply every critical lower coefficient in the
   reduction reader's row, spatial-rank, and old-basis protocol. These rows and
   the common integer leading coefficient feed the actual relative coordinate

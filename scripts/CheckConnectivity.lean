@@ -16452,3 +16452,41 @@ example (c : List Bool) (t : ℕ) :
       2 * c.length + 2 * (Turing.MultiTapeTM.encNat 2).length + (BinaryNatCode.encode (S.modulus c)).length + 2 :=
   LowerStage.state_length S _ _ _ clearedReply constantReply c t
 end IntegralFrozenPowerRegression
+
+
+namespace IntegralMonomialTermRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralMonomialTermBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private def coefficientTask (p : List Bool) := pair [false] p
+private def heightTask (p : List Bool) := pair [true] p
+private def answer (p : List Bool) :=
+  if pairFst p = [false] then coefficientReader (pairSnd p) else heightReader (pairSnd p)
+private theorem coefficientReply (p : List Bool) : answer (coefficientTask p) = access.coefficient p := by
+  simp only [answer, coefficientTask, pairFst_pair, pairSnd_pair, ite_true]
+  rfl
+private theorem heightReply (p : List Bool) : answer (heightTask p) = access.height p := by
+  simp only [answer, heightTask, pairFst_pair, pairSnd_pair]
+  exact ite_eq_right (by decide)
+example : (EntryStage.program S access coefficientTask heightTask).Controls :=
+  EntryStage.controls S access (constFn_mem_FP _) _ _
+    (mem_FP_pair (constFn_mem_FP _) id_mem_FP) (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
+example (p : List Bool) : (EntryStage.program S access coefficientTask heightTask).value answer p = entryProgram S access p :=
+  EntryStage.value_eq S access _ _ _ coefficientReply heightReply p
+example : (EntryStage.program S access coefficientTask heightTask).query (q 2 1 0) =
+    heightTask (pair [true, false, true] (pair (BinaryNatCode.encode 0) (pair (BinaryNatCode.encode 1) (BinaryNatCode.encode 0)))) := by decide
+example : (EntryStage.program S access coefficientTask heightTask).value answer (q 0 0 0) = BinaryNatCode.encode 5 := by decide
+example : (EntryStage.program S access coefficientTask heightTask).value answer (q 2 1 1) = BinaryNatCode.encode 4 := by decide
+-- Scalar, free-coordinate, and padding factors do not call either child.
+example : (EntryStage.program S access coefficientTask heightTask).request (q 1 1 1) = false := by decide
+example : (EntryStage.program S access coefficientTask heightTask).request (q 3 1 1) = false := by decide
+example : (EntryStage.program S access coefficientTask heightTask).request (q 4 1 1) = false := by decide
+example : (EntryStage.program S access coefficientTask heightTask).value (fun _ => [true]) (q 1 1 1) = BinaryNatCode.encode 2 := by decide
+example : (EntryStage.program S access coefficientTask heightTask).value (fun _ => [true]) (q 3 1 1) = BinaryNatCode.encode 2 := by decide
+example : (EntryStage.program S access coefficientTask heightTask).value (fun _ => []) (q 4 1 1) = BinaryNatCode.encode 1 := by decide
+example : (EntryStage.program S access coefficientTask heightTask).value (fun _ => [true]) (q 4 0 1) = [] := by decide
+example : (ProductStage.controller S access id).Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := Turing.MultiTapeTM.encBits) :=
+  ProductStage.certificates S access _ id_mem_FP
+end IntegralMonomialTermRegression
