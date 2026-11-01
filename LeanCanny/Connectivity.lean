@@ -1,3 +1,4 @@
+import LeanCanny.Algebra.IntegralCriticalScriptGenerator
 import LeanCanny.Algebra.IntegralCriticalScriptOrigin
 import LeanCanny.Algebra.IntegralCriticalScript
 import LeanCanny.Algebra.IntegralCriticalQueryBounds

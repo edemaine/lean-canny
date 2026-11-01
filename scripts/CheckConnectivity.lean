@@ -16737,3 +16737,135 @@ example : birthFamily (S := 2) (B := 2) (past rules 1) (past_bound (S := 2) rule
     birthFamily (S := 2) (B := 2) rules (by decide) widthBound (1 : Fin 2) :=
   birthFamily_past (S := 2) (B := 2) rules (by decide) widthBound 1 (by decide) (0 : Fin 1)
 end CriticalScriptRegression
+
+
+namespace CriticalScriptRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralCriticalScript IntegralCriticalScriptGeneratorBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def G : Queries where
+  cap _ := 2
+  width _ := 2
+  ambient _ := 0
+  sourceWidth _ := 2
+  degreeBound _ := 2
+  height _ := 0
+  rules _ := rules
+  length_le _ := by change 2 ≤ 2 + 1; decide
+  scalar_bound _ := widthBound
+  selected _ := (0 : Fin 2)
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+  row _ := (6 : Fin 16)
+  col _ := (7 : Fin 16)
+private theorem controls : Controls G where
+  count := UnaryFn.const 2
+  selected := BinaryFn.const 0
+  width := UnaryFn.const 2
+  ambient := UnaryFn.const 0
+  offset := BinaryFn.const 0
+  degree := BinaryFn.const 2
+  modulus := BinaryFn.const 6
+  row := BinaryFn.const 6
+  col := BinaryFn.const 7
+private noncomputable def D := IntegralCriticalDenominatorScript.program (fun c => instructions (G.rules c)) G.modulus G.modulus_ne_zero
+private theorem metadata (c : List Bool) (i : ℕ) :
+    IntegralCriticalDenominatorScript.instructionAt (instructions (G.rules c)) i =
+      if i < 2 then ⟨-1, 2, 12, [0]⟩ else ⟨0, 0, 0, []⟩ := by
+  have HL : instructions (G.rules c) = [⟨-1, 2, 12, [0]⟩, ⟨-1, 2, 12, [0]⟩] := by
+    have HX : instructions rules = [⟨-1, 2, 12, [0]⟩, ⟨-1, 2, 12, [0]⟩] := by rfl
+    simpa only [G] using HX
+  rw [HL]
+  by_cases hi : i < 2
+  · have HI : i = 0 ∨ i = 1 := by omega
+    rcases HI with rfl | rfl <;> rfl
+  · rw [ite_eq_right hi]
+    unfold IntegralCriticalDenominatorScript.instructionAt
+    rw [List.getElem?_eq_none (by change 2 ≤ i; omega), Option.getD_none]
+private theorem cursor_binary : BinaryFn IntegralDenominatorPass.cursor :=
+  BinaryFn.fromBits BoundedFold.counter_mem_FP
+private theorem index_metadata (c : List Bool) (i j : ℕ) :
+    ((IntegralCriticalDenominatorScript.instructionAt (instructions (G.rules c)) i).indices[j]?).getD i =
+      if i < 2 ∧ j = 0 then 0 else i := by
+  rw [metadata]
+  by_cases hi : i < 2
+  · rw [ite_eq_left hi]
+    by_cases hj : j = 0
+    · subst j; simp [hi]
+    · rw [ite_eq_right (fun h => hj h.2), List.getElem?_eq_none (by change 1 ≤ j; omega), Option.getD_none]
+  · rw [ite_eq_right hi, ite_eq_right (fun h => hi h.1)]
+    rfl
+private theorem passControls : IntegralDenominatorPass.Access D where
+  count := UnaryFn.const 2
+  modulus := BinaryFn.const 6
+  arity := by
+    have H : UnaryFn (fun p => if IntegralDenominatorPass.cursor p < 2 then 1 else 0) :=
+      (cursor_binary.lt (BinaryFn.const 2)).computable.ite_decide (UnaryFn.const 1) (UnaryFn.const 0)
+    apply H.of_eq
+    intro p
+    change (if IntegralDenominatorPass.cursor p < 2 then 1 else 0) =
+      (IntegralCriticalDenominatorScript.instructionAt (instructions (G.rules (pairFst p))) (IntegralDenominatorPass.cursor p)).indices.length
+    rw [metadata]
+    split_ifs <;> rfl
+  leading := by
+    have H := (cursor_binary.lt (BinaryFn.const 2)).ite_mem_FP (constFn_mem_FP (BinaryNatCode.encode 5)) (constFn_mem_FP [])
+    apply mem_FP_of_eq H
+    intro p
+    change (if IntegralDenominatorPass.cursor p < 2 then BinaryNatCode.encode 5 else []) =
+      residueBits ((IntegralCriticalDenominatorScript.instructionAt (instructions (G.rules (pairFst p)))
+        (IntegralDenominatorPass.cursor p)).leading : ZMod 6)
+    rw [metadata]
+    split_ifs <;> decide
+  degree := by
+    apply (BinaryFn.ite (cursor_binary.lt (BinaryFn.const 2)) (BinaryFn.const 2) (BinaryFn.const 0)).of_eq
+    intro p
+    change (if IntegralDenominatorPass.cursor p < 2 then 2 else 0) =
+      (IntegralCriticalDenominatorScript.instructionAt (instructions (G.rules (pairFst p))) (IntegralDenominatorPass.cursor p)).degree
+    rw [metadata]
+    split_ifs <;> rfl
+  exponent := by
+    apply (BinaryFn.ite (cursor_binary.lt (BinaryFn.const 2)) (BinaryFn.const 12) (BinaryFn.const 0)).of_eq
+    intro p
+    change (if IntegralDenominatorPass.cursor p < 2 then 12 else 0) =
+      (IntegralCriticalDenominatorScript.instructionAt (instructions (G.rules (pairFst p))) (IntegralDenominatorPass.cursor p)).exponent
+    rw [metadata]
+    split_ifs <;> rfl
+  index := by
+    have HI : BinaryFn (fun z => IntegralDenominatorPass.cursor (pairFst z)) := cursor_binary.comp pairFst_mem_FP
+    have HJ := BinaryFn.fromBits pairSnd_mem_FP
+    apply (BinaryFn.ite ((HI.lt (BinaryFn.const 2)).and (HJ.eq (BinaryFn.const 0))) (BinaryFn.const 0) HI).of_eq
+    intro z
+    exact (index_metadata _ _ _).symm
+private noncomputable def entryAt (c : List Bool) (k : ℕ) (r t : Fin 4) : List Bool :=
+  residueBits ((generatorFamily G).coefficient c k r t)
+private noncomputable def entry (p : List Bool) : List Bool :=
+  entryAt (pairFst p) (Nat.fromBitsLE (IntegralPowerProductBits.factorWord p))
+    ⟨Nat.fromBitsLE (IntegralPowerProductBits.rowWord p) % 4, Nat.mod_lt _ (by decide)⟩
+    ⟨Nat.fromBitsLE (IntegralPowerProductBits.colWord p) % 4, Nat.mod_lt _ (by decide)⟩
+private theorem entry_eq (c : List Bool) (k : ℕ) (r t : Fin 4) :
+    entry (pair c (pair (BinaryNatCode.encode k) (pair (BinaryNatCode.encode r.val) (BinaryNatCode.encode t.val)))) =
+      residueBits ((generatorFamily G).coefficient c k r t) := by
+  change entry (pair c (pair (BinaryNatCode.encode k) (pair (BinaryNatCode.encode r.val) (BinaryNatCode.encode t.val)))) = entryAt c k r t
+  simp only [entry, IntegralPowerProductBits.factorWord, IntegralPowerProductBits.rowWord, IntegralPowerProductBits.colWord,
+    pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.mod_eq_of_lt r.isLt, Nat.mod_eq_of_lt t.isLt]
+example : (program G id).Controls := program_controls G controls passControls entry entry_eq id id_mem_FP
+example : (fun c => residueBits (leading G c : ZMod (G.modulus c))) ∈ FP := leading_FP G passControls (BinaryFn.const 0)
+example : (generatorFamily G).arity [] = 1 := rfl
+example : (generatorFamily G).degree [] = 4 := rfl
+example : leading G [] = 2 ^ 150 * 2 ^ 150 := by decide
+example : residueBits (leading G [] : ZMod 6) = BinaryNatCode.encode 4 := by decide
+-- The queried old basis ranks survive scalar-index splitting.
+example : (program G id).query [] = pair [] (pair (BinaryNatCode.encode 2) (pair (BinaryNatCode.encode 1) (BinaryNatCode.encode 1))) := by decide
+-- A deliberately distinct reply checks multiplication by the actual nonunit leading residue.
+example : (program G id).value (fun _ => BinaryNatCode.encode 5) [] = BinaryNatCode.encode 4 := by
+  change (if decide (IntegralScalarGeneratorBits.request (scalarFamily G) []) then
+    IntegralScalarGeneratorBits.finish (scalarFamily G) (pair [] (BinaryNatCode.encode 5)) else _) = _
+  have HR : IntegralScalarGeneratorBits.request (scalarFamily G) [] := by
+    change ¬(3 + 1 < 4) ∧ 4 ≤ 4 ∧ 4 - 4 ≤ 2
+    decide
+  rw [show decide (IntegralScalarGeneratorBits.request (scalarFamily G) []) = true from decide_eq_true HR]
+  simp only [ite_true, IntegralScalarGeneratorBits.finish, pairFst_pair, pairSnd_pair]
+  change residueBits (-((5 : ZMod 6) * ((2 ^ 150 * 2 ^ 150 : ℤ) : ZMod 6) ^ 1)) = BinaryNatCode.encode 4
+  decide
+end CriticalScriptRegression

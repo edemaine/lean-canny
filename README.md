@@ -1227,6 +1227,10 @@ The checked ingredients are:
   older suffix. The constructed embedding supplies its actual matrix and
   preserves the same integer denominator. A prefix lookup selects the same
   creating family in the full script, supporting queries with one root.
+  Actual creating-generator families now supply the resumable companion
+  controller. Its leading residue comes from the interpreted bank’s native
+  denominator pass; metadata and task writers suffice for the certificate,
+  while the requested critical coefficient remains a recursive child.
   Reading these scripts is FP when their metadata has the supplied native
   controls; no algebraic matrix callback is used by the denominator pass.
   Each retained generator now has an actual creating birth, whose index
