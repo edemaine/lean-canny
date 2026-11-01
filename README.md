@@ -1574,9 +1574,12 @@ monomial, and basis labels. Their child contracts name the existing lower-row,
 scalar, and critical-coordinate models. A native reciprocal-chart branch now
 returns the actual double-nilpotent mapped-system coefficient from its selected
 homogeneous reply, including the negative identity chart and invalid-label zeros.
-The remaining Macaulay and Gram task bindings and the source
-decoder, scalar callbacks, determinant routing, and normalized companions still
-need to be joined into one mixed evaluator.
+Native Macaulay entries now request only their selected current reciprocal
+coefficient; invalid second-basis labels are rejected before padding. A native
+negative Gram product and streamed sum return the literal matrix entry, with
+loop counts bounded by the original retained-grid cap. The source decoder,
+scalar callbacks, determinant routing, and producer companions still need
+to be joined into one mixed evaluator.
 
 Native integer-zero and trailing-degree scans keep binary counters and request
 small-modulus residues or coefficient-zero flags recursively. Their local
@@ -1603,7 +1606,10 @@ residue model. Its hypotheses are exact current child replies, an integer
 entry-height bound, and the small-modulus loop bound. Distinct native phase
 nodes now derive every internal reply contract from this one dispatcher model,
 including zero outside the factor matrix. The final branch is the literal
-normalized coefficient matrix. The raw-factor dispatcher and complete
+normalized coefficient matrix. Normalized producer-leading and retained-generator
+companion phases also have a native dispatcher with current-reply closure. Its
+two charged companion requests read the actual coefficient and producer leading;
+both decrease the mixed task rank. The raw-factor dispatcher and complete
 mixed-reader assembly remain to be connected.
 
 A full mixed command history includes normalized cuts alongside integer and
@@ -1616,7 +1622,11 @@ reader. Native physical height and monomial controllers use exact current
 lower-stage replies and scalar callbacks, including signed composite-modulus
 regressions. One context-restricted physical dispatcher now covers phases zero
 through twenty-five, with exact current-reply closure and canonical values.
-Its scalar callbacks remain charged. Creating companions, complete mixed
+Its scalar callbacks remain charged. Native physical scalar controllers compute
+common leading and original scale from their current children. The physical
+denominator is reconstructed from earlier producer leading values and original
+rule scales; a physical producer-leading phase requests common leading and
+raises it to the exact derived exponent. Creating companions, complete mixed
 dispatch, and original input-codec binding remain required.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
@@ -1667,7 +1677,12 @@ including points outside the source, which remain excluded by membership.
 These constructions have one initial unary dimension and degree budget.
 Every individual path fits a bounded closed ball, but this does not provide
 an effective uniform radius. General Boolean mixtures across open and closed
-boundaries and component-preserving compactification remain required.
+boundaries and component-preserving compactification remain required. Arbitrary
+formulas now have an exact finite sign partition using their original atomic
+terms. Boundary tuples lift to closures of the corresponding selected pieces
+in the bounded compiler of each closed weak envelope. Relative incidence is
+expressed by equality of every retained original coordinate. Connected component
+refinement and native traversal of these pieces remain separate obligations.
 
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove
