@@ -1,3 +1,4 @@
+import LeanCanny.Algebra.IntegralPowerProductRecursiveStage
 import LeanCanny.Algebra.IntegralEulerLowerController
 import LeanCanny.Algebra.IntegralEulerSumController
 import LeanCanny.Algebra.IntegralCriticalCoordinateProductController

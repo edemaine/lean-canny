@@ -16259,3 +16259,110 @@ example : (IntegralEulerLowBits.program bothEuler objectiveRowTask gradientRowTa
   IntegralEulerLowBits.program_controls bothEuler bothEulerAccess _ _
     (mem_FP_pair (constFn_mem_FP _) id_mem_FP) (mem_FP_pair (constFn_mem_FP _) id_mem_FP)
 end IntegralFrozenPowerRegression
+
+
+namespace LayeredProductControllerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open MatrixProductBits
+set_option backward.isDefEq.respectTransparency false
+private def A : Matrix (Fin 2) (Fin 2) (ZMod 6) := !![1, 1; 0, 1]
+private def B : Matrix (Fin 2) (Fin 2) (ZMod 6) := !![1, 0; 1, 1]
+private def F : Family where
+  width _ := 2
+  count := Nat.fromBitsLE
+  modulus _ := 6
+  row _ := 0
+  col _ := 0
+  factor _ s := if s % 2 = 0 then A else B
+  modulus_ne_zero _ := by decide
+private def factorReader (p : List Bool) := residueBits
+  (F.factor (pairFst p) (Nat.fromBitsLE (IntegralPowerProductBits.factorWord p))
+    ⟨Nat.fromBitsLE (IntegralPowerProductBits.rowWord p) % 2, Nat.mod_lt _ (by decide)⟩
+    ⟨Nat.fromBitsLE (IntegralPowerProductBits.colWord p) % 2, Nat.mod_lt _ (by decide)⟩)
+private def access : Access F where
+  width := BinaryFn.const 2
+  count := BinaryFn.fromBits id_mem_FP
+  modulus := BinaryFn.const 6
+  row := BinaryFn.const 0
+  col := BinaryFn.const 0
+  entry := factorReader
+  entry_eq c s i j := by
+    have HI : i.val % 2 = i.val := Nat.mod_eq_of_lt (show i.val < 2 from i.isLt)
+    have HJ : j.val % 2 = j.val := Nat.mod_eq_of_lt (show j.val < 2 from j.isLt)
+    simp only [factorReader, IntegralPowerProductBits.factorWord, IntegralPowerProductBits.rowWord,
+      IntegralPowerProductBits.colWord, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits,
+      HI, HJ]
+    rfl
+private def answer := powerEntry F access
+private theorem reply (c : List Bool) (i j : Fin (F.power.dimension c)) :
+    answer (id (pair c (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))) = residueBits (F.power.matrix c i j) :=
+  powerEntry_packet F access c i j
+example : (RecursiveStage.controller F access id).Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := Turing.MultiTapeTM.encBits) := RecursiveStage.certificates F access _ id_mem_FP
+example : BinaryFn (ModularRecursiveStage.clock F.power) := RecursiveStage.clock_binary F access
+example : UnaryFn (ModularRecursiveStage.stateBound F.power) := RecursiveStage.stateBound_unary F access
+example (c : List Bool) (t : ℕ) :
+    (((RecursiveStage.controller F access id).reference answer)^[t] ((RecursiveStage.controller F access id).initial c)).length ≤
+      ModularRecursiveStage.stateBound F.power c := RecursiveStage.state_length F access _ _ reply c t
+-- Noncommuting factors distinguish the original order from the reverse order.
+example : F.value (BinaryNatCode.encode 2) = BinaryNatCode.encode 2 := by decide
+example : residueBits ((B * A) (0 : Fin 2) (0 : Fin 2)) = BinaryNatCode.encode 1 := by decide
+example : F.value [] = BinaryNatCode.encode 1 := by decide
+example : (RecursiveStage.controller F access id).output
+    (((RecursiveStage.controller F access id).reference answer)^[ModularRecursiveStage.clock F.power (BinaryNatCode.encode 2)]
+      ((RecursiveStage.controller F access id).initial (BinaryNatCode.encode 2))) = BinaryNatCode.encode 2 := by
+  rw [RecursiveStage.output_when_halted F access _ _ reply _ _ (RecursiveStage.halted_after F access _ _ reply _)]
+  decide
+example : (RecursiveStage.entryProgram F id).Controls := RecursiveStage.entry_controls F access _ id_mem_FP
+-- Width two: row 3 is layer 1/offset 1, column 4 is layer 2/offset 0.
+example : (RecursiveStage.entryProgram F id).query (pair [true, false] (pair (BinaryNatCode.encode 3) (BinaryNatCode.encode 4))) =
+    pair [true, false] (pair (BinaryNatCode.encode 1) (pair (BinaryNatCode.encode 1) (BinaryNatCode.encode 0))) := by decide
+example : (RecursiveStage.entryProgram F id).value factorReader
+    (pair [] (pair (BinaryNatCode.encode 3) (BinaryNatCode.encode 4))) = BinaryNatCode.encode 1 := by decide
+example : (RecursiveStage.entryProgram F id).value (fun _ => [true])
+    (pair [] (pair (BinaryNatCode.encode 0) (BinaryNatCode.encode 4))) = [] := by decide
+example (p : List Bool) : (RecursiveStage.entryProgram F id).value factorReader p = powerEntry F access p :=
+  RecursiveStage.entry_value F access _ _ (fun _ => rfl) p
+end LayeredProductControllerRegression
+
+namespace ClearedCoordinateProductsRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralPowerProductBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+example : (ProductStage.controller F access id).Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := Turing.MultiTapeTM.encBits) :=
+  ProductStage.certificates F access _ id_mem_FP
+example : (FactorStage.controller F access id).Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := Turing.MultiTapeTM.encBits) :=
+  FactorStage.certificates F access _ id_mem_FP
+example : BinaryFn (ModularRecursiveStage.clock (powerFamily F)) := FactorStage.clock_binary F access
+example : UnaryFn (ModularRecursiveStage.stateBound (powerFamily F)) := FactorStage.stateBound_unary F access
+example (q : List Bool) (t : ℕ) :
+    (((FactorStage.controller F access id).reference reader)^[t] ((FactorStage.controller F access id).initial q)).length ≤
+      ModularRecursiveStage.stateBound (powerFamily F) q := FactorStage.state_length F access _ _ (fun _ => rfl) q t
+example (q : List Bool) : (FactorStage.controller F access id).output
+    (((FactorStage.controller F access id).reference reader)^[ModularRecursiveStage.clock (powerFamily F) q]
+      ((FactorStage.controller F access id).initial q)) = (powerFamily F).value q :=
+  FactorStage.output_when_halted F access _ _ (fun _ => rfl) q _ (FactorStage.halted_after F access _ _ (fun _ => rfl) q)
+example (q child : List Bool) (budget : List Bool → ℕ)
+    (h : (FactorStage.controller F access id).Requests reader budget q child) :
+    ∃ r t : Fin (F.rank (pairFst q)), child = pair (pairFst q)
+      (pair (BinaryNatCode.encode (Nat.fromBitsLE (factorWord q))) (pair (BinaryNatCode.encode r.val) (BinaryNatCode.encode t.val))) :=
+  FactorStage.requests_in_bounds F access _ _ (fun _ => rfl) budget q child h
+example : (ProductStage.entryProgram F id).Controls := ProductStage.entry_controls F access _ id_mem_FP
+private def firstPowerQuery := pair ([] : List Bool)
+  (pair (BinaryNatCode.encode 0) (pair (BinaryNatCode.encode 0) (BinaryNatCode.encode 0)))
+-- A nonunit factor is powered integrally before reducing modulo 10.
+example : (FactorStage.controller F access id).output
+    (((FactorStage.controller F access id).reference reader)^[ModularRecursiveStage.clock (powerFamily F) firstPowerQuery]
+      ((FactorStage.controller F access id).initial firstPowerQuery)) = BinaryNatCode.encode 4 := by
+  rw [FactorStage.output_when_halted F access id reader (fun _ => rfl) firstPowerQuery _
+    (FactorStage.halted_after F access id reader (fun _ => rfl) firstPowerQuery)]
+  unfold firstPowerQuery
+  apply Eq.trans (power_packet F [] 0 (0 : Fin 2) (0 : Fin 2))
+  change residueBits ((Algebra.leftMulMatrix b (((2, 3) : ℤ × ℤ) ^ 2) (0 : Fin 2) (0 : Fin 2) : ℤ) : ZMod 10) = _
+  rw [diagonal]
+  norm_num
+  decide
+end ClearedCoordinateProductsRegression

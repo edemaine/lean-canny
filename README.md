@@ -1131,6 +1131,11 @@ The checked ingredients are:
   objective term locally, and bounds its modular accumulator. Coordinate
   multiplication requests one decremented gradient coefficient when the
   selected exponent is positive, and returns zero otherwise.
+  Retained-height power products now have resumable stages through the
+  existing layered matrix reduction. Binary product lengths use one local
+  power stack; adjacent layers request valid factor positions and old basis
+  pairs. Separate factor-power stages preserve the original factor source.
+  Both native certificates use metadata without a factor evaluator.
   Saved-source queries now supply every critical lower coefficient in the
   reduction reader's row, spatial-rank, and old-basis protocol. These rows and
   the common integer leading coefficient feed the actual relative coordinate
