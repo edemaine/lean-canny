@@ -1519,81 +1519,39 @@ The checked ingredients are:
   two points. Point queries include singleton validation and endpoint
   membership, retaining irrational endpoints and rejecting invalid descriptions.
 
-Actual flat task values now connect frozen and Euler arithmetic to the creating
-source. Finite child transports cover grid sums, layered products and factor
-powers, with source data preserved under fresh task records. The middle
-matrix stages now connect moment powers to action entries and reduction
-powers to lower coefficients. Shifted action tasks consume the actual retained
-reduction power at the next phase. Their controllers have local correctness,
-native certificates, binary clocks, and explicit state and request bounds.
-The remaining original/derivative leaf bindings, relative-factor replies, and
-complete history dispatcher still require assembly.
+The complete 27-phase evaluator for critical-only scripts has a native
+polynomial-space proof. One canonical residue model connects the actual leaf,
+arithmetic, matrix, and creating-companion values. The concrete dispatchers
+have native certificates, binary clocks, unary state bounds, and strictly
+decreasing child ranks. Primitive original scalar coefficients may use charged
+space. The stack compiler includes local output-processing costs, and no
+per-stage matrix evaluator is assumed. A fresh phase26 record exposes the
+actual creating-prefix generator entry through this evaluator.
 
-A tagged mixed history now retains an initial integer bank through physical
-critical births, with exact generator origins and common clearing. Its native
-modular denominator pass charges space for exact-leading leaves. Relative
-scalar normalization preserves selected roots, and nilpotent scalar births
-retain formal parameter coefficients. Local mixed-history height estimates
-use a single original-source growth factor with a binary-size bound.
-The total height controller for critical-only scripts now requests the actual
-earlier companion and recovers the cleared retained-height matrix. Extending
-the tagged interpreter to the relative exceptional-factor births and assembling
-the complete recursive dispatcher remain required.
+Source snapshots preserve integer matrix entries under fresh query records,
+and valid source dimensions fit the native field cap. The arithmetic includes
+original and derivative grid sums, monomial factors and powers, frozen and
+Euler rows, reduction powers, augmented moments, and relative characteristic
+coefficients. Guards confine semantic replies to the actual current requests.
+Both old-basis indices and the original transpose convention are retained.
+The creating-source adapter returns zero at missing births. Its leading and
+denominator leaves come from primitive critical-script metadata.
 
-Actual creating sources now support guarded coefficient rescaling and relative
-characteristic powering, with replies confined to the current finite matrix.
-Augmented moment tasks route their nonzero entries to fresh action tasks and
-have explicit state and request bounds. Source snapshots preserve integer
-matrix entries under query-field changes; actual valid dimensions fit the
-native field cap. Original and derivative coefficient leaves and integer-bank
-companions have charged polynomial-space evaluators. Exceptional-bank
-correlation guards recover the selected parent slice at the original spatial
-degree. The remaining child transports and complete dispatcher are still open.
+A tagged mixed history retains an initial integer bank through physical
+critical births, with exact generator origins and common clearing. Its modular
+denominator pass charges space for exact-leading leaves. Relative scalar
+normalization preserves selected roots, and nilpotent scalar births retain
+formal parameter coefficients. Mixed-history height estimates use one
+original-source growth factor and a binary-size bound. Extending the native
+script backend to normalized exceptional-factor births and their charged
+scalar requests remains required.
 
-A total creating-source adapter now supplies native scalar metadata over every
-flat word, with the exact creating family on valid births and a fixed base
-integer algebra otherwise. Its leading and denominator leaves are derived
-from primitive script metadata. Independent exceptional frames now construct
-an integral bank for the retained parent coordinates and exceptional scalar,
-with common clearing and actual CriticalData at the original spatial degree.
-The source coefficient and exact-leading leaves have charged polynomial-space
-readers. One initial cap also covers later relative critical births; mixed
-sampler access, correlation guards, and the complete dispatcher remain required.
-The one-request stack compiler now also accepts local space certificates.
-
-Flat monomial stages now connect product powers, layered product entries,
-factor powers, and actual coefficient/height factors with native local
-controllers and bounded decreasing requests. Reduction entries now emit
-phase16 lower-row coefficient tasks with the original transpose and both
-old-basis ranks. The reduction and relative-factor correctness rules require
-only the actual guarded reply; unrelated oversized legacy packets add no
-semantic obligations. The complete mixed-history evaluator still requires
-the remaining stages and uniform source integration.
-
-Total flat companion control now reads the actual root script on every word,
-returns zero at missing births, and proves its coefficient-child target equals
-the actual creating polynomial entry. Canonical creating, Euler, reduction,
-and action sources depend only on root, birth, and caller modulus; changing
-query fields preserves those whole sources. Guarded action entries request
-flat reduction powers, whose native controllers stream phase17 entries with
-binary clocks and unary state bounds. Uniform creating-source access and the
-remaining stages still need integration into the complete history dispatcher.
-A one-request stack adapter now derives its clock and stored-answer bound
-from native controls and guarded decreasing child tasks.
-
-Flat relative factor tasks now preserve both old-basis ranks and spatial
-indices in fresh records. Their native controller handles local zero/unit
-entries and emits only lower-phase action or moment children; the semantic
-bridge is the actual relative characteristic power matrix. This still needs
-the remaining middle arithmetic stages and the complete history dispatcher.
-
-Independent exceptional frames now retain an original-parent label and an
-exceptional-scalar label, including endpoint-only and empty fibers. Their exact
-fiber homeomorphisms transfer recursive covers, and native record bounds count
-one additional frozen parameter. These frames still need the extended sampler
-readers and recursive graph assembly. Flat original/derivative grid sums now
-stream phase8-to7 terms and phase7-to6 monomial requests with native local
-certificates, rank decrease, and bounded task records.
+Independent exceptional frames retain original-parent and exceptional-scalar
+labels, including endpoint-only and empty fibers. Correlation guards recover
+the selected parent slice at the original spatial degree. Their fiber
+homeomorphisms transfer recursive covers, and native record bounds account
+for the additional frozen parameter. The mixed sampler access, full recursive
+slice covers, and graph assembly remain open.
 
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove

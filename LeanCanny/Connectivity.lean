@@ -1,3 +1,4 @@
+import LeanCanny.Algebra.IntegralCriticalNativeSampler
 import LeanCanny.Algebra.IntegralCriticalActualGridTransport
 import LeanCanny.Algebra.IntegralCriticalActualMaskSnapshot
 import LeanCanny.Algebra.IntegralCriticalTotalFrozenStages
