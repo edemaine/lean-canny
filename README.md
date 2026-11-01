@@ -1538,28 +1538,36 @@ The creating-source adapter returns zero at missing births. Its leading and
 denominator leaves come from primitive critical-script metadata.
 
 A tagged mixed history retains an initial integer bank through physical
-critical births, with exact generator origins and common clearing. Its modular
-denominator pass charges space for exact-leading leaves. Relative coordinate,
-validated squarefree, and Gram factors are constructed over the selected old
-parent ring, with bounds at the original spatial degree. Scalar normalization
-preserves selected roots even when the old regular-representation matrix is
-singular. Nilpotent extensions expose formal parameter coefficients, and
-normalized-cut companion readers reduce to concrete raw factor matrices.
-Their native arithmetic stages still need to be joined to the mixed backend.
+critical births, with exact generator origins and common clearing. Relative
+coordinate, validated squarefree, and Gram factors are constructed over the
+selected old parent ring, with bounds at the original spatial degree. Scalar
+normalization preserves selected roots even when the old multiplication
+matrix is singular. One or two formal nilpotent digits expose the actual
+parameter coefficients; both fit the original task cap. The Gram determinant
+source uses an ordinary characteristic constant coefficient of its negated
+matrix, with exact extraction of both formal digits.
 
-Mixed-history heights use one original-source growth factor. The actual
-virtual coordinate and squarefree sources have binary height bounds derived
-from the original source and old bank. Resumable cofactor folds request older
-producer-leading residues; these scalar leaves remain charged computations.
+Native virtual-source metadata, original integer coefficient leaves, and
+source snapshots are proved. Scalar requests charge the common denominator,
+leading value, and retained heights. Reduction entries request their leading
+scalar recursively, preserving both old-basis indices. A native stack compiler
+accepts the mixed birth/routine/phase rank and includes local processing costs.
+The virtual arithmetic, determinant, and normalized-companion stages still
+need to be joined into one mixed evaluator.
+
+Mixed-history heights use one original-source growth factor. Actual virtual
+coordinate and squarefree sources have binary height bounds derived from the
+original source and old bank. Resumable cofactor folds request older producer
+leading residues; these scalar leaves remain charged computations.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
-labels, including endpoint-only and empty fibers. Selected-parent relative
-factors now give complete physical critical arcs and finite cuts. Exact
-endpoint incidence joins these arcs to supplied endpoint covers, and selected
-coordinate nonvanishing propagates along the arcs. These are covers of the
-critical-point slabs. Correlated frame adapters, saturation to full exceptional
-level slices, the mixed sampler access, and recursive graph assembly remain
-open.
+labels, including endpoint-only and empty fibers. A frozen-first coordinate
+permutation now connects arbitrary active subsets to the same selected mixed
+parent. Exact fiber homeomorphisms preserve the original degree and bank.
+Finite critical sections meet every connected component of each full frame
+slice. Their critical-point slabs have endpoint incidence and supplied-endpoint
+covers. Regularity and path saturation to full slices, the mixed sampler
+access, and recursive graph assembly remain open.
 
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove
