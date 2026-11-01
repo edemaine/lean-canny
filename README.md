@@ -1198,7 +1198,12 @@ The checked ingredients are:
   valid fields exactly. A flattening writer extracts the original task
   from local matrix query wrappers; its stored result retains one root,
   fresh fields, and a derived unary word bound. Earlier births and lower
-  phases preserve the decreasing rank through this writer. The constructed critical polynomial's top coefficient
+  phases preserve the decreasing rank through this writer.
+  A native binary critical-query cap now includes the original and relative
+  spatial grids, retained rank, characteristic/moment/action/product block
+  dimensions, and scalar-rescaling exponents. It uses the coefficient-height
+  budget as a numeric bound, keeping field widths polynomial in its binary
+  length. The cap still needs instantiation in the combined history reader. The constructed critical polynomial's top coefficient
   is an explicit nonzero integer power. A second height representation uses
   the actual monic scalar root divided by that integer, preserving the same
   full physical parent. Its retained numerators are exactly the canonical

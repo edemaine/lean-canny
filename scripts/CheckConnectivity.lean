@@ -16606,3 +16606,31 @@ example : UnaryFn (RankedHistoryTask.wordBudget (fun _ => 10) 5 (bound cap 3)) :
 example : child.length ≤ RankedHistoryTask.wordBudget (fun _ => 10) 5 (bound cap 3) parent :=
   flatten_length_le cap 3 (fun _ => 10) 5 pairFst b phase reader query (by decide) (by decide)
 end RankedHistoryFieldsRegression
+
+
+namespace CriticalQueryBoundsRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open IntegralCriticalQueryBounds
+private def family (q : List Bool) := cap 20 3 (2 ^ q.length) 2 (Nat.fromBitsLE q + 2) 4 (Nat.fromBitsLE q) 6
+private theorem family_binary : BinaryFn family :=
+  cap_binary (BinaryFn.const 20) (UnaryFn.const 3)
+    ((BinaryFn.const 2).powUnary (UnaryFn.length id_mem_FP)) (UnaryFn.const 2)
+    ((BinaryFn.fromBits id_mem_FP).add (BinaryFn.const 2)) (BinaryFn.const 4) (BinaryFn.fromBits id_mem_FP) (BinaryFn.const 6)
+example : UnaryFn (RankedHistoryFields.bound family 6) := RankedHistoryFields.bound_unary family 6 family_binary
+example (S n R W D N C m : ℕ) : C ≤ cap S n R W D N C m := (metadata_le S n R W D N C m).2.2.2.2.2.2.1
+example (S n R W D N C m b k : ℕ) (hb : b ≤ PurePowerReductionBounds.bound n D)
+    (hk : k ≤ PurePowerReductionBounds.dimension n D) : (b + 1) * k ≤ cap S n R W D N C m :=
+  scale_exponent_le S n R W D N C m hb hk
+example (S n R W D N C m L r : ℕ) (hL : L ≤ PurePowerReductionBounds.dimension n D) (hr : r ≤ R) :
+    IntegralCoefficientBlocks.dimension L r ≤ cap S n R W D N C m := coefficient_block_le_of_le S n R W D N C m hL hr
+example (S n R W D N C m L r : ℕ) (hL : L ≤ PurePowerReductionBounds.dimension n D) (hr : r ≤ R) :
+    (L + 2) * r ≤ cap S n R W D N C m := moment_block_le_of_le S n R W D N C m hL hr
+example (S n R W D N C m count r : ℕ) (hc : count ≤ n + 2) (hr : r ≤ R) :
+    (count + 1) * r ≤ cap S n R W D N C m := product_block_le_of_le S n R W D N C m hc hr
+example (S n R W D N C m a w : ℕ) (ha : a ≤ n) (hw : w ≤ W) :
+    FixedWidthPolynomial.count a w ≤ cap S n R W D N C m := source_grid_le_of_le S n R W D N C m ha hw
+-- A height budget of 2^100 still uses only 101 bits per numeric field.
+example : (RankedHistoryFields.write (fun _ => cap 20 2 4 2 4 4 (2 ^ 100) 6) 6 (fun _ => [true]) []).length = 606 := by
+  rw [RankedHistoryFields.write_length]
+  decide
+end CriticalQueryBoundsRegression
