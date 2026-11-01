@@ -1571,7 +1571,10 @@ original scale separately from the derivative scale at composite moduli. Their
 flat writers preserve the source context and both old-bank indices. Actual
 restored-row and homogeneous-row branches return zero on invalid row,
 monomial, and basis labels. Their child contracts name the existing lower-row,
-scalar, and critical-coordinate models. The source
+scalar, and critical-coordinate models. A native reciprocal-chart branch now
+returns the actual double-nilpotent mapped-system coefficient from its selected
+homogeneous reply, including the negative identity chart and invalid-label zeros.
+The remaining Macaulay and Gram task bindings and the source
 decoder, scalar callbacks, determinant routing, and normalized companions still
 need to be joined into one mixed evaluator.
 
@@ -1591,8 +1594,14 @@ Native powers, augmented entries and moments, and relative factors now use
 current replies for this actual leading matrix. An adaptive inverse-coefficient
 controller first requests the exact trailing index, then the selected
 characteristic coefficient at the restored caller modulus. Both requests have
-native certificates and strictly decreasing mixed ranks. The inverse-matrix
-sum, raw-coefficient product, and final normalized branch remain required.
+native certificates and strictly decreasing mixed ranks. Streamed sums now
+compute the literal inverse matrix and its raw-coefficient product. The final
+branch returns the trailing scalar on the diagonal at the selected degree,
+the inverse/raw product below it, and zero for invalid indices or higher degrees.
+One native dispatcher covers all fifteen normalization phases with a canonical
+residue model. Its hypotheses are exact current child replies, an integer
+entry-height bound, and the small-modulus loop bound. The raw-factor dispatcher
+and complete mixed-reader assembly remain to be connected.
 
 A full mixed command history includes normalized cuts alongside integer and
 physical critical births. Padded earlier prefixes preserve exact generator
@@ -1602,8 +1611,9 @@ zero and offset zero without a frozen-height coordinate or formal digit.
 Its original and derivative controllers now use an immutable original scalar
 reader. Native physical height and monomial controllers use exact current
 lower-stage replies and scalar callbacks, including signed composite-modulus
-regressions. Their complete context dispatch and original input-codec binding
-remain required.
+regressions. Context-restricted physical controllers now cover phases zero through eight,
+with exact current-reply closure and canonical values. The remaining physical
+phases, complete mixed dispatch, and original input-codec binding remain required.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
 coordinate, squarefree, and Gram sources have binary height bounds derived from
@@ -1640,6 +1650,14 @@ native traversal now derives that finite term list from actual input formulas
 whose Boolean constructors are disjunctions of strict atoms. The resulting
 equation writer preserves whole-set connectivity of the canonical input,
 including disconnected unbounded sets.
+Formulas built from strict inequalities using conjunction and disjunction now
+have a native closed witness graph homeomorphic to their original solution set.
+Nonnegative margin gates use positive parts, products, and sums; a reciprocal
+of the positive root margin selects precisely the original open set. Native
+whole-set and point-query equation writers retain the original singleton
+validation. Every old singleton has a unique canonical endpoint extension,
+including points outside the source, which remain excluded by membership.
+These constructions have one initial unary dimension and degree budget.
 Every individual path fits a bounded closed ball, but this does not provide
 an effective uniform radius. General Boolean mixtures across open and closed
 boundaries and component-preserving compactification remain required.
