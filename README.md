@@ -1552,8 +1552,12 @@ source snapshots are proved. Scalar requests charge the common denominator,
 leading value, and retained heights. Reduction entries request their leading
 scalar recursively, preserving both old-basis indices. A native stack compiler
 accepts the mixed birth/routine/phase rank and includes local processing costs.
-The virtual arithmetic, determinant, and normalized-companion stages still
-need to be joined into one mixed evaluator.
+Native current-reply controllers cover derivative, retained-height,
+frozen and Euler operations, reduction entries and powers, action entries,
+and moment and relative powering. Their guards, clocks, state bounds, and
+mixed-rank requests are proved. The remaining grid/product/factor arithmetic,
+determinant entries, and normalized companions still need to be joined into
+one mixed evaluator.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
 coordinate and squarefree sources have binary height bounds derived from the
@@ -1565,9 +1569,12 @@ labels, including endpoint-only and empty fibers. A frozen-first coordinate
 permutation now connects arbitrary active subsets to the same selected mixed
 parent. Exact fiber homeomorphisms preserve the original degree and bank.
 Finite critical sections meet every connected component of each full frame
-slice. Their critical-point slabs have endpoint incidence and supplied-endpoint
-covers. Regularity and path saturation to full slices, the mixed sampler
-access, and recursive graph assembly remain open.
+slice. An additional coarse critical-height cut gives regularity between cuts,
+at the original degree and initial cap. Path saturation then gives full
+closed-slab component covers from recursive endpoint covers. The mixed sampler,
+uniform endpoint recursion, cut ordering, label packing, and graph assembly
+remain open. The general Boolean and noncompact component-preserving reduction
+also remains required; nonemptiness equivalence alone does not supply it.
 
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove

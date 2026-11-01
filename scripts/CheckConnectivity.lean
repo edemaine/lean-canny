@@ -27084,3 +27084,497 @@ example (q : List Bool) :
 
 
 end Group13Regression7
+
+
+namespace Group14Regression0
+namespace VirtualLowerRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open IntegralCriticalHistoryTask IntegralMixedCutSource IntegralMixedVirtualQueryBits
+open IntegralMixedVirtualNativeLowerBits
+open scoped Classical
+
+-- Only two actual current children are used for an objective value.
+example (P : Parameters) (F : Family) (reply : List Bool → List Bool) (q : List Bool)
+    (he : ObjectiveRepliesAt P F reply q) :
+    (objectiveProgram P F).value reply q = (source P F).objectiveValue q :=
+  (objective_value_at P F reply q he).trans (IntegralMixedVirtualSnapshotBits.objective_eq P F q)
+
+-- Guarded source-leading and frozen-sum replies give the literal constant.
+example (P : Parameters) (a : Access P) (F : Family) (h : InputMetadata F)
+    (reply : List Bool → List Bool) (q : List Bool) (he : FrozenConstantRepliesAt P F reply q) :
+    (frozenConstantProgram P F).value reply q = (source P F).toGradient.toFrozen.constantValue q :=
+  (frozenConstant_value_at P a F h reply q he).trans (IntegralMixedVirtualSnapshotBits.frozenConstant_eq P F q)
+
+example (P : Parameters) (a : Access P) (F : Family) (h : InputMetadata F)
+    (reply : List Bool → List Bool)
+    (he : ∀ q, selectedValid P .eulerLower q = true → LowerRepliesAt P F reply q) :
+    NativeControllerBranch.Correct (lowerMachine P a F h) reply (IntegralMixedRoutineTaskBits.Frame P) :=
+  lower_correct P a F h reply he
+
+-- A recursive height request retains the exact virtual algebra and matrix entry.
+example (P : Parameters) (F : Family) (q : List Bool) :
+    height P F (IntegralMixedScalarQueryBits.virtualHeight P q) = height P F q := height_scalar_child P F q
+
+-- Immutable raw integer polynomial access is the only cost on the original leaf.
+example (P : Parameters) (a : Access P) (F : Family) (h : InputMetadata F)
+    (ha : SpaceFunction (originalScalar P F)) (reply : List Bool → List Bool) :
+    NativeControllerBranch.Correct (originalMachine P a F h ha) reply (IntegralMixedRoutineTaskBits.Frame P) :=
+  original_correct P a F h ha reply
+
+example (P : Parameters) (a : Access P) (F : Family) (h : InputMetadata F)
+    (g : IntegralMixedVirtualCaps.RootGeometry P F) (reply : List Bool → List Bool) (q : List Bool)
+    (hv : IntegralMixedVirtualCaps.valid P q) (he : DerivativeRepliesAt P F reply q) :
+    (derivativeProgram P F).value reply (derivativeInput P F q) = IntegralMixedVirtualCoefficientBits.derivative P F q :=
+  derivative_value_at P a F h g reply q hv he
+end VirtualLowerRegression
+end Group14Regression0
+
+
+namespace Group14Regression1
+namespace VirtualUpperPartialRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralCriticalHistoryTask IntegralMixedVirtualUpperBits NativeControllerBranch
+
+-- All actual retained-algebra stages are native controllers with current
+-- semantic reply contracts, without a matrix evaluation or FP scalar premise.
+example (P : Parameters) (a : Access P) (F : IntegralMixedCutSource.Family)
+    (h : IntegralMixedVirtualQueryBits.InputMetadata F) (g : IntegralMixedVirtualCaps.RootGeometry P F)
+    (x : (q : List Bool) → ZMod (modulus P q))
+    (hl : LowerMatches P F (fun q => residueBits (x q))) (ha : LeadingMatches P F (fun q => residueBits (x q))) :
+    Correct (stage17 P a F h) (fun q => residueBits (x q)) (IntegralMixedRoutineTaskBits.Frame P) :=
+  correct17 P a F h g x hl ha
+
+example (P : Parameters) (a : Access P) (F : IntegralMixedCutSource.Family)
+    (h : IntegralMixedVirtualQueryBits.InputMetadata F) (g : IntegralMixedVirtualCaps.RootGeometry P F)
+    (reply : List Bool → List Bool) (hx : ReductionMatches P F reply) :
+    Correct (stage18 P a F h) reply (IntegralMixedRoutineTaskBits.Frame P) :=
+  correct18 P a F h g reply hx
+
+example (P : Parameters) (a : Access P) (F : IntegralMixedCutSource.Family)
+    (h : IntegralMixedVirtualQueryBits.InputMetadata F) (x : (q : List Bool) → ZMod (modulus P q))
+    (hx : PowerMatches P F (fun q => residueBits (x q))) :
+    Correct (stage19 P a F h) (fun q => residueBits (x q)) (IntegralMixedRoutineTaskBits.Frame P) :=
+  correct19 P a F h x hx
+
+example (P : Parameters) (F : IntegralMixedCutSource.Family) (g : IntegralMixedVirtualCaps.RootGeometry P F)
+    (q : List Bool) (hv : IntegralMixedVirtualCaps.valid P q)
+    (i j : Fin ((reduction P F).dimension q * (reduction P F).rank q)) :
+    IntegralMixedVirtualMatrixBits.reductionEntry P F (IntegralCriticalFlatMatrixQuery.writer P .reductionEntry
+      (pair q (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))) =
+      residueBits ((IntegralCriticalTotalSnapshotBits.blockMatrix (reduction P F).toSource q i j : ℤ) : ZMod (modulus P q)) :=
+  IntegralMixedVirtualMatrixBits.reduction_child P F g q hv i j
+
+example (P : Parameters) (a : Access P) (F : IntegralMixedCutSource.Family)
+    (h : IntegralMixedVirtualQueryBits.InputMetadata F) (g : IntegralMixedVirtualCaps.RootGeometry P F)
+    (q : List Bool) (hv : IntegralMixedVirtualCaps.valid P q) :
+    IntegralMixedVirtualSnapshotBits.lower P F (IntegralMixedVirtualLowerChildBits.child P F q) =
+      (relativeAccess P a F h).low (IntegralMixedVirtualLowerChildBits.input P F q) :=
+  IntegralMixedVirtualLowerChildBits.child_value P a F h g q hv
+
+-- The integer matrices ignore output indices/routines, and phase-only
+-- retargeting preserves the actual power, rather than a supplied source equality.
+example (P : Parameters) (F : IntegralMixedCutSource.Family) (q : List Bool) (r t : ℕ) :
+    IntegralMixedVirtualMatrixBits.integerAction F (IntegralMixedVirtualTaskBits.saved P q) (get P .slot13 q) r t =
+      IntegralCriticalTotalSnapshotBits.integerEntry (IntegralCriticalTotalSnapshotBits.blockMatrix (characteristic P F) q) r t :=
+  IntegralMixedVirtualMatrixBits.action_snapshot P F q r t
+example (P : Parameters) (F : IntegralMixedCutSource.Family) (p : Phase) (q : List Bool) :
+    powerValue P F (IntegralCriticalFlatEulerBits.next P p q) = powerValue P F q := power_next P F p q
+example (P : Parameters) (F : IntegralMixedCutSource.Family) (q : List Bool) :
+    momentValue P F q = momentAt F (IntegralMixedVirtualTaskBits.saved P q) (get P .slot13 q)
+      (get P .row q) (get P .col q) (get P .slot11 q) (get P .slot12 q) (modulus P q) (modulus_ne_zero P q) :=
+  moment_snapshot P F q
+
+-- Moment and relative powering retain all local native bounds while their
+-- current raw entry replies are supplied by the same ranked dispatcher.
+example (P : Parameters) (a : Access P) (F : IntegralMixedCutSource.Family)
+    (h : IntegralMixedVirtualQueryBits.InputMetadata F) (answer : List Bool → List Bool)
+    (he : ∀ q, selected P .momentPower q = true → IntegralCriticalFlatMomentBits.RepliesAt P (characteristic P F) answer q) :
+    Correct (stage22 P a F h) answer (IntegralMixedRoutineTaskBits.Frame P) := correct22 P a F h answer he
+example (P : Parameters) (a : Access P) (F : IntegralMixedCutSource.Family)
+    (h : IntegralMixedVirtualQueryBits.InputMetadata F) (g : IntegralMixedVirtualCaps.RootGeometry P F)
+    (answer : List Bool → List Bool) (hx : FactorMatches P F answer) :
+    Correct (stage24 P a F h) answer (IntegralMixedRoutineTaskBits.Frame P) := correct24 P a F h g answer hx
+
+end VirtualUpperPartialRegression
+end Group14Regression1
+
+
+namespace Group14Regression2
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCriticalSweep IntegralMixedVirtualOriginalRows
+
+noncomputable def sphere : SpatialSource 2 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+
+noncomputable def initial : State sphere 1 128 0 (Fin 0) :=
+  IntegralMixedHistory.base sphere (IntegralHistorySampler.base 1 (2 ^ 128))
+    (by change PurePowerReductionBounds.dimension 3 2 ≤ 2 ^ 128; decide)
+
+noncomputable def sweep : Rule 2 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => -2
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant (-5) }
+  height := 0
+  height_frozen := by decide
+  slope := -3
+  slope_ne_zero := by decide
+
+noncomputable def family : IntegralMixedCutSource.Family where
+  ambient _ := 2
+  cap _ := 1
+  width _ := 128
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := sphere
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := sweep
+  kind _ := .coordinate 0 0
+  degree _ := 0
+  degree_bound _ := Nat.zero_le _
+  scalar_cap _ := by change IntegralMixedExceptionalBounds.auxiliaryCap 3 2 ≤ 2 ^ 128; decide
+
+noncomputable def indices : IntegralMixedVirtualSweepSource.Indices family where
+  coordinate _ := 0
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < (2 ^ 128) ^ 1; positivity⟩
+  col _ := ⟨0, by change 0 < (2 ^ 128) ^ 1; positivity⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+theorem scale_eq : originalScale Group14Regression2.family [] = 64 := by
+  norm_num [originalScale, IntegralMixedVirtualSweepSource.denominator, data,
+    CoordinateFrozenCriticalElimination.denominator, commonDenominator,
+    CommonIntegerDenominator.denominator, Group14Regression2.family, sweep, initial, IntegralMixedHistory.base,
+    sphere, Fin.prod_univ_succ]
+  decide
+
+abbrev Free := Fin (Group14Regression2.family.ambient [] - (Group14Regression2.family.rule []).critical.offset.val + 1)
+def j0 : Free := ⟨0, by change 0 < 2; decide⟩
+def j1 : Free := ⟨1, by change 1 < 2; decide⟩
+noncomputable def e0 : Free →₀ ℕ := Finsupp.single j0 2
+noncomputable def e1 : Free →₀ ℕ := Finsupp.single j1 1
+
+-- The full source row restores its free Fermat coefficient.
+example : (row Group14Regression2.family [] j0).coeff e0 = 64 := by
+  have HF : (frozen Group14Regression2.family indices []).totalDegree < 2 := frozen_degree Group14Regression2.family indices []
+  have HL : (frozen Group14Regression2.family indices []).coeff e0 = 0 := by
+    apply MvPolynomial.coeff_eq_zero_of_totalDegree_lt
+    simpa only [e0, Finsupp.support_single j0 (by decide : (2 : ℕ) ≠ 0),
+      Finset.sum_singleton, Finsupp.single_eq_same] using HF
+  have Hj : j0 = objective (Group14Regression2.family.rule []) := Fin.ext rfl
+  rw [equation_coefficient Group14Regression2.family indices [] j0 Hj e0, HL, scale_eq]
+  have HD : (Group14Regression2.family.spatial []).degree = 2 := rfl
+  norm_num [Fin.sum_univ_succ, Finsupp.single_eq_single_iff, e0, j0, Group14Regression2.family, sweep, sphere]
+  rw [HD]
+  change (64 : IntegralMixedVirtualSweepSource.Coefficient Group14Regression2.family []) *
+    ((Finset.univ.filter (fun x : Fin 2 => x = 0)).card : IntegralMixedVirtualSweepSource.Coefficient Group14Regression2.family []) = 64
+  rw [show (Finset.univ.filter (fun x : Fin 2 => x = 0)).card = 1 from by decide]
+  norm_num
+
+-- The nonobjective row restores the full derivative monomial.
+example : (row Group14Regression2.family [] j1).coeff e1 = 128 := by
+  have HF : (gradient Group14Regression2.family indices [] j1).totalDegree < 1 := gradient_degree Group14Regression2.family indices [] j1
+  have HL : (gradient Group14Regression2.family indices [] j1).coeff e1 = 0 := by
+    apply MvPolynomial.coeff_eq_zero_of_totalDegree_lt
+    simpa only [e1, Finsupp.support_single j1 (by decide : (1 : ℕ) ≠ 0),
+      Finset.sum_singleton, Finsupp.single_eq_same] using HF
+  have Hne : j1 ≠ objective (Group14Regression2.family.rule []) := by
+    intro H
+    have HV := congrArg Fin.val H
+    change 1 = 0 at HV
+    omega
+  rw [derivative_coefficient Group14Regression2.family indices [] j1 Hne e1, HL, scale_eq]
+  have HD : (Group14Regression2.family.spatial []).degree = 2 := rfl
+  norm_num [Group14Regression2.family, sphere, e1]
+  rw [HD, ← Finsupp.single_tsub]
+  norm_num
+
+end Group14Regression2
+
+
+namespace Group14Regression3
+
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCriticalSweep FixedWidthPolynomial
+open scoped Classical
+
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+
+noncomputable def initial : State circle 1 64 0 (Fin 0) :=
+  IntegralMixedHistory.base circle (IntegralHistorySampler.base 1 (2 ^ 64))
+    (by norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, count, circle]; decide)
+
+noncomputable def sweep : Rule 1 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => -2
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant (-5) }
+  height := 0
+  height_frozen := by decide
+  slope := -3
+  slope_ne_zero := by decide
+
+noncomputable def family : IntegralMixedCutSource.Family where
+  ambient _ := 1
+  cap _ := 1
+  width _ := 64
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := circle
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := sweep
+  kind _ := .coordinate 0 0
+  degree _ := 0
+  degree_bound _ := Nat.zero_le _
+  scalar_cap _ := by
+    norm_num [IntegralMixedExceptionalBounds.auxiliaryCap, IntegralMixedExceptionalBounds.K,
+      IntegralMixedExceptionalBounds.E, IntegralMixedExceptionalBounds.regularCap,
+      IntegralMixedExceptionalBounds.valueCap, IntegralMixedExceptionalBounds.valueDimension,
+      IntegralMixedExceptionalBounds.boxWidth, IntegralMixedExceptionalBounds.boxBase,
+      IntegralMixedSweepBounds.parameterCap, IntegralMixedSweepBounds.coordinateCap, PurePowerReductionBounds.dimension,
+      PurePowerReductionBounds.width, PurePowerReductionBounds.bound, count, circle]
+    decide
+
+noncomputable def indices : IntegralMixedVirtualSweepSource.Indices family where
+  coordinate _ := 0
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  col _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+noncomputable def originalBounds : IntegralMixedCoordinateBounds.OriginalBounds family where
+  bankHeight _ := 4
+  sourceHeight _ := 3
+  rank _ := count 1 64
+  sourceWidth _ := 2
+  spatialDegree _ := 2
+  nodes _ := 1
+  bank _ := UniformIntegralPrefix.HeightBank.base_bounds _ _ _
+  coefficient _ e := by
+    change Fin 2 →₀ ℕ at e
+    change ((MvPolynomial.C (-1 : ℤ) : MvPolynomial (Fin 2) ℤ).coeff e).natAbs ≤ 2 ^ 3
+    rw [MvPolynomial.coeff_C]
+    split_ifs <;> norm_num
+  rank_bound _ := Nat.le_refl _
+  width_bound _ := by change (2 : ℕ).size ≤ 2; decide
+  degree_bound _ := by change (2 : ℕ) ≤ 2; decide
+  leading _ := by change (1 : ℤ).natAbs.size ≤ 3; decide
+  expression_nodes _ _ := by change (AffineExpr.constant (-5)).nodes ≤ 1; decide
+  expression_coefficients _ _ := by change (-5 : ℤ).natAbs.size ≤ 3; decide
+  scales _ _ := by change (-2 : ℤ).natAbs.size ≤ 3; decide
+  slope _ := by change (-3 : ℤ).natAbs.size ≤ 3; decide
+  source_le_bank _ := by decide
+
+-- Negative integer scales and a nonunit sweep slope feed the actual
+-- relative coordinate construction, with no raw-factor height premise.
+example (q : List Bool) (k : ℕ) (u v : Fin (count 0 64)) :
+    (IntegralMixedCutMatrix.coefficientMatrix initial (by decide) sweep
+      (.coordinate 0 0) k u v).natAbs ≤
+        2 ^ IntegralMixedCoordinateBounds.height 1 (count 1 64) 2 2 1 1 4 :=
+  (IntegralMixedCoordinateBounds.rawBounds family indices originalBounds (fun _ => 0) (fun _ => rfl)).bound q k u v
+
+example : BinaryFn
+    (IntegralMixedCoordinateBounds.rawBounds family indices originalBounds (fun _ => 0) (fun _ => rfl)).height :=
+  IntegralMixedCoordinateBounds.rawBounds_height_binary family indices originalBounds (fun _ => 0) (fun _ => rfl)
+    (UnaryFn.const 1) (BinaryFn.const (count 1 64)) (UnaryFn.const 2) (BinaryFn.const 2)
+    (BinaryFn.const 1) (BinaryFn.const 1) (BinaryFn.const 4)
+
+-- Above-cap indices vanish rather than wrap into a different coefficient.
+example (k : ℕ) (hk : 2 ^ 64 ≤ k) :
+    IntegralMixedCutMatrix.coefficientMatrix initial (by decide) sweep (.coordinate 0 0) k = 0 :=
+  IntegralMixedCutNilpotent.coefficient_outside initial (by decide) sweep (.coordinate 0 0)
+    (family.scalar_cap []) k hk
+
+
+
+open MatrixPower
+
+def valueChoice : Fin (IntegralMixedValueTrailing.ChoiceBound circle sweep) :=
+  ⟨1, by change 1 < IntegralMixedGridValue.dimension circle sweep + 2; omega⟩
+
+-- This is the actual negative Gram source, not an assumed annihilator.
+example (q : List Bool) :
+    (IntegralMixedValueDeterminantSource.source Group14Regression3.family indices (fun _ => valueChoice)).value q = residueBits
+      ((Algebra.leftMulMatrix (IntegralMixedCutNilpotent.basis initial).finBasis
+        (IntegralMixedCutNilpotent.value initial (by decide) sweep (.value 0 valueChoice))
+          (indices.row q) (indices.col q) : ℤ) : ZMod 6) :=
+  IntegralMixedValueDeterminantSource.source_value Group14Regression3.family indices (fun _ => valueChoice) q (by change 0 < 1; decide)
+
+-- The zero value label is returned immediately and does not read the matrix.
+example (q : List Bool) : IntegralMixedValueDeterminantSource.value Group14Regression3.family indices (fun _ => 0) q = [] := rfl
+
+example (q : List Bool) :
+    ((IntegralMixedValueDeterminantSource.source Group14Regression3.family indices (fun _ => valueChoice)).rank q).size ≤ 64 * (1 + 2) + 1 :=
+  IntegralMixedValueDeterminantSource.source_rank_bits Group14Regression3.family indices (fun _ => valueChoice) q
+
+-- The literal scalar coefficient is recovered by the two zero-column selections.
+example (e : Fin (2 ^ 64)) (u v : Fin (count 0 64)) :
+    Algebra.leftMulMatrix (IntegralMixedValueDoubleNilpotent.basis initial)
+      (IntegralMixedValueDoubleNilpotent.matrix initial (by decide) sweep 0).det
+      (IntegralCoordinateBasis.pairIndex 1 64
+        (IntegralCoordinateBasis.pairIndex 0 64 (u, e),
+          ⟨IntegralMixedValueDoubleNilpotent.reflectedIndex circle sweep valueChoice,
+            IntegralMixedValueDoubleNilpotent.reflectedIndex_lt circle sweep valueChoice (family.scalar_cap [])⟩))
+      (IntegralCoordinateBasis.pairIndex 1 64 (IntegralCoordinateBasis.pairIndex 0 64 (v, 0), 0)) =
+      IntegralMixedCutMatrix.coefficientMatrix initial (by decide) sweep (.value 0 valueChoice) e.val u v :=
+  IntegralMixedValueDoubleNilpotent.raw_coefficient initial (by decide) sweep 0 valueChoice
+    (by change 0 < 1; decide) (family.scalar_cap []) e u v
+
+-- Negating the source matrix absorbs the characteristic determinant sign.
+example : (- (!![2, 3; 5, 7] : Matrix (Fin 2) (Fin 2) ℤ)).charpoly.coeff 0 = -1 := by
+  rw [IntegralMixedValueDeterminantSource.negative_charpoly_constant, Matrix.det_fin_two]
+  norm_num
+
+theorem metadata : IntegralMixedVirtualNativeBits.Metadata family indices where
+  ambient := UnaryFn.const 1
+  birth := UnaryFn.const 0
+  width := UnaryFn.const 64
+  offset := UnaryFn.const 1
+  degree := BinaryFn.const 2
+  objective := BinaryFn.const 0
+  target := BinaryFn.const 0
+  row := BinaryFn.const 0
+  col := BinaryFn.const 0
+  modulus := BinaryFn.const 6
+  coordinate := BinaryFn.const 0
+  coefficientIndex := BinaryFn.const 0
+
+example : IntegralMixedValueDeterminantMetadata.address family indices (fun _ => valueChoice) ∈ FP :=
+  IntegralMixedValueDeterminantMetadata.address_FP family indices metadata (fun _ => valueChoice) (BinaryFn.const 1)
+
+example (q : List Bool) :
+    pairFst (IntegralMixedValueDeterminantMetadata.address family indices (fun _ => valueChoice) q) = q :=
+  IntegralMixedValueDeterminantMetadata.address_original family indices (fun _ => valueChoice) q
+
+
+
+
+
+-- The actual double-nilpotent matrix has literal homogeneous coordinate
+-- rows and the full original mapped test row.
+example (q : List Bool) :
+    IntegralMixedValueDoubleNilpotent.matrix (family.state q) (family.birth_bound q) (family.rule q) (indices.coordinate q) =
+      ProjectiveGramEliminant.gram (MacaulayFullBox.matrix
+        (IntegralMixedValueDoubleSystem.mappedSystem family q (indices.coordinate q))
+        (RelativeProjectiveValueGram.degrees (fun _ =>
+          IntegralMixedCoordinateSquarefree.coordinateDegree (family.spatial q) (family.rule q)) (family.spatial q).degree)
+        (IntegralMixedGridValue.width (family.spatial q) (family.rule q))) :=
+  IntegralMixedValueDoubleSystem.matrix_eq family q (indices.coordinate q)
+
+noncomputable def testRow : MvPolynomial (Fin 2) (Polynomial ℤ) :=
+  MvPolynomial.C (Polynomial.X ^ 4 - 1) + MvPolynomial.X 1
+
+-- The noninjective sweep map kills η^4 but preserves the independent
+-- reciprocal-value polynomial variable.
+example (H : Fin 1 → MvPolynomial (Fin 2) (Polynomial ℤ)) :
+    (RelativeValueSystemMap.reciprocal H testRow 2 0).map
+        (Polynomial.mapRingHom (AdjoinRoot.mk (Polynomial.X ^ 4 : Polynomial ℤ))) =
+      RelativeValueSystemMap.reciprocal
+        (fun j => (H j).map (AdjoinRoot.mk (Polynomial.X ^ 4 : Polynomial ℤ)))
+        (MvPolynomial.C (-1) + MvPolynomial.X 1) 2 0 := by
+  rw [RelativeValueSystemMap.system]
+  have HP : testRow.map (AdjoinRoot.mk (Polynomial.X ^ 4 : Polynomial ℤ)) =
+      MvPolynomial.C (-1 : AdjoinRoot (Polynomial.X ^ 4 : Polynomial ℤ)) + MvPolynomial.X 1 := by
+    simp only [testRow, map_add, MvPolynomial.map_C, map_sub, AdjoinRoot.mk_self,
+      map_one, map_zero, zero_sub, map_neg, MvPolynomial.map_X]
+  rw [HP]
+
+end Group14Regression3
+
+
+namespace Group14Regression4
+namespace CoarseCriticalHeightRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity
+open Polynomial IntegralMixedHistory
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+private noncomputable def p : Polynomial ℤ := Polynomial.X ^ 2 - Polynomial.C 1
+private theorem p_degree : p.natDegree ≤ 2 := by
+  exact (Polynomial.natDegree_sub_le _ _).trans (max_le (by simp) (by simp))
+private theorem p_nonzero : p.map (Int.castRingHom ℝ) ≠ 0 := by
+  intro H
+  have HC := congrArg (fun f : Polynomial ℝ => f.coeff 2) H
+  norm_num [p, Polynomial.coeff_one] at HC
+
+-- Negative, nonunit clearing denominator; no inverse occurs in the polynomial.
+example : (ClearedAffinePolynomial.polynomial 2 p 3 (-3) (-6)).natDegree ≤ 2 :=
+  (ClearedAffinePolynomial.degree_le _ _ _ _ _).trans p_degree
+example : (ClearedAffinePolynomial.polynomial 2 p 3 (-3) (-6)).map (Int.castRingHom ℝ) ≠ 0 :=
+  ClearedAffinePolynomial.selected_nonzero _ _ _ _ _ _ p_degree p_nonzero (by norm_num) (by norm_num)
+example : (ClearedAffinePolynomial.polynomial 2 p 3 (-3) (-6)).eval₂ (Int.castRingHom ℝ) 3 = 0 := by
+  rw [ClearedAffinePolynomial.eval _ _ _ _ _ _ p_degree (by norm_num)]
+  norm_num [p]
+example : (ClearedAffinePolynomial.polynomial 2 p 3 (-3) (-6)).eval₂ (Int.castRingHom ℝ) (-1) = 0 := by
+  rw [ClearedAffinePolynomial.eval _ _ _ _ _ _ p_degree (by norm_num)]
+  norm_num [p]
+
+private noncomputable def P : SpatialSource 0 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+private noncomputable def x : State P 1 2 0 (Fin 0) :=
+  base P (IntegralHistorySampler.base 1 (2^2)) (by
+    norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, FixedWidthPolynomial.count, P]; decide)
+private def r : CriticalRule 0 where
+  offset := 0
+  objective := 0
+  coordinate := 0
+  scales _ := -3
+  scales_ne_zero _ := by decide
+  heights _ := .constant 0
+private noncomputable def φ : x.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ :=
+  (Int.castRingHom ℝ).toIntAlgHom
+
+-- The actual ordinary critical annihilator at the original root 1.
+example : (criticalPolynomial x (by decide) r).eval₂ φ.toRingHom 1 = 0 := by
+  have H := IntegralMixedCriticalRoot.root x (by decide) r φ (fun _ => 1)
+    (by intro i hi; exact (Nat.not_lt_zero _ hi).elim)
+    (by simp [FermatCriticalHomogenization.polynomial, P])
+    (by
+      intro j hj
+      apply (hj _).elim
+      apply Fin.ext
+      have Hj := j.isLt
+      change j.val < 1 at Hj
+      change j.val = 0
+      omega)
+  exact H
+example : ((criticalPolynomial x (by decide) r).map φ.toRingHom).natDegree = 4 := by
+  rw [IntegralMixedCriticalRoot.selected_degree]
+  norm_num [criticalDegree, P, r, PurePowerReductionBounds.dimension,
+    PurePowerReductionBounds.width, PurePowerReductionBounds.bound, FixedWidthPolynomial.count]
+  decide
+example : (criticalPolynomial x (by decide) r).natDegree ≤ 2^2 :=
+  (IntegralMixedCriticalRoot.degree_le _ _ _).trans (criticalDegree_cap _ _ _)
+
+end CoarseCriticalHeightRegression
+end Group14Regression4
