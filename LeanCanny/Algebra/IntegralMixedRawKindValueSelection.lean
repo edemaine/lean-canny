@@ -16,6 +16,7 @@ theorem value_kind (F : Family) (key : List Bool) (ht : tag F key = 4) :
     F.kind key = IntegralMixedValueCoefficientSnapshot.kind F key (coordinate F key) (choice F key) := by
   cases hk : F.kind key with
   | coordinate j c => simp only [tag, hk] at ht; omega
+  | limitCoordinate j c => simp only [tag, hk] at ht; omega
   | squarefree j c => simp only [tag, hk] at ht; omega
   | value j c =>
     simp only [coordinate, choice, hk, IntegralMixedValueCoefficientSnapshot.kind]

@@ -1757,13 +1757,27 @@ Forward and inverse coordinate selectors and the sweep slope mask are derived
 from original level data. A separate seventh header field distinguishes raw
 cut tags while preserving the existing source contexts.
 
-Selected limit-coordinate factors now have exact matrix coefficient transport,
+Selected limit-coordinate factors have exact matrix coefficient transport,
 finite valid choices, real limit roots, and original-source height bounds.
-Native shifted requests preserve the original root and modulus. A certified
-streamed product combines older producer leadings with a lower critical query.
-The coefficient model, new cut constructor, and full current-reply dispatcher
-integration remain required, along with concrete command/advice writers and
-effective graph bounds.
+Their native evaluator streams older producer leadings and a shifted critical
+query, preserving the original root and modulus even for nonunit denominators.
+The fourth cut constructor uses raw tag 5 and producer context 2. Its prepared
+branch restores the immutable coordinate and choice; all denominator and
+critical replies close against the full native controller. The shared history
+height profile includes the extra denominator powers. Initial real parent
+coordinates have correlated integer-prefix realizations and causal level
+bounds. A correlated limit birth constructs the next source's frozen data
+while retaining the old bank. Source-framed instructions and their
+Family adapter preserve each creating source. Literal header adapters derive
+cut metadata and producer routing. A causal binary schedule bounds the next
+level and its LOW coefficients from retained-bank bounds, with native residue
+readers. Actual framed run and padded-prefix bank bounds follow from script
+syntax and one default-instruction bound. A concrete original-bank advice
+factory constructs scalar controls and exact headers for one coarse critical
+birth followed by a coordinate or limit cut. Original direction and level
+values remain charged in space. General source/rule syntax binding, sampling
+and full native assembly across frames, complete recursive command writers,
+and effective graph bounds remain required.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate

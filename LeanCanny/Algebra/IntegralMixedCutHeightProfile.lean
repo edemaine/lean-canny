@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 public import LeanCanny.Algebra.IntegralMixedHeightMonotone
+public import LeanCanny.Algebra.IntegralMixedLimitCoordinateBounds
 /-! # Original-metadata factors for one mixed relative-cut birth -/
 @[expose] public section
 namespace LeanCanny.Algebra.IntegralMixedCutHeightProfile
@@ -24,9 +25,12 @@ def system (n R W D S L : ℕ) := coordinate n R W D S L + row n R W D S L + 1
 def value (n R W D S L : ℕ) :=
   IntegralRelativeCharacteristicBounds.determinantHeight (columns n D) R
     (IntegralMacaulayGramBounds.gramHeight (rows n D) R (system n R W D S L))
-def factor (n R W D S L : ℕ) := max (coordinate n R W D S L)
+def legacyFactor (n R W D S L : ℕ) := max (coordinate n R W D S L)
   (max (IntegralPrincipalHeightBounds.height (IntegralMixedExceptionalBounds.K (n + 1) D) R (coordinate n R W D S L))
     (value n R W D S L))
+
+def factor (n R W D S L : ℕ) := max (legacyFactor n R W D S L)
+  (IntegralMixedLimitCoordinateBounds.factor n R W D S L)
 
 theorem coordinate_scaled (n R W D S L G : ℕ) :
     IntegralMixedCoordinateBounds.height n R W D S L G = coordinate n R W D S L * G := by

@@ -19,11 +19,13 @@ theorem coordinate_choice_lt (F : Family) (key : List Bool) (ht : tag F key = 2)
   | coordinate j c => simpa only [choice, hk] using c.isLt
   | squarefree j c => simp only [tag, hk] at ht; omega
   | value j c => simp only [tag, hk] at ht; omega
+  | limitCoordinate j c => simp only [tag, hk] at ht; omega
 
 theorem value_choice_lt (F : Family) (key : List Bool) (ht : tag F key = 4) :
     choice F key < IntegralMixedValueTrailing.ChoiceBound (F.spatial key) (F.rule key) := by
   cases hk : F.kind key with
   | coordinate j c => simp only [tag, hk] at ht; omega
+  | limitCoordinate j c => simp only [tag, hk] at ht; omega
   | squarefree j c => simp only [tag, hk] at ht; omega
   | value j c => simpa only [choice, hk] using c.isLt
 

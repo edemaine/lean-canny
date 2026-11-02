@@ -49,5 +49,6 @@ theorem factor_binary {n R W D S L : List Bool → ℕ} (hn : UnaryFn n) (hR : B
   have HV := IntegralRelativeCharacteristicBounds.determinantHeight_binary (columns_binary hn hD) hR
     (IntegralMacaulayGramBounds.gramHeight_binary (rows_binary hn hD) hR HS)
   have HP := IntegralPrincipalHeightBounds.height_binary (PurePowerReductionBounds.dimension_binary (hn.add (UnaryFn.const 1)) hD) hR HC
-  exact max_binary HC (max_binary HP HV)
+  exact max_binary (max_binary HC (max_binary HP HV))
+    (IntegralMixedLimitCoordinateBounds.factor_binary hn hR hW hD hS hL)
 end LeanCanny.Algebra.IntegralMixedCutHeightProfile

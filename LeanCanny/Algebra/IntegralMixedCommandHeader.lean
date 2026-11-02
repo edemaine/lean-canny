@@ -48,16 +48,16 @@ theorem decode_nil : decode [] = zero := rfl
 
 def kindContext {n : ℕ} {P : SpatialSource n} {r : IntegralMixedCriticalSweep.Rule n} :
     IntegralMixedRelativeCuts.Kind P r → ℕ
-  | .coordinate .. => 2 | .squarefree .. => 3 | .value .. => 4
+  | .coordinate .. => 2 | .squarefree .. => 3 | .value .. => 4 | .limitCoordinate .. => 2
 def kindRawTag {n : ℕ} {P : SpatialSource n} {r : IntegralMixedCriticalSweep.Rule n} :
     IntegralMixedRelativeCuts.Kind P r → ℕ
-  | .coordinate .. => 2 | .squarefree .. => 3 | .value .. => 4
+  | .coordinate .. => 2 | .squarefree .. => 3 | .value .. => 4 | .limitCoordinate .. => 5
 def kindCoordinate {n : ℕ} {P : SpatialSource n} {r : IntegralMixedCriticalSweep.Rule n} :
     IntegralMixedRelativeCuts.Kind P r → ℕ
-  | .coordinate j _ => j.val | .squarefree j _ => j.val | .value j _ => j.val
+  | .coordinate j _ => j.val | .squarefree j _ => j.val | .value j _ => j.val | .limitCoordinate j _ => j.val
 def kindChoice {n : ℕ} {P : SpatialSource n} {r : IntegralMixedCriticalSweep.Rule n} :
     IntegralMixedRelativeCuts.Kind P r → ℕ
-  | .coordinate _ c => c.val | .squarefree _ c => c.val | .value _ c => c.val
+  | .coordinate _ c => c.val | .squarefree _ c => c.val | .value _ c => c.val | .limitCoordinate _ c => c.val
 
 def selection {n : ℕ} {P : SpatialSource n} (s : IntegralMixedFullHistoryFamilyBits.Selection P) : Header :=
   ⟨kindContext s.kind, kindCoordinate s.kind, s.rule.critical.offset.val, s.rule.critical.objective,

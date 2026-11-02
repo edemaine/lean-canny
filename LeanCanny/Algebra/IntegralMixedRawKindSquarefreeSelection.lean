@@ -21,6 +21,7 @@ theorem squarefree_kind (F : Family) (key : List Bool) (ht : tag F key = 3) :
     F.kind key = squarefreeKind F key (coordinate F key) (choice F key) := by
   cases hk : F.kind key with
   | coordinate j c => simp only [tag, hk] at ht; omega
+  | limitCoordinate j c => simp only [tag, hk] at ht; omega
   | squarefree j c =>
     simp only [coordinate, choice, hk, squarefreeKind,
       IntegralMixedPscEntrySnapshot.indices, IntegralMixedPscEntrySnapshot.index,
@@ -31,6 +32,7 @@ theorem squarefree_choice_lt (F : Family) (key : List Bool) (ht : tag F key = 3)
     choice F key < IntegralMixedCoordinateSquarefree.coordinateDegree (F.spatial key) (F.rule key) := by
   cases hk : F.kind key with
   | coordinate j c => simp only [tag, hk] at ht; omega
+  | limitCoordinate j c => simp only [tag, hk] at ht; omega
   | squarefree j c => simpa only [choice, hk] using c.isLt
   | value j c => simp only [tag, hk] at ht; omega
 

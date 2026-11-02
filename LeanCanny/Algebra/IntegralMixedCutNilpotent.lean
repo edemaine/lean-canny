@@ -49,6 +49,13 @@ theorem factor_degree_lt (x : State P S B m ι) (hm : m ≤ S) (r : Rule n) (c :
     change (IntegralMixedCoordinateSquarefree.exceptional x hm r j k).natDegree < _
     unfold auxiliaryCap
     omega
+  | limitCoordinate j c =>
+    have HC := IntegralMixedLimitCoordinate.factor_degree x hm r j c
+    have HI : c.val < PurePowerReductionBounds.dimension (n - r.critical.offset.val + 1) P.degree + 1 := c.isLt
+    have HK := coordinateCap_le P.degree r
+    change (IntegralMixedLimitCoordinate.factor x hm r j c).natDegree < _
+    unfold auxiliaryCap
+    omega
 
 noncomputable def basis (x : State P S B m ι) :=
   x.sampler.scalarPrefix.basis.step (X ^ (2 ^ B)) (monic_X_pow _) (natDegree_X_pow _)

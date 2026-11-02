@@ -10,47 +10,51 @@ public import LeanCanny.Algebra.IntegralMixedNormalizationScopedCurrent
 namespace LeanCanny.Algebra.IntegralMixedRawDispatcherBits
 open LeanCanny.Encoding LeanCanny.Computation MatrixPower IntegralCriticalHistoryTask NativeControllerBranch
 open IntegralMixedCutSource IntegralMixedVirtualQueryBits
+open IntegralMixedOldBankCofactorBits (Routing RoutingAccess)
 set_option backward.isDefEq.respectTransparency false
 
 abbrev Matches (P : Parameters) (a : Access P) (F : Family) (h : InputMetadata F)
-    (k : IntegralMixedRawKindBits.Metadata F) (hd : BinaryFn F.degree) (answer : List Bool → List Bool) : Prop :=
-  ∀ q, IntegralMixedVirtualCaps.valid P q → IntegralMixedRoutineTaskBits.routine P q = 4 → answer q = (machine P a F h k hd).model q
+    (k : IntegralMixedRawKindBits.Metadata F) (hd : BinaryFn F.degree) (R : Routing) (rA : RoutingAccess R) (answer : List Bool → List Bool) : Prop :=
+  ∀ q, IntegralMixedVirtualCaps.valid P q → IntegralMixedRoutineTaskBits.routine P q = 4 → answer q = (machine P a F h k hd R rA).model q
 
 theorem valueFactor_matches (P : Parameters) (a : Access P) (F : Family) (h : InputMetadata F)
-    (k : IntegralMixedRawKindBits.Metadata F) (hd : BinaryFn F.degree) (answer : List Bool → List Bool)
-    (hm : Matches P a F h k hd answer) (q : List Bool) (hq : IntegralMixedValueFactorScopedBits.Selected P F q) :
+    (k : IntegralMixedRawKindBits.Metadata F) (hd : BinaryFn F.degree) (R : Routing) (rA : RoutingAccess R) (answer : List Bool → List Bool)
+    (hm : Matches P a F h k hd R rA answer) (q : List Bool) (hq : IntegralMixedValueFactorScopedBits.Selected P F q) :
     answer q = IntegralMixedValueFactorValue.value P F q :=
-  (hm q hq.1.1 hq.1.2.1).trans (model_valueFactor P a F h k hd q hq)
+  (hm q hq.1.1 hq.1.2.1).trans (model_valueFactor P a F h k hd R rA q hq)
 
 theorem squarefreeFactor_matches (P : Parameters) (a : Access P) (F : Family) (h : InputMetadata F)
-    (k : IntegralMixedRawKindBits.Metadata F) (hd : BinaryFn F.degree) (answer : List Bool → List Bool)
-    (hm : Matches P a F h k hd answer) : IntegralMixedSquarefreeCoefficientNative.FactorMatches P F answer := by
+    (k : IntegralMixedRawKindBits.Metadata F) (hd : BinaryFn F.degree) (R : Routing) (rA : RoutingAccess R) (answer : List Bool → List Bool)
+    (hm : Matches P a F h k hd R rA answer) : IntegralMixedSquarefreeCoefficientNative.FactorMatches P F answer := by
   intro q hq
-  exact (hm q hq.1 hq.2.1).trans (model_squarefreeFactor P a F h k hd q hq)
+  exact (hm q hq.1 hq.2.1).trans (model_squarefreeFactor P a F h k hd R rA q hq)
 
 theorem raw_matches (P : Parameters) (a : Access P) (F : Family) (h : InputMetadata F)
-    (k : IntegralMixedRawKindBits.Metadata F) (hd : BinaryFn F.degree) (answer : List Bool → List Bool)
-    (hm : Matches P a F h k hd answer) : IntegralMixedNormalizationScopedBits.RawMatches P F answer := by
+    (k : IntegralMixedRawKindBits.Metadata F) (hd : BinaryFn F.degree) (R : Routing) (rA : RoutingAccess R) (answer : List Bool → List Bool)
+    (hm : Matches P a F h k hd R rA answer) : IntegralMixedNormalizationScopedBits.RawMatches P F answer := by
   intro q hv hr hp hx
-  exact (hm q hv hr).trans (model_raw P a F h k hd q hv hr hp hx)
+  exact (hm q hv hr).trans (model_raw P a F h k hd R rA q hv hr hp hx)
 
 theorem correct (P : Parameters) (a : Access P) (F : Family) (h : InputMetadata F)
-    (k : IntegralMixedRawKindBits.Metadata F) (hd : BinaryFn F.degree) (g : IntegralMixedVirtualCaps.RootGeometry P F)
-    (x : (q : List Bool) → ZMod (modulus P q)) (hm : Matches P a F h k hd (fun q => residueBits (x q)))
+    (k : IntegralMixedRawKindBits.Metadata F) (hd : BinaryFn F.degree) (R : Routing) (rA : RoutingAccess R) (g : IntegralMixedVirtualCaps.RootGeometry P F)
+    (x : (q : List Bool) → ZMod (modulus P q)) (hm : Matches P a F h k hd R rA (fun q => residueBits (x q)))
     (critical : IntegralMixedVirtualContextComponentBits.Matches P F (fun q => residueBits (x q)))
+    (bank : ∀ q, IntegralMixedVirtualCaps.valid P q → IntegralMixedOldBankCofactorBits.RepliesAt P F R (fun q => residueBits (x q)) q)
     (gram : IntegralMixedGramScopedBits.Matches P F (fun q => residueBits (x q)))
     (psc : IntegralMixedPscContextUpperModel.Matches P F (fun q => residueBits (x q))) :
-    Correct (machine P a F h k hd) (fun q => residueBits (x q)) (IntegralMixedRoutineTaskBits.Frame P) := by
+    Correct (machine P a F h k hd R rA) (fun q => residueBits (x q)) (IntegralMixedRoutineTaskBits.Frame P) := by
   apply choose_correct
   · exact IntegralMixedPreparedCoordinateNative.correct P a F h k hd g _ critical
   · apply choose_correct
-    · exact IntegralMixedPreparedSquarefreeNative.correct P a F h k hd g _ (squarefreeFactor_matches P a F h k hd _ hm)
+    · exact IntegralMixedPreparedSquarefreeNative.correct P a F h k hd g _ (squarefreeFactor_matches P a F h k hd R rA _ hm)
     · apply choose_correct
-      · exact IntegralMixedPreparedValueNative.correct_scoped P a F h k hd g _ (valueFactor_matches P a F h k hd _ hm)
+      · exact IntegralMixedPreparedValueNative.correct_scoped P a F h k hd g _ (valueFactor_matches P a F h k hd R rA _ hm)
       · apply choose_correct
-        · exact IntegralMixedValueFactorScopedBits.correct_of_matches P a F h g _ gram
+        · exact IntegralMixedPreparedLimitNative.correct P a F h k hd g R rA _ critical bank
         · apply choose_correct
-          · exact IntegralMixedSquarefreeFactorBits.correct_of_matches P a F h g x critical psc
-          · exact zero_correct _ _
+          · exact IntegralMixedValueFactorScopedBits.correct_of_matches P a F h g _ gram
+          · apply choose_correct
+            · exact IntegralMixedSquarefreeFactorBits.correct_of_matches P a F h g x critical psc
+            · exact zero_correct _ _
 
 end LeanCanny.Algebra.IntegralMixedRawDispatcherBits

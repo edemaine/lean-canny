@@ -7,8 +7,9 @@ module
 public import LeanCanny.Algebra.IntegralMixedValueTrailing
 public import LeanCanny.Algebra.IntegralMixedNormalizedScalar
 public import LeanCanny.Algebra.IntegralRelativeTruncation
+public import LeanCanny.Algebra.IntegralMixedLimitCoordinateRealization
 
-/-! # All three actual relative exceptional cut births
+/-! # All four actual relative exceptional cut births
 
 Tagged coordinate-trailing, selected squarefree and equation-value-trailing
 cuts are literal polynomials over the CURRENT retained algebra. Validity
@@ -28,17 +29,20 @@ inductive Kind (P : SpatialSource n) (r : Rule n) where
   | coordinate (j : Fin (n - r.critical.offset.val + 1)) (index : Fin (IntegralMixedCoordinateTrailing.ChoiceBound P r))
   | squarefree (j : Fin (n - r.critical.offset.val + 1)) (index : Fin (IntegralMixedCoordinateSquarefree.coordinateDegree P r))
   | value (row : Fin (n - r.critical.offset.val + 1)) (index : Fin (IntegralMixedValueTrailing.ChoiceBound P r))
+  | limitCoordinate (j : Fin (n - r.critical.offset.val + 1)) (index : Fin (IntegralMixedLimitCoordinate.ChoiceBound P r))
 
 def Valid (x : State P S B m ι) (hm : m ≤ S) (r : Rule n)
     (φ : x.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ) : Kind P r → Prop
   | .coordinate j k => IntegralMixedCoordinateTrailing.Valid x hm r j φ k
   | .squarefree j k => IntegralMixedCoordinateSquarefree.Valid x hm r j φ k
   | .value i k => IntegralMixedValueTrailing.Valid x hm r i φ k
+  | .limitCoordinate j c => IntegralMixedLimitCoordinate.Valid x hm r j φ c
 
 noncomputable def factor (x : State P S B m ι) (hm : m ≤ S) (r : Rule n) : Kind P r → Polynomial x.sampler.scalarPrefix.carrier
   | .coordinate j k => IntegralMixedCoordinateTrailing.factor x hm r j k
   | .squarefree j k => IntegralMixedCoordinateSquarefree.exceptional x hm r j k
   | .value i k => IntegralMixedValueTrailing.factor x hm r i k
+  | .limitCoordinate j c => IntegralMixedLimitCoordinate.factor x hm r j c
 
 theorem selected_nonzero (x : State P S B m ι) (hm : m ≤ S) (r : Rule n)
     (φ : x.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ) (c : Kind P r) (hc : Valid x hm r φ c) :
@@ -47,6 +51,7 @@ theorem selected_nonzero (x : State P S B m ι) (hm : m ≤ S) (r : Rule n)
   | coordinate _ _ => exact hc.2
   | squarefree j k => exact IntegralMixedCoordinateSquarefree.exceptional_nonzero x hm r j φ k hc
   | value _ _ => exact hc.2
+  | limitCoordinate _ _ => exact hc.2
 
 theorem factor_degree (x : State P S B m ι) (hm : m ≤ S) (r : Rule n) (c : Kind P r) :
     (factor x hm r c).natDegree ≤ auxiliaryCap (n + 1) P.degree := by
@@ -64,6 +69,13 @@ theorem factor_degree (x : State P S B m ι) (hm : m ≤ S) (r : Rule n) (c : Ki
     have HM : (2 * K (n + 1) P.degree + 1) * E (n + 1) P.degree ≤ regularCap (n + 1) P.degree := by
       exact Nat.le_mul_of_pos_left _ (Nat.succ_pos _)
     exact HC.trans (HM.trans HR)
+  | limitCoordinate j c =>
+    have HC := IntegralMixedLimitCoordinate.factor_degree x hm r j c
+    have HI : c.val < PurePowerReductionBounds.dimension (n - r.critical.offset.val + 1) P.degree + 1 := c.isLt
+    have HK := coordinateCap_le P.degree r
+    change (IntegralMixedLimitCoordinate.factor x hm r j c).natDegree ≤ _
+    unfold auxiliaryCap
+    omega
 
 theorem finite_cuts (x : State P S B m ι) (hm : m ≤ S) (r : Rule n)
     (φ : x.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ) (c : Kind P r) (hc : Valid x hm r φ c) :
@@ -78,13 +90,16 @@ structure Choices (x : State P S B m ι) (hm : m ≤ S) (r : Rule n)
   squarefreeValid : ∀ j, IntegralMixedCoordinateSquarefree.Valid x hm r j φ (squarefreeIndex j)
   valueIndex : Fin (n - r.critical.offset.val + 1) → Fin (IntegralMixedValueTrailing.ChoiceBound P r)
   valueValid : ∀ i, IntegralMixedValueTrailing.Valid x hm r i φ (valueIndex i)
+  limitIndex : Fin (n - r.critical.offset.val + 1) → Fin (IntegralMixedLimitCoordinate.ChoiceBound P r)
+  limitValid : ∀ j, IntegralMixedLimitCoordinate.Valid x hm r j φ (limitIndex j)
 
 theorem exists_choices (x : State P S B m ι) (hm : m ≤ S) (r : Rule n)
     (φ : x.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ) : Nonempty (Choices x hm r φ) := by
   choose a ha using (fun j => IntegralMixedCoordinateTrailing.exists_valid x hm r j φ)
   choose b hb using (fun j => IntegralMixedCoordinateSquarefree.exists_valid x hm r j φ)
   choose c hc using (fun i => IntegralMixedValueTrailing.exists_valid x hm r i φ)
-  exact ⟨⟨a, ha, b, hb, c, hc⟩⟩
+  choose l hl using (fun j => IntegralMixedLimitCoordinate.exists_valid x hm r j φ)
+  exact ⟨⟨a, ha, b, hb, c, hc, l, hl⟩⟩
 
 variable [Fintype ι]
 

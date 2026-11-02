@@ -23,6 +23,7 @@ def Command.context {n B : ℕ} {P : SpatialSource n} : Command P B → ℕ
   | .cut _ (.coordinate ..) .. => 2
   | .cut _ (.squarefree ..) .. => 3
   | .cut _ (.value ..) .. => 4
+  | .cut _ (.limitCoordinate ..) .. => 2
 
 def Command.coordinate {n B : ℕ} {P : SpatialSource n} : Command P B → ℕ
   | .integer .. => 0
@@ -30,6 +31,7 @@ def Command.coordinate {n B : ℕ} {P : SpatialSource n} : Command P B → ℕ
   | .cut _ (.coordinate j _) .. => j.val
   | .cut _ (.squarefree j _) .. => j.val
   | .cut _ (.value i _) .. => i.val
+  | .cut _ (.limitCoordinate j _) .. => j.val
 
 theorem Command.context_le {n B : ℕ} {P : SpatialSource n} (c : Command P B) : c.context ≤ 4 := by
   cases c with
@@ -49,6 +51,7 @@ theorem Command.coordinate_le {n B : ℕ} {P : SpatialSource n} (c : Command P B
     | coordinate j _ => have H := j.isLt; dsimp only [Command.coordinate]; omega
     | squarefree j _ => have H := j.isLt; dsimp only [Command.coordinate]; omega
     | value i _ => have H := i.isLt; dsimp only [Command.coordinate]; omega
+    | limitCoordinate j _ => have H := j.isLt; dsimp only [Command.coordinate]; omega
 
 theorem retained_cut_leading {n S B : ℕ} {P : SpatialSource n} {ι : Type} [Fintype ι]
     (initial : State P S B 0 ι) (cs : List (Command P B)) (h : cs.length ≤ S + 1) (i : Fin cs.length)

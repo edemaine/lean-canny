@@ -14,18 +14,18 @@ open scoped Classical
 set_option backward.isDefEq.respectTransparency false
 
 noncomputable def tag (F : Family) (key : List Bool) : ℕ := match F.kind key with
-  | .coordinate .. => 2 | .squarefree .. => 3 | .value .. => 4
+  | .coordinate .. => 2 | .squarefree .. => 3 | .value .. => 4 | .limitCoordinate .. => 5
 noncomputable def coordinate (F : Family) (key : List Bool) : ℕ := match F.kind key with
-  | .coordinate j _ => j.val | .squarefree j _ => j.val | .value j _ => j.val
+  | .coordinate j _ => j.val | .squarefree j _ => j.val | .value j _ => j.val | .limitCoordinate j _ => j.val
 noncomputable def choice (F : Family) (key : List Bool) : ℕ := match F.kind key with
-  | .coordinate _ c => c.val | .squarefree _ c => c.val | .value _ c => c.val
+  | .coordinate _ c => c.val | .squarefree _ c => c.val | .value _ c => c.val | .limitCoordinate _ c => c.val
 
 structure Metadata (F : Family) : Prop where
   tag : BinaryFn (tag F)
   coordinate : BinaryFn (coordinate F)
   choice : BinaryFn (choice F)
 
-theorem tag_bounds (F : Family) (key : List Bool) : 2 ≤ tag F key ∧ tag F key ≤ 4 := by
+theorem tag_bounds (F : Family) (key : List Bool) : 2 ≤ tag F key ∧ tag F key ≤ 5 := by
   cases hk : F.kind key <;> simp only [tag, hk] <;> omega
 
 theorem coordinate_le (F : Family) (key : List Bool) : coordinate F key ≤ F.ambient key := by
@@ -33,6 +33,7 @@ theorem coordinate_le (F : Family) (key : List Bool) : coordinate F key ≤ F.am
   | coordinate j c => have hj := j.isLt; simpa only [coordinate, hk] using (by omega : j.val ≤ F.ambient key)
   | squarefree j c => have hj := j.isLt; simpa only [coordinate, hk] using (by omega : j.val ≤ F.ambient key)
   | value j c => have hj := j.isLt; simpa only [coordinate, hk] using (by omega : j.val ≤ F.ambient key)
+  | limitCoordinate j c => have hj := j.isLt; simpa only [coordinate, hk] using (by omega : j.val ≤ F.ambient key)
 
 theorem choice_le (F : Family) (key : List Bool) : choice F key ≤ auxiliaryCap (F.ambient key + 1) (F.spatial key).degree := by
   cases hk : F.kind key with
@@ -61,6 +62,13 @@ theorem choice_le (F : Family) (key : List Bool) : choice F key ≤ auxiliaryCap
     simp only [choice, hk]
     unfold auxiliaryCap
     omega
+  | limitCoordinate j c =>
+    have hc := c.isLt
+    have hb := coordinateCap_le (F.spatial key).degree (F.rule key)
+    change c.val < PurePowerReductionBounds.dimension (F.ambient key - (F.rule key).critical.offset.val + 1) (F.spatial key).degree + 1 at hc
+    simp only [choice, hk]
+    unfold auxiliaryCap
+    omega
 
 theorem coordinate_cap (P : Parameters) (F : Family) (g : IntegralMixedVirtualCaps.RootGeometry P F) (q : List Bool) :
     coordinate F (IntegralMixedVirtualTaskBits.saved P q) ≤ numericCap P (RankedHistoryTask.root q) :=
@@ -82,5 +90,6 @@ theorem coordinate_kind (F : Family) (key : List Bool) (ht : tag F key = 2) :
       Nat.mod_eq_of_lt j.isLt, Nat.mod_eq_of_lt c.isLt]
   | squarefree j c => simp only [tag, hk] at ht; omega
   | value j c => simp only [tag, hk] at ht; omega
+  | limitCoordinate j c => simp only [tag, hk] at ht; omega
 
 end LeanCanny.Algebra.IntegralMixedRawKindBits

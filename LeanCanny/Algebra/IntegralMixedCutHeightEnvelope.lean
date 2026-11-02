@@ -49,10 +49,10 @@ theorem value_scaled (F : Family) (I : Indices F) (H : OriginalBounds F) (q : Li
     (determinant_scaled (columns (F.ambient q) (H.spatialDegree q)) (H.rank q)
       (IntegralMacaulayGramBounds.gramHeight (rows (F.ambient q) (H.spatialDegree q)) (H.rank q) A) (H.bankHeight q) hG)
 
-theorem height_le (F : Family) (I : Indices F) (H : OriginalBounds F) (q : List Bool)
+theorem legacy_height_le (F : Family) (I : Indices F) (H : OriginalBounds F) (q : List Bool)
     (hR : count (F.birth q + 2) (F.width q) ≤ H.rank q) :
-    IntegralMixedAllRawHeightBounds.height F I H q ≤
-      factor (F.ambient q) (H.rank q) (H.sourceWidth q) (H.spatialDegree q) (F.cap q) (H.nodes q) * H.bankHeight q := by
+    IntegralMixedAllRawHeightBounds.legacyHeight F I H q ≤
+      legacyFactor (F.ambient q) (H.rank q) (H.sourceWidth q) (H.spatialDegree q) (F.cap q) (H.nodes q) * H.bankHeight q := by
   have hG : 1 ≤ H.bankHeight q := by have := H.source_le_bank q; omega
   have HC := coordinate_scaled (F.ambient q) (H.rank q) (H.sourceWidth q) (H.spatialDegree q) (F.cap q) (H.nodes q) (H.bankHeight q)
   have HP : IntegralMixedSquarefreeHeightBounds.height (F.ambient q) (H.rank q) (H.sourceWidth q) (H.spatialDegree q)
@@ -63,12 +63,21 @@ theorem height_le (F : Family) (I : Indices F) (H : OriginalBounds F) (q : List 
     rw [HC]
     exact principal_scaled _ _ _ _ hG
   have HV := value_scaled F I H q hR
-  unfold IntegralMixedAllRawHeightBounds.height
+  unfold IntegralMixedAllRawHeightBounds.legacyHeight
   apply max_le
   · exact HC.le.trans (Nat.mul_le_mul_right _ (le_max_left _ _))
   · apply max_le
     · exact HP.trans (Nat.mul_le_mul_right _ ((le_max_left _ _).trans (le_max_right _ _)))
     · exact HV.trans (Nat.mul_le_mul_right _ ((le_max_right _ _).trans (le_max_right _ _)))
+
+theorem height_le (F : Family) (I : Indices F) (H : OriginalBounds F) (q : List Bool)
+    (hR : count (F.birth q + 2) (F.width q) ≤ H.rank q) :
+    IntegralMixedAllRawHeightBounds.height F I H q ≤
+      factor (F.ambient q) (H.rank q) (H.sourceWidth q) (H.spatialDegree q) (F.cap q) (H.nodes q) * H.bankHeight q := by
+  apply max_le
+  · exact (legacy_height_le F I H q hR).trans (Nat.mul_le_mul_right _ (le_max_left _ _))
+  · rw [IntegralMixedLimitCoordinateBounds.height_eq_factor]
+    exact Nat.mul_le_mul_right _ (le_max_right _ _)
 
 theorem coefficient_height (F : Family) (I : Indices F) (H : OriginalBounds F) (q : List Bool)
     (hR : count (F.birth q + 2) (F.width q) ≤ H.rank q) (k : ℕ) (u v : Fin (count (F.birth q) (F.width q))) :
