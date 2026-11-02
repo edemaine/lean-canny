@@ -1832,8 +1832,16 @@ Bounded original choices now replay the exact actual packed script and bank.
 Advice has exactly 2*n*B bits, and both advice and packed roots have uniform
 polynomial length bounds in the original input. Native denominator, common-Q,
 cofactor and common-cleared coordinate readers use the same joint prefix root;
-no independent coordinate-root lifting is inferred. Original-equation filters,
-bounded vertex descriptors and the recursive connectivity graph remain required.
+no independent coordinate-root lifting is inferred. Original-equation filtering and recursive adjacency remain required.
+
+Fixed-width native candidate labels now decode one actual joint-root bank point.
+Every nonempty clopen original zero piece contains such a point. Filtering by
+the original equation constructs an actual component path cover, including
+singular and unbounded zero sets, with at most 2^labelWidth components. The
+canonical Boolean sign decomposition uses these covers with injective fixed-width
+sign/component tags bounded by one polynomial in the original input length.
+Native graph reachability is available; original-equation filtering costs and
+relative-frontier adjacency remain required for the full connectivity algorithm.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate

@@ -1,3 +1,31 @@
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateSource
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateWidth
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateLabel
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateEncode
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateDecode
+import LeanCanny.Encoding.IntegralMixedAuxiliaryPositiveNativeSquare
+import LeanCanny.Algebra.IntegralMixedFramedFamilyTerminalRows
+import LeanCanny.Encoding.IntegralFramedCompleteTerminalRows
+import LeanCanny.Geometry.IntegralMixedCanonicalCompleteVertex
+import LeanCanny.Geometry.IntegralMixedDefaultCompleteVertex
+import LeanCanny.Encoding.IntegralMixedAuxiliaryPositiveVertex
+import LeanCanny.Encoding.IntegralMixedAuxiliaryPositiveSampling
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateSampling
+import LeanCanny.Algebra.IntegralMixedFramedBankSnapshot
+import LeanCanny.Algebra.IntegralMixedFramedBankTermSource
+import LeanCanny.Algebra.IntegralMixedFramedBankTermPackets
+import LeanCanny.Algebra.IntegralMixedFramedBankTermPacketValues
+import LeanCanny.Algebra.IntegralMixedFramedBankTermReaders
+import LeanCanny.Algebra.IntegralMixedFramedBankObservation
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidatePoint
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidatePointSampling
+import LeanCanny.Connectivity.SampledBitComponentCover
+import LeanCanny.Connectivity.AuxiliaryCandidateComponentCover
+import LeanCanny.Connectivity.IntegralMixedAuxiliaryCandidateGraph
+import LeanCanny.Connectivity.IntegralMixedAuxiliaryCandidateGraphQuery
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateTable
+import LeanCanny.Connectivity.CanonicalAuxiliaryCandidateCover
+import LeanCanny.Connectivity.CanonicalAuxiliaryCandidateBounds
 import LeanCanny.Algebra.IntegralMixedFramedCompanionKeyTransport
 import LeanCanny.Algebra.IntegralMixedFramedCompanionQuery
 import LeanCanny.Algebra.IntegralMixedFramedCompanionQueryReadback
@@ -2816,8 +2844,17 @@ no interpreted evaluator premise. One padded default-X birth gives a positive
 prefix even in dimension zero. Actual packed records replay the geometric
 sample with uniformly polynomial advice and root length. Native denominator,
 common-Q, cofactor and common-cleared coordinate readers retain the same joint
-bank point. Filtering original equations, bounded vertex descriptors and the
-recursive component graph remain required.
+bank point. Original-equation filtering and the recursive adjacency algorithm remain required.
+Fixed-width native candidate descriptors now retain a single decoded joint-root
+bank point and meet every nonempty clopen original zero piece. Filtering by
+the original equation gives an actual clopen component path cover, with at
+most 2^labelWidth components. Native original-term substitution readers use
+actual common-denominator products. Every canonical Boolean sign source now
+uses this bounded cover; its combined sign/component tags have an injective
+fixed-width encoding bounded by one original-input polynomial. The existing
+relative-frontier graph equivalences hold for these actual covers. Graph
+reachability and packet normalization are native, but original-equation filter
+costs and relative-frontier adjacency costs remain separate obligations.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

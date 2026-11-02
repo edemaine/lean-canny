@@ -42915,3 +42915,474 @@ example : ∃ bound : Polynomial ℕ, ∀ original,
 #print axioms exists_bounded_prepared_run_sample
 end BoundedPackedSamplingRegression
 end Group36Regression13
+
+
+namespace Group37Regression0
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR LeanCanny.Algebra
+open scoped Classical
+namespace CandidateRegression
+open IntegralMixedAuxiliaryCandidate
+example : pad 5 [true,false]=[true,false,false,false,false] := rfl
+example : pad 3 [true,false,true,false]=[true,false,true] := rfl
+example : pad 0 [true]=[] := rfl
+example (t : List Bool → Term) (u : List Bool) : adviceWidth (fun _ => 0) t u=0 := by
+  simp only [adviceWidth,Nat.mul_zero,Nat.zero_mul]
+
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits)∈FP) (ha : ∀ q,(t q).arity≤n q)
+example (original a v w : List Bool) (hA : a.length=adviceWidth n t original) :
+    source n t (pair original (a++v))=source n t (pair original (a++w)) := by
+  apply source_eq_of_prefix
+  simp only [←hA,List.take_left]
+
+example (original a w : List Bool) (hA : a.length=adviceWidth n t original)
+    (hw : w.length=SquareSampleCompleteVertices.width (input hn ht ha)
+      (IntegralMixedAuxiliaryChoiceAdvice.prepare n t (pair original a)))
+    (hV : SquareSampleCompleteVertices.Valid (input hn ht ha)
+      (IntegralMixedAuxiliaryChoiceAdvice.prepare n t (pair original a)) w) :
+    Valid hn ht ha (pair original (encode hn ht ha original a w)) ∧
+      vertex hn ht ha (pair original (encode hn ht ha original a w))=w :=
+  ⟨valid_encode hn ht ha original a w hA hw hV,vertex_encode hn ht ha original a w hA hw⟩
+
+example (q : List Bool) (h : (pairSnd q).length≠labelWidth hn ht ha (pairFst q)) : ¬Valid hn ht ha q :=
+  fun hv => h hv.1.1
+example (q : List Bool) (h : Valid hn ht ha q) : ∀ b∈padding hn ht ha q,b=false :=
+  (padding_zero_iff hn ht ha q).mp h.1.2
+
+#print axioms adviceWidth_unary
+#print axioms source_FP
+#print axioms source_length_polynomial
+#print axioms source_eq_of_prefix
+#print axioms native_access
+#print axioms width_polynomial
+#print axioms vertexBudget_unary
+#print axioms actualWidth_le_budget
+#print axioms guard_FP
+#print axioms label_width_polynomial
+#print axioms mem_PSPACE
+#print axioms encoder_FP
+#print axioms source_encode
+#print axioms vertex_encode
+#print axioms padding_encode
+#print axioms valid_encode
+#print axioms vertex_length_of_guard
+#print axioms padding_zero_iff
+end CandidateRegression
+end Group37Regression0
+
+
+namespace Group37Regression1
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open IntegralMixedHistory IntegralMixedFramedHistoryScript
+open CanonicalAuxiliaryTrajectory AuxiliaryTiltedTerm CoerciveComponentSampling
+open IntegralMixedAuxiliaryRecipeRoot
+open scoped Classical
+namespace PositiveVertexRegression
+
+noncomputable def equation : Term := .mul (.add (.var 0) (.const (-2))) (.add (.var 0) (.const (-2)))
+abbrev dims : List Bool→ℕ := fun _=>1
+noncomputable abbrev terms : List Bool→Term := fun _=>equation
+
+theorem hn : UnaryFn dims := UnaryFn.const 1
+theorem ht : (fun u=>(terms u).toData.toBits)∈FP := by
+  change (fun _ : List Bool=>equation.toData.toBits)∈FP
+  exact constFn_mem_FP _
+theorem ha : ∀ u,(terms u).arity≤dims u := by
+  intro u
+  change equation.arity≤1
+  decide
+
+-- The original equation has a repeated root. The complete vertex still
+-- captures it, and the actual same-bank quotient at newest-first index1 is2.
+example : ∃ labels : Fin 1→ℕ×ℕ,∃ advice w : List Bool,
+    ∃ hw : SquareSampleCompleteVertices.Valid (positiveInput hn ht ha) (root [] labels advice) w,
+      w.length=SquareSampleCompleteVertices.width (positiveInput hn ht ha) (root [] labels advice) ∧
+      ∃ j : Fin (((planAt hn ht ha).rules (root [] labels advice)).length+1),j.val=1 ∧
+        IntegralMixedCanonicalBankPoint.point (positiveState hn ht ha (root [] labels advice))
+          (IntegralMixedCanonicalCompleteVertex.tuple (positiveInput hn ht ha) (root [] labels advice) w hw
+            (positive_count hn ht ha [] labels advice)) j=2 := by
+  let x0 : Zeros (polynomial 1 equation) := ⟨fun _=>2,by
+    norm_num [polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars]⟩
+  obtain ⟨r,a,H⟩:=exists_bounded_positive_vertex hn ht ha
+  obtain ⟨labels,advice,_,_,_,_,_,_,p,_,w,hw,hlen,hread⟩:=H [] Set.univ isClopen_univ x0 (Set.mem_univ _)
+  have HP : p.val (0 : Fin 1)=2 := by
+    have HE:=p.property
+    change (polynomial 1 equation).eval p.val=0 at HE
+    norm_num [polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars] at HE
+    nlinarith
+  obtain ⟨j,hj,hv⟩:=hread (0 : Fin 1)
+  exact ⟨labels,advice,w,hw,hlen,j,hj,hv.symm.trans HP⟩
+
+-- Dimension zero has the same native access, with no positivity promise.
+example : (IntegralMixedAuxiliaryPositivePrefix.input (UnaryFn.const 0)
+    (constFn_mem_FP ((Term.const 0).toData.toBits)) (fun _=>by decide) id).Access :=
+  IntegralMixedAuxiliaryPositivePrefix.native_access (UnaryFn.const 0) (constFn_mem_FP _)
+    (fun _=>by decide) id id_mem_FP
+
+end PositiveVertexRegression
+#print axioms IntegralMixedAuxiliaryPositivePrefix.native_access
+#print axioms IntegralMixedAuxiliaryPositivePrefix.native_count_evaluator
+#print axioms IntegralMixedAuxiliaryPositivePrefix.vertex_width_unary
+#print axioms IntegralMixedAuxiliaryPositivePrefix.vertices_mem_PSPACE
+#print axioms LeanCanny.Algebra.IntegralMixedFramedFamilyRunView.family_terminal_rows
+#print axioms IntegralFramedCompleteSquare.rows_after_script
+#print axioms IntegralMixedCanonicalCompleteVertex.transport_roots
+#print axioms IntegralMixedCanonicalCompleteVertex.exists_vertex
+#print axioms default_complete_vertex
+#print axioms positive_native_access
+#print axioms positive_count
+#print axioms positive_rows
+#print axioms positive_vertex_of_realization
+#print axioms exists_bounded_positive_vertex
+end Group37Regression1
+
+
+namespace Group37Regression2
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open CoerciveComponentSampling AuxiliaryTiltedTerm IntegralMixedAuxiliaryRecipeRoot
+open scoped Classical
+namespace CandidateSamplingRegression
+abbrev dims : List Bool→ℕ := fun _=>0
+abbrev terms : List Bool→Term := fun _=>.const 0
+theorem hn : UnaryFn dims := UnaryFn.const 0
+theorem ht : (fun q=>(terms q).toData.toBits)∈FP := by
+  change (fun _ : List Bool=>(Term.const 0).toData.toBits)∈FP
+  exact constFn_mem_FP _
+theorem ha : ∀ q,(terms q).arity≤dims q := by
+  intro q
+  change (Term.const 0).arity≤0
+  decide
+
+-- No original coordinates, no encoded cut records: the existing default X
+-- still gives a positive joint square system and an actual native label.
+example : ∃ label : List Bool,
+    label.length=IntegralMixedAuxiliaryCandidate.labelWidth hn ht ha [] ∧
+    IntegralMixedAuxiliaryCandidate.Valid hn ht ha (pair [] label) := by
+  let x0 : Zeros (polynomial 0 (.const 0)) := ⟨Fin.elim0,by simp [polynomial,Term.eval]⟩
+  obtain ⟨_,_,_,label,_,hlen,hV,_,_,_⟩:=exists_valid_candidate_sample hn ht ha []
+    Set.univ isClopen_univ x0 (Set.mem_univ _)
+  exact ⟨label,hlen,hV⟩
+
+-- Validity is an actual native PSPACE language from the original syntax.
+example : IntegralMixedAuxiliaryCandidate.language hn ht ha∈PSPACE :=
+  IntegralMixedAuxiliaryCandidate.mem_PSPACE hn ht ha
+end CandidateSamplingRegression
+#print axioms candidate_input_eq
+#print axioms exists_valid_candidate_sample
+end Group37Regression2
+
+
+namespace Group37Regression3
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralCriticalHistoryTask
+
+open scoped Classical
+namespace BankTermReadersRegression
+
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+    (s : IntegralMixedFramedNativeBits.Syntax P D H)
+    (hs : IntegralMixedFramedStepHeight.FamilyInputs P D s.nodes s.factor s.seed)
+    (hF : ∀ root,1≤s.factor root) (hL : ∀ root,1≤s.nodes root)
+    (word : List Bool → List Bool) (hw : word∈FP) :
+    SpaceFunction (IntegralMixedFramedBankTermBits.coordinates P D H word).family.value :=
+  IntegralMixedFramedBankTermBits.encoded_evaluator P a D H s hs hF hL word hw
+
+-- Coordinate readers preserve the caller's arbitrary positive modulus exactly.
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+    (word : List Bool → List Bool) (c : List Bool) (i k m : ℕ) (hm : 0<m) :
+    IntegralMixedFramedBankTermBits.numeratorCode P D H word
+      (pair (pair c (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k))) (BinaryNatCode.encode (m-1)))=
+      MatrixPower.residueBits (((IntegralMixedFramedBankTermBits.numerator P D H word c i).coeff k : ℤ) : ZMod m) :=
+  IntegralMixedFramedBankTermBits.numerator_packet P D H word c i k m hm
+
+-- Zero extension includes variable labels beyond the retained prefix.
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+    (word : List Bool → List Bool) (c : List Bool) (i : ℕ)
+    (hi : (IntegralMixedFramedBankSnapshotBits.atKey P D H c).count ≤ i) :
+    IntegralMixedFramedBankTermBits.numerator P D H word c i=0 := by
+  rw [IntegralMixedFramedBankTermBits.numerator,ite_eq_right (by omega)]
+
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+    (c : List Bool) (i k : ℕ) :
+    IntegralMixedFramedBankTermBits.denominatorCode P D H
+      (pair (pair c (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k))) (BinaryNatCode.encode 5))=
+      MatrixPower.residueBits (((IntegralMixedFramedBankTermBits.denominator P D H c i).coeff k : ℤ) : ZMod 6) := by
+  simpa only using IntegralMixedFramedBankTermBits.denominator_packet P D H c i k 6 (by decide)
+
+#print axioms IntegralMixedFramedBankSnapshotBits.cofactor_packet
+#print axioms IntegralMixedFramedBankTermBits.width_unary
+#print axioms IntegralMixedFramedBankTermBits.weight_packet
+#print axioms IntegralMixedFramedBankTermBits.coordinate_coefficient_packet
+#print axioms IntegralMixedFramedBankTermBits.numerator_evaluator
+#print axioms IntegralMixedFramedBankTermBits.denominator_evaluator
+#print axioms IntegralMixedFramedBankTermBits.encoded_evaluator
+end BankTermReadersRegression
+end Group37Regression3
+
+
+namespace Group37Regression4
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open CoerciveComponentSampling AuxiliaryTiltedTerm
+open scoped Classical
+namespace CandidatePointRegression
+noncomputable def equation : Term := .mul (.add (.var 0) (.const (-2))) (.add (.var 0) (.const (-2)))
+abbrev dims : List Bool→ℕ := fun _=>1
+noncomputable abbrev terms : List Bool→Term := fun _=>equation
+theorem hn : UnaryFn dims := UnaryFn.const 1
+theorem ht : (fun u=>(terms u).toData.toBits)∈FP := by
+  change (fun _ : List Bool=>equation.toData.toBits)∈FP
+  exact constFn_mem_FP _
+theorem ha : ∀ u,(terms u).arity≤dims u := by
+  intro u
+  change equation.arity≤1
+  decide
+
+-- A repeated root is recovered by the actual decoded candidate point.
+example : ∃ label : List Bool,∃ hv : IntegralMixedAuxiliaryCandidate.Valid hn ht ha (pair [] label),
+    label.length=IntegralMixedAuxiliaryCandidate.labelWidth hn ht ha [] ∧
+    IntegralMixedAuxiliaryCandidate.pointAt hn ht ha [] label hv (0 : Fin 1)=2 := by
+  let x0 : Zeros (polynomial 1 equation) := ⟨fun _=>2,by
+    norm_num [polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars]⟩
+  obtain ⟨label,hv,p,_,he⟩:=IntegralMixedAuxiliaryCandidate.exists_point_sample hn ht ha []
+    Set.univ isClopen_univ x0 (Set.mem_univ _)
+  have HP : p.val (0 : Fin 1)=2 := by
+    have HE:=p.property
+    change (polynomial 1 equation).eval p.val=0 at HE
+    norm_num [polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars] at HE
+    nlinarith
+  refine ⟨label,hv,?_,?_⟩
+  · simpa only [pairFst_pair,pairSnd_pair] using hv.1.1
+  · rw [he]
+    exact HP
+
+-- Natural zero extension preserves the same dependent finite tuple.
+example (z : Fin 2→ℝ) : IntegralMixedFramedBankObservation.extend z 9=0 := by
+  simp [IntegralMixedFramedBankObservation.extend]
+end CandidatePointRegression
+#print axioms IntegralMixedFramedBankObservation.terminal
+#print axioms IntegralMixedAuxiliaryCandidate.bankData_recipe
+#print axioms IntegralMixedAuxiliaryCandidate.joint_recipe
+#print axioms IntegralMixedAuxiliaryCandidate.point_recipe
+#print axioms IntegralMixedAuxiliaryCandidate.exists_point_sample
+end Group37Regression4
+
+
+namespace Group37Regression5
+open LeanCanny LeanCanny.Connectivity LeanCanny.Geometry Set
+open SampledBitComponentCover
+open scoped Classical
+namespace SampledComponentRegression
+noncomputable abbrev samples : Samples ℝ 1 where
+  good w := w=[false]
+  point _ := 0
+  hit C hC hN := by
+    refine ⟨⟨⟨[false],rfl⟩,rfl⟩,?_⟩
+    rw [hC.eq_univ hN]
+    trivial
+
+example : Nat.card (ConnectedComponents ℝ)≤2 := component_card_le samples
+example : piece samples ⟨[true],rfl⟩=∅ := piece_of_not_good samples _ (by change [true]≠[false]; simp)
+example : piece samples ⟨[false],rfl⟩=univ := by
+  rw [piece_of_good samples _ rfl]
+  exact PreconnectedSpace.connectedComponent_eq_univ (0 : ℝ)
+example : JoinedIn (piece samples ⟨[false],rfl⟩) (-3 : ℝ) 5 := by
+  have HE : piece samples ⟨[false],rfl⟩=univ := by
+    rw [piece_of_good samples _ rfl]
+    exact PreconnectedSpace.connectedComponent_eq_univ (0 : ℝ)
+  apply (clopenCover samples id isometry_id).paths _ (-3) ?_ 5 ?_
+  · change (-3 : ℝ)∈piece samples ⟨[false],rfl⟩
+    rw [HE]
+    trivial
+  · change (5 : ℝ)∈piece samples ⟨[false],rfl⟩
+    rw [HE]
+    trivial
+
+example (i : Vertex 1) : FrontierCover.Accessible (piece samples i) := accessible samples id isometry_id i
+end SampledComponentRegression
+#print axioms components_finite
+#print axioms component_surjective
+#print axioms piece_clopen
+#print axioms cover
+#print axioms piece_nonempty
+#print axioms vertex_card_le
+#print axioms component_card_le
+#print axioms overlap_iff
+#print axioms incident_iff
+#print axioms component_paths
+#print axioms clopenCover
+#print axioms accessible
+end Group37Regression5
+
+
+namespace Group37Regression6
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open LeanCanny.Connectivity AuxiliaryCandidateComponentCover Set
+open scoped Classical
+namespace ActualComponentCoverRegression
+noncomputable def equation : Term := .add (.mul (.var 0) (.var 0)) (.const (-1))
+abbrev dims : List Bool→ℕ := fun _=>1
+noncomputable abbrev terms : List Bool→Term := fun _=>equation
+theorem hn : UnaryFn dims := UnaryFn.const 1
+theorem ht : (fun q=>(terms q).toData.toBits)∈FP := by
+  change (fun _ : List Bool=>equation.toData.toBits)∈FP
+  exact constFn_mem_FP _
+theorem ha : ∀ q,(terms q).arity≤dims q := by intro q; change equation.arity≤1; decide
+
+noncomputable def minus : Space dims terms [] := ⟨fun _=>-1,by
+  norm_num [AuxiliaryTiltedTerm.polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars]⟩
+noncomputable def plus : Space dims terms [] := ⟨fun _=>1,by
+  norm_num [AuxiliaryTiltedTerm.polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars]⟩
+
+-- Actual bounded native labels cover both components of x²-1=0.
+example : ∃ i j : Vertex (IntegralMixedAuxiliaryCandidate.labelWidth hn ht ha []),
+    minus∈(cover hn ht ha []).piece i ∧ plus∈(cover hn ht ha []).piece j := by
+  obtain ⟨i,hi⟩:=(cover hn ht ha []).cover minus
+  obtain ⟨j,hj⟩:=(cover hn ht ha []).cover plus
+  exact ⟨i,j,hi,hj⟩
+
+example : Nat.card (ConnectedComponents (Space dims terms []))≤
+    2^IntegralMixedAuxiliaryCandidate.labelWidth hn ht ha [] := component_card_le hn ht ha []
+example : BinaryFn (fun original=>2^IntegralMixedAuxiliaryCandidate.labelWidth hn ht ha original) :=
+  component_ceiling_binary hn ht ha
+
+-- Invalid native/original-equation labels have genuinely empty pieces.
+example (i : Vertex (IntegralMixedAuxiliaryCandidate.labelWidth hn ht ha []))
+    (hi : ¬Good hn ht ha [] i.val) : ((cover hn ht ha []).piece i)=∅ := by
+  apply Set.eq_empty_iff_forall_notMem.mpr
+  intro x hx
+  exact hi ((nonempty_iff_good hn ht ha [] i).mp ⟨x,hx⟩)
+end ActualComponentCoverRegression
+#print axioms evaluation
+#print axioms samples
+#print axioms component_card_le
+#print axioms component_ceiling_binary
+#print axioms cover
+#print axioms nonempty_iff_good
+#print axioms incident_iff
+end Group37Regression6
+
+
+namespace Group37Regression7
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open LeanCanny.Connectivity.IntegralMixedAuxiliaryCandidateGraph
+open Turing.MultiTapeTM LeanCanny.Encoding.Brackets
+open scoped Classical
+namespace CandidateGraphRegression
+
+def equalityEdge (_ u v : List Bool) : Prop := u=v
+def allAllowed (_ _ : List Bool) : Prop := True
+
+theorem equality_decider : SpaceDecider (edgeLanguage equalityEdge) := by
+  have H := stringEq_fppred (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP)
+    (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP)
+  apply SpaceDecider.of_computable (.of_polyTime H.computable)
+  intro q
+  simp only [edgeLanguage,equalityEdge,Set.mem_ofPred_eq,decide_eq_true_eq,Function.comp_apply]
+
+theorem allowed_decider : SpaceDecider (filterLanguage allAllowed) := by
+  apply SpaceDecider.of_computable (.of_polyTime
+    (ComputableTidilyInPolyTime.const (encIn:=encBits) (encMid:=encBool) true))
+  intro q
+  simp only [filterLanguage,allAllowed,Set.mem_ofPred_eq]
+
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits)∈FP) (ha : ∀ q,(t q).arity≤n q)
+example : reachLanguage hn ht ha equalityEdge allAllowed∈PSPACE :=
+  reach_mem_PSPACE hn ht ha equality_decider allowed_decider
+example : connectedLanguage hn ht ha equalityEdge allAllowed∈PSPACE :=
+  connected_mem_PSPACE hn ht ha equality_decider allowed_decider
+
+example (adjacent : List Bool → List Bool → List Bool → Prop)
+    (allowed : List Bool → List Bool → Prop) (original v : List Bool) :
+    pair original (pair (List.replicate (IntegralMixedAuxiliaryCandidate.labelWidth hn ht ha original+1) false) v)
+      ∉reachLanguage hn ht ha adjacent allowed := by
+  apply reject_source_length hn ht ha adjacent allowed
+  simp only [querySource,pairFst_pair,pairSnd_pair,List.length_replicate]
+  omega
+
+example (original u : List Bool)
+    (hL : u.length=IntegralMixedAuxiliaryCandidate.labelWidth hn ht ha original)
+    (hV : IntegralMixedAuxiliaryCandidate.Valid hn ht ha (pair original u)) :
+    pair original (pair u u)∈reachLanguage hn ht ha equalityEdge allAllowed := by
+  constructor
+  · simp only [EndpointGuard,querySource,queryTarget,pairFst_pair,pairSnd_pair,hL,and_self]
+  · simp only [pairFst_pair,pairSnd_pair,querySource,queryTarget]
+    refine ⟨?_,?_,Relation.ReflTransGen.refl⟩ <;>
+      simpa only [vertices,pairFst_pair,pairSnd_pair,allAllowed,and_true,decide_eq_true_eq] using hV
+
+#print axioms edge_computable
+#print axioms vertex_computable
+#print axioms connected_mem_PSPACE
+#print axioms endpoint_guard_FP
+#print axioms normalizedSource_FP
+#print axioms normalizedSource_eq
+#print axioms reach_mem_PSPACE
+#print axioms reject_source_length
+end CandidateGraphRegression
+end Group37Regression7
+
+
+namespace Group37Regression8
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open IntegralMixedAuxiliaryCandidate IntegralMixedAuxiliaryParameters
+namespace CandidateTableRegression
+example (n : List Bool → ℕ) (t : List Bool → Term) (q : List Bool) :
+    source n t q=IntegralMixedAuxiliaryRecipeRoot.root (pairFst q) (decodedLabels n t q) (advice n t q) :=
+  source_root n t q
+
+example (n : List Bool → ℕ) (t : List Bool → Term) (original : List Bool)
+    (i : Fin (n original)) :
+    decodedLabels n t (pair original []) ⟨i.val,by simpa only [pairFst_pair] using i.isLt⟩=(0,0) := by
+  simp only [decodedLabels,decodedChoice,decodedDegree,fieldPacket,sourceInput,advice,
+    pairFst_pair,pairSnd_pair,List.take_nil,IntegralMixedAuxiliaryChoiceAdvice.choice,
+    IntegralMixedAuxiliaryChoiceAdvice.degree,IntegralMixedAuxiliaryChoiceAdvice.block,
+    List.drop_nil]
+  rfl
+
+#print axioms fieldPacket_FP
+#print axioms decodedChoice_binary
+#print axioms decodedDegree_binary
+#print axioms table_decoded
+#print axioms source_root
+#print axioms source_stateHorizon
+end CandidateTableRegression
+end Group37Regression8
+
+
+namespace Group37Regression9
+open LeanCanny LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.Computation LeanCanny.ETR
+open scoped Classical
+namespace CanonicalCandidateRegression
+noncomputable def emptyDescription : Description:=⟨0,.falsum⟩
+theorem formed : emptyDescription.WellFormed:=by
+  change (0 : ℕ)≤0
+  exact Nat.le_refl 0
+
+-- The actual Boolean graph retains the project's empty-set convention.
+example : ∀ i j : CanonicalAuxiliaryCandidateCover.Index emptyDescription,
+    (CanonicalAuxiliaryCandidateCover.piece emptyDescription i).Nonempty→
+    (CanonicalAuxiliaryCandidateCover.piece emptyDescription j).Nonempty→
+    CanonicalAuxiliaryCandidateCover.walk emptyDescription i j := by
+  apply (CanonicalAuxiliaryCandidateCover.connected_language_iff emptyDescription formed).mp
+  rw [whole_encode_mem_iff]
+  refine ⟨formed,?_⟩
+  have HE : emptyDescription.realization=∅:=by
+    ext x
+    simp only [emptyDescription,Description.realization,Formula.Holds]
+    rfl
+  rw [HE]
+  exact isPreconnected_empty
+
+-- Every semantic sign/component tag has an injective fixed native width.
+example (d : Description) : Function.Injective (CanonicalAuxiliaryCandidateCover.encode d) :=
+  CanonicalAuxiliaryCandidateCover.encode_injective d
+example : UnaryFn CanonicalAuxiliaryCandidateCover.tagWidth:=CanonicalAuxiliaryCandidateCover.tagWidth_unary
+end CanonicalCandidateRegression
+#print axioms CanonicalAuxiliaryCandidateCover.equation_scope
+#print axioms CanonicalAuxiliaryCandidateCover.closedCover
+#print axioms CanonicalAuxiliaryCandidateCover.connected_language_iff
+#print axioms CanonicalAuxiliaryCandidateCover.point_language_iff
+#print axioms CanonicalAuxiliaryCandidateCover.width_bound
+#print axioms CanonicalAuxiliaryCandidateCover.encode_injective
+#print axioms CanonicalAuxiliaryCandidateCover.index_card_le
+end Group37Regression9
