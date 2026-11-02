@@ -1,3 +1,51 @@
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQHeightCosts
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQHeightOriginal
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQHeightPost
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQHeightUnit
+import LeanCanny.Algebra.IntegralMixedFramedNativeCurrentQHeight
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQScalarMachines
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQScalarModel
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQNativeDispatcher
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQNativeSpace
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQGrowth
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQScalarOriginal
+import LeanCanny.Algebra.BoundedRegularFramedCurrentQNative
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQCompanionSpace
+import LeanCanny.Computation.SingleCallSpace
+import LeanCanny.Algebra.TransformedRecursiveProductSpace
+import LeanCanny.Algebra.IntegralMixedFramedCutCoefficientPolynomial
+import LeanCanny.Algebra.IntegralMixedFramedCutCoefficientBounds
+import LeanCanny.Algebra.IntegralMixedFramedCutSourceProfile
+import LeanCanny.Algebra.IntegralMixedFramedCutRootPullback
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateProbe
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateProbePrepared
+import LeanCanny.Algebra.IntegralMixedFramedExceptionalProbes
+import LeanCanny.Algebra.IntegralMixedFramedLimitProbe
+import LeanCanny.Algebra.IntegralMixedRelativeCutFiniteGuards
+import LeanCanny.Algebra.IntegralMixedFramedCutSourcePlanning
+import LeanCanny.Geometry.IntegralMixedFrozenFrameSampling
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRelative
+import LeanCanny.Geometry.IntegralMixedFrozenFrameHeightCut
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRegularity
+import LeanCanny.Geometry.IntegralMixedFrozenFramePaths
+import LeanCanny.Geometry.IntegralMixedFrozenFrameSaturation
+import LeanCanny.Geometry.IntegralMixedFrozenFrameSections
+import LeanCanny.Geometry.IntegralMixedFrozenFrameProjection
+import LeanCanny.Geometry.IntegralMixedFrozenFrameCharts
+import LeanCanny.Geometry.IntegralMixedFrozenFrameSectionLift
+import LeanCanny.Geometry.IntegralMixedFrozenFrameInterior
+import LeanCanny.Geometry.IntegralMixedFrozenFrameSlabCover
+import LeanCanny.Algebra.IntegralMixedNormalizedScalarCorrelated
+import LeanCanny.Geometry.IntegralMixedFrozenFrameHeightContinue
+import LeanCanny.Algebra.IntegralMixedCriticalScalarShadow
+import LeanCanny.Geometry.IntegralMixedFrozenFrameNormal
+import LeanCanny.Geometry.IntegralMixedFrozenFrameLineContinue
+import LeanCanny.Connectivity.EndpointSingletonPieces
+import LeanCanny.Connectivity.BitEndpointFrontier
+import LeanCanny.Connectivity.BitEndpointFrontierNative
+import LeanCanny.Connectivity.CanonicalEndpointFrontier
+import LeanCanny.Connectivity.CanonicalEndpointNative
+import LeanCanny.Connectivity.CanonicalEndpointDecision
 import LeanCanny.Algebra.MvIndexedRationalClearing
 import LeanCanny.Algebra.IntegralMixedFramedBankTermPolynomial
 import LeanCanny.Algebra.IntegralMixedFramedBankTermBounds
@@ -2891,7 +2939,7 @@ no interpreted evaluator premise. One padded default-X birth gives a positive
 prefix even in dimension zero. Actual packed records replay the geometric
 sample with uniformly polynomial advice and root length. Native denominator,
 common-Q, cofactor and common-cleared coordinate readers retain the same joint
-bank point. Original-equation filtering and the recursive adjacency algorithm remain required.
+bank point. The recursive adjacency algorithm remains required.
 Fixed-width native candidate descriptors now retain a single decoded joint-root
 bank point and meet every nonempty clopen original zero piece. Filtering by
 the original equation gives an actual clopen component path cover, with at
@@ -2907,8 +2955,8 @@ actual joint-root bank point. Raw Boolean sign/component words have exact
 native writers and decoding, canonical zero padding and PSPACE validity.
 Every invalid word denotes an empty piece. These actual bounded bit frontier
 covers characterize both original connectivity languages; their vertex costs
-and widths are proved, while native frontier edges and endpoint piece locators
-remain required. Retained-coordinate ordering uses a positive Q-squared
+and widths are proved. Fixed endpoint singleton labels now remove the
+endpoint locator obligation; native frontier edge costs remain required. Retained-coordinate ordering uses a positive Q-squared
 clearing and checks both labels and the same joint vertex, including signed
 and nonunit denominators. Literal correlated cuts preserve the entire old
 hom and tuple; frozen masks reorder only physical variables and LOW. Their
@@ -2920,6 +2968,23 @@ is for the bounded zero set. Global unbounded component preservation and the
 recursive adjacency construction remain open. General affine scalar and
 native critical factories retain their literal snapshot/bounds obligations;
 a current-Q slope is not inferred from a fixed-parent-Q snapshot.
+Current-denominator height evaluation now uses the charged existing bank
+product rather than an original-input primitive for the expanded Q. Literal
+all-seven routine models, arbitrary-modulus companion readout, original-only
+growth bounds and regular-source controls are native. Full untruncated cut
+coefficient probes and finite lower-choice/leading/higher-coefficient guards
+retain the entire selected factor; padded normalized row roots alone do not
+validate a factor root. Actual regular-frame sampling, height cuts, sections
+and slab covers derive their geometry from the original regular source and
+recursive endpoint covers. Scalar-only critical shadows share the exact
+native scalar prefix and bank without asserting physical critical-row lifts.
+Free-slot normalization identifies their cuts with ordinary coordinate cuts.
+The actual Boolean frontier graph now has two reserved singleton endpoint
+words, total native vertex validation and native endpoint writers. The point
+language transfer charges only its actual frontier-edge routine; malformed,
+empty and nonunique endpoint descriptions are rejected. Recursive native
+attachment/graph assembly and global unbounded component preservation remain
+open, so this is not an unconditional PSPACE connectivity theorem.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

@@ -1832,7 +1832,7 @@ Bounded original choices now replay the exact actual packed script and bank.
 Advice has exactly 2*n*B bits, and both advice and packed roots have uniform
 polynomial length bounds in the original input. Native denominator, common-Q,
 cofactor and common-cleared coordinate readers use the same joint prefix root;
-no independent coordinate-root lifting is inferred. Original-equation filtering and recursive adjacency remain required.
+no independent coordinate-root lifting is inferred. Effective recursive adjacency remains required.
 
 Fixed-width native candidate labels now decode one actual joint-root bank point.
 Every nonempty clopen original zero piece contains such a point. Filtering by
@@ -1842,8 +1842,9 @@ canonical Boolean sign decomposition uses these covers with injective fixed-widt
 sign/component tags bounded by one polynomial in the original input length.
 Native original-equation filtering and graph reachability are proved. Exact
 raw bit decoding supplies an actual bounded Boolean frontier cover with native
-PSPACE vertex validity. Relative-frontier edge costs and endpoint piece
-locators remain required for the full connectivity algorithm.
+PSPACE vertex validity. Reserved singleton endpoint words now have native
+validation and writers, removing endpoint piece locators from the point-query
+transfer. Relative-frontier edge costs remain required.
 
 Actual retained-coordinate ordering preserves signs through positive Q-squared
 clearing, including negative denominators and composite moduli. Correlated cut
@@ -1853,6 +1854,19 @@ leading readers, including permuted sources, keep huge powers implicit. The
 original-only radius bounds every decoded candidate, and the marked-lift
 component theorem applies to the bounded zero set. Unbounded component
 preservation and effective recursive adjacency remain open.
+
+Current-denominator sweep height evaluation now reuses the charged bank
+product. Original-only scalar controls and growth bounds give native models
+for all seven routines and arbitrary-modulus companion readout. Untruncated
+factor probes preserve the complete selected cut, with finite semantic tests
+for lower choices, the leading coefficient and all higher coefficients.
+Actual regular-frame sampling and sections give closed-slab covers from
+recursive endpoint covers. Scalar-only critical shadows share the native
+scalar prefix and bank, and free-slot normalization recovers ordinary
+coordinate cuts without requiring physical critical lifts. The point-language
+transfer now needs only a native bound for its actual frontier-edge routine;
+it already rejects malformed, empty and nonunique endpoints. Native recursive
+attachment/graph assembly and unbounded component preservation remain open.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
