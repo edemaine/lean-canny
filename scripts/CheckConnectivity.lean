@@ -45776,3 +45776,304 @@ end SweepCutoffRegression
 #print axioms BoundedRegularCoordinateCutoff.as_radius_power
 #print axioms BoundedRegularCoordinateCutoff.exponent_binary
 end Group42Regression8
+
+
+namespace Group43Regression0
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower IntegralCriticalHistoryTask
+open scoped Classical BigOperators
+namespace NativeCoordinateRegression
+private noncomputable def diagonal : Matrix (Fin 1) (Fin 1) ℤ := Matrix.diagonal (fun _=>-3)
+example : (ScaledGradedReductionAnnihilator.polynomial diagonal (-2) 1).coeff 1 = -2 := by
+  rw [ScaledGradedReductionAnnihilator.coefficient,diagonal,Matrix.charpoly_diagonal,Fin.prod_univ_one]
+  norm_num
+example : (ScaledGradedReductionAnnihilator.polynomial diagonal (-2) 1).coeff 0 = 3 := by
+  rw [ScaledGradedReductionAnnihilator.coefficient,diagonal,Matrix.charpoly_diagonal,Fin.prod_univ_one]
+  norm_num
+example : residueBits ((-2 : ℤ) : ZMod 6)=[false,false,true] := by decide
+example : residueBits ((3 : ℤ) : ZMod 6)=[true,true] := by decide
+example : residueBits ((-2 : ℤ) : ZMod 1)=[] := by decide
+
+open IntegralMixedFramedOldHeightQueryBits in
+example (P : Parameters) (key r t i : List Bool) :
+    modulus P (query P (pair (pair (pair key (BinaryNatCode.encode 5)) (pair r t)) i))=6 := by
+  let q:=pair (pair (pair key (BinaryNatCode.encode 5)) (pair r t)) i
+  have HM : callerModulus q=6 := by
+    simp only [q,callerModulus,source,IntegralMixedFramedCompanionQueryBits.callerModulus,
+      PaddedIntegralGeneratorSource.modulus,pairFst_pair,pairSnd_pair,BinaryNatCode.encode,Nat.fromBitsLE_bits]
+  exact (query_modulus P q (by rw [HM]; exact IntegralMixedRoutineTaskBits.routine_cap P (root q))).trans HM
+
+open IntegralMixedFramedCoordinateCharacteristicBits in
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (c : List Bool) (bad : count P D H c ≤ index c) :
+    matrix P D H c=0 := matrix_outside P D H c bad
+
+example {n : List Bool→ℕ} {t : List Bool→ETR.Term}
+    (hn : UnaryFn n) (ht : (fun q=>(t q).toData.toBits)∈FP) (ha : ∀ q,(t q).arity≤n q) :
+    IntegerPolynomialRootQueriesBits.Access (IntegralMixedAuxiliaryCandidateCoordinate.source hn ht ha) :=
+  IntegralMixedAuxiliaryCandidateCoordinate.native_access hn ht ha
+
+example {n : List Bool→ℕ} {t : List Bool→ETR.Term}
+    (hn : UnaryFn n) (ht : (fun q=>(t q).toData.toBits)∈FP) (ha : ∀ q,(t q).arity≤n q)
+    (q : List Bool) (hq : IntegralMixedAuxiliaryCandidate.Valid hn ht ha q) (i : Fin (n (pairFst q))) :
+    ((IntegralMixedAuxiliaryCandidateCoordinate.source hn ht ha).polynomial
+      (pair q (BinaryNatCode.encode (n (pairFst q)-i.val)))).eval₂ (Int.castRingHom ℝ)
+        (IntegralMixedAuxiliaryCandidate.point hn ht ha q hq i)=0 :=
+  IntegralMixedAuxiliaryCandidateCoordinate.point_root hn ht ha q hq i
+
+#print axioms IntegralMixedFramedOldHeightBankBits.sourceEntry_pullback
+#print axioms IntegralMixedFramedOldHeightBankBits.sourceEntry_planned
+#print axioms IntegralMixedFramedOldHeightQueryBits.query_FP
+#print axioms IntegralMixedFramedOldHeightQueryBits.query_modulus
+#print axioms IntegralMixedFramedOldHeightQueryBits.model_query
+#print axioms IntegralMixedFramedOldHeightQueryBits.packet_FP
+#print axioms IntegralMixedFramedOldHeightQueryBits.value_pullback
+#print axioms IntegralMixedFramedOldHeightQueryBits.evaluator
+#print axioms IntegralMixedFramedCoordinateCharacteristicBits.access
+#print axioms IntegralMixedFramedCoordinateCharacteristicBits.coefficient_space
+#print axioms IntegralMixedFramedCoordinateCharacteristicBits.matrix_bound
+#print axioms IntegralMixedFramedCoordinateCharacteristicBits.polynomial_mass
+#print axioms IntegralMixedFramedCoordinateCharacteristicBits.rootAccess
+#print axioms IntegralMixedFramedCoordinateCharacteristicBits.matrix_actual
+#print axioms IntegralMixedFramedCoordinateCharacteristicBits.quotient_root
+#print axioms IntegralMixedFramedCoordinateCharacteristicBits.point_root
+#print axioms IntegralMixedAuxiliaryCandidateCoordinate.native_access
+#print axioms IntegralMixedAuxiliaryCandidateCoordinate.point_root
+#print axioms IntegralMixedAuxiliaryCandidateCoordinate.pointAt_root
+end NativeCoordinateRegression
+end Group43Regression0
+
+
+namespace Group43Regression1
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower IntegralCriticalHistoryTask IntegralMixedFramedHistoryFamilyBits
+open scoped Classical
+namespace AllCoordinateRegression
+-- The new selector is the requested Y degree, even above the recorded choice.
+example {n : ℕ} {P : IntegralMixedHistory.SpatialSource n}
+    (s : IntegralMixedFullHistoryFamilyBits.Selection P) (j c : ℕ)
+    (hc : c<IntegralMixedCoordinateTrailing.ChoiceBound P s.rule) :
+    IntegralMixedRelativeCuts.choiceIndex (IntegralMixedFramedAllCoordinateBits.selection s j c).rule
+      (IntegralMixedFramedAllCoordinateBits.selection s j c).kind=c := by
+  change c%IntegralMixedCoordinateTrailing.ChoiceBound P s.rule=c
+  exact Nat.mod_eq_of_lt hc
+-- Y and E degrees are independent: Y^2 has an E^0 coefficient above Y^0.
+example : (((Polynomial.X^2+Polynomial.C (Polynomial.X^3) : Polynomial (Polynomial ℤ)).coeff 2).coeff 0)=1 := by
+  rw [Polynomial.coeff_add,Polynomial.coeff_X_pow,Polynomial.coeff_C]
+  norm_num [Polynomial.coeff_X_pow]
+example : (((Polynomial.X^2+Polynomial.C (Polynomial.X^3) : Polynomial (Polynomial ℤ)).coeff 0).coeff 3)=1 := by
+  rw [Polynomial.coeff_add,Polynomial.coeff_X_pow,Polynomial.coeff_C]
+  norm_num [Polynomial.coeff_X_pow]
+-- The matrix reader preserves a composite caller modulus.
+example (P : Parameters) (D : Plan P) (H : Data P D) (c : List Bool)
+    (i j : Fin (FixedWidthPolynomial.count ((IntegralMixedFramedAllCoordinateSourceBits.source P D H).arity c)
+      ((IntegralMixedFramedAllCoordinateSourceBits.source P D H).width c))) :
+    IntegralMixedFramedAllCoordinatePacketBits.value P D H
+      (pair (pair c (BinaryNatCode.encode 5)) (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))=
+      residueBits (((IntegralMixedFramedAllCoordinateSourceBits.source P D H).matrix c i j : ℤ) : ZMod 6) := by
+  have HE:=IntegralMixedFramedAllCoordinatePacketBits.packet P D H c (BinaryNatCode.encode 5) i j
+  have HM : Nat.fromBitsLE (BinaryNatCode.encode 5)+1=6 := by decide
+  rw [HM] at HE
+  exact HE
+example (P : Parameters) (D : Plan P) (H : Data P D) (q : List Bool)
+    (hl : ¬IntegralMixedFramedAllCoordinatePacketBits.Labels P D H q) :
+    IntegralMixedFramedAllCoordinatePacketBits.value P D H q=[] :=
+  IntegralMixedFramedAllCoordinatePacketBits.value_outside P D H q hl
+end AllCoordinateRegression
+#print axioms IntegralMixedFramedAllCoordinateBits.planned
+#print axioms IntegralMixedFramedAllCoordinateBits.pullback
+#print axioms IntegralMixedFramedAllCoordinateTaskBits.query_FP
+#print axioms IntegralMixedFramedAllCoordinateTaskBits.query_saved
+#print axioms IntegralMixedFramedAllCoordinateTransportBits.entry
+#print axioms IntegralMixedFramedAllCoordinateBoundsBits.query_choiceBound
+#print axioms IntegralMixedFramedAllCoordinatePacketBits.query_selected
+#print axioms IntegralMixedFramedAllCoordinatePacketBits.query_value
+#print axioms IntegralMixedFramedAllCoordinatePacketBits.evaluator
+#print axioms IntegralMixedFramedAllCoordinatePacketBits.packet
+#print axioms IntegralMixedFramedAllCoordinateSourceBits.powered_evaluator
+#print axioms IntegralMixedFramedAllCoordinateSourceBits.pulled_powered_evaluator
+#print axioms IntegralMixedFramedAllCoordinateSourceBits.evaluation
+#print axioms IntegralMixedFramedAllCoordinateSourceBits.polynomial_mass
+#print axioms IntegralMixedFramedAllCoordinateSourceBits.polynomial_degree
+end Group43Regression1
+
+
+namespace Group43Regression2
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding Polynomial
+open scoped Classical
+namespace RealInfinitesimalSignSpaceRegression
+open RealInfinitesimalSignSpace
+example : scan (fun k=>if k=3 then (-2:ℝ) else 0) 6=RealInfinitesimalSignSpace.tag (-2) := by
+  apply scan_first _ 3 6 (by decide)
+  · norm_num
+  · intro i hi
+    simp only [ite_eq_right (by omega : i≠3)]
+example : scan (0:Polynomial ℝ).coeff 100=RealInfinitesimalSignSpace.tag 0 := by
+  rw [scan_zero _ 100 (by simp)]
+  exact ((tag_nil _).mpr rfl).symm
+example : SpaceFunction (value (fun _=>[true]) (fun c=>Nat.fromBitsLE c)) :=
+  evaluator (SpaceFunction.ofFP _ (constFn_mem_FP [true])) (by intro z; decide) _ (BinaryFn.fromBits id_mem_FP)
+example (p : Polynomial ℝ) : ∃δ:ℝ,0<δ ∧ ∀x,0<x→x<δ→RealInfinitesimalSignSpace.tag p.trailingCoeff=RealInfinitesimalSignSpace.tag (p.eval x) :=
+  eventually_correct p
+end RealInfinitesimalSignSpaceRegression
+#print axioms RealInfinitesimalSignSpace.evaluator
+#print axioms RealInfinitesimalSignSpace.value_at
+#print axioms RealInfinitesimalSignSpace.eventually_correct
+end Group43Regression2
+
+
+namespace Group43Regression3
+open LeanCanny LeanCanny.Algebra Polynomial
+open scoped Classical
+namespace SelectedPolynomialLiftRegression
+abbrev A := ℤ×ℤ
+noncomputable def representative (a : A) : Polynomial ℤ := Polynomial.C a.1+Polynomial.C (a.2-a.1)*Polynomial.X
+noncomputable def evaluate : Polynomial ℤ→+*ℤ := Polynomial.evalRingHom 0
+def select : A→+*ℤ := RingHom.fst ℤ ℤ
+lemma evaluated (a : A) : evaluate (representative a)=select a := by
+  simp [evaluate,representative,select]
+noncomputable def head : Polynomial A := Polynomial.C (0,1)*Polynomial.X^2+Polynomial.X
+lemma head_selected : head.map select=Polynomial.X := by
+  simp [head,select]
+-- The original nonzero quadratic coefficient vanishes on the selected component.
+example : (head.map select).natDegree=1 := by rw [head_selected]; exact Polynomial.natDegree_X
+example : (SelectedPolynomialLift.lift head representative 1).map evaluate=Polynomial.X := by
+  rw [SelectedPolynomialLift.map_lift head representative 1 select evaluate evaluated
+    (by rw [head_selected]; exact Polynomial.natDegree_X.le),head_selected]
+-- The chooser itself is not multiplicative, so a ring-hom claim would be wrong.
+example : representative ((0,1):A)*representative ((0,1):A)≠representative (((0,1):A)*((0,1):A)) := by
+  intro H
+  have HC:=congrArg (fun p:Polynomial ℤ=>p.coeff 1) H
+  norm_num [representative,←pow_two,Polynomial.coeff_X_pow] at HC
+-- No old variables are needed for the parameter-axis construction.
+example (p : Polynomial (Polynomial ℤ)) (d e y k : ℕ) :
+    ((SelectedMultivariatePolynomialLift.lift p (fun z=>MvPolynomial.C z :ℤ→MvPolynomial (Fin 0) ℤ) d e).coeff y).coeff
+      ((0:Fin 0→₀ℕ).cons k)=if y≤d then if k≤e then (p.coeff y).coeff k else 0 else 0 := by
+  rw [SelectedMultivariatePolynomialLift.coefficient]
+  split_ifs <;> simp only [MvPolynomial.coeff_C,ite_true]
+end SelectedPolynomialLiftRegression
+#print axioms SelectedPolynomialLift.map_lift_coefficients
+#print axioms SelectedPolynomialLift.seed_map_lift
+#print axioms SelectedPolynomialLift.principal_map_lift
+#print axioms SelectedPolynomialLift.canonical
+#print axioms SelectedParameterPolynomialLift.map_lift
+#print axioms SelectedParameterPolynomialLift.principal
+#print axioms SelectedPoweredPolynomialLift.evaluate
+#print axioms SelectedPoweredPolynomialLift.principal
+#print axioms SelectedMultivariatePolynomialLift.coefficient
+#print axioms SelectedMultivariatePolynomialLift.map_lift
+end Group43Regression3
+
+
+namespace Group43Regression4
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding Polynomial
+namespace CutCommonParentRegression
+-- A formally quadratic factor specializes to a linear factor at the selected old root.
+noncomputable def relative : Polynomial (Polynomial ℤ) :=
+  Polynomial.C (Polynomial.X:Polynomial ℤ)*Polynomial.X^2+Polynomial.C (Polynomial.C (-2))*Polynomial.X+Polynomial.C (Polynomial.C 4)
+lemma selected_zero : relative.map (Polynomial.evalRingHom (0:ℤ))=Polynomial.C (-2)*Polynomial.X+Polynomial.C 4 := by
+  simp [relative]
+lemma selected_one : relative.map (Polynomial.evalRingHom (1:ℤ))=Polynomial.X^2+Polynomial.C (-2)*Polynomial.X+Polynomial.C 4 := by
+  simp [relative]
+-- Root2 belongs to the selected parent0, but not to the other old embedding1.
+example : (relative.map (Polynomial.evalRingHom (0:ℤ))).eval 2=0 := by rw [selected_zero]; norm_num
+example : (relative.map (Polynomial.evalRingHom (1:ℤ))).eval 2≠0 := by rw [selected_one]; norm_num
+-- Ignoring the untruncated higher coefficient would accept an unrelated root.
+example : ((Polynomial.C (-2)*Polynomial.X+Polynomial.C 4 : Polynomial ℤ)).eval 2=0 := by norm_num
+example : (Polynomial.X^2+Polynomial.C (-2)*Polynomial.X+Polynomial.C 4 : Polynomial ℤ).eval 2≠0 := by norm_num
+-- A lower factor can vanish at the selected old parent without being algebraically zero.
+example : (Polynomial.C (Polynomial.X:Polynomial ℤ)*Polynomial.X : Polynomial (Polynomial ℤ)).map (Polynomial.evalRingHom (0:ℤ))=0 := by
+  simp
+example : (Polynomial.C (Polynomial.X:Polynomial ℤ)*Polynomial.X : Polynomial (Polynomial ℤ)).coeff 1≠0 := by simp
+#print axioms IntegralMixedCutCoefficientPolynomialKey.active
+#print axioms IntegralMixedCutCoefficientPolynomialKey.packet
+#print axioms IntegralMixedCutCoefficientPolynomialKey.evaluation
+#print axioms IntegralFramedCutCommonParent.dimension
+#print axioms IntegralFramedCutCommonParent.evaluation
+#print axioms IntegralFramedCutNativeValidity.zero_iff
+#print axioms IntegralFramedCutNativeValidity.coefficientGuards
+#print axioms IntegralFramedCutNativeValidity.valid_and_degree
+end CutCommonParentRegression
+end Group43Regression4
+
+
+namespace Group43Regression5
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower
+open scoped Classical
+namespace IntegerExpandRegression
+noncomputable def base:=PowerIntegerPolynomial.source (fun _=>False) (fun _=>2)
+noncomputable def expanded:=IntegerPolynomialExpandSource.source base (fun _=>2)
+private theorem expanded_eq : expanded.polynomial []=Polynomial.X^2-Polynomial.C 4 := by
+  simp [expanded,base,IntegerPolynomialExpandSource.source,PowerIntegerPolynomial.source,
+    PowerIntegerPolynomial.polynomial,PowerIntegerPolynomial.value]
+  norm_num [map_ofNat]
+example : expanded.polynomial []=Polynomial.X^2-Polynomial.C 4 := expanded_eq
+example : (expanded.polynomial []).eval₂ (Int.castRingHom ℝ) (-2)=0 := by
+  rw [expanded_eq]
+  norm_num
+example : IntegerPolynomialRootQueriesBits.Access expanded :=
+  IntegerPolynomialExpandSource.access base
+    (PowerIntegerPolynomial.access (FPPred.const False) (BinaryFn.const 2)) (BinaryFn.const 2) (fun _=>by decide)
+example : expanded.degree []=2 := rfl
+
+-- A nondivisible index is zero, while the divisible constant and leading
+-- indices retain the original coefficient and exact composite caller modulus.
+example : PrimitivePairBits.coefficient expanded.polynomial
+    (pair (pair [] (BinaryNatCode.encode 1)) (BinaryNatCode.encode 5))=[] := by
+  rw [IntegerPolynomialRootQueriesBits.coefficient_packet _ [] 1 6 (by decide)]
+  have HC : (expanded.polynomial []).coeff 1=0 := by
+    simp [expanded,base,IntegerPolynomialExpandSource.source,Polynomial.coeff_expand (by decide : 0<2),
+      PowerIntegerPolynomial.source]
+  rw [HC]
+  rfl
+
+example : PrimitivePairBits.coefficient expanded.polynomial
+    (pair (pair [] (BinaryNatCode.encode 2)) (BinaryNatCode.encode 5))=BinaryNatCode.encode 1 := by
+  rw [IntegerPolynomialRootQueriesBits.coefficient_packet _ [] 2 6 (by decide)]
+  have HC : (expanded.polynomial []).coeff 2=1 := by
+    simp [expanded,base,IntegerPolynomialExpandSource.source,Polynomial.coeff_expand (by decide : 0<2),
+      PowerIntegerPolynomial.source,PowerIntegerPolynomial.coefficient]
+  rw [HC]
+  change BinaryNatCode.encode ((1 : ZMod 6).val)=BinaryNatCode.encode 1
+  rw [ZMod.val_one_eq_one_mod]
+end IntegerExpandRegression
+#print axioms IntegerPolynomialExpandSource.mass_le
+#print axioms IntegerPolynomialExpandSource.eval
+#print axioms IntegerPolynomialExpandSource.query_value
+#print axioms IntegerPolynomialExpandSource.coefficient_evaluator
+#print axioms IntegerPolynomialExpandSource.access
+end Group43Regression5
+
+
+namespace Group43Regression6
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry
+open BoundedZeroSource BoundedRegularSource
+open scoped BigOperators Classical
+namespace MarkedLiftCoordinatesRegression
+noncomputable def q : MvPolynomial (Fin 1) ℤ:=0
+noncomputable def x : BoundedZeroSource.Bounded q 2:=⟨fun _=>2,by norm_num [BoundedZeroSource.Bounded,q,radial,radiusSquared,Fin.sum_univ_one]⟩
+example : sphereSlack q 2 x^2=12 := by
+  rw [sphereSlack_sq]
+  norm_num [x,radial,radiusSquared,Fin.sum_univ_one]
+example : (regularSlack q 1 0 2 x).im=0 := regularSlack_im _ _ _ _ _
+example : (BoundedRegularSource.lift q 1 0 2 x).val ((0 : Fin 1).castAdd 4)=2 := by
+  rw [lift_original_coordinate]
+  rfl
+example : (BoundedRegularSource.lift q 1 0 2 x).val=
+    Fin.append (Fin.append x.val ![sphereSlack q 2 x,0]) ![(regularSlack q 1 0 2 x).re,0] :=
+  lift_coordinates _ _ _ _ _
+example : (∑ i : Fin 1,x.val i^powerDegree 1)+(sphereSlack q 2 x)^powerDegree 1+
+    (regularSlack q 1 0 2 x).re^powerDegree 1=BoundedRegularSource.level 1 1 0 2 :=
+  regularSlack_sum _ _ _ _ _
+end MarkedLiftCoordinatesRegression
+#print axioms PurePowerSublevelLift.section_im_zero
+#print axioms BoundedRegularSource.sphereSlack_sq
+#print axioms BoundedRegularSource.regularSlack_im
+#print axioms BoundedRegularSource.section_coordinates
+#print axioms BoundedRegularSource.lift_coordinates
+#print axioms BoundedRegularSource.regularSlack_sum
+#print axioms BoundedRegularSource.lift_original_coordinate
+
+#print axioms BoundedRegularSource.regularSlack_scaled
+end Group43Regression6

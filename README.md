@@ -1887,7 +1887,8 @@ unbounded component preservation remain open.
 Raw causal records now provide native indexed current-Q controls and original
 resource bounds. Bank-coordinate characteristic polynomials retain the same
 joint point, with proved original-only degree and coefficient-mass bounds;
-their native coefficient bridge and integer prelude remain unfinished.
+their native coefficient bridge is now constructed. The integer prelude
+remains unfinished.
 Lower-choice probes query all earlier choices without altering the old run.
 Recursive covers now have explicit size and native numeric width bounds.
 Actual sections and persistent physical branches have injective fixed bit
@@ -1909,6 +1910,19 @@ exponents. Actual regular-source coordinates have an explicit dyadic bound;
 its exponent is affine in the radius code. Clipping bad roots to those outer
 cuts preserves avoidance of the complete bad set and exact cut origins.
 Native sorting and whole-record assembly remain required.
+
+Old-bank coordinate annihilators now have native coefficient and metadata
+access, derived from original inputs and preserving the same candidate joint
+point. Scalar power substitution also has native access without expanding
+polynomial syntax. The canonical marked lift has exact original-coordinate
+and real-slack identities; native correlated replay remains unfinished.
+Unrestricted coordinate probes support all Y and E coefficients without
+recorded-choice clipping. Selected principal queries lift to integer
+polynomials on the same weighted tuple. Their general native coefficient
+circuit, physical rank and endpoint-query costs remain open. Native cut scans
+now imply actual validity and exact specialized degree at one common old
+interpretation. The creating-row/root bridge and later-tail transport remain
+required before those scans validate an entire recursive trace.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate

@@ -1,3 +1,36 @@
+import LeanCanny.Algebra.IntegralMixedFramedOldHeightTransport
+import LeanCanny.Algebra.IntegralMixedFramedOldHeightQuery
+import LeanCanny.Algebra.IntegralMixedFramedOldHeightQueryValue
+import LeanCanny.Algebra.IntegralMixedFramedOldHeightPacket
+import LeanCanny.Algebra.IntegralMixedFramedOldHeightSpace
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateCharacteristicSource
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateCharacteristicSpace
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateCharacteristicBounds
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateCharacteristicActual
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateRootSource
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateCoordinateSource
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateCoordinateRoot
+import LeanCanny.Algebra.IntegralMixedFramedAllCoordinateProfile
+import LeanCanny.Algebra.IntegralMixedFramedAllCoordinateTask
+import LeanCanny.Algebra.IntegralMixedFramedAllCoordinateTransport
+import LeanCanny.Algebra.IntegralMixedFramedAllCoordinateBounds
+import LeanCanny.Algebra.IntegralMixedFramedAllCoordinateSource
+import LeanCanny.Algebra.IntegralMixedFramedAllCoordinatePackets
+import LeanCanny.Algebra.IntegralMixedFramedAllCoordinateSpace
+import LeanCanny.Algebra.IntegralMixedAllCoordinateHeight
+import LeanCanny.Algebra.IntegralMixedFramedAllCoordinatePolynomial
+import LeanCanny.Algebra.IntegralMixedFramedAllCoordinatePolynomialBounds
+import LeanCanny.Algebra.RealInfinitesimalSignSpace
+import LeanCanny.Algebra.SelectedPolynomialLift
+import LeanCanny.Algebra.SelectedParameterPolynomialLift
+import LeanCanny.Algebra.SelectedPoweredPolynomialLift
+import LeanCanny.Algebra.SelectedMultivariatePolynomialLift
+import LeanCanny.Algebra.IntegralMixedCutCoefficientPolynomialKey
+import LeanCanny.Encoding.IntegralFramedCutCommonParent
+import LeanCanny.Encoding.IntegralFramedCutNativeValidity
+import LeanCanny.Algebra.IntegerPolynomialExpandSource
+import LeanCanny.Algebra.IntegerPolynomialExpandSpace
+import LeanCanny.Geometry.BoundedMarkedLiftCoordinates
 import LeanCanny.Algebra.FixedWidthHeadLiftSpace
 import LeanCanny.Algebra.IntegralMixedCutHeadRootGuard
 import LeanCanny.Algebra.IntegralCoordinatePullSpace
@@ -3124,7 +3157,8 @@ Raw causal records now derive actual indexed current-Q scalar controls and
 original growth bounds; the integer backend currently handles padded X only.
 Old bank-coordinate characteristic polynomials annihilate the same retained
 joint point and have original-only degree, leading and mass bounds. Their
-native matrix-entry cost bridge and prescribed-root prelude remain separate.
+native matrix-entry and coefficient costs are now constructed; the
+prescribed-root prelude remains separate.
 Lower-choice probes preserve the entire old run while querying every earlier
 choice. Their full coefficients have native readers for every cut tag.
 Descending regular covers have explicit cardinality and native numeric width
@@ -3154,6 +3188,25 @@ its exponent is affine in the radius code. Sweeps may clip bad values to
 these prescribed outer cuts while retaining avoidance of the entire bad set
 and the original bad-root or empty-fiber origins. Native sorting and record
 assembly remain separate from these geometric and coefficient bounds.
+Actual old-bank coordinate annihilators now have native coefficient,
+degree and mass access. The concrete candidate constructor derives every
+original control internally, and its polynomial annihilates the same decoded
+joint point. Scalar power substitution preserves coefficient mass and has
+native coefficient access, with no expanded integer polynomial syntax.
+The canonical marked lift retains the original coordinates and has exactly
+two real slack coordinates; their sphere and regular-source power relations
+are proved. Correlated native prelude assembly remains separate.
+Unrestricted coordinate-Y probes now stream every E coefficient without the
+creating choice's lower-choice clipping. Their native readers preserve the
+same old algebra, source and caller modulus. A charged real-polynomial scan
+finds the local eventual sign. Selected polynomial representatives lift actual
+seed and principal queries to integer multivariate polynomials on the same
+weighted joint tuple, with degrees chosen after selection. Native generalized
+principal coefficients, physical-point rank and branch endpoint cost remain
+open. Every finite cut coefficient test now has one common old interpretation;
+its native scans imply actual Kind.Valid and exact degree for every cut tag.
+Deriving this interpretation and the actual factor root from creating rows,
+then transporting all earlier cuts to one terminal tuple, remains unfinished.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
