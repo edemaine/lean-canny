@@ -1,3 +1,74 @@
+import LeanCanny.Algebra.IntegralMixedFramedCompanionKeyTransport
+import LeanCanny.Algebra.IntegralMixedFramedCompanionQuery
+import LeanCanny.Algebra.IntegralMixedFramedCompanionQueryReadback
+import LeanCanny.Algebra.IntegralMixedFramedCompanionEntry
+import LeanCanny.Algebra.IntegralMixedFramedCompanionQueryValue
+import LeanCanny.Algebra.IntegralMixedFramedCompanionQuerySpace
+import LeanCanny.Algebra.IntegralMixedFramedRootPullbackInstruction
+import LeanCanny.Algebra.IntegralMixedFramedRootPullbackData
+import LeanCanny.Algebra.IntegralMixedFramedRootPullbackHeaders
+import LeanCanny.Algebra.IntegralMixedFramedRootPullbackUnit
+import LeanCanny.Algebra.IntegralMixedFramedRootPullbackSyntaxFields
+import LeanCanny.Algebra.IntegralMixedFramedRootPullbackSyntax
+import LeanCanny.Algebra.IntegralMixedFramedRootPullback
+import LeanCanny.Algebra.IntegralMixedFramedRootPullbackSource
+import LeanCanny.Algebra.IntegralMixedFramedRootPullbackValue
+import LeanCanny.Algebra.IntegralMixedFramedRootPullbackBounds
+import LeanCanny.Algebra.IntegralMixedFramedModulusPacket
+import LeanCanny.Algebra.IntegralMixedFramedCompanionPlanning
+import LeanCanny.Algebra.IntegralMixedFramedCompanionDefault
+import LeanCanny.Algebra.IntegralMixedFramedCompanionUniformSpace
+import LeanCanny.Algebra.IntegralMixedFramedCompanionOriginalSpace
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptyCompanionSpace
+import LeanCanny.Algebra.IntegralMixedFramedRowMass
+import LeanCanny.Algebra.IntegralMixedFramedRowMassControls
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptyRowMass
+import LeanCanny.Algebra.IntegralMixedFramedPrefixSchedule
+import LeanCanny.Encoding.IntegralFramedCompleteSquare
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptySquareSample
+import LeanCanny.Algebra.UniformIntegralPrefixRowOrigin
+import LeanCanny.Algebra.IntegralMixedFramedRowOrigin
+import LeanCanny.Algebra.IntegralMixedFramedCompanionCreatorSource
+import LeanCanny.Algebra.IntegralMixedFramedRowSource
+import LeanCanny.Algebra.PaddedIntegralGeneratorSourceComp
+import LeanCanny.Algebra.IntegralMixedFramedRowQuery
+import LeanCanny.Algebra.IntegralMixedFramedRowPolynomial
+import LeanCanny.Algebra.PaddedIntegralRowComp
+import LeanCanny.Algebra.IntegralMixedFramedRowSpace
+import LeanCanny.Encoding.IntegralFramedCompleteSquareSpace
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptyNativeSquare
+import LeanCanny.Geometry.IntegralMixedCanonicalBankPoint
+import LeanCanny.Algebra.IntegralMixedDefaultRealExtension
+import LeanCanny.Algebra.IntegralMixedFramedTerminalPrefix
+import LeanCanny.Geometry.CanonicalAuxiliaryZeroReadback
+import LeanCanny.Encoding.IntegralMixedAuxiliaryPositivePrefix
+import LeanCanny.Algebra.IntegralMixedFramedLeadingSource
+import LeanCanny.Algebra.IntegralMixedFramedLeadingQuery
+import LeanCanny.Algebra.IntegralMixedFramedLeadingSpace
+import LeanCanny.Algebra.IntegralMixedFramedBankDenominator
+import LeanCanny.Algebra.IntegralMixedFramedBankProducts
+import LeanCanny.Algebra.IntegralMixedFramedBankCofactor
+import LeanCanny.Algebra.IntegralMixedFramedBankCoordinate
+import LeanCanny.Algebra.IntegralMixedFramedBankCoordinateSpace
+import LeanCanny.Algebra.IntegralMixedFramedBankCoordinateBounds
+import LeanCanny.Geometry.IntegralMixedFramedClearedBankPoint
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptyBankReaders
+import LeanCanny.Encoding.IntegralMixedAuxiliaryRecipeSource
+import LeanCanny.Encoding.IntegralMixedAuxiliaryRecipeInstruction
+import LeanCanny.Encoding.IntegralMixedAuxiliaryRecipeScript
+import LeanCanny.Algebra.IntegralMixedFramedRunTransport
+import LeanCanny.Encoding.IntegralMixedAuxiliaryRecipeState
+import LeanCanny.Algebra.IntegralMixedFramedFamilyRunView
+import LeanCanny.Encoding.IntegralMixedAuxiliaryRecipeFamily
+import LeanCanny.Encoding.IntegralMixedAuxiliaryRecipeMetadata
+import LeanCanny.Geometry.CanonicalAuxiliaryRealizationTransport
+import LeanCanny.Encoding.IntegralMixedAuxiliaryRecipeRealization
+import LeanCanny.Encoding.IntegralMixedAuxiliaryPreparedSampling
+import LeanCanny.Encoding.IntegralMixedAuxiliaryChoiceAdvice
+import LeanCanny.Encoding.IntegralMixedAuxiliaryChoicePrepare
+import LeanCanny.Encoding.IntegralMixedAuxiliaryChoiceBounds
+import LeanCanny.Encoding.IntegralMixedAuxiliaryRecipeNativeRealization
+import LeanCanny.Encoding.IntegralMixedAuxiliaryBoundedSampling
 import LeanCanny.Encoding.NoInfinitySquareSample
 import LeanCanny.Encoding.NoInfinitySquareControls
 import LeanCanny.Encoding.NoInfinitySquareRows
@@ -2736,8 +2807,17 @@ height bounds and native readers from literal row access and exclusion at
 infinity. Actual scalar-only framed histories supply that exclusion and their
 fixed row-degree schedule. Bounded choice labels replay the exact sampled
 script and state. A native reader covers each complete newest-first monic row,
-charging its actual creating companion. The packed frontend identification,
-original row-reader binding and recursive graph remain required.
+charging its actual creating companion. Original-formula filtering and the recursive graph remain required.
+Original syntax now supplies unconditional creating-companion space for every
+caller modulus, with honest full-root pullback and a direct default-X branch.
+Exact creator-cell transport binds complete native row access to the actual
+joint prefix equations. Derived row mass, annihilators and count routines need
+no interpreted evaluator premise. One padded default-X birth gives a positive
+prefix even in dimension zero. Actual packed records replay the geometric
+sample with uniformly polynomial advice and root length. Native denominator,
+common-Q, cofactor and common-cleared coordinate readers retain the same joint
+bank point. Filtering original equations, bounded vertex descriptors and the
+recursive component graph remain required.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

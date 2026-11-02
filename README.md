@@ -1821,25 +1821,19 @@ regular in its free level direction; its bounded level sheet is homeomorphic
 to its exact projected region, with a unique continuous level value. This
 sheet statement makes no identification with the original zero-set components.
 
-The empty-bank auxiliary frontend now constructs the complete arithmetic
-model and its native space bound from the original term and dimension alone.
-Every source, default, chronological command bound, height and modulus budget
-is derived. Sampling yields a literal framed run; scalar-only reindexing
-identifies its actual rows with the canonical prefix. Complete coordinate
-annihilators retain singular roots. An explicit seed adapter matches the
-native causal schedule. The creating companion also supplies lower monic
-equation coefficients, with derived row mass after coordinate powers.
-Encoding sampled choices, native point validation and the recursive cover
-remain required.
+The empty-bank auxiliary frontend now derives complete native square sampling
+from original term syntax and dimension. All creating companions, literal
+joint rows, mass and degree bounds, coordinate annihilators and root counts
+have native space proofs. Full-root pullback preserves every actual source
+while accommodating arbitrary caller moduli. A padded default-X birth handles
+dimension zero without another serialized record.
 
-Complete square sampling now derives its coordinate annihilators and native
-readers from the actual rows and exclusion at infinity, retaining every root,
-including singular ones. Actual framed histories provide the fixed degree
-schedule. Bounded choices replay the exact sampled script and state. The full
-newest-first monic row also has a native coefficient reader, charging its
-creating companion and checking exponent divisibility and basis bounds.
-Binding these readers to the packed original frontend and assembling the
-recursive connectivity graph remain required.
+Bounded original choices now replay the exact actual packed script and bank.
+Advice has exactly 2*n*B bits, and both advice and packed roots have uniform
+polynomial length bounds in the original input. Native denominator, common-Q,
+cofactor and common-cleared coordinate readers use the same joint prefix root;
+no independent coordinate-root lifting is inferred. Original-equation filters,
+bounded vertex descriptors and the recursive connectivity graph remain required.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
