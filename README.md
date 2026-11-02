@@ -1821,6 +1821,17 @@ regular in its free level direction; its bounded level sheet is homeomorphic
 to its exact projected region, with a unique continuous level value. This
 sheet statement makes no identification with the original zero-set components.
 
+The empty-bank auxiliary frontend now constructs the complete arithmetic
+model and its native space bound from the original term and dimension alone.
+Every source, default, chronological command bound, height and modulus budget
+is derived. Sampling yields a literal framed run; scalar-only reindexing
+identifies its actual rows with the canonical prefix. Complete coordinate
+annihilators retain singular roots. An explicit seed adapter matches the
+native causal schedule. The creating companion also supplies lower monic
+equation coefficients, with derived row mass after coordinate powers.
+Encoding sampled choices, native point validation and the recursive cover
+remain required.
+
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
 permutation now connects arbitrary active subsets to the same selected mixed

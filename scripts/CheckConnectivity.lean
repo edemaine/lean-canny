@@ -41556,3 +41556,451 @@ example : FlatAffineExceptionalCanonicalUnitHeaders.fallbackOfWords P (fun _ => 
 #print axioms FlatAffineExceptionalCanonicalUnitHeaders.fallbackOfWords_get
 end CanonicalUnitHeaderRegression
 end Group33Regression16
+
+
+namespace Group34Regression0
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR LeanCanny.Algebra
+open IntegralCriticalHistoryTask IntegralMixedAuxiliaryParameters IntegralMixedAuxiliarySchedule
+namespace AuxiliaryParametersRegression
+
+def n (_ : List Bool) := 3
+def t (_ : List Bool) : Term := .const 0
+def root := pair [] (pair (WordList.encode [[],[]]) [])
+
+example : Access (parameters n t) := by
+  apply access (n:=n) (t:=t) (UnaryFn.const 3)
+  change (fun _ : List Bool => (Term.const 0).toData.toBits)∈FP
+  exact constFn_mem_FP _
+example : (parameters n t).ambient root=5 := rfl
+example : (parameters n t).cap root=5 := by
+  change max 3 (WordListRecords.count (WordList.encode [[],[]]))+2=5
+  rw [WordListRecords.count_encode]
+  rfl
+example (q : List Bool) : IntegralMixedExceptionalBounds.auxiliaryCap
+    ((parameters n t).ambient q+1) ((parameters n t).degree q)≤2^(parameters n t).width q :=
+  auxiliary_cap n t q
+example (q : List Bool) : recordCount q+2≤(parameters n t).cap q+1 := room n t q
+example (q : List Bool) : (augmented n t q).arity=4 := augmented_arity n t (fun _ => by change 0≤3; decide) q
+example (q : List Bool) : (augmented n t q).arity+1≤(parameters n t).ambient q :=
+  source_scope n t (fun _ => by change 0≤3; decide) q
+example (q : List Bool) : frozen n q 2=2 := rfl
+example (q : List Bool) : frozen n q 10=3 := rfl
+example (q : List Bool) : height n t q 0=seed n t q+1 := rfl
+example (q : List Bool) (b : ℕ) : 1≤height n t q b := height_positive n t q b
+example (q : List Bool) :
+    (FixedLeadingTiltedSource.lowTerm (frozen n q 2) (degreeCharge n t q) (n q)
+      (augmented n t q)).toData.size≤height n t q 2 := word_le_height n t q 2
+
+#print axioms recordCount_unary
+#print axioms degreeCharge_unary
+#print axioms spatialDegree_unary
+#print axioms scalarCeiling_binary
+#print axioms scalarWidth_unary
+#print axioms sourceWidth_unary
+#print axioms access
+#print axioms auxiliary_cap
+#print axioms room
+#print axioms augmented_arity
+#print axioms seed_binary
+#print axioms factor_binary
+#print axioms height_packet_binary
+#print axioms rank_packet_binary
+#print axioms levelExponent_packet_binary
+#print axioms frozen_packet_unary
+#print axioms word_le_height
+#print axioms savedPacket_FP
+#print axioms frozen_saved_unary
+#print axioms exponent_saved_binary
+#print axioms source_scope
+#print axioms term_saved_FP
+end AuxiliaryParametersRegression
+end Group34Regression0
+
+
+namespace Group34Regression1
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower IntegralCriticalHistoryTask
+
+
+
+open FlatAffineExceptionalCanonicalTiltedNative
+open scoped Classical
+namespace CanonicalTiltedOriginalRegression
+noncomputable section
+variable (P : Parameters) (a : Access P) (s : Description P) {F : FlatAffineFullSourceTower.Inputs} (hF : F.Access)
+  (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F)) (h : (q : List Bool) → Fin (FlatAffineFullSourceTower.arity F q))
+  (hh : UnaryFn (fun q => (h q).val)) (hn : ∀ root, 0<P.ambient root)
+  (hcap : ∀ root, IntegralMixedExceptionalBounds.auxiliaryCap (P.ambient root+1) (P.degree root)≤2^P.width root)
+  (hW : ∀ root, FlatAffineExceptionalBankSource.width F (FlatAffineExceptionalCanonicalUnitPlan.input root)≤P.width root)
+  (hroom : ∀ root, FlatAffineExceptionalCanonicalUnitPlan.count root+FlatAffineExceptionalCanonicalUnitPlan.seedCount F root+2≤P.cap root+1)
+  (hSW : ∀ root, (P.degree root).size≤P.sourceWidth root)
+
+
+-- Actual integer leaves need no polynomial word or coefficient/degree cost.
+example : IntegralMixedIntegerFamilyBits.Original P
+    (IntegralMixedFramedIntegerBits.polynomial P (plan P s F C h hn hcap hW hroom)) :=
+  integerOriginal P a s hF C h hh hn hcap hW hroom
+
+-- The canonical records construct their complete native controls without
+-- supplied unit-body, snapshot, spatial coefficient or LOW agreement fields.
+example : IntegralMixedFramedNativeBits.Controls P (plan P s F C h hn hcap hW hroom)
+    (data P s F C h hn hcap hW hroom hSW) :=
+  originalControls P a s hF C h hh hn hcap hW hroom hSW
+
+theorem actual_bank_replies (answer : List Bool → List Bool)
+    (hm : IntegralMixedFramedNativeBits.Matches P a (plan P s F C h hn hcap hW hroom)
+      (data P s F C h hn hcap hW hroom hSW) (originalControls P a s hF C h hh hn hcap hW hroom hSW) answer)
+    (q : List Bool) (hv : IntegralMixedVirtualCaps.valid P q) :
+    IntegralMixedOldBankCofactorBits.RepliesAt P
+      (IntegralMixedFramedHistoryFamilyBits.family P (plan P s F C h hn hcap hW hroom)
+        (data P s F C h hn hcap hW hroom hSW))
+      (IntegralMixedFramedHeaderBits.routing P (plan P s F C h hn hcap hW hroom)) answer q :=
+  IntegralMixedFramedProducerActualBits.bank_replies P _ _ answer
+    (IntegralMixedFramedNativeBits.producer_actual P a _ _ _ answer hm) q hv
+
+#print axioms originalControls
+#print axioms actual_bank_replies
+end
+end CanonicalTiltedOriginalRegression
+end Group34Regression1
+
+
+namespace Group34Regression2
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower IntegralCriticalHistoryTask
+
+open scoped Classical
+namespace EmptyTiltedNativeRegression
+private def singletonRoot : List Bool := pair [] (pair (WordList.encode [[]]) [])
+
+example : IntegralMixedEmptyUnitPlan.count singletonRoot=1 := by
+  simp only [IntegralMixedEmptyUnitPlan.count,IntegralMixedEmptyUnitPlan.records,singletonRoot,
+    pairFst_pair,pairSnd_pair,WordListRecords.count_encode,List.length_cons,List.length_nil]
+
+-- At the terminal prefix, padding deliberately returns to source zero.
+example (P : Parameters) (key : List Bool)
+    (he : IntegralMixedFramedHistoryFamilyBits.prefixLength P key=IntegralMixedEmptyUnitPlan.count (pairFst key)) :
+    IntegralMixedEmptyUnitPlan.sourceIndex P key=0 := by
+  unfold IntegralMixedEmptyUnitPlan.sourceIndex
+  apply ite_eq_right
+  change ¬IntegralMixedFramedHistoryFamilyBits.prefixLength P key<IntegralMixedEmptyUnitPlan.count (pairFst key)
+  omega
+
+-- The total original integer family is literally X, including actual cuts.
+example (P : Parameters) (O : IntegralMixedCanonicalUnitSourceBits.Originals P)
+    (hn : ∀ root, 0<P.ambient root)
+    (hcap : ∀ root, IntegralMixedExceptionalBounds.auxiliaryCap (P.ambient root+1) (P.degree root)≤2^P.width root)
+    (hroom : ∀ root, IntegralMixedEmptyUnitPlan.count root+2≤P.cap root+1) (key : List Bool) :
+    IntegralMixedFramedIntegerBits.polynomial P (IntegralMixedEmptyUnitPlan.plan P O hn hcap hroom) key=Polynomial.X :=
+  IntegralMixedEmptyUnitPlan.polynomial_X P O hn hcap hroom key
+
+noncomputable section
+open IntegralMixedEmptyTiltedNative
+variable (P : Parameters) (a : Access P) (s : Description P)
+  (hn : ∀ root, 0<P.ambient root)
+  (hcap : ∀ root, IntegralMixedExceptionalBounds.auxiliaryCap (P.ambient root+1) (P.degree root)≤2^P.width root)
+  (hroom : ∀ root, IntegralMixedEmptyUnitPlan.count root+2≤P.cap root+1)
+  (hSW : ∀ root, (P.degree root).size≤P.sourceWidth root)
+
+-- Complete controls require no exceptional-bank or table/snapshot premise.
+example : IntegralMixedFramedNativeBits.Controls P (plan P s hn hcap hroom) (data P s hn hcap hroom hSW) :=
+  controls P a s hn hcap hroom hSW
+
+theorem actual_bank_replies (answer : List Bool → List Bool)
+    (hm : IntegralMixedFramedNativeBits.Matches P a (plan P s hn hcap hroom) (data P s hn hcap hroom hSW)
+      (controls P a s hn hcap hroom hSW) answer) (q : List Bool) (hv : IntegralMixedVirtualCaps.valid P q) :
+    IntegralMixedOldBankCofactorBits.RepliesAt P
+      (IntegralMixedFramedHistoryFamilyBits.family P (plan P s hn hcap hroom) (data P s hn hcap hroom hSW))
+      (IntegralMixedFramedHeaderBits.routing P (plan P s hn hcap hroom)) answer q :=
+  IntegralMixedFramedProducerActualBits.bank_replies P _ _ answer
+    (IntegralMixedFramedNativeBits.producer_actual P a _ _ _ answer hm) q hv
+
+example (hs : IntegralMixedFramedStepHeight.FamilyInputs P (plan P s hn hcap hroom) (fun _ => 1) s.factor s.seed) :
+    SpaceFunction (plannedMachine P a s hn hcap hroom hSW).model :=
+  planned_model_space P a s hn hcap hroom hSW hs
+end
+
+#print axioms IntegralMixedEmptyUnitPlan.selectedCode_FP
+#print axioms IntegralMixedEmptyUnitPlan.rules_chronological
+#print axioms IntegralMixedEmptyUnitPlan.writer_FP
+#print axioms IntegralMixedEmptyUnitPlan.instruction_source
+#print axioms IntegralMixedEmptyUnitPlan.rules_noninteger
+#print axioms IntegralMixedEmptyUnitPlan.virtual_rule
+#print axioms IntegralMixedEmptyUnitPlan.physical_rule
+#print axioms IntegralMixedEmptyUnitPlan.unitSnapshot
+#print axioms IntegralMixedEmptyUnitPlan.unitControls
+#print axioms IntegralMixedEmptyUnitPlan.polynomial_X
+#print axioms IntegralMixedEmptyUnitPlan.integerOriginal
+#print axioms IntegralMixedEmptyUnitPlan.native
+#print axioms IntegralMixedEmptyUnitPlan.commands_represents
+#print axioms IntegralMixedEmptyUnitPlan.fallback_readback
+#print axioms IntegralMixedEmptyUnitPlan.represents
+#print axioms IntegralMixedEmptyTiltedNative.packet_FP
+#print axioms IntegralMixedEmptyTiltedNative.inputSyntax
+#print axioms IntegralMixedEmptyTiltedNative.controls
+#print axioms IntegralMixedEmptyTiltedNative.planned_model_space
+#print axioms actual_bank_replies
+end EmptyTiltedNativeRegression
+end Group34Regression2
+
+
+namespace Group34Regression3
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR LeanCanny.Algebra
+open IntegralCriticalHistoryTask IntegralMixedFramedStepHeight
+open IntegralMixedAuxiliaryParameters IntegralMixedAuxiliarySchedule
+namespace AuxiliaryEmptyBoundsRegression
+open IntegralMixedAuxiliaryEmptyPlan
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+  (hn : UnaryFn n) (ht : (fun root => (t root).toData.toBits)∈FP) (ha : ∀ root,(t root).arity≤n root)
+
+example : FamilyInputs (parameters n t) (plan hn ht ha) (fun _ => 1) (factor n t) (seed n t) :=
+  familyInputs hn ht ha
+example : SpaceFunction (machine hn ht ha).model := model_space hn ht ha
+example (key : List Bool) :
+    ((IntegralMixedFramedHistoryFamilyBits.family (parameters n t) (plan hn ht ha) (data hn ht ha)).state key).bank.Bounds
+      (familyHeight (parameters n t) (fun _ => 1) (factor n t) (seed n t) key) :=
+  family_bank_bounds (parameters n t) (plan hn ht ha) (data hn ht ha) (fun _ => 1) (factor n t) (seed n t)
+    (familyInputs hn ht ha) key
+example (root : List Bool) : ((plan hn ht ha).rules root).length=recordCount root :=
+  IntegralMixedEmptyUnitPlan.rules_length (parameters n t) (originals hn ht ha)
+    (ambient_positive n t) (auxiliary_cap n t) root
+example (root : List Bool) (birth : ℕ) :
+    IntegralMixedCanonicalUnitSourceBits.source (parameters n t) (originals hn ht ha) root birth =
+      LeanCanny.Geometry.CanonicalAuxiliaryTrajectory.source (frozen n root birth) (degreeCharge n t root) (t root)
+        (augmented n t root).degreeBound_le_dataSize birth (scalarWidth n t root) (height n t root birth) :=
+  source_geometry hn ht ha root birth
+
+#print axioms IntegralMixedEmptyInstructionBounds.command_bounds
+#print axioms IntegralMixedEmptyInstructionBounds.reverse_range_bounds
+#print axioms description
+#print axioms source_geometry
+#print axioms height_eq
+#print axioms source_instruction_bounds
+#print axioms step_bounds
+#print axioms script_bounds
+#print axioms default_bounds
+#print axioms familyInputs
+#print axioms machine
+#print axioms model_space
+end AuxiliaryEmptyBoundsRegression
+end Group34Regression3
+
+
+namespace Group34Regression4
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.ETR
+open IntegralMixedHistory AuxiliaryTiltedTerm CanonicalAuxiliaryTrajectory
+open CoerciveComponentSampling IntegralMixedFramedHistoryScript
+open scoped Classical
+namespace FramedSamplingRegression
+
+def equation : Term := .add (.var 0) (.const (-2))
+
+-- A literal framed run, rather than a separate existential scalar sampler.
+-- Original source degree is fixed once, and no interpreting hom is supplied.
+example {B : ℕ}
+    (hcap : IntegralMixedExceptionalBounds.auxiliaryCap 4 (FixedLeadingTiltedSource.degree 2)≤2^B) :
+    ∃ cs : List (Instruction 3 B), ∃ _ : cs.length=1, ∃ hcs : cs.length≤2,
+      (∀ c∈cs, IsLimitInstruction c) ∧
+      OriginalRealization (run (initialState (S:=1) equation (by decide) hcap) cs hcs) (fun _ : Fin 1 => 2) := by
+  let x0 : Zeros (polynomial 1 equation) := ⟨fun _ => 2,by
+    norm_num [polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars]⟩
+  obtain ⟨cs,hlen,hcs,hLimit,p,_,hread⟩ := exists_closed_framed_sample equation (by decide) (by decide)
+    (by decide : 1≤1) hcap Set.univ isClopen_univ x0 (Set.mem_univ _)
+  have HP : p.val=(fun _ : Fin 1 => 2) := by
+    funext i
+    have H := p.property
+    change (polynomial 1 equation).eval p.val=0 at H
+    norm_num [polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars] at H
+    have hi : i=0 := Subsingleton.elim _ _
+    rw [hi]
+    linarith
+  exact ⟨cs,hlen,hcs,hLimit,HP ▸ hread⟩
+
+-- Source reframing preserves literal rows, old interpreting hom and bank quotient.
+example {a b n S B m : ℕ} {P : SpatialSource a} {ι : Type}
+    (x : State P S B m ι) (Q : SpatialSource b)
+    (hQ : PurePowerReductionBounds.dimension (b+1) Q.degree≤2^B) (p : Fin n→ℝ) :
+    OriginalRealization (reframe x Q hQ) p ↔ OriginalRealization x p :=
+  originalRealization_reframe x Q hQ p
+end FramedSamplingRegression
+#print axioms IntegralMixedFramedStateTransport.reframe_twice
+#print axioms IntegralMixedFramedStateTransport.step_reframe_heq
+#print axioms SnocTrace.prepend
+#print axioms SampleTrace.toSnoc
+#print axioms SampleTrace.appendStep
+#print axioms SnocTrace.toForward
+#print axioms SnocTrace.exists_framed_run
+#print axioms SampleTrace.exists_framed_run
+#print axioms originalRealization_reframe
+#print axioms originalRealization_of_heq
+#print axioms exists_closed_framed_sample
+end Group34Regression4
+
+
+namespace Group34Regression5
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.ETR
+open IntegralMixedHistory IntegralHistorySampler AuxiliaryTiltedTerm CanonicalAuxiliaryTrajectory
+open CoerciveComponentSampling IntegralMixedFramedHistoryScript
+open scoped Classical
+namespace ScalarSamplingRegression
+
+def equation : Term := .add (.var 0) (.const (-2))
+
+-- All original coordinates are read from the actual canonical square run.
+-- D=2 is a semantic test; the native frontend uses its original syntax Dsize.
+example {B : ℕ}
+    (hcap : IntegralMixedExceptionalBounds.auxiliaryCap 4 (FixedLeadingTiltedSource.degree 2)≤2^B) :
+    ∃ cs : List (Instruction 3 B), ∃ _ : cs.length=1, ∃ hcs : cs.length≤2,
+      (∀ c∈cs, IsLimitInstruction c) ∧
+      CanonicalOriginalRealization (run (initialState (S:=1) equation (by decide) hcap) cs hcs) (fun _ : Fin 1 => 2) := by
+  let x0 : Zeros (polynomial 1 equation) := ⟨fun _ => 2,by
+    norm_num [polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars]⟩
+  obtain ⟨cs,hlen,hcs,hLimit,p,_,hread⟩ := exists_closed_canonical_sample equation (by decide) (by decide)
+    (by decide : 1≤1) hcap Set.univ isClopen_univ x0 (Set.mem_univ _)
+  have HP : p.val=(fun _ : Fin 1 => 2) := by
+    funext i
+    have H := p.property
+    change (polynomial 1 equation).eval p.val=0 at H
+    norm_num [polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars] at H
+    rw [Subsingleton.elim i 0]
+    linarith
+  exact ⟨cs,hlen,hcs,hLimit,HP ▸ hread⟩
+
+-- No extra variable or dummy birth is assumed for an empty prefix.
+example (S N : ℕ) : (base_scalarOnly S N).equiv = Equiv.refl (Fin 0) := by
+  ext i
+  exact Fin.elim0 i
+
+-- A repeated root is permitted: no Jacobian or separability premise occurs.
+example {S N m : ℕ} {ι : Type} [Fintype ι]
+    (F : Sampler S N m ι) (H : ScalarOnly F) (hm : m≤S) (hN : 0<N) :
+    ScalarOnly (scalarStep F hm hN (Polynomial.X^2) 2) :=
+  scalarStep_scalarOnly F H hm hN _ _
+
+-- The actual prefix annihilator captures every physical root under the
+-- concrete newest-first equivalence, including singular repeated roots.
+example {n S B : ℕ} {P : SpatialSource n} {ι : Type} [Fintype ι]
+    (x : State P S B 0 ι) (H : ScalarOnly x.sampler)
+    (cs : List (Instruction n B)) (hcs : cs.length≤S+1)
+    (hc : ∀ c∈cs,c.command.isCritical=false) (z : Index ι cs→ℝ)
+    (hz : ∀ j, ((run x cs hcs).sampler.rows j).eval₂ (Int.castRingHom ℝ) z=0) (i : Fin cs.length) :
+    (UniformIntegralPrefix.annihilator (run x cs hcs).sampler.scalarPrefix i).eval₂
+      (Int.castRingHom ℝ) (z ((run x cs hcs).sampler.scalar i))=0 :=
+  physical_annihilator_complete x H cs hcs hc z hz i
+end ScalarSamplingRegression
+#print axioms base_scalarOnly
+#print axioms scalarStep_scalarOnly
+#print axioms ScalarOnly.reindexed_rows
+#print axioms ScalarOnly.reindexed_degrees
+#print axioms ScalarOnly.roots_iff
+#print axioms scalarOnly_step
+#print axioms scalarOnly_run
+#print axioms scalarVariables_scalar
+#print axioms scalarVariables_rows
+#print axioms scalarVariables_roots
+#print axioms scalarVariables_degrees
+#print axioms scalarVariables_noInfinity
+#print axioms canonical_annihilator_nonzero
+#print axioms canonical_annihilator_complete
+#print axioms physical_annihilator_complete
+#print axioms canonicalRealization_of_original
+#print axioms IsLimitInstruction.not_critical
+#print axioms exists_closed_canonical_sample
+end Group34Regression5
+
+
+namespace Group34Regression6
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.ETR
+open IntegralMixedHistory AuxiliaryTiltedTerm CanonicalAuxiliaryTrajectory
+open CoerciveComponentSampling
+open scoped Classical
+namespace SeededSamplingRegression
+
+def equation : Term := .add (.var 0) (.const (-2))
+
+-- The native seed is exactly wordBudget+1, not the earlier max1 seed.
+-- No current bank bound, root tuple or interpreting hom is supplied.
+example {B : ℕ}
+    (hcap : IntegralMixedExceptionalBounds.auxiliaryCap 4 (FixedLeadingTiltedSource.degree 2)≤2^B) :
+    ∃ L : SampleFrame 1 1 B 2 equation (by decide), L.birth=1 ∧
+      SampleTrace hcap (seededInitialFrame equation (by decide) (by decide : 1≤1) hcap
+        (wordBudget 1 2 equation+1) (by omega) (by omega)) 1 L ∧
+      ∃ j : Fin L.birth, j.val=0 ∧ L.hom (L.state.bank.numerator j)/(L.state.bank.denominator j:ℝ)=2 := by
+  let x0 : Zeros (polynomial 1 equation) := ⟨fun _ => 2,by
+    norm_num [polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars]⟩
+  obtain ⟨L,_,hbirth,htrace,p,_,hread⟩ := exists_closed_seeded_sample equation (by decide) (by decide)
+    (by decide : 1≤1) hcap (wordBudget 1 2 equation+1) (by omega) (by omega)
+    Set.univ isClopen_univ x0 (Set.mem_univ _)
+  have HP : p.val 0=2 := by
+    have H := p.property
+    change (polynomial 1 equation).eval p.val=0 at H
+    norm_num [polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars] at H
+    linarith
+  obtain ⟨j,hj,hvalue⟩ := hread 0
+  refine ⟨L,hbirth,htrace,j,?_,hvalue.symm.trans HP⟩
+  simpa only [frontIndex,Nat.sub_self,Nat.zero_sub] using hj
+
+-- The exact chosen seed is retained by the literal source at birth zero.
+example {n S B D : ℕ} (t : Term) (ht : (term n t).degreeBound≤D)
+    (hn : n≤S) (cap : IntegralMixedExceptionalBounds.auxiliaryCap (n+3) (FixedLeadingTiltedSource.degree D)≤2^B)
+    (G : ℕ) (hG : 1≤G) (hword : wordBudget n D t≤G) :
+    (seededInitialFrame (S:=S) t ht hn cap G hG hword).height=G := rfl
+
+-- Same actual transition bound works at this seed, without a new HG premise.
+example {n S B D G : ℕ} {t : Term} {ht : (term n t).degreeBound≤D}
+    {hn : n≤S} {cap : IntegralMixedExceptionalBounds.auxiliaryCap (n+3) (FixedLeadingTiltedSource.degree D)≤2^B}
+    {hG : 1≤G} {hword : wordBudget n D t≤G} {L : SampleFrame n S B D t ht}
+    (H : SampleTrace cap (seededInitialFrame t ht hn cap G hG hword) n L) :
+    L.height=nextHeight n S B D 1^n*G := H.height_eq
+end SeededSamplingRegression
+#print axioms seededInitialState
+#print axioms seededInitialFrame
+#print axioms exists_closed_seeded_sample
+end Group34Regression6
+
+
+namespace Group34Regression7
+open LeanCanny LeanCanny.Algebra
+open IntegralCoordinateBasis FixedWidthPolynomial PaddedIntegralParameterExtension
+open scoped Classical
+
+namespace EquationReadbackRegression
+
+example (B : ℕ) (r : Fin (count 0 B)) : (pairIndex 0 B (r,lastDigit B)).val =
+    (2^B-1)+2^B*r.val := pairIndex_value r (lastDigit B)
+
+theorem representative_base (B : ℕ) (z : ℤ) : (IntegralCoordinateBasis.base (2^B)).representative z =
+    (MvPolynomial.C z : MvPolynomial (Fin 0) ℤ) := by
+  have HE (e : Fin 0 → Fin (2^B)) : IntegralCoordinateBasis.exponent e=0 := by
+    ext i
+    exact Fin.elim0 i
+  simp [IntegralCoordinateBasis.representative, IntegralCoordinateBasis.base, HE]
+
+example (b : IntegralCoordinateBasis ℤ 0 2) :
+    (equation b (Polynomial.X-Polynomial.C 2) 3).coeff 1 = 0 := by
+  rw [equation,polynomial_coefficient,PaddedIntegralNormalization.coefficient_below
+    (Polynomial.X-Polynomial.C 2) 3 2 (⟨1,by decide⟩ : Fin 2)]
+  norm_num [representative_zero]
+
+-- The honest padded X-2 equation is X^2-2X; its nonzero coefficient survives readback.
+example : ((equation (IntegralCoordinateBasis.base 2)
+    (Polynomial.X-Polynomial.C 2) 1).coeff 1 : MvPolynomial (Fin 0) ℤ) = MvPolynomial.C (-2) := by
+  rw [equation,polynomial_coefficient,PaddedIntegralNormalization.coefficient_below
+    (Polynomial.X-Polynomial.C 2) 1 2 (⟨1,by decide⟩ : Fin 2)]
+  norm_num
+  simpa using representative_base 1 (-2)
+
+#print axioms equation_coefficient_companion
+#print axioms equation_coefficient_top
+#print axioms equation_coefficient_above
+#print axioms equation_coefficient_outside
+#print axioms PaddedIntegralGeneratorSource.Source.equation_lower
+#print axioms PaddedIntegralEquationBits.query_FP
+#print axioms PaddedIntegralEquationBits.query_value
+#print axioms PaddedIntegralEquationBits.evaluator
+#print axioms representative_mass
+#print axioms equation_row_mass
+#print axioms equation_row_mass_of_coefficient
+
+end EquationReadbackRegression
+end Group34Regression7

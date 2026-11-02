@@ -1,3 +1,33 @@
+import LeanCanny.Encoding.IntegralMixedAuxiliaryParameters
+import LeanCanny.Encoding.IntegralMixedAuxiliarySchedule
+import LeanCanny.Encoding.IntegralMixedAuxiliarySavedFields
+import LeanCanny.Encoding.FlatAffineExceptionalCanonicalTiltedOriginalControls
+import LeanCanny.Encoding.IntegralMixedEmptyUnitPlan
+import LeanCanny.Encoding.IntegralMixedEmptyUnitLookup
+import LeanCanny.Encoding.IntegralMixedEmptyUnitData
+import LeanCanny.Encoding.IntegralMixedEmptyUnitSnapshot
+import LeanCanny.Encoding.IntegralMixedEmptyUnitHeaders
+import LeanCanny.Encoding.IntegralMixedEmptyIntegerOriginal
+import LeanCanny.Encoding.IntegralMixedEmptyTiltedNative
+import LeanCanny.Encoding.IntegralMixedEmptyInstructionBounds
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptyPlan
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptySourceBounds
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptyFamilyInputs
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptySpace
+import LeanCanny.Geometry.CanonicalAuxiliarySnocTrace
+import LeanCanny.Algebra.IntegralMixedFramedStateTransport
+import LeanCanny.Geometry.CanonicalAuxiliaryFramedRun
+import LeanCanny.Geometry.CanonicalAuxiliaryFramedSample
+import LeanCanny.Algebra.IntegralHistoryScalarOnly
+import LeanCanny.Algebra.IntegralMixedFramedScalarOnly
+import LeanCanny.Algebra.IntegralMixedFramedScalarValidation
+import LeanCanny.Geometry.CanonicalAuxiliaryScalarSample
+import LeanCanny.Geometry.CanonicalAuxiliarySeededInitial
+import LeanCanny.Geometry.CanonicalAuxiliarySeededSampling
+import LeanCanny.Algebra.PaddedIntegralEquationReadback
+import LeanCanny.Algebra.PaddedIntegralEquationSource
+import LeanCanny.Algebra.PaddedIntegralEquationNative
+import LeanCanny.Algebra.PaddedIntegralEquationMass
 import LeanCanny.Algebra.IntegralMixedLimitCoordinateCommand
 import LeanCanny.Algebra.IntegralMixedFramedLimitReadback
 import LeanCanny.Geometry.CanonicalAuxiliaryContinuation
@@ -2669,6 +2699,13 @@ selected grid has at most 2^(B*(n+1)) points, independently of its large level
 coefficient. Canonical original records now derive command and fallback header
 tables, body rows and exact tilted LOW bindings. Native descriptor enumeration,
 validation, component-preserving covers and graph routines remain required.
+The empty-bank auxiliary plan now derives all seven arithmetic routines and
+their space bounds from the original term and dimension. Literal framed-run
+sampling, scalar-only variable equivalences, and complete coordinate
+annihilators retain singular roots. Exact seed adapters preserve the native
+causal source. Lower monic-equation coefficients are read from the creating
+companion, with derived coefficient mass after coordinate powers. Serializing
+sampled records, native point validation, and the recursive cover remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
