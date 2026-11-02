@@ -1,3 +1,38 @@
+import LeanCanny.Algebra.IntegralMixedCausalRecord
+import LeanCanny.Algebra.IntegralMixedCausalPlan
+import LeanCanny.Algebra.IntegralMixedCausalPlanLookup
+import LeanCanny.Algebra.IntegralMixedCausalPlanData
+import LeanCanny.Algebra.IntegralMixedCausalPlanBounds
+import LeanCanny.Algebra.IntegralMixedCausalPlanSnapshot
+import LeanCanny.Algebra.IntegralMixedCausalPlanMetadata
+import LeanCanny.Algebra.IntegralMixedCausalPlanHeaders
+import LeanCanny.Algebra.IntegralMixedCausalRecordShadow
+import LeanCanny.Algebra.IntegralMixedFramedCutProbeTask
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQCutProbes
+import LeanCanny.Algebra.IntegralMixedFramedExceptionalPrepared
+import LeanCanny.Algebra.IntegralMixedFramedLimitPrepared
+import LeanCanny.Algebra.IntegralMixedFramedFullCutProbe
+import LeanCanny.Algebra.IntegralMixedFramedCutProbeTransport
+import LeanCanny.Algebra.IntegralMixedFramedCutProbeSource
+import LeanCanny.Algebra.IntegralMixedFramedCutProbePackets
+import LeanCanny.Algebra.IntegralMixedFramedCutProbeSpace
+import LeanCanny.Algebra.IntegralMixedFramedCutProbePolynomial
+import LeanCanny.Algebra.IntegralMixedFramedCutProbeBounds
+import LeanCanny.Algebra.PaddedIntegralRootGuard
+import LeanCanny.Algebra.IntegralRelativePaddedRootGuard
+import LeanCanny.Algebra.IntegralRelativeJointRootGuard
+import LeanCanny.Algebra.IntegralMixedCutJointRootGuard
+import LeanCanny.Geometry.IntegralMixedFrozenFrameTerminal
+import LeanCanny.Geometry.IntegralMixedFrozenFrameTerminalInterval
+import LeanCanny.Connectivity.FiniteCriticalSweepOrigins
+import LeanCanny.Geometry.IntegralMixedFrozenFrameCutContinue
+import LeanCanny.Geometry.IntegralMixedFrozenFrameEndpointFiber
+import LeanCanny.Geometry.IntegralMixedFrozenFrameSweepStep
+import LeanCanny.Geometry.IntegralMixedFrozenFrameDescending
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRegularCover
+import LeanCanny.Connectivity.CanonicalWholeDecision
+import LeanCanny.Connectivity.FormulaSignSlotCircularPoint
+import LeanCanny.Connectivity.CanonicalAuxiliaryCandidateSample
 import LeanCanny.Algebra.IntegralMixedFramedCurrentQHeightCosts
 import LeanCanny.Algebra.IntegralMixedFramedCurrentQHeightOriginal
 import LeanCanny.Algebra.IntegralMixedFramedCurrentQHeightPost
@@ -2985,6 +3020,25 @@ language transfer charges only its actual frontier-edge routine; malformed,
 empty and nonunique endpoint descriptions are rejected. Recursive native
 attachment/graph assembly and global unbounded component preservation remain
 open, so this is not an unconditional PSPACE connectivity theorem.
+Causal plans now instantiate actual prior-run Q from original typed records;
+their original headers, bodies, sources and all-key snapshots are exact.
+Native original mode/header writers remain frontend obligations. Full actual
+relative-factor coefficients have native arbitrary-modulus matrix and powered
+polynomial readers from the verified current-Q machine, including all four
+cut tags and coefficients above the recorded truncation degree. Joint cut
+guards derive the old hom from the successor tuple's own tail. Finite degree
+guards plus the precise nonzero-quotient-or-zero-constant condition reject
+spurious zero roots introduced by padding, including constant factors.
+Actual last-coordinate and fully frozen covers close descending regular-frame
+recursion: every endpoint cover is constructed by induction, using correlated
+cut/shadow continuations and finite sweeps with explicit cut origins. These
+covers still need bounded native trace encodings and attachment costs. Each
+valid Boolean tag now has its own actual projected sample; every scoped
+original term and formula retains its value on the same decoded joint-bank
+coordinate prefix. Both original connectivity languages transfer to the SAME
+total actual frontier-edge routine, with all other input/vertex/width/endpoint
+costs native. Its native space bound, mixed-scale raw script integration and
+global unbounded component preservation remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

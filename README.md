@@ -1868,6 +1868,21 @@ transfer now needs only a native bound for its actual frontier-edge routine;
 it already rejects malformed, empty and nonunique endpoints. Native recursive
 attachment/graph assembly and unbounded component preservation remain open.
 
+Causal script plans now instantiate prior-run Q only in their mathematical
+rules, preserving exact original headers, bodies and source lookup. Their
+raw original table writers and mixed-scale controls remain frontend work.
+Full relative-factor coefficients now have native arbitrary-modulus readers
+from the actual current-Q machine. At one successor joint tuple, finite
+coefficient guards and an exact zero-padding guard recover the actual cut
+root; a padded row alone is insufficient. Last-coordinate and fully frozen
+terminal covers now support a descending regular-frame construction that
+builds every recursive endpoint cover. Quantitative native labels and
+attachment queries remain required. A valid Boolean tag's decoded joint
+point projects into its own piece, retaining every original coordinate and
+scoped term/formula value. Both connectivity transfers now use the same
+actual raw frontier-edge routine; its native space bound and global
+unbounded component preservation remain open.
+
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
 permutation now connects arbitrary active subsets to the same selected mixed

@@ -44570,3 +44570,368 @@ end EndpointFrontierRegression
 #print axioms CanonicalEndpointNative.width_point
 #print axioms CanonicalEndpointNative.valid_point
 end Group39Regression14
+
+
+namespace Group40Regression0
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedFramedHistoryScript IntegralMixedCausalRecordBits IntegralMixedCausalPlanBits
+open scoped Classical BigOperators
+namespace CausalProbe
+private noncomputable def source : SpatialSource 1 where
+  low := 0
+  leading := 1
+  degree := 2
+  degree_two := le_rfl
+  low_degree := by simp
+  leading_ne_zero := one_ne_zero
+private noncomputable def p : Polynomial ℤ := Polynomial.C 2*Polynomial.X-Polynomial.C 3
+private theorem pn : p≠0 := by
+  intro h
+  have H:=congrArg (fun q : Polynomial ℤ => q.coeff 1) h
+  norm_num [p] at H
+private noncomputable def seed (S : ℕ) : State source S 32 0 (Fin 0) :=
+  IntegralMixedHistory.base source (IntegralHistorySampler.base S (2^32)) (by decide)
+private theorem pd : p.natDegree≤2^32 := by
+  have H : p.natDegree≤1 := by
+    rw [p,Polynomial.natDegree_sub_C,Polynomial.natDegree_C_mul_X 2 (by decide : (2:ℤ)≠0)]
+  exact H.trans (by decide)
+private noncomputable def integer : Record 1 32 where
+  source := source
+  source_cap := by decide
+  template := .integer p pn pd
+
+private noncomputable def cut : Record 1 32 where
+  source := source
+  source_cap := by decide
+  template := .cut {
+    critical := {offset:=⟨1,by decide⟩, objective:=0, coordinate:=0,scales:=fun _=>1,scales_ne_zero:=fun _=>one_ne_zero,heights:=fun _=>.constant 0}
+    height := ⟨0,by decide⟩
+    frozen := by decide
+    tag := .coordinate
+    coordinate := 0
+    choice := 0
+    degree := 1
+    source_cap := by decide
+    degree_cap := by decide
+    current := true }
+example : (chosen (commands (seed 3) [cut,integer] (by decide)) ⟨0,by rw [commands_length]; decide⟩).source=source := rfl
+private theorem Q2 : commonDenominator (run (seed 3) [instantiate (seed 3) integer] (by decide))=2 := by
+  change commonDenominator (integerStep (seed 3) (by decide) p pn pd)=2
+  unfold commonDenominator CommonIntegerDenominator.denominator
+  rw [Fin.prod_univ_one,integerStep_denominator]
+  have Hdeg : (Polynomial.C (3:ℤ)).degree < (Polynomial.C (2:ℤ)*Polynomial.X).degree := by
+    rw [Polynomial.degree_C (by decide : (3:ℤ)≠0),Polynomial.degree_C_mul_X (by decide : (2:ℤ)≠0)]
+    decide
+  rw [p,Polynomial.leadingCoeff_sub_of_degree_lt Hdeg,Polynomial.leadingCoeff_C_mul_X]
+-- The compiled cut uses Q=2 from the prior actual integer birth, not initialQ=1.
+example : (ruleOfInstruction (chosen (commands (seed 3) [cut,integer] (by decide))
+    ⟨0,by rw [commands_length]; decide⟩) (fallbackRule 1 (by decide))).slope=2 := by
+  change commonDenominator (run (seed 3) [instantiate (seed 3) integer] (by decide))=2
+  exact Q2
+example : IntegralMixedCommandHeaderBits.command (cut.template.command 2 (by decide))=cut.template.header :=
+  cut.template.header_command _ _
+example : commandBody (cut.template.command 2 (by decide))=cut.template.body := cut.template.body_command _ _
+#print axioms Template.header_command
+#print axioms Template.body_command
+#print axioms instantiate_congr
+#print axioms commands_headers
+#print axioms commands_sources
+#print axioms chosen_instantiate
+#print axioms chronological_instantiate
+#print axioms instruction_source
+#print axioms familyInputs
+#print axioms fields
+#print axioms unitSlope
+#print axioms metadata
+#print axioms tables_native
+#print axioms tables_represent
+#print axioms instantiate_shadow
+
+end CausalProbe
+end Group40Regression0
+
+
+namespace Group40Regression1
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower IntegralCriticalHistoryTask
+
+open scoped Classical
+namespace FullCutNativeRegression
+-- Arbitrarily large caller moduli survive; the old task cap is irrelevant.
+example (P : Parameters) (L F C : List Bool→ℕ) (task r s mw : List Bool) :
+    modulus (IntegralMixedFramedCutProbeTaskBits.parameters P L F C)
+      (IntegralMixedFramedCutProbeTaskBits.query P L F C (pair (pair task mw) (pair r s)))=
+      Nat.fromBitsLE mw+1 := by
+  rw [IntegralMixedFramedCutProbeTaskBits.query_modulus]
+  simp only [IntegralMixedFramedCutProbeTaskBits.callerModulus,PaddedIntegralGeneratorSource.modulus,pairFst_pair,pairSnd_pair]
+-- A full coefficient outside the fixed initial scalar radix is zero, not wrapped.
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (c : List Bool)
+    (hk : 2^P.width (RankedHistoryTask.root c)≤get P .coefficient c) :
+    (IntegralMixedFramedCutProbeSourceBits.source P D H).matrix c=0 :=
+  IntegralMixedFramedCutProbeSourceBits.matrix_outside P D H c hk
+-- Every finite basis entry has the requested source modulus, including composite six.
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (c : List Bool)
+    (i j : Fin (FixedWidthPolynomial.count ((IntegralMixedFramedCutProbeSourceBits.source P D H).arity c)
+      ((IntegralMixedFramedCutProbeSourceBits.source P D H).width c))) :
+    IntegralMixedFramedCutProbePacketBits.value P D H
+      (pair (pair c (BinaryNatCode.encode 5)) (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))=
+      residueBits (((IntegralMixedFramedCutProbeSourceBits.source P D H).matrix c i j : ℤ) : ZMod 6) := by
+  have HE:=IntegralMixedFramedCutProbePacketBits.packet P D H c (BinaryNatCode.encode 5) i j
+  have HM : Nat.fromBitsLE (BinaryNatCode.encode 5)+1=6 := by decide
+  rw [HM] at HE
+  exact HE
+-- Invalid natural labels remain invalid rather than being reinterpreted modulo rank.
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (q : List Bool)
+    (hl : ¬IntegralMixedFramedCutProbePacketBits.Labels P q) : IntegralMixedFramedCutProbePacketBits.value P D H q=[] :=
+  IntegralMixedFramedCutProbePacketBits.value_outside P D H q hl
+#print axioms IntegralMixedFramedCutProbeTaskBits.query_FP
+#print axioms IntegralMixedFramedCutProbeTaskBits.query_saved
+#print axioms IntegralMixedFramedCoordinateProbeBits.currentQ_evaluator
+#print axioms IntegralMixedFramedExceptionalProbeBits.currentQ_value_evaluator
+#print axioms IntegralMixedFramedExceptionalProbeBits.currentQ_squarefree_evaluator
+#print axioms IntegralMixedFramedLimitProbeBits.currentQ_evaluator
+#print axioms IntegralMixedFramedExceptionalPreparedBits.value_entry
+#print axioms IntegralMixedFramedExceptionalPreparedBits.squarefree_entry
+#print axioms IntegralMixedFramedLimitPreparedBits.entry
+#print axioms IntegralMixedFramedFullCutProbeBits.currentQ_evaluator
+#print axioms IntegralMixedFramedCutProbeTransportBits.entry
+#print axioms IntegralMixedFramedCutProbePacketBits.evaluator
+#print axioms IntegralMixedFramedCutProbePacketBits.packet
+#print axioms IntegralMixedFramedCutProbeSourceBits.powered_evaluator
+#print axioms IntegralMixedFramedCutProbeSourceBits.evaluation
+#print axioms IntegralMixedFramedCutProbeSourceBits.polynomial_mass
+end FullCutNativeRegression
+end Group40Regression1
+
+
+namespace Group40Regression2
+open LeanCanny LeanCanny.Algebra Polynomial
+open scoped Classical
+namespace PaddedRootGuardRegression
+-- Padding of a nonzero constant has a false zero root. The original test rejects it.
+example : (PaddedIntegralNormalization.polynomial (Polynomial.C (-2 : ℚ)) 0 3).eval 0=0 := by
+  norm_num [PaddedIntegralNormalization.polynomial,FixedDegreeIntegralNormalization.polynomial]
+example : (Polynomial.C (-2 : ℚ) : Polynomial ℚ).eval 0≠0 := by norm_num
+-- Negative leading -2 is nonunit modulo six; actual quotient recovery is in the real field.
+example : (PaddedIntegralNormalization.polynomial (Polynomial.C (-2 : ℚ)*Polynomial.X+Polynomial.C 4) 1 3).eval (-4)=0 := by
+  norm_num [PaddedIntegralNormalization.polynomial,FixedDegreeIntegralNormalization.polynomial]
+example : (Polynomial.C (-2 : ℚ)*Polynomial.X+Polynomial.C 4).eval 2=0 := by norm_num
+example : (PaddedIntegralNormalization.polynomial (Polynomial.C (-2 : ℚ)*Polynomial.X+Polynomial.C 4) 1 3).eval 0=0 := by
+  norm_num [PaddedIntegralNormalization.polynomial,FixedDegreeIntegralNormalization.polynomial]
+example : (Polynomial.C (-2 : ℚ)*Polynomial.X+Polynomial.C 4).eval 0≠0 := by norm_num
+#print axioms PaddedIntegralNormalization.scaled_root_converse
+#print axioms PaddedIntegralNormalization.root_guard
+#print axioms IntegralRelativeTruncation.padded_root_guard
+#print axioms IntegralRelativeTruncation.joint_root_guard
+#print axioms IntegralRelativeTruncation.exists_joint_parent
+#print axioms IntegralMixedRelativeCuts.joint_coefficient_guards
+end PaddedRootGuardRegression
+end Group40Regression2
+
+
+namespace Group40Regression3
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry IntegralMixedHistory
+open IntegralMixedFrozenFrame Set
+open scoped Classical BigOperators
+namespace FrozenTerminalRegression
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-4)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by rw [MvPolynomial.totalDegree_C]; decide
+  leading_ne_zero := by decide
+noncomputable abbrev frame : Frame 1 where
+  frozen := {0}
+  scales i := if i=0 then -2 else 1
+  scales_ne_zero i := by split_ifs <;> norm_num
+  heights _ := .constant 0
+private theorem all_other (i : Fin 2) (hi : i≠1) : i∈frame.frozen := by
+  fin_cases i <;> simp_all
+private theorem upper_mem : (![0,2] : Fin 2→ℝ)∈slice circle frame (Fin.elim0 : Fin 0→ℝ) := by
+  constructor
+  · change ((MvPolynomial.C (-4 : ℤ)) + MvPolynomial.C 1 *
+      ∑ j : Fin 2,(MvPolynomial.X j)^2).eval₂ (Int.castRingHom ℝ) (![0,2] : Fin 2→ℝ)=0
+    simp only [MvPolynomial.eval₂_add,MvPolynomial.eval₂_C,MvPolynomial.eval₂_mul,MvPolynomial.eval₂_sum,
+      MvPolynomial.eval₂_pow,MvPolynomial.eval₂_X]
+    rw [Fin.sum_univ_two]
+    norm_num
+  · intro i hi
+    have HI : i=0:=by simpa only [Finset.mem_singleton] using hi
+    subst i
+    norm_num [AffineExpr.evaluate]
+example {S B : ℕ} {ι : Type} (x : State circle S B 0 ι) (hm : 0≤S)
+    (φ : x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ) :
+    Nat.card (slice circle frame (Fin.elim0 : Fin 0→ℝ))≤2^B :=
+  (last_free_finite_card x hm φ frame 1 (by simp) all_other Fin.elim0 (fun i=>Fin.elim0 i)).2
+example {S B : ℕ} {ι : Type} (x : State circle S B 0 ι) (hm : 0≤S)
+    (φ : x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ) :
+    (![0,-2] : Fin 2→ℝ)∉connectedComponentIn (slice circle frame (Fin.elim0 : Fin 0→ℝ)) (![0,2]) := by
+  rw [last_free_component_iff x hm φ frame 1 (by simp) all_other Fin.elim0 (fun i=>Fin.elim0 i)
+    (![0,2]) (![0,-2]) upper_mem]
+  intro H
+  have HH:=congrFun H 1
+  norm_num at HH
+example : Subsingleton (slice circle (advance frame 1) (Fin.cons (2 : ℝ) (Fin.elim0 : Fin 0→ℝ))) :=
+  fully_frozen_subsingleton circle (advance frame 1) _ (fun i=>by fin_cases i <;> simp [advance])
+end FrozenTerminalRegression
+#print axioms last_coordinate_injective
+#print axioms last_free_finite_card
+#print axioms last_free_cover
+#print axioms last_free_component_iff
+#print axioms fully_frozen_subsingleton
+#print axioms fully_frozen_cover
+end Group40Regression3
+
+
+namespace Group40Regression4
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Connectivity IntegralMixedHistory
+open IntegralMixedFrozenFrame Set
+open scoped Classical
+example : ∃ k : ℕ,∃ cut : Fin (k+2)→ℝ,StrictMono cut ∧
+    ∀ j,cut j∈({1} : Set ℝ) ∨ (fun _ : Unit=>(0 : ℝ)) ⁻¹' {cut j}=∅ := by
+  obtain ⟨k,cut,Hmono,_,_,_,Horigin⟩:=FiniteCriticalSweepOrigins.exists_cuts
+    (fun _ : Unit=>(0 : ℝ)) continuous_const ({1} : Set ℝ) (Set.finite_singleton 1)
+  exact ⟨k,cut,Hmono,Horigin⟩
+#print axioms last_free_interval_finite_card
+#print axioms last_free_interval_cover
+#print axioms last_free_open_slab_empty
+#print axioms FiniteCriticalSweepOrigins.exists_cuts
+end Group40Regression4
+
+
+namespace Group40Regression5
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding LeanCanny.Connectivity IntegralMixedHistory
+open IntegralMixedFrozenFrame
+open scoped Classical
+namespace FrozenDescendingRegression
+abbrev readers : BoundedFullWriter.Readers where
+  source _ := (ETR.Term.const 0).toData.toBits
+  dim _ := 0
+  radius _ := 0
+example : ∃ I : Type,Finite I ∧ Nonempty (ClopenPathCover
+    {y : Fin 4→ℝ | (BoundedRegularSource.polynomial (BoundedFullWriter.original readers [])
+      (BoundedFullWriter.size readers []) (BoundedFullWriter.size readers []) 0).eval₂ (Int.castRingHom ℝ) y=0} I) :=
+  regular_zero_cover_original readers []
+end FrozenDescendingRegression
+#print axioms line_slice
+#print axioms cutState_native_prefix
+#print axioms cutState_native_bank
+#print axioms continue_sweep_cut
+#print axioms fiberHomeomorph
+#print axioms endpointHomeomorph
+#print axioms endpoint_point
+#print axioms sweepBad_finite
+#print axioms sweep_from_root_covers
+#print axioms exists_recursive_cover
+#print axioms originalWidth_cap
+#print axioms regular_zero_cover_original
+end Group40Regression5
+
+
+namespace Group40Regression6
+open LeanCanny LeanCanny.Connectivity LeanCanny.Computation LeanCanny.ETR Set
+open scoped Classical
+namespace CanonicalWholeDecisionRegression
+noncomputable abbrev emptySpace : Description:=⟨1,.falsum⟩
+theorem emptyFormed : emptySpace.WellFormed:=by
+  change (0 : ℕ)≤1
+  omega
+example : ImplicitGraph.Connected
+    (CanonicalEndpointNative.edge (Input.whole emptySpace).encode)
+    (CanonicalEndpointNative.valid (Input.whole emptySpace).encode)
+    (CanonicalEndpointNative.width (Input.whole emptySpace).encode) := by
+  apply (CanonicalEndpointNative.connected_language_iff emptySpace emptyFormed).mp
+  rw [whole_encode_mem_iff]
+  refine ⟨emptyFormed,?_⟩
+  change IsPreconnected (∅ : Set (Fin 1→ℝ))
+  exact isPreconnected_empty
+
+noncomputable abbrev punctured : Description:=⟨1,.not (.eqZero (.var 0))⟩
+theorem puncturedFormed : punctured.WellFormed:=by
+  change (1 : ℕ)≤1
+  exact Nat.le_refl _
+
+theorem punctured_disconnected : ¬IsPreconnected punctured.realization := by
+  intro H
+  have HI:=H.image (fun y : Fin 1→ℝ=>y 0) (continuous_apply 0).continuousOn
+  have HM : (-1 : ℝ)∈(fun y : Fin 1→ℝ=>y 0) '' punctured.realization := by
+    refine ⟨fun _=>-1,?_,rfl⟩
+    change ¬(-1 : ℝ)=0
+    norm_num
+  have HP : (1 : ℝ)∈(fun y : Fin 1→ℝ=>y 0) '' punctured.realization := by
+    refine ⟨fun _=>1,?_,rfl⟩
+    change ¬(1 : ℝ)=0
+    norm_num
+  obtain ⟨y,hy,h0⟩:=HI.Icc_subset HM HP (by norm_num : (0 : ℝ)∈Icc (-1) 1)
+  have HN : y 0≠0:=hy
+  exact HN h0
+
+-- Reserved endpoint vertices cannot connect across a missing original point.
+example : ¬ImplicitGraph.Connected
+    (CanonicalEndpointNative.edge (Input.whole punctured).encode)
+    (CanonicalEndpointNative.valid (Input.whole punctured).encode)
+    (CanonicalEndpointNative.width (Input.whole punctured).encode) := by
+  intro H
+  have HC:=(CanonicalEndpointNative.connected_language_iff punctured puncturedFormed).mpr H
+  exact punctured_disconnected ((whole_encode_mem_iff punctured).mp HC).2
+
+-- A tautology using an out-of-dimension variable is still an invalid input.
+example : (Input.whole ⟨0,.eqZero (.mul (.const 0) (.var 2))⟩).encode∉connectedLanguage := by
+  rw [whole_encode_mem_iff]
+  rintro ⟨h,_⟩
+  norm_num [Description.WellFormed,Formula.arity,Term.arity] at h
+end CanonicalWholeDecisionRegression
+#print axioms CanonicalEndpointNative.wellFormed_computable
+#print axioms CanonicalEndpointNative.connected_language_iff
+#print axioms CanonicalEndpointNative.connected_mem_PSPACE
+#print axioms CanonicalEndpointNative.point_mem_PSPACE
+end Group40Regression6
+
+
+namespace Group40Regression7
+open LeanCanny LeanCanny.Connectivity LeanCanny.ETR LeanCanny.Encoding Set
+open scoped Classical
+namespace ProjectedCandidateSampleRegression
+noncomputable abbrev description : Description:=⟨1,.or (.ltZero (.var 0)) (.eqZero (.const 1))⟩
+theorem formed : description.WellFormed:=by
+  change (1 : ℕ)≤1
+  exact Nat.le_refl _
+noncomputable def seed : description.realization:=⟨fun _=>-1,by
+  norm_num [description,Description.realization,Formula.Holds,Term.eval,Formula.extend]⟩
+
+-- A valid actual Boolean tag retains a negative first coordinate in its
+-- SAME decoded closed-source joint-bank point, and projects into its own piece.
+example : ∃ i : CanonicalAuxiliaryCandidateCover.Index description,
+    ∃ hi : AuxiliaryCandidateComponentCover.Good
+      CanonicalAuxiliaryCandidateCover.dimension_unary CanonicalAuxiliaryCandidateCover.equation_FP
+      CanonicalAuxiliaryCandidateCover.equation_scope (CanonicalSignRefinement.source description i.1) i.2.val,
+      IntegralMixedAuxiliaryCandidate.pointAt CanonicalAuxiliaryCandidateCover.dimension_unary
+        CanonicalAuxiliaryCandidateCover.equation_FP CanonicalAuxiliaryCandidateCover.equation_scope
+        (CanonicalSignRefinement.source description i.1) i.2.val (Classical.choose hi)
+        (CanonicalAuxiliaryCandidateCover.coordinateIndex description i 0)<0 ∧
+      CanonicalAuxiliaryCandidateCover.sample description formed i hi∈CanonicalAuxiliaryCandidateCover.piece description i := by
+  obtain ⟨i,_,hi⟩:=CanonicalAuxiliaryCandidateCover.exists_valid_tag description formed seed
+  refine ⟨i,hi,?_,CanonicalAuxiliaryCandidateCover.sample_mem description formed i hi⟩
+  have HP:=(CanonicalAuxiliaryCandidateCover.sample description formed i hi).property
+  norm_num [description,Description.realization,Set.mem_ofPred_eq,Formula.Holds,Term.eval,Formula.extend] at HP
+  have HN : CanonicalAuxiliaryCandidateCover.rawSample description i hi 0<0:=HP
+  rw [CanonicalAuxiliaryCandidateCover.rawSample_coordinate] at HN
+  exact HN
+
+example (i : CanonicalAuxiliaryCandidateCover.Index description) :
+    (CanonicalAuxiliaryCandidateCover.coordinateIndex description i 0).val=0 :=
+  CanonicalAuxiliaryCandidateCover.coordinateIndex_val description i 0
+end ProjectedCandidateSampleRegression
+#print axioms FormulaSignSlotCircularBoundedCover.projection_coordinate
+#print axioms FormulaSignSlotCircularBoundedCover.projectedPoint_coordinate
+#print axioms FormulaSignSlotCircularBoundedCover.projectedPoint_mem
+#print axioms CanonicalAuxiliaryCandidateCover.closedSample_coordinate
+#print axioms CanonicalAuxiliaryCandidateCover.rawSample_coordinate
+#print axioms CanonicalAuxiliaryCandidateCover.sample_mem
+
+#print axioms CanonicalAuxiliaryCandidateCover.environment_eq
+#print axioms CanonicalAuxiliaryCandidateCover.rawSample_term_eval
+#print axioms CanonicalAuxiliaryCandidateCover.rawSample_formula_holds
+#print axioms CanonicalAuxiliaryCandidateCover.sourcePoint_holds
+end Group40Regression7
