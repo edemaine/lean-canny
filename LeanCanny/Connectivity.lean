@@ -1,3 +1,58 @@
+import LeanCanny.Algebra.IntegralMixedLimitCoordinateCommand
+import LeanCanny.Algebra.IntegralMixedFramedLimitReadback
+import LeanCanny.Geometry.CanonicalAuxiliaryContinuation
+import LeanCanny.Algebra.FermatLevelDerivative
+import LeanCanny.Geometry.IntegralMixedCausalLevelRegularity
+import LeanCanny.Geometry.FlatCoordinateConstraintRegularity
+import LeanCanny.Geometry.IntegralMixedCausalSliceRegularity
+import LeanCanny.Geometry.FermatLevelSheet
+import LeanCanny.Geometry.FermatLevelSheetProjection
+import LeanCanny.Geometry.FermatLevelSheetCausal
+import LeanCanny.Geometry.FrozenSliceInclusion
+import LeanCanny.Geometry.CanonicalAuxiliaryTerminal
+import LeanCanny.Geometry.CanonicalAuxiliarySampleFrame
+import LeanCanny.Geometry.CanonicalAuxiliaryCutWitness
+import LeanCanny.Geometry.CanonicalAuxiliarySampleTrace
+import LeanCanny.Geometry.CanonicalAuxiliaryRecursiveSampling
+import LeanCanny.Geometry.CanonicalAuxiliaryInitialFrame
+import LeanCanny.Geometry.CanonicalAuxiliaryTraceReadback
+import LeanCanny.Geometry.CanonicalAuxiliaryClosedSampling
+import LeanCanny.Geometry.CanonicalAuxiliaryTraceHeight
+import LeanCanny.Algebra.IntegralMixedLimitCoordinateRootCount
+import LeanCanny.Geometry.CanonicalAuxiliaryGridBounds
+import LeanCanny.Geometry.CanonicalAuxiliaryStepHeight
+import LeanCanny.Geometry.CanonicalAuxiliaryHeightAccess
+import LeanCanny.Geometry.CanonicalAuxiliaryWordBudget
+import LeanCanny.Encoding.FlatAffineExceptionalFramedNativeControls
+import LeanCanny.Encoding.FlatAffineExceptionalFramedNativePlanned
+import LeanCanny.Encoding.FlatAffineExceptionalFramedPreludeBounds
+import LeanCanny.Algebra.IntegralMixedFramedUnitSourceBounds
+import LeanCanny.Encoding.FlatAffineExceptionalFramedNativeUnitBounds
+import LeanCanny.Algebra.IntegralMixedCanonicalTiltedSource
+import LeanCanny.Encoding.FlatAffineExceptionalCanonicalTiltedBody
+import LeanCanny.Encoding.WordListRecords
+import LeanCanny.Encoding.IntegralMixedUnitRowCode
+import LeanCanny.Encoding.IntegralMixedUnitRecordCode
+import LeanCanny.Algebra.IntegralMixedCanonicalUnitSource
+import LeanCanny.Algebra.IntegralMixedCanonicalUnitRules
+import LeanCanny.Encoding.IntegralMixedUnitRecordSemantics
+import LeanCanny.Encoding.FlatAffineExceptionalCanonicalUnitPlan
+import LeanCanny.Encoding.FlatAffineExceptionalCanonicalUnitLookup
+import LeanCanny.Encoding.FlatAffineExceptionalCanonicalUnitData
+import LeanCanny.Encoding.FlatAffineExceptionalCanonicalUnitSnapshot
+import LeanCanny.Encoding.IntegralMixedCanonicalUnitDefaults
+import LeanCanny.Encoding.FlatAffineExceptionalCanonicalTiltedNativeBody
+import LeanCanny.Encoding.FlatAffineExceptionalCanonicalTiltedNativeControls
+import LeanCanny.Encoding.IntegralMixedAuxiliaryLimitRecord
+import LeanCanny.Encoding.IntegralMixedAuxiliaryLimitRecordSemantics
+import LeanCanny.Encoding.IntegralMixedAuxiliaryLimitCommand
+import LeanCanny.Encoding.IntegralMixedAuxiliaryLimitRecords
+import LeanCanny.Encoding.IntegralMixedAuxiliaryLimitCut
+import LeanCanny.Algebra.IntegralMixedCanonicalUnitHeader
+import LeanCanny.Algebra.IntegralMixedCanonicalUnitHeaderFP
+import LeanCanny.Encoding.FlatAffineExceptionalCanonicalUnitHeaders
+import LeanCanny.Encoding.FlatAffineExceptionalCanonicalUnitHeaderReadback
+import LeanCanny.Encoding.FlatAffineExceptionalCanonicalUnitHeaderGeneric
 import LeanCanny.Algebra.IntegralMixedIntegerFamilyOriginalSource
 import LeanCanny.Encoding.FlatAffineExceptionalFramedIntegerPrelude
 import LeanCanny.Encoding.FlatAffineExceptionalFramedIntegerOriginal
@@ -2604,6 +2659,16 @@ limits in every clopen frozen component piece, even for unbounded slices.
 These limits meet an actual finite selected relative-factor coordinate grid
 at the same real bank specialization. The full canonical source writer and
 recursive graph construction remain required.
+A concrete finite trace now starts at the empty bank and makes exactly n
+actual tagged limit births. It meets every nonempty clopen piece of an original
+Term zero set; final newest-first bank entries recover every original
+coordinate. The old hom and entire old physical tuple are preserved at each
+birth. Source and bank heights follow the derived native binary recurrence,
+with one original uniform syntax budget and one spatial scalar cap. The actual
+selected grid has at most 2^(B*(n+1)) points, independently of its large level
+coefficient. Canonical original records now derive command and fallback header
+tables, body rows and exact tilted LOW bindings. Native descriptor enumeration,
+validation, component-preserving covers and graph routines remain required.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

@@ -1801,6 +1801,26 @@ the actual finite selected relative-factor coordinate grid. The tilt direction
 remains the free auxiliary axis. Physical critical attachment and the formal
 parameter used in limit cuts retain distinct scopes.
 
+The component sampler now starts with an actual empty bank and performs
+exactly n tagged limit cuts. It reaches a point in every nonempty clopen piece
+of the original Term zero set, with every original coordinate recovered from
+the final bank at index n−1−i. All earlier physical rows and the interpreting
+hom remain correlated through the trace. Original word sizes and the actual
+interpreter derive the next bank height; its uniform recurrence has native
+binary access. Each selected coordinate has at most 2^B values, and the actual
+grid has at most 2^(B(n+1)) points. These are semantic coverage and size results;
+native descriptor validation and the recursive connectivity graph remain open.
+
+Canonical unit records now construct their literal changing-source plan,
+body writer, snapshots and total command/fallback header tables. Original
+producer birth labels are converted to current retained indices. The actual
+integer prelude supplies its own coefficient and degree costs, and original
+tilted term descriptors supply LOW identities. A separate auxiliary-cut record
+writer preserves the original input and advice. The causal level source is
+regular in its free level direction; its bounded level sheet is homeomorphic
+to its exact projected region, with a unique continuous level value. This
+sheet statement makes no identification with the original zero-set components.
+
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
 permutation now connects arbitrary active subsets to the same selected mixed
