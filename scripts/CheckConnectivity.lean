@@ -37224,3 +37224,508 @@ example (d : Data) : captured d.toBits = true :: pair d.toBits [] := by
 #print axioms runEncoded_mem_FP_context
 #print axioms runEncoded_mem_FP_context_of_additive
 end Group28Regression26
+
+namespace Group29Regression0
+open LeanCanny LeanCanny.ETR LeanCanny.Encoding
+open PartialHomogenizationNative
+
+-- The source word is constant, while the frozen parameter count depends on
+-- the independent caller word; the native fold retains that caller context.
+def t : Term := .add (.var 0) (.var 1)
+def params : PartialHomogenizationNative.Parameters := ⟨List.length,fun _ => 1,fun _ => t.toData.size⟩
+def source (_ : List Bool) : List Bool := t.toData.toBits
+example : PartialHomogenizationNative.Access params := ⟨UnaryFn.length id_mem_FP,UnaryFn.const 1,UnaryFn.const _⟩
+example : PartialHomogenizationNative.write params source ∈ FP :=
+  PartialHomogenizationNative.write_FP params ⟨UnaryFn.length id_mem_FP,UnaryFn.const 1,UnaryFn.const _⟩ source (constFn_mem_FP _)
+example (c : List Bool) : PartialHomogenizationNative.write params source c = (PartialHomogenization.homogenize c.length t).toData.toBits :=
+  PartialHomogenizationNative.write_term params source c t rfl (by change t.degreeBound ≤ 1; decide) (Nat.le_refl _)
+example : PartialHomogenizationNative.write params source [true] ≠ PartialHomogenizationNative.write params source [] := by
+  rw [PartialHomogenizationNative.write_term params source [true] t rfl (by decide) (Nat.le_refl _),
+    PartialHomogenizationNative.write_term params source [] t rfl (by decide) (Nat.le_refl _)]
+  change (PartialHomogenization.homogenize 1 t).toData.toBits ≠
+    (PartialHomogenization.homogenize 0 t).toData.toBits
+  intro H
+  have HL := congrArg List.length H
+  simp only [Data.length_toBits] at HL
+  norm_num [t,PartialHomogenization.homogenize,PartialHomogenization.physicalDegree,Term.power] at HL
+
+example : (TermView.term (FixedLeadingTiltedSourceFP.lowWord 1 1 1 t)).arity ≤ 3 :=
+  FixedLeadingTiltedSourceFP.lowWord_arity 1 1 (1 : Fin 2) t (by decide)
+example : (TermView.term (FixedLeadingTiltedSourceFP.lowWord 1 1 1 t)).finitePolynomial 3 =
+    (Algebra.FixedLeadingTiltedSource.source 1 1 (1 : Fin 2) t (by decide)).low :=
+  FixedLeadingTiltedSourceFP.lowWord_polynomial 1 1 (1 : Fin 2) t (by decide)
+
+-- Arbitrary raw source words are normalized, including malformed input.
+noncomputable def viewed (c : List Bool) : Term := TermView.term c
+example : (fun c => (viewed c).toData.toBits) ∈ FP :=
+  mem_FP_of_eq TermView.normalize_mem_FP (fun c => TermView.normalize_eq_term c)
+example : (fun c => FixedLeadingTiltedSourceFP.lowWord (Codec.unaryValue c)
+    (FixedLeadingTiltedSourceFP.originalDegree viewed c) c.length (viewed c)) ∈ FP :=
+  FixedLeadingTiltedSourceFP.original_lowWord_FP
+    (mem_FP_of_eq TermView.normalize_mem_FP (fun c => TermView.normalize_eq_term c))
+    Codec.unaryValue_unary (UnaryFn.length id_mem_FP)
+
+#print axioms PartialHomogenizationData.bounded_term
+#print axioms PartialHomogenizationData.frameCode_growth
+#print axioms PartialHomogenizationNative.combineBits_FP
+#print axioms PartialHomogenizationNative.run_FP
+#print axioms PartialHomogenizationNative.write_term
+#print axioms PartialHomogenization.homogenize_FP
+#print axioms PartialHomogenization.padded_FP
+#print axioms FixedLeadingTiltedSourceFP.lowTerm_FP
+#print axioms FixedLeadingTiltedSourceFP.original_lowWord_FP
+#print axioms FixedLeadingTiltedSourceFP.lowWord_arity
+#print axioms FixedLeadingTiltedSourceFP.lowWord_polynomial
+end Group29Regression0
+
+namespace Group29Regression1
+noncomputable section
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory FlatAffineFullSourceTower
+
+example : IntegralMixedAffineCode.integerLiteral (SignStatisticBits.integerCode (-7)) = (ETR.Term.const (-7)).toData.toBits := by
+  rw [IntegralMixedAffineCode.integerLiteral_eq, SignedIntegerArithmetic.value_packet]
+example : FlatAffineFullSourceTower.integer 3 [true, false, true, false, true, false] 0 = 3 := by decide
+example : FlatAffineFullSourceTower.integer 3 [false, true, false, true, false, true] 0 = -3 := by decide
+
+def sumEntry (p : List Bool) := if (pairSnd p).length = 0 then
+  IntegralMixedAffineCode.encode (.scale (-3) (.reference 1)) else
+  IntegralMixedAffineCode.encode (.scale 5 (.reference 1))
+def sumExpr (_ : List Bool) (i : Fin 2) : AffineExpr :=
+  if i.val = 0 then .scale (-3) (.reference 1) else .scale 5 (.reference 1)
+example (q : List Bool) : IntegralMixedAffineCode.sumCode (fun _ => 2) sumEntry q =
+    IntegralMixedAffineCode.encode (FlatAffineExceptionalMixedExpressions.sum (List.ofFn (sumExpr q))) := by
+  apply IntegralMixedAffineCode.sumCode_eq (fun _ => 2) sumExpr sumEntry
+  intro c j hj
+  interval_cases j <;> simp only [sumEntry, sumExpr, pairSnd_pair, List.length_replicate] <;> rfl
+
+-- Source syntax can itself be produced in charged space.
+example (e : List Bool → AffineExpr) (source mod : List Bool → List Bool)
+    (hs : SpaceFunction source) (hm : mod ∈ FP) (he : ∀ q, source q = IntegralMixedAffineCode.encode (e q)) :
+    SpaceFunction (fun q => MatrixPower.residueBits (IntegralMixedAffineCoefficients.constantCoefficient (e q) : ZMod (Nat.fromBitsLE (mod q) + 1))) :=
+  IntegralMixedAffineCode.constant_space_fromSpace e source mod hs hm he
+
+-- The actual shifted rules charge original level and selector words only.
+example {F : FlatAffineFullSourceTower.Inputs} (hF : F.Access) (input mod : List Bool → List Bool) (hi : input ∈ FP) (hm : mod ∈ FP)
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (hh : BinaryFn (fun u => (h u).val))
+    (J : (q : List Bool) → Fin (FlatAffineFullSourceTower.arity F (input q))) (hj : SpaceFunction (fun q => BinaryNatCode.encode (J q).val))
+    (I : List Bool → ℕ) (hI : BinaryFn I) :
+    SpaceFunction (fun q => MatrixPower.residueBits (IntegralMixedAffineCoefficients.referenceCoefficient
+      (FlatAffineExceptionalMixedExpressions.shifted F h (input q) (J q)) (I q) : ZMod (Nat.fromBitsLE (mod q) + 1))) :=
+  FlatAffineExceptionalMixedExpressions.shifted_reference_space hF input mod hi hm h hh J hj I hI
+
+example (F : FlatAffineFullSourceTower.Inputs) (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F))
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (u : List Bool) :
+    (FlatAffineExceptionalBankSource.denominator F C h u).natAbs.size ≤ FlatAffineExceptionalSlopeSource.height F C h u :=
+  FlatAffineExceptionalSlopeSource.denominator_size F C h u
+
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalMixedExpressions.term_arity_height
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalMixedExpressions.term_arity_shifted
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalMixedExpressions.ordered_heights_arity
+#print axioms LeanCanny.Algebra.IntegralMixedAffineCode.sumCode_FP
+#print axioms LeanCanny.Algebra.IntegralMixedAffineCode.sumCode_eq
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSlopeSource.denominator_bound
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSlopeSource.denominator_size
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSlopeSource.height_binary
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSlopeSource.slope_evaluator
+#print axioms LeanCanny.Algebra.IntegralMixedAffineCode.constantReader_space
+#print axioms LeanCanny.Algebra.IntegralMixedAffineCode.referenceReader_space
+#print axioms LeanCanny.Algebra.IntegralMixedAffineCode.constant_space_fromSpace
+#print axioms LeanCanny.Algebra.IntegralMixedAffineCode.reference_space_fromSpace
+#print axioms LeanCanny.Algebra.IntegralMixedAffineCode.integerLiteral_FP
+#print axioms LeanCanny.Algebra.IntegralMixedAffineCode.integerLiteral_eq
+#print axioms LeanCanny.Algebra.IntegralMixedAffineCode.scaledReference_FP
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalMixedExpressions.height_encode_space
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalMixedExpressions.rawHeight_encode_FP
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalMixedExpressions.levelKernel_FP
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalMixedExpressions.levelKernel_packet
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalMixedExpressions.level_encode_space
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalMixedExpressions.shifted_encode_space_source
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalMixedExpressions.shifted_constant_space
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalMixedExpressions.shifted_reference_space
+
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalRuleCellsSpace.ordered_reference
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalRuleCellsSpace.coarse_constant
+end
+end Group29Regression1
+
+namespace Group29Regression2
+namespace ClearedDilationRegression
+open LeanCanny.Algebra Polynomial
+open ClearedDilatedCoordinatePolynomial
+-- A nonunit clearing factor never requires modular division.
+example : (((rescale (Polynomial.X + Polynomial.C (Polynomial.X + Polynomial.C (-2)) : Polynomial (Polynomial ℤ))) 6).coeff 0).coeff 1 = 6 := by
+  rw [coefficient, natDegree_X_add_C]
+  norm_num
+example (p : Polynomial (Polynomial ℤ)) (q : ℤ) (c k : ℕ) (h : c < k) :
+    ((Bivariate.swap (rescale p q)).coeff c).coeff k = 0 := by
+  rw [swapped_coefficient, ite_eq_right (by omega)]
+example (p : Polynomial (Polynomial ℤ)) (q a : ℤ) (ha : a ≠ 0)
+    (hd : p.coeff p.natDegree = Polynomial.C a) :
+    (Bivariate.swap (rescale p q)).trailingCoeff.natDegree ≤ p.natDegree :=
+  trailing_coordinate_degree p q a ha hd
+example (p : Polynomial (Polynomial ℤ)) (q : ℤ) (H L : ℕ)
+    (hp : ∀ k j, ((p.coeff k).coeff j).natAbs ≤ 2 ^ H) (hq : q.natAbs ≤ 2 ^ L) (c k : ℕ) :
+    (((Bivariate.swap (rescale p q)).coeff c).coeff k).natAbs ≤ 2 ^ (H + p.natDegree * L) :=
+  integer_coefficient_bound p q H L hp hq c k
+example (p : Polynomial (Polynomial ℤ)) (q : ℤ) (e y x : ℝ)
+    (hy : (q : ℝ) * y = e * x) (hp : eval₂ (eval₂RingHom (Int.castRingHom ℝ) e) y p = 0) :
+    eval₂ (eval₂RingHom (Int.castRingHom ℝ) e) x (rescale p q) = 0 :=
+  root (Int.castRingHom ℝ) p q e y x hy hp
+#print axioms ClearedDilatedCoordinatePolynomial.coefficient
+#print axioms ClearedDilatedCoordinatePolynomial.swapped_coefficient
+#print axioms ClearedDilatedCoordinatePolynomial.eval_rescale
+#print axioms ClearedDilatedCoordinatePolynomial.root
+#print axioms ClearedDilatedCoordinatePolynomial.trailing_degree_le
+#print axioms ClearedDilatedCoordinatePolynomial.coefficient_degree
+#print axioms ClearedDilatedCoordinatePolynomial.trailing_coordinate_degree
+#print axioms ClearedDilatedCoordinatePolynomial.integer_coefficient_bound
+end ClearedDilationRegression
+end Group29Regression2
+
+namespace Group29Regression3
+namespace OriginalSpatialHeightRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower IntegralCriticalHistoryTask
+open IntegralMixedOriginalSpatialHeight
+example (t : List Bool → ETR.Term) (ht : (fun r => (t r).toData.toBits) ∈ FP) : UnaryFn (height t) := height_unary t ht
+example (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P) (t : List Bool → ETR.Term)
+    (hp : ∀ r, (t r).finitePolynomial (P.ambient r + 1) = (D.spatial r).low)
+    (r : List Bool) (e : Fin (P.ambient r + 1) →₀ ℕ) :
+    ((D.spatial r).low.coeff e).natAbs ≤ 2 ^ height t r := coefficient_bound P D t hp r e
+example : height (fun _ => ETR.Term.mul (.const (-6)) (.add (.var 0) (.var 0))) [] =
+    (ETR.Term.mul (.const (-6)) (.add (.var 0) (.var 0))).toData.size + 1 := rfl
+#print axioms IntegralMixedOriginalSpatialHeight.height_unary
+#print axioms IntegralMixedOriginalSpatialHeight.coefficient_bound
+#print axioms IntegralMixedOriginalSpatialHeight.inputs
+end OriginalSpatialHeightRegression
+end Group29Regression3
+
+namespace Group29Regression4
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCriticalSweep FixedWidthPolynomial
+open scoped Classical
+
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+
+noncomputable def initial : State circle 1 64 0 (Fin 0) :=
+  IntegralMixedHistory.base circle (IntegralHistorySampler.base 1 (2 ^ 64))
+    (by norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, count, circle]; decide)
+
+noncomputable def sweep : Rule 1 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => -2
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant (-5) }
+  height := 0
+  height_frozen := by decide
+  slope := -3
+  slope_ne_zero := by decide
+
+noncomputable def family : IntegralMixedCutSource.Family where
+  ambient _ := 1
+  cap _ := 1
+  width _ := 64
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := circle
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := sweep
+  kind _ := .coordinate 0 0
+  degree _ := 0
+  degree_bound _ := Nat.zero_le _
+  scalar_cap _ := by
+    norm_num [IntegralMixedExceptionalBounds.auxiliaryCap, IntegralMixedExceptionalBounds.K,
+      IntegralMixedExceptionalBounds.E, IntegralMixedExceptionalBounds.regularCap,
+      IntegralMixedExceptionalBounds.valueCap, IntegralMixedExceptionalBounds.valueDimension,
+      IntegralMixedExceptionalBounds.boxWidth, IntegralMixedExceptionalBounds.boxBase,
+      IntegralMixedSweepBounds.parameterCap, IntegralMixedSweepBounds.coordinateCap, PurePowerReductionBounds.dimension,
+      PurePowerReductionBounds.width, PurePowerReductionBounds.bound, count, circle]
+    decide
+
+noncomputable def indices : IntegralMixedVirtualSweepSource.Indices family where
+  coordinate _ := 0
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  col _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+
+
+
+open IntegralCriticalHistoryTask MatrixPower
+open IntegralMixedCommandHeaderBits
+open scoped Classical
+private def P : Parameters := ⟨fun _ => 4, fun _ => 64, fun _ => 1, fun _ => 2, fun _ => 2, fun _ => 0, fun _ => 6⟩
+private theorem PA : IntegralCriticalHistoryTask.Access P :=
+  ⟨UnaryFn.const 4, UnaryFn.const 64, UnaryFn.const 1, UnaryFn.const 2,
+    BinaryFn.const 2, BinaryFn.const 0, BinaryFn.const 6⟩
+noncomputable def initialInteger : IntegralMixedFullHistoryScript.Command circle 64 :=
+  .integer Polynomial.X Polynomial.X_ne_zero (by simpa only [Polynomial.natDegree_X] using (Nat.one_le_two_pow : 1 ≤ 2 ^ 64))
+noncomputable def selectedCut : IntegralMixedFullHistoryScript.Command circle 64 :=
+  .cut sweep (.squarefree 0 ⟨0, Nat.pow_pos (Nat.two_pow_pos _)⟩) 1 (by unfold IntegralMixedExceptionalBounds.auxiliaryCap; omega) Nat.one_le_two_pow
+noncomputable def initialCommands := [selectedCut, IntegralMixedFullHistoryScript.Command.critical sweep.critical, initialInteger]
+noncomputable def fallbackSelection : IntegralMixedFullHistoryFamilyBits.Selection circle :=
+  ⟨sweep, .coordinate 0 0, 0, Nat.zero_le _⟩
+noncomputable def D : IntegralMixedFullHistoryFamilyBits.Data P where
+  spatial _ := circle
+  degree_eq _ := rfl
+  sourceWidth _ := by change (2 : ℕ).size ≤ 2; decide
+  scalar_cap _ := (_root_.Group29Regression4.family.scalar_cap [])
+  rules _ := initialCommands
+  room _ := by change 3 + 2 ≤ 4 + 1; decide
+  fallback _ := fallbackSelection
+noncomputable def T : IntegralMixedHeaderTablesBits.Tables where
+  commands _ := words initialCommands
+  fallback _ := WordList.encode (List.replicate 30 (encode (IntegralMixedCommandHeaderBits.selection fallbackSelection)))
+private theorem TA : IntegralMixedHeaderTablesBits.Access T :=
+  ⟨constFn_mem_FP _, constFn_mem_FP _⟩
+private theorem TR : IntegralMixedHeaderTablesBits.Represents P D T where
+  commands _ := rfl
+  fallback key := by
+    have HI : IntegralMixedHeaderTablesBits.fallbackIndex P key < 30 :=
+      IntegralMixedHeaderTablesBits.fallbackIndex_lt P key
+    simp only [T, WordList.get_encode, List.getElem?_replicate_of_lt HI, Option.getD_some]
+    rfl
+
+open IntegralMixedOriginalSpatialTermBits
+private def lowTerm : ETR.Term := .add (.add (.const (-3)) (.const 2))
+  (.add (.var 0) (.mul (.const (-1)) (.var 0)))
+private def lowWord (_ : List Bool) := lowTerm.toData.toBits
+private theorem lowScope (r : List Bool) : (ETR.TermView.term (lowWord r)).arity ≤ P.ambient r + 1 := by
+  rw [show lowWord r = lowTerm.toData.toBits from rfl, ETR.TermView.term_toBits]
+  change lowTerm.arity ≤ 2
+  decide
+private theorem lowPolynomial (r : List Bool) :
+    (ETR.TermView.term (lowWord r)).finitePolynomial (P.ambient r + 1) = (D.spatial r).low := by
+  rw [show lowWord r = lowTerm.toData.toBits from rfl, ETR.TermView.term_toBits]
+  change lowTerm.finitePolynomial 2 = MvPolynomial.C (-1)
+  change MvPolynomial.C (-3) + MvPolynomial.C 2 +
+    (MvPolynomial.X (0 : Fin 2) + MvPolynomial.C (-1) * MvPolynomial.X (0 : Fin 2)) = MvPolynomial.C (-1)
+  have HC : (MvPolynomial.C (-1 : ℤ) : MvPolynomial (Fin 2) ℤ) = -1 := by simp
+  rw [HC]
+  simp only [neg_one_mul, add_neg_cancel, add_zero]
+  rw [← MvPolynomial.C_add]
+  exact HC
+example : SpaceFunction (scalar P D) := evaluator P PA D lowWord (constFn_mem_FP _) lowScope lowPolynomial
+example : SpaceFunction (IntegralMixedPhysicalNativeLowerBits.originalScalar P (IntegralMixedFullCriticalDispatcherBits.physicalFamily P D)) :=
+  physical_evaluator P PA D (IntegralMixedHeaderTablesBits.physicalInputMetadata P PA D T TA TR) lowWord (constFn_mem_FP _) lowScope lowPolynomial
+example : SpaceFunction (IntegralMixedVirtualNativeLowerBits.originalScalar P (IntegralMixedFullHistoryFamilyBits.family P D)) :=
+  virtual_evaluator P PA D (IntegralMixedHeaderTablesBits.fullMetadata P PA D T TA TR) lowWord (constFn_mem_FP _) lowScope lowPolynomial
+example : IntegralMixedFullCriticalDispatcherBits.Controls P D :=
+  controls P PA D (IntegralMixedHeaderTablesBits.fullMetadata P PA D T TA TR)
+    (IntegralMixedHeaderTablesBits.physicalInputMetadata P PA D T TA TR)
+    lowWord (constFn_mem_FP _) lowScope lowPolynomial
+noncomputable def testScalar := IntegralOriginalTermCoefficientBits.scalar
+  (fun _ => 2) (fun _ => 2) (fun _ => 6) (fun _ => MvPolynomial.C (-1))
+example : SpaceFunction testScalar :=
+  IntegralOriginalTermCoefficientBits.evaluator _ _ _ (UnaryFn.const 2) (UnaryFn.const 2)
+    (BinaryFn.const 6) (fun _ => by decide) _ lowWord (constFn_mem_FP _)
+    (fun r => by have H := lowScope r; change (ETR.TermView.term (lowWord r)).arity ≤ 2 at H; exact H)
+    (fun r => by have H := lowPolynomial r; change (ETR.TermView.term (lowWord r)).finitePolynomial 2 = MvPolynomial.C (-1) at H; exact H)
+example (q : List Bool) : testScalar (pair q []) = residueBits (5 : ZMod 6) := by
+  unfold testScalar IntegralOriginalTermCoefficientBits.scalar
+  rw [pairFst_pair, pairSnd_pair]
+  have H0 : RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 0) = 0 := by
+    ext i
+    change FixedWidthPolynomial.entry 2 0 i.val = 0
+    rw [FixedWidthPolynomial.entry_eq_digit]
+    simp
+  change residueBits ((MvPolynomial.C (-1 : ℤ)).coeff
+    (RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 0)) : ZMod 6) = _
+  rw [H0]
+  norm_num
+  exact congrArg residueBits (by decide : (-1 : ZMod 6) = 5)
+example (q : List Bool) : testScalar (pair q [false, false]) = testScalar (pair q []) := by
+  unfold testScalar IntegralOriginalTermCoefficientBits.scalar
+  rw [pairFst_pair, pairSnd_pair, pairSnd_pair]
+  rfl
+example (q : List Bool) : testScalar (pair q [true]) = [] := by
+  unfold testScalar IntegralOriginalTermCoefficientBits.scalar
+  rw [pairFst_pair, pairSnd_pair]
+  change residueBits ((MvPolynomial.C (-1 : ℤ)).coeff
+    (RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 1)) : ZMod 6) = []
+  rw [MvPolynomial.coeff_C]
+  have HN : RationalSubstitution.Indexed.exponentVector 2 (FixedWidthPolynomial.entry 2 1) ≠ 0 := by
+    intro H
+    have HH := congrArg (fun e : Fin 2 →₀ ℕ => e 0) H
+    change 1 = 0 at HH
+    omega
+  rw [ite_eq_right (Ne.symm HN)]
+  rfl
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.root_FP
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.width_unary
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.modulusWord_FP
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.collected_eq
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.evaluator
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.physical_evaluator
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.virtual_evaluator
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.controls
+#print axioms LeanCanny.Algebra.IntegralOriginalTermCoefficientBits.evaluator
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.physical_coefficient
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.virtual_coefficient
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.physical_source_scalar
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.virtual_source_scalar
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.physical_family_evaluator
+#print axioms LeanCanny.Algebra.IntegralMixedOriginalSpatialTermBits.virtual_family_evaluator
+end Group29Regression4
+
+namespace Group29Regression5
+namespace FullNativeSyntaxRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower IntegralCriticalHistoryTask
+open IntegralMixedFullNativeBits
+example (P : Parameters) (a : Access P)
+    (D : IntegralMixedFullHistoryFamilyBits.Data P)
+    (T : IntegralMixedHeaderTablesBits.Tables) (ht : IntegralMixedHeaderTablesBits.Access T)
+    (hr : IntegralMixedHeaderTablesBits.Represents P D T)
+    (body : IntegralMixedOriginalRuleBodyBits.Access P D)
+    (integer : IntegralMixedIntegerProducerSpaceBits.Original P D)
+    (word : List Bool → List Bool) (hword : word ∈ FP)
+    (hs : ∀ r, (ETR.TermView.term (word r)).arity ≤ P.ambient r + 1)
+    (hp : ∀ r, (ETR.TermView.term (word r)).finitePolynomial (P.ambient r + 1) = (D.spatial r).low)
+    (C L : List Bool → ℕ) (hi : IntegralMixedFullHeightBits.Inputs P D C L)
+    (hC : BinaryFn C) (hL : BinaryFn L)
+    (hm : ∀ root, 2 * IntegralMixedNormalizationTopBits.characteristicBudget P
+      (IntegralMixedFullHeightBits.height P C L) root + 4 ≤ P.modulusBound root) :
+    SpaceFunction (machine P a D
+      (controls_of_syntax P a D T ht hr body integer word hword hs hp C L hi hC hL hm)).model :=
+  model_space_of_syntax P a D T ht hr body integer word hword hs hp C L hi hC hL hm
+
+#print axioms IntegralMixedFullNativeBits.core_of_syntax
+#print axioms IntegralMixedFullNativeBits.controls_of_syntax
+#print axioms IntegralMixedFullNativeBits.model_space_of_syntax
+end FullNativeSyntaxRegression
+end Group29Regression5
+
+namespace Group29Regression6
+namespace TiltedOriginalSpatialRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower IntegralCriticalHistoryTask
+open LeanCanny.ETR FixedLeadingTiltedOriginalSpatial
+example (P : Parameters) (a : Access P) (D : IntegralMixedFullHistoryFamilyBits.Data P)
+    (full : IntegralMixedFullHistoryFamilyBits.Metadata P D)
+    (physical : IntegralMixedPhysicalQueryBits.InputMetadata
+      (IntegralMixedFullCriticalDispatcherBits.physicalFamily P D))
+    (t : List Bool → Term) (k : List Bool → ℕ)
+    (u : (r : List Bool) → Fin (P.ambient r))
+    (ht : (fun r => (t r).toData.toBits) ∈ FP) (hk : UnaryFn k)
+    (hu : UnaryFn (fun r => (u r).val)) (ha : ∀ r, (t r).arity ≤ P.ambient r)
+    (hs : ∀ r, D.spatial r = FixedLeadingTiltedSource.source (k r)
+      (FixedLeadingTiltedSourceFP.originalDegree t r) (u r) (t r) (t r).degreeBound_le_dataSize) :
+    IntegralMixedFullCriticalDispatcherBits.Controls P D :=
+  controls P a D full physical t k u ht hk hu ha hs
+
+#print axioms FixedLeadingTiltedOriginalSpatial.word_FP
+#print axioms FixedLeadingTiltedOriginalSpatial.word_scope
+#print axioms FixedLeadingTiltedOriginalSpatial.word_polynomial
+#print axioms FixedLeadingTiltedOriginalSpatial.controls
+end TiltedOriginalSpatialRegression
+end Group29Regression6
+
+namespace Group29Regression7
+namespace ClearedDilationMatrixRegression
+open LeanCanny.Algebra Polynomial ClearedDilatedCoordinateMatrix
+variable {A I : Type*} [CommRing A] [Fintype I] [DecidableEq I]
+example (b : Module.Basis I ℤ A) (p : Polynomial (Polynomial A))
+    (q : ℤ) (H L : ℕ)
+    (hp : ∀ k j i t, ((Algebra.leftMulMatrix b ((p.coeff k).coeff j)) i t).natAbs ≤ 2 ^ H)
+    (hq : q.natAbs ≤ 2 ^ L) (c k : ℕ) (i t : I) :
+    ((Algebra.leftMulMatrix b
+      (((Bivariate.swap (ClearedDilatedCoordinatePolynomial.rescale p (q : A))).coeff c).coeff k)) i t).natAbs ≤
+      2 ^ (H + p.natDegree * L) :=
+  ClearedDilatedCoordinateMatrix.entry_bound b p q H L hp hq c k i t
+
+example (b : Module.Basis I ℤ A) (p : Polynomial (Polynomial A)) (q : ℤ) (c k : ℕ) (h : c < k) :
+    Algebra.leftMulMatrix b (((Bivariate.swap (ClearedDilatedCoordinatePolynomial.rescale p (q : A))).coeff c).coeff k) = 0 := by
+  rw [ClearedDilatedCoordinateMatrix.coefficient, ite_eq_right (by omega)]
+#print axioms ClearedDilatedCoordinateMatrix.coefficient
+#print axioms ClearedDilatedCoordinateMatrix.entry_bound
+end ClearedDilationMatrixRegression
+end Group29Regression7
+
+namespace Group29Regression8
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry Polynomial Filter
+open scoped Topology
+
+-- Specializing the old parent A=0 kills the universal E^0 coefficient.
+-- The selected trailing coefficient must be chosen after that specialization.
+noncomputable def phi : Polynomial ℝ →+* ℝ := evalRingHom 0
+noncomputable def ann : Polynomial (Polynomial (Polynomial ℝ)) := Polynomial.X-Polynomial.C (Polynomial.C Polynomial.X+Polynomial.X)
+example : (ClearedDilationLimit.selected phi ann 1).coeff 0=0 := by
+  simp [ClearedDilationLimit.selected,ClearedDilatedCoordinatePolynomial.rescale,
+    DilatedCoordinatePolynomial.rescale,ann,phi,scaleRoots_one,Bivariate.swap_X,Bivariate.swap_Y,Bivariate.swap_C_C,
+    coe_mapRingHom]
+example : (ClearedDilationLimit.selected phi ann 1).coeff 1=Polynomial.X-1 := by
+  simp [ClearedDilationLimit.selected,ClearedDilatedCoordinatePolynomial.rescale,
+    DilatedCoordinatePolynomial.rescale,ann,phi,scaleRoots_one,Bivariate.swap_X,Bivariate.swap_Y,Bivariate.swap_C_C,
+    coe_mapRingHom]
+example : ∃ i : Fin (ann.natDegree+1),
+    ClearedDilationGrid.candidate phi ann 1 i≠0 ∧
+      (ClearedDilationGrid.candidate phi ann 1 i).natDegree ≤ ann.natDegree := by
+  have HDeg : ann.natDegree=1 := Polynomial.natDegree_X_sub_C _
+  have HC : ann.coeff ann.natDegree=Polynomial.C (1 : Polynomial ℝ) := by rw [HDeg]; simp [ann]
+  obtain ⟨i,_,HN,HD⟩ := ClearedDilationGrid.selected_candidate phi ann 1 1
+    (by simp [phi]) HC
+  exact ⟨i,HN,HD⟩
+
+-- W=x²+5 has an unconstrained critical point of nonzero value 5.
+-- The appended free objective supplies the missing hypersurface equation.
+noncomputable def P0 : IntegralMixedHistory.SpatialSource 0 where
+  low := MvPolynomial.C 5
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by rw [MvPolynomial.totalDegree_C]; decide
+  leading_ne_zero := one_ne_zero
+example : ∃ v ∈ Set.Icc (-1:ℝ) 1,
+    (FermatLevelLift.polynomial (FermatLevelLift.source P0 7)).eval₂ (Int.castRingHom ℝ)
+      (Fin.snoc (fun _ : Fin 1 => 0) v)=0 := by
+  obtain ⟨v,hv,H,_⟩ := FermatLevelCritical.lift_critical P0 7 rfl (by decide)
+    (fun _ => 0) (by norm_num [FermatLevelLift.polynomial,FermatCriticalHomogenization.polynomial,P0])
+    0 (by
+      intro i _
+      change (MvPolynomial.pderiv i (FermatCriticalHomogenization.polynomial (MvPolynomial.C (5:ℤ)) 1 2)).eval₂
+        (Int.castRingHom ℝ) (fun _ => 0)=0
+      rw [FermatCriticalHomogenization.pderiv_polynomial,MvPolynomial.pderiv_C]
+      simp)
+  exact ⟨v,hv,H⟩
+
+example : (FermatLevelCoordinate.polynomial P0 7 (fun _ => 1) (fun _ : Fin 1 => (0:ℝ))
+    0 (by decide) (0 : Fin 1)).eval₂ (RingHom.id ℝ) 0=0 := by
+  apply FermatLevelCoordinate.root P0 7 rfl (by decide) (fun _ => 1) (fun _ => one_ne_zero)
+    (fun _ => (0:ℝ)) 0 (by decide) (0 : Fin 1) (RingHom.id ℝ) (fun _ => 0)
+  · intro i hi
+    omega
+  · norm_num [FermatLevelLift.polynomial,FermatCriticalHomogenization.polynomial,P0]
+  · intro i _
+    change (MvPolynomial.pderiv i (FermatCriticalHomogenization.polynomial (MvPolynomial.C (5:ℤ)) 1 2)).eval₂
+      (Int.castRingHom ℝ) (fun _ => 0)=0
+    rw [FermatCriticalHomogenization.pderiv_polynomial,MvPolynomial.pderiv_C]
+    simp
+
+#print axioms ClearedDilationLimit.swap_eval
+#print axioms ClearedDilationLimit.selected_ne_zero
+#print axioms ClearedDilationLimit.coordinate_degree
+#print axioms ClearedDilationLimit.limit_root
+#print axioms ClearedDilationGrid.selected_candidate
+#print axioms ClearedDilationGrid.finite_grid
+#print axioms ClearedDilationGrid.limit_mem
+#print axioms FermatLevelLift.source
+#print axioms FermatLevelLift.eval_source
+#print axioms FermatLevelLift.derivative
+#print axioms FermatLevelCritical.exists_level
+#print axioms FermatLevelCritical.lift_critical
+
+#print axioms FermatLevelCoordinate.root
+end Group29Regression8

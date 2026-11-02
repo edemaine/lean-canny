@@ -1728,8 +1728,23 @@ primitive to the concrete input writer remains required.
 A division-free dilation gives the tilted sampling polynomial a constant
 nonzero leading coefficient. Physical variables are homogenized while frozen
 parameters remain unchanged; the gradient and coordinate coefficient identities
-are proved with polynomial syntax-size bounds. The uniform native writer and
-its limit-coordinate cut interface still need to be connected to the sampler.
+are proved with polynomial syntax-size bounds. The uniform native writer now feeds the original spatial coefficient reader,
+with an input-syntax coefficient-height ceiling. A denominator-cleared
+coordinate equation recovers the original coordinate by an index shift and
+integer powers, preserving degree bounds without modular division. Selection
+after specializing the old algebra gives a finite nonzero limit-coordinate
+family. A bounded auxiliary level coordinate turns unconstrained critical
+points into roots of the existing hypersurface critical kernel. The native
+cut interface, effective level bound, and sampler assembly remain open.
+
+
+Concrete exceptional affine syntax now derives its coefficient cells from
+charged original level and selector words. The actual initial-bank slope has
+a separate space evaluator and a source-only height bound. A complete
+arithmetic constructor uses original header, scalar-body, and polynomial
+writers together with charged integer sources. Binding the remaining concrete
+selectors and command snapshots, and handling large level coefficients without
+serializing their full integers, remain required.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
