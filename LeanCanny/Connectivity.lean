@@ -1,3 +1,39 @@
+import LeanCanny.Algebra.IntegralMixedFramedClearedMatrix
+import LeanCanny.Algebra.IntegralMixedFramedClearedMatrixSpace
+import LeanCanny.Algebra.IntegralMixedFramedClearedMatrixPower
+import LeanCanny.Algebra.IntegralMixedFramedClearedPowerSum
+import LeanCanny.Algebra.IntegralMixedFramedSlackScalars
+import LeanCanny.Algebra.IntegralMixedFramedSlackMatrices
+import LeanCanny.Algebra.IntegralMixedFramedMatrixValueSpace
+import LeanCanny.Algebra.IntegralMixedFramedMatrixValuePower
+import LeanCanny.Algebra.IntegralMixedFramedSlackMatrixSpace
+import LeanCanny.Encoding.IntegralMixedAuxiliarySlackMatrices
+import LeanCanny.Algebra.IntegralMixedFramedSlackCharacteristicSpace
+import LeanCanny.Algebra.IntegralMixedFramedSlackCharacteristicCoefficients
+import LeanCanny.Algebra.IntegralMixedFramedSlackMatrixBounds
+import LeanCanny.Algebra.ScaledCharacteristicIntegerBounds
+import LeanCanny.Algebra.IntegralMixedFramedSlackRootSource
+import LeanCanny.Algebra.IntegralMixedFramedSlackRootSpace
+import LeanCanny.Algebra.IntegralMixedFramedSlackRootProperties
+import LeanCanny.Encoding.IntegralMixedAuxiliarySlackSources
+import LeanCanny.Encoding.IntegralFramedCutBankDenominator
+import LeanCanny.Encoding.IntegralFramedCutBankPoint
+import LeanCanny.Encoding.IntegralFramedCutBankRoot
+import LeanCanny.Encoding.IntegralFramedCutGuardComplete
+import LeanCanny.Encoding.IntegralFramedCutExact
+import LeanCanny.Algebra.FixedWidthSuffixLiftSpace
+import LeanCanny.Algebra.IntegralMixedFramedSuffixRoots
+import LeanCanny.Encoding.SquareSampleCompleteSuffixPolynomialTest
+import LeanCanny.Encoding.IntegralFramedCompleteSuffix
+import LeanCanny.Connectivity.IntegralMixedSelectedCoordinateEndpoint
+import LeanCanny.Geometry.OrderedRealRootWindow
+import LeanCanny.Connectivity.IntegralMixedSelectedCoordinateWindow
+import LeanCanny.Geometry.IntegralMixedFramedSlackInterpretation
+import LeanCanny.Geometry.IntegralMixedFramedSlackJointInterpretation
+import LeanCanny.Geometry.IntegralMixedFramedSlackPolynomialRoots
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQFromOriginal
+import LeanCanny.Encoding.IntegralFramedBankQueryOriginal
+import LeanCanny.Algebra.IntegerPolynomialOuterSign
 import LeanCanny.Algebra.UniformIntegralPrefixJointRoots
 import LeanCanny.Algebra.IntegralMixedFramedPrefixAtKey
 import LeanCanny.Algebra.IntegralMixedFramedPaddedRoots
@@ -3240,9 +3276,9 @@ transporting all earlier cuts to one terminal tuple remains unfinished.
 The actual successor candidate now constructs the common old interpretation:
 its newest companion row and every old tail row imply the full, untruncated
 cut-factor root, specialized validity and exact degree. No interpreting hom,
-row root or factor root is supplied by the caller. Relating this quotient to
-the decoded newest bank value and transporting all earlier cuts to one
-terminal tuple remain separate.
+row root or factor root is supplied by the caller. The quotient is now the decoded newest bank value. Every earlier prefix
+has an interpretation of the same terminal tuple; native terminal cut validation
+remains separate.
 Actual coordinate coefficient representatives now stream into integer
 multivariate heads while preserving the saved old bank and caller modulus.
 Ranks among all real roots of each selected coordinate polynomial are constant
@@ -3257,6 +3293,29 @@ A native derivative-sign scan compares actual coordinates from different
 framed scripts and identifies the same real value from a shared nonzero
 annihilator. Concrete correlated prelude construction and full trace/graph
 assembly remain unfinished.
+Actual old-bank multiplication matrices now provide both slack annihilators.
+Their coefficients, degree and mass controls are native original-only programs;
+the expanded sources have degrees twice the old rank and d times the old rank.
+One old interpretation evaluates their algebra elements as Q²u² and λQ^d v^d
+for the prescribed real marked slacks. A joint root constructs this one
+interpretation from literal original-coordinate readbacks. Expanded
+characteristic polynomials therefore vanish at those prescribed values.
+Concrete correlated integer replay and prelude construction remain separate.
+Native selected-cut acceptance is now exactly actual specialized validity,
+degree and the full untruncated factor root at the decoded newest bank value,
+with the old interpretation constructed from the same candidate. Every earlier
+prefix can also be interpreted on the suffix of one complete terminal tuple;
+generic native suffix-polynomial tests preserve all newer zero exponent blocks.
+The concrete terminal cut predicate and whole recursive trace remain unfinished.
+Anchored coordinate-root ordinals now identify actual physical branch endpoints
+through coordinate Near predicates plus frozen endpoint equations. Exact root
+window counts replace the scalar-root existential quantifiers in Near; its
+ordered epsilon/delta conditions and native coefficient-sign costs remain open.
+For an actual integer parameter polynomial with coefficient mass at most 2^b,
+every parameter at least 2^(b+1) gives its leading-coefficient sign, uniformly
+across families with that mass bound. A uniform polynomial presentation and
+bound for all recursive graph primitives is still required for effective global
+stabilization; this numerical lemma does not supply that presentation.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

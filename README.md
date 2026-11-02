@@ -1926,7 +1926,8 @@ transport remains required before validating an entire recursive trace.
 
 Actual successor rows now derive one common old interpretation, specialized
 cut validity, exact degree and the full untruncated factor root. Decoded-bank
-identification and later terminal-tail transport remain open. Actual cached
+identification and same-terminal prefix interpretations are now proved;
+native terminal cut validation remains open. Actual cached
 coordinate coefficients now feed integer multivariate heads. Coordinate-root
 ordinals are constant on continuous physical branches, using all real scalar
 roots; this does not assert that every ordinal tuple is a physical point.
@@ -1936,6 +1937,23 @@ integer Source leaves without expanded integer syntax. A native derivative
 scan proves equality between coordinates from different framed scripts using
 one shared nonzero annihilator. Correlated prelude replay, physical endpoint
 assembly, full native graph construction and effective global stabilization
+remain unfinished.
+
+Native original-only coefficient, degree and mass programs now construct the
+two slack annihilators over the same old algebra. Their expanded characteristic
+polynomials vanish at the prescribed real marked slacks under the same joint
+interpretation. Concrete correlated prelude replay remains unfinished.
+Selected-cut acceptance is now exactly actual validity, degree and the full
+factor root at the decoded newest bank value. Every earlier prefix has one
+interpretation of the same terminal suffix; generic native suffix tests are
+available. Binding every cut predicate to that terminal tuple remains open.
+Anchored scalar root ordinals characterize actual branch endpoints. Root-window
+counts remove scalar-root existential quantifiers from Near, retaining its
+ordered epsilon/delta conditions and the native coefficient-sign obligation.
+A uniform coefficient-mass bound now gives an explicit large-parameter sign
+cutoff for actual integer polynomial families. Applying it to the full
+recursive graph still requires the corresponding polynomial presentation and
+bounds. Full native graph construction and effective global stabilization
 remain unfinished.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
