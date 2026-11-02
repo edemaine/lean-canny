@@ -1,3 +1,33 @@
+import LeanCanny.Algebra.UniformIntegralPrefixJointRoots
+import LeanCanny.Algebra.IntegralMixedFramedPrefixAtKey
+import LeanCanny.Algebra.IntegralMixedFramedPaddedRoots
+import LeanCanny.Encoding.IntegralFramedCutParentRoots
+import LeanCanny.Encoding.IntegralFramedCutParentInterpretation
+import LeanCanny.Encoding.IntegralFramedCutAcceptedValidity
+import LeanCanny.Algebra.IntegralMixedFramedCompanionCellCongr
+import LeanCanny.Encoding.IntegralFramedCutNewestRow
+import LeanCanny.Encoding.IntegralFramedCutSourceRow
+import LeanCanny.Encoding.IntegralFramedCutNormalizedRoots
+import LeanCanny.Encoding.IntegralFramedCutAcceptedRoot
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateRepresentative
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateIndex
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateIndexPolynomial
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateCoefficientSpace
+import LeanCanny.Algebra.IntegralMixedFramedCoordinatePacked
+import LeanCanny.Algebra.IntegralMixedFramedCoordinatePackedSpace
+import LeanCanny.Algebra.IntegerPolynomialRationalPointSource
+import LeanCanny.Algebra.IntegerPolynomialRationalPointSpace
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQLeadingSpace
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQBankProducts
+import LeanCanny.Algebra.IntegralMixedFramedBankScalars
+import LeanCanny.Algebra.IntegralMixedFramedBankUnivariateSource
+import LeanCanny.Geometry.IntegralMixedFramedBankUnivariateSign
+import LeanCanny.Encoding.IntegralFramedBankUnivariateTest
+import LeanCanny.Geometry.OrderedCoveringRootRank
+import LeanCanny.Connectivity.IntegralMixedSelectedRootRank
+import LeanCanny.Connectivity.IntegralMixedSelectedRootCodes
+import LeanCanny.Encoding.IntegralFramedBankQuery
+import LeanCanny.Encoding.IntegralFramedBankThomEquality
 import LeanCanny.Algebra.IntegralMixedFramedOldHeightTransport
 import LeanCanny.Algebra.IntegralMixedFramedOldHeightQuery
 import LeanCanny.Algebra.IntegralMixedFramedOldHeightQueryValue
@@ -3205,8 +3235,28 @@ weighted joint tuple, with degrees chosen after selection. Native generalized
 principal coefficients, physical-point rank and branch endpoint cost remain
 open. Every finite cut coefficient test now has one common old interpretation;
 its native scans imply actual Kind.Valid and exact degree for every cut tag.
-Deriving this interpretation and the actual factor root from creating rows,
-then transporting all earlier cuts to one terminal tuple, remains unfinished.
+The interpretation and actual factor root now follow from creating rows;
+transporting all earlier cuts to one terminal tuple remains unfinished.
+The actual successor candidate now constructs the common old interpretation:
+its newest companion row and every old tail row imply the full, untruncated
+cut-factor root, specialized validity and exact degree. No interpreting hom,
+row root or factor root is supplied by the caller. Relating this quotient to
+the decoded newest bank value and transporting all earlier cuts to one
+terminal tuple remain separate.
+Actual coordinate coefficient representatives now stream into integer
+multivariate heads while preserving the saved old bank and caller modulus.
+Ranks among all real roots of each selected coordinate polynomial are constant
+on continuous physical branches; unused ranks from ghost roots cause no claim
+of physical realizability. Native physical anchoring and endpoint assembly
+remain required.
+Implicit integer polynomials can now be tested at actual retained-bank
+coordinates. Native current-Q leading and bank-product readers support integer
+Source leaves without serialized integer words. Even denominator clearing and
+power substitution preserve the requested sign at the same complete candidate.
+A native derivative-sign scan compares actual coordinates from different
+framed scripts and identifies the same real value from a shared nonzero
+annihilator. Concrete correlated prelude construction and full trace/graph
+assembly remain unfinished.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

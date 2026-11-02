@@ -1921,8 +1921,22 @@ recorded-choice clipping. Selected principal queries lift to integer
 polynomials on the same weighted tuple. Their general native coefficient
 circuit, physical rank and endpoint-query costs remain open. Native cut scans
 now imply actual validity and exact specialized degree at one common old
-interpretation. The creating-row/root bridge and later-tail transport remain
-required before those scans validate an entire recursive trace.
+interpretation. The creating-row/root bridge now follows from the actual candidate. Later-tail
+transport remains required before validating an entire recursive trace.
+
+Actual successor rows now derive one common old interpretation, specialized
+cut validity, exact degree and the full untruncated factor root. Decoded-bank
+identification and later terminal-tail transport remain open. Actual cached
+coordinate coefficients now feed integer multivariate heads. Coordinate-root
+ordinals are constant on continuous physical branches, using all real scalar
+roots; this does not assert that every ordinal tuple is a physical point.
+Native implicit univariate tests preserve the same complete candidate and
+actual retained-bank value. Current-Q leading and product readers support
+integer Source leaves without expanded integer syntax. A native derivative
+scan proves equality between coordinates from different framed scripts using
+one shared nonzero annihilator. Correlated prelude replay, physical endpoint
+assembly, full native graph construction and effective global stabilization
+remain unfinished.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
