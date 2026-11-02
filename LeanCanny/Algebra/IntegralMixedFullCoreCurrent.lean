@@ -24,14 +24,14 @@ theorem scalar_matches (P : Parameters) (a : Access P) (D : IntegralMixedFullHis
 
 theorem algebra_matches (P : Parameters) (a : Access P) (D : IntegralMixedFullHistoryFamilyBits.Data P) (h : Controls P D)
     (answer : List Bool → List Bool) (hm : Matches P a D h answer) :
-    IntegralMixedFullAlgebraDispatcherBits.Matches P a D h.algebra answer := by
+    IntegralMixedFullAlgebraSpaceBits.Matches P a D h.algebra answer := by
   intro q hv hr
   exact (hm q hv (Or.inr hr)).trans (model_algebra P a D h q (by rcases hr with hr | hr <;> omega))
 
 theorem producer_matches (P : Parameters) (a : Access P) (D : IntegralMixedFullHistoryFamilyBits.Data P) (h : Controls P D)
     (answer : List Bool → List Bool) (hm : Matches P a D h answer) : IntegralMixedProducerActualBits.Matches P D answer :=
-  IntegralMixedFullProducerDispatcherBits.producer_matches P a D h.algebra.producer answer
-    (IntegralMixedFullAlgebraDispatcherBits.producer_matches P a D h.algebra answer (algebra_matches P a D h answer hm))
+  IntegralMixedFullProducerSpaceBits.producer_matches P a D h.algebra.producer answer
+    (IntegralMixedFullAlgebraSpaceBits.producer_matches P a D h.algebra answer (algebra_matches P a D h answer hm))
 
 theorem correct (P : Parameters) (a : Access P) (D : IntegralMixedFullHistoryFamilyBits.Data P) (h : Controls P D)
     (x : (q : List Bool) → ZMod (modulus P q)) (hm : Matches P a D h (fun q => residueBits (x q)))
@@ -42,8 +42,8 @@ theorem correct (P : Parameters) (a : Access P) (D : IntegralMixedFullHistoryFam
     · exact IntegralMixedFullScalarBits.correct_of_matches P a D h.scalar _ (producer_matches P a D h _ hm) (scalar_matches P a D h _ hm)
     · intro q _
       exact IntegralMixedFullScalarBits.machine_selected P a D h.scalar q
-  · exact IntegralMixedFullAlgebraDispatcherBits.correct P a D h.algebra x (algebra_matches P a D h _ hm)
+  · exact IntegralMixedFullAlgebraSpaceBits.correct P a D h.algebra x (algebra_matches P a D h _ hm)
       (IntegralMixedFullScalarBits.physical_matches P a D h.scalar _ (scalar_matches P a D h _ hm))
-      (IntegralMixedFullScalarBits.virtual_matches P a D h.scalar _ (scalar_matches P a D h _ hm)) hn
+      (IntegralMixedFullScalarBits.virtual_matches P a D h.scalar _ (scalar_matches P a D h _ hm)) (fun q hv hr hp _ => hn q hv hr hp)
 
 end LeanCanny.Algebra.IntegralMixedFullCoreBits

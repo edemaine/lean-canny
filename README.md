@@ -1617,9 +1617,8 @@ natural invalid labels and use only current value-row or block replies. Native
 relative factors and powers now compute the literal characteristic coefficient
 matrix, guarding invalid output basis labels explicitly. One native Gram
 determinant dispatcher closes all its internal current replies; its external
-arithmetic boundary is the existing value-row model. The source decoder,
-scalar callbacks, remaining raw coordinate/PSC branches, and final decoder
-binding still need to be joined into one mixed evaluator. The raw value-factor
+arithmetic boundary is the existing value-row model. The complete mixed evaluator now joins these source decoders, scalar callbacks,
+raw coordinate/PSC branches, and normalized producer operations. The raw value-factor
 branch now reads the actual Gram characteristic coefficient; its coefficient
 branch extracts the first nilpotent digit, retains natural invalid-label zeros,
 and supplies the existing normalization raw-cut value after truncation.
@@ -1652,8 +1651,8 @@ including zero outside the factor matrix. The final branch is the literal
 normalized coefficient matrix. Normalized producer-leading and retained-generator
 companion phases also have a native dispatcher with current-reply closure. Its
 two charged companion requests read the actual coefficient and producer leading;
-both decrease the mixed task rank. The raw-factor dispatcher and complete
-mixed-reader assembly remain to be connected.
+both decrease the mixed task rank. The raw-factor dispatcher and complete mixed reader now share one current
+residue model.
 
 A full mixed command history includes normalized cuts alongside integer and
 physical critical births. Padded earlier prefixes preserve exact generator
@@ -1692,8 +1691,9 @@ also have one guarded native dispatcher with canonical replies. A joint
 critical/producer dispatcher closes the physical critical-coefficient callback
 internally; its remaining boundaries are the scalar and normalized-coefficient
 models. Natural-index height identities connect actual callbacks to the finite
-affine formulas, including zero beyond the spatial coordinate range. Complete mixed dispatch and original input-codec
-binding remain required.
+affine formulas, including zero beyond the spatial coordinate range. Complete
+mixed dispatch is proved; the remaining original input bindings are described
+below.
 
 A native scalar dispatcher now computes all six scalar phases from original
 syntax cells and current producer replies. Fixed-width table passes reconstruct
@@ -1704,7 +1704,9 @@ controllers restore the actual cut coordinate and choice before evaluation.
 The PSC backend now computes actual matrix entries, powers, factors, and constant
 characteristic coefficients with preserved cut indices. Context-restricted
 normalization correctness uses proved request invariance to avoid imposing
-virtual-source meanings on physical contexts. Full raw dispatch remains open.
+virtual-source meanings on physical contexts. Full raw dispatch now includes
+coordinate, squarefree, and Gram sources in contexts two through four,
+preserving the saved coordinate and cut choice.
 
 Mixed-history heights use one original-source growth factor. Actual virtual
 coordinate, squarefree, and Gram sources have binary height bounds derived from
@@ -1712,6 +1714,22 @@ the original source and old bank. The Gram bounds include the actual reciprocal
 system, Macaulay entries, determinant, and both formal nilpotent digits.
 Resumable cofactor folds request older producer leading residues; these scalar
 leaves remain charged computations.
+
+The complete seven-routine mixed arithmetic controller now has a native
+polynomial-space evaluator. All recursive scalar, critical, entry, determinant,
+raw-cut, normalization, and producer callbacks are closed against its current
+model. Original integer degrees and coefficients may themselves use charged
+space. Literal command headers supply metadata, and original syntax bounds
+supply heights for the actual complete history, including normalized cuts.
+The initial exceptional integer bank has an actual source adapter with exact
+polynomial transport. Binding every remaining original scalar and spatial
+primitive to the concrete input writer remains required.
+
+A division-free dilation gives the tilted sampling polynomial a constant
+nonzero leading coefficient. Physical variables are homogenized while frozen
+parameters remain unchanged; the gradient and coordinate coefficient identities
+are proved with polynomial syntax-size bounds. The uniform native writer and
+its limit-coordinate cut interface still need to be connected to the sampler.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
@@ -1765,6 +1783,14 @@ refinement and native adjacency of these pieces remain separate obligations.
 Original atomic rows also have native syntax readers, degree/mass/coefficient
 bounds, zero extension, and padding/reindexing adapters that preserve their
 literal evaluation on retained coordinates.
+
+Arbitrary Boolean inputs now have finite component covers without a supplied
+finiteness or path-cover premise. Polynomial zero sets have finitely many
+components and are locally connected, including singular and unbounded sets.
+Refining connected chains and taking a complete-space limit constructs actual
+paths. The resulting finite semantic graph characterizes both connectivity
+tests. Native bounded labels, component membership, and adjacency costs remain
+required to turn this graph into the full PSPACE decision procedure.
 
 The missing construction must produce suitable covers uniformly from input
 formulas, handle Boolean constraints, singularities and unbounded sets, prove
