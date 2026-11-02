@@ -21,14 +21,16 @@ structure Readers (headers : List Bool → Header) : Prop where
   objective : BinaryFn (fun q => (headers q).objective)
   degree : BinaryFn (fun q => (headers q).degree)
   choice : BinaryFn (fun q => (headers q).choice)
+  rawTag : BinaryFn (fun q => (headers q).rawTag)
 
 theorem decode_readers : Readers decode :=
   ⟨BinaryFn.fromBits (get_FP 0), BinaryFn.fromBits (get_FP 1), BinaryFn.fromBits (get_FP 2),
-    BinaryFn.fromBits (get_FP 3), BinaryFn.fromBits (get_FP 4), BinaryFn.fromBits (get_FP 5)⟩
+    BinaryFn.fromBits (get_FP 3), BinaryFn.fromBits (get_FP 4), BinaryFn.fromBits (get_FP 5),
+    BinaryFn.fromBits (get_FP 6)⟩
 
 theorem Readers.comp {headers : List Bool → Header} (h : Readers headers)
     (f : List Bool → List Bool) (hf : f ∈ FP) : Readers (fun q => headers (f q)) :=
-  ⟨h.context.comp hf, h.coordinate.comp hf, h.offset.comp hf, h.objective.comp hf, h.degree.comp hf, h.choice.comp hf⟩
+  ⟨h.context.comp hf, h.coordinate.comp hf, h.offset.comp hf, h.objective.comp hf, h.degree.comp hf, h.choice.comp hf, h.rawTag.comp hf⟩
 
 theorem Readers.choose (p : List Bool → Prop) [∀ q, Decidable (p q)]
     {left right : List Bool → Header} (hp : FPPred p) (hl : Readers left) (hr : Readers right) :
@@ -38,7 +40,8 @@ theorem Readers.choose (p : List Bool → Prop) [∀ q, Decidable (p q)]
     (BinaryFn.ite hp hl.offset hr.offset).of_eq (fun q => by split_ifs <;> rfl),
     (BinaryFn.ite hp hl.objective hr.objective).of_eq (fun q => by split_ifs <;> rfl),
     (BinaryFn.ite hp hl.degree hr.degree).of_eq (fun q => by split_ifs <;> rfl),
-    (BinaryFn.ite hp hl.choice hr.choice).of_eq (fun q => by split_ifs <;> rfl)⟩
+    (BinaryFn.ite hp hl.choice hr.choice).of_eq (fun q => by split_ifs <;> rfl),
+    (BinaryFn.ite hp hl.rawTag hr.rawTag).of_eq (fun q => by split_ifs <;> rfl)⟩
 
 def fetched (table : List Bool → List Bool) (index : List Bool → ℕ) (q : List Bool) : List Bool :=
   WordList.get (table q) (index q)
@@ -60,13 +63,13 @@ def table (headers : List Header) : List Bool := WordList.encode (headers.map en
 
 theorem table_length (headers : List Header) (W : ℕ)
     (h : ∀ h ∈ headers, h.context.size ≤ W ∧ h.coordinate.size ≤ W ∧ h.offset.size ≤ W ∧
-      h.objective.size ≤ W ∧ h.degree.size ≤ W ∧ h.choice.size ≤ W) :
-    (table headers).length ≤ (24 * W + 26) * headers.length := by
-  have H := WordList.length_le (headers.map encode) ((2 * W + 2) * 6) (by
+      h.objective.size ≤ W ∧ h.degree.size ≤ W ∧ h.choice.size ≤ W ∧ h.rawTag.size ≤ W) :
+    (table headers).length ≤ (28 * W + 30) * headers.length := by
+  have H := WordList.length_le (headers.map encode) ((2 * W + 2) * 7) (by
     intro w hw
     obtain ⟨h1, hh1, rfl⟩ := List.mem_map.mp hw
     have HH := h h1 hh1
-    exact encode_length h1 W HH.1 HH.2.1 HH.2.2.1 HH.2.2.2.1 HH.2.2.2.2.1 HH.2.2.2.2.2)
-  simpa only [table, List.length_map, show 2 * ((2 * W + 2) * 6) + 2 = 24 * W + 26 by omega] using H
+    exact encode_length h1 W HH.1 HH.2.1 HH.2.2.1 HH.2.2.2.1 HH.2.2.2.2.1 HH.2.2.2.2.2.1 HH.2.2.2.2.2.2)
+  simpa only [table, List.length_map, show 2 * ((2 * W + 2) * 7) + 2 = 28 * W + 30 by omega] using H
 
 end LeanCanny.Algebra.IntegralMixedCommandHeaderBits

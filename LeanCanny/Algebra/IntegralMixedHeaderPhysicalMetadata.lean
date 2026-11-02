@@ -18,7 +18,7 @@ def physical (P : Parameters) (T : Tables) (key : List Bool) : Header :=
 theorem physical_readers (P : Parameters) (a : IntegralCriticalHistoryTask.Access P) (T : Tables) (h : Access T) :
     Readers (physical P T) :=
   Readers.choose _ (((producer_readers P a T h).context).eq (BinaryFn.const 1)) (producer_readers P a T h)
-    ⟨BinaryFn.const 0, BinaryFn.const 0, BinaryFn.const 0, BinaryFn.const 0, BinaryFn.const 0, BinaryFn.const 0⟩
+    ⟨BinaryFn.const 0, BinaryFn.const 0, BinaryFn.const 0, BinaryFn.const 0, BinaryFn.const 0, BinaryFn.const 0, BinaryFn.const 0⟩
 
 theorem physical_offset (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P)
     (T : Tables) (h : Represents P D T) (key : List Bool) :

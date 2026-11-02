@@ -1746,6 +1746,25 @@ writers together with charged integer sources. Binding the remaining concrete
 selectors and command snapshots, and handling large level coefficients without
 serializing their full integers, remain required.
 
+
+The initial parent bank now supplies its own real coordinate bound from the
+original polynomial masses. This gives an explicit binary exponent for the
+level coefficient and a native modular reader for its potentially huge
+integer value. The actual appended-level spatial coefficient reader and its
+height ceiling use the old term word and this exponent. The arithmetic
+constructor accepts this source without serializing the level integer.
+Forward and inverse coordinate selectors and the sweep slope mask are derived
+from original level data. A separate seventh header field distinguishes raw
+cut tags while preserving the existing source contexts.
+
+Selected limit-coordinate factors now have exact matrix coefficient transport,
+finite valid choices, real limit roots, and original-source height bounds.
+Native shifted requests preserve the original root and modulus. A certified
+streamed product combines older producer leadings with a lower critical query.
+The coefficient model, new cut constructor, and full current-reply dispatcher
+integration remain required, along with concrete command/advice writers and
+effective graph bounds.
+
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
 permutation now connects arbitrary active subsets to the same selected mixed

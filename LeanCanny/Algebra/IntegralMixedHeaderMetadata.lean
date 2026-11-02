@@ -43,10 +43,10 @@ theorem fullMetadata (P : Parameters) (a : IntegralCriticalHistoryTask.Access P)
     (congrArg Header.coordinate (producer_eq P D T hr key)).trans (command_coordinate _))
 
 theorem selected_tag (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P) (key : List Bool) :
-    (IntegralMixedCommandHeaderBits.selection (IntegralMixedFullHistoryFamilyBits.selection P D key)).context =
+    (IntegralMixedCommandHeaderBits.selection (IntegralMixedFullHistoryFamilyBits.selection P D key)).rawTag =
       IntegralMixedRawKindBits.tag (family P D) key := by
-  change kindContext ((family P D).kind key) = IntegralMixedRawKindBits.tag (family P D) key
-  cases hk : (family P D).kind key <;> simp only [IntegralMixedRawKindBits.tag, hk, kindContext]
+  change kindRawTag ((family P D).kind key) = IntegralMixedRawKindBits.tag (family P D) key
+  cases hk : (family P D).kind key <;> simp only [IntegralMixedRawKindBits.tag, hk, kindRawTag]
 
 theorem selected_coordinate (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits.Data P) (key : List Bool) :
     (IntegralMixedCommandHeaderBits.selection (IntegralMixedFullHistoryFamilyBits.selection P D key)).coordinate =
@@ -62,8 +62,8 @@ theorem selected_choice (P : Parameters) (D : IntegralMixedFullHistoryFamilyBits
 
 theorem rawMetadata (P : Parameters) (a : IntegralCriticalHistoryTask.Access P) (D : IntegralMixedFullHistoryFamilyBits.Data P)
     (T : Tables) (ht : Access T) (hr : Represents P D T) : IntegralMixedRawKindBits.Metadata (family P D) where
-  tag := ((selected_readers P a T ht).context).of_eq (fun key =>
-    (congrArg Header.context (selected_eq P D T hr key)).trans (selected_tag P D key))
+  tag := ((selected_readers P a T ht).rawTag).of_eq (fun key =>
+    (congrArg Header.rawTag (selected_eq P D T hr key)).trans (selected_tag P D key))
   coordinate := ((selected_readers P a T ht).coordinate).of_eq (fun key =>
     (congrArg Header.coordinate (selected_eq P D T hr key)).trans (selected_coordinate P D key))
   choice := ((selected_readers P a T ht).choice).of_eq (fun key =>

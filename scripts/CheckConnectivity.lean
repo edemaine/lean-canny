@@ -36470,7 +36470,7 @@ private theorem TR : IntegralMixedHeaderTablesBits.Represents P D T where
       IntegralMixedHeaderTablesBits.fallbackIndex_lt P key
     simp only [T, WordList.get_encode, List.getElem?_replicate_of_lt HI, Option.getD_some]
     rfl
-example : decode (encode ⟨4, 3, 1, 7, 19, 5⟩) = ⟨4, 3, 1, 7, 19, 5⟩ := decode_encode _
+example : decode (encode ⟨4, 3, 1, 7, 19, 5, 4⟩) = ⟨4, 3, 1, 7, 19, 5, 4⟩ := decode_encode _
 example : lookup (words initialCommands) 0 = command initialInteger := lookup_words _ _
 example : lookup (words initialCommands) 1 = command (.critical sweep.critical : IntegralMixedFullHistoryScript.Command circle 64) := lookup_words _ _
 example : lookup (words initialCommands) 2 = command selectedCut := lookup_words _ _
@@ -36909,14 +36909,22 @@ private theorem TR : IntegralMixedHeaderTablesBits.Represents P D T where
     simp only [T, WordList.get_encode, List.getElem?_replicate_of_lt HI, Option.getD_some]
     rfl
 open FlatAffineExceptionalIntegerHeaders
-example (w : List Bool) : (prepend^[2] w).length = 52 + w.length := by
-  have HK : 2 * (IntegralMixedCommandHeaderBits.encode IntegralMixedCommandHeaderBits.zero).length + 2 = 26 := by decide
+example (w : List Bool) : (prepend^[2] w).length = 60 + w.length := by
+  have HK : 2 * (IntegralMixedCommandHeaderBits.encode IntegralMixedCommandHeaderBits.zero).length + 2 = 30 := by decide
   simpa only [HK, Nat.reduceMul] using prepend_length 2 w
 example : (fun q : List Bool => prepend^[q.length] q) ∈ FP :=
   prepend_native List.length (UnaryFn.length id_mem_FP) id id_mem_FP
-example : (IntegralMixedHeaderTablesBits.physical P T (pair [] (pair (BinaryNatCode.encode 1) []))).offset = 1 := by decide
-example : (IntegralMixedHeaderTablesBits.physical P T (pair [] (pair (BinaryNatCode.encode 2) []))).offset = 0 := by decide
-example : (IntegralMixedHeaderTablesBits.selected P T (pair [] (pair (BinaryNatCode.encode 2) []))).offset = 1 := by decide
+example : (IntegralMixedHeaderTablesBits.physical P T (pair [] (pair (BinaryNatCode.encode 1) []))).offset = 1 := by
+  unfold IntegralMixedHeaderTablesBits.physical
+  rw [IntegralMixedHeaderTablesBits.producer_eq P D T TR]
+  decide
+example : (IntegralMixedHeaderTablesBits.physical P T (pair [] (pair (BinaryNatCode.encode 2) []))).offset = 0 := by
+  unfold IntegralMixedHeaderTablesBits.physical
+  rw [IntegralMixedHeaderTablesBits.producer_eq P D T TR]
+  decide
+example : (IntegralMixedHeaderTablesBits.selected P T (pair [] (pair (BinaryNatCode.encode 2) []))).offset = 1 := by
+  rw [IntegralMixedHeaderTablesBits.selected_eq P D T TR]
+  decide
 example : IntegralMixedPhysicalQueryBits.InputMetadata
     (IntegralMixedFullPhysicalBits.family P (IntegralMixedFullHistoryFamilyBits.physicalData P D)) :=
   IntegralMixedHeaderTablesBits.physicalInputMetadata P PA D T TA TR
@@ -37729,3 +37737,904 @@ example : (FermatLevelCoordinate.polynomial P0 7 (fun _ => 1) (fun _ : Fin 1 => 
 
 #print axioms FermatLevelCoordinate.root
 end Group29Regression8
+
+namespace Group30Regression0
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCriticalSweep FixedWidthPolynomial
+open scoped Classical
+
+noncomputable def oldCircle : SpatialSource 0 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+noncomputable def circle := FermatLevelLift.source oldCircle (-14)
+
+noncomputable def initial : State circle 1 64 0 (Fin 0) :=
+  IntegralMixedHistory.base circle (IntegralHistorySampler.base 1 (2 ^ 64))
+    (by norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, count, circle, FermatLevelLift.source, oldCircle]; decide)
+
+noncomputable def sweep : Rule 1 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => -2
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant (-5) }
+  height := 0
+  height_frozen := by decide
+  slope := -3
+  slope_ne_zero := by decide
+
+noncomputable def family : IntegralMixedCutSource.Family where
+  ambient _ := 1
+  cap _ := 1
+  width _ := 64
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := circle
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := sweep
+  kind _ := .coordinate 0 0
+  degree _ := 0
+  degree_bound _ := Nat.zero_le _
+  scalar_cap _ := by
+    norm_num [IntegralMixedExceptionalBounds.auxiliaryCap, IntegralMixedExceptionalBounds.K,
+      IntegralMixedExceptionalBounds.E, IntegralMixedExceptionalBounds.regularCap,
+      IntegralMixedExceptionalBounds.valueCap, IntegralMixedExceptionalBounds.valueDimension,
+      IntegralMixedExceptionalBounds.boxWidth, IntegralMixedExceptionalBounds.boxBase,
+      IntegralMixedSweepBounds.parameterCap, IntegralMixedSweepBounds.coordinateCap, PurePowerReductionBounds.dimension,
+      PurePowerReductionBounds.width, PurePowerReductionBounds.bound, count, circle, FermatLevelLift.source, oldCircle]
+    decide
+
+noncomputable def indices : IntegralMixedVirtualSweepSource.Indices family where
+  coordinate _ := 0
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  col _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+
+
+
+open IntegralCriticalHistoryTask MatrixPower
+open IntegralMixedCommandHeaderBits
+open scoped Classical
+private def P : Parameters := ⟨fun _ => 4, fun _ => 64, fun _ => 1, fun _ => 2, fun _ => 2, fun _ => 0, fun _ => 6⟩
+private theorem PA : IntegralCriticalHistoryTask.Access P :=
+  ⟨UnaryFn.const 4, UnaryFn.const 64, UnaryFn.const 1, UnaryFn.const 2,
+    BinaryFn.const 2, BinaryFn.const 0, BinaryFn.const 6⟩
+noncomputable def initialInteger : IntegralMixedFullHistoryScript.Command circle 64 :=
+  .integer Polynomial.X Polynomial.X_ne_zero (by simpa only [Polynomial.natDegree_X] using (Nat.one_le_two_pow : 1 ≤ 2 ^ 64))
+noncomputable def selectedCut : IntegralMixedFullHistoryScript.Command circle 64 :=
+  .cut sweep (.squarefree 0 ⟨0, Nat.pow_pos (Nat.two_pow_pos _)⟩) 1 (by unfold IntegralMixedExceptionalBounds.auxiliaryCap; omega) Nat.one_le_two_pow
+noncomputable def initialCommands := [selectedCut, IntegralMixedFullHistoryScript.Command.critical sweep.critical, initialInteger]
+noncomputable def fallbackSelection : IntegralMixedFullHistoryFamilyBits.Selection circle :=
+  ⟨sweep, .coordinate 0 0, 0, Nat.zero_le _⟩
+noncomputable def D : IntegralMixedFullHistoryFamilyBits.Data P where
+  spatial _ := circle
+  degree_eq _ := rfl
+  sourceWidth _ := by change (2 : ℕ).size ≤ 2; decide
+  scalar_cap _ := (_root_.Group30Regression0.family.scalar_cap [])
+  rules _ := initialCommands
+  room _ := by change 3 + 2 ≤ 4 + 1; decide
+  fallback _ := fallbackSelection
+noncomputable def T : IntegralMixedHeaderTablesBits.Tables where
+  commands _ := words initialCommands
+  fallback _ := WordList.encode (List.replicate 30 (encode (IntegralMixedCommandHeaderBits.selection fallbackSelection)))
+private theorem TA : IntegralMixedHeaderTablesBits.Access T :=
+  ⟨constFn_mem_FP _, constFn_mem_FP _⟩
+private theorem TR : IntegralMixedHeaderTablesBits.Represents P D T where
+  commands _ := rfl
+  fallback key := by
+    have HI : IntegralMixedHeaderTablesBits.fallbackIndex P key < 30 :=
+      IntegralMixedHeaderTablesBits.fallbackIndex_lt P key
+    simp only [T, WordList.get_encode, List.getElem?_replicate_of_lt HI, Option.getD_some]
+    rfl
+
+private def levelWord (_ : List Bool) := (ETR.Term.const (-1)).toData.toBits
+private theorem levelScope (r : List Bool) : (ETR.TermView.term (levelWord r)).arity ≤ P.ambient r := by
+  rw [show levelWord r = (ETR.Term.const (-1)).toData.toBits from rfl, ETR.TermView.term_toBits]
+  change 0 ≤ 1
+  decide
+private theorem levelLow (r : List Bool) : (D.spatial r).low =
+    FermatLevelCoefficientBits.polynomial P.ambient (FermatLevelOriginalSpatialBits.old P levelWord) (fun _ => -14) r := by
+  unfold FermatLevelCoefficientBits.polynomial FermatLevelOriginalSpatialBits.old levelWord
+  rw [ETR.TermView.term_toBits]
+  rfl
+attribute [local irreducible] D _root_.Group30Regression0.P
+example (EA : SpaceFunction (fun q : List Bool => residueBits ((-14 : ℤ) : ZMod (modulus _root_.Group30Regression0.P q)))) :
+    IntegralMixedFullCriticalDispatcherBits.Controls P D :=
+  FermatLevelOriginalSpatialBits.controls P PA D (IntegralMixedHeaderTablesBits.fullMetadata P PA D T TA TR)
+    (IntegralMixedHeaderTablesBits.physicalInputMetadata P PA D T TA TR)
+    levelWord (constFn_mem_FP _) levelScope (fun _ => -14) levelLow EA
+
+open FermatLevelCoefficientBits
+private noncomputable def oldPolynomial (_ : List Bool) : MvPolynomial (Fin 1) ℤ := MvPolynomial.C (-1)
+noncomputable def model := IntegralOriginalTermCoefficientBits.scalar (fun _ => 2) (fun _ => 2) (fun _ => 6)
+  (polynomial (fun _ => 1) oldPolynomial (fun _ => -14))
+private theorem EO : SpaceFunction (IntegralOriginalTermCoefficientBits.scalar (fun _ => 1) (fun _ => 2) (fun _ => 6) oldPolynomial) :=
+  IntegralOriginalTermCoefficientBits.evaluator _ _ _ (UnaryFn.const 1) (UnaryFn.const 2) (BinaryFn.const 6)
+    (fun _ => by decide) _ levelWord (constFn_mem_FP _)
+    (fun q => by rw [show levelWord q = (ETR.Term.const (-1)).toData.toBits from rfl, ETR.TermView.term_toBits]; decide)
+    (fun q => by rw [show levelWord q = (ETR.Term.const (-1)).toData.toBits from rfl, ETR.TermView.term_toBits]; rfl)
+example : SpaceFunction model := evaluator _ _ _ (UnaryFn.const 1) (UnaryFn.const 2) (BinaryFn.const 6)
+  (fun _ => by decide) _ _ EO (SpaceFunction.ofFP _ (constFn_mem_FP _))
+example : FPPred (IsLast (fun _ => 1) (fun _ => 2)) := isLast_fppred (UnaryFn.const 1) (UnaryFn.const 2)
+private theorem model_coeff (k : ℕ) : model (pair [] (BinaryNatCode.encode k)) =
+    residueBits (((if entry 2 k 1 = 0 then (oldPolynomial []).coeff
+      (RationalSubstitution.Indexed.exponentVector 1 (entry 2 k)) else 0) -
+      (if FermatLevelCoefficient.IsLast 1 2 k then -14 else 0) : ℤ) : ZMod 6) := by
+  unfold model IntegralOriginalTermCoefficientBits.scalar polynomial
+  rw [pairFst_pair, pairSnd_pair]
+  simp only [BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  rw [FermatLevelCoefficient.coefficient]
+example : model (pair [] (BinaryNatCode.encode 4)) = residueBits (2 : ZMod 6) := by
+  rw [model_coeff]
+  have H : FermatLevelCoefficient.IsLast 1 2 4 := by
+    constructor
+    · decide
+    · intro i hi
+      have HI : i = 0 := by omega
+      subst i
+      decide
+  rw [ite_eq_right (by decide : entry 2 4 1 ≠ 0), ite_eq_left H]
+  exact congrArg residueBits (by decide : ((0 - -14 : ℤ) : ZMod 6) = 2)
+example : model (pair [] (BinaryNatCode.encode 5)) = [] := by
+  rw [model_coeff]
+  have H : ¬FermatLevelCoefficient.IsLast 1 2 5 := by
+    rintro ⟨_, hz⟩
+    have HH := hz 0 (by decide)
+    change 1 = 0 at HH
+    omega
+  rw [ite_eq_right (by decide : entry 2 5 1 ≠ 0), ite_eq_right H]
+  rfl
+example : model (pair [] (BinaryNatCode.encode 8)) = [] := by
+  rw [model_coeff]
+  have H : ¬FermatLevelCoefficient.IsLast 1 2 8 := by
+    rintro ⟨h, _⟩
+    change 2 = 1 at h
+    omega
+  rw [ite_eq_right (by decide : entry 2 8 1 ≠ 0), ite_eq_right H]
+  rfl
+example : model (pair [] [false, false, true, false]) = model (pair [] [false, false, true]) := by
+  unfold model IntegralOriginalTermCoefficientBits.scalar
+  rw [pairFst_pair, pairSnd_pair, pairSnd_pair]
+  rfl
+example (p : List Bool) : (model p).length ≤ 3 := value_length _ _ _ _ _ p (by decide)
+#print axioms LeanCanny.Algebra.FermatLevelCoefficient.last_not_range
+#print axioms LeanCanny.Algebra.FermatLevelCoefficient.extend_exponent
+#print axioms LeanCanny.Algebra.FermatLevelCoefficient.rename_coefficient
+#print axioms LeanCanny.Algebra.FermatLevelCoefficient.exponent_single_iff
+#print axioms LeanCanny.Algebra.FermatLevelCoefficient.coefficient
+#print axioms LeanCanny.Algebra.FermatLevelCoefficient.source_coefficient
+#print axioms LeanCanny.Algebra.FermatLevelCoefficientBits.lastExponent_binary
+#print axioms LeanCanny.Algebra.FermatLevelCoefficientBits.oldZero_fppred
+#print axioms LeanCanny.Algebra.FermatLevelCoefficientBits.isLast_fppred
+#print axioms LeanCanny.Algebra.FermatLevelCoefficientBits.lastExponent_bits
+#print axioms LeanCanny.Algebra.FermatLevelCoefficientBits.finish_FP
+#print axioms LeanCanny.Algebra.FermatLevelCoefficientBits.finish_packet
+#print axioms LeanCanny.Algebra.FermatLevelCoefficientBits.evaluator
+#print axioms LeanCanny.Algebra.FermatLevelCoefficientBits.value_length
+#print axioms LeanCanny.Algebra.FermatLevelOriginalBits.physical
+#print axioms LeanCanny.Algebra.FermatLevelOriginalBits.virtual
+#print axioms LeanCanny.Algebra.FermatLevelOriginalSpatialBits.physical
+#print axioms LeanCanny.Algebra.FermatLevelOriginalSpatialBits.virtual
+#print axioms LeanCanny.Algebra.FermatLevelOriginalSpatialBits.controls
+end Group30Regression0
+
+namespace Group30Regression1
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCriticalSweep FixedWidthPolynomial
+open scoped Classical
+
+noncomputable def oldCircle : SpatialSource 0 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+noncomputable def circle := FermatLevelLift.source oldCircle 16
+
+noncomputable def initial : State circle 1 64 0 (Fin 0) :=
+  IntegralMixedHistory.base circle (IntegralHistorySampler.base 1 (2 ^ 64))
+    (by norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, count, circle, FermatLevelLift.source, oldCircle]; decide)
+
+noncomputable def sweep : Rule 1 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => -2
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant (-5) }
+  height := 0
+  height_frozen := by decide
+  slope := -3
+  slope_ne_zero := by decide
+
+noncomputable def family : IntegralMixedCutSource.Family where
+  ambient _ := 1
+  cap _ := 1
+  width _ := 64
+  birth _ := 0
+  physical _ := Fin 0
+  spatial _ := circle
+  state _ := initial
+  birth_bound _ := by decide
+  rule _ := sweep
+  kind _ := .coordinate 0 0
+  degree _ := 0
+  degree_bound _ := Nat.zero_le _
+  scalar_cap _ := by
+    norm_num [IntegralMixedExceptionalBounds.auxiliaryCap, IntegralMixedExceptionalBounds.K,
+      IntegralMixedExceptionalBounds.E, IntegralMixedExceptionalBounds.regularCap,
+      IntegralMixedExceptionalBounds.valueCap, IntegralMixedExceptionalBounds.valueDimension,
+      IntegralMixedExceptionalBounds.boxWidth, IntegralMixedExceptionalBounds.boxBase,
+      IntegralMixedSweepBounds.parameterCap, IntegralMixedSweepBounds.coordinateCap, PurePowerReductionBounds.dimension,
+      PurePowerReductionBounds.width, PurePowerReductionBounds.bound, count, circle, FermatLevelLift.source, oldCircle]
+    decide
+
+noncomputable def indices : IntegralMixedVirtualSweepSource.Indices family where
+  coordinate _ := 0
+  coefficientIndex _ := 0
+  target _ := 0
+  row _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  col _ := ⟨0, by change 0 < (2 ^ 64) ^ 1; positivity⟩
+  modulus _ := 6
+  modulus_ne_zero _ := by decide
+
+
+
+
+open IntegralCriticalHistoryTask MatrixPower
+open IntegralMixedCommandHeaderBits
+open scoped Classical
+private def P : Parameters := ⟨fun _ => 4, fun _ => 64, fun _ => 1, fun _ => 2, fun _ => 2, fun _ => 0, fun _ => 6⟩
+private theorem PA : IntegralCriticalHistoryTask.Access P :=
+  ⟨UnaryFn.const 4, UnaryFn.const 64, UnaryFn.const 1, UnaryFn.const 2,
+    BinaryFn.const 2, BinaryFn.const 0, BinaryFn.const 6⟩
+noncomputable def initialInteger : IntegralMixedFullHistoryScript.Command circle 64 :=
+  .integer Polynomial.X Polynomial.X_ne_zero (by simpa only [Polynomial.natDegree_X] using (Nat.one_le_two_pow : 1 ≤ 2 ^ 64))
+noncomputable def selectedCut : IntegralMixedFullHistoryScript.Command circle 64 :=
+  .cut sweep (.squarefree 0 ⟨0, Nat.pow_pos (Nat.two_pow_pos _)⟩) 1 (by unfold IntegralMixedExceptionalBounds.auxiliaryCap; omega) Nat.one_le_two_pow
+noncomputable def initialCommands := [selectedCut, IntegralMixedFullHistoryScript.Command.critical sweep.critical, initialInteger]
+noncomputable def fallbackSelection : IntegralMixedFullHistoryFamilyBits.Selection circle :=
+  ⟨sweep, .coordinate 0 0, 0, Nat.zero_le _⟩
+noncomputable def D : IntegralMixedFullHistoryFamilyBits.Data P where
+  spatial _ := circle
+  degree_eq _ := rfl
+  sourceWidth _ := by change (2 : ℕ).size ≤ 2; decide
+  scalar_cap _ := (_root_.Group30Regression1.family.scalar_cap [])
+  rules _ := initialCommands
+  room _ := by change 3 + 2 ≤ 4 + 1; decide
+  fallback _ := fallbackSelection
+noncomputable def T : IntegralMixedHeaderTablesBits.Tables where
+  commands _ := words initialCommands
+  fallback _ := WordList.encode (List.replicate 30 (encode (IntegralMixedCommandHeaderBits.selection fallbackSelection)))
+private theorem TA : IntegralMixedHeaderTablesBits.Access T :=
+  ⟨constFn_mem_FP _, constFn_mem_FP _⟩
+private theorem TR : IntegralMixedHeaderTablesBits.Represents P D T where
+  commands _ := rfl
+  fallback key := by
+    have HI : IntegralMixedHeaderTablesBits.fallbackIndex P key < 30 :=
+      IntegralMixedHeaderTablesBits.fallbackIndex_lt P key
+    simp only [T, WordList.get_encode, List.getElem?_replicate_of_lt HI, Option.getD_some]
+    rfl
+
+private def levelWord (_ : List Bool) := (ETR.Term.const (-1)).toData.toBits
+private theorem levelScope (r : List Bool) : (ETR.TermView.term (levelWord r)).arity ≤ P.ambient r := by
+  rw [show levelWord r = (ETR.Term.const (-1)).toData.toBits from rfl, ETR.TermView.term_toBits]
+  change 0 ≤ 1
+  decide
+private theorem levelLow (r : List Bool) : (D.spatial r).low =
+    FermatLevelCoefficientBits.polynomial P.ambient (FermatLevelOriginalSpatialBits.old P levelWord) (FermatLevelPowerResidue.coefficient (fun _ => 4)) r := by
+  unfold FermatLevelCoefficientBits.polynomial FermatLevelOriginalSpatialBits.old levelWord FermatLevelPowerResidue.coefficient
+  rw [ETR.TermView.term_toBits]
+  rfl
+attribute [local irreducible] D _root_.Group30Regression1.P
+example : IntegralMixedFullCriticalDispatcherBits.Controls P D :=
+  FermatLevelPowerResidue.controls P PA D (IntegralMixedHeaderTablesBits.fullMetadata P PA D T TA TR)
+    (IntegralMixedHeaderTablesBits.physicalInputMetadata P PA D T TA TR)
+    levelWord (constFn_mem_FP _) levelScope (fun _ => 4) (BinaryFn.const 4) levelLow
+example (P1 : Parameters) (a : Access P1) (E : List Bool → ℕ) (hE : BinaryFn E) :
+    (fun q => residueBits (FermatLevelPowerResidue.coefficient E (RankedHistoryTask.root q) : ZMod (modulus P1 q))) ∈ FP :=
+  FermatLevelPowerResidue.residue_FP P1 a E hE
+example (P1 : Parameters) (a : Access P1) (n D G : List Bool → ℕ)
+    (hn : UnaryFn n) (hD : UnaryFn D) (hG : BinaryFn G) :
+    (fun q => residueBits (FermatLevelPowerResidue.coefficient (LevelLiftCoefficient.exponent n D G)
+      (RankedHistoryTask.root q) : ZMod (modulus P1 q))) ∈ FP :=
+  FermatLevelPowerResidue.residue_FP P1 a _ (LevelLiftCoefficient.exponent_binary hn hD hG)
+example (P1 : Parameters) (q : List Bool) (hm : modulus P1 q = 6) :
+    residueBits (FermatLevelPowerResidue.coefficient (fun _ => 4) (RankedHistoryTask.root q) : ZMod (modulus P1 q)) =
+      residueBits (4 : ZMod 6) := by
+  rw [hm]
+  apply congrArg residueBits
+  change (16 : ZMod 6) = 4
+  decide
+example (P1 : Parameters) (q : List Bool) (hm : modulus P1 q = 1) :
+    residueBits (FermatLevelPowerResidue.coefficient (fun _ => 4) (RankedHistoryTask.root q) : ZMod (modulus P1 q)) = [] := by
+  rw [hm]
+  have H : (FermatLevelPowerResidue.coefficient (fun _ => 4) (RankedHistoryTask.root q) : ZMod 1) = 0 := Subsingleton.elim _ _
+  rw [H]
+  rfl
+example (n E : ℕ) (t : ETR.Term) :
+    MvMass.mass (MvPolynomial.rename Fin.castSucc (t.finitePolynomial n) -
+      MvPolynomial.C ((2 : ℤ)^E)*MvPolynomial.X (Fin.last n)) ≤ 2^t.toData.size + 2^E :=
+  FermatLevelOriginalHeight.term_mass n t E
+example : BinaryFn (FermatLevelOriginalHeight.height (fun _ => ETR.Term.const (-1)) (fun _ => 4)) :=
+  FermatLevelOriginalHeight.height_binary _ _ (constFn_mem_FP _) (BinaryFn.const 4)
+private theorem heightLow (r : List Bool) : (D.spatial r).low =
+    MvPolynomial.rename Fin.castSucc ((ETR.Term.const (-1)).finitePolynomial (P.ambient r)) -
+      MvPolynomial.C ((2 : ℤ)^4)*MvPolynomial.X (Fin.last (P.ambient r)) := by
+  have H := levelLow r
+  unfold FermatLevelCoefficientBits.polynomial FermatLevelOriginalSpatialBits.old levelWord FermatLevelPowerResidue.coefficient at H
+  rw [ETR.TermView.term_toBits] at H
+  exact H
+example (r : List Bool) (e : Fin (P.ambient r+1) →₀ ℕ) :
+    ((D.spatial r).low.coeff e).natAbs ≤
+      2^FermatLevelOriginalHeight.height (fun _ => ETR.Term.const (-1)) (fun _ => 4) r :=
+  FermatLevelOriginalHeight.coefficient_bound P D _ _ heightLow r e
+example : BinaryFn (FermatLevelOriginalHeight.height (fun r => ETR.TermView.term (levelWord r)) (fun _ => 4)) :=
+  FermatLevelOriginalHeight.word_height_binary levelWord (fun _ => 4) (constFn_mem_FP _) (BinaryFn.const 4)
+example (r : List Bool) (e : Fin (P.ambient r+1) →₀ ℕ) :
+    ((D.spatial r).low.coeff e).natAbs ≤
+      2^FermatLevelOriginalHeight.height (fun r => ETR.TermView.term (levelWord r)) (fun _ => 4) r :=
+  FermatLevelOriginalHeight.word_coefficient_bound P D levelWord (fun _ => 4) levelLow r e
+#print axioms LeanCanny.Algebra.FermatLevelPowerResidue.modulusWord_FP
+#print axioms LeanCanny.Algebra.FermatLevelPowerResidue.residue_FP
+#print axioms LeanCanny.Algebra.FermatLevelPowerResidue.controls
+#print axioms LeanCanny.Algebra.FermatLevelOriginalHeight.mass_le
+#print axioms LeanCanny.Algebra.FermatLevelOriginalHeight.term_mass
+#print axioms LeanCanny.Algebra.FermatLevelOriginalHeight.sum_powers
+#print axioms LeanCanny.Algebra.FermatLevelOriginalHeight.height_binary
+#print axioms LeanCanny.Algebra.FermatLevelOriginalHeight.coefficient_bound
+#print axioms LeanCanny.Algebra.FermatLevelOriginalHeight.inputs
+#print axioms LeanCanny.Algebra.FermatLevelOriginalHeight.word_height_binary
+#print axioms LeanCanny.Algebra.FermatLevelOriginalHeight.word_coefficient_bound
+#print axioms LeanCanny.Algebra.FermatLevelOriginalHeight.word_inputs
+end Group30Regression1
+
+namespace Group30Regression2
+open LeanCanny LeanCanny.ETR LeanCanny.Algebra LeanCanny.Geometry Polynomial Filter
+open scoped Topology
+
+def q : Term := .mul (.add (.var 1) (.mul (.const (-1)) (.var 0)))
+  (.add (.var 1) (.mul (.const (-1)) (.var 0)))
+example : FixedLeadingDilationValueBound.levelCoefficient 2 2 0=16 := by decide
+example : |FixedLeadingDilationValueBound.frozenValue 1 2 (fun _ : Fin 2 => 1)| <
+    (FixedLeadingDilationValueBound.levelCoefficient 2 2 0:ℝ)-1 :=
+  FixedLeadingDilationValueBound.frozen_margin 1 2 0 _ (by intro i _; norm_num)
+
+-- A negative, nonunit denominator is retained literally as eta/Q.
+example : ∀ᶠ i : ℕ in atTop,
+    |(FixedLeadingTiltedSource.polynomial 1 2 (1 : Fin 2) q (by decide)).eval₂ (Int.castRingHom ℝ)
+      (FixedLeadingTiltedGradient.point 1 (((-2:ℝ)*(1/((i:ℝ)+1)))/(-2)) (fun _ => 1))| ≤
+        (FixedLeadingDilationValueBound.levelCoefficient 2 2 0:ℝ)-1 := by
+  have HE : Tendsto (fun i : ℕ => (-2:ℝ)*(1/((i:ℝ)+1))) atTop (𝓝 0) := by
+    have HC : Tendsto (fun _ : ℕ => (-2:ℝ)) atTop (𝓝 (-2:ℝ)) := tendsto_const_nhds
+    simpa only [mul_zero] using (HC.mul tendsto_one_div_add_atTop_nhds_zero_nat)
+  exact FixedLeadingDilationValueBound.eventually_value_bound atTop 1 2 0 (1 : Fin 2) q
+    (by decide) (by decide) (by decide) (by decide) _ (-2) (fun _ _ => 1) (fun _ => 1)
+    HE tendsto_const_nhds (by intro i _; norm_num)
+
+-- The level coefficient may have exponentially many bits. Its residue still
+-- has a native FP reader from the binary original-height exponent.
+example : Encoding.LevelLiftCoefficient.read (fun _ => 2) (fun _ => 2)
+    (fun c => 2^c.length) (fun _ => BinaryNatCode.encode 5) ∈ FP :=
+  Encoding.LevelLiftCoefficient.read_FP (UnaryFn.const 2) (UnaryFn.const 2)
+    ((BinaryFn.const 2).powUnary (UnaryFn.length id_mem_FP)) (constFn_mem_FP _)
+example : Encoding.LevelLiftCoefficient.read (fun _ => 2) (fun _ => 2) (fun _ => 0)
+    (fun _ => BinaryNatCode.encode 5) [] = BinaryNatCode.encode 4 := by
+  rw [Encoding.LevelLiftCoefficient.read,Encoding.BinaryNat.powMod_eq_bits]
+  norm_num [Encoding.LevelLiftCoefficient.exponent,FixedLeadingTiltedSource.degree,BinaryNatCode.encode]
+  simp only [Nat.fromBitsLE_bits]
+  rfl
+
+#print axioms FixedLeadingDilationValueBound.value_zero
+#print axioms FixedLeadingDilationValueBound.value_tendsto
+#print axioms FixedLeadingDilationValueBound.frozen_height
+#print axioms FixedLeadingDilationValueBound.frozen_margin
+#print axioms FixedLeadingDilationValueBound.eventually_level_critical
+#print axioms Encoding.LevelLiftCoefficient.exponent_binary
+#print axioms Encoding.LevelLiftCoefficient.read_FP
+#print axioms Encoding.LevelLiftCoefficient.read_value
+end Group30Regression2
+
+namespace Group30Regression3
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra
+attribute [local irreducible] FlatAffineExceptionalParentBank.bank FlatAffineExceptionalParentBank.values
+  FlatAffineExceptionalInitialValueBound.height
+
+-- The old parent realization is constructed first. Its actual normalized
+-- retained coordinates satisfy the original-source height bound under that
+-- very hom; no later critical/level coefficient enters the bound.
+example (F : FlatAffineFullSourceTower.Inputs) (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F))
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (S : ℕ) (u v a : List Bool) (hm : FlatAffineExceptionalBankSource.births F u ≤ S+1)
+    (hv : FlatAffineCompleteVertices.Valid F (FlatAffineLastHeightRow.parentCone F C) u v)
+    (ha : SquareSampleCompleteVertices.Valid
+      (IntegerPolynomialSampleInput.input (FlatAffineExceptionalSliceFrame.scalarSource F C h)) u a) :
+    ∃ φ : (FlatAffineExceptionalParentBank.bank F C h S u hm).sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ,
+      ∀ i, |φ ((FlatAffineExceptionalParentBank.bank F C h S u hm).bank.numerator i) /
+        ((FlatAffineExceptionalParentBank.bank F C h S u hm).bank.denominator i:ℝ)| ≤
+          (2:ℝ)^FlatAffineExceptionalInitialValueBound.height F C h u := by
+  obtain ⟨_y,φ,_rows,_old,_generators,HR⟩ := FlatAffineExceptionalParentBank.exists_realization F C h S u v a hm hv ha
+  exact ⟨φ,fun i => FlatAffineExceptionalInitialValueBound.normalized_bound F C h S u v a hm hv ha φ HR i⟩
+
+example {F : FlatAffineFullSourceTower.Inputs} (hF : F.Access) (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F))
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (hh : UnaryFn (fun u => (h u).val)) :
+    LevelLiftCoefficient.read (fun _ => 3) (fun _ => 2)
+      (FlatAffineExceptionalInitialValueBound.height F C h) (fun _ => BinaryNatCode.encode 5) ∈ FP :=
+  FlatAffineExceptionalLevelBound.initial_coefficient_FP hF C h hh (UnaryFn.const 3) (UnaryFn.const 2) (constFn_mem_FP _)
+
+#print axioms FlatAffineExceptionalInitialValueBound.height_binary
+#print axioms FlatAffineExceptionalInitialValueBound.values_bound
+#print axioms FlatAffineExceptionalInitialValueBound.normalized_bound
+#print axioms FlatAffineExceptionalInitialValueBound.cleared_bound
+#print axioms FlatAffineExceptionalLevelBound.selected_margin
+#print axioms FlatAffineExceptionalLevelBound.initial_coefficient_FP
+end Group30Regression3
+
+namespace Group30Regression4
+noncomputable section
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open FlatAffineFullSourceTower FrozenCoordinatePermutationBits
+
+example : FrozenCoordinatePermutationBits.reader (pair [false,true,false,true] (BinaryNatCode.encode 0)) = BinaryNatCode.encode 1 := by rw [FrozenCoordinatePermutationBits.reader_packet]; rfl
+example : FrozenCoordinatePermutationBits.reader (pair [false,true,false,true] (BinaryNatCode.encode 1)) = BinaryNatCode.encode 3 := by rw [FrozenCoordinatePermutationBits.reader_packet]; rfl
+example : FrozenCoordinatePermutationBits.reader (pair [false,true,false,true] (BinaryNatCode.encode 2)) = BinaryNatCode.encode 0 := by rw [FrozenCoordinatePermutationBits.reader_packet]; rfl
+example : FrozenCoordinatePermutationBits.reader (pair [false,true,false,true] (BinaryNatCode.encode 3)) = BinaryNatCode.encode 2 := by rw [FrozenCoordinatePermutationBits.reader_packet]; rfl
+example : FrozenCoordinatePermutationBits.reader (pair [false,true,false,true] (BinaryNatCode.encode 99)) = [] := by rw [FrozenCoordinatePermutationBits.reader_packet]; rfl
+example : FrozenCoordinatePermutationBits.eraseBit (pair (BinaryNatCode.encode 1) [false,true,false,true]) = [false,false,false,true] := by decide
+example : FrozenCoordinatePermutationBits.eraseBit (pair (BinaryNatCode.encode 99) [false,true,false,true]) = [false,true,false,true] := by decide
+
+-- Existing mathematical permutation, at arbitrary input-dependent dimension.
+example {N : ℕ} (s : Finset (Fin N)) (j : Fin N) :
+    FrozenCoordinatePermutationBits.reader (pair (FrozenCoordinatePermutationBits.mask s) (BinaryNatCode.encode j.val)) =
+      BinaryNatCode.encode (LeanCanny.Geometry.FrozenCoordinateOrdering.permutation s j).val := reader_mask s j
+
+-- No permutation FrozenCoordinatePermutationBits.reader is supplied; original level flags suffice.
+example {F : FlatAffineFullSourceTower.Inputs} (hF : F.Access) (input : List Bool → List Bool) (hi : input ∈ FP)
+    (row : (q : List Bool) → Fin (FlatAffineFullSourceTower.arity F (input q))) (hr : BinaryFn (fun q => (row q).val)) :
+    SpaceFunction (fun q => BinaryNatCode.encode ((FlatAffineExceptionalOrderedRule.order F (input q)) (row q)).val) :=
+  FlatAffineExceptionalSelectorSpace.ordered_evaluator hF input hi row hr
+
+example {F : FlatAffineFullSourceTower.Inputs} (hF : F.Access) (input mod : List Bool → List Bool) (hi : input ∈ FP) (hm : mod ∈ FP)
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (hh : BinaryFn (fun u => (h u).val))
+    (row : (q : List Bool) → Fin (FlatAffineFullSourceTower.arity F (input q))) (hr : BinaryFn (fun q => (row q).val)) :
+    SpaceFunction (fun q => MatrixPower.residueBits (IntegralMixedAffineCoefficients.constantCoefficient
+      ((FlatAffineExceptionalCoarseRule.rule F h (input q)).heights (row q)) : ZMod (Nat.fromBitsLE (mod q) + 1))) :=
+  FlatAffineExceptionalSelectorSpace.coarse_constant_actual hF input mod hi hm h hh row hr
+
+#print axioms LeanCanny.Encoding.FrozenCoordinatePermutationBits.reader_FP
+#print axioms LeanCanny.Encoding.FrozenCoordinatePermutationBits.table_eq
+#print axioms LeanCanny.Encoding.FrozenCoordinatePermutationBits.reader_packet
+#print axioms LeanCanny.Encoding.FrozenCoordinatePermutationBits.permutation_get
+#print axioms LeanCanny.Encoding.FrozenCoordinatePermutationBits.reader_mask
+#print axioms LeanCanny.Encoding.FrozenCoordinatePermutationBits.eraseBit_FP
+#print axioms LeanCanny.Encoding.FrozenCoordinatePermutationBits.eraseBit_mask
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.maskWord_space
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.maskWord_eq
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.ordered_evaluator
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.coarseMask_space
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.coarse_evaluator
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.ordered_reference_actual
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.coarse_constant_actual
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.coarse_reference_actual
+end
+end Group30Regression4
+
+namespace Group30Regression5
+open LeanCanny LeanCanny.Encoding LeanCanny.Encoding.FrozenCoordinatePermutationBits
+example : FrozenCoordinatePermutationBits.inverseIndex (pair [false,true,false,true] (BinaryNatCode.encode 1)) = 0 := by decide
+example : FrozenCoordinatePermutationBits.inverseIndex (pair [false,true,false,true] (BinaryNatCode.encode 3)) = 1 := by decide
+example : FrozenCoordinatePermutationBits.inverseIndex (pair [false,true,false,true] (BinaryNatCode.encode 0)) = 2 := by decide
+example : FrozenCoordinatePermutationBits.inverseIndex (pair [false,true,false,true] (BinaryNatCode.encode 2)) = 3 := by decide
+example : FrozenCoordinatePermutationBits.inverseIndex (pair [false,true,false,true] (BinaryNatCode.encode 99)) = 4 := by decide
+example {N : ℕ} (s : Finset (Fin N)) (i : Fin N) :
+    FrozenCoordinatePermutationBits.inverseReader (pair (FrozenCoordinatePermutationBits.mask s) (BinaryNatCode.encode i.val)) = BinaryNatCode.encode ((LeanCanny.Geometry.FrozenCoordinateOrdering.permutation s).symm i).val := FrozenCoordinatePermutationBits.inverse_reader_mask s i
+#print axioms FrozenCoordinatePermutationBits.forwardAtUnary_FP
+#print axioms FrozenCoordinatePermutationBits.inversePredicate_FP
+#print axioms FrozenCoordinatePermutationBits.inverseIndex_unary
+#print axioms FrozenCoordinatePermutationBits.inverseReader_FP
+#print axioms FrozenCoordinatePermutationBits.inverse_reader_mask
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.inverse_evaluator
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.height_unary
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.initial_denominator_space
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.initial_slope_mask_space
+#print axioms LeanCanny.Encoding.FlatAffineExceptionalSelectorSpace.actual_slope_mask_space
+end Group30Regression5
+
+namespace Group30Regression6
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedCommandHeaderBits
+
+def separated : IntegralMixedCommandHeaderBits.Header := ⟨2, 3, 1, 4, 7, 6, 5⟩
+example : IntegralMixedCommandHeaderBits.decode (IntegralMixedCommandHeaderBits.encode separated) = separated := IntegralMixedCommandHeaderBits.decode_encode _
+example : (IntegralMixedCommandHeaderBits.decode (IntegralMixedCommandHeaderBits.encode separated)).context = 2 := by rw [IntegralMixedCommandHeaderBits.decode_encode]; rfl
+example : (IntegralMixedCommandHeaderBits.decode (IntegralMixedCommandHeaderBits.encode separated)).rawTag = 5 := by rw [IntegralMixedCommandHeaderBits.decode_encode]; rfl
+example : IntegralMixedCommandHeaderBits.isCut (IntegralMixedCommandHeaderBits.decode (IntegralMixedCommandHeaderBits.encode separated)) := by rw [IntegralMixedCommandHeaderBits.decode_encode]; decide
+example (h : IntegralMixedCommandHeaderBits.Header) : WordList.get (IntegralMixedCommandHeaderBits.encode h) 0 = BinaryNatCode.encode h.context := by simp [IntegralMixedCommandHeaderBits.encode, WordList.get_encode]
+example (h : IntegralMixedCommandHeaderBits.Header) : WordList.get (IntegralMixedCommandHeaderBits.encode h) 1 = BinaryNatCode.encode h.coordinate := by simp [IntegralMixedCommandHeaderBits.encode, WordList.get_encode]
+example (h : IntegralMixedCommandHeaderBits.Header) : WordList.get (IntegralMixedCommandHeaderBits.encode h) 2 = BinaryNatCode.encode h.offset := by simp [IntegralMixedCommandHeaderBits.encode, WordList.get_encode]
+example (h : IntegralMixedCommandHeaderBits.Header) : WordList.get (IntegralMixedCommandHeaderBits.encode h) 3 = BinaryNatCode.encode h.objective := by simp [IntegralMixedCommandHeaderBits.encode, WordList.get_encode]
+example (h : IntegralMixedCommandHeaderBits.Header) : WordList.get (IntegralMixedCommandHeaderBits.encode h) 4 = BinaryNatCode.encode h.degree := by simp [IntegralMixedCommandHeaderBits.encode, WordList.get_encode]
+example (h : IntegralMixedCommandHeaderBits.Header) : WordList.get (IntegralMixedCommandHeaderBits.encode h) 5 = BinaryNatCode.encode h.choice := by simp [IntegralMixedCommandHeaderBits.encode, WordList.get_encode]
+example (h : IntegralMixedCommandHeaderBits.Header) : WordList.get (IntegralMixedCommandHeaderBits.encode h) 6 = BinaryNatCode.encode h.rawTag := by simp [IntegralMixedCommandHeaderBits.encode, WordList.get_encode]
+example : IntegralMixedCommandHeaderBits.decode [] = IntegralMixedCommandHeaderBits.zero := IntegralMixedCommandHeaderBits.decode_nil
+example (a b c d e f : ℕ) :
+    IntegralMixedCommandHeaderBits.decode (WordList.encode [BinaryNatCode.encode a, BinaryNatCode.encode b, BinaryNatCode.encode c,
+      BinaryNatCode.encode d, BinaryNatCode.encode e, BinaryNatCode.encode f]) = ⟨a,b,c,d,e,f,0⟩ := by
+  simp [IntegralMixedCommandHeaderBits.decode, WordList.get_encode, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  rfl
+example : IntegralMixedCommandHeaderBits.lookup (IntegralMixedCommandHeaderBits.table [separated, IntegralMixedCommandHeaderBits.zero]) 0 = separated := by
+  simp [IntegralMixedCommandHeaderBits.lookup, IntegralMixedCommandHeaderBits.table, WordList.get_encode, IntegralMixedCommandHeaderBits.decode_encode]
+example : IntegralMixedCommandHeaderBits.lookup (IntegralMixedCommandHeaderBits.table [separated, IntegralMixedCommandHeaderBits.zero]) 9 = IntegralMixedCommandHeaderBits.zero := by
+  simp [IntegralMixedCommandHeaderBits.lookup, IntegralMixedCommandHeaderBits.table, WordList.get_encode, IntegralMixedCommandHeaderBits.decode_nil]
+example : BinaryFn (fun q => (IntegralMixedCommandHeaderBits.decode q).rawTag) := IntegralMixedCommandHeaderBits.decode_readers.rawTag
+example : (IntegralMixedCommandHeaderBits.table [separated, IntegralMixedCommandHeaderBits.zero]).length ≤ (28*3+30)*2 :=
+  IntegralMixedCommandHeaderBits.table_length [separated, IntegralMixedCommandHeaderBits.zero] 3 (by intro h hh; simp only [List.mem_cons, List.not_mem_nil, or_false] at hh; rcases hh with rfl | rfl <;> decide)
+#print axioms IntegralMixedCommandHeaderBits.decode_encode
+#print axioms IntegralMixedCommandHeaderBits.decode_nil
+#print axioms IntegralMixedCommandHeaderBits.command_context
+#print axioms IntegralMixedCommandHeaderBits.command_coordinate
+#print axioms IntegralMixedCommandHeaderBits.lookup_words
+#print axioms IntegralMixedCommandHeaderBits.encode_length
+#print axioms IntegralMixedCommandHeaderBits.decode_readers
+#print axioms IntegralMixedCommandHeaderBits.Readers.comp
+#print axioms IntegralMixedCommandHeaderBits.Readers.choose
+#print axioms IntegralMixedCommandHeaderBits.table_length
+#print axioms IntegralMixedHeaderTablesBits.producer_eq
+#print axioms IntegralMixedHeaderTablesBits.fallback_eq
+#print axioms IntegralMixedHeaderTablesBits.selected_eq
+#print axioms IntegralMixedHeaderTablesBits.fullMetadata
+#print axioms IntegralMixedHeaderTablesBits.selected_tag
+#print axioms IntegralMixedHeaderTablesBits.rawMetadata
+#print axioms IntegralMixedHeaderTablesBits.physicalInputMetadata
+#print axioms FlatAffineExceptionalIntegerHeaders.data_headers_FP
+end Group30Regression6
+
+namespace Group30Regression7
+open LeanCanny LeanCanny.Algebra IntegralMixedHistory IntegralMixedCriticalSweep Polynomial Filter
+open IntegralMixedLimitCoordinate
+open scoped Topology
+attribute [local irreducible] IntegralMixedLimitCoordinate.series IntegralMixedLimitCoordinate.factor
+  IntegralMixedLimitCoordinate.coefficient IntegralMixedLimitCoordinate.selectedSeries
+  IntegralMixedCriticalSweep.coordinate
+
+-- A finite valid factor is obtained from the actual retained prefix and the
+-- actual source critical branch, with no supplied annihilator or evaluator.
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type} (x : State P S B m ι) (hm : m≤S)
+    (r : Rule n) (j : Fin (n-r.critical.offset.val+1))
+    (φ : x.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ) (eta v : ℕ → ℝ) (a : ℝ) (z : ℕ → Fin (n+1) → ℝ)
+    (heta : Tendsto eta atTop (𝓝 0)) (hv : Tendsto v atTop (𝓝 a)) (hne : ∀ᶠ i in atTop, eta i≠0)
+    (hscale : ∀ᶠ i in atTop, (commonDenominator x:ℝ)*z i
+      (ClearedCoordinateCritical.freeIndex r.critical.offset.val (fit r).le j)=eta i*v i)
+    (hfrozen : ∀ᶠ i in atTop, ∀ h, h.val<r.critical.offset.val →
+      ((data x hm r.critical).scales h:ℝ)*z i h=heightValue x r φ (eta i) h)
+    (hp : ∀ᶠ i in atTop, (FermatCriticalHomogenization.polynomial P.low P.leading P.degree).eval₂
+      (Int.castRingHom ℝ) (z i)=0)
+    (hg : ∀ᶠ h in atTop, ∀ i : Fin (n-r.critical.offset.val+1), i≠objective r →
+      (MvPolynomial.pderiv (ClearedCoordinateCritical.freeIndex r.critical.offset.val (fit r).le i)
+        (FermatCriticalHomogenization.polynomial P.low P.leading P.degree)).eval₂ (Int.castRingHom ℝ) (z h)=0) :
+    ∃ c : Fin (ChoiceBound P r), IntegralMixedLimitCoordinate.Valid x hm r j φ c ∧
+      (IntegralMixedLimitCoordinate.factor x hm r j c).map φ.toRingHom≠0 ∧
+      ((IntegralMixedLimitCoordinate.factor x hm r j c).map φ.toRingHom).natDegree ≤ degree P r ∧
+      ((IntegralMixedLimitCoordinate.factor x hm r j c).map φ.toRingHom).eval a=0 := by
+  obtain ⟨c,hc⟩ := IntegralMixedLimitCoordinate.exists_valid x hm r j φ
+  refine ⟨c,hc,hc.2,selected_degree_bound x hm r j φ c,?_⟩
+  exact IntegralMixedLimitCoordinate.limit_root atTop x hm r j φ c hc eta v a z heta hv hne hscale hfrozen hp hg
+
+#print axioms IntegralMixedLimitCoordinate.top_survives
+#print axioms IntegralMixedLimitCoordinate.selected_ne_zero
+#print axioms IntegralMixedLimitCoordinate.exists_valid
+#print axioms IntegralMixedLimitCoordinate.factor_nonzero
+#print axioms IntegralMixedLimitCoordinate.factor_degree
+#print axioms IntegralMixedLimitCoordinate.selected_degree_bound
+#print axioms IntegralMixedLimitCoordinate.valid_index
+#print axioms IntegralMixedLimitCoordinate.factor_coefficient
+#print axioms IntegralMixedLimitCoordinate.critical_root
+#print axioms IntegralMixedLimitCoordinate.limit_root
+end Group30Regression7
+
+namespace Group30Regression8
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open IntegralMixedHistory IntegralMixedCriticalSweep IntegralMixedCutSource FixedWidthPolynomial
+open IntegralMixedLimitCoordinateBounds
+attribute [local irreducible] IntegralMixedLimitCoordinate.factor IntegralMixedLimitCoordinate.coefficient
+  IntegralMixedLimitCoordinate.series IntegralMixedCriticalSweep.coordinate
+
+-- The actual family matrix bound uses original syntax/metadata bounds only;
+-- the old coordinate entry estimate and bankQ power are derived internally.
+example (F : Family) (I : IntegralMixedVirtualSweepSource.Indices F)
+    (H : IntegralMixedCoordinateBounds.OriginalBounds F) (q : List Bool)
+    (c : Fin (IntegralMixedLimitCoordinate.ChoiceBound (F.spatial q) (F.rule q)))
+    (k : ℕ) (u v : Fin (count (F.birth q) (F.width q))) :
+    (Algebra.leftMulMatrix (F.state q).sampler.scalarPrefix.basis.finBasis
+      ((IntegralMixedLimitCoordinate.factor (F.state q) (F.birth_bound q) (F.rule q) (I.coordinate q) c).coeff k) u v).natAbs ≤
+        2^(factor (F.ambient q) (H.rank q) (H.sourceWidth q) (H.spatialDegree q)
+          (F.cap q) (H.nodes q)*H.bankHeight q) := by
+  rw [← height_eq_factor]
+  exact coefficient_height F I H q c k u v
+
+-- Outside the chosen coefficient degree the integer matrix is literally zero.
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type} (x : State P S B m ι) (hm : m≤S)
+    (r : Rule n) (j : Fin (n-r.critical.offset.val+1))
+    (c : Fin (IntegralMixedLimitCoordinate.ChoiceBound P r)) (k : ℕ) (hk : c.val<k) :
+    Algebra.leftMulMatrix x.sampler.scalarPrefix.basis.finBasis
+      ((IntegralMixedLimitCoordinate.factor x hm r j c).coeff k)=0 := by
+  rw [Polynomial.coeff_eq_zero_of_natDegree_lt
+    ((IntegralMixedLimitCoordinate.factor_degree x hm r j c).trans_lt hk),map_zero]
+
+#print axioms IntegralMixedLimitCoordinateBounds.entry_height
+#print axioms IntegralMixedLimitCoordinateBounds.height_eq_factor
+#print axioms IntegralMixedLimitCoordinateBounds.factor_binary
+#print axioms IntegralMixedLimitCoordinateBounds.height_binary
+#print axioms IntegralMixedLimitCoordinateBounds.original_coefficient_height
+#print axioms IntegralMixedLimitCoordinateBounds.coefficient_height
+#print axioms IntegralMixedLimitCoordinateBounds.family_height_binary
+end Group30Regression8
+
+namespace Group30Regression9
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCriticalSweep FixedWidthPolynomial
+open scoped Classical
+
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-1)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+
+noncomputable def initial : State circle 1 64 0 (Fin 0) :=
+  IntegralMixedHistory.base circle (IntegralHistorySampler.base 1 (2 ^ 64))
+    (by norm_num [PurePowerReductionBounds.dimension, PurePowerReductionBounds.width,
+      PurePowerReductionBounds.bound, count, circle]; decide)
+
+noncomputable def sweep : Rule 1 where
+  critical := {
+    offset := 1
+    objective := 0
+    coordinate := 0
+    scales := fun _ => -2
+    scales_ne_zero := fun _ => by decide
+    heights := fun _ => .constant (-5) }
+  height := 0
+  height_frozen := by decide
+  slope := -3
+  slope_ne_zero := by decide
+
+noncomputable def bankPolynomial : Polynomial ℤ := Polynomial.C (-3)*Polynomial.X
+private theorem bankNonzero : bankPolynomial ≠ 0 := mul_ne_zero (Polynomial.C_ne_zero.mpr (by decide)) Polynomial.X_ne_zero
+private theorem bankCap : bankPolynomial.natDegree ≤ 2^64 := by
+  apply Polynomial.natDegree_mul_le.trans
+  simp only [Polynomial.natDegree_C, Polynomial.natDegree_X, zero_add]
+  exact Nat.one_le_two_pow
+noncomputable def retained : State circle 1 64 1 (Fin 0 ⊕ Unit) :=
+  integerStep initial (by decide) bankPolynomial bankNonzero bankCap
+noncomputable def family : IntegralMixedCutSource.Family where
+  ambient _ := 1
+  cap _ := 1
+  width _ := 64
+  birth _ := 1
+  physical _ := Fin 0 ⊕ Unit
+  spatial _ := circle
+  state _ := retained
+  birth_bound _ := by decide
+  rule _ := sweep
+  kind _ := .coordinate 0 0
+  degree _ := 0
+  degree_bound _ := Nat.zero_le _
+  scalar_cap _ := by
+    norm_num [IntegralMixedExceptionalBounds.auxiliaryCap, IntegralMixedExceptionalBounds.K,
+      IntegralMixedExceptionalBounds.E, IntegralMixedExceptionalBounds.regularCap,
+      IntegralMixedExceptionalBounds.valueCap, IntegralMixedExceptionalBounds.valueDimension,
+      IntegralMixedExceptionalBounds.boxWidth, IntegralMixedExceptionalBounds.boxBase,
+      IntegralMixedSweepBounds.parameterCap, IntegralMixedSweepBounds.coordinateCap, PurePowerReductionBounds.dimension,
+      PurePowerReductionBounds.width, PurePowerReductionBounds.bound, count, circle]
+    decide
+
+open IntegralMixedLimitCoordinateSnapshot
+private theorem denominator_fixture : denominator family [] = -3 := by
+  change (∏ i : Fin 1, retained.bank.denominator i) = -3
+  rw [Fin.prod_univ_one]
+  change bankPolynomial.leadingCoeff = -3
+  exact Polynomial.leadingCoeff_C_mul_X (-3)
+private theorem degree_fixture : degree family [] = 4 := by
+  decide
+private theorem choice_fixture : 3 < IntegralMixedLimitCoordinate.ChoiceBound (family.spatial []) (family.rule []) := by
+  change 3 < 5
+  decide
+attribute [local irreducible] IntegralMixedLimitCoordinateSnapshot.coefficient IntegralMixedCoordinateCoefficientSnapshot.coefficient
+example (r t : ℕ) : coefficient family [] 0 3 3 r t = -3 *
+    IntegralMixedCoordinateCoefficientSnapshot.coefficient family [] 0 3 0 r t := by
+  rw [coefficient_eq family [] 0 3 3 r t choice_fixture, ite_eq_left (Nat.le_refl 3), denominator_fixture, degree_fixture]
+  rfl
+example (r t : ℕ) : coefficient family [] 0 3 4 r t = 0 := coefficient_zero family [] 0 3 4 r t choice_fixture (by decide)
+example (j c k t : ℕ) : coefficient family [] j c k (count (family.birth []) (family.width [])) t = 0 :=
+  coefficient_invalid_row family [] j c k _ t (Nat.le_refl _)
+example (j c k r : ℕ) : coefficient family [] j c k r (count (family.birth []) (family.width [])) = 0 :=
+  coefficient_invalid_col family [] j c k r _ (Nat.le_refl _)
+example (F : IntegralMixedCutSource.Family) (key : List Bool)
+    (j : Fin (F.ambient key-(F.rule key).critical.offset.val+1))
+    (c : Fin (IntegralMixedLimitCoordinate.ChoiceBound (F.spatial key) (F.rule key))) :
+    factor F key j.val c.val = IntegralMixedLimitCoordinate.factor (F.state key) (F.birth_bound key) (F.rule key) j c :=
+  factor_fin F key j c
+example : IntegralCriticalTotalSnapshotBits.integerEntry ((-3 : ℤ) • (fun _ _ : Fin 1 => (2 : ℤ))) 0 0 = -6 := by decide
+example : IntegralCriticalTotalSnapshotBits.integerEntry ((-3 : ℤ) • (fun _ _ : Fin 1 => (2 : ℤ))) 1 0 = 0 := by decide
+private noncomputable def p : Polynomial (Polynomial ℤ) :=
+  Polynomial.C (Polynomial.C 1 + Polynomial.C 2*Polynomial.X)*Polynomial.X
+private theorem pDegree : p.natDegree ≤ 2 := by
+  apply Polynomial.natDegree_mul_le.trans
+  simp only [Polynomial.natDegree_C, Polynomial.natDegree_X, zero_add]
+  decide
+example : (((Polynomial.Bivariate.swap (BoundedClearedDilation.rescale p (-3) 2)).coeff 2).coeff 1) = -6 := by
+  rw [BoundedClearedDilation.swapped_coefficient p (-3) 2 pDegree]
+  norm_num [p, Polynomial.coeff_C_mul, Polynomial.coeff_one]
+example : (((Polynomial.Bivariate.swap (BoundedClearedDilation.rescale p (-3) 2)).coeff 1).coeff 2) = 0 := by
+  rw [BoundedClearedDilation.swapped_coefficient p (-3) 2 pDegree, ite_eq_right (by decide : ¬2 ≤ 1)]
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.coordinate_fin
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.choice_fin
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.factor_fin
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.degree_eq
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.choice_value
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.old_choice_bound
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.matrix_eq
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.old_coefficient
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.integerEntry_smul
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.coefficient_eq
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.coefficient_zero
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.coefficient_invalid_row
+#print axioms LeanCanny.Algebra.IntegralMixedLimitCoordinateSnapshot.coefficient_invalid_col
+end Group30Regression9
+
+namespace Group30Regression10
+namespace PoweredPrefixRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower
+open PoweredPrefixProduct
+
+def answer (p : List Bool) := if Nat.fromBitsLE (pairSnd p) = 0 then residueBits (2 : ZMod 6) else residueBits (5 : ZMod 6)
+example : (PoweredPrefixProduct.program (fun _ => 1) (fun _ => 3) (fun _ => 5) id).value answer [] = BinaryNatCode.encode 4 := by
+  rw [PoweredPrefixProduct.value _ _ _ _ _ [] (fun _ => (2 : ZMod 6)) (5 : ZMod 6)]
+  · change residueBits ((2 : ZMod 6)^3*5) = BinaryNatCode.encode 4
+    decide
+  · intro i hi
+    have HI : i=0 := by omega
+    subst i
+    simp only [answer, id_eq, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, ite_true]
+  · simp only [answer, id_eq, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.one_ne_zero, ite_false]
+example : (PoweredPrefixProduct.program (fun _ => 0) (fun _ => 99) (fun _ => 5) id).value (fun _ => residueBits (-1 : ZMod 6)) [] = BinaryNatCode.encode 5 := by
+  rw [PoweredPrefixProduct.value _ _ _ _ _ [] (fun _ => (0 : ZMod 6)) (-1 : ZMod 6)]
+  · change residueBits ((1 : ZMod 6)^99*(-1)) = BinaryNatCode.encode 5
+    norm_num
+    decide
+  · intro i hi
+    omega
+  · rfl
+example : PoweredPrefixProduct.transform (fun _ => 1) (fun _ => 100) (fun _ => 0)
+    (pair (pair [] (BinaryNatCode.encode 0)) (residueBits (-2 : ZMod 1))) = [] := by
+  rw [PoweredPrefixProduct.transform_packet]
+  change residueBits ((-2 : ZMod 1)^100) = []
+  decide
+example : (PoweredPrefixProduct.program (fun _ => 1) (fun _ => 2^100) (fun _ => 5) id).controller.Certificates
+    (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  PoweredPrefixProduct.certificates _ _ _ _ (BinaryFn.const 1) (BinaryFn.const (2^100)) (BinaryFn.const 5) id_mem_FP
+#print axioms TransformedRecursiveProduct.certificates
+#print axioms TransformedRecursiveProduct.partialValue
+#print axioms TransformedRecursiveProduct.orbit_length
+#print axioms TransformedRecursiveProduct.output_when_halted
+#print axioms PoweredPrefixProduct.transform_FP
+#print axioms PoweredPrefixProduct.transform_packet
+#print axioms PoweredPrefixProduct.certificates
+#print axioms PoweredPrefixProduct.value
+end PoweredPrefixRegression
+end Group30Regression10
+
+namespace Group30Regression11
+namespace BoundedClearedDilationRegression
+open LeanCanny.Algebra Polynomial BoundedClearedDilation
+-- The original allowance may exceed a particular retained component's degree.
+example : ((BoundedClearedDilation.rescale (Polynomial.X+Polynomial.C Polynomial.X : Polynomial (Polynomial ℤ)) 6 3).coeff 0).coeff 1 = 216 := by
+  rw [BoundedClearedDilation.coefficient _ _ _ (by rw [natDegree_X_add_C]; decide)]
+  norm_num
+example : ((BoundedClearedDilation.rescale (Polynomial.X+Polynomial.C Polynomial.X : Polynomial (Polynomial ℤ)) 6 3).coeff 1).coeff 1 = 36 := by
+  rw [BoundedClearedDilation.coefficient _ _ _ (by rw [natDegree_X_add_C]; decide)]
+  norm_num
+example (p : Polynomial (Polynomial ℤ)) (q : ℤ) (d c k : ℕ)
+    (hp : p.natDegree ≤ d) (hk : c < k) : ((Bivariate.swap (BoundedClearedDilation.rescale p q d)).coeff c).coeff k = 0 := by
+  rw [BoundedClearedDilation.swapped_coefficient _ _ _ hp, ite_eq_right (by omega)]
+#print axioms BoundedClearedDilation.coefficient
+#print axioms BoundedClearedDilation.swapped_coefficient
+#print axioms BoundedClearedDilation.root
+#print axioms BoundedClearedDilation.trailing_degree_le
+#print axioms BoundedClearedDilation.coefficient_degree
+end BoundedClearedDilationRegression
+end Group30Regression11
+
+namespace Group30Regression12
+namespace LimitCoordinateTasksRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower IntegralCriticalHistoryTask
+open IntegralMixedLimitCoordinateTasks
+example (P : Parameters) (q : List Bool) : get P .slot8 (IntegralMixedLimitCoordinateTasks.prepare P q) = get P .coefficient q := by
+  rw [IntegralMixedLimitCoordinateTasks.prepare_get]
+  rfl
+example (P : Parameters) (q : List Bool) : get P .coefficient (IntegralMixedLimitCoordinateTasks.prepare P q) = get P .slot8 q-get P .coefficient q := by
+  rw [IntegralMixedLimitCoordinateTasks.prepare_get]
+  rfl
+example (P : Parameters) (F : IntegralMixedCutSource.Family) (q : List Bool)
+    (hr : IntegralMixedRoutineTaskBits.routine P q=4) : IntegralMixedRoutineTaskBits.Frame P q (IntegralMixedLimitCoordinateTasks.critical P F q) :=
+  IntegralMixedLimitCoordinateTasks.critical_frame P F q hr
+#print axioms IntegralMixedLimitCoordinateTasks.prepare_FP
+#print axioms IntegralMixedLimitCoordinateTasks.prepare_get
+#print axioms IntegralMixedLimitCoordinateTasks.prepare_saved
+#print axioms IntegralMixedLimitCoordinateTasks.critical_FP
+#print axioms IntegralMixedLimitCoordinateTasks.critical_frame
+end LimitCoordinateTasksRegression
+end Group30Regression12
+
+namespace Group30Regression13
+namespace LimitCoordinateRequestsRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower IntegralCriticalHistoryTask
+open IntegralMixedCutSource IntegralMixedVirtualQueryBits IntegralMixedLimitCoordinateRequests
+example (P : Parameters) (F : Family) (R : IntegralMixedOldBankCofactorBits.Routing) (q : List Bool) :
+    (IntegralMixedLimitCoordinateRequests.program P F R).count q = birth P q + 1 := rfl
+example (P : Parameters) (F : Family) (g : IntegralMixedVirtualCaps.RootGeometry P F) (R : IntegralMixedOldBankCofactorBits.Routing)
+    (q : List Bool) (hr : IntegralMixedRoutineTaskBits.routine P q = 4) (i : ℕ) (hi : i < birth P q+1) :
+    IntegralMixedRoutineTaskBits.Frame P q (IntegralMixedLimitCoordinateRequests.task P F R (pair q (BinaryNatCode.encode i))) := IntegralMixedLimitCoordinateRequests.task_frame P F g R q hr i hi
+example (P : Parameters) (q : List Bool) : IntegralMixedLimitCoordinateRequests.modulusPredecessor P q + 1 = modulus P q := IntegralMixedLimitCoordinateRequests.modulusPredecessor_value P q
+example (P : Parameters) (q : List Bool) (h : get P .modulus q = 0) : IntegralMixedLimitCoordinateRequests.modulusPredecessor P q = 0 := by
+  simp [IntegralMixedLimitCoordinateRequests.modulusPredecessor,modulus,h]
+example (P : Parameters) (q : List Bool) (h : get P .modulus q = 6) : IntegralMixedLimitCoordinateRequests.modulusPredecessor P q = 5 := by
+  simp [IntegralMixedLimitCoordinateRequests.modulusPredecessor,modulus,h]
+example (P : Parameters) (a : Access P) (F : Family) (h : InputMetadata F) (R : IntegralMixedOldBankCofactorBits.Routing) (hr : IntegralMixedOldBankCofactorBits.RoutingAccess R) :
+    (IntegralMixedLimitCoordinateRequests.program P F R).controller.Certificates (encQ := Turing.MultiTapeTM.encBits) (encS := RecursiveFold.encState) :=
+  IntegralMixedLimitCoordinateRequests.certificates P a F h R hr
+#print axioms IntegralMixedLimitCoordinateRequests.task_FP
+#print axioms IntegralMixedLimitCoordinateRequests.task_frame
+#print axioms IntegralMixedLimitCoordinateRequests.exponent_binary
+#print axioms IntegralMixedLimitCoordinateRequests.modulusPredecessor_value
+#print axioms IntegralMixedLimitCoordinateRequests.certificates
+end LimitCoordinateRequestsRegression
+end Group30Regression13
+
+namespace Group30Regression14
+namespace FullNativeLevelSyntaxRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower IntegralCriticalHistoryTask
+open IntegralMixedFullNativeBits
+example (P : Parameters) (a : Access P)
+    (D : IntegralMixedFullHistoryFamilyBits.Data P)
+    (T : IntegralMixedHeaderTablesBits.Tables) (ht : IntegralMixedHeaderTablesBits.Access T)
+    (hr : IntegralMixedHeaderTablesBits.Represents P D T)
+    (scalar : IntegralMixedFullScalarBits.Controls P D)
+    (integer : IntegralMixedIntegerProducerSpaceBits.Original P D)
+    (word : List Bool → List Bool) (hword : word ∈ FP)
+    (hs : ∀ r, (ETR.TermView.term (word r)).arity ≤ P.ambient r)
+    (E : List Bool → ℕ) (hE : BinaryFn E) (L : List Bool → ℕ) (hL : BinaryFn L)
+    (hlow : ∀ r, (D.spatial r).low = FermatLevelCoefficientBits.polynomial P.ambient
+      (FermatLevelOriginalSpatialBits.old P word) (FermatLevelPowerResidue.coefficient E) r)
+    (hl : ∀ r, (D.spatial r).leading.natAbs.size ≤ levelHeight word E r)
+    (hc : ∀ r, ∀ c ∈ D.rules r, IntegralMixedFullScriptHeight.CommandBounds (levelHeight word E r) (L r) c)
+    (hf : ∀ key, IntegralMixedFullHeightBits.RuleBounds (levelHeight word E (pairFst key))
+      (L (pairFst key)) (D.fallback key).rule)
+    (hm : ∀ root, 2 * IntegralMixedNormalizationTopBits.characteristicBudget P
+      (IntegralMixedFullHeightBits.height P (levelHeight word E) L) root + 4 ≤ P.modulusBound root) :
+    SpaceFunction (machine P a D
+      (controls_of_level_syntax P a D T ht hr scalar integer word hword hs E hE L hL hlow hl hc hf hm)).model :=
+  model_space_of_level_syntax P a D T ht hr scalar integer word hword hs E hE L hL hlow hl hc hf hm
+
+#print axioms IntegralMixedFullNativeBits.core_of_level_syntax
+#print axioms IntegralMixedFullNativeBits.controls_of_level_syntax
+#print axioms IntegralMixedFullNativeBits.model_space_of_level_syntax
+end FullNativeLevelSyntaxRegression
+end Group30Regression14
