@@ -1,3 +1,50 @@
+import LeanCanny.Algebra.MvIndexedRationalClearing
+import LeanCanny.Algebra.IntegralMixedFramedBankTermPolynomial
+import LeanCanny.Algebra.IntegralMixedFramedBankTermBounds
+import LeanCanny.Geometry.IntegralMixedFramedBankTermSign
+import LeanCanny.Algebra.IntegralMixedFramedBankTermCoefficient
+import LeanCanny.Encoding.IntegralFramedBankTermTest
+import LeanCanny.Encoding.IntegralFramedBankTermZero
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptyBankTermTest
+import LeanCanny.Geometry.IntegralMixedFramedBankTermObservation
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateTermPoint
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateTermInput
+import LeanCanny.Encoding.IntegralFramedBankTermObservation
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptyTermSemantics
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateTermSemantics
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateFilter
+import LeanCanny.Geometry.IntegralMixedFramedBankPointBound
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateBounds
+import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateRadius
+import LeanCanny.Geometry.AuxiliaryCandidateRegularLift
+import LeanCanny.Encoding.BoundedRegularLowModularTerm
+import LeanCanny.Encoding.BoundedRegularLowCoefficient
+import LeanCanny.Algebra.IntegralMixedFramedAffineScalarSnapshot
+import LeanCanny.Algebra.IntegralMixedFramedAffineScalarControls
+import LeanCanny.Algebra.IntegralMixedFramedCompanionControlsSpace
+import LeanCanny.Algebra.BoundedRegularFramedOriginal
+import LeanCanny.Algebra.BoundedRegularFramedNative
+import LeanCanny.Connectivity.CanonicalAuxiliaryCandidateNonempty
+import LeanCanny.Connectivity.CanonicalAuxiliaryCandidateLabels
+import LeanCanny.Connectivity.CanonicalAuxiliaryCandidateDecode
+import LeanCanny.Connectivity.CanonicalAuxiliaryCandidateValidity
+import LeanCanny.Connectivity.CanonicalAuxiliaryBitFrontier
+import LeanCanny.Algebra.IntegralMixedRelativeCutCorrelated
+import LeanCanny.Geometry.IntegralMixedFrozenFrame
+import LeanCanny.Geometry.IntegralMixedFrozenFrameLevel
+import LeanCanny.Geometry.IntegralMixedFrozenFrameOrder
+import LeanCanny.Geometry.IntegralMixedFrozenFrameCut
+import LeanCanny.Geometry.IntegralMixedFrozenFrameSweep
+import LeanCanny.Algebra.IntegralMixedFramedBankOrderTerm
+import LeanCanny.Geometry.IntegralMixedFramedBankOrder
+import LeanCanny.Encoding.IntegralFramedBankOrderTest
+import LeanCanny.Encoding.IntegralFramedBankOrderKey
+import LeanCanny.Encoding.IntegralFramedBankOrderLanguage
+import LeanCanny.Encoding.IntegralMixedAuxiliaryEmptyBankOrder
+import LeanCanny.Algebra.FixedWidthPermutationSpace
+import LeanCanny.Encoding.BoundedRegularPermutedCoefficient
+import LeanCanny.Algebra.BoundedRegularFramedPermuted
+import LeanCanny.Geometry.IntegralMixedFrozenFrameCritical
 import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateSource
 import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateWidth
 import LeanCanny.Encoding.IntegralMixedAuxiliaryCandidateLabel
@@ -2853,8 +2900,26 @@ actual common-denominator products. Every canonical Boolean sign source now
 uses this bounded cover; its combined sign/component tags have an injective
 fixed-width encoding bounded by one original-input polynomial. The existing
 relative-frontier graph equivalences hold for these actual covers. Graph
-reachability and packet normalization are native, but original-equation filter
-costs and relative-frontier adjacency costs remain separate obligations.
+reachability, packet normalization and original-equation filtering are native.
+Relative-frontier adjacency costs remain separate obligations.
+Original-equation filtering now has a native PSPACE decider at the same
+actual joint-root bank point. Raw Boolean sign/component words have exact
+native writers and decoding, canonical zero padding and PSPACE validity.
+Every invalid word denotes an empty piece. These actual bounded bit frontier
+covers characterize both original connectivity languages; their vertex costs
+and widths are proved, while native frontier edges and endpoint piece locators
+remain required. Retained-coordinate ordering uses a positive Q-squared
+clearing and checks both labels and the same joint vertex, including signed
+and nonunit denominators. Literal correlated cuts preserve the entire old
+hom and tuple; frozen masks reorder only physical variables and LOW. Their
+current-Q sweep and actual critical-coordinate readback preserve the same
+source degree and leading coefficient. Native bounded-regular LOW/leading
+and permuted coefficient readers avoid serializing huge powers. The derived
+radius contains all decoded candidates; its marked-lift component equivalence
+is for the bounded zero set. Global unbounded component preservation and the
+recursive adjacency construction remain open. General affine scalar and
+native critical factories retain their literal snapshot/bounds obligations;
+a current-Q slope is not inferred from a fixed-parent-Q snapshot.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

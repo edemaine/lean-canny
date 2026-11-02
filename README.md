@@ -1840,8 +1840,19 @@ the original equation constructs an actual component path cover, including
 singular and unbounded zero sets, with at most 2^labelWidth components. The
 canonical Boolean sign decomposition uses these covers with injective fixed-width
 sign/component tags bounded by one polynomial in the original input length.
-Native graph reachability is available; original-equation filtering costs and
-relative-frontier adjacency remain required for the full connectivity algorithm.
+Native original-equation filtering and graph reachability are proved. Exact
+raw bit decoding supplies an actual bounded Boolean frontier cover with native
+PSPACE vertex validity. Relative-frontier edge costs and endpoint piece
+locators remain required for the full connectivity algorithm.
+
+Actual retained-coordinate ordering preserves signs through positive Q-squared
+clearing, including negative denominators and composite moduli. Correlated cut
+frames retain the same old hom, tuple and bank; frozen-first permutations keep
+the spatial degree and leading coefficient. Native bounded-regular LOW and
+leading readers, including permuted sources, keep huge powers implicit. The
+original-only radius bounds every decoded candidate, and the marked-lift
+component theorem applies to the bounded zero set. Unbounded component
+preservation and effective recursive adjacency remain open.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate

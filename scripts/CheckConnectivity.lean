@@ -43386,3 +43386,592 @@ end CanonicalCandidateRegression
 #print axioms CanonicalAuxiliaryCandidateCover.encode_injective
 #print axioms CanonicalAuxiliaryCandidateCover.index_card_le
 end Group37Regression9
+
+
+namespace Group38Regression0
+open LeanCanny.Algebra LeanCanny.Encoding
+open scoped Classical
+noncomputable def testClearing : MvPolynomial (Fin 1) ℤ :=
+  MvIndexedRationalClearing.cleared 1 2 2 (fun r=>if r=0 then -1 else 1)
+    (fun r _=>r) (fun _=>MvPolynomial.X 0) (fun _=>MvPolynomial.C (-2))
+example : testClearing.eval₂ (Int.castRingHom ℝ) (fun _=>3) = -10 := by
+  norm_num [testClearing,MvIndexedRationalClearing.cleared,Finset.sum_range_succ,
+    Finset.prod_range_succ,MvPolynomial.eval₂_add,MvPolynomial.eval₂_mul,
+    MvPolynomial.eval₂_pow,MvPolynomial.eval₂_C,MvPolynomial.eval₂_X]
+example : SignType.sign (testClearing.eval₂ (Int.castRingHom ℝ) (fun _=>3)) = -1 := by
+  have H : testClearing.eval₂ (Int.castRingHom ℝ) (fun _=>3) = -10 := by
+    norm_num [testClearing,MvIndexedRationalClearing.cleared,Finset.sum_range_succ,
+      Finset.prod_range_succ,MvPolynomial.eval₂_add,MvPolynomial.eval₂_mul,
+      MvPolynomial.eval₂_pow,MvPolynomial.eval₂_C,MvPolynomial.eval₂_X]
+  rw [H]
+  norm_num
+#print axioms MvIndexedRationalClearing.sign
+#print axioms IntegralMixedFramedBankTermBits.polynomial_encode
+#print axioms IntegralMixedFramedBankTermBits.polynomial_mass
+#print axioms LeanCanny.Geometry.IntegralMixedFramedBankTermSign.sign
+#print axioms IntegralMixedFramedBankTermBits.coefficient_evaluator
+#print axioms IntegralFramedBankTermTest.evaluator
+#print axioms IntegralFramedBankTermTest.zero_decider
+#print axioms IntegralFramedBankTermTest.zero_mem_PSPACE
+end Group38Regression0
+
+
+namespace Group38Regression1
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open IntegralCriticalHistoryTask IntegralMixedFramedHistoryFamilyBits
+example (P : Parameters) (D : Plan P) (H : Data P D) (key : List Bool) (z : ℕ→ℝ)
+    (i : ℕ) (hi : i<(IntegralMixedFramedBankSnapshotBits.atKey P D H key).count) :
+    LeanCanny.Geometry.IntegralMixedFramedBankTermSign.point P D H key (fun j=>z j.val) i=
+      (IntegralMixedFramedBankObservation.ofState
+        (LeanCanny.Geometry.IntegralMixedFramedBankTermSign.state P D H key)).point z
+        (IntegralMixedFramedBankTermBits.reverseIndex P D H key i) :=
+  LeanCanny.Geometry.IntegralMixedFramedBankTermSign.point_observation P D H key z i hi
+#print axioms IntegralMixedAuxiliaryEmptyPlan.term_evaluator
+#print axioms IntegralMixedAuxiliaryEmptyPlan.term_zero_decider
+#print axioms LeanCanny.Geometry.IntegralMixedFramedBankTermSign.point_observation
+#print axioms IntegralMixedAuxiliaryCandidate.term_point
+end Group38Regression1
+
+
+namespace Group38Regression2
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryCandidate.termInput_eq
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryCandidate.termValue_space
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryCandidate.termQuery_FP
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryEmptyPlan.term_packet
+#print axioms LeanCanny.Encoding.IntegralFramedBankTermTest.packet_observation
+end Group38Regression2
+
+
+namespace Group38Regression3
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open scoped Classical
+namespace Test
+example {n : List Bool→ℕ} {t : List Bool→Term}
+    (hn : UnaryFn n) (ht : (fun q=>(t q).toData.toBits)∈FP) (ha : ∀q,(t q).arity≤n q)
+    (q : List Bool) (h : ¬IntegralMixedAuxiliaryCandidate.Valid hn ht ha q) :
+    q∉IntegralMixedAuxiliaryCandidate.filteredLanguage hn ht ha := by
+  rintro ⟨hv,_⟩
+  exact h hv
+example {n : List Bool→ℕ} (hn : UnaryFn n) :
+    IntegralMixedAuxiliaryCandidate.filteredLanguage hn (constFn_mem_FP (Term.const 0).toData.toBits)
+      (fun _=>Nat.zero_le _) =
+      IntegralMixedAuxiliaryCandidate.language hn (constFn_mem_FP (Term.const 0).toData.toBits)
+        (fun _=>Nat.zero_le _) := by
+  ext q
+  change (∃h:IntegralMixedAuxiliaryCandidate.Valid _ _ _ q,Term.eval _ (.const 0)=0)↔_
+  simp only [Term.eval,Int.cast_zero]
+  change (∃_ : IntegralMixedAuxiliaryCandidate.Valid _ _ _ q,True)↔IntegralMixedAuxiliaryCandidate.Valid _ _ _ q
+  exact ⟨fun ⟨h,_⟩=>h,fun h=>⟨h,True.intro⟩⟩
+example {n : List Bool→ℕ} (hn : UnaryFn n) :
+    IntegralMixedAuxiliaryCandidate.filteredLanguage hn (constFn_mem_FP (Term.const 1).toData.toBits)
+      (fun _=>Nat.zero_le _) = ∅ := by
+  ext q
+  change (∃h:IntegralMixedAuxiliaryCandidate.Valid _ _ _ q,Term.eval _ (.const 1)=0)↔False
+  simp only [Term.eval,Int.cast_one,one_ne_zero]
+  exact ⟨fun ⟨_,h⟩=>h,False.elim⟩
+#print axioms IntegralMixedAuxiliaryCandidate.tested_point
+#print axioms IntegralMixedAuxiliaryCandidate.term_sign
+#print axioms IntegralMixedAuxiliaryCandidate.filtered_decider
+#print axioms IntegralMixedAuxiliaryCandidate.filtered_mem_PSPACE
+#print axioms IntegralMixedAuxiliaryCandidate.filtered_iff_pointAt_eval
+#print axioms IntegralMixedAuxiliaryCandidate.filtered_iff_pointAt
+end Test
+end Group38Regression3
+
+
+namespace Group38Regression4
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR Set
+open CoerciveComponentSampling
+
+open IntegralMixedAuxiliaryCandidate AuxiliaryCandidateRegularLift
+open scoped Classical
+namespace CandidateRegularRegression
+noncomputable def equation : Term := .add (.var 0) (.const (-2))
+abbrev dims : List Bool→ℕ := fun _=>1
+noncomputable abbrev terms : List Bool→Term := fun _=>equation
+theorem hn : UnaryFn dims := UnaryFn.const 1
+theorem ht : (fun q=>(terms q).toData.toBits)∈FP := by
+  change (fun _ : List Bool=>equation.toData.toBits)∈FP
+  exact constFn_mem_FP _
+theorem ha : ∀ q,(terms q).arity≤dims q := by intro q; change equation.arity≤1; decide
+
+-- A genuine decoded original sample obtains its radius from the actual bank.
+-- The regular lift retains its value2 literally among its old coordinates.
+example : ∃ label : List Bool,∃ hg : Connectivity.AuxiliaryCandidateComponentCover.Good hn ht ha [] label,
+    (markedPoint hn ht ha [] label hg).val.val ((0 : Fin 1).castAdd 4)=2 ∧
+    (2:ℝ)^2≤(BoundedZeroSource.radiusSquared (IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha []):ℝ) := by
+  let x0 : Zeros (AuxiliaryTiltedTerm.polynomial 1 equation) := ⟨fun _=>2,by
+    norm_num [AuxiliaryTiltedTerm.polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars]⟩
+  obtain ⟨label,hv,p,_,Hpoint⟩:=exists_point_sample hn ht ha [] Set.univ isClopen_univ x0 (mem_univ _)
+  have HP : p.val (0 : Fin 1)=2 := by
+    have H:=p.property
+    norm_num [AuxiliaryTiltedTerm.polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars] at H
+    linarith
+  have HG : Connectivity.AuxiliaryCandidateComponentCover.Good hn ht ha [] label := by
+    refine ⟨hv,?_⟩
+    rw [Hpoint]
+    exact (Connectivity.AuxiliaryCandidateComponentCover.evaluation _ _ _).symm.trans p.property
+  have HV : pointAt hn ht ha [] label (Classical.choose HG) (0 : Fin 1)=2 :=
+    (congrFun Hpoint (0 : Fin 1)).trans HP
+  refine ⟨label,HG,(coordinate hn ht ha [] label HG (0 : Fin 1)).trans HV,?_⟩
+  have HR:=IntegralMixedAuxiliaryCandidateRadius.point_radial_le hn ht ha [] label (Classical.choose HG)
+  simpa only [BoundedZeroSource.radial,Fin.sum_univ_one,HV] using HR
+
+example : BinaryFn (IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha) :=
+  IntegralMixedAuxiliaryCandidateRadius.radius_binary hn ht ha
+example : UnaryFn (allowance terms) := allowance_unary ht
+end CandidateRegularRegression
+#print axioms IntegralMixedFramedBankPointBound.point_bound
+#print axioms IntegralMixedFramedBankPointBound.height_binary
+#print axioms IntegralMixedFramedBankPointBound.sample_bound
+#print axioms IntegralMixedAuxiliaryCandidateBounds.nativeInput_eq
+#print axioms IntegralMixedAuxiliaryCandidateBounds.packedHeight_binary
+#print axioms IntegralMixedAuxiliaryCandidateBounds.point_bound
+#print axioms IntegralMixedAuxiliaryCandidateBounds.pointAt_bound
+#print axioms IntegralMixedAuxiliaryCandidateRadius.coordinate_exponent
+#print axioms IntegralMixedAuxiliaryCandidateRadius.exists_radius
+#print axioms IntegralMixedAuxiliaryCandidateRadius.radius_binary
+#print axioms IntegralMixedAuxiliaryCandidateRadius.point_radial_le
+#print axioms allowance_unary
+#print axioms original_degree
+#print axioms original_mass
+#print axioms marked_projection
+#print axioms coordinate
+#print axioms component_iff
+#print axioms regular
+#print axioms proper
+end Group38Regression4
+
+
+namespace Group38Regression5
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR LeanCanny.Algebra
+open LeanCanny.Geometry MvPolynomial
+open BoundedFullWriter MatrixPower
+namespace RegularLowRegression
+
+private theorem scale_zero_mod_two (n N b : ℕ) : (IntegerRegularSource.scale n N b : ZMod 2)=0 := by
+  have HE : IntegerRegularSource.exponent n N b≠0 := by
+    unfold IntegerRegularSource.exponent CriticalRegularLevel.exponent
+    omega
+  simp only [IntegerRegularSource.scale,Int.cast_pow,Int.cast_ofNat,
+    show (2 : ZMod 2)=0 from rfl,zero_pow HE]
+
+example (P : Readers) (q : List Bool) : (BoundedRegularLowModularTerm.leading P q : ZMod 2)=0 := by
+  unfold BoundedRegularLowModularTerm.leading BoundedSourceWriter.leading IntegerRegularSource.leading
+  rw [mul_one]
+  exact scale_zero_mod_two _ _ _
+
+example (P : Readers) (q : List Bool) :
+    (BoundedRegularLowModularTerm.low P q).map (Int.castRingHom (ZMod 2)) = -1 := by
+  unfold BoundedRegularLowModularTerm.low BoundedSourceWriter.lower BoundedFullWriter.controls IntegerRegularSource.lower
+  simp only [map_sub,map_mul,map_C,map_one,Int.coe_castRingHom,
+    scale_zero_mod_two,C_0,zero_mul,zero_sub]
+
+variable {n radius : List Bool → ℕ} {t : List Bool → Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits)∈FP) (hR : BinaryFn radius)
+  (ha : ∀ q,(t q).arity≤n q)
+example : BoundedRegularLowCoefficient.leadingValue (BoundedRegularLowCoefficient.readers n t radius)
+    (fun _ => BinaryNatCode.encode 5)∈FP :=
+  BoundedRegularLowCoefficient.leading_FP (BoundedRegularLowCoefficient.readers_native hn ht hR) (constFn_mem_FP _)
+example (W M : List Bool → ℕ) (hW : UnaryFn W) (hM : BinaryFn M) (hpos : ∀ q,M q≠0) :
+    SpaceFunction (IntegralOriginalTermCoefficientBits.scalar (fun q => n q+4) W M
+      (BoundedRegularLowModularTerm.low (BoundedRegularLowCoefficient.readers n t radius))) :=
+  BoundedRegularLowCoefficient.original_scalar_evaluator hn ht hR ha W M hW hM hpos
+
+#print axioms BoundedRegularLowModularTerm.source_polynomial
+#print axioms BoundedRegularLowModularTerm.encode_mem_FP
+#print axioms BoundedRegularLowModularTerm.arity
+#print axioms BoundedRegularLowModularTerm.polynomial_map
+#print axioms BoundedRegularLowCoefficient.evaluator
+#print axioms BoundedRegularLowCoefficient.scalar_evaluator
+#print axioms BoundedRegularLowCoefficient.leading_FP
+#print axioms BoundedRegularLowCoefficient.readers_native
+#print axioms BoundedRegularLowCoefficient.readers_source_polynomial
+#print axioms BoundedRegularLowCoefficient.original_scalar_evaluator
+end RegularLowRegression
+end Group38Regression5
+
+
+namespace Group38Regression6
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory MatrixPower
+open scoped Classical
+namespace FramedAffineScalarRegression
+
+def height : AffineExpr:=.add (.scale (-3) (.reference 0)) (.add (.reference 1) (.reference 1))
+
+-- A signed sum with a repeated reference retains nonunit coefficients mod6.
+example : IntegralMixedAffineCode.referenceReader
+    (pair (IntegralMixedAffineCode.encode height) (pair (BinaryNatCode.encode 1) (BinaryNatCode.encode 5)))=
+    residueBits (2 : ZMod 6) := by
+  rw [IntegralMixedAffineCode.referenceReader_packet]
+  rfl
+example : IntegralMixedAffineCode.referenceReader
+    (pair (IntegralMixedAffineCode.encode height) (pair (BinaryNatCode.encode 0) (BinaryNatCode.encode 5)))=
+    residueBits (3 : ZMod 6) := by
+  rw [IntegralMixedAffineCode.referenceReader_packet]
+  change residueBits ((-3 : ℤ) : ZMod 6)=residueBits (3 : ZMod 6)
+  decide
+
+-- Midpoint scale2 is retained, and unused coordinates keep the literal default1.
+example (P : IntegralCriticalHistoryTask.Parameters) (q : List Bool) (i : ℕ)
+    (hi : i<IntegralMixedOriginalRuleBodyBits.arity P q) :
+    IntegralMixedFramedAffineScalarBits.literalScale P (fun _=>true) q i=2 := by
+  simp only [IntegralMixedFramedAffineScalarBits.literalScale,hi,ite_true]
+example (P : IntegralCriticalHistoryTask.Parameters) (q : List Bool) (i : ℕ)
+    (hi : ¬i<IntegralMixedOriginalRuleBodyBits.arity P q) :
+    IntegralMixedFramedAffineScalarBits.literalScale P (fun _=>true) q i=1 := by
+  simp only [IntegralMixedFramedAffineScalarBits.literalScale,hi,ite_false]
+end FramedAffineScalarRegression
+#print axioms IntegralMixedFramedAffineScalarBits.physical_scales_primitive
+#print axioms IntegralMixedFramedAffineScalarBits.virtual_scales_primitive
+#print axioms IntegralMixedFramedAffineScalarBits.constant_cell_space
+#print axioms IntegralMixedFramedAffineScalarBits.reference_cell_space
+#print axioms IntegralMixedFramedAffineScalarBits.scale_cell_space
+#print axioms IntegralMixedFramedAffineScalarBits.slope_cell_space
+#print axioms IntegralMixedFramedAffineScalarBits.height_primitive
+#print axioms IntegralMixedFramedAffineScalarBits.controls
+end Group38Regression6
+
+
+namespace Group38Regression7
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra LeanCanny.Geometry
+open MatrixPower IntegralCriticalHistoryTask IntegralMixedFramedHistoryFamilyBits
+namespace RegularFramedRegression
+variable (P : Parameters) (a : Access P) (D : Plan P)
+  (H : Data P D) (s : BoundedRegularFramedNativeBits.Original P D)
+example : IntegralMixedFramedScalarCellsBits.leadingValue P D∈FP :=
+  BoundedRegularFramedOriginalBits.leading_FP P a D _
+    (BoundedRegularLowCoefficient.readers_native s.dimension_native s.term_native s.radius_native) s.snapshot
+example : IntegralMixedFramedScalarLeadingBits.Primitive P D H :=
+  BoundedRegularFramedOriginalBits.leading P a D H _
+    (BoundedRegularLowCoefficient.readers_native s.dimension_native s.term_native s.radius_native) s.snapshot
+example (key : List Bool) : IntegralMixedFramedIntegerBits.polynomial P D key=Polynomial.X := s.integerX key
+private theorem scale_zero_mod_two (n N b : ℕ) : (IntegerRegularSource.scale n N b : ZMod 2)=0 := by
+  have HE : IntegerRegularSource.exponent n N b≠0 := by
+    unfold IntegerRegularSource.exponent CriticalRegularLevel.exponent
+    omega
+  simp only [IntegerRegularSource.scale,Int.cast_pow,Int.cast_ofNat,
+    show (2 : ZMod 2)=0 from rfl,zero_pow HE]
+-- The nonunit leading of the actual source is retained by the adapter.
+example (R : BoundedFullWriter.Readers) (key : List Bool) :
+    ((BoundedRegularLowModularTerm.source R key).leading : ZMod 2)=0 := by
+  change (BoundedRegularLowModularTerm.leading R key : ZMod 2)=0
+  unfold BoundedRegularLowModularTerm.leading BoundedSourceWriter.leading IntegerRegularSource.leading
+  rw [mul_one]
+  exact scale_zero_mod_two _ _ _
+#print axioms BoundedRegularFramedOriginalBits.physical
+#print axioms BoundedRegularFramedOriginalBits.virtual
+#print axioms BoundedRegularFramedOriginalBits.leading_FP
+#print axioms BoundedRegularFramedOriginalBits.leading
+#print axioms BoundedRegularFramedOriginalBits.controls
+#print axioms BoundedRegularFramedOriginalBits.original_controls
+#print axioms BoundedRegularFramedNativeBits.controls
+#print axioms BoundedRegularFramedNativeBits.model_space
+end RegularFramedRegression
+end Group38Regression7
+
+
+namespace Group38Regression8
+open LeanCanny LeanCanny.Connectivity LeanCanny.Encoding LeanCanny.ETR
+open scoped Classical
+namespace CanonicalNonemptyRegression
+-- A mixed strict/equality Boolean input, not a supplied polynomial source.
+noncomputable def description : Description:=⟨1,.or (.ltZero (.var 0)) (.eqZero (.const 1))⟩
+theorem formed : description.WellFormed:=by
+  change max 1 0≤1
+  exact Nat.le_refl 1
+noncomputable def actualPoint : description.realization:=⟨fun _=>-1,by
+  norm_num [description,Description.realization,Formula.Holds,Term.eval,Formula.extend]⟩
+
+example : ∃ i : CanonicalAuxiliaryCandidateCover.Index description,
+    actualPoint∈CanonicalAuxiliaryCandidateCover.piece description i ∧
+    AuxiliaryCandidateComponentCover.Good CanonicalAuxiliaryCandidateCover.dimension_unary
+      CanonicalAuxiliaryCandidateCover.equation_FP CanonicalAuxiliaryCandidateCover.equation_scope
+      (CanonicalSignRefinement.source description i.1) i.2.val :=
+  CanonicalAuxiliaryCandidateCover.exists_valid_tag description formed actualPoint
+end CanonicalNonemptyRegression
+#print axioms FormulaSignSlotCircularBoundedCover.closedCover_nonempty
+#print axioms FormulaSignSlotCircularBoundedCover.positiveCover_nonempty
+#print axioms FormulaSignSlotCircularBoundedCover.projectedPiece_nonempty
+#print axioms CanonicalSignRefinement.ClosedCovers.piece_nonempty_iff
+#print axioms CanonicalAuxiliaryCandidateCover.piece_nonempty_iff_good
+#print axioms CanonicalAuxiliaryCandidateCover.exists_valid_tag
+end Group38Regression8
+
+
+namespace Group38Regression9
+open LeanCanny LeanCanny.Connectivity LeanCanny.Encoding LeanCanny.ETR
+open scoped Classical
+namespace CanonicalBitFrontierRegression
+noncomputable def description : Description:=⟨1,.or (.ltZero (.var 0)) (.eqZero (.const 1))⟩
+theorem formed : description.WellFormed:=by
+  change max 1 0≤1
+  exact Nat.le_refl 1
+noncomputable def actualPoint : description.realization:=⟨fun _=>-1,by
+  norm_num [description,Description.realization,Formula.Holds,Term.eval,Formula.extend]⟩
+
+-- An actual mixed-Boolean point has a bounded word accepted by native validity.
+example : ∃ i : Vertex (CanonicalAuxiliaryBitFrontier.width description),
+    actualPoint∈CanonicalAuxiliaryBitFrontier.piece description i ∧
+    CanonicalAuxiliaryBitFrontier.valid (CanonicalSignRefinement.original description) i.val=true := by
+  obtain ⟨i,hi⟩:=CanonicalAuxiliaryBitFrontier.covers description formed actualPoint
+  refine ⟨i,hi,?_⟩
+  change decide (CanonicalAuxiliaryCandidateLabels.Valid (pair (CanonicalSignRefinement.original description) i.val))=true
+  exact decide_eq_true ((CanonicalAuxiliaryBitFrontier.piece_nonempty_iff description formed i).mp ⟨actualPoint,hi⟩)
+
+-- The total native packet guard rejects a word one bit beyond its budget.
+example (original : List Bool) :
+    CanonicalAuxiliaryBitFrontier.valid original
+      (true::List.replicate (CanonicalAuxiliaryCandidateCover.tagWidth original) false)=false := by
+  have HN : ¬CanonicalAuxiliaryCandidateLabels.Valid (pair original
+      (true::List.replicate (CanonicalAuxiliaryCandidateCover.tagWidth original) false)) := by
+    intro h
+    have HL:=h.1.1
+    simp only [pairFst_pair,pairSnd_pair,List.length_cons,List.length_replicate] at HL
+    omega
+  simp only [CanonicalAuxiliaryBitFrontier.valid,HN,decide_false]
+end CanonicalBitFrontierRegression
+#print axioms CanonicalAuxiliaryCandidateLabels.encode_decode
+#print axioms CanonicalAuxiliaryCandidateLabels.decoded_nonempty
+#print axioms CanonicalAuxiliaryCandidateLabels.decider
+#print axioms CanonicalAuxiliaryCandidateLabels.mem_PSPACE
+#print axioms CanonicalAuxiliaryBitFrontier.covers
+#print axioms CanonicalAuxiliaryBitFrontier.cover
+#print axioms CanonicalAuxiliaryBitFrontier.vertex_computable
+#print axioms CanonicalAuxiliaryBitFrontier.connected_language_iff
+end Group38Regression9
+
+
+namespace Group38Regression10
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry IntegralMixedHistory
+open IntegralMixedFrozenFrame Set
+open scoped Classical BigOperators
+namespace FrozenFrameRegression
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-4)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by rw [MvPolynomial.totalDegree_C]; decide
+  leading_ne_zero := by decide
+noncomputable abbrev frame : Frame 1 where
+  frozen := {0}
+  scales _ := 2
+  scales_ne_zero _ := by decide
+  heights _ := .scale 2 (.reference 0)
+abbrev values : Fin 1→ℝ := fun _=>2
+
+-- Old bank value2 shifts to index1. Retained endpoint level -4 is index0.
+-- Its new frozen equation is 2*y1=2*2+(-4)=0, on the SAME circle.
+example : (![2,0] : Fin 2→ℝ)∈slice circle (level frame 1) (Fin.cons (-4) values) := by
+  rw [slice_level circle frame 1 (by simp)]
+  constructor
+  · constructor
+    · change ((MvPolynomial.C (-4 : ℤ)) + MvPolynomial.C 1 *
+        ∑ j : Fin 2,(MvPolynomial.X j)^2).eval₂ (Int.castRingHom ℝ) (![2,0] : Fin 2→ℝ)=0
+      simp only [MvPolynomial.eval₂_add,MvPolynomial.eval₂_C,MvPolynomial.eval₂_mul,MvPolynomial.eval₂_sum,
+        MvPolynomial.eval₂_pow,MvPolynomial.eval₂_X]
+      rw [Fin.sum_univ_two]
+      norm_num
+    · intro i hi
+      have HE : i=0 := by simpa only [Finset.mem_singleton] using hi
+      subst i
+      norm_num [AffineExpr.evaluate,values]
+  · norm_num [projection,AffineExpr.evaluate,values]
+
+example : slice circle (coarse (level frame 1) 1) (Fin.cons (-4) values)=slice circle frame values :=
+  slice_coarse_level circle frame 1 (by simp) values (-4)
+
+example : (2-(level frame 1).frozen.card)+1=1 := by
+  simpa only [Finset.card_singleton] using level_rank frame 1 (by simp)
+
+example (i : Fin 2) : ((level frame 1).heights i).nodes≤4 := level_nodes frame 1 i
+example : ((ordered frame).frozen)=Finset.univ.filter (fun i : Fin 2=>i.val<1) :=
+  ordered_frozen frame
+example : (later (.reference 9)).evaluate (Fin.cons (-4) values)=0 := by
+  rw [evaluate_later]
+  norm_num [AffineExpr.evaluate]
+example : shiftedSlice circle frame values 0 (-4)=
+    slice circle (coarse frame 0) values∩{y | projection frame values 0 y=(-4)} :=
+  shiftedSlice_fiber circle frame values 0 (by simp) (-4)
+end FrozenFrameRegression
+#print axioms IntegralMixedRelativeCuts.real_extend_correlated
+#print axioms later
+#print axioms evaluate_later
+#print axioms nodes_later
+#print axioms coefficients_later
+#print axioms constraint_iff
+#print axioms actualSlice_eq
+#print axioms advance_rank
+#print axioms slice_advance
+#print axioms slice_coarse_advance
+#print axioms level_nodes
+#print axioms level_coefficients
+#print axioms slice_level
+#print axioms slice_coarse_level
+#print axioms ordered_frozen
+#print axioms slice_permute
+#print axioms actualSlice_permute
+#print axioms actualSliceHomeomorph
+#print axioms old_sampler
+#print axioms original_source_bounds
+#print axioms continue_cut
+
+#print axioms shiftedSlice_fiber
+#print axioms sweep_constraint
+#print axioms sweepSlice_eq
+end Group38Regression10
+
+
+namespace Group38Regression11
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open IntegralCriticalHistoryTask IntegralMixedFramedHistoryFamilyBits
+open scoped Classical
+namespace BankOrderRegression
+-- Same tuple, negative common denominator, and nonunits modulo six.
+noncomputable def positiveDifference : MvPolynomial (Fin 2) ℤ :=
+  MvPolynomial.C (-6)*(MvPolynomial.C 3*MvPolynomial.X 0-MvPolynomial.C (-2)*MvPolynomial.X 1)
+example : positiveDifference.eval₂ (Int.castRingHom ℝ) ![3,6] = -126 := by
+  norm_num [positiveDifference,MvPolynomial.eval₂_mul,MvPolynomial.eval₂_sub,
+    MvPolynomial.eval₂_C,MvPolynomial.eval₂_X]
+example : SignType.sign ((-6 : ℝ)^2*((3/(-2 : ℝ))-(6/3 : ℝ))) = -1 := by norm_num
+example : MatrixPower.residueBits ((-126 : ℤ) : ZMod 6)=[] := by decide
+example (P : Parameters) (D : Plan P) (H : Data P D) (key : List Bool→List Bool) (c : List Bool)
+    (hc : IntegralMixedFramedBankOrderBits.count P D H key c=3) :
+    IntegralMixedFramedBankOrderBits.chronological P D H key (fun _=>2^100) c=0 := by
+  unfold IntegralMixedFramedBankOrderBits.chronological IntegralMixedFramedBankOrderBits.clipped
+  rw [hc]
+  norm_num
+example (P : Parameters) (D : Plan P) (H : Data P D) (key : List Bool→List Bool) (c : List Bool)
+    (hc : IntegralMixedFramedBankOrderBits.count P D H key c=3) (right : List Bool→ℕ) :
+    ¬IntegralMixedFramedBankOrderBits.Labels P D H key (fun _=>3) right c := by
+  unfold IntegralMixedFramedBankOrderBits.Labels
+  rw [hc]
+  dsimp only
+  omega
+example (P : Parameters) (birth : List Bool→ℕ) (payload : List Bool→List Bool) (c : List Bool)
+    (hc : P.cap c=0) :
+    IntegralMixedFramedHistoryFamilyBits.prefixLength P (IntegralFramedBankOrderKey.key birth payload c)=1 := by
+  rw [IntegralFramedBankOrderKey.prefix_length,hc]
+  omega
+#print axioms IntegralMixedFramedBankOrderBits.word_FP
+#print axioms LeanCanny.Geometry.IntegralMixedFramedBankOrder.polynomial_eval
+#print axioms LeanCanny.Geometry.IntegralMixedFramedBankOrder.polynomial_sign
+#print axioms IntegralFramedBankOrderTest.evaluator
+#print axioms IntegralFramedBankOrderTest.outside
+#print axioms IntegralFramedBankOrderTest.packet
+#print axioms IntegralFramedBankOrderTest.packet_positive_polynomial
+#print axioms IntegralFramedBankOrderKey.key_FP
+#print axioms IntegralFramedBankOrderKey.positive
+#print axioms IntegralMixedAuxiliaryEmptyPlan.order_evaluator
+example (P : Parameters) (D : Plan P) (H : Data P D)
+    (s : IntegralMixedFramedNativeBits.Syntax P D H)
+    (hs : IntegralMixedFramedStepHeight.FamilyInputs P D s.nodes s.factor s.seed)
+    (key : List Bool→List Bool)
+    (hpos : ∀ c,0<(IntegralMixedFramedBankSnapshotBits.atKey P D H (key c)).count)
+    (left right : List Bool→ℕ) (q : List Bool) (sign : SignType)
+    (bad : ¬IntegralMixedFramedBankOrderBits.Labels P D H key left right (pairFst (pairFst q))) :
+    q∉IntegralFramedBankOrderTest.language P D H s hs key hpos left right sign := fun h=>bad h.1
+#print axioms IntegralFramedBankOrderTest.decider
+#print axioms IntegralFramedBankOrderTest.packet_mem_iff
+#print axioms IntegralMixedAuxiliaryEmptyPlan.order_decider
+end BankOrderRegression
+end Group38Regression11
+
+
+namespace Group38Regression12
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra
+open MatrixPower RationalSubstitution.Indexed
+namespace PermutedRegularRegression
+private def A (_ : List Bool) : ℕ := 2
+private def W (_ : List Bool) : ℕ := 2
+private def target (_ : List Bool) : List Bool := [true,false,false,false]
+private def inverse (p : List Bool) : List Bool :=
+  BinaryNatCode.encode (if Nat.fromBitsLE (pairSnd p)=0 then 1 else 0)
+example : FixedWidthPermutationBits.word A W target inverse []=[false,false,true,false] := by decide
+example : FixedWidthQuery.coordinate W (FixedWidthPermutationBits.word A W target inverse) [] 0=0 := by decide
+example : FixedWidthQuery.coordinate W (FixedWidthPermutationBits.word A W target inverse) [] 1=1 := by decide
+example : FixedWidthPermutationBits.word A (fun _ => 0) target inverse []=[] := by decide
+
+example (p : MvPolynomial (Fin 2) ℤ) :
+    p.coeff (exponentVector 2 (FixedWidthQuery.coordinate W (FixedWidthPermutationBits.word A W target inverse) []))=
+      (MvPolynomial.rename (Equiv.swap (0 : Fin 2) (1 : Fin 2)).symm p).coeff (exponentVector 2 (FixedWidthQuery.coordinate W target [])) := by
+  apply FixedWidthPermutationBits.coefficient A W target inverse [] (Equiv.swap (0 : Fin 2) (1 : Fin 2)) _ p
+  intro i
+  fin_cases i <;> decide
+
+example (P : BoundedFullWriter.Readers) (hP : P.PolyTime) (mask : List Bool → List Bool) (hm : mask∈FP)
+    (W M : List Bool → ℕ) (hW : UnaryFn W) (hM : BinaryFn M) (hpos : ∀q,M q≠0)
+    (ha : ∀ q,(LeanCanny.ETR.TermView.term (P.source q)).arity≤P.dim q) :
+    SpaceFunction (IntegralOriginalTermCoefficientBits.scalar (fun q => P.dim q+4) W M
+      (fun q => (BoundedRegularPermutedCoefficient.source P (BoundedRegularPermutedCoefficient.frozenPermutation P mask) q).low)) :=
+  BoundedRegularPermutedCoefficient.frozen_scalar_evaluator P hP W M hW hM hpos mask hm ha
+
+#print axioms FixedWidthPermutationBits.word_FP
+#print axioms FixedWidthPermutationBits.exponent_word
+#print axioms FixedWidthPermutationBits.coefficient
+#print axioms FixedWidthPermutationBits.frozenInverse_FP
+#print axioms FixedWidthPermutationBits.frozenInverse_packet
+#print axioms BoundedRegularPermutedCoefficient.evaluator
+#print axioms BoundedRegularPermutedCoefficient.scalar_evaluator
+#print axioms BoundedRegularPermutedCoefficient.leading_FP
+#print axioms BoundedRegularPermutedCoefficient.frozen_scalar_evaluator
+#print axioms BoundedRegularFramedPermutedBits.frozen
+#print axioms BoundedRegularFramedPermutedBits.physical
+#print axioms BoundedRegularFramedPermutedBits.virtual
+#print axioms BoundedRegularFramedPermutedBits.leading_FP
+#print axioms BoundedRegularFramedPermutedBits.leading
+#print axioms BoundedRegularFramedPermutedBits.controls
+end PermutedRegularRegression
+end Group38Regression12
+
+
+namespace Group38Regression13
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry IntegralMixedHistory
+open IntegralMixedCriticalSweep IntegralMixedFrozenFrame
+open scoped Classical BigOperators
+namespace FrozenCriticalRegression
+noncomputable def circle : SpatialSource 1 where
+  low := MvPolynomial.C (-4)
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by rw [MvPolynomial.totalDegree_C]; decide
+  leading_ne_zero := by decide
+noncomputable abbrev frame : Frame 1 where
+  frozen := {1}
+  scales _ := 2
+  scales_ne_zero _ := by decide
+  heights _ := .constant 0
+
+example {S B : ℕ} {ι : Type} (x : State circle S B 0 ι) (hm : 0≤S)
+    (φ : x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ) :
+    let e:=FrozenCoordinateOrdering.permutation frame.frozen
+    (selected (IntegralMixedCoordinateRename.state x e) hm (sweep x frame 1 (by simp) 0 (by simp))
+      (freeCoordinate frame 0 (by simp)) φ).eval₂ (Polynomial.evalRingHom 0) 2=0 := by
+  have Hpoint : (![2,0] : Fin 2→ℝ)∈slice circle (coarse frame 1) (Fin.elim0 : Fin 0→ℝ)∩
+      {y | projection frame Fin.elim0 1 y=0} := by
+    refine ⟨⟨?_,?_⟩,?_⟩
+    · change ((MvPolynomial.C (-4 : ℤ)) + MvPolynomial.C 1 *
+        ∑ j : Fin 2,(MvPolynomial.X j)^2).eval₂ (Int.castRingHom ℝ) (![2,0] : Fin 2→ℝ)=0
+      simp only [MvPolynomial.eval₂_add,MvPolynomial.eval₂_C,MvPolynomial.eval₂_mul,MvPolynomial.eval₂_sum,
+        MvPolynomial.eval₂_pow,MvPolynomial.eval₂_X]
+      rw [Fin.sum_univ_two]
+      norm_num
+    · intro i hi
+      simp only [coarse,Finset.erase_singleton,Finset.notMem_empty] at hi
+    · norm_num [projection,AffineExpr.evaluate]
+  exact selected_coordinate_root x hm φ frame 1 (by simp) 0 (by simp) Fin.elim0
+    (fun i=>Fin.elim0 i) 0 (![2,0]) Hpoint (fun i hi hg=>by
+      have H1 : i≠1 := by simpa only [Finset.mem_singleton] using hi
+      have HB:=i.isLt
+      have H0 : i.val≠0:=fun H=>hg (Fin.ext H)
+      have H2 : i.val≠1:=fun H=>H1 (Fin.ext H)
+      omega) 0 (by simp)
+end FrozenCriticalRegression
+#print axioms freeCoordinate_readback
+#print axioms objective_readback
+#print axioms objective_physical
+#print axioms selected_coordinate_root
+end Group38Regression13
