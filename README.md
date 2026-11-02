@@ -1775,9 +1775,31 @@ readers. Actual framed run and padded-prefix bank bounds follow from script
 syntax and one default-instruction bound. A concrete original-bank advice
 factory constructs scalar controls and exact headers for one coarse critical
 birth followed by a coordinate or limit cut. Original direction and level
-values remain charged in space. General source/rule syntax binding, sampling
-and full native assembly across frames, complete recursive command writers,
-and effective graph bounds remain required.
+values remain charged in space. Complete recursive command writers and effective graph bounds remain required.
+
+Changing-source framed histories now have one native polynomial-space
+controller for all seven arithmetic routines. Every scalar, critical, entry,
+determinant, raw-cut, normalization and producer callback uses its current
+model. Actual retained generators recover their earlier creating sources and
+signed leading coefficients. Original term words and native frozen-coordinate,
+tilt and level selectors supply the spatial coefficient costs; original integer
+words supply exact degree and coefficient costs in space. The actual initial
+exceptional bank also supplies these costs directly, followed by changing-source
+noninteger instructions and default X padding. Unit-selector body
+records supply the scalar costs. The combined syntax factory derives its height
+and modulus budgets from original script, default and fallback bounds. Binding
+these records to the complete canonical recursive command writer remains
+required.
+
+Physical critical points now extend the actual framed history, including at
+singular points, while preserving the old real specialization, physical tuple
+and bank. For an arbitrary polynomial zero set, an auxiliary-variable tilt
+constructs bounded critical limits in every clopen component piece without a
+compactness or regularity premise. A literal auxiliary-term transport preserves the frozen original coordinates.
+At the same real bank specialization, its bounded critical trajectories meet
+the actual finite selected relative-factor coordinate grid. The tilt direction
+remains the free auxiliary axis. Physical critical attachment and the formal
+parameter used in limit cuts retain distinct scopes.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate

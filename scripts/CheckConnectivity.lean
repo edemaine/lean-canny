@@ -39671,3 +39671,1033 @@ example (params : IntegralCriticalHistoryTask.Parameters)
 #print axioms family_charged_bank_bounds
 #print axioms familyHeight_binary
 end Group31Regression19
+
+
+namespace Group32Regression0
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralCriticalHistoryTask NativeControllerBranch
+namespace FramedArithmeticRegression
+variable (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P)
+variable (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (h : IntegralMixedFramedEntryBits.Controls P D H)
+example (answer : List Bool → List Bool)
+    (hc : IntegralMixedFramedCriticalBits.Matches P a D H h answer)
+    (hs : IntegralMixedFramedScalarModelBits.Matches P D H answer)
+    (he : IntegralMixedFramedEntryBits.Matches P a D H h answer) :
+    Correct (IntegralMixedFramedEntryBits.machine P a D H h) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedFramedEntryBits.correct P a D H h answer hc hs he
+example (x : (q : List Bool) → ZMod (modulus P q))
+    (he : IntegralMixedFramedEntryBits.Matches P a D H h (fun q => residueBits (x q)))
+    (hd : IntegralMixedFramedDeterminantBits.Matches P a D H h (fun q => residueBits (x q))) :
+    Correct (IntegralMixedFramedDeterminantBits.machine P a D H h) (fun q => residueBits (x q))
+      (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedFramedDeterminantBits.correct P a D H h x he hd
+-- PSC and Gram consumers see the same actual routine-three current model.
+example (answer : List Bool → List Bool)
+    (hd : IntegralMixedFramedDeterminantBits.Matches P a D H h answer) :
+    IntegralMixedPscContextBranchBits.CurrentMatches P a (IntegralMixedFramedEntryBits.family P D H)
+      (IntegralMixedFramedEntryBits.input P a D H h) answer ∧
+    IntegralMixedGramScopedBits.CurrentMatches P a (IntegralMixedFramedEntryBits.family P D H)
+      (IntegralMixedFramedEntryBits.input P a D H h) answer :=
+  ⟨IntegralMixedFramedDeterminantBits.psc_matches P a D H h answer hd,
+    IntegralMixedFramedDeterminantBits.gram_matches P a D H h answer hd⟩
+#print axioms IntegralMixedFramedEntryBits.external
+#print axioms IntegralMixedFramedEntryBits.correct
+#print axioms IntegralMixedFramedEntryBits.canonical
+#print axioms IntegralMixedFramedDeterminantBits.model_psc
+#print axioms IntegralMixedFramedDeterminantBits.model_gram
+#print axioms IntegralMixedFramedDeterminantBits.psc_matches
+#print axioms IntegralMixedFramedDeterminantBits.gram_matches
+#print axioms IntegralMixedFramedDeterminantBits.correct
+#print axioms IntegralMixedFramedDeterminantBits.canonical
+end FramedArithmeticRegression
+end Group32Regression0
+
+
+namespace Group32Regression1
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open IntegralCriticalHistoryTask
+namespace FermatFramedSpatialRegression
+private def exponent (key : List Bool) := Nat.fromBitsLE (pairFst (pairSnd key))
+private theorem exponent_binary : BinaryFn exponent :=
+  BinaryFn.fromBits (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP)
+-- Same original root, different creating births: the level record must change.
+example : FermatLevelFramedSpatialBits.coefficient exponent
+    (pair [true,false] (pair (BinaryNatCode.encode 7) [])) = 128 := by
+  simp only [FermatLevelFramedSpatialBits.coefficient,exponent,pairSnd_pair,pairFst_pair,
+    BinaryNatCode.encode,Nat.fromBitsLE_bits]
+  norm_num
+example : residueBits (FermatLevelFramedSpatialBits.coefficient exponent
+    (pair [true,false] (pair (BinaryNatCode.encode 8) [])) : ZMod 6) = residueBits (4 : ZMod 6) := by
+  simp only [FermatLevelFramedSpatialBits.coefficient,exponent,pairSnd_pair,pairFst_pair,
+    BinaryNatCode.encode,Nat.fromBitsLE_bits]
+  decide
+example (P : Parameters) (a : Access P) (saved : List Bool → List Bool) (hs : saved ∈ FP) :
+    (fun q => residueBits (FermatLevelFramedSpatialBits.coefficient exponent (saved q) :
+      ZMod (modulus P q))) ∈ FP :=
+  FermatLevelFramedSpatialBits.residue_FP P a saved hs exponent exponent_binary
+#print axioms FermatLevelFramedSpatialBits.residue_FP
+#print axioms FermatLevelFramedSpatialBits.physical
+#print axioms FermatLevelFramedSpatialBits.virtual
+#print axioms FermatLevelFramedSpatialBits.controls
+end FermatFramedSpatialRegression
+end Group32Regression1
+
+
+namespace Group32Regression2
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+namespace FermatFramedTiltedRegression
+private def t (_ : List Bool) : Term := .var 0
+private theorem t_FP : (fun key => (t key).toData.toBits) ∈ FP := by
+  change (fun _ : List Bool => (Term.var 0).toData.toBits) ∈ FP
+  exact constFn_mem_FP _
+-- The original word stays fixed; retaining the variable changes its dilation powers.
+example : FermatLevelFramedTiltedSyntax.word t (fun _ => 0) (fun _ => 0) [] ≠
+    FermatLevelFramedTiltedSyntax.word t (fun _ => 1) (fun _ => 0) [] := by
+  intro hw
+  have HT := congrArg TermView.term hw
+  simp only [FermatLevelFramedTiltedSyntax.word,FixedLeadingTiltedSourceFP.lowWord,
+    TermView.term_toBits,t] at HT
+  unfold FixedLeadingTiltedSource.lowTerm at HT
+  have HP := (Term.mul.inj (Term.add.inj HT).1).1
+  unfold PartialHomogenization.padded at HP
+  have HQ := (Term.mul.inj HP).1
+  have HD := congrArg Term.degreeBound HQ
+  simp only [PartialHomogenization.degree_power,Term.degreeBound,Nat.mul_one] at HD
+  change (Term.var 0).toData.size-1=(Term.var 0).toData.size at HD
+  have HB := (Term.var 0).degreeBound_le_dataSize
+  change 1≤(Term.var 0).toData.size at HB
+  omega
+example : FermatLevelFramedTiltedSyntax.word t (fun _ => 0) (fun _ => 0) ∈ FP :=
+  FermatLevelFramedTiltedSyntax.word_FP t _ _ t_FP (UnaryFn.const 0) (UnaryFn.const 0)
+example (k u : List Bool → ℕ) (hk : UnaryFn k) (hu : UnaryFn u) :
+    FermatLevelFramedTiltedSyntax.word t k u ∈ FP :=
+  FermatLevelFramedTiltedSyntax.word_FP t k u t_FP hk hu
+#print axioms FermatLevelFramedTiltedSyntax.word_FP
+#print axioms FermatLevelFramedTiltedSyntax.word_scope
+#print axioms FermatLevelFramedTiltedSyntax.word_polynomial
+#print axioms FermatLevelFramedTiltedSyntax.controls
+end FermatFramedTiltedRegression
+end Group32Regression2
+
+
+namespace Group32Regression3
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralCriticalHistoryTask
+namespace FramedNativeRegression
+open IntegralMixedFramedNativeBits
+-- High raw routine fields use the decoder's producer routine, not an unbounded guard.
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (h : Controls P D H) (q : List Bool)
+    (hq : 6 ≤ get P .slot14 q) :
+    (machine P a D H h).model q = (IntegralMixedFramedProducerBits.machine P a D H h.producer).model q := by
+  have hr : IntegralMixedRoutineTaskBits.routine P q = 6 := min_eq_right hq
+  have HE := model_component P a D H h 6 q hr
+  simpa only [component] using HE
+-- Every retained denominator is recovered at its actual earlier creating source.
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (h : Controls P D H)
+    (answer : List Bool → List Bool) (hm : Matches P a D H h answer) (q : List Bool)
+    (hv : IntegralMixedVirtualCaps.valid P q) :
+    IntegralMixedOldBankCofactorBits.RepliesAt P (IntegralMixedFramedHistoryFamilyBits.family P D H)
+      (IntegralMixedFramedHeaderBits.routing P D) answer q :=
+  IntegralMixedFramedProducerActualBits.bank_replies P D H answer (producer_actual P a D H h answer hm) q hv
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (s : Syntax P D H)
+    (hs : IntegralMixedFramedStepHeight.FamilyInputs P D s.nodes s.factor s.seed)
+    (hF : ∀ root, 1 ≤ s.factor root)
+    (hf : ∀ key, IntegralMixedFramedOriginalBounds.FallbackBounds P D H s.nodes s.seed key) :
+    SpaceFunction (plannedMachine P a D H s).model := planned_model_space P a D H s hs hF hf
+#print axioms IntegralMixedFramedNativeBits.model_component
+#print axioms IntegralMixedFramedNativeBits.correct
+#print axioms IntegralMixedFramedNativeBits.canonical
+#print axioms IntegralMixedFramedNativeBits.model_space
+#print axioms IntegralMixedFramedNativeBits.Controls.ofSyntax
+#print axioms IntegralMixedFramedNativeBits.Syntax.planned
+#print axioms IntegralMixedFramedNativeBits.planned_bounds
+#print axioms IntegralMixedFramedNativeBits.planned_model_space
+end FramedNativeRegression
+end Group32Regression3
+
+
+namespace Group32Regression4
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedFramedCompanionBits
+namespace FramedCompanionSourceRegression
+example (P : IntegralCriticalHistoryTask.Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (key : List Bool) :
+    (source P D H).degree key≤2^(source P D H).width key :=
+  IntegralMixedFullHistoryScript.degree_cap ((bank P D H).state key) ((bank P D H).birth_bound key) (IntegralMixedFramedHistoryFamilyBits.instruction P D key).command
+example (P : IntegralCriticalHistoryTask.Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (key : List Bool)
+    (i : Fin ((bank P D H).birth key)) (context : List Bool) :
+    ((bank P D H).state key).bank.denominator i=leading P D H
+      (IntegralMixedFramedHistoryFamilyBits.keyAt (pairFst key)
+        (IntegralMixedFramedHistoryFamilyBits.prefixLength P key-1-i.val) context) :=
+  IntegralMixedFramedHistoryFamilyBits.retained_leading_key P D H key i context
+#print axioms IntegralMixedFramedCompanionBits.value_canonical
+#print axioms IntegralMixedFramedCompanionBits.source_matrix
+#print axioms IntegralMixedFramedHistoryFamilyBits.retained_leading_key
+end FramedCompanionSourceRegression
+end Group32Regression4
+
+
+namespace Group32Regression5
+namespace FramedProducerRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower IntegralCriticalHistoryTask NativeControllerBranch
+open IntegralMixedFramedProducerBits
+open scoped Classical
+
+-- A nonunit negative leading remains an exact original integer leaf modulo six.
+example (P : Parameters) (q : List Bool) (hm : modulus P q=6) :
+    IntegralMixedIntegerFamilyBits.leadingValue P (fun _ => Polynomial.C (-3)*Polynomial.X) q=residueBits (-3 : ZMod 6) := by
+  unfold IntegralMixedIntegerFamilyBits.leadingValue IntegralMixedIntegerFamilyBits.taskPolynomial
+  rw [hm,Polynomial.leadingCoeff_C_mul_X (-3)]
+  simp only [Int.cast_neg,Int.cast_ofNat]
+
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+    (h : Controls P D H) (answer : List Bool → List Bool) (hm : Matches P a D H h answer)
+    (q : List Bool) (hv : IntegralMixedVirtualCaps.valid P q) :
+    IntegralMixedOldBankCofactorBits.RepliesAt P (virtualFamily P D H)
+      (IntegralMixedFramedHeaderBits.routing P D) answer q :=
+  IntegralMixedFramedProducerActualBits.bank_replies P D H answer (producer_matches P a D H h answer hm) q hv
+
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (q : List Bool)
+    (hx : get P .slot15 q=(IntegralMixedFramedHistoryFamilyBits.instruction P D (IntegralMixedVirtualTaskBits.saved P q)).command.context)
+    (hc : get P .slot13 q=(IntegralMixedFramedHistoryFamilyBits.instruction P D (IntegralMixedVirtualTaskBits.saved P q)).command.coordinate) :
+    IntegralMixedFramedProducerActualBits.companion P D H q=IntegralMixedFramedCompanionBits.value P D H q :=
+  IntegralMixedFramedProducerActualBits.companion_actual P D H q hx hc
+
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+    (h : Controls P D H) (x : (q : List Bool) → ZMod (modulus P q))
+    (hm : Matches P a D H h (fun q => residueBits (x q)))
+    (hp : IntegralMixedPhysicalComponentBits.Matches P (physicalFamily P D H) (fun q => residueBits (x q)))
+    (hs : IntegralMixedPhysicalScalarReplyBits.Matches P (physicalFamily P D H) (fun q => residueBits (x q)))
+    (hn : IntegralMixedNormalizedCompanionBits.ScopedNormalizationMatches P (virtualFamily P D H) (fun q => residueBits (x q))) :
+    Correct (machine P a D H h) (fun q => residueBits (x q)) (IntegralMixedRoutineTaskBits.Frame P) :=
+  correct P a D H h x hm hp hs hn
+
+#print axioms IntegralMixedIntegerFamilyBits.oldRank_binary
+#print axioms IntegralMixedIntegerFamilyBits.newRank_binary
+#print axioms IntegralMixedIntegerFamilyBits.companion_evaluator
+#print axioms IntegralMixedIntegerFamilyBits.leading_evaluator
+#print axioms IntegralMixedIntegerFamilyBits.raw_evaluator
+#print axioms IntegralMixedIntegerFamilyBits.coefficient_evaluator
+#print axioms IntegralMixedIntegerFamilyBits.model_leading
+#print axioms IntegralMixedIntegerFamilyBits.model_companion
+#print axioms IntegralMixedIntegerFamilyBits.correct
+#print axioms IntegralMixedIntegerFamilyBits.canonical
+#print axioms IntegralMixedFramedIntegerBits.polynomial_actual
+#print axioms IntegralMixedFramedIntegerBits.polynomial_ne_zero
+#print axioms IntegralMixedFramedIntegerBits.degree_cap
+#print axioms IntegralMixedFramedProducerBits.selected
+#print axioms IntegralMixedFramedProducerBits.model_integer
+#print axioms IntegralMixedFramedProducerBits.model_physical
+#print axioms IntegralMixedFramedProducerBits.model_cut
+#print axioms IntegralMixedFramedProducerBits.correct
+#print axioms IntegralMixedFramedProducerBits.producer_matches
+#print axioms IntegralMixedFramedProducerBits.canonical
+#print axioms IntegralMixedFramedProducerActualBits.leading_actual
+#print axioms IntegralMixedFramedProducerActualBits.companion_actual
+#print axioms IntegralMixedFramedProducerActualBits.instruction_context_snapshot
+#print axioms IntegralMixedFramedProducerActualBits.instruction_coordinate_snapshot
+#print axioms IntegralMixedFramedProducerActualBits.leading_query_context
+#print axioms IntegralMixedFramedProducerActualBits.bank_replies
+end FramedProducerRegression
+end Group32Regression5
+
+
+namespace Group32Regression6
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower
+open LeanCanny.ETR
+namespace FramedIntegerSyntaxRegression
+open scoped Classical
+private def cancellation : Term := .add (.var 0) (.mul (.const (-1)) (.var 0))
+private def negative : Term := .add (.mul (.const (-3)) (.var 0)) (.const 5)
+example : (IntegerUnivariateTermSource.polynomial (fun _ => cancellation.toData.toBits) []).natDegree=0 := by
+  unfold IntegerUnivariateTermSource.polynomial
+  rw [TermView.term_toBits]
+  simp [cancellation,Term.eval]
+example : (IntegerUnivariateTermSource.polynomial (fun _ => negative.toData.toBits) []).coeff 1 = -3 := by
+  unfold IntegerUnivariateTermSource.polynomial
+  rw [TermView.term_toBits]
+  simp [negative,Term.eval]
+example : IntegerUnivariateTermSource.variableValue
+    (pair (pair [] (pair (BinaryNatCode.encode 0) (BinaryNatCode.encode 1))) (BinaryNatCode.encode 0))=[] := by
+  rw [IntegerUnivariateTermSource.variable_packet [] 0 1 1 (by decide)]
+  simp only [Polynomial.coeff_X_one,Int.cast_one]
+  rw [show (1 : ZMod 1)=0 from Subsingleton.elim _ _]
+  rfl
+example : SpaceFunction (fun c => BinaryNatCode.encode
+    (IntegerUnivariateTermSource.polynomial (fun _ => cancellation.toData.toBits) c).natDegree) :=
+  IntegerUnivariateTermSource.degree_evaluator _ (constFn_mem_FP _)
+example (P : IntegralCriticalHistoryTask.Parameters) (a : IntegralCriticalHistoryTask.Access P)
+    (word : List Bool → List Bool) (hw : word∈FP) :
+    IntegralMixedIntegerFamilyBits.Original P (IntegerUnivariateTermSource.polynomial word) :=
+  IntegralMixedFramedIntegerSyntaxBits.original_of_word P a _ word hw (fun _ => rfl)
+#print axioms IntegerUnivariateTermSource.variableValue_FP
+#print axioms IntegerUnivariateTermSource.variable_packet
+#print axioms IntegerUnivariateTermSource.coordinates_polynomial
+#print axioms IntegerUnivariateTermSource.coefficient_evaluator
+#print axioms IntegerUnivariateTermSource.degree_bound
+#print axioms IntegerUnivariateTermSource.mass_bound
+#print axioms IntegerUnivariateTermSource.access
+#print axioms IntegerUnivariateTermSource.degree_evaluator
+#print axioms IntegralMixedFramedIntegerSyntaxBits.original_of_word
+#print axioms IntegralMixedFramedIntegerSyntaxBits.original
+#print axioms IntegralMixedFramedIntegerSyntaxBits.controls
+end FramedIntegerSyntaxRegression
+end Group32Regression6
+
+
+namespace Group32Regression7
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralCriticalHistoryTask IntegralMixedHistory
+namespace AgentFramedScalarRegression
+
+def body0 : List Bool := WordList.encode [BinaryNatCode.encode 1,
+  WordList.encode [pair [true] (BinaryNatCode.encode 7), pair [false] (BinaryNatCode.encode 99)],
+  WordList.encode [pair [true] (BinaryNatCode.encode 11)]]
+def body1 : List Bool := WordList.encode [BinaryNatCode.encode 0,
+  WordList.encode [pair [true] (BinaryNatCode.encode 19)],
+  WordList.encode [pair [false] (BinaryNatCode.encode 23)]]
+def writer (key : List Bool) : List Bool :=
+  if Nat.fromBitsLE (pairFst (pairSnd key)) = 0 then body0 else body1
+
+def firstKey : List Bool := pair [true,false] (pair (BinaryNatCode.encode 0) (BinaryNatCode.encode 1))
+def nextKey : List Bool := pair [true,false] (pair (BinaryNatCode.encode 1) (BinaryNatCode.encode 1))
+
+theorem writer_FP : writer ∈ FP :=
+  ((BinaryFn.fromBits (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP)).eq (BinaryFn.const 0)).ite_mem_FP
+    (constFn_mem_FP _) (constFn_mem_FP _)
+theorem writer_first : writer firstKey = body0 := by
+  simp only [writer, firstKey, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, ite_true]
+theorem writer_next : writer nextKey = body1 := by
+  simp only [writer, nextKey, pairFst_pair, pairSnd_pair, BinaryNatCode.encode, Nat.fromBitsLE_bits, show (1 : ℕ) ≠ 0 by decide, ite_false]
+example : pairFst firstKey = pairFst nextKey := by decide
+example : IntegralMixedFramedUnitBodyBits.expression writer true firstKey 0 = .reference 7 := by
+  have ha : IntegralMixedFramedUnitBodyBits.active writer true firstKey 0 = true := by
+    norm_num [IntegralMixedFramedUnitBodyBits.active, IntegralMixedFramedUnitBodyBits.rowWord, IntegralMixedFramedUnitBodyBits.field, writer_first, body0, body1, WordList.get_encode]
+  have hr : IntegralMixedFramedUnitBodyBits.reference writer true firstKey 0 = 7 := by
+    norm_num [IntegralMixedFramedUnitBodyBits.reference, IntegralMixedFramedUnitBodyBits.rowWord, IntegralMixedFramedUnitBodyBits.field, writer_first, body0, body1, WordList.get_encode, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  simp only [IntegralMixedFramedUnitBodyBits.expression, ha, ite_true, hr]
+example : IntegralMixedFramedUnitBodyBits.expression writer true nextKey 0 = .reference 19 := by
+  have ha : IntegralMixedFramedUnitBodyBits.active writer true nextKey 0 = true := by
+    norm_num [IntegralMixedFramedUnitBodyBits.active, IntegralMixedFramedUnitBodyBits.rowWord, IntegralMixedFramedUnitBodyBits.field, writer_next, body0, body1, WordList.get_encode]
+  have hr : IntegralMixedFramedUnitBodyBits.reference writer true nextKey 0 = 19 := by
+    norm_num [IntegralMixedFramedUnitBodyBits.reference, IntegralMixedFramedUnitBodyBits.rowWord, IntegralMixedFramedUnitBodyBits.field, writer_next, body0, body1, WordList.get_encode, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  simp only [IntegralMixedFramedUnitBodyBits.expression, ha, ite_true, hr]
+example : IntegralMixedFramedUnitBodyBits.expression writer false firstKey 0 = .reference 11 := by
+  have ha : IntegralMixedFramedUnitBodyBits.active writer false firstKey 0 = true := by
+    norm_num [IntegralMixedFramedUnitBodyBits.active, IntegralMixedFramedUnitBodyBits.rowWord, IntegralMixedFramedUnitBodyBits.field, writer_first, body0, body1, WordList.get_encode]
+  have hr : IntegralMixedFramedUnitBodyBits.reference writer false firstKey 0 = 11 := by
+    norm_num [IntegralMixedFramedUnitBodyBits.reference, IntegralMixedFramedUnitBodyBits.rowWord, IntegralMixedFramedUnitBodyBits.field, writer_first, body0, body1, WordList.get_encode, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+  simp only [IntegralMixedFramedUnitBodyBits.expression, ha, ite_true, hr]
+example : IntegralMixedFramedUnitBodyBits.expression writer false nextKey 0 = .constant 0 := by
+  have ha : IntegralMixedFramedUnitBodyBits.active writer false nextKey 0 = false := by
+    norm_num [IntegralMixedFramedUnitBodyBits.active, IntegralMixedFramedUnitBodyBits.rowWord, IntegralMixedFramedUnitBodyBits.field, writer_next, body1, WordList.get_encode]
+  simp only [IntegralMixedFramedUnitBodyBits.expression, ha, Bool.false_eq_true, ite_false]
+example : IntegralMixedFramedUnitBodyBits.expression writer true firstKey 1 = .constant 0 := by
+  have ha : IntegralMixedFramedUnitBodyBits.active writer true firstKey 1 = false := by
+    norm_num [IntegralMixedFramedUnitBodyBits.active, IntegralMixedFramedUnitBodyBits.rowWord, IntegralMixedFramedUnitBodyBits.field, writer_first, body0, WordList.get_encode]
+  simp only [IntegralMixedFramedUnitBodyBits.expression, ha, Bool.false_eq_true, ite_false]
+example : IntegralMixedFramedUnitBodyBits.expression writer true firstKey (2^70) = .constant 0 := by
+  have ha : IntegralMixedFramedUnitBodyBits.active writer true firstKey (2^70) = false := by
+    norm_num [IntegralMixedFramedUnitBodyBits.active, IntegralMixedFramedUnitBodyBits.rowWord, IntegralMixedFramedUnitBodyBits.field, writer_first, body0, WordList.get_encode]; rfl
+  simp only [IntegralMixedFramedUnitBodyBits.expression, ha, Bool.false_eq_true, ite_false]
+example : IntegralMixedFramedUnitBodyBits.expression (fun _ => []) false [] 0 = .constant 0 := by
+  have ha : IntegralMixedFramedUnitBodyBits.active (fun _ => []) false [] 0 = false := by
+    norm_num [IntegralMixedFramedUnitBodyBits.active, IntegralMixedFramedUnitBodyBits.rowWord, IntegralMixedFramedUnitBodyBits.field, WordList.get, WordList.get_encode]; rfl
+  simp only [IntegralMixedFramedUnitBodyBits.expression, ha, Bool.false_eq_true, ite_false]
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+    (h : IntegralMixedFramedUnitSnapshotBits.Snapshot P D H writer) :
+    IntegralMixedFramedScalarCellsBits.Primitive P D H :=
+  IntegralMixedFramedUnitCellsBits.primitive P a D H writer writer_FP h
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+    (h : IntegralMixedFramedUnitControlsBits.Controls P D H) :
+    IntegralMixedFramedScalarLeadingBits.Primitive P D H :=
+  IntegralMixedFramedUnitControlsBits.leading P a D H h
+#print axioms IntegralMixedFramedScalarCellsBits.reader_packet
+#print axioms IntegralMixedFramedScalarModelBits.component_canonical
+#print axioms IntegralMixedFramedScalarModelBits.physical_matches
+#print axioms IntegralMixedFramedScalarModelBits.virtual_matches
+#print axioms IntegralMixedFramedScalarModelBits.critical_correct
+#print axioms IntegralMixedFramedUnitBodyBits.rowReader_FP
+#print axioms IntegralMixedFramedUnitBodyBits.active_FP
+#print axioms IntegralMixedFramedUnitBodyBits.reference_binary
+#print axioms IntegralMixedFramedUnitBodyBits.height_binary
+#print axioms IntegralMixedFramedUnitSnapshotBits.Snapshot.of_rules
+#print axioms IntegralMixedFramedUnitSnapshotBits.cell_eq
+#print axioms IntegralMixedFramedUnitCellsBits.active_pred
+#print axioms IntegralMixedFramedUnitCellsBits.reference_binary
+#print axioms IntegralMixedFramedUnitCellsBits.flag_pred
+#print axioms IntegralMixedFramedUnitCellsBits.reader_FP
+#print axioms IntegralMixedFramedUnitCellsBits.primitive
+#print axioms IntegralMixedFramedUnitCellsBits.leading_FP
+#print axioms IntegralMixedFramedUnitScaleBits.physical_primitive
+#print axioms IntegralMixedFramedUnitScaleBits.virtual_primitive
+#print axioms IntegralMixedFramedScalarLeadingBits.certificates
+#print axioms IntegralMixedFramedScalarLeadingBits.correct
+#print axioms IntegralMixedFramedScalarLeadingBits.physical_value
+#print axioms IntegralMixedFramedScalarLeadingBits.virtual_value
+#print axioms IntegralMixedFramedUnitControlsBits.routingAccess
+#print axioms IntegralMixedFramedUnitControlsBits.leading
+#print axioms IntegralMixedFramedUnitControlsBits.cells
+end AgentFramedScalarRegression
+end Group32Regression7
+
+
+namespace Group32Regression8
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedFramedHistoryScript
+open scoped Classical
+namespace AgentFramedOldHeightRegression
+
+noncomputable def circle (c : ℤ) : SpatialSource 1 where
+  low := MvPolynomial.C c
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by rw [MvPolynomial.totalDegree_C]; decide
+  leading_ne_zero := by decide
+private theorem cap (c : ℤ) : PurePowerReductionBounds.dimension 2 (circle c).degree≤2^8 := by
+  norm_num [PurePowerReductionBounds.dimension,PurePowerReductionBounds.width,
+    PurePowerReductionBounds.bound,circle]
+  decide
+noncomputable def initial : State (circle (-1)) 2 8 0 (Fin 0) :=
+  IntegralMixedHistory.base (circle (-1)) (IntegralHistorySampler.base 2 (2^8)) (cap (-1))
+noncomputable def p : Polynomial ℤ := Polynomial.C (-3)*Polynomial.X
+private theorem hp : p≠0 := mul_ne_zero (Polynomial.C_ne_zero.mpr (by decide)) Polynomial.X_ne_zero
+private theorem hd : p.natDegree≤2^8 := by
+  apply Polynomial.natDegree_mul_le.trans
+  norm_num [Polynomial.natDegree_C,Polynomial.natDegree_X]
+noncomputable def first : Instruction 1 8 := ⟨circle (-1),cap (-1),.integer p hp hd⟩
+noncomputable def rule : CriticalRule 1 where
+  offset := 1
+  objective := 0
+  coordinate := 0
+  scales _ := 1
+  scales_ne_zero _ := by decide
+  heights _ := .constant 0
+noncomputable def second : Instruction 1 8 := ⟨circle (-4),cap (-4),.critical rule⟩
+noncomputable def old := run initial [first] (by decide)
+noncomputable def final := run initial [second,first] (by decide)
+
+-- The next physical birth really uses the new source, while its old bank is retained.
+example : source (circle (-1)) [second,first]=circle (-4) := rfl
+example : final.bank.denominator ⟨1,by decide⟩ = -3 := by
+  change (run initial [second,first] (by decide)).bank.denominator (⟨0,by decide⟩ : Fin 1).succ = -3
+  rw [run_denominator_succ]
+  change p.leadingCoeff = -3
+  exact Polynomial.leadingCoeff_C_mul_X (-3)
+example : Canonical final := run_canonical initial (fun i => Fin.elim0 i) _ _
+example : (birthState initial [second,first] (by decide) ⟨0,by decide⟩).bank.denominator ⟨0,by decide⟩ = -3 := by
+  change old.bank.denominator 0 = -3
+  change p.leadingCoeff = -3
+  exact Polynomial.leadingCoeff_C_mul_X (-3)
+example : (chosen [second,first] ⟨0,by decide⟩).source.low=MvPolynomial.C (-4) := rfl
+example (i : Fin 2) :
+    final.bank.denominator i = IntegralMixedFullHistoryScript.leading
+      (birthState initial [second,first] (by decide) i) (older_bound [second,first] (by decide) i)
+      (chosen [second,first] i).command := (origin initial [second,first] (by decide) i).denominator_eq
+
+example : CommonIntegerDenominator.denominator (Finset.univ.erase (0 : Fin 2)) final.bank.denominator = -3 := by
+  unfold CommonIntegerDenominator.denominator
+  rw [show Finset.univ.erase (0 : Fin 2) = ({1} : Finset (Fin 2)) by decide, Finset.prod_singleton]
+  change (run initial [second,first] (by decide)).bank.denominator (⟨0,by decide⟩ : Fin 1).succ = -3
+  rw [run_denominator_succ]
+  exact Polynomial.leadingCoeff_C_mul_X (-3)
+
+example (r t : Fin (FixedWidthPolynomial.count 2 8)) :
+    Algebra.leftMulMatrix final.sampler.scalarPrefix.basis.finBasis (cleared final (0 : Fin 2)) r t =
+      CommonIntegerDenominator.denominator (Finset.univ.erase (0 : Fin 2)) final.bank.denominator *
+        (if r.val % FixedWidthPolynomial.count 0 8 = t.val % FixedWidthPolynomial.count 0 8 then
+          Algebra.leftMulMatrix (birthPrefix initial [second,first] (by decide) (0 : Fin 2)).basis.finBasis
+            (AdjoinRoot.root _) ((origin initial [second,first] (by decide) (0 : Fin 2)).chain.oldIndex r)
+              ((origin initial [second,first] (by decide) (0 : Fin 2)).chain.oldIndex t) else 0) :=
+  (origin initial [second,first] (by decide) (0 : Fin 2)).cleared_matrix
+    (run_canonical initial (fun i => Fin.elim0 i) _ _) r t
+
+example (P : IntegralCriticalHistoryTask.Parameters) (a : IntegralCriticalHistoryTask.Access P)
+    (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+    (T : IntegralMixedHeaderTablesBits.Tables) (ht : IntegralMixedHeaderTablesBits.Access T)
+    (hr : IntegralMixedFramedHeaderBits.Represents P D H T) (answer : List Bool → List Bool)
+    (own : IntegralMixedFramedProducerActualBits.Matches P D H answer) :
+    NativeControllerBranch.Correct (IntegralMixedFramedOldHeightBits.machine P a D H T ht hr) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedFramedOldHeightBits.correct_of_matches P a D H T ht hr answer own
+#print axioms IntegralMixedFramedHistoryScript.Origin.cleared_matrix
+#print axioms IntegralMixedFramedOldHeightBits.value_canonical
+#print axioms IntegralMixedFramedOldHeightBits.cofactor_eq
+#print axioms IntegralMixedFramedOldHeightBits.sourceEntry_command
+#print axioms IntegralMixedFramedOldHeightBits.origin_entry
+#print axioms IntegralMixedFramedOldHeightBits.sourceEntry_root
+#print axioms IntegralMixedFramedOldHeightBits.sourceEntry_invariance
+#print axioms IntegralMixedFramedOldHeightBits.entry_formula
+#print axioms IntegralMixedFramedOldHeightBits.value_request
+#print axioms IntegralMixedFramedOldHeightBits.passCertificates
+#print axioms IntegralMixedFramedOldHeightBits.pass_value
+#print axioms IntegralMixedFramedOldHeightBits.pass_cofactor
+#print axioms IntegralMixedFramedOldHeightBits.pass_state_length
+#print axioms IntegralMixedFramedOldHeightBits.pass_requests_frame
+#print axioms IntegralMixedFramedNativeOldHeightBits.certificates
+#print axioms IntegralMixedFramedNativeOldHeightBits.correct
+#print axioms IntegralMixedFramedOldHeightBits.child_context
+#print axioms IntegralMixedFramedOldHeightBits.child_coordinate
+#print axioms IntegralMixedFramedOldHeightBits.current_replies
+#print axioms IntegralMixedFramedOldHeightBits.correct_of_matches
+#print axioms IntegralMixedFramedOldHeightBits.correct_of_dispatcher_matches
+end AgentFramedOldHeightRegression
+end Group32Regression8
+
+
+namespace Group32Regression9
+namespace MixedScalarHeightRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower IntegralCriticalHistoryTask
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] IntegralMixedFramedScalarCellsBits.cell IntegralMixedFramedNativeHeightBits.model
+  IntegralMixedFramedHeightIntegerBits.bank IntegralMixedFramedHeightIntegerBits.scales IntegralMixedFramedHeightIntegerBits.factor IntegralMixedFramedHeightIntegerBits.references IntegralMixedFramedHeightIntegerBits.constant IntegralMixedFramedHeightIntegerBits.affine IntegralMixedFramedHeightIntegerBits.value IntegralMixedFramedHeightIntegerBits.word modulus
+
+private theorem bank_empty (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (J : IntegralMixedFramedHistoryFamilyBits.Data P D) (q : List Bool) (hb : birth P q = 0) : IntegralMixedFramedHeightIntegerBits.bank P D J q = 1 := by
+  unfold IntegralMixedFramedHeightIntegerBits.bank IntegralMixedHistory.commonDenominator CommonIntegerDenominator.denominator
+  apply Finset.prod_eq_one
+  intro i _
+  have H := i.isLt.trans_eq (IntegralMixedFramedOldHeightBits.bank_birth P D J q)
+  exact False.elim (Nat.not_lt_zero _ (H.trans_eq hb))
+
+private theorem rows_empty (P : Parameters) (q : List Bool) (hb : birth P q = 0) :
+    IntegralMixedHeightTableQueryBits.oldRow P q = 0 ∧ IntegralMixedHeightTableQueryBits.oldCol P q = 0 := by
+  have HD : IntegralMixedOldHeightBits.dimension P q = 1 := by rw [IntegralMixedOldHeightBits.dimension, hb]; rfl
+  simp only [IntegralMixedHeightTableQueryBits.oldRow, IntegralMixedHeightTableQueryBits.oldCol, HD, Nat.mod_one, and_self]
+
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (J : IntegralMixedFramedHistoryFamilyBits.Data P D) (q : List Bool)
+    (hb : birth P q = 0) (ha : P.ambient (RankedHistoryTask.root q) = 0)
+    (hi : get P .slot8 q = 0) (hx : get P .slot15 q = 1) (hm : modulus P q = 6)
+    (hc : IntegralMixedFramedScalarCellsBits.cell P D J q 0 0 = -2) :
+    IntegralMixedFramedNativeHeightBits.model P D J q = residueBits (4 : ZMod 6) := by
+  have HR := rows_empty P q hb
+  have HQ := bank_empty P D J q hb
+  have HS : IntegralMixedFramedHeightIntegerBits.scales P D J q = 1 := by
+    simp only [IntegralMixedFramedHeightIntegerBits.scales, ha, hi, Nat.zero_add, Finset.prod_range_one, ite_true]
+  have HF : IntegralMixedFramedHeightIntegerBits.factor P D J q = 1 := by rw [IntegralMixedFramedHeightIntegerBits.factor, HQ, ha, HS, pow_zero, one_mul]
+  have HC : IntegralMixedFramedHeightIntegerBits.constant P D J q = -2 := by rw [IntegralMixedFramedHeightIntegerBits.constant, HR.1, HR.2, ite_eq_left rfl, hc]
+  have HA : IntegralMixedFramedHeightIntegerBits.affine P D J q = -2 := by
+    rw [IntegralMixedFramedHeightIntegerBits.affine, IntegralMixedFramedHeightIntegerBits.references, hb, Finset.range_zero, Finset.sum_empty, HQ, HC, one_mul, zero_add]
+  have HG : IntegralMixedFramedHeightPostBits.guard P (pair q []) := by
+    norm_num [IntegralMixedFramedHeightPostBits.guard, pairFst_pair, ha, hi, hx]
+  have HCase : IntegralMixedFramedHeightPostBits.constantBranch P (pair q []) := by
+    simp only [IntegralMixedFramedHeightPostBits.constantBranch, pairFst_pair, hx, true_or]
+  have HV : IntegralMixedFramedHeightIntegerBits.value P D J q = -2 := by
+    rw [IntegralMixedFramedHeightIntegerBits.value, ite_eq_left HG, ite_eq_left HCase, HF, HA, one_mul]
+  rw [IntegralMixedFramedNativeHeightBits.model_eq, IntegralMixedFramedHeightIntegerBits.word, HV]
+  have HN : residueBits ((-2 : ℤ) : ZMod 6) = residueBits (4 : ZMod 6) := by decide
+  exact (congrArg (fun m => residueBits ((-2 : ℤ) : ZMod m)) hm).trans HN
+
+
+-- A virtual next-digit block restores the original negative slope, modulo 6.
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (J : IntegralMixedFramedHistoryFamilyBits.Data P D) (q : List Bool)
+    (hb : birth P q = 0) (ha : P.ambient (RankedHistoryTask.root q) = 0)
+    (hi : get P .slot8 q = 0) (hx : get P .slot15 q = 3) (hm : modulus P q = 6)
+    (hr : get P .row q = 1) (ht : get P .col q = 0) (hn : 1 < IntegralMixedHeightTableQueryBits.radix P q)
+    (hc : IntegralMixedFramedScalarCellsBits.cell P D J q 3 0 = -2) :
+    IntegralMixedFramedNativeHeightBits.model P D J q = residueBits (4 : ZMod 6) := by
+  have HR := rows_empty P q hb
+  have HQ := bank_empty P D J q hb
+  have HS : IntegralMixedFramedHeightIntegerBits.scales P D J q = 1 := by simp only [IntegralMixedFramedHeightIntegerBits.scales, ha, hi, Nat.zero_add, Finset.prod_range_one, ite_true]
+  have HF : IntegralMixedFramedHeightIntegerBits.factor P D J q = 1 := by rw [IntegralMixedFramedHeightIntegerBits.factor, HQ, ha, HS, pow_zero, one_mul]
+  have HG : IntegralMixedFramedHeightPostBits.guard P (pair q []) := by
+    norm_num [IntegralMixedFramedHeightPostBits.guard, pairFst_pair, ha, hi, hx]
+  have HC : ¬ IntegralMixedFramedHeightPostBits.constantBranch P (pair q []) := by
+    norm_num [IntegralMixedFramedHeightPostBits.constantBranch, pairFst_pair, hx, hr, ht, Nat.mod_eq_of_lt hn]
+  have HE : IntegralMixedFramedHeightPostBits.slopeBranch P (pair q []) := by
+    norm_num [IntegralMixedFramedHeightPostBits.slopeBranch, IntegralMixedFramedHeightAffineSumBits.diagonal, pairFst_pair, hr, ht,
+      Nat.mod_eq_of_lt hn, HR.1, HR.2]
+  have HV : IntegralMixedFramedHeightIntegerBits.value P D J q = -2 := by
+    rw [IntegralMixedFramedHeightIntegerBits.value, ite_eq_left HG, ite_eq_right HC, ite_eq_left HE, HF, hc, one_mul]
+  rw [IntegralMixedFramedNativeHeightBits.model_eq, IntegralMixedFramedHeightIntegerBits.word, HV]
+  have HN : residueBits ((-2 : ℤ) : ZMod 6) = residueBits (4 : ZMod 6) := by decide
+  exact (congrArg (fun m => residueBits ((-2 : ℤ) : ZMod m)) hm).trans HN
+
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (J : IntegralMixedFramedHistoryFamilyBits.Data P D)
+    (T : IntegralMixedHeaderTablesBits.Tables) (ht : IntegralMixedHeaderTablesBits.Access T) (hr : IntegralMixedFramedHeaderBits.Represents P D J T) (hc : IntegralMixedFramedScalarCellsBits.Primitive P D J)
+    (answer : List Bool → List Bool) (hp : IntegralMixedFramedProducerActualBits.Matches P D J answer)
+    (hm : IntegralMixedFramedHeightCurrentBits.Matches P D J answer) :
+    NativeControllerBranch.Correct (IntegralMixedFramedNativeHeightBits.machine P a D J (IntegralMixedFramedHeaderBits.routing P D)
+      (IntegralMixedFramedHeaderBits.routingAccess P a D J T ht hr) hc) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  IntegralMixedFramedHeightCurrentBits.correct P a D J T ht hr hc answer hp hm
+
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (J : IntegralMixedFramedHistoryFamilyBits.Data P D) (q : List Bool) (hx : get P .slot15 q = 1) :
+    IntegralMixedFramedNativeHeightBits.model P D J q = IntegralMixedPhysicalNativeLowerBits.height P (IntegralMixedFramedScalarCellsBits.physicalFamily P D J) q :=
+  IntegralMixedFramedNativeHeightActualBits.physical_model P D J q hx
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (J : IntegralMixedFramedHistoryFamilyBits.Data P D) (q : List Bool) (hx : 2 ≤ get P .slot15 q ∧ get P .slot15 q ≤ 4) :
+    IntegralMixedFramedNativeHeightBits.model P D J q = IntegralMixedVirtualNativeLowerBits.height P (IntegralMixedFramedOldHeightBits.bankFamily P D J) q :=
+  IntegralMixedFramedNativeHeightActualBits.virtual_model P D J q hx
+
+#print axioms FixedWidthVectorPass.certificates
+#print axioms FixedWidthVectorPass.state_length
+#print axioms FixedWidthVectorPass.requests_coordinate_any
+#print axioms IntegralMixedFramedHeightTablePassBits.certificates
+#print axioms IntegralMixedFramedHeightTablePassBits.value_at
+#print axioms IntegralMixedFramedHeightTablePassBits.requests_frame
+#print axioms IntegralMixedFramedHeightTableReadBits.residueRead_value
+#print axioms IntegralMixedFramedHeightTableMatrixBits.matrix_entry
+#print axioms IntegralMixedFramedHeightTableMatrixBits.number_height
+#print axioms IntegralMixedFramedScalarCellsBits.rule_physical
+#print axioms IntegralMixedFramedScalarCellsBits.rule_virtual
+#print axioms IntegralMixedFramedHeightBankProductBits.value_FP
+#print axioms IntegralMixedFramedHeightBankProductBits.value_table
+#print axioms IntegralMixedFramedHeightCellAccessBits.scaleProduct_space
+#print axioms IntegralMixedFramedHeightReferenceSumBits.value_space
+#print axioms IntegralMixedFramedHeightScaleFactorBits.factor_space
+#print axioms IntegralMixedFramedHeightAffineSumBits.value_space
+#print axioms IntegralMixedFramedHeightPostBits.post_space
+#print axioms IntegralMixedFramedHeightPostBits.post_eq
+#print axioms IntegralMixedFramedHeightTableArithmeticBits.post_table
+#print axioms IntegralMixedFramedNativeHeightBits.correct
+#print axioms IntegralMixedFramedNativeHeightBits.model_canonical
+#print axioms IntegralMixedFramedHeightCellIdentities.factor_cofactor
+#print axioms IntegralMixedFramedHeightCellIdentities.affine_entry
+#print axioms IntegralMixedFramedHeightIndexBits.row_virtual
+#print axioms IntegralMixedFramedHeightIntegerNaturalBits.physical
+#print axioms IntegralMixedFramedHeightIntegerNaturalBits.virtual
+#print axioms IntegralMixedFramedNativeHeightActualBits.physical_model
+#print axioms IntegralMixedFramedNativeHeightActualBits.virtual_model
+#print axioms IntegralMixedFramedHeightCurrentBits.leading_replies
+#print axioms IntegralMixedFramedHeightCurrentBits.replies
+#print axioms IntegralMixedFramedHeightCurrentBits.correct
+end MixedScalarHeightRegression
+end Group32Regression9
+
+
+namespace Group32Regression10
+namespace FramedFullScalarRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.Algebra MatrixPower IntegralCriticalHistoryTask
+open IntegralMixedFramedFullScalarBits
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] modulus
+
+-- The physical and virtual scopes share the same signed original coefficient leaf.
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (J : IntegralMixedFramedHistoryFamilyBits.Data P D) (h : Controls P D J)
+    (q : List Bool) (hv : IntegralMixedVirtualCaps.valid P q) (hr : IntegralMixedRoutineTaskBits.routine P q = 0)
+    (hp : isPhase .originalCoefficient q) (hx : get P .slot15 q = 3) (hm : modulus P q = 6)
+    (ha : (IntegralMixedFramedHistoryFamilyBits.instruction P D (IntegralMixedVirtualTaskBits.saved P q)).source.leading = -2) :
+    (machine P a D J h).model q = residueBits (4 : ZMod 6) := by
+  have HS := (selected_iff P .originalCoefficient q).mpr ⟨hv, hr, hp, by omega, by omega⟩
+  rw [model0 P a D J h q HS, IntegralMixedFramedScalarLeadingBits.value, IntegralMixedFramedScalarCellsBits.leadingValue, IntegralMixedFramedScalarCellsBits.leading, ha]
+  have HN : residueBits ((-2 : ℤ) : ZMod 6) = residueBits (4 : ZMod 6) := by decide
+  exact (congrArg (fun m => residueBits ((-2 : ℤ) : ZMod m)) hm).trans HN
+
+-- Context 0 is reserved for integer producers, not spatial scalar arithmetic.
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (J : IntegralMixedFramedHistoryFamilyBits.Data P D) (h : Controls P D J)
+    (q : List Bool) (hx : get P .slot15 q = 0) : (machine P a D J h).model q = [] :=
+  model_other_context P a D J h q (by omega)
+
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (J : IntegralMixedFramedHistoryFamilyBits.Data P D) (h : Controls P D J)
+    (q : List Bool) (hp : isPhase .criticalCoefficient q) : (machine P a D J h).model q = [] :=
+  model_other_phase P a D J h q (by change phase q = 25 at hp; omega)
+
+-- No scalar evaluator premise: only producer current replies and this dispatcher's current model.
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (J : IntegralMixedFramedHistoryFamilyBits.Data P D) (h : Controls P D J)
+    (answer : List Bool → List Bool) (hp : IntegralMixedFramedProducerActualBits.Matches P D J answer)
+    (hm : Matches P a D J h answer) :
+    NativeControllerBranch.Correct (machine P a D J h) answer (IntegralMixedRoutineTaskBits.Frame P) :=
+  correct_of_matches P a D J h answer hp hm
+
+noncomputable section
+-- Original-only unit-selector records construct every scalar leaf cost.
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    (J : IntegralMixedFramedHistoryFamilyBits.Data P D) (h : IntegralMixedFramedUnitControlsBits.Controls P D J) :
+    Controls P D J := Controls.ofUnit P a D J h
+example (P : Parameters) (a : Access P) (D : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    (J : IntegralMixedFramedHistoryFamilyBits.Data P D) (h : Controls P D J) (answer : List Bool → List Bool)
+    (own : Matches P a D J h answer) : IntegralMixedFramedScalarModelBits.Matches P D J answer :=
+  semantic_matches P a D J h answer own
+
+#print axioms IntegralMixedFramedScalarLeadingBits.certificates
+#print axioms IntegralMixedFramedScalarLeadingBits.physical_value
+#print axioms IntegralMixedFramedScalarLeadingBits.virtual_value
+#print axioms denominator_selected
+#print axioms scalar_selected
+#print axioms physical_leading_replies
+#print axioms denominator_correct
+#print axioms oldHeight_correct
+#print axioms model0
+#print axioms model1
+#print axioms model2
+#print axioms model3
+#print axioms model4
+#print axioms model5
+#print axioms physical_matches
+#print axioms virtual_matches
+#print axioms height_matches
+#print axioms replies_of_matches
+#print axioms correct_of_matches
+#print axioms canonical
+#print axioms model_phase
+#print axioms model_invalid
+#print axioms model_other_context
+#print axioms model_other_phase
+#print axioms matches_of_components
+#print axioms components_of_matches
+#print axioms correct_of_components
+#print axioms residue_value
+#print axioms IntegralMixedDenominatorCanonicalBits.physical
+#print axioms IntegralMixedDenominatorCanonicalBits.virtual
+#print axioms Controls.ofUnit
+#print axioms semantic_matches
+#print axioms correct_of_unit_matches
+end
+end FramedFullScalarRegression
+end Group32Regression10
+
+
+namespace Group32Regression11
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open IntegralCriticalHistoryTask IntegralMixedHistory IntegralMixedFramedHistoryFamilyBits IntegralMixedFramedStepHeight
+open IntegralMixedFramedOriginalBounds IntegralMixedFramedRawHeight
+-- A creating cut supplies its own syntax. Its unrelated fallback need not
+-- satisfy a node/scale bound at that key, including on the new limit kind.
+example (params : Parameters) (plan : Plan params) (data : IntegralMixedFramedHistoryFamilyBits.Data params plan)
+    (L C : List Bool → ℕ) (key : List Bool)
+    (r : IntegralMixedCriticalSweep.Rule (params.ambient (pairFst key)))
+    (kind : IntegralMixedRelativeCuts.Kind (instruction params plan key).source r) (d : ℕ)
+    (ha : d≤IntegralMixedExceptionalBounds.auxiliaryCap (params.ambient (pairFst key)+1)
+      (instruction params plan key).source.degree) (hd : d≤2^params.width (pairFst key))
+    (hc : (instruction params plan key).command=.cut r kind d ha hd) :
+    FallbackBounds params plan data L C key := by
+  simp only [FallbackBounds,hc]
+-- Actual top entries are bounded from syntax and a default instruction,
+-- not an all-query bank, top-matrix, or normalization-evaluator premise.
+example (params : Parameters) (plan : Plan params) (data : IntegralMixedFramedHistoryFamilyBits.Data params plan)
+    (L F C : List Bool → ℕ) (h : FamilyInputs params plan L F C) (hF : ∀ root, 1≤F root)
+    (hfallback : ∀ key, FallbackBounds params plan data L C key) (key : List Bool) (r t : ℕ) :
+    (IntegralCriticalTotalSnapshotBits.integerEntry (IntegralMixedNormalizationTopBits.top (family params plan data) key) r t).natAbs≤
+      2^rootCeiling params L F C (pairFst key) :=
+  natural_top_root_height params plan data L F C h hF hfallback key r t
+-- Changing the supplied numeric height does not change the derived ceiling.
+example (params : Parameters) (L F C newHeight : List Bool → ℕ) (root : List Bool) :
+    rootCeiling {params with height:=newHeight} L F C root=rootCeiling params L F C root :=
+  rootCeiling_update_height params L F C newHeight root
+#print axioms selected_rule_bounds
+#print axioms family_rank_bound
+#print axioms originalBounds
+#print axioms allRaw_height_le
+#print axioms coefficient_root_height
+#print axioms top_root_height
+#print axioms natural_top_root_height
+#print axioms rawBounds
+#print axioms rootRank_binary
+#print axioms localHeight_binary
+#print axioms rootCeiling_binary
+#print axioms rootCeiling_update_height
+#print axioms rawBounds_height_binary
+end Group32Regression11
+
+
+namespace Group32Regression12
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralCriticalHistoryTask NativeControllerBranch
+open IntegralMixedFramedNormalizationBits IntegralMixedFramedStepHeight IntegralMixedFramedOriginalBounds
+-- The derived budget is sufficient even if the original modulus budget was
+-- smaller; the original budget is preserved if it was larger.
+example (params : Parameters) (L F C : List Bool → ℕ) (root : List Bool) :
+    2*IntegralMixedNormalizationTopBits.characteristicBudget (planned params L F C)
+      (IntegralMixedFramedRawHeight.rootCeiling (planned params L F C) L F C) root+4≤
+      (planned params L F C).modulusBound root := planned_budget params L F C root
+example (params : Parameters) (L F C : List Bool → ℕ) (root : List Bool) :
+    params.modulusBound root≤(planned params L F C).modulusBound root := planned_preserves_modulus params L F C root
+-- Planning transports the actual creating instruction at a saved key.
+-- It does not claim identical interpretation of old and new packed tasks.
+example (params : Parameters) (plan : IntegralMixedFramedHistoryFamilyBits.Plan params) (L F C : List Bool → ℕ) (key : List Bool) :
+    IntegralMixedFramedHistoryFamilyBits.instruction (planned params L F C) (plannedPlan params plan L F C) key=
+      IntegralMixedFramedHistoryFamilyBits.instruction params plan key := planned_instruction params plan L F C key
+-- Routine5's physical context is an explicit zero branch.
+example (params : Parameters) (a : Access params) (plan : IntegralMixedFramedHistoryFamilyBits.Plan params)
+    (data : IntegralMixedFramedHistoryFamilyBits.Data params plan) (h : Controls params plan data)
+    (q : List Bool) (hx : get params .slot15 q=1) : (machine params a plan data h).model q=[] :=
+  IntegralMixedNormalizationScopedBits.model_physical_context params a (IntegralMixedFramedHistoryFamilyBits.family params plan data)
+    (input params a plan data h) (degree params a plan data h)
+    (IntegralMixedFramedRawHeight.rootCeiling params h.nodes h.factor h.seed) (heightNative params a plan data h) q hx
+-- No bank-height/top-matrix bound or modulus inequality remains in the
+-- planned correctness interface: syntax and current replies suffice.
+example (params : Parameters) (a : Access params) (plan : IntegralMixedFramedHistoryFamilyBits.Plan params)
+    (data : IntegralMixedFramedHistoryFamilyBits.Data params plan) (h : Controls params plan data)
+    (hs : FamilyInputs params plan h.nodes h.factor h.seed) (hF : ∀ root, 1≤h.factor root)
+    (hf : ∀ key, FallbackBounds params plan data h.nodes h.seed key)
+    (x : (q : List Bool) → ZMod (modulus (planned params h.nodes h.factor h.seed) q))
+    (hn : PlannedMatches params a plan data h (fun q => MatrixPower.residueBits (x q)))
+    (hr : PlannedRawMatches params a plan data h (fun q => MatrixPower.residueBits (x q))) :
+    Correct (plannedMachine params a plan data h) (fun q => MatrixPower.residueBits (x q))
+      (IntegralMixedRoutineTaskBits.Frame (planned params h.nodes h.factor h.seed)) :=
+  planned_correct params a plan data h hs hF hf x hn hr
+#print axioms requiredModulus_binary
+#print axioms planned_access
+#print axioms planned_budget
+#print axioms planned_preserves_modulus
+#print axioms planned_familyInputs
+#print axioms planned_instruction
+#print axioms planned_fallback
+#print axioms top_height
+#print axioms raw_matches
+#print axioms correct
+#print axioms producer_matches
+#print axioms raw_correct
+#print axioms plannedControls
+#print axioms planned_correct
+#print axioms planned_canonical
+#print axioms planned_producer_matches
+end Group32Regression12
+
+
+namespace Group32Regression13
+open LeanCanny LeanCanny.Algebra
+open IntegralMixedHistory FlatAffineCriticalStage UniformIntegralPowerSchedule
+open scoped Classical
+namespace CriticalAttachmentRegression
+-- This parabola has a singular zero and a nonunit integer leading coefficient.
+noncomputable def source : SpatialSource 0 where
+  low := 0
+  leading := 3
+  degree := 2
+  degree_two := by decide
+  low_degree := by simp
+  leading_ne_zero := by decide
+
+def rule : CriticalRule 0 where
+  offset := 0
+  objective := 0
+  coordinate := 0
+  scales := fun _ => -2
+  scales_ne_zero := by intro _; decide
+  heights := fun _ => .constant 0
+
+example {S B m : ℕ} {ι : Type} [Fintype ι] (x : State source S B m ι) (hm : m≤S)
+    (z : ι → ℝ) (hz : ∀ i, (x.sampler.rows i).eval₂ (Int.castRingHom ℝ) z=0)
+    (φ : x.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ)
+    (hφ : ∀ i, φ (x.sampler.scalarPrefix.basis.generator i)=z (x.sampler.scalar i)^weights S (2^B) m i)
+    (v : Fin m → ℝ) (hv : ∀ i, φ (x.bank.numerator i)/(x.bank.denominator i:ℝ)=v i) :
+    ∃ y : ((ι ⊕ Variables 1) ⊕ Unit) → ℝ,
+    ∃ ψ : (criticalStep x hm rule).sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ,
+      (∀ i, ((criticalStep x hm rule).sampler.rows i).eval₂ (Int.castRingHom ℝ) y=0) ∧
+      (∀ i, y (Sum.inl (Sum.inl i))=z i) ∧
+      (∀ i, y (Sum.inl (ambient i))^physical S (2^B) m=0) ∧
+      (ψ.comp (AdjoinRoot.ofAlgHom ℤ _)=φ) ∧
+      (∀ i, ψ ((criticalStep x hm rule).sampler.scalarPrefix.basis.generator i)=
+        y ((criticalStep x hm rule).sampler.scalar i)^weights S (2^B) (m+1) i) ∧
+      ∀ i, ψ ((criticalStep x hm rule).bank.numerator i)/((criticalStep x hm rule).bank.denominator i:ℝ)=
+        (Fin.cons 0 v : Fin (m+1) → ℝ) i := by
+  apply criticalStep_real_extend_correlated x hm rule (by decide) z hz φ hφ v hv (fun _ => 0)
+  · intro i hi
+    change i.val<0 at hi
+    omega
+  · simp [source,FermatCriticalHomogenization.polynomial]
+  · intro i _ hi
+    apply False.elim
+    apply hi
+    apply Fin.ext
+    have H1 := i.isLt
+    have H2 := (data x hm rule).free.isLt
+    omega
+
+example {n B : ℕ} (Q : SpatialSource n) (hc : PurePowerReductionBounds.dimension (n+1) Q.degree≤2^B)
+    (r : CriticalRule n) :
+    (IntegralMixedFramedHistoryScript.criticalInstruction Q hc r).command=.critical r := rfl
+
+-- At E the actual command reads the retained expression, not a formal variable.
+example (select : Fin 0 → Fin 3) :
+    (IntegralMixedCanonicalDilation.retainedRule (n:=1) (by decide) select (.reference 2)).heights 0=.reference 2 := by
+  simp [IntegralMixedCanonicalDilation.retainedRule]
+end CriticalAttachmentRegression
+#print axioms IntegralHistorySampler.criticalStep_real_extend
+#print axioms IntegralHistorySampler.coordinate_multipliers
+#print axioms criticalStep_real_extend_correlated
+#print axioms IntegralMixedCanonicalDilation.retained_frozen
+#print axioms IntegralMixedFramedHistoryScript.run_critical
+#print axioms IntegralMixedFramedHistoryScript.run_critical_real_extend
+end Group32Regression13
+
+
+namespace Group32Regression14
+open LeanCanny.Geometry AuxiliaryTiltEnergy AuxiliaryTiltConstrainedSampling
+open CoercivePolynomialSampling CoerciveComponentSampling
+open Set Filter MvPolynomial
+open scoped Topology
+
+-- The zero polynomial has an unbounded original zero set. The auxiliary
+-- equation is z²=0, so its bounded tilt does not force original x to infinity.
+example (y : Fin 2 → ℝ) : (augmented (0 : MvPolynomial (Fin 1) ℝ)).eval y=0 ↔ y (Fin.last 1)=0 := by
+  simpa using augmented_zero_iff (0 : MvPolynomial (Fin 1) ℝ) y
+
+example (z : ℝ) : -(3:ℝ)/16≤z^4-z/2 := by
+  have H := quartic_lower (1/2:ℝ) z (1/2) (by norm_num)
+  norm_num at H
+  linarith
+
+example : ∃ (y : ℕ → Fin 2 → ℝ) (a : Zeros (0 : MvPolynomial (Fin 1) ℝ)) (φ : ℕ → ℕ),
+    StrictMono φ ∧ Tendsto (y ∘ φ) atTop (𝓝 (Fin.snoc a.val 0)) ∧
+    (∀ k, penalty 2 (y k)≤1) ∧
+    ∀ᶠ k in atTop, ∀ j, eval (y (φ k)) (pderiv j
+      (TiltedCoerciveComponentSampling.polynomial (augmented (0 : MvPolynomial (Fin 1) ℝ)) 2
+        (Fin.last 1) (1/((φ k:ℝ)+1))))=0 := by
+  let x0 : Zeros (0 : MvPolynomial (Fin 1) ℝ) := ⟨0,by simp⟩
+  have HD : ∀ k : ℕ, 1/((k:ℝ)+1)≤4 := by
+    intro k
+    have H : 1/((k:ℝ)+1)≤1 := (div_le_one (by positivity)).mpr (by have HK := Nat.cast_nonneg (α:=ℝ) k; linarith)
+    linarith
+  obtain ⟨y,a,φ,_,hφ,hl,hb,hc⟩ := AuxiliaryTiltComponentSampling.exists_critical_limits
+    (0 : MvPolynomial (Fin 1) ℝ) 2 Set.univ isClopen_univ x0 (Set.mem_univ _)
+    (fun k : ℕ => 1/((k:ℝ)+1)) (fun _ => by positivity) HD tendsto_one_div_add_atTop_nhds_zero_nat
+  refine ⟨y,a,φ,hφ,hl,?_,hc⟩
+  intro k
+  simpa [x0,penalty] using hb k
+
+#print axioms eval_augmented
+#print axioms augmented_zero_iff
+#print axioms quartic_lower
+#print axioms exists_comparison
+#print axioms objective_lower
+#print axioms comparison_penalty
+#print axioms AuxiliaryTiltConstrainedSampling.exists_minimizer_on
+#print axioms AuxiliaryTiltConstrainedSampling.exists_minimizers_subsequence_on
+#print axioms AuxiliaryTiltComponentSampling.exists_critical_limits
+end Group32Regression14
+
+
+namespace Group32Regression15
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.ETR
+open IntegralMixedHistory AuxiliaryTiltedTerm FrozenAuxiliaryComponentSampling
+open CanonicalAuxiliaryTrajectory MvPolynomial
+open scoped Classical
+namespace CanonicalAuxiliaryGridRegression
+
+def equation : Term := .add (.var 0) (.const (-2))
+
+example : (term 2 equation).degreeBound=2 := by decide
+example : (term 2 equation).arity=3 := by decide
+-- Source degree remains the one initial cap despite the old algebra rank,
+-- and the huge causal level coefficient is not a new variable.
+example (m B G : ℕ) : (source (n:=2) 1 2 equation (by decide) m B G).degree=10 := rfl
+example (m B G : ℕ) : (source (n:=2) 1 2 equation (by decide) m B G).leading=1 := rfl
+
+example : FrozenCoordinateSubstitution.point 1 (fun _ : Fin 2 => (2:ℝ)) (fun _ => 7) 0=2 := by
+  simp [FrozenCoordinateSubstitution.point]
+example : FrozenCoordinateSubstitution.point 1 (fun _ : Fin 2 => (2:ℝ)) (fun _ => 7) 1=7 := by
+  simp [FrozenCoordinateSubstitution.point]
+
+-- The actual original frozen slice x0=2 leaves x1 completely unbounded.
+-- Its selected relative-factor grid is finite and meets the whole slice.
+example {S B m G : ℕ} {ι : Type}
+    (x : State (source (n:=2) 1 2 equation (by decide) m B G) S B m ι) (hm : m≤S)
+    (HG : x.bank.Bounds G) (φ : x.sampler.scalarPrefix.carrier →ₐ[ℤ] ℝ)
+    (values : Fin m → ℝ) (H : ∀ i, φ (x.bank.numerator i)/(x.bank.denominator i:ℝ)=values i)
+    (select : Fin 1 → Fin m) (Hsel : values (select 0)=2) :
+    (grid x hm select (by decide : 1≤2) φ (fun _ => 2)).Finite ∧
+    ∃ b : slice (polynomial 2 equation) 1 (fun _ => 2), b.val 0=2 ∧
+      Fin.snoc b.val 0∈grid x hm select (by decide : 1≤2) φ (fun _ => 2) := by
+  have x0 : slice (polynomial 2 equation) 1 (fun _ => 2) := ⟨fun _ => 2,by
+    constructor
+    · norm_num [polynomial,equation,Term.eval,FixedLeadingTiltedGradient.coordinateVars]
+    · intro _ _
+      rfl⟩
+  have HP : ∀ j : Fin 2, ∀ hj : j.val<1, (2:ℝ)=values (select ⟨j.val,hj⟩) := by
+    intro j hj
+    have HE : (⟨j.val,hj⟩:Fin 1)=0 := by apply Fin.ext; change j.val=0; omega
+    rw [HE]
+    exact Hsel.symm
+  obtain ⟨b,_,hb⟩ := meets_grid x hm HG φ values H (by decide) (by decide : 1≤2) (by decide)
+    select (fun _ => 2) HP Set.univ isClopen_univ x0 (Set.mem_univ _)
+  exact ⟨finite_grid x hm select (by decide) φ _,b,b.property.2 0 (by decide),hb⟩
+
+end CanonicalAuxiliaryGridRegression
+#print axioms FrozenCoordinateSubstitution.eval_substitute
+#print axioms FrozenCoordinateSubstitution.derivative_substitute
+#print axioms FrozenCoordinateSubstitution.substitute_augmented
+#print axioms FrozenCoordinateSubstitution.eval_augmented_tilt_free
+#print axioms FrozenAuxiliaryComponentSampling.exists_critical_limits
+#print axioms AuxiliaryTiltedTerm.polynomial_term
+#print axioms AuxiliaryTiltedTerm.free_derivative_tilted
+#print axioms FrozenAuxiliaryTermSampling.exists_critical_limits
+#print axioms CanonicalAuxiliaryTrajectory.exists_series_roots
+#print axioms CanonicalAuxiliaryTrajectory.meets_selected_factors
+#print axioms CanonicalAuxiliaryTrajectory.finite_coordinateRoots
+#print axioms CanonicalAuxiliaryTrajectory.finite_grid
+#print axioms CanonicalAuxiliaryTrajectory.meets_grid
+end Group32Regression15
+
+
+namespace Group32Regression16
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower IntegralCriticalHistoryTask IntegralMixedHistory
+open IntegralMixedFramedHistoryScript
+open scoped Classical
+namespace FramedIntegerOriginalRegression
+
+-- A changing-source instruction occurs after the complete initial integer bank.
+example {n B : ℕ} (Q : SpatialSource n)
+    (hcap : PurePowerReductionBounds.dimension (n+1) Q.degree≤2^B)
+    (F : FlatAffineFullSourceTower.Inputs) (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F))
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (u : List Bool) (hB : FlatAffineExceptionalBankSource.width F u≤B)
+    (later : Instruction n B) :
+    chronological ([later]++FlatAffineExceptionalFramedIntegerPrelude.commands Q B hcap F C h u hB)
+      (FlatAffineExceptionalBankSource.births F u)=some later := by
+  unfold chronological
+  rw [List.reverse_append,List.getElem?_append_right (by
+    rw [List.length_reverse,FlatAffineExceptionalFramedIntegerPrelude.length_commands])]
+  rw [List.length_reverse,FlatAffineExceptionalFramedIntegerPrelude.length_commands,Nat.sub_self]
+  rfl
+
+-- Lifting the same actual bank polynomial does not identify its prefix algebra
+-- with a sampler having a different FlatAffineExceptionalBankSource.width or a different spatial source.
+example {n n' B B' : ℕ} (Q : SpatialSource n) (Q' : SpatialSource n')
+    (hc : PurePowerReductionBounds.dimension (n+1) Q.degree≤2^B)
+    (hc' : PurePowerReductionBounds.dimension (n'+1) Q'.degree≤2^B')
+    (F : FlatAffineFullSourceTower.Inputs) (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F))
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (u : List Bool)
+    (hB : FlatAffineExceptionalBankSource.width F u≤B) (hB' : FlatAffineExceptionalBankSource.width F u≤B') (i : Fin (FlatAffineExceptionalBankSource.births F u)) :
+    (FlatAffineExceptionalFramedIntegerPrelude.command Q B hc F C h u hB i).command.context=
+      (FlatAffineExceptionalFramedIntegerPrelude.command Q' B' hc' F C h u hB' i).command.context := rfl
+
+-- Beyond the initial bank, noninteger instructions give the literal X padding.
+example (P : Parameters) (base : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    (F : FlatAffineFullSourceTower.Inputs) (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F))
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (input : List Bool → List Bool)
+    (later : (root : List Bool) → List (Instruction (P.ambient root) (P.width root)))
+    (hW : ∀ root, FlatAffineExceptionalBankSource.width F (input root)≤P.width root)
+    (hroom : ∀ root, (later root).length+FlatAffineExceptionalBankSource.births F (input root)+2≤P.cap root+1)
+    (hno : ∀ root c, c∈later root → c.command.context≠0) (key : List Bool)
+    (hb : FlatAffineExceptionalBankSource.births F (input (pairFst key))≤IntegralMixedFramedHistoryFamilyBits.prefixLength P key) :
+    IntegralMixedFramedIntegerBits.polynomial P
+      (FlatAffineExceptionalFramedIntegerPrelude.plan P base F C h input later hW hroom) key=Polynomial.X := by
+  rw [FlatAffineExceptionalFramedIntegerOriginal.polynomial_source P base F C h input later hW hroom hno]
+  simp only [FlatAffineExceptionalIntegerProducer.sourceQuery,
+    show ¬IntegralMixedFullHistoryFamilyBits.prefixLength P key<FlatAffineExceptionalBankSource.births F (input (pairFst key)) from Nat.not_lt.mpr hb,
+    ite_false,FlatAffineExceptionalIntegerSource.source,FlatAffineExceptionalIntegerSource.padded,
+    pairFst_pair,show Nat.fromBitsLE ([] : List Bool)=0 from rfl,ite_true]
+
+-- Actual original bank access supplies both charged leaves without a new
+-- interpreted coefficient/degree cost or a header/fallback assumption.
+example (P : Parameters) (a : Access P) (base : IntegralMixedFramedHistoryFamilyBits.Plan P)
+    {F : FlatAffineFullSourceTower.Inputs} (hF : F.Access) (C : FlatAffinePowerPositive.ConeCertificate (FlatAffineCompleteRootStages.next F))
+    (h : (u : List Bool) → Fin (FlatAffineFullSourceTower.arity F u)) (hh : UnaryFn (fun u => (h u).val))
+    (input : List Bool → List Bool) (hi : input∈FP)
+    (later : (root : List Bool) → List (Instruction (P.ambient root) (P.width root)))
+    (hW : ∀ root, FlatAffineExceptionalBankSource.width F (input root)≤P.width root)
+    (hroom : ∀ root, (later root).length+FlatAffineExceptionalBankSource.births F (input root)+2≤P.cap root+1)
+    (hno : ∀ root c, c∈later root → c.command.context≠0) :
+    IntegralMixedIntegerFamilyBits.Original P (IntegralMixedFramedIntegerBits.polynomial P
+      (FlatAffineExceptionalFramedIntegerPrelude.plan P base F C h input later hW hroom)) :=
+  FlatAffineExceptionalFramedIntegerOriginal.original P a base hF C h hh input hi later hW hroom hno
+
+#print axioms IntegralMixedIntegerFamilyBits.original_of_source
+#print axioms FlatAffineExceptionalFramedIntegerPrelude.command
+#print axioms FlatAffineExceptionalFramedIntegerPrelude.length_commands
+#print axioms FlatAffineExceptionalFramedIntegerPrelude.chronological_commands
+#print axioms FlatAffineExceptionalFramedIntegerPrelude.chronological_append
+#print axioms FlatAffineExceptionalFramedIntegerPrelude.plan
+#print axioms FlatAffineExceptionalFramedIntegerOriginal.polynomial_source
+#print axioms FlatAffineExceptionalFramedIntegerOriginal.original
+end FramedIntegerOriginalRegression
+end Group32Regression16
