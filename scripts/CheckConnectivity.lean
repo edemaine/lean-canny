@@ -42004,3 +42004,190 @@ example : ((equation (IntegralCoordinateBasis.base 2)
 
 end EquationReadbackRegression
 end Group34Regression7
+
+
+namespace Group35Regression0
+open LeanCanny LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding
+open MvPolynomial MatrixPower
+open scoped Classical
+namespace NoInfinitySquareRegression
+
+noncomputable def repeated : NoInfinitySquareSample.Family where
+  count _ := 1
+  degree _ := 2
+  mass _ := 0
+  rowDegree _ _ := 2
+  rows _ _ := X (0 : Fin 1)^2
+  count_pos _ := by decide
+  degree_pos _ := by decide
+  row_degree _ _ := (totalDegree_X_pow _ _).le
+  rowDegree_pos _ _ := by decide
+  rowDegree_le _ _ := le_rfl
+  row_mass _ _ := by simpa only [MvMass.X,one_pow,pow_zero] using MvMass.pow_le (X (0 : Fin 1)) 2
+  noInfinity _ := by
+    intro y hy hz
+    have H := hz 0
+    change (WeightedHomogenization.homogenize (fun _=>1) 2 (X (0 : Fin 1)^2)).eval₂ (Int.castRingHom ℂ) y=0 at H
+    rw [WeightedHomogenization.homogenize_X_pow] at H
+    simp only [eval₂_pow,eval₂_X] at H
+    have Hz : y (some 0)=0 := (pow_eq_zero_iff (by decide : 2≠0)).mp H
+    funext j
+    cases j with
+    | none => exact hy
+    | some i => simpa only [Subsingleton.elim i 0,Pi.zero_apply] using Hz
+
+theorem original_reader : SpaceFunction (SquareSampleInput.rowCoefficient (NoInfinitySquareSample.input repeated)) := by
+  let W := fun q=> (SquareSampleInput.widthWord q).length
+  let T := SquareSampleInput.rankWord
+  let M := SquareSampleInput.modulusWord
+  have hW : UnaryFn W := UnaryFn.length SquareSampleInput.widthWord_FP
+  have hT : T∈FP := SquareSampleInput.rankWord_FP
+  have hM : M∈FP := SquareSampleInput.modulusWord_FP
+  have hQ := FixedWidthCoordinatePowerBits.quotientTarget_FP (fun _=>1) W (fun _=>2) T
+    (UnaryFn.const 1) hW (BinaryFn.const 2) hT
+  have E := FixedWidthRowBits.variable_evaluator (fun _=>1) W (fun _=> (0 : Fin 1))
+    (FixedWidthCoordinatePowerBits.quotientTarget (fun _=>1) W (fun _=>2) T) M
+    (UnaryFn.const 1) hW (UnaryFn.const 0) hQ hM
+  have P := FixedWidthCoordinatePowerBits.evaluator (fun _=>1) W (fun _=>2) T
+    (fun _=>X (0 : Fin 1)) M (fun _ _=>by decide) (UnaryFn.const 1) hW (BinaryFn.const 2) hT E
+  change SpaceFunction (FixedWidthRowBits.value (fun _=>1) W (fun _=>X (0 : Fin 1)^2) T M)
+  simpa only [CoordinatePowerSubstitution.substitute_X] using P
+
+theorem access : NoInfinitySquareSample.Access repeated :=
+  ⟨UnaryFn.const 1,BinaryFn.const 2,BinaryFn.const 0,BinaryFn.const 2,original_reader⟩
+
+-- Every affine root is captured, although the repeated root has zero derivative.
+example (u : List Bool) :
+    ((NoInfinitySquareSample.input repeated).annihilator u (0 : Fin 1)).eval₂ (Int.castRingHom ℝ) 0=0 := by
+  exact NoInfinitySquareSample.complete repeated u (fun _=>0) (by intro i; simp [NoInfinitySquareSample.input,repeated]) (0 : Fin 1)
+
+example : (pderiv (0 : Fin 1) (X (0 : Fin 1)^2 : MvPolynomial (Fin 1) ℤ)).eval (fun _=>0)=0 := by simp
+
+-- A native original-row reader derives both annihilator access and complete counting.
+example : (NoInfinitySquareSample.input repeated).Access := NoInfinitySquareSample.access access
+example : SpaceFunction (SquareSampleInput.annCoefficient (NoInfinitySquareSample.input repeated)) :=
+  NoInfinitySquareSample.ann_evaluator access
+example : SpaceFunction (fun u=>BinaryNatCode.encode (SquareSampleComplete.count (NoInfinitySquareSample.input repeated) u)) :=
+  NoInfinitySquareSample.count_evaluator access
+end NoInfinitySquareRegression
+#print axioms NoInfinitySquareSample.polynomial_height
+#print axioms NoInfinitySquareSample.complete
+#print axioms NoInfinitySquareSample.controls
+#print axioms NoInfinitySquareSample.dimension_binary
+#print axioms NoInfinitySquareSample.coordinate_evaluator
+#print axioms NoInfinitySquareGramSource.evaluator
+#print axioms NoInfinitySquareGram.evaluator
+#print axioms NoInfinitySquareGram.annihilator_evaluator
+#print axioms NoInfinitySquareSample.ann_evaluator
+#print axioms NoInfinitySquareSample.access
+#print axioms NoInfinitySquareSample.count_evaluator
+#print axioms IntegralHistorySampler.scalarStep_scheduled
+#print axioms IntegralMixedFramedHistoryScript.scheduled_run
+#print axioms IntegralPrefixSquareSample.access
+#print axioms IntegralPrefixSquareSample.complete
+#print axioms IntegralFramedSquareSample.complete
+#print axioms NoInfinitySquareRegression.original_reader
+end Group35Regression0
+
+
+namespace Group35Regression1
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR LeanCanny.Algebra
+open LeanCanny.Geometry.CanonicalAuxiliaryTrajectory IntegralMixedHistory
+
+open scoped Classical
+namespace AuxiliaryRecipeRegression
+
+example (labels : Fin 3 → ℕ × ℕ) (advice : List Bool) :
+    IntegralMixedAuxiliarySchedule.stateHorizon (IntegralMixedAuxiliaryPreparedRoot.dimension (fun _ => 3))
+      (IntegralMixedAuxiliaryRecipeRoot.root [] labels advice)=6 :=
+  IntegralMixedAuxiliaryRecipeRoot.root_stateHorizon (fun _ => 3) [] labels advice
+example (labels : Fin 3 → ℕ × ℕ) (advice : List Bool) (j : Fin 3) :
+    IntegralMixedEmptyUnitPlan.code (IntegralMixedAuxiliaryRecipeRoot.root [] labels advice) j.val=
+      IntegralMixedAuxiliaryLimitRecord.record 3 j.val 0 (labels j).1 (labels j).2 :=
+  IntegralMixedAuxiliaryRecipeRoot.root_code [] labels advice j
+
+variable {n S B D : ℕ} {t : Term} {ht : (AuxiliaryTiltedTerm.term n t).degreeBound≤D}
+  (hn : n≤S) (cap : IntegralMixedExceptionalBounds.auxiliaryCap (n+3) (FixedLeadingTiltedSource.degree D)≤2^B)
+  (G : ℕ) (hG : 1≤G) (hword : wordBudget n D t≤G)
+example {r : ℕ} {L : SampleFrame n S B D t ht}
+    (H : SampleTrace cap (seededInitialFrame t ht hn cap G hG hword) r L) :
+    ∃ labels : Fin r → ℕ × ℕ, ∃ hcs : (replay (S:=S) (t:=t) (ht:=ht) cap G labels).length≤S+1,
+      (∀ i, (labels i).1≤IntegralMixedExceptionalBounds.auxiliaryCap (n+3) (FixedLeadingTiltedSource.degree D) ∧
+        (labels i).2≤IntegralMixedExceptionalBounds.auxiliaryCap (n+3) (FixedLeadingTiltedSource.degree D)) ∧
+      IntegralMixedFramedHistoryScript.Index (Fin 0) (replay (S:=S) (t:=t) (ht:=ht) cap G labels)=L.carrier ∧
+      HEq (reframe (IntegralMixedFramedHistoryScript.run (seededInitialState (S:=S) t ht cap G)
+        (replay (S:=S) (t:=t) (ht:=ht) cap G labels) hcs)
+        (source L.frozen D t ht L.birth B L.height) L.state.critical_cap) L.state :=
+  H.exists_label_run hn cap G hG hword
+
+#print axioms IntegralMixedAuxiliaryPreparedRoot.packWords_FP
+#print axioms IntegralMixedAuxiliaryPreparedRoot.pack_stateHorizon
+#print axioms IntegralMixedAuxiliaryPreparedRoot.model_space
+#print axioms IntegralMixedAuxiliaryRecipeRoot.root_code
+#print axioms IntegralMixedAuxiliaryRecipeRoot.root_height
+#print axioms SampleFrame.criticalRule_front
+#print axioms SampleFrame.record_command
+#print axioms SampleFrame.record_instruction
+#print axioms SampleFrame.instruction_eq_recipe
+#print axioms SnocTrace.exists_recipe_run
+#print axioms extract_labels
+#print axioms SampleTrace.exists_label_run
+end AuxiliaryRecipeRegression
+end Group35Regression1
+
+
+namespace Group35Regression2
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralCoordinateBasis FixedWidthPolynomial PaddedIntegralParameterExtension MonicParameterRows
+open scoped Classical
+namespace PoweredEquationRegression
+private noncomputable def p : Polynomial (MvPolynomial (Fin 1) ℤ) :=
+  Polynomial.X^2+Polynomial.C (MvPolynomial.X 0)
+-- The old coordinate is cubed, and the newly born coordinate has power five.
+example : (MonicParameterRows.row p 2 (fun _=>3) 5).coeff
+    (appendExponent (Finsupp.single (0 : Fin 1) 3) 0)=1 := by
+  have H := coefficient_row p 2 (fun _=>3) 5 (by decide) (Finsupp.single (0 : Fin 1) 3) 0
+  norm_num [p,MonicParameterRows.coefficient,CoordinatePowerSubstitution.substitute_X] at H
+  simpa only [p,MvPolynomial.X_pow_eq_monomial,MvPolynomial.coeff_monomial,ite_true] using H
+example : (MonicParameterRows.row p 2 (fun _=>3) 5).coeff
+    (appendExponent (Finsupp.single (0 : Fin 1) 3) 2)=0 :=
+  coefficient_off_power p 2 (fun _=>3) 5 _ 2 (by decide)
+example : (MonicParameterRows.row p 2 (fun _=>3) 5).coeff
+    (appendExponent (0 : Fin 1→₀ℕ) 10)=1 := by
+  have H := coefficient_row p 2 (fun _=>3) 5 (by decide) (0 : Fin 1→₀ℕ) 2
+  norm_num at H
+  exact H
+private noncomputable def S : PaddedIntegralGeneratorSource.Source where
+  arity _ := 0
+  width _ := 1
+  carrier _ := ℤ
+  ring _ := inferInstance
+  nontrivial _ := inferInstance
+  basis _ := IntegralCoordinateBasis.base 2
+  polynomial _ := Polynomial.X
+  degree _ := 1
+example : PaddedIntegralRowBits.Active S (fun _=>2) (fun _=>2) (fun _=>[true]) [] := by decide
+example : ¬PaddedIntegralRowBits.Active S (fun _=>2) (fun _=>2) (fun _=>[false,true]) [] := by decide
+example : PaddedIntegralRowBits.coefficientContext S (fun _=>2) (fun _=>2) (fun _=>[true]) [] =
+    pair [] (BinaryNatCode.encode 1) := by decide
+#print axioms MonicParameterRows.nativeExponent_head
+#print axioms MonicParameterRows.native_lower_coefficient
+#print axioms PaddedIntegralRowBits.active_FP
+#print axioms PaddedIntegralRowBits.lower_evaluator
+#print axioms PaddedIntegralRowBits.topReader_FP
+#print axioms PaddedIntegralRowBits.row_evaluator
+
+#print axioms coefficient_block
+#print axioms coefficient_monic_row
+#print axioms coefficient_off_power
+#print axioms coefficient_monic_row_powers
+#print axioms PaddedIntegralEquationMatrixBits.matrix_eq
+#print axioms PaddedIntegralEquationMatrixBits.entry_packet
+#print axioms PaddedIntegralEquationMatrixBits.powered_evaluator
+#print axioms PaddedIntegralEquationMatrixBits.powered_polynomial_eq
+#print axioms powered_row_coefficient
+#print axioms powered_row_top
+#print axioms powered_row_above
+#print axioms powered_row_off_power
+end PoweredEquationRegression
+end Group35Regression2

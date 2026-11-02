@@ -1,3 +1,28 @@
+import LeanCanny.Encoding.NoInfinitySquareSample
+import LeanCanny.Encoding.NoInfinitySquareControls
+import LeanCanny.Encoding.NoInfinitySquareRows
+import LeanCanny.Encoding.NoInfinitySquareGramSource
+import LeanCanny.Encoding.NoInfinitySquareGram
+import LeanCanny.Encoding.NoInfinitySquareAccess
+import LeanCanny.Algebra.IntegralMixedFramedDegreeSchedule
+import LeanCanny.Encoding.IntegralPrefixSquareSample
+import LeanCanny.Encoding.IntegralFramedSquareSample
+import LeanCanny.Encoding.IntegralMixedAuxiliaryPreparedRoot
+import LeanCanny.Geometry.CanonicalAuxiliaryRecordRule
+import LeanCanny.Geometry.CanonicalAuxiliaryRecipeInstruction
+import LeanCanny.Geometry.CanonicalAuxiliaryRecipeRun
+import LeanCanny.Geometry.CanonicalAuxiliaryRecipeLabels
+import LeanCanny.Encoding.IntegralMixedAuxiliaryRecipeRoot
+import LeanCanny.Algebra.MonicParameterRowCoefficients
+import LeanCanny.Algebra.PaddedIntegralEquationMatrix
+import LeanCanny.Algebra.PaddedIntegralEquationMatrixNative
+import LeanCanny.Algebra.PaddedIntegralEquationCoefficientSpace
+import LeanCanny.Algebra.PaddedIntegralRowReadback
+import LeanCanny.Algebra.MonicParameterHeadCoefficients
+import LeanCanny.Algebra.MonicParameterNativeLower
+import LeanCanny.Algebra.PaddedIntegralRowQuery
+import LeanCanny.Algebra.PaddedIntegralLowerRowSpace
+import LeanCanny.Algebra.PaddedIntegralRowSpace
 import LeanCanny.Encoding.IntegralMixedAuxiliaryParameters
 import LeanCanny.Encoding.IntegralMixedAuxiliarySchedule
 import LeanCanny.Encoding.IntegralMixedAuxiliarySavedFields
@@ -2706,6 +2731,13 @@ annihilators retain singular roots. Exact seed adapters preserve the native
 causal source. Lower monic-equation coefficients are read from the creating
 companion, with derived coefficient mass after coordinate powers. Serializing
 sampled records, native point validation, and the recursive cover remain open.
+The complete square sampler now derives its reciprocal Gram annihilators,
+height bounds and native readers from literal row access and exclusion at
+infinity. Actual scalar-only framed histories supply that exclusion and their
+fixed row-degree schedule. Bounded choice labels replay the exact sampled
+script and state. A native reader covers each complete newest-first monic row,
+charging its actual creating companion. The packed frontend identification,
+original row-reader binding and recursive graph remain required.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
