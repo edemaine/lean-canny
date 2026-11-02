@@ -45433,3 +45433,346 @@ example : ∃ p : Polynomial ℕ,∀ q : List Bool,
 #print axioms parameterWidth_unary
 #print axioms parameterWidth_polynomial
 end Group41Regression9
+
+
+namespace Group42Regression0
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralCriticalHistoryTask
+open scoped Classical
+namespace CutSuccessorRegression
+-- The original parent survives every indexed coefficient/choice query.
+example (P : Parameters) (c : List Bool) :
+    IntegralMixedVirtualTaskBits.saved P
+      (IntegralMixedCutCoefficientQueryBits.query P (pair c (pair (BinaryNatCode.encode 7) (BinaryNatCode.encode 2))))=
+      IntegralMixedVirtualTaskBits.saved P c := by
+  rw [IntegralMixedCutCoefficientQueryBits.query_saved,pairFst_pair]
+example (P : Parameters) (c : List Bool) :
+    get P .coefficient (IntegralMixedCutCoefficientQueryBits.query P
+      (pair c (pair (BinaryNatCode.encode 7) (BinaryNatCode.encode 2))))=
+      min 7 (numericCap P (RankedHistoryTask.root c)) := by
+  rw [IntegralMixedCutCoefficientQueryBits.query_get]
+  simp only [reduceCtorEq,ite_false,ite_true,IntegralMixedCutCoefficientQueryBits.coefficient,
+    pairFst_pair,pairSnd_pair,BinaryNatCode.encode,Nat.fromBitsLE_bits]
+-- The unused newest coordinate cannot contribute to a tail coefficient.
+example (p : MvPolynomial (Fin 1) ℤ) (e : Fin 2→₀ℕ) (he : e 0≠0) :
+    (MvPolynomial.rename Fin.succ p).coeff e=0 := by
+  rw [FixedWidthHeadLiftBits.rename_coefficient,ite_eq_right he]
+-- A nonunit negative coefficient is preserved literally in the old tail.
+example : (MvPolynomial.rename Fin.succ
+    (MvPolynomial.C (-2)*MvPolynomial.X (0:Fin 1) : MvPolynomial (Fin 1) ℤ)).eval₂
+      (Int.castRingHom ℝ) (fun i:Fin 2=>if i=0 then 9 else 2)= -4 := by
+  norm_num [MvPolynomial.eval₂_rename]
+#print axioms FixedWidthHeadLiftBits.rename_coefficient
+#print axioms FixedWidthHeadLiftBits.evaluator
+#print axioms IntegralRelativeTruncation.jointQuotient_zero_iff
+#print axioms IntegralMixedRelativeCuts.head_root_guard
+#print axioms IntegralCoordinateCoefficientBits.pulled_powered_evaluator
+#print axioms IntegralMixedFramedChoiceProbeSourceBits.pulled_powered_evaluator
+#print axioms IntegralMixedCutCoefficientQueryBits.query_get
+#print axioms IntegralFramedCurrentQSquare.access_native
+#print axioms IntegralMixedFramedHistoryScript.paddedPast_succ
+#print axioms IntegralFramedCutSuccessor.active_count
+#print axioms IntegralFramedCutCoefficientTest.coefficient_evaluator
+#print axioms IntegralFramedCutCoefficientTest.evaluator
+#print axioms IntegralFramedCutCoefficientTest.packet
+end CutSuccessorRegression
+end Group42Regression0
+
+
+namespace Group42Regression1
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralCriticalHistoryTask
+namespace CutFiniteRegression
+-- These are exact sign tables of -2*T+4 and -2*T, respectively.
+def linear (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (pairFst (pairSnd q))=0 then [false,true] else
+  if Nat.fromBitsLE (pairFst (pairSnd q))=1 then [true] else []
+def zeroConstant (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (pairFst (pairSnd q))=1 then [true] else []
+def constant (q : List Bool) : List Bool :=
+  if Nat.fromBitsLE (pairFst (pairSnd q))=0 then [true] else []
+-- A genuine nonzero root passes; a false zero padding root fails.
+example : FiniteCoefficientSignScan.Guards linear (fun _=>[true]) (fun _=>0) (fun _=>1) (fun _=>3) [] := by decide
+example : ¬FiniteCoefficientSignScan.Guards linear (fun _=>[]) (fun _=>0) (fun _=>1) (fun _=>3) [] := by decide
+-- An actual zero root of the factor passes the constant-coefficient guard.
+example : FiniteCoefficientSignScan.Guards zeroConstant (fun _=>[]) (fun _=>0) (fun _=>1) (fun _=>3) [] := by decide
+-- A nonzero constant factor has only spurious padding roots, all rejected.
+example : ¬FiniteCoefficientSignScan.Guards constant (fun _=>[]) (fun _=>0) (fun _=>0) (fun _=>3) [] := by decide
+-- A supposedly lower vanishing choice with a nonzero coefficient is rejected.
+example : ¬FiniteCoefficientSignScan.Guards linear (fun _=>[true]) (fun _=>1) (fun _=>1) (fun _=>3) [] := by decide
+#print axioms FiniteCoefficientSignScan.evaluator
+#print axioms IntegralFramedCutFiniteGuards.choice_binary
+#print axioms IntegralFramedCutFiniteGuards.degree_binary
+#print axioms IntegralFramedCutFiniteGuards.evaluator
+#print axioms IntegralFramedCutFiniteGuards.decider
+#print axioms IntegralFramedCutFiniteGuards.coefficient_zero_iff
+#print axioms IntegralFramedCutFiniteGuards.head_zero_iff
+#print axioms IntegralMixedCutCoefficientQueryBits.query_active
+#print axioms IntegralMixedCutCoefficientQueryBits.scalar_cap
+#print axioms IntegralMixedCutCoefficientQueryBits.coefficient_packet
+#print axioms IntegralMixedCutCoefficientQueryBits.choice_packet
+#print axioms IntegralMixedCutCoefficientQueryBits.element_packet
+end CutFiniteRegression
+end Group42Regression1
+
+
+namespace Group42Regression2
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralCriticalHistoryTask IntegralMixedFullHistoryScript
+namespace CutCreatingRegression
+-- Actual command classification does not consult a virtual fallback selection.
+example {n B : ℕ} {P : IntegralMixedHistory.SpatialSource n} (p : Polynomial ℤ) (hp : p≠0) (hcap : p.natDegree≤2^B) :
+    ¬IntegralFramedCreatingCut.IsCut (Command.integer (P:=P) p hp hcap) := by
+  simp only [IntegralFramedCreatingCut.IsCut,not_false_eq_true]
+example {n B : ℕ} {P : IntegralMixedHistory.SpatialSource n} (r : IntegralMixedHistory.CriticalRule n) :
+    ¬IntegralFramedCreatingCut.IsCut (Command.critical (P:=P) (B:=B) r) := by
+  simp only [IntegralFramedCreatingCut.IsCut,not_false_eq_true]
+example {n B : ℕ} {P : IntegralMixedHistory.SpatialSource n} (r : IntegralMixedCriticalSweep.Rule n)
+    (k : IntegralMixedRelativeCuts.Kind P r) (d : ℕ)
+    (hs : d≤IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree) (hd : d≤2^B) :
+    IntegralFramedCreatingCut.IsCut (Command.cut r k d hs hd) := by trivial
+-- Every indexed coefficient test keeps exactly the original active parent.
+example (P : Parameters) (c d : List Bool) :
+    IntegralMixedFramedFullCutProbeBits.Active P (IntegralFramedCutCoefficientTest.query P (pair c d)) ↔
+      IntegralMixedFramedFullCutProbeBits.Active P c := by
+  rw [IntegralFramedCutCoefficientTest.query_active,pairFst_pair]
+#print axioms IntegralMixedFramedHistoryScript.padded_step_prefix
+#print axioms IntegralFramedCutCoefficientTest.query_active
+#print axioms IntegralFramedCutCoefficientTest.factor_eval
+#print axioms IntegralFramedCreatingCut.isCut_iff_context
+#print axioms IntegralFramedCreatingCut.commandContext_binary
+#print axioms IntegralFramedCreatingCut.parentCut_FP
+#print axioms IntegralFramedSelectedCut.decider
+end CutCreatingRegression
+end Group42Regression2
+
+
+namespace Group42Regression3
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Connectivity
+open IntegralMixedHistory IntegralMixedCriticalSweep IntegralMixedSelectedGeometry IntegralMixedSelectedPhysicalFiber
+open scoped Classical
+namespace SelectedEndpointMatchRegression
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type}
+    (x : State P S B m ι) (hm : m≤S) (r : Rule n) (φ : x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ)
+    (a b endpoint : ℝ) (y : Fin (n+1)→ℝ) :
+    ¬IntegralMixedSelectedEndpointMatch.Near x hm r φ a b endpoint [] y :=
+  IntegralMixedSelectedEndpointMatch.near_nil_false x hm r φ a b endpoint y
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type}
+    (x : State P S B m ι) (hm : m≤S) (r : Rule n) (φ : x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ)
+    (c : IntegralMixedRelativeCuts.Choices x hm r φ) (a b : ℝ) (t₀ : Set.Ioo a b)
+    (havoid : ∀ t∈Set.Ioo a b,t∉IntegralMixedSelectedCriticalCuts.bad x hm r φ c) (w : List Bool) :
+    {y | IntegralMixedSelectedEndpointMatch.Near x hm r φ a b a w y}.Subsingleton ∧
+      {y | IntegralMixedSelectedEndpointMatch.Near x hm r φ a b a w y}⊆physical x hm r φ a :=
+  IntegralMixedSelectedEndpointMatch.near_fiber x hm r φ c a b t₀ havoid a
+    ⟨le_rfl,(t₀.property.1.trans t₀.property.2).le⟩ w
+end SelectedEndpointMatchRegression
+#print axioms IntegralMixedSelectedIntrinsicCode.rank_transport
+#print axioms IntegralMixedSelectedIntrinsicCode.word_injective
+#print axioms IntegralMixedSelectedIntrinsicCode.exists_codes
+#print axioms IntegralMixedSelectedEndpointMatch.near_nil_false
+#print axioms IntegralMixedSelectedEndpointMatch.exists_matched_codes
+#print axioms IntegralMixedSelectedEndpointMatch.near_fiber
+end Group42Regression3
+
+
+namespace Group42Regression4
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding
+open IntegralMixedHistory IntegralMixedCanonicalBankPoint
+open scoped Classical
+namespace CanonicalBankInjectiveRegression
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type} (x : State P S B m ι)
+    (z w : Fin m→ℝ) (H : point x z=point x w) : z=w := point_injective x H
+noncomputable def negative {n S B m : ℕ} {P : SpatialSource n} {ι : Type}
+    (x : State P S B m ι) : State P S B m ι where
+  sampler:=x.sampler
+  bank:={numerator:=x.bank.numerator,denominator:=fun _=>-2}
+  denominator_ne_zero _:=by change (-2:ℤ)≠0; decide
+  critical_cap:=x.critical_cap
+example {n S B m : ℕ} {P : SpatialSource n} {ι : Type} (x : State P S B m ι)
+    (z w : Fin m→ℝ) (H : point (negative x) z=point (negative x) w) : z=w :=
+  point_injective (negative x) H
+end CanonicalBankInjectiveRegression
+#print axioms point_injective
+#print axioms vertex_injective
+end Group42Regression4
+
+
+namespace Group42Regression5
+open LeanCanny LeanCanny.Algebra
+open scoped Classical
+namespace RealParameterTarskiRegression
+noncomputable def old : Polynomial ℤ→+*ℝ:=Polynomial.eval₂RingHom (Int.castRingHom ℝ) 2
+noncomputable def p : Polynomial (Polynomial (Polynomial ℤ)) :=
+  Polynomial.C (Polynomial.C (Polynomial.X-Polynomial.C 2))*Polynomial.X^2+
+    Polynomial.X-Polynomial.C Polynomial.X
+example : p.coeff 2≠0 := by
+  convert Polynomial.C_ne_zero.mpr (Polynomial.X_sub_C_ne_zero (2:ℤ)) using 1
+  norm_num [p,Polynomial.coeff_mul_X_pow',Polynomial.coeff_X]
+private theorem selected : p.map (Polynomial.mapRingHom old)=
+    (Polynomial.X-Polynomial.C Polynomial.X : Polynomial (Polynomial ℝ)) := by
+  simp [p,old]
+example : (p.map (Polynomial.mapRingHom old)).natDegree=1 := by
+  rw [selected,Polynomial.natDegree_X_sub_C]
+example : RealParameterTarski.value (p.map (Polynomial.mapRingHom old)) 1=1 := by
+  obtain ⟨δ,Hδ,HV⟩:=RealParameterTarski.eventual_query_eq_value (p.map (Polynomial.mapRingHom old)) 1
+  have H:=HV (δ/2) (by positivity) (by linarith)
+  rw [selected] at H
+  have HQ : RootSignQueries.tarskiQuery
+      (((Polynomial.X-Polynomial.C Polynomial.X : Polynomial (Polynomial ℝ))).map (Polynomial.evalRingHom (δ/2)))
+      ((1 : Polynomial (Polynomial ℝ)).map (Polynomial.evalRingHom (δ/2)))=1 := by
+    simp [RootSignQueries.tarskiQuery,RootSignQueries.signSum]
+  rw [selected]
+  exact H.symm.trans HQ
+end RealParameterTarskiRegression
+#print axioms RealParameterTarski.natDegree_eval
+#print axioms RealParameterTarski.query_eq_value
+#print axioms RealParameterTarski.eventual_query_eq_value
+#print axioms RealParameterTarski.selected_eventual
+
+example : 0<RealParameterTarski.patternThreshold
+    (RealParameterTarskiRegression.p.map (Polynomial.mapRingHom RealParameterTarskiRegression.old))
+    (fun _ : Fin 1=>(Polynomial.X : Polynomial (Polynomial ℝ))) := RealParameterTarski.patternThreshold_pos _ _
+#print axioms RealParameterTarski.patternThreshold_pos
+#print axioms RealParameterTarski.rootCount_stable
+#print axioms RealParameterTarski.exists_realizable_interval
+#print axioms RealParameterTarski.selected_realizable_interval
+end Group42Regression5
+
+
+namespace Group42Regression6
+open LeanCanny LeanCanny.Geometry LeanCanny.Geometry.BoundedRegularRadius
+open LeanCanny.Algebra LeanCanny.Encoding
+open scoped Classical
+
+-- Flattening adds only an analysis variable and recovers exactly the old family.
+example {ι : Type*} (p : Polynomial (MvPolynomial ι ℤ)) :
+    MvPolynomial.optionEquivLeft ℤ ι (flatten p)=p := unflatten_flatten p
+
+example : MvMass.mass (flatten (powerScalar (ι:=Fin 0) 2 3))≤4 := by
+  exact powerScalar_mass 2 3
+
+example : MvMass.mass (flatten (sourcePolynomial (MvPolynomial.C (-3) : MvPolynomial (Fin 0) ℤ)))≤512 := by
+  apply sourcePolynomial_mass _ 2
+  rw [MvMass.C]
+  norm_num
+
+-- Each actual coefficient, with radius degree and spatial degree separate,
+-- has the same original-only bound. No enormous integer power is computed.
+example {n : ℕ} (q : MvPolynomial (Fin n) ℤ) (D b k : ℕ)
+    (hq : MvMass.mass q≤2^b) (a : Fin (n+4)→₀ℕ) :
+    (((polynomial q D b).coeff k).coeff a).natAbs≤2^coefficientExponent n D b :=
+  coefficient_bound q D b hq k a
+
+example : BinaryFn (fun q : List Bool=>coefficientExponent q.length (q.length+1) q.length) :=
+  coefficientExponent_binary (UnaryFn.length id_mem_FP)
+    (BinaryFn.ofUnary ((UnaryFn.length id_mem_FP).add (UnaryFn.const 1)))
+    (BinaryFn.ofUnary (UnaryFn.length id_mem_FP))
+
+#print axioms powerScalar_mass
+#print axioms sourcePolynomial_mass
+#print axioms expanded_mass
+#print axioms expanded_coefficient
+#print axioms flatten_eq_symm
+#print axioms unflatten_flatten
+#print axioms coefficient_bound
+#print axioms coefficientExponent_binary
+end Group42Regression6
+
+
+namespace Group42Regression7
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower
+open scoped Classical
+namespace PowerIntegerRegression
+example : PowerIntegerPolynomial.polynomial True 3=Polynomial.X+Polynomial.C 8 := by
+  norm_num [PowerIntegerPolynomial.polynomial,PowerIntegerPolynomial.value]
+example : PowerIntegerPolynomial.polynomial False 5=Polynomial.X-Polynomial.C 32 := by
+  norm_num [PowerIntegerPolynomial.polynomial,PowerIntegerPolynomial.value]
+example : (PowerIntegerPolynomial.polynomial True 3).eval₂ (Int.castRingHom ℝ) (-8)=0 := by
+  rw [PowerIntegerPolynomial.root_iff]
+  norm_num [PowerIntegerPolynomial.value]
+example : PowerIntegerPolynomial.value True 0≠0 := PowerIntegerPolynomial.value_ne_zero _ _
+
+example : PrimitivePairBits.coefficient (fun _=>PowerIntegerPolynomial.polynomial False 5)
+    (pair (pair [] (BinaryNatCode.encode 0)) (BinaryNatCode.encode 5))=BinaryNatCode.encode 4 := by
+  rw [IntegerPolynomialRootQueriesBits.coefficient_packet _ [] 0 6 (by decide)]
+  have HC : (PowerIntegerPolynomial.polynomial False 5).coeff 0=-32 := by
+    norm_num [PowerIntegerPolynomial.coefficient,PowerIntegerPolynomial.value]
+  rw [HC]
+  change BinaryNatCode.encode (((-32 : ℤ) : ZMod 6).val)=BinaryNatCode.encode 4
+  apply congrArg BinaryNatCode.encode
+  decide
+
+example : PrimitivePairBits.coefficient (fun _=>PowerIntegerPolynomial.polynomial True 3)
+    (pair (pair [] (BinaryNatCode.encode 0)) (BinaryNatCode.encode 5))=BinaryNatCode.encode 2 := by
+  rw [IntegerPolynomialRootQueriesBits.coefficient_packet _ [] 0 6 (by decide)]
+  have HC : (PowerIntegerPolynomial.polynomial True 3).coeff 0=8 := by
+    norm_num [PowerIntegerPolynomial.coefficient,PowerIntegerPolynomial.value]
+  rw [HC]
+  change BinaryNatCode.encode ((8 : ZMod 6).val)=BinaryNatCode.encode 2
+  rw [ZMod.val_ofNat]
+
+example : PrimitivePairBits.coefficient (fun _=>PowerIntegerPolynomial.polynomial False 5)
+    (pair (pair [] (BinaryNatCode.encode 1)) (BinaryNatCode.encode 0))=[] := by
+  rw [IntegerPolynomialRootQueriesBits.coefficient_packet _ [] 1 1 (by decide)]
+  have HC : (PowerIntegerPolynomial.polynomial False 5).coeff 1=1 := by
+    norm_num [PowerIntegerPolynomial.coefficient]
+  rw [HC]
+  change BinaryNatCode.encode ((1 : ZMod 1).val)=[]
+  rw [ZMod.val_one_eq_one_mod]
+  rfl
+
+example : IntegerPolynomialRootQueriesBits.Access
+    (PowerIntegerPolynomial.source (fun q=>q.length=0) (fun q=>q.length)) :=
+  PowerIntegerPolynomial.access ((BinaryFn.ofUnary (UnaryFn.length id_mem_FP)).eq (BinaryFn.const 0))
+    (BinaryFn.ofUnary (UnaryFn.length id_mem_FP))
+end PowerIntegerRegression
+#print axioms PowerIntegerPolynomial.degree
+#print axioms PowerIntegerPolynomial.mass
+#print axioms PowerIntegerPolynomial.root_iff
+#print axioms PowerIntegerPolynomial.power_evaluator
+#print axioms PowerIntegerPolynomial.coefficient_evaluator
+#print axioms PowerIntegerPolynomial.access
+#print axioms PowerIntegerPolynomial.original
+end Group42Regression7
+
+
+namespace Group42Regression8
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding LeanCanny.Connectivity
+open scoped Classical
+namespace SweepCutoffRegression
+-- The outside bad roots need no radius bound: only their clipped subset
+-- contributes cuts; all interior slabs still avoid the complete bad set.
+example : ∃ n : ℕ,n≤({-100,0,100} : Set ℝ).ncard ∧ ∃ cut : Fin (n+2)→ℝ,StrictMono cut ∧
+    cut 0=-(2 : ℝ)^1 ∧ cut (Fin.last (n+1))=(2 : ℝ)^1 ∧
+    (∀ t∈({-100,0,100} : Set ℝ)∩Set.Ioo (-(2 : ℝ)^1) ((2 : ℝ)^1),∃ j,cut j=t) ∧
+    (∀ _x : Unit,(0 : ℝ)∈Set.Icc (cut 0) (cut (Fin.last (n+1)))) ∧
+    (∀ i : Fin (n+1),∀ t∈Set.Ioo (cut i.castSucc) (cut i.succ),t∉({-100,0,100} : Set ℝ)) ∧
+    ∀ j,cut j∈({-100,0,100} : Set ℝ) ∨ (fun _ : Unit=>(0 : ℝ)) ⁻¹' {cut j}=∅ :=
+  FiniteCriticalSweepBounded.exists_clipped_power_cuts (fun _ : Unit=>(0 : ℝ)) _ (by simp) 1 (by norm_num)
+
+example : BoundedRegularCoordinateCutoff.exponent 0 1 3=82 := by decide
+example {n : ℕ} (q : MvPolynomial (Fin n) ℤ) (D b R : ℕ)
+    (w : Fin (n+4)→ℝ) (hw : (BoundedRegularSource.polynomial q D b R).eval₂ (Int.castRingHom ℝ) w=0)
+    (j : Fin (n+4)) : |w j|<(2 : ℝ)^BoundedRegularCoordinateCutoff.exponent n D R :=
+  BoundedRegularCoordinateCutoff.coordinate_lt q D b R w hw j
+
+-- The actual source cutoff directly supplies native integer leaves.
+example : IntegerPolynomialRootQueriesBits.Access (PowerIntegerPolynomial.source (fun _=>False)
+    (fun q : List Bool=>BoundedRegularCoordinateCutoff.exponent q.length (q.length+1) q.length)) :=
+  PowerIntegerPolynomial.access (FPPred.const False)
+    (BoundedRegularCoordinateCutoff.exponent_binary (UnaryFn.length id_mem_FP)
+      (BinaryFn.ofUnary ((UnaryFn.length id_mem_FP).add (UnaryFn.const 1)))
+      (BinaryFn.ofUnary (UnaryFn.length id_mem_FP)))
+end SweepCutoffRegression
+#print axioms FiniteCriticalSweepBounded.exists_cuts
+#print axioms FiniteCriticalSweepBounded.exists_clipped_cuts
+#print axioms FiniteCriticalSweepBounded.exists_clipped_power_cuts
+#print axioms FiniteCriticalSweepBounded.left_power_origin
+#print axioms FiniteCriticalSweepBounded.right_power_origin
+#print axioms BoundedRegularCoordinateCutoff.power_sum_le
+#print axioms BoundedRegularCoordinateCutoff.coordinate_lt
+#print axioms BoundedRegularCoordinateCutoff.exponent_affine
+#print axioms BoundedRegularCoordinateCutoff.as_radius_power
+#print axioms BoundedRegularCoordinateCutoff.exponent_binary
+end Group42Regression8

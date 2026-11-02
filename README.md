@@ -1896,6 +1896,20 @@ remain open. The actual bounded regular source is also exactly a polynomial
 in the external physical radius `T = 2^R`, with parameter degree independent
 of `R` and polynomial binary width. This does not prove radius stabilization.
 
+Native finite cut guards now test full coefficients, all lower choices and
+padding at one actual successor vertex. Original command tags exclude
+integer and physical commands from selected-cut validation. Relating every
+guard to one creating-cut interpretation and later terminal tails remains
+unfinished. Branch endpoints have a curve-free local characterization;
+real parameter Tarski queries have semantic eventual-sign results, while
+their native general coefficient circuit and endpoint cost remain open.
+The external radius family has a proved original-only integer height bound.
+Signed power constants have native degree-one integer sources with binary
+exponents. Actual regular-source coordinates have an explicit dyadic bound;
+its exponent is affine in the radius code. Clipping bad roots to those outer
+cuts preserves avoidance of the complete bad set and exact cut origins.
+Native sorting and whole-record assembly remain required.
+
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
 permutation now connects arbitrary active subsets to the same selected mixed

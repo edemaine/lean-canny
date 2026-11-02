@@ -1,3 +1,34 @@
+import LeanCanny.Algebra.FixedWidthHeadLiftSpace
+import LeanCanny.Algebra.IntegralMixedCutHeadRootGuard
+import LeanCanny.Algebra.IntegralCoordinatePullSpace
+import LeanCanny.Algebra.IntegralMixedFramedChoiceProbePullSpace
+import LeanCanny.Algebra.IntegralMixedCutCoefficientQuery
+import LeanCanny.Encoding.IntegralFramedCurrentQSquareSpace
+import LeanCanny.Algebra.IntegralMixedFramedHistorySuccessor
+import LeanCanny.Encoding.IntegralFramedCutSuccessorInput
+import LeanCanny.Encoding.IntegralFramedCutCoefficientTest
+import LeanCanny.Encoding.IntegralFramedCutCoefficientSpace
+import LeanCanny.Encoding.IntegralFramedCutCoefficientSign
+import LeanCanny.Computation.FiniteCoefficientSignScan
+import LeanCanny.Encoding.IntegralFramedCutFiniteGuards
+import LeanCanny.Encoding.IntegralFramedCutFiniteDecider
+import LeanCanny.Encoding.IntegralFramedCutGuardSemantics
+import LeanCanny.Algebra.IntegralMixedCutCoefficientReadback
+import LeanCanny.Algebra.IntegralMixedCutCoefficientElement
+import LeanCanny.Algebra.IntegralMixedFramedPaddedStep
+import LeanCanny.Encoding.IntegralFramedCutFactorSign
+import LeanCanny.Encoding.IntegralFramedCreatingCut
+import LeanCanny.Encoding.IntegralFramedSelectedCutDecider
+import LeanCanny.Connectivity.IntegralMixedSelectedIntrinsicCode
+import LeanCanny.Connectivity.IntegralMixedSelectedEndpointMatch
+import LeanCanny.Geometry.IntegralMixedCanonicalBankInjective
+import LeanCanny.Algebra.RealParameterTarski
+import LeanCanny.Algebra.RealParameterSignPatterns
+import LeanCanny.Geometry.BoundedRegularRadiusMass
+import LeanCanny.Algebra.PowerIntegerPolynomial
+import LeanCanny.Algebra.PowerIntegerPolynomialSpace
+import LeanCanny.Connectivity.FiniteCriticalSweepBounded
+import LeanCanny.Geometry.BoundedRegularCoordinateCutoff
 import LeanCanny.Encoding.IntegralMixedCausalRowCode
 import LeanCanny.Algebra.IntegralMixedCausalUnitRecord
 import LeanCanny.Encoding.IntegralMixedCausalUnitBody
@@ -3105,6 +3136,24 @@ The bounded regular source is exactly a polynomial in the external physical
 radius T=2^R. Its parameter degree is independent of R and its binary width is
 polynomial in original metadata. This algebraic identity does not establish
 component stability or an effective unbounded-radius bound.
+Native finite cut guards now inspect every full coefficient and lower
+choice on one actual successor vertex, including its newest-coordinate
+padding condition. Original command tags reject integer and physical
+commands from the selected-cut language. Exact factor-sign and padded-step
+identities are proved; fixed-parent interpretation and arbitrary later-tail
+transport still require their creating-cut semantic bridge. Actual branch
+endpoint matching has a curve-free local predicate, and selected real
+parameter Tarski queries and finite sign patterns stabilize semantically.
+Their native general principal-coefficient circuit and endpoint cost remain
+open. A full canonical bank tuple determines its joint vertex word.
+The external radius family now has an original-only integer coefficient
+height bound. Signed powers of two have native degree-one integer sources
+and integer-family access, with binary exponents and exact caller modulus.
+Actual regular-source zero coordinates have a strict explicit dyadic cutoff;
+its exponent is affine in the radius code. Sweeps may clip bad values to
+these prescribed outer cuts while retaining avoidance of the entire bad set
+and the original bad-root or empty-fiber origins. Native sorting and record
+assembly remain separate from these geometric and coefficient bounds.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
