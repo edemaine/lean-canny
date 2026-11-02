@@ -1918,16 +1918,16 @@ polynomial syntax. The canonical marked lift has exact original-coordinate
 and real-slack identities; native correlated replay remains unfinished.
 Unrestricted coordinate probes support all Y and E coefficients without
 recorded-choice clipping. Selected principal queries lift to integer
-polynomials on the same weighted tuple. Their general native coefficient
-circuit, physical rank and endpoint-query costs remain open. Native cut scans
+polynomials on the same weighted tuple. Their native principal coefficient streams now have degree and mass controls;
+physical rank and endpoint-query costs remain open. Native cut scans
 now imply actual validity and exact specialized degree at one common old
-interpretation. The creating-row/root bridge now follows from the actual candidate. Later-tail
-transport remains required before validating an entire recursive trace.
+interpretation. The creating-row/root bridge follows from the actual candidate. Later-tail
+transport is now proved for selected cuts; a universal trace scan remains open.
 
 Actual successor rows now derive one common old interpretation, specialized
 cut validity, exact degree and the full untruncated factor root. Decoded-bank
-identification and same-terminal prefix interpretations are now proved;
-native terminal cut validation remains open. Actual cached
+identification, same-terminal prefix interpretations and native terminal cut
+validation are now proved. Actual cached
 coordinate coefficients now feed integer multivariate heads. Coordinate-root
 ordinals are constant on continuous physical branches, using all real scalar
 roots; this does not assert that every ordinal tuple is a physical point.
@@ -1935,18 +1935,18 @@ Native implicit univariate tests preserve the same complete candidate and
 actual retained-bank value. Current-Q leading and product readers support
 integer Source leaves without expanded integer syntax. A native derivative
 scan proves equality between coordinates from different framed scripts using
-one shared nonzero annihilator. Correlated prelude replay, physical endpoint
+one shared nonzero annihilator. Physical endpoint
 assembly, full native graph construction and effective global stabilization
 remain unfinished.
 
 Native original-only coefficient, degree and mass programs now construct the
 two slack annihilators over the same old algebra. Their expanded characteristic
 polynomials vanish at the prescribed real marked slacks under the same joint
-interpretation. Concrete correlated prelude replay remains unfinished.
+interpretation. Concrete correlated prelude replay is now proved.
 Selected-cut acceptance is now exactly actual validity, degree and the full
 factor root at the decoded newest bank value. Every earlier prefix has one
 interpretation of the same terminal suffix; generic native suffix tests are
-available. Binding every cut predicate to that terminal tuple remains open.
+available. A universal scan of every creating cut remains open.
 Anchored scalar root ordinals characterize actual branch endpoints. Root-window
 counts remove scalar-root existential quantifiers from Near, retaining its
 ordered epsilon/delta conditions and the native coefficient-sign obligation.
@@ -1955,6 +1955,23 @@ cutoff for actual integer polynomial families. Applying it to the full
 recursive graph still requires the corresponding polynomial presentation and
 bounds. Full native graph construction and effective global stabilization
 remain unfinished.
+
+The native marked integer prelude now contains the original coordinates,
+marked slacks and four power parameters in one prescribed correlated
+realization. Its full outer-context saved key preserves the actual decoded old
+candidate and admits one interpreting homomorphism. Both canonical slack roots
+now satisfy the literal native sources; all
+coordinate and slack roots are derived from the same old candidate, supplying
+one correlated realization of the complete native prelude.
+Native selected terminal-cut tests now characterize validity, degree and the
+full factor root at the same decoded retained bank value. A universal scan
+over every creating cut remains separate. Original-syntax bank queries also
+supply their own planning while coordinate selection stays in the test datum.
+Fixed-width Tarski principal streams now have native coefficient, degree and
+mass controls, with eventual real signs from iterated infinitesimal trailing
+coefficients. Same-terminal endpoint substitutions and coefficient-sign tests
+remain unfinished, as do full native graph construction and effective global
+stabilization.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
