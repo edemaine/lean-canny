@@ -1,3 +1,52 @@
+import LeanCanny.Encoding.IntegralMixedCausalRowCode
+import LeanCanny.Algebra.IntegralMixedCausalUnitRecord
+import LeanCanny.Encoding.IntegralMixedCausalUnitBody
+import LeanCanny.Algebra.IntegralMixedCausalUnitHeader
+import LeanCanny.Encoding.IntegralMixedCausalRecordPlan
+import LeanCanny.Encoding.IntegralMixedCausalRecordTables
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQIndexedOriginal
+import LeanCanny.Algebra.IntegralMixedCausalPlanOriginalRules
+import LeanCanny.Encoding.IntegralMixedCausalRecordCells
+import LeanCanny.Encoding.IntegralMixedCausalRecordSnapshot
+import LeanCanny.Encoding.IntegralMixedCausalRecordControls
+import LeanCanny.Algebra.IntegralMixedCausalUnitBounds
+import LeanCanny.Encoding.IntegralMixedCausalRecordInteger
+import LeanCanny.Algebra.IntegralMixedBankCoordinatePolynomial
+import LeanCanny.Algebra.IntegralMixedBankCoordinateBounds
+import LeanCanny.Algebra.IntegralMixedRelativeCutChoice
+import LeanCanny.Algebra.IntegralMixedFramedCutChoiceProfile
+import LeanCanny.Algebra.IntegralMixedCutChoiceFamily
+import LeanCanny.Algebra.IntegralMixedRawKindChoiceQuery
+import LeanCanny.Algebra.IntegralMixedFramedChoicePrepared
+import LeanCanny.Algebra.IntegralMixedFramedLimitChoice
+import LeanCanny.Algebra.IntegralMixedFramedFullChoiceProbe
+import LeanCanny.Algebra.IntegralMixedFramedChoiceCoefficientTransport
+import LeanCanny.Algebra.IntegralMixedFramedChoiceProbeTask
+import LeanCanny.Algebra.IntegralMixedFramedChoiceProbeTransport
+import LeanCanny.Algebra.IntegralMixedFramedChoiceProbeSource
+import LeanCanny.Algebra.IntegralMixedCutChoiceBounds
+import LeanCanny.Algebra.IntegralMixedFramedChoiceProbePackets
+import LeanCanny.Algebra.IntegralMixedFramedChoiceProbeSpace
+import LeanCanny.Algebra.IntegralMixedFramedChoiceProbePolynomial
+import LeanCanny.Algebra.IntegralMixedFramedChoiceProbeBounds
+import LeanCanny.Geometry.IntegralMixedFrozenFrameCutCard
+import LeanCanny.Geometry.IntegralMixedFrozenFrameSectionCard
+import LeanCanny.Connectivity.FiniteCriticalSweepCount
+import LeanCanny.Geometry.IntegralMixedFrozenFrameSweepCard
+import LeanCanny.Geometry.IntegralMixedFrozenFrameDescendingCard
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRegularCoverCard
+import LeanCanny.Encoding.IntegralMixedFrozenFrameCoverWidth
+import LeanCanny.Algebra.IntegralMixedFramedScalarPrefix
+import LeanCanny.Geometry.IntegralMixedFramedPrefixVertex
+import LeanCanny.Encoding.IntegralFramedCurrentQSquare
+import LeanCanny.Geometry.IntegralMixedFrozenFramePointScalar
+import LeanCanny.Geometry.IntegralMixedFrozenFrameSectionCode
+import LeanCanny.Connectivity.IntegralMixedSelectedCoordinateOrder
+import LeanCanny.Connectivity.IntegralMixedSelectedBranchRanks
+import LeanCanny.Connectivity.IntegralMixedSelectedBranchCodes
+import LeanCanny.Geometry.BoundedRegularRadiusExponents
+import LeanCanny.Geometry.BoundedRegularRadiusPolynomial
+import LeanCanny.Geometry.BoundedRegularRadiusBounds
 import LeanCanny.Algebra.IntegralMixedCausalRecord
 import LeanCanny.Algebra.IntegralMixedCausalPlan
 import LeanCanny.Algebra.IntegralMixedCausalPlanLookup
@@ -3022,7 +3071,8 @@ attachment/graph assembly and global unbounded component preservation remain
 open, so this is not an unconditional PSPACE connectivity theorem.
 Causal plans now instantiate actual prior-run Q from original typed records;
 their original headers, bodies, sources and all-key snapshots are exact.
-Native original mode/header writers remain frontend obligations. Full actual
+Native original mode/header writers are now derived from raw causal records,
+including mixed coordinate scale masks and original midpoint rows. Full actual
 relative-factor coefficients have native arbitrary-modulus matrix and powered
 polynomial readers from the verified current-Q machine, including all four
 cut tags and coefficients above the recorded truncation degree. Joint cut
@@ -3037,8 +3087,24 @@ valid Boolean tag now has its own actual projected sample; every scoped
 original term and formula retains its value on the same decoded joint-bank
 coordinate prefix. Both original connectivity languages transfer to the SAME
 total actual frontier-edge routine, with all other input/vertex/width/endpoint
-costs native. Its native space bound, mixed-scale raw script integration and
-global unbounded component preservation remain open.
+costs native. Its native space bound, full native geometry replay and global
+unbounded component preservation remain open.
+Raw causal records now derive actual indexed current-Q scalar controls and
+original growth bounds; the integer backend currently handles padded X only.
+Old bank-coordinate characteristic polynomials annihilate the same retained
+joint point and have original-only degree, leading and mass bounds. Their
+native matrix-entry cost bridge and prescribed-root prelude remain separate.
+Lower-choice probes preserve the entire old run while querying every earlier
+choice. Their full coefficients have native readers for every cut tag.
+Descending regular covers have explicit cardinality and native numeric width
+bounds. Selected critical sections and persistent actual physical branches
+have injective fixed bit words; rank/count computation, endpoint matching and
+whole-record replay still require native algorithms. Critical point retention
+and canonical scalar-prefix joint vertices preserve the same original tuple.
+The bounded regular source is exactly a polynomial in the external physical
+radius T=2^R. Its parameter degree is independent of R and its binary width is
+polynomial in original metadata. This algebraic identity does not establish
+component stability or an effective unbounded-radius bound.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

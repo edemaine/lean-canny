@@ -44935,3 +44935,501 @@ end ProjectedCandidateSampleRegression
 #print axioms CanonicalAuxiliaryCandidateCover.rawSample_formula_holds
 #print axioms CanonicalAuxiliaryCandidateCover.sourcePoint_holds
 end Group40Regression7
+
+
+namespace Group41Regression0
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation
+open IntegralMixedHistory
+open IntegralMixedCausalRowCode
+open IntegralCriticalHistoryTask
+
+private theorem fromBits_bits_reverse (k : ℕ) : Nat.fromBits (Nat.bits k).reverse=k := Nat.fromBitsLE_bits k
+
+private def atomCode (i : ℕ) := pair [true] (BinaryNatCode.encode i)
+private def midpointCode (i j : ℕ) := pair [true] (pair (atomCode i) (atomCode j))
+
+example : expression [] (midpointCode 2 0) 3=.add (.reference 0) (.reference 2) := by
+  norm_num [IntegralMixedCausalRowCode.expression,IntegralMixedCausalRowCode.midpoint,atom,active,reference,midpointCode,atomCode,
+    pairFst_pair,pairSnd_pair,BinaryNatCode.encode,Nat.fromBitsLE,Nat.fromBits]
+  norm_num [fromBits_bits_reverse]
+
+example : expression [] (midpointCode 7 0) 3=.add (.constant 0) (.reference 2) := by
+  norm_num [IntegralMixedCausalRowCode.expression,IntegralMixedCausalRowCode.midpoint,atom,active,reference,midpointCode,atomCode,
+    pairFst_pair,pairSnd_pair,BinaryNatCode.encode,Nat.fromBitsLE,Nat.fromBits]
+  norm_num [fromBits_bits_reverse]
+
+private def parameters : Parameters where
+  cap _ := 4
+  ambient _ := 2
+  width _ := 16
+  degree _ := 2
+  sourceWidth _ := 2
+  height _ := 0
+  modulusBound _ := 8
+
+example : IntegralMixedFramedCurrentQIndexedBits.scale parameters (fun _ => [true,false,true]) [] 0=2 ∧
+    IntegralMixedFramedCurrentQIndexedBits.scale parameters (fun _ => [true,false,true]) [] 1=1 ∧
+    IntegralMixedFramedCurrentQIndexedBits.scale parameters (fun _ => [true,false,true]) [] 2=2 ∧
+    IntegralMixedFramedCurrentQIndexedBits.scale parameters (fun _ => [true,false,true]) [] 3=1 := by
+  norm_num [IntegralMixedFramedCurrentQIndexedBits.scale,IntegralMixedOriginalRuleBodyBits.arity,
+    parameters]
+
+private def tagCode (i : ℕ) := WordList.encode (List.replicate 11 [] ++ [BinaryNatCode.encode i])
+
+example : (IntegralMixedCausalUnitHeaderBits.header 2 2 (tagCode 0)).rawTag=2 ∧
+    (IntegralMixedCausalUnitHeaderBits.header 2 2 (tagCode 1)).rawTag=3 ∧
+    (IntegralMixedCausalUnitHeaderBits.header 2 2 (tagCode 2)).rawTag=4 ∧
+    (IntegralMixedCausalUnitHeaderBits.header 2 2 (tagCode 3)).rawTag=5 := by
+  norm_num [IntegralMixedCausalUnitHeaderBits.header,IntegralMixedCausalUnitHeaderBits.selection,
+    IntegralMixedUnitRecordCode.critical,IntegralMixedUnitRecordCode.field,tagCode,
+    WordList.get_encode,BinaryNatCode.encode,Nat.fromBitsLE,Nat.fromBits]
+  norm_num [fromBits_bits_reverse]
+
+#print axioms IntegralMixedCausalRowCode.atom_encode_FP
+#print axioms IntegralMixedCausalRowCode.expression_encode_FP
+#print axioms IntegralMixedCausalUnitHeaderBits.record_header
+#print axioms IntegralMixedCausalUnitHeaderBits.header_FP
+#print axioms IntegralMixedCausalUnitBodyBits.writer_FP
+#print axioms IntegralMixedCausalUnitBodyBits.record_body
+#print axioms IntegralMixedCausalRecordPlanBits.headerTable_FP
+#print axioms IntegralMixedCausalRecordPlanBits.modeTable_FP
+#print axioms IntegralMixedCausalRecordPlanBits.bodyTable_FP
+#print axioms IntegralMixedCausalRecordPlanBits.instruction_source
+#print axioms IntegralMixedCausalRecordPlanBits.metadata
+#print axioms IntegralMixedCausalRecordPlanBits.tables_native
+#print axioms IntegralMixedFramedCurrentQIndexedBits.controls
+
+#print axioms IntegralMixedCausalRecordPlanBits.physical_row
+#print axioms IntegralMixedCausalRecordPlanBits.virtual_row
+#print axioms IntegralMixedCausalRecordPlanBits.physical_mask
+#print axioms IntegralMixedCausalRecordPlanBits.virtual_mask
+#print axioms IntegralMixedCausalRecordPlanBits.originalRules
+#print axioms IntegralMixedCausalRecordPlanBits.scalarControls
+#print axioms IntegralMixedCausalUnitRecordBits.record_core
+#print axioms IntegralMixedCausalUnitRecordBits.original_bounds
+
+#print axioms IntegralMixedCausalRecordPlanBits.polynomial_X
+#print axioms IntegralMixedCausalRecordPlanBits.integerOriginal
+end Group41Regression0
+
+
+namespace Group41Regression1
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory
+open scoped Classical BigOperators
+namespace CoordinateProbe
+private noncomputable def source : SpatialSource 0 where
+  low := 0
+  leading := 1
+  degree := 2
+  degree_two := le_rfl
+  low_degree := by simp
+  leading_ne_zero := one_ne_zero
+private noncomputable def p : Polynomial ℤ := Polynomial.C 2*Polynomial.X-Polynomial.C 3
+private theorem pn : p≠0 := by
+  intro h
+  have H := congrArg (fun q : Polynomial ℤ => q.coeff 1) h
+  norm_num [p] at H
+private theorem pd : p.natDegree≤2^2 := by
+  have H : p.natDegree≤1 := by
+    rw [p,Polynomial.natDegree_sub_C,Polynomial.natDegree_C_mul_X 2 (by decide : (2:ℤ)≠0)]
+  exact H.trans (by decide)
+private noncomputable def seed : State source 3 2 0 (Fin 0) :=
+  IntegralMixedHistory.base source (IntegralHistorySampler.base 3 (2^2)) (by decide)
+private noncomputable def command : IntegralMixedFullHistoryScript.Command source 2 := .integer p pn pd
+private noncomputable def x := IntegralMixedFullHistoryScript.run seed [command] (by decide)
+private theorem qtwo : commonDenominator x=2 := by
+  change commonDenominator (integerStep seed (by decide) p pn pd)=2
+  unfold commonDenominator CommonIntegerDenominator.denominator
+  rw [Fin.prod_univ_one,integerStep_denominator]
+  have Hdeg : (Polynomial.C (3:ℤ)).degree<(Polynomial.C (2:ℤ)*Polynomial.X).degree := by
+    rw [Polynomial.degree_C (by decide : (3:ℤ)≠0),Polynomial.degree_C_mul_X (by decide : (2:ℤ)≠0)]
+    decide
+  rw [p,Polynomial.leadingCoeff_sub_of_degree_lt Hdeg,Polynomial.leadingCoeff_C_mul_X]
+example : (IntegralMixedBankCoordinatePolynomial.polynomial x 0).natDegree=4 := by
+  rw [IntegralMixedBankCoordinatePolynomial.degree]
+  rfl
+example : (IntegralMixedBankCoordinatePolynomial.polynomial x 0).leadingCoeff=16 := by
+  rw [IntegralMixedBankCoordinatePolynomial.leading,qtwo]
+  rfl
+example : (IntegralMixedBankCoordinatePolynomial.polynomial x 0).eval₂ (Int.castRingHom ℝ) (3/2)=0 := by
+  have ht : ∀ i : Fin ([command].length),IntegralMixedIntegerRealization.Root [command][i] (3/2) := by
+    intro i
+    have hi : i=0 := Fin.eq_zero i
+    subst i
+    change p.eval₂ (Int.castRingHom ℝ) (3/2)=0
+    norm_num [p]
+  obtain ⟨_,φ,_,_,hvalues⟩ := IntegralMixedIntegerRealization.exists_realization seed Fin.elim0
+    (fun i => Fin.elim0 i) [command] (by decide) (fun _ => 3/2) ht
+  have H := IntegralMixedBankCoordinatePolynomial.quotient_root x φ 0
+  have HV := hvalues 0
+  change φ (x.bank.numerator 0)/(x.bank.denominator 0:ℝ)=3/2 at HV
+  exact (congrArg (fun a : ℝ => (IntegralMixedBankCoordinatePolynomial.polynomial x 0).eval₂ (Int.castRingHom ℝ) a) HV).symm.trans H
+#print axioms IntegralMixedBankCoordinatePolynomial.coefficient
+#print axioms IntegralMixedBankCoordinatePolynomial.degree
+#print axioms IntegralMixedBankCoordinatePolynomial.leading
+#print axioms IntegralMixedBankCoordinatePolynomial.nonzero
+#print axioms IntegralMixedBankCoordinatePolynomial.quotient_root
+#print axioms IntegralMixedBankCoordinatePolynomial.point_root
+#print axioms IntegralMixedBankCoordinatePolynomial.coefficientBudget_binary
+#print axioms IntegralMixedBankCoordinatePolynomial.massBudget_binary
+#print axioms IntegralMixedBankCoordinatePolynomial.common_bound
+#print axioms IntegralMixedBankCoordinatePolynomial.matrix_bound
+#print axioms IntegralMixedBankCoordinatePolynomial.coefficient_bound
+#print axioms IntegralMixedBankCoordinatePolynomial.mass_bound
+end CoordinateProbe
+end Group41Regression1
+
+
+namespace Group41Regression2
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower IntegralCriticalHistoryTask
+
+open scoped Classical
+namespace FullChoiceProbeRegression
+-- A lower finite choice retains its exact tag and coordinate; no new parent is chosen.
+example {n : ℕ} {P : IntegralMixedHistory.SpatialSource n} (r : IntegralMixedCriticalSweep.Rule n)
+    (c : IntegralMixedRelativeCuts.Kind P r) (k : ℕ) (hk : k<IntegralMixedRelativeCuts.choiceIndex r c) :
+    IntegralMixedRelativeCuts.atChoice r c k=IntegralMixedRelativeCuts.lowerChoice r c k hk :=
+  IntegralMixedRelativeCuts.atChoice_lower r c k hk
+-- Clipping above the actual finite choice is harmless, unlike wrapping modulo a radix.
+example {n : ℕ} {P : IntegralMixedHistory.SpatialSource n} (r : IntegralMixedCriticalSweep.Rule n)
+    (c : IntegralMixedRelativeCuts.Kind P r) (k b : ℕ) (hb : IntegralMixedRelativeCuts.choiceIndex r c≤b) :
+    IntegralMixedRelativeCuts.atChoice r c (min k b)=IntegralMixedRelativeCuts.atChoice r c k :=
+  IntegralMixedRelativeCuts.atChoice_clipped r c k b hb
+-- Finite entry packets preserve composite modulus six and the same selected old algebra.
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (c : List Bool)
+    (i j : Fin (FixedWidthPolynomial.count ((IntegralMixedFramedChoiceProbeSourceBits.source P D H).arity c)
+      ((IntegralMixedFramedChoiceProbeSourceBits.source P D H).width c))) :
+    IntegralMixedFramedChoiceProbePacketBits.value P D H
+      (pair (pair c (BinaryNatCode.encode 5)) (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode j.val)))=
+      residueBits (((IntegralMixedFramedChoiceProbeSourceBits.source P D H).matrix c i j : ℤ) : ZMod 6) := by
+  have HE:=IntegralMixedFramedChoiceProbePacketBits.packet P D H c (BinaryNatCode.encode 5) i j
+  have HM : Nat.fromBitsLE (BinaryNatCode.encode 5)+1=6 := by decide
+  rw [HM] at HE
+  exact HE
+-- Out-of-range natural basis labels stay zero rather than being wrapped into valid samples.
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D) (q : List Bool)
+    (hl : ¬IntegralMixedFramedChoiceProbePacketBits.Labels P q) :
+    IntegralMixedFramedChoiceProbePacketBits.value P D H q=[] :=
+  IntegralMixedFramedChoiceProbePacketBits.value_outside P D H q hl
+#print axioms IntegralMixedRelativeCuts.atChoice_lower
+#print axioms IntegralMixedRelativeCuts.atChoice_clipped
+#print axioms IntegralMixedRawKindChoiceBits.query_FP
+#print axioms IntegralMixedRawKindChoiceBits.query_saved
+#print axioms IntegralMixedCutChoiceFamilyBits.coordinate_kind
+#print axioms IntegralMixedCutChoiceFamilyBits.squarefree_kind
+#print axioms IntegralMixedCutChoiceFamilyBits.value_kind
+#print axioms IntegralMixedCutChoiceFamilyBits.limit_kind
+#print axioms IntegralMixedFramedChoicePreparedBits.coordinate_evaluator
+#print axioms IntegralMixedFramedChoicePreparedBits.squarefree_evaluator
+#print axioms IntegralMixedFramedChoicePreparedBits.value_evaluator
+#print axioms IntegralMixedFramedLimitChoiceBits.evaluator
+#print axioms IntegralMixedFramedFullChoiceProbeBits.evaluator
+#print axioms IntegralMixedFramedChoiceProbeTransportBits.entry
+#print axioms IntegralMixedFramedChoiceProbePacketBits.evaluator
+#print axioms IntegralMixedFramedChoiceProbeSourceBits.evaluation
+#print axioms IntegralMixedFramedChoiceProbeSourceBits.polynomial_mass
+end FullChoiceProbeRegression
+end Group41Regression2
+
+
+namespace Group41Regression3
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Connectivity IntegralMixedHistory
+open IntegralMixedCriticalSweep IntegralMixedFrozenFrame
+open scoped Classical
+namespace FrozenCountsRegression
+noncomputable def singular : SpatialSource 1 where
+  low := 0
+  leading := 1
+  degree := 2
+  degree_two := by decide
+  low_degree := by rw [MvPolynomial.totalDegree_zero]; decide
+  leading_ne_zero := by decide
+noncomputable abbrev frame : Frame 1 where
+  frozen := {0}
+  scales _ := 1
+  scales_ne_zero _ := one_ne_zero
+  heights _ := .constant 0
+example {S B : ℕ} {ι : Type} (x : State singular S B 0 ι) (hm : 0≤S)
+    (φ : x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ) :
+    Finite (IntegralMixedSelectedPhysicalFiber.physical x hm (sweep x frame 0 (by simp) 1 (by simp)) φ 0) ∧
+    Nat.card (IntegralMixedSelectedPhysicalFiber.physical x hm (sweep x frame 0 (by simp) 1 (by simp)) φ 0)≤2^(B*2) :=
+  physical_finite_card x hm (sweep x frame 0 (by simp) 1 (by simp)) φ 0
+example : {a : ℝ | (Polynomial.X^2 : Polynomial ℤ).eval₂ (Int.castRingHom ℝ) a=0}.ncard≤2 := by
+  apply (selected_polynomial_roots_ncard (Polynomial.X^2 : Polynomial ℤ) (Int.castRingHom ℝ) ?_).trans
+  · rw [Polynomial.natDegree_pow,Polynomial.natDegree_X]
+  · simp only [Polynomial.map_pow,Polynomial.map_X]
+    exact pow_ne_zero 2 Polynomial.X_ne_zero
+end FrozenCountsRegression
+#print axioms selected_polynomial_roots_ncard
+#print axioms selected_bad_ncard
+#print axioms height_cut_roots_ncard
+#print axioms sweepBad_ncard
+#print axioms physical_coordinate_root
+#print axioms physical_finite_card
+end Group41Regression3
+
+
+namespace Group41Regression4
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding LeanCanny.Connectivity
+open IntegralMixedFrozenFrame
+open scoped Classical
+namespace FrozenQuantitativeRegression
+noncomputable def readers : BoundedFullWriter.Readers where
+  dim _:=0
+  source _:=((LeanCanny.ETR.Term.const 0).toData.toBits)
+  radius _:=1
+example : ∃ I : Type,Finite I ∧ Nat.card I≤(coverFactor 3 (originalWidth readers []))^4 ∧
+    Nonempty (ClopenPathCover {y : Fin 4→ℝ |
+      (BoundedRegularSource.polynomial (BoundedFullWriter.original readers [])
+        (BoundedFullWriter.size readers []) (BoundedFullWriter.size readers []) (readers.radius [])).eval₂
+        (Int.castRingHom ℝ) y=0} I) := regular_zero_cover_original_card readers []
+example : IntegralMixedFrozenFrameCoverWidth.width 0 0=5:=by decide
+example : ∃ N, N≤1 ∧ ∃ cut : Fin (N+2)→ℝ,StrictMono cut ∧
+    (∀ t∈({0}:Set ℝ),∃ j,cut j=t) ∧
+    (∀ _x : Unit,(0:ℝ)∈Set.Icc (cut 0) (cut (Fin.last (N+1)))) ∧
+    (∀ i : Fin (N+1),∀ t∈Set.Ioo (cut i.castSucc) (cut i.succ),t∉({0}:Set ℝ)) ∧
+    ∀ j,cut j∈({0}:Set ℝ) ∨ (fun _ : Unit=>(0:ℝ)) ⁻¹' {cut j}=∅ := by
+  simpa only [Set.ncard_singleton] using FiniteCriticalSweepCount.exists_cuts_bound
+    (fun _ : Unit=>(0:ℝ)) continuous_const {0} (Set.finite_singleton 0)
+end FrozenQuantitativeRegression
+#print axioms FiniteCriticalSweepCount.exists_cuts_bound
+#print axioms sweep_from_root_covers_card
+#print axioms exists_recursive_cover_card
+#print axioms regular_zero_cover_original_card
+#print axioms IntegralMixedFrozenFrameCoverWidth.factor_binary
+#print axioms IntegralMixedFrozenFrameCoverWidth.width_unary
+#print axioms IntegralMixedFrozenFrameCoverWidth.regularWidth_polynomial
+#print axioms IntegralMixedFrozenFrameCoverWidth.regular_zero_cover_card
+end Group41Regression4
+
+
+namespace Group41Regression5
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding
+open IntegralMixedHistory IntegralMixedFramedHistoryScript
+open scoped Classical
+namespace FramedPrefixVertexRegression
+noncomputable def source : SpatialSource 0 where
+  low:=MvPolynomial.C (-1)
+  leading:=1
+  degree:=2
+  degree_two:=by decide
+  low_degree:=by simpa only [MvPolynomial.totalDegree_C] using (show 0<2 by decide)
+  leading_ne_zero:=by decide
+noncomputable def rule : CriticalRule 0 where
+  offset:=0
+  objective:=0
+  coordinate:=0
+  scales _:=1
+  scales_ne_zero _:=one_ne_zero
+  heights _:=.constant 0
+example {S B : ℕ} (x : State source S B 0 (Fin 0)) (hm : 0≤S) (i : Fin 1) :
+    (IntegralMixedFramedScalarPrefix.advance x hm (.critical rule)).sampler.rows i=
+      (UniformIntegralPrefix.step x.sampler.scalarPrefix hm (Nat.two_pow_pos B)
+        (criticalPolynomial x hm rule) (criticalDegree x hm rule)).rows i :=
+  IntegralMixedFramedScalarPrefix.advance_rows x hm (.critical rule) i
+example {S B : ℕ} (x : State source S B 0 (Fin 0))
+    (c : Instruction 0 B) (hc : c.command.isCritical=true) (h : [c].length≤S+1) :
+    HEq (IntegralMixedFramedScalarPrefix.run x [c] h).bank (IntegralMixedFramedHistoryScript.run x [c] h).bank := by
+  have _hc:=hc
+  exact IntegralMixedFramedScalarPrefix.run_bank x [c] h
+end FramedPrefixVertexRegression
+#print axioms IntegralMixedFramedScalarPrefix.advance_rows
+#print axioms IntegralMixedFramedScalarPrefix.run_bank
+#print axioms IntegralMixedFramedScalarPrefix.run_canonical
+#print axioms IntegralMixedFramedPrefixVertex.exists_vertex
+#print axioms IntegralFramedCurrentQSquare.access
+#print axioms IntegralFramedCurrentQSquare.valid_decider
+end Group41Regression5
+
+
+namespace Group41Regression6
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry
+open IntegralMixedHistory IntegralMixedFrozenFrame
+open scoped Classical
+namespace FrozenPointScalarRegression
+noncomputable def source : SpatialSource 0 where
+  low:=MvPolynomial.C (-1)
+  leading:=1
+  degree:=2
+  degree_two:=by decide
+  low_degree:=by simpa only [MvPolynomial.totalDegree_C] using (show 0<2 by decide)
+  leading_ne_zero:=by decide
+noncomputable abbrev frame : Frame 0 where
+  frozen:=∅
+  scales _:=1
+  scales_ne_zero _:=one_ne_zero
+  heights _:=.constant 0
+private theorem belongs : (fun _ : Fin 1=>(1:ℝ))∈slice source frame (Fin.elim0 : Fin 0→ℝ) := by
+  constructor
+  · norm_num [source,FermatCriticalHomogenization.polynomial,MvPolynomial.eval₂_add,MvPolynomial.eval₂_C,
+      MvPolynomial.eval₂_mul,MvPolynomial.eval₂_sum,MvPolynomial.eval₂_pow,MvPolynomial.eval₂_X]
+  · intro i hi
+    exact False.elim (Finset.notMem_empty i hi)
+private theorem gradients : ∀ i : Fin 1,i∉frame.frozen→i≠0→
+    (MvPolynomial.pderiv i (FermatCriticalHomogenization.polynomial source.low source.leading source.degree)).eval₂
+      (Int.castRingHom ℝ) (fun _=>1)=0 := by
+  intro i _ hi
+  exact False.elim (hi (Fin.eq_zero i))
+example {S B : ℕ} (x : State source S B 0 (Fin 0)) (hm : 0≤S)
+    (φ : x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ) :
+    let born:=pointScalarState x hm frame 0 (by simp) 0 (by simp)
+    ∃ w : (Fin 0⊕Unit)→ℝ,∃ ψ : born.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ,
+      (∀ i,(born.sampler.rows i).eval₂ (Int.castRingHom ℝ) w=0) ∧
+      ψ (born.bank.numerator 0)/(born.bank.denominator 0:ℝ)=1 := by
+  obtain ⟨w,ψ,Hw,_,_,_,HV,_⟩:=retain_point_coordinate x hm φ frame 0 (by simp) 0 (by simp)
+    Fin.elim0 (fun i=>Fin.elim0 i) (fun i=>Fin.elim0 i) Fin.elim0 (fun i=>Fin.elim0 i)
+    (fun _=>1) belongs gradients
+  exact ⟨w,ψ,Hw,HV 0⟩
+end FrozenPointScalarRegression
+#print axioms point_coordinate_root
+#print axioms pointScalarState_native_prefix
+#print axioms pointScalarState_native_bank
+#print axioms retain_point_coordinate
+end Group41Regression6
+
+
+namespace Group41Regression7
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Connectivity
+open IntegralMixedHistory IntegralMixedCriticalSweep IntegralMixedSelectedPhysicalFiber
+open scoped Classical
+namespace FrozenSectionCodeRegression
+noncomputable def source : SpatialSource 1 where
+  low:=0
+  leading:=1
+  degree:=2
+  degree_two:=by decide
+  low_degree:=by rw [MvPolynomial.totalDegree_zero]; decide
+  leading_ne_zero:=by decide
+noncomputable def rule : Rule 1 where
+  critical:={
+    offset:=1
+    objective:=0
+    coordinate:=0
+    scales:=fun _=>1
+    scales_ne_zero:=fun _=>one_ne_zero
+    heights:=fun _=>.constant 0 }
+  height:=0
+  height_frozen:=by decide
+  slope:=1
+  slope_ne_zero:=by decide
+noncomputable def zeroPoint {S B : ℕ} (x : State source S B 0 (Fin 0)) (hm : 0≤S)
+    (φ : x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ) : physical x hm rule φ 0 := by
+  refine ⟨fun _=>0,?_,?_⟩
+  · intro i _
+    simp only [mul_zero,heightValue,rule,expression,Int.cast_zero,mul_zero,map_zero,mul_zero,ite_self,zero_add]
+  · intro j
+    have HJ : j=0:=Fin.eq_zero j
+    subst j
+    norm_num [IntegralMixedSweepRows.integerRow,IntegralMixedCriticalSweep.objective,rule,source,FermatCriticalHomogenization.polynomial,
+      MvPolynomial.eval₂_add,MvPolynomial.eval₂_C,MvPolynomial.eval₂_mul,MvPolynomial.eval₂_sum,
+      MvPolynomial.eval₂_pow,MvPolynomial.eval₂_X]
+example {S B : ℕ} (x : State source S B 0 (Fin 0)) (hm : 0≤S)
+    (φ : x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ) :
+    (IntegralMixedFrozenFrameSectionCode.word x hm rule φ 0 (zeroPoint x hm φ)).length=2*B :=
+  IntegralMixedFrozenFrameSectionCode.word_length x hm rule φ 0 (zeroPoint x hm φ)
+end FrozenSectionCodeRegression
+#print axioms IntegralMixedFrozenFrameSectionCode.roots_card
+#print axioms IntegralMixedFrozenFrameSectionCode.coordinate_mem
+#print axioms IntegralMixedFrozenFrameSectionCode.word_digit
+#print axioms IntegralMixedFrozenFrameSectionCode.word_injective
+#print axioms IntegralMixedFrozenFrameSectionCode.root_ordinal
+#print axioms IntegralMixedFrozenFrameSectionCode.width_unary
+#print axioms IntegralMixedFrozenFrameSectionCode.width_polynomial
+end Group41Regression7
+
+
+namespace Group41Regression8
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Connectivity
+open IntegralMixedHistory IntegralMixedCriticalSweep IntegralMixedSelectedGeometry IntegralMixedSelectedPhysicalFiber
+open scoped Classical
+namespace SelectedBranchCodesRegression
+noncomputable def source : SpatialSource 1 where
+  low:=MvPolynomial.C (-1)
+  leading:=1
+  degree:=2
+  degree_two:=by decide
+  low_degree:=by simpa only [MvPolynomial.totalDegree_C] using (show 0<2 by decide)
+  leading_ne_zero:=by decide
+noncomputable def rule : Rule 1 where
+  critical:={
+    offset:=1
+    objective:=0
+    coordinate:=0
+    scales:=fun _=>1
+    scales_ne_zero:=fun _=>one_ne_zero
+    heights:=fun _=>.constant 0 }
+  height:=0
+  height_frozen:=by decide
+  slope:=1
+  slope_ne_zero:=by decide
+example : IntegralMixedSelectedBranchCodes.width 1 3=14:=by decide
+example {S B : ℕ} (x : State source S B 0 (Fin 0)) (hm : 0≤S)
+    (φ : x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ) (c : IntegralMixedRelativeCuts.Choices x hm rule φ)
+    (a b : ℝ) (t₀ : Set.Ioo a b)
+    (havoid : ∀ t∈Set.Ioo a b,t∉IntegralMixedSelectedCriticalCuts.bad x hm rule φ c) :
+    ∃ curve : physical x hm rule φ t₀.val→ℝ→Fin 2→ℝ,
+      (∀ j,curve j t₀.val=j.val) ∧
+      (∀ j,ContinuousOn (curve j) (Set.Icc a b)) ∧
+      (∀ j t,t∈Set.Icc a b→curve j t∈physical x hm rule φ t) ∧
+      (∀ t : Set.Ioo a b,∀ y,y∈physical x hm rule φ t.val↔∃! j,curve j t.val=y) ∧
+      ∃ code : physical x hm rule φ t₀.val→List Bool,
+        Function.Injective code ∧ (∀ j,(code j).length=2*(2*B+1)) ∧
+        ∀ j (t : Set.Ioo a b),code j=IntegralMixedSelectedBranchCodes.word x hm rule φ t₀.val
+          (fun k=>freeCoordinates rule (curve k t.val)) j := by
+  simpa only [IntegralMixedSelectedBranchCodes.width,Nat.mul_comm B 2] using
+    IntegralMixedSelectedBranchCodes.exists_codes x hm rule φ c a b t₀ havoid
+end SelectedBranchCodesRegression
+#print axioms IntegralMixedSelectedCoordinateOrder.covering
+#print axioms IntegralMixedSelectedCoordinateOrder.comparison
+#print axioms IntegralMixedSelectedBranchRanks.rank_eq
+#print axioms IntegralMixedSelectedBranchRanks.word_injective
+#print axioms IntegralMixedSelectedBranchRanks.word_eq
+#print axioms IntegralMixedSelectedBranchCodes.exists_codes
+#print axioms IntegralMixedSelectedBranchCodes.width_unary
+end Group41Regression8
+
+
+namespace Group41Regression9
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Geometry LeanCanny.Geometry.BoundedRegularRadius
+open scoped Classical
+
+example : (powerScalar (ι:=Fin 0) 2 3).eval (MvPolynomial.C 2)=MvPolynomial.C (32 : ℤ) := by
+  norm_num [powerScalar]
+
+example : MvPolynomial.eval₂ (RingHom.id ℤ) (fun _ : Fin 4=>0)
+    ((sourcePolynomial (MvPolynomial.C (-3) : MvPolynomial (Fin 0) ℤ)).eval (MvPolynomial.C 4))=265 := by
+  norm_num [sourcePolynomial,Polynomial.eval_finsetSum]
+  norm_num [map_ofNat]
+
+example {n : ℕ} (q : MvPolynomial (Fin n) ℤ) (D b : ℕ) :
+    (polynomial q D b).eval (MvPolynomial.C 1)=BoundedRegularSource.polynomial q D b 0 := by
+  simpa only [pow_zero] using polynomial_eval q D b 0
+
+example {n : ℕ} (q : MvPolynomial (Fin n) ℤ) (D b : ℕ) :
+    (polynomial q D b).eval 0=-1 := polynomial_at_zero q D b
+
+example : BoundedZeroSource.massExponent 0 0 3=17 := by decide
+example : BoundedZeroSource.penaltyExponent 0 1 3=80 := by decide
+
+example : ∃ p : Polynomial ℕ,∀ q : List Bool,
+    parameterWidth q.length (q.length+1)≤p.eval q.length :=
+  parameterWidth_polynomial (UnaryFn.length id_mem_FP)
+    (BinaryFn.ofUnary ((UnaryFn.length id_mem_FP).add (UnaryFn.const 1)))
+
+#print axioms mass_affine
+#print axioms penalty_affine
+#print axioms critical_value_exponent_add
+#print axioms perturbation_affine
+#print axioms source_mass_affine
+#print axioms regularization_affine
+#print axioms sourcePolynomial_eval
+#print axioms polynomial_eval
+#print axioms polynomial_at_zero
+#print axioms polynomial_degree
+#print axioms parameterDegree_binary
+#print axioms parameterWidth_unary
+#print axioms parameterWidth_polynomial
+end Group41Regression9

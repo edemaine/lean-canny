@@ -1870,7 +1870,8 @@ attachment/graph assembly and unbounded component preservation remain open.
 
 Causal script plans now instantiate prior-run Q only in their mathematical
 rules, preserving exact original headers, bodies and source lookup. Their
-raw original table writers and mixed-scale controls remain frontend work.
+raw original table writers and mixed-scale controls are now constructed from
+the causal record format, including optional original midpoint rows.
 Full relative-factor coefficients now have native arbitrary-modulus readers
 from the actual current-Q machine. At one successor joint tuple, finite
 coefficient guards and an exact zero-padding guard recover the actual cut
@@ -1882,6 +1883,18 @@ point projects into its own piece, retaining every original coordinate and
 scoped term/formula value. Both connectivity transfers now use the same
 actual raw frontier-edge routine; its native space bound and global
 unbounded component preservation remain open.
+
+Raw causal records now provide native indexed current-Q controls and original
+resource bounds. Bank-coordinate characteristic polynomials retain the same
+joint point, with proved original-only degree and coefficient-mass bounds;
+their native coefficient bridge and integer prelude remain unfinished.
+Lower-choice probes query all earlier choices without altering the old run.
+Recursive covers now have explicit size and native numeric width bounds.
+Actual sections and persistent physical branches have injective fixed bit
+words; native rank computation, branch attachment and complete record replay
+remain open. The actual bounded regular source is also exactly a polynomial
+in the external physical radius `T = 2^R`, with parameter degree independent
+of `R` and polynomial binary width. This does not prove radius stabilization.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
