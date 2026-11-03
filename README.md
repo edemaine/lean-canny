@@ -1946,7 +1946,7 @@ interpretation. Concrete correlated prelude replay is now proved.
 Selected-cut acceptance is now exactly actual validity, degree and the full
 factor root at the decoded newest bank value. Every earlier prefix has one
 interpretation of the same terminal suffix; generic native suffix tests are
-available. A universal scan of every creating cut remains open.
+available. A universal native scan now validates every creating cut.
 Anchored scalar root ordinals characterize actual branch endpoints. Root-window
 counts remove scalar-root existential quantifiers from Near, retaining its
 ordered epsilon/delta conditions and the native coefficient-sign obligation.
@@ -1964,14 +1964,34 @@ now satisfy the literal native sources; all
 coordinate and slack roots are derived from the same old candidate, supplying
 one correlated realization of the complete native prelude.
 Native selected terminal-cut tests now characterize validity, degree and the
-full factor root at the same decoded retained bank value. A universal scan
-over every creating cut remains separate. Original-syntax bank queries also
+full factor root at the same decoded retained bank value. A universal native scan
+now validates every creating cut. Original-syntax bank queries also
 supply their own planning while coordinate selection stays in the test datum.
 Fixed-width Tarski principal streams now have native coefficient, degree and
 mass controls, with eventual real signs from iterated infinitesimal trailing
 coefficients. Same-terminal endpoint substitutions and coefficient-sign tests
 remain unfinished, as do full native graph construction and effective global
 stabilization.
+
+The marked replay now has original-only native controls and arbitrary-modulus
+bank access. Every filtered old candidate supplies one complete native vertex
+with all prescribed bank values. Certified saved-prefix rows and denominator
+data agree with this literal replay. A datum-based Thom comparison is in
+PSPACE and preserves both sampled contexts and words; every filtered old
+candidate has a replay of the required width accepted by that comparison.
+Marked-point filtering remains separate.
+A native scan validates every chronological cut on one terminal tuple, including
+actual validity, stored degree and the full factor root at its retained bank
+value. Causal records now append after the marked prelude with absolute birth
+references, native tables, original implicit integer leaves and derived height
+bounds. All seven native model routines have original-only controls; uniform
+caller-modulus causal readout remains separate from the proved serializer and
+Data pullback.
+Actual coordinate heads now suffix-embed into one terminal tuple while retaining
+eta. Substitution by the same bank endpoint plus or minus delta has native
+cleared coefficient and mass programs. Shifted principal-coefficient tests,
+ordered Near, physical trace reconstruction, full native graph assembly and
+effective global stabilization remain unfinished.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate

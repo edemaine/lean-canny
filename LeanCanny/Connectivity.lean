@@ -1,3 +1,85 @@
+import LeanCanny.Algebra.IntegerPolynomialFiniteMassEnvelope
+import LeanCanny.Algebra.IntegralMixedSourceIntegerBounds
+import LeanCanny.Algebra.IntegralMixedSourceIntegerSnapshot
+import LeanCanny.Encoding.BoundedRegularLowHeight
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerHeight
+import LeanCanny.Algebra.IntegralMixedSourceIntegerHeaders
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerData
+import LeanCanny.Algebra.IntegralMixedSourceIntegerRules
+import LeanCanny.Algebra.IntegralMixedSourceIntegerCurrentQControls
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerControls
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQCompanionPlannedSpace
+import LeanCanny.Algebra.IntegralMixedFramedZeroRules
+import LeanCanny.Algebra.BoundedRegularIntegerCurrentQOriginal
+import LeanCanny.Algebra.IntegralMixedSourceIntegerZeroRules
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerOriginal
+import LeanCanny.Algebra.BoundedRegularIntegerCurrentQPlanned
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerUniformSpace
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQLeadingPlannedSpace
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQBankProductPlannedSpace
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerScalarSpace
+import LeanCanny.Algebra.BoundedRegularIntegerCurrentQRootControls
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerCertified
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerBank
+import LeanCanny.Algebra.IntegralMixedSourceIntegerCausalPrelude
+import LeanCanny.Algebra.IntegralMixedSourceIntegerCausalAppend
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerBankObservation
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordAppend
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordTables
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordAgreement
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordSource
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordBounds
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordPlan
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordHeight
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordCells
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordSnapshot
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordControls
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordControls
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPlanned
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordSpace
+import LeanCanny.Algebra.IntegralMixedCausalPlanRootPullback
+import LeanCanny.Algebra.RationalMonomialParameterShift
+import LeanCanny.Algebra.FixedWidthKroneckerSpace
+import LeanCanny.Algebra.CommonDenominatorMass
+import LeanCanny.Algebra.RationalMonomialParameterShiftSpace
+import LeanCanny.Algebra.RationalMonomialParameterShiftReader
+import LeanCanny.Algebra.RationalMonomialParameterShiftBounds
+import LeanCanny.Algebra.RationalMonomialParameterShiftNative
+import LeanCanny.Algebra.FixedWidthParameterSuffixSpace
+import LeanCanny.Algebra.FixedWidthBivariateRowSpace
+import LeanCanny.Algebra.FixedWidthBivariateParameterSuffixSpace
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateParameterSuffix
+import LeanCanny.Algebra.IntegralMixedFramedTerminalCoordinateHead
+import LeanCanny.Algebra.IntegralMixedFramedTerminalCoordinateSource
+import LeanCanny.Algebra.IntegralMixedFramedTerminalParameterShift
+import LeanCanny.Geometry.IntegralMixedFramedTerminalParameterShift
+import LeanCanny.Encoding.SquareSampleCompleteSuffixSourceReindex
+import LeanCanny.Encoding.IntegralFramedTraceCutTask
+import LeanCanny.Encoding.IntegralFramedTraceCutMetadata
+import LeanCanny.Encoding.IntegralFramedTraceCutSource
+import LeanCanny.Encoding.IntegralFramedTraceCutGuards
+import LeanCanny.Encoding.IntegralFramedTraceCutScan
+import LeanCanny.Encoding.IntegralFramedTraceCutOrigin
+import LeanCanny.Encoding.SquareSampleCompleteSuffixEvaluation
+import LeanCanny.Encoding.IntegralFramedTraceCutReadback
+import LeanCanny.Encoding.IntegralFramedTraceCutValidity
+import LeanCanny.Encoding.IntegralFramedTraceCutRoot
+import LeanCanny.Encoding.IntegralFramedTraceCutGuardComplete
+import LeanCanny.Encoding.IntegralFramedTraceCutExact
+import LeanCanny.Encoding.IntegralFramedTraceCutAll
+import LeanCanny.Encoding.IntegralMixedCandidateReplayDatum
+import LeanCanny.Encoding.IntegralMixedCandidateReplayOld
+import LeanCanny.Encoding.IntegralMixedCandidateReplayNew
+import LeanCanny.Encoding.IntegralMixedCandidateReplayThom
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedCandidateAtRadius
+import LeanCanny.Algebra.IntegralMixedSourceIntegerScalarOnly
+import LeanCanny.Geometry.IntegralMixedRealizedCompleteVertex
+import LeanCanny.Algebra.IntegralMixedFramedFullObservation
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedCandidateVertex
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedCertifiedReplay
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedNativeVertex
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedOriginalReadback
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedThomCompleteness
 import LeanCanny.Algebra.IntegerPolynomialSourceChoice
 import LeanCanny.Algebra.IntegerPolynomialZeroRootSource
 import LeanCanny.Encoding.IntegralMixedAuxiliaryParametricSlackSources
@@ -3399,7 +3481,7 @@ candidate, giving a correlated realization of the complete native prelude.
 Every selected earlier cut has native validity, degree and full-factor-root
 tests at the retained bank value of one terminal tuple. The old interpretation
 is constructed from that tuple, with chronology and header guards discharged.
-A native universal scan over every creating cut remains separate.
+A native universal scan now validates every creating cut on that same terminal tuple.
 Original-syntax bank queries now perform their own planning for arbitrary
 caller modulus; coordinate selection in the univariate test datum keeps the
 sampler context and vertex word fixed. Native coefficient streams, polynomial
@@ -3407,6 +3489,30 @@ degree controls and mass bounds supply fixed-width Tarski principal readers.
 Iterated delta/epsilon trailing coefficients give their eventual real query
 signs. Binding endpoint substitutions and all coefficient signs to the same
 terminal tuple remains separate from these certified readers.
+The marked prelude now has original-only native controls, FamilyInputs and
+arbitrary-modulus bank access. A filtered old candidate constructs its bounded
+point and canonical correlated replay, then one valid complete native vertex
+retaining every bank value. Saved-prefix rows and integer denominator data
+agree with that literal replay, including the certified planned bank. A native
+datum-based Thom scan identifies all old original coordinates with n+7-i in
+the new bank, without changing either sampler context or vertex word. Every
+filtered old candidate has a replay of the required width accepted by this
+PSPACE comparison. Marked-point filtering remains separate.
+The full chronological cut scan now validates all actual cuts at one terminal
+sample: selected-parent validity, exact stored degree and the untruncated
+factor root at the decoded retained bank quotient. Physical trace and frame
+reconstruction remain separate from this exact native predicate.
+Raw causal records now append after the charged n+8-leaf prelude using absolute
+birth references. Native source/header/body/mode tables, original implicit
+integer leaves and height bounds are derived from original syntax. All seven
+native model routines have original-only controls. Arbitrary-modulus causal
+readout still needs the projected-root controls; serializer and Data pullback
+already preserve the original record table.
+Actual coordinate heads now retain eta while suffix-embedding every old raw
+variable into one terminal tuple. Endpoint substitution eta=bank point plus
+or minus delta has native cleared coefficient and mass programs, preserving
+negative denominators and the selected terminal point. Full shifted-head
+principal-coefficient tests and the final ordered Near predicate remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
