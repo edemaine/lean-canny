@@ -1,3 +1,41 @@
+import LeanCanny.Encoding.IntegralFramedPhysicalTraceCutSource
+import LeanCanny.Encoding.IntegralMixedPhysicalTraceCutTest
+import LeanCanny.Encoding.IntegralMixedPhysicalTraceCutGuards
+import LeanCanny.Encoding.IntegralMixedPhysicalTraceCutScan
+import LeanCanny.Encoding.IntegralFramedPhysicalSuffixPoint
+import LeanCanny.Encoding.IntegralFramedPhysicalTraceCutSemantics
+import LeanCanny.Encoding.IntegralFramedPhysicalTraceCutParent
+import LeanCanny.Encoding.IntegralMixedPhysicalCutCoefficientSemantics
+import LeanCanny.Encoding.IntegralMixedPhysicalCutValidity
+import LeanCanny.Encoding.IntegralMixedPhysicalTraceCutValidity
+import LeanCanny.Encoding.IntegralFramedPhysicalSourcePrelude
+import LeanCanny.Encoding.IntegralFramedPhysicalScalarRoots
+import LeanCanny.Encoding.IntegralFramedPhysicalOlderParent
+import LeanCanny.Algebra.MvTwoParameterEvaluation
+import LeanCanny.Algebra.FixedWidthBivariateParameterPairEvaluation
+import LeanCanny.Algebra.IntegralMixedFramedCoordinatePackedSelected
+import LeanCanny.Algebra.SelectedParameterHeadEvaluation
+import LeanCanny.Algebra.IntegralMixedFramedTerminalCoordinateSelected
+import LeanCanny.Algebra.IntegralMixedSourceIntegerCausalPrefix
+import LeanCanny.Encoding.IntegralFramedPhysicalCausalPrelude
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPrefix
+import LeanCanny.Algebra.IntegralMixedRelativeCutSpecialized
+import LeanCanny.Encoding.IntegralMixedCausalRecordDegree
+import LeanCanny.Encoding.IntegralMixedCausalCutDegree
+import LeanCanny.Algebra.IntegralMixedCausalPlanSuccessor
+import LeanCanny.Encoding.IntegralMixedAuxiliaryRecordPrelude
+import LeanCanny.Encoding.IntegralMixedCausalCutRealization
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordReadback
+import LeanCanny.Algebra.IntegralMixedFramedTerminalTarskiSelected
+import LeanCanny.Encoding.IntegralFramedTerminalTarskiStatistic
+import LeanCanny.Encoding.IntegralFramedTerminalTarskiStatisticSpace
+import LeanCanny.Encoding.IntegralFramedTerminalTarskiStatisticValue
+import LeanCanny.Encoding.IntegralFramedPhysicalTarskiSelected
+import LeanCanny.Algebra.IntegralMixedPhysicalOriginalSourceDerivativeSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalSourceAtDerivativeSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockLayout
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockPowers
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockSourceSpace
 import LeanCanny.Algebra.IntegralMixedFramedPhysicalRowOrigin
 import LeanCanny.Algebra.IntegralMixedFramedPhysicalHeightFullSpace
 import LeanCanny.Algebra.FixedWidthFermatHeadSpace
@@ -3749,6 +3787,24 @@ statistic. The selected-near predicate has an exact five-statistic semantic
 characterization with derived degree, seed and window stability. Matching the
 native statistic to that model, full coefficient assembly, frame consistency,
 the effective graph and global stabilization remain open.
+Native chronological cut tests now use one full physical context and word.
+Actual original script length bounds the universal scan. Every accepted
+literal creating cut derives its own Active/birth-fit facts and one older
+homomorphism from the same full vertex; all coefficient/choice queries use
+that homomorphism. The selected relative factor is valid and has exactly
+the recorded specialized degree. Factor-root and retained-quotient binding
+remain separate.
+The same full raw scalar suffix now interprets every literal older prefix
+with its old weights. Actual integer preludes have one full complete word.
+Marked/outer prefixes equal the prelude rebuilt at their target cap/width.
+A native chosen-degree codec realizes the corresponding literal decoded
+cut and preserves the full tuple; arbitrary record solvability is not
+asserted. Original causal instructions read back at the same saved bank.
+Native terminal head/query/degree metadata now match the ordered selected
+model, with one full-vertex older homomorphism for all six window queries.
+Source/gradient block readers keep the exact caller modulus and external
+exponent word. Final full-row coefficient assembly, Near predicate guards,
+chosen geometric grammar, graph and global stabilization remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

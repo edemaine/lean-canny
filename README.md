@@ -2011,25 +2011,28 @@ exponents, and cleared two-coordinate midpoint queries preserve arbitrary
 signed denominators. Ordered Near, native graph assembly and effective
 global stabilization remain unfinished.
 
-The full physical sampler has exact native degrees, a uniform row mass
-bound and a complete-square factory retaining every physical and multiplier
-row. Original Fermat, derivative, normal and full height coefficient readers
-are proved; assembling the full row reader remains open.
-Marked and outer replay tests now check all original leaves, regular/marked
-equations, original-coordinate Thom agreement and every creating critical
-correlation on one fixed full context and word. Their controls come from
-original syntax; only the literal full-row coefficient backend remains a
-cost premise. Accepted replays project to the original candidate. Different
-accepted slack phases attach in the same full regular component.
-Actual realizations have one full sample without a scalar-only restriction.
-Raw scalar-suffix tests use native physical columns without an old sampler
-vertex or evaluator.
-Actual principal Tarski tests have native degree, mass and arithmetic
-controls. Descending principal-sign scans compute the declared iterated
-statistic. The selected-near predicate has an exact five-statistic semantic
-characterization, including derived exact degree, epsilon seed and window
-stability. Native/model matching, frame consistency, graph assembly and
-global stabilization remain open.
+The full physical sampler has native degree/mass bounds and a complete
+square factory retaining every row. Original source, derivative, normal
+and height readers are proved, including numeric critical-block source
+and gradient readers. Final full-row coefficient assembly remains open.
+Marked/outer tests check all original leaves, regular/marked equations,
+original-coordinate Thom agreement, critical correlations and all creating
+cuts on one fixed full context and word. Original syntax supplies their
+controls; only the literal full-row backend remains a cost premise.
+Accepted replays project to the original candidate and their marked phases
+attach in one full regular component.
+Every accepted literal cut now derives its parent interpretation from the
+same full tuple, with valid relative factor and exact recorded degree.
+Factor-root/retained-quotient binding remains separate. Raw suffix tests
+use native physical columns and old weights, without old labels or roots.
+Actual integer preludes have one full word. Marked/outer prefixes equal
+preludes rebuilt at the record target cap/width. Chosen-degree records have
+exact decoded cut realization and saved-bank instruction readback.
+Arbitrary record solvability is not inferred.
+Native terminal statistic factories now match the actual selected head,
+window queries and exact degree/seed model, under one full-vertex older
+homomorphism for all six queries. The final Near predicate guards, chosen
+geometric record grammar, graph and global stabilization remain open.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
