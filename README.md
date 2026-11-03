@@ -2011,6 +2011,26 @@ exponents, and cleared two-coordinate midpoint queries preserve arbitrary
 signed denominators. Ordered Near, native graph assembly and effective
 global stabilization remain unfinished.
 
+The full physical sampler now has exact native row degrees and a uniform
+mass bound for every saved prefix. Its complete-square factory retains all
+physical and multiplier rows, with one label and bank interpretation for
+every actual joint root. Native arity, degree sum and mass are proved; full
+coefficient access still needs the new critical-block reader.
+Native full scalar-row coefficients follow from the actual scalar-column
+injection. Affine matrices, powered representatives and arbitrary injective
+coefficient embeddings have native readers. Saved-key writers preserve the
+original root, birth packet and context.
+A sparse guard now has native same-vertex tests and a universal scan for all
+creating births; accepted active tests enforce equality of the actual bank
+quotient and selected physical-coordinate power. Native untruncated all-leaf scans derive the actual n+8/n+10 power and
+signed cutoff values. Frame grammar remains required.
+Actual principal Tarski coefficient tests now have original-only degree, mass
+and arithmetic controls. The selected whole-head bounds are derived. Their
+principal slices now use raw scalar columns of the same full physical tuple,
+without old sampler access or roots. Ordered-window stability equivalence is
+proved; native iterated-sign coupling, graph assembly and global stabilization
+remain open.
+
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
 permutation now connects arbitrary active subsets to the same selected mixed

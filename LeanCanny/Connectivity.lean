@@ -1,3 +1,76 @@
+import LeanCanny.Algebra.RationalMonomialBivariateShift
+import LeanCanny.Algebra.RationalMonomialBivariateShiftSpace
+import LeanCanny.Algebra.IntegralMixedFramedTerminalCoordinateReader
+import LeanCanny.Algebra.IntegralMixedFramedTerminalTarskiHead
+import LeanCanny.Algebra.FixedWidthBivariateParameterPairSpace
+import LeanCanny.Algebra.CertifiedBivariateTernaryPower
+import LeanCanny.Algebra.FixedWidthBivariateTernaryPower
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateOuterBounds
+import LeanCanny.Algebra.IntegralMixedFramedTerminalTarskiFamily
+import LeanCanny.Algebra.IntegralMixedFramedTerminalTarskiAccess
+import LeanCanny.Algebra.IntegralMixedFramedTerminalTarskiMass
+import LeanCanny.Algebra.IntegralMixedSelectedCoordinateHead
+import LeanCanny.Algebra.IntegralMixedSelectedCoordinateHeadWidth
+import LeanCanny.Encoding.IntegralFramedTerminalTarskiParameterTest
+import LeanCanny.Algebra.IntegralHistoryPhysicalRowMass
+import LeanCanny.Algebra.PhysicalPowerCriticalCoefficients
+import LeanCanny.Algebra.IntegralMixedPhysicalRowMass
+import LeanCanny.Algebra.PhysicalCriticalMassBudget
+import LeanCanny.Algebra.IntegralHistoryPhysicalHeightCoefficient
+import LeanCanny.Algebra.IntegralMixedPhysicalRowBudget
+import LeanCanny.Algebra.IntegralMixedPhysicalRowStepMass
+import LeanCanny.Algebra.IntegralMixedFramedFullRowMass
+import LeanCanny.Algebra.IntegralMixedFramedFullRowMassControls
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQOldHeightSpace
+import LeanCanny.Algebra.IntegralMixedFramedCriticalGuardQueries
+import LeanCanny.Algebra.IntegralMixedFramedCriticalGuardSpace
+import LeanCanny.Algebra.IntegralMixedFramedCriticalGuardBounds
+import LeanCanny.Algebra.IntegralMixedFramedCriticalGuardProfile
+import LeanCanny.Geometry.IntegralMixedFramedCriticalGuard
+import LeanCanny.Geometry.IntegralMixedFramedCriticalGuardPadding
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedCriticalGuard
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalAncestry
+import LeanCanny.Algebra.IntegralMixedFramedCriticalGuardOrigin
+import LeanCanny.Algebra.IntegralHistoryScalarRows
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalScalarRows
+import LeanCanny.Algebra.IntegralMixedFramedScalarColumnRows
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalAffineSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalAffineMatrix
+import LeanCanny.Algebra.FixedWidthEmbeddingSpace
+import LeanCanny.Algebra.IntegralCoordinatePoweredLocalSpace
+import LeanCanny.Algebra.IntegralMixedFramedFullScalarRowSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalAffineCurrent
+import LeanCanny.Encoding.IntegralFramedPhysicalSquare
+import LeanCanny.Encoding.IntegralFramedPhysicalSquarePoint
+import LeanCanny.Encoding.IntegralFramedPhysicalSquareAccess
+import LeanCanny.Encoding.IntegralMixedMarkedReplayAttachment
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalRowSelector
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalPersistence
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalRowDegree
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalDegreeSemantics
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalDegreeBlock
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalDegreeValues
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalDegree
+import LeanCanny.Encoding.IntegralFramedPhysicalCriticalGuardTest
+import LeanCanny.Encoding.IntegralFramedPhysicalCriticalGuardScan
+import LeanCanny.Encoding.SquareSampleCompleteEmbeddedPolynomialTest
+import LeanCanny.Connectivity.IntegralMixedSelectedWindowStability
+import LeanCanny.Algebra.FixedWidthBoxRepackSpace
+import LeanCanny.Algebra.FixedWidthBinaryDerivativeSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalLowSpace
+import LeanCanny.Algebra.IntegralMixedPhysicalOriginalDerivativeSpace
+import LeanCanny.Encoding.IntegralFramedPhysicalUnivariateTest
+import LeanCanny.Encoding.IntegralFramedPhysicalUnivariateSpace
+import LeanCanny.Encoding.IntegralFramedPhysicalIntegerLeaves
+import LeanCanny.Encoding.IntegralFramedPhysicalLeafSources
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalHeightSource
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalHeightMatrix
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalHeightPackets
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalHeightCoefficientSpace
+import LeanCanny.Algebra.IntegralMixedFramedScalarEmbedding
+import LeanCanny.Geometry.IntegralMixedFramedScalarEmbedding
+import LeanCanny.Encoding.IntegralFramedScalarEmbeddedTarskiParameterTest
+import LeanCanny.Algebra.MvTwoParameterEvaluationDegree
 import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPullbackCells
 import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPullbackSnapshot
 import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPullbackControls
@@ -3590,6 +3663,35 @@ candidate and both parameter blocks. Coefficient-box reindexing rejects
 oversized exponents before repacking, and a two-coordinate cleared midpoint
 query retains arbitrary signed denominators. Shifted principal-coefficient
 tests and the final ordered Near predicate remain open.
+Full physical saved histories now have native row-birth/local-index selectors,
+literal old-row/degree persistence and exact original-header degree programs.
+The full physical row mass bound is derived for every command and padded
+default. A complete square factory retains all physical and multiplier rows,
+their actual degrees and infinity exclusion. Native arity, degree sum and mass
+are derived; its remaining access boundary is the literal full-row coefficient
+reader. Every actual full joint root has one complete label with that same
+tuple and retained-bank interpretation.
+Full scalar rows now equal the actual prefix rows renamed along native
+injective scalar columns, without a noncritical-only hypothesis. Current-Q
+arithmetic supplies their native coefficient reader. Unerased affine matrices
+and modulus-local powered representatives have native cost, including support
+guards for variables embedded among physical columns. New critical-block
+coefficient assembly remains open.
+A sparse physical guard compares each retained quotient to its literal
+creating physical-coordinate power. Its original-only coefficient/mass/degree
+programs preserve arbitrary signed denominators. Native complete-vertex tests
+and one universal creating-birth scan retain the context and word; accepted
+active guards imply those actual equalities. Native untruncated all-leaf scans now use actual full scalar columns; the
+n+8/n+10 variants derive power parameters and signed cutoff values.
+Frame grammar remains required.
+Accepted marked replay phases over the same original candidate are joined
+inside the full regular zero set. Actual eta-head and principal Tarski
+coefficient readers now have original controls, whole degree and mass bounds,
+and same-tuple sign tests. Sufficient head truncation bounds are derived.
+Principal slices now embed the raw scalar digits into the same full physical
+tuple, without old sampler access or roots. The ordered-window stability
+equivalence is proved; native iterated-sign coupling, graph assembly and
+global stabilization remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
