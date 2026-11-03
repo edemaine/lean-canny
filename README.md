@@ -2080,16 +2080,25 @@ records and prove exact equality with the accepted padded raw table. Reserved
 coefficient-only interval probes support nonzero constant and rootless factors.
 Actual strict padding margins and a zero-padding extension give one full
 sampler word preserving every old quotient. An earlier-only scan retains the
-actual-root guard on every meaningful cut. Concrete probe serialization and
-completeness guard assembly remain open.
+actual-root guard on every meaningful cut. The actual last typed cut now
+binds its serialized word to the literal instruction/current denominator,
+canonical parent key and complete sampler word at the same root and cap.
+Whole-chain parent/padding realization and reverse guard acceptance remain
+open.
 
 Equal-height boundary programs now realize the midpoint, endpoint and both
 capture blocks at the same point, including singular boundary components.
 Equal specialized numerical frozen equations give equal coordinate-root
 multisets and ranks across independent banks and parameters. A literal
 scale-two mean row centers the sweep at zero without a retained alias.
-Native branch-origin verification, semantic guard composition and the two-way
-bounded graph construction remain open. Fixed integer bivariate families have
+The actual native cut writer/decoder now preserves these specialized roots.
+Five native epsilon-window statistics identify the coordinate rank of the
+captured midpoint, using the same full word and original-only costs. Keeping
+epsilon proves the exact pseudo-remainder seed degree, including degree drops
+at epsilon zero. Anchored coordinate ranks and Near tests imply an actual
+local path. The last record before each checked level is exactly that frame's
+own first-free-coordinate critical capture. Semantic guard composition and
+the two-way bounded graph construction remain open. Fixed integer bivariate families have
 stable root-sign-pattern counts past a common mass cutoff; the recursive
 polynomial presentation and original-only uniform mass bound needed for
 global stabilization remain open.

@@ -1001,3 +1001,67 @@ including the new combined CheckRoadmapChains fixture. Namespace axiom audit:
 87183 declarations, only propext/Classical.choice/Quot.sound. Exact22-file
 stage manifest, source hashes, blob bytes and100644 modes verified. Durable
 verification evidence is retained under tmp/group57-*.
+
+16. G58: native midpoint ranks, literal last probes and local path soundness
+
+An actual FP midpoint cut writer uses the scale-two reference sum, with its
+literal typed/raw decoder at the actual current Q. Its selected coordinate
+polynomial at parameter0 has the ordinary sweep's root MULTISET at the actual
+mean, with explicit nonzero clearing scale. Factor-root semantics away from0
+are centered displacements; no ordinary-height alias is asserted.
+
+The native zero-parameter head keeps every terminal raw variable and two
+dummy axes. Epsilon remains in the query (slot1, delta slot0 unused). This
+is essential: evaluating epsilon at0 may lower the pseudo-remainder seed
+degree (p=X^2-1,q=X). The existing independent-window theorem proves the
+exact d-1 seed degree. Original-only five-statistic evaluators/deciders use
+hn/ht/ha/hR and native query writers in both modes; no ER, principal reader
+or degree_FP premise is supplied. On explicit Core/count/same-root/index
+bounds, ONE interpreting old hom from the SAME valid complete word gives
+exact acceptance iff the selected(parameter0) root has the supplied full
+real-root rank. Ghost coordinate roots are included, repeated roots counted
+once. Outside that domain only arithmetic evaluation is claimed.
+
+The point-window model identifies captured physical ordinals without a
+continuity or isolation oracle. Same-width coordinate-rank words agree on
+equal specialized slices/actual points across different banks; COMPLETE
+sample words are not transported. Matching the captured midpoint's used
+coordinate ranks, actual frozen endpoint equations and all coordinate Near
+tests imply JoinedIn the ORIGINAL coarse slice. This is local edge soundness;
+the concrete whole graph validity/guard assembly remains open.
+
+The final typed raw cut now determines the actual newest instruction and
+parent current denominator, canonical parent key and complete sampler word.
+The root/cap/width stay fixed. Parent Realizes remains honest; no arbitrary
+later solvability is inferred. Checked-chain padded tables put the literal
+probe at that exact position. Reverse coefficient guard completeness,
+whole-history/padding realization and role conjunction are still explicit.
+Every checked level also has literal own-height provenance: its immediately
+previous record is FrameCode(current frozen labels, objective=k,coordinate=k),
+including the initial seed case. Physical guards are needed to infer actual
+criticality from that byte equality.
+
+Scope audit: the signed cutoff pair exists only in outer=true (prelude n+10,
+producers n+8/n+9), while current global word budgets use marked=false n+8.
+These are NOT combined. A no-mandatory-outer-cuts construction using finite
+actual Bad union realCriticalValues is being proved separately; its extrema
+and finite enumeration are not claimed here. A read-only design audit is
+also checking whether arbitrary retained endpoints are a sound graph
+overapproximation when every local edge has its own NoBad/NoCrit/origin/Near
+proof; no historical ancestry edges or arbitrary-frame equality are allowed.
+M3 whole graph/path equivalence, M4 effective uniform stabilization and M5
+original Boolean incidence remain open. No unconditional original point or
+whole-set connectivity membership theorem is claimed.
+
+Handoffs: tmp/framed-zero-tarski-eleven-handoff.txt,
+tmp/chronological-mean-cut-five-handoff.txt,
+tmp/g58-reserved-binding-five-handoff.txt, tmp/g58-root-four-handoff.txt.
+The unused exact-zero-query alternative helpers were archived with hashes
+under tmp/g58-exact-query-alternative; the live implementation keeps epsilon.
+Verification: all25 entire sources passed strict200000-heartbeat checks.
+Full strict three-target build19424 jobs PASS; all22 Check scripts PASS,
+including the combined CheckRoadmapOrigins fixture. Namespace axiom audit:
+87390 declarations, only propext/Classical.choice/Quot.sound. Source hashes,
+exact29-file stage manifest, blob bytes and100644 modes are checked at commit.
+The completed local-edge overapproximation review is retained in
+ tmp/m3-local-edge-overapprox-review.txt; source/frame agreement remains vital.

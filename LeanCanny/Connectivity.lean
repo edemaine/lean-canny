@@ -1,3 +1,28 @@
+import LeanCanny.Algebra.FixedWidthBivariateZeroLift
+import LeanCanny.Algebra.FixedWidthBivariateZeroLiftSpace
+import LeanCanny.Algebra.IntegralMixedFramedZeroTarskiAccess
+import LeanCanny.Algebra.IntegralMixedFramedZeroTarskiFamily
+import LeanCanny.Algebra.IntegralMixedFramedZeroTarskiMass
+import LeanCanny.Algebra.IntegralMixedFramedZeroTarskiSelected
+import LeanCanny.Connectivity.IntegralMixedSelectedAnchorWindow
+import LeanCanny.Connectivity.IntegralMixedSpecializedSectionWordComparison
+import LeanCanny.Encoding.IntegralFramedZeroTarskiStatistic
+import LeanCanny.Encoding.IntegralFramedZeroTarskiStatisticSpace
+import LeanCanny.Encoding.IntegralFramedZeroTarskiStatisticValue
+import LeanCanny.Encoding.IntegralMixedChronologicalMeanCutActual
+import LeanCanny.Encoding.IntegralMixedChronologicalMeanCutCode
+import LeanCanny.Encoding.IntegralMixedChronologicalMeanCutRaw
+import LeanCanny.Encoding.IntegralMixedPhysicalZeroTarskiNative
+import LeanCanny.Encoding.IntegralMixedPhysicalZeroTarskiSelected
+import LeanCanny.Encoding.IntegralMixedReservedCutCode
+import LeanCanny.Encoding.IntegralMixedReservedCutPlanning
+import LeanCanny.Encoding.IntegralMixedReservedCutVertex
+import LeanCanny.Encoding.IntegralMixedReservedProbePosition
+import LeanCanny.Encoding.IntegralMixedRoadmapOwnHeightCode
+import LeanCanny.Encoding.IntegralMixedSourceIntegerLastCode
+import LeanCanny.Geometry.IntegralMixedChronologicalMeanCut
+import LeanCanny.Geometry.IntegralMixedChronologicalMeanCutSpecialization
+import LeanCanny.Geometry.IntegralMixedMatchedSlabNearEdge
 import LeanCanny.Algebra.IntegralMixedMeanCenteredSweep
 import LeanCanny.Algebra.IntegralMixedNumericalSweepSpecialization
 import LeanCanny.Algebra.IntegralMixedPaddedZeroRealExtension
@@ -4176,16 +4201,25 @@ and proves exact equality of the accepted raw table with their padded word.
 Coefficient-only reserved interval probes admit nonzero constant and rootless
 factors. Actual strict padding margins and zero-padding extensions produce
 one full sampler word preserving every old quotient; the earlier-only scan
-keeps actual-root guards on meaningful cut records. Concrete probe role,
-serialization and completeness guard assembly remain to be bound together.
+keeps actual-root guards on meaningful cut records. The last typed raw cut
+now derives the literal actual instruction and current Q; its canonical
+parent key gives a full sampler word at the same prepared root and cap.
+Parent/padding realization, role guards and reverse coefficient acceptance
+remain to be assembled for whole-chain completeness.
 Equal-height boundary programs realize midpoint/child records and both capture
 blocks at the same point, including singular boundary-component samples.
 Specialized numerical frozen equations determine the full coordinate root
 multisets and ranks across independent banks/parameters. A literal scale-two
 reference-sum row centers the midpoint mean at zero; no producer alias or
-sample-word transport is inferred. Native branch-origin verification, actual
-graph edges and two-way path equivalence remain open, as does original Boolean
-incidence. Fixed integer bivariate families have stable root-sign-pattern
+sample-word transport is inferred. Its actual native cut writer and current-Q
+decoder now have those exact specialized roots. Native five-statistic epsilon
+windows decide actual zero-parameter coordinate ranks on the same complete
+word, with original-only costs and exact seed degrees. Matching the captured
+physical midpoint's ranks makes all coordinate Near tests an actual local
+path; inactive rank digits are irrelevant to that implication. The literal
+last record before every checked level is its own first-free-coordinate
+critical capture. Concrete graph validity/guard composition and the two-way
+bounded path theorem remain open, as does original Boolean incidence. Fixed integer bivariate families have stable root-sign-pattern
 counts at a common outer mass cutoff.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.
