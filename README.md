@@ -1979,19 +1979,37 @@ with all prescribed bank values. Certified saved-prefix rows and denominator
 data agree with this literal replay. A datum-based Thom comparison is in
 PSPACE and preserves both sampled contexts and words; every filtered old
 candidate has a replay of the required width accepted by that comparison.
-Marked-point filtering remains separate.
+The same vertex now also passes marked-point filtering.
 A native scan validates every chronological cut on one terminal tuple, including
 actual validity, stored degree and the full factor root at its retained bank
 value. Causal records now append after the marked prelude with absolute birth
 references, native tables, original implicit integer leaves and derived height
 bounds. All seven native model routines have original-only controls; uniform
-caller-modulus causal readout remains separate from the proved serializer and
-Data pullback.
+caller-modulus causal readout now follows from original-only projected-root
+controls, preserving the original record table.
 Actual coordinate heads now suffix-embed into one terminal tuple while retaining
 eta. Substitution by the same bank endpoint plus or minus delta has native
 cleared coefficient and mass programs. Shifted principal-coefficient tests,
 ordered Near, physical trace reconstruction, full native graph assembly and
 effective global stabilization remain unfinished.
+
+The actual original candidate filter is now in PSPACE. A bounded search
+finds one polynomial-width complete marked replay satisfying all original
+untruncated leaf roots, regular-source and mark equations, and the Thom
+comparison to the original candidate. The canonical replay constructs that
+same witness; soundness recovers the original zero equation.
+Marked causal records have original-only arbitrary-modulus bank access and
+native validation of every actual creating cut on one terminal tuple. A
+separate n+10 prelude adds signed cutoff roots with native controls.
+An explicit full physical-column enumeration and native scalar-column reader
+now give full-row interpretation and bank readback on the same physical
+tuple. Native physical-row coefficients and masses, scalar/physical-coordinate
+correlation and the trace grammar are still needed.
+Tarski parameter coefficient tests now preserve both parameter blocks and
+the complete candidate. Native coefficient reboxing rejects oversized
+exponents, and cleared two-coordinate midpoint queries preserve arbitrary
+signed denominators. Ordered Near, native graph assembly and effective
+global stabilization remain unfinished.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate

@@ -1,3 +1,61 @@
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPullbackCells
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPullbackSnapshot
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPullbackControls
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPullbackNative
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPullbackBounds
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPullbackPlanned
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordCaller
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordBank
+import LeanCanny.Algebra.IntegralMixedFramedCurrentQBankTermSpace
+import LeanCanny.Encoding.IntegralFramedBankTermCurrentQ
+import LeanCanny.Encoding.IntegralMixedMarkedLeafTest
+import LeanCanny.Encoding.IntegralMixedMarkedLeafScan
+import LeanCanny.Encoding.IntegralMixedMarkedLeafPowers
+import LeanCanny.ETR.BoundedMarkedParameterTerm
+import LeanCanny.Geometry.BoundedMarkedParameterSemantics
+import LeanCanny.Encoding.IntegralMixedMarkedPointTest
+import LeanCanny.Encoding.IntegralMixedMarkedPointReadback
+import LeanCanny.Encoding.IntegralMixedMarkedPointSemantics
+import LeanCanny.Encoding.IntegralMixedMarkedReplayValidity
+import LeanCanny.Encoding.IntegralMixedAuxiliaryOuterIntegerSource
+import LeanCanny.Encoding.IntegralMixedAuxiliaryOuterIntegerRoots
+import LeanCanny.Encoding.IntegralMixedAuxiliaryOuterRecordPlan
+import LeanCanny.Encoding.IntegralMixedAuxiliaryOuterRecordRealization
+import LeanCanny.Encoding.IntegralMixedAuxiliaryOuterIntegerRadius
+import LeanCanny.Encoding.IntegralMixedAuxiliaryOuterRecordHeight
+import LeanCanny.Encoding.IntegralMixedAuxiliaryOuterRecordControls
+import LeanCanny.Encoding.IntegralMixedAuxiliaryOuterRecordSpace
+import LeanCanny.Encoding.IntegralMixedAuxiliaryOuterRecordCaller
+import LeanCanny.Encoding.IntegralMixedAuxiliaryOuterRecordBank
+import LeanCanny.Algebra.IntegralMixedFramedPlanningAbsorption
+import LeanCanny.Algebra.IntegralMixedFramedPlannedProbe
+import LeanCanny.Encoding.IntegralFramedTraceCutOriginalCount
+import LeanCanny.Encoding.IntegralFramedTraceCutSelectedParent
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedTraceCuts
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedTraceOrigin
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedTraceSelectedParent
+import LeanCanny.Algebra.MvTwoParameterCoefficient
+import LeanCanny.Algebra.FixedWidthParameterCons
+import LeanCanny.Algebra.MvTwoParameterEncodedCoefficient
+import LeanCanny.Algebra.FixedWidthTarskiParameterCoefficientSpace
+import LeanCanny.Encoding.SquareSampleCompleteTarskiParameterTest
+import LeanCanny.Algebra.RationalMonomialMidpoint
+import LeanCanny.Algebra.RationalMonomialMidpointSpace
+import LeanCanny.Algebra.IntegralMixedFramedMidpoint
+import LeanCanny.Geometry.IntegralMixedFramedMidpoint
+import LeanCanny.Encoding.IntegralMixedSourceIntegerRecordPermutedControls
+import LeanCanny.Algebra.FixedWidthRowReboxSpace
+import LeanCanny.Algebra.FixedWidthBivariateReboxSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalIndex
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalScalar
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalLayout
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalColumn
+import LeanCanny.Geometry.IntegralMixedFullBankPoint
+import LeanCanny.Algebra.IntegralMixedMarkedValuesCoordinates
+import LeanCanny.Encoding.IntegralMixedMarkedCanonicalValues
+import LeanCanny.Encoding.IntegralMixedMarkedReplayCompleteness
+import LeanCanny.Encoding.IntegralMixedMarkedReplayRelation
+import LeanCanny.Encoding.IntegralMixedCandidateGoodTest
 import LeanCanny.Algebra.IntegerPolynomialFiniteMassEnvelope
 import LeanCanny.Algebra.IntegralMixedSourceIntegerBounds
 import LeanCanny.Algebra.IntegralMixedSourceIntegerSnapshot
@@ -3497,7 +3555,7 @@ agree with that literal replay, including the certified planned bank. A native
 datum-based Thom scan identifies all old original coordinates with n+7-i in
 the new bank, without changing either sampler context or vertex word. Every
 filtered old candidate has a replay of the required width accepted by this
-PSPACE comparison. Marked-point filtering remains separate.
+PSPACE comparison. The same vertex now also passes marked-point filtering.
 The full chronological cut scan now validates all actual cuts at one terminal
 sample: selected-parent validity, exact stored degree and the untruncated
 factor root at the decoded retained bank quotient. Physical trace and frame
@@ -3505,14 +3563,33 @@ reconstruction remain separate from this exact native predicate.
 Raw causal records now append after the charged n+8-leaf prelude using absolute
 birth references. Native source/header/body/mode tables, original implicit
 integer leaves and height bounds are derived from original syntax. All seven
-native model routines have original-only controls. Arbitrary-modulus causal
-readout still needs the projected-root controls; serializer and Data pullback
-already preserve the original record table.
+native model routines have original-only controls. Projected-root controls now supply arbitrary-modulus causal readout while
+preserving the original record table.
 Actual coordinate heads now retain eta while suffix-embedding every old raw
 variable into one terminal tuple. Endpoint substitution eta=bank point plus
 or minus delta has native cleared coefficient and mass programs, preserving
 negative denominators and the selected terminal point. Full shifted-head
 principal-coefficient tests and the final ordered Near predicate remain open.
+The original candidate filter now has a native PSPACE decider: bounded
+existential search over one polynomial-width marked replay is sound and
+complete for the actual original zero equation. One and the same complete
+vertex satisfies all untruncated prelude leaf roots, the regular-source and
+mark equations, and the Thom comparison to the original point. Canonical
+correlated values construct this witness; no marked point is supplied.
+Causal records after the marked prelude now have original-only uniform caller
+controls and arbitrary-modulus bank access. A native scan validates all actual
+creating cuts at the same terminal tuple. The n+10 outer prelude adds signed
+cutoff roots with original-only controls and bank access.
+The full physical sampler now has an explicit column enumeration and native
+scalar-column indices derived from original headers. Its full-row interpretation
+and retained-bank readback refer to one physical tuple. Full native physical
+row coefficients, masses, fresh-scalar correlation and trace grammar remain
+required; scalar-prefix cut tests alone do not establish them.
+Native Tarski parameter coefficient access preserves the same complete
+candidate and both parameter blocks. Coefficient-box reindexing rejects
+oversized exponents before repacking, and a two-coordinate cleared midpoint
+query retains arbitrary signed denominators. Shifted principal-coefficient
+tests and the final ordered Near predicate remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
