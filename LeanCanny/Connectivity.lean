@@ -1,3 +1,53 @@
+import LeanCanny.Algebra.IntegralMixedFramedPointEquality
+import LeanCanny.Encoding.IntegralFramedPhysicalBankPolynomial
+import LeanCanny.Encoding.IntegralFramedPhysicalPointEqualityTest
+import LeanCanny.Encoding.IntegralFramedPhysicalSquareContext
+import LeanCanny.Encoding.IntegralMixedChronologicalCompanionCode
+import LeanCanny.Encoding.IntegralMixedChronologicalEndpointActual
+import LeanCanny.Encoding.IntegralMixedChronologicalEndpointLabels
+import LeanCanny.Encoding.IntegralMixedChronologicalEndpointRaw
+import LeanCanny.Encoding.IntegralMixedChronologicalFrameCode
+import LeanCanny.Encoding.IntegralMixedChronologicalFrameCodeActual
+import LeanCanny.Encoding.IntegralMixedChronologicalFrameDecode
+import LeanCanny.Encoding.IntegralMixedChronologicalMidpointActual
+import LeanCanny.Encoding.IntegralMixedChronologicalMidpointCode
+import LeanCanny.Encoding.IntegralMixedChronologicalMidpointDecode
+import LeanCanny.Encoding.IntegralMixedChronologicalMidpointRaw
+import LeanCanny.Encoding.IntegralMixedChronologicalPointSignatureCode
+import LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality
+import LeanCanny.Encoding.IntegralMixedPhysicalFieldEqualityList
+import LeanCanny.Encoding.IntegralMixedPhysicalFieldEqualitySemantics
+import LeanCanny.Encoding.IntegralMixedPhysicalPointCompanionScan
+import LeanCanny.Encoding.IntegralMixedPhysicalPointCompanionSemantics
+import LeanCanny.Encoding.IntegralMixedPhysicalPointEquality
+import LeanCanny.Encoding.IntegralMixedPhysicalPointSignatureComparison
+import LeanCanny.Encoding.IntegralMixedRoadmapFramedColumns
+import LeanCanny.Encoding.IntegralMixedRoadmapPaddedWord
+import LeanCanny.Encoding.IntegralMixedRoadmapRecordBudget
+import LeanCanny.Encoding.IntegralMixedRoadmapRecordChain
+import LeanCanny.Encoding.NoInfinitySquareWordWidth
+import LeanCanny.Encoding.SquareSampleCompleteNaturality
+import LeanCanny.Encoding.SquareSampleHashNaturality
+import LeanCanny.Encoding.SquareSampleOrdinalNaturality
+import LeanCanny.Encoding.SquareSampleParameterNaturality
+import LeanCanny.Encoding.SquareSampleRankNaturality
+import LeanCanny.Geometry.IntegralMixedChronologicalFrame
+import LeanCanny.Geometry.IntegralMixedChronologicalFrameFreeze
+import LeanCanny.Geometry.IntegralMixedChronologicalFrameRetained
+import LeanCanny.Geometry.IntegralMixedChronologicalMidpoint
+import LeanCanny.Geometry.IntegralMixedChronologicalPointReadback
+import LeanCanny.Geometry.IntegralMixedChronologicalPointSignature
+import LeanCanny.Geometry.IntegralMixedMatchedSlabBlock
+import LeanCanny.Geometry.IntegralMixedMatchedSlabEndpoints
+import LeanCanny.Geometry.IntegralMixedMatchedSlabInterior
+import LeanCanny.Geometry.IntegralMixedPointCompanionBounds
+import LeanCanny.Geometry.IntegralMixedPointCompanionCodeStable
+import LeanCanny.Geometry.IntegralMixedPointCompanionColumns
+import LeanCanny.Geometry.IntegralMixedPointCompanionLayout
+import LeanCanny.Geometry.IntegralMixedPointCompanionPadding
+import LeanCanny.Geometry.IntegralMixedPointCompanionPaddingBounds
+import LeanCanny.Geometry.IntegralMixedPointCompanionReadback
+import LeanCanny.Geometry.IntegralMixedPointCompanionTrace
 import LeanCanny.Algebra.ClearedCoordinateFrozenCongruence
 import LeanCanny.Algebra.ClearedCoordinateNormalization
 import LeanCanny.Algebra.IntegralMixedNumericalSweep
@@ -4051,8 +4101,27 @@ validity, nonzero proof and exact degree internally from checked local guards.
 Acceptance is equivalent to actual endpoint order AND selected-factor root
 absence; native cost uses original syntax/radius controls only. The legacy
 normalized-context language is not identified with this new recognizer.
-Native descriptor interpretation, bounded recursive charging/serialization
-and two-way graph/incidence assembly remain open. Fixed integer bivariate
+Chronological producer labels now compile checked prefix, midpoint and
+endpoint-child frames to the actual current-Q commands. All-coordinate
+critical companions capture a whole physical point; native guarded physical
+comparisons use each block's creating power. Across independent words, the
+original integer characteristic polynomial and all Thom derivatives identify
+retained quotients. Atomic endpoint signatures list every frozen/free
+producer; midpoint mean rows still need their own companion/signature binding.
+One matched branch family now constructs the literal clopen slab interior,
+its codes, Near tests and child endpoints together.
+A literal recursive chain has quadratic record count, original native code
+and byte bounds, and an actual source-framed physical-column ceiling. Padding
+the meaningful chain before its final probe fixes the existing marked cap
+exactly, including the probe and two spare stages. Padding realization uses
+an already realized typed seed; arbitrary raw record copying is not inferred.
+Complete sampling labels are proved natural for literal input composition.
+The actual full-physical input ignores auxiliary key data in all semantic
+fields; its same ordinal word retains the entire tuple after embedding that
+word in the query context. An explicit sampler-width ceiling depends on row
+count and logarithmic degree. Its original-only graph-wide binding is pending.
+Full native chain provenance, graph edge soundness/completeness and original
+Boolean incidence remain open. Fixed integer bivariate
 families have stable root-sign-pattern counts at a common outer mass cutoff.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.

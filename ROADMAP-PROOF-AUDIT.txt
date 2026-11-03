@@ -696,3 +696,140 @@ Durable scoped evidence:
 Next proof contract and read-only construction plan:
   tmp/m3-bounded-graph-contract.txt
   tmp/m3-point-companion-plan.txt
+
+13. NATIVE FRAME COMPILERS, WHOLE POINTS AND FIXED COUNTS (2026-11-03)
+
+Baseline commit: 826c409. This checkpoint adds50 scoped sources. The goal
+remains unconditional original point/whole connectivity PSPACE membership;
+that goal is not finished by the local results below.
+
+One shared family: IntegralMixedMatchedSlabInterior constructs the actual
+closed branches, ordinal codes, Near characterization and clopen transported
+pieces together. Its endpoint/block modules identify the literal midpoint
+block in THAT family and construct the actual child endpoint record. Keeping
+all anchors and routing overlapping pieces through endpoint covers therefore
+needs no native midpoint-component primitive or equality between separately
+chosen existential families.
+
+Honest full points: IntegralMixedPointCompanion captures every free physical
+coordinate at fixed objective by actual critical records. The full tuple and
+one hom realize the SAME physical point in all companion blocks. All records
+decode at their changing Q; count, scalar references, literal old/new physical
+columns and original code sizes are proved. Critical births add2n+4 full
+columns. A native all-coordinate scan compares every block with its anchor
+using each block's OWN creating power and checks the existing scalar
+correlation. Its semantic iff is whole physical-point equality plus retained
+selected-coordinate equality, not one-head or one-hom identity.
+
+Independent contexts: IntegralMixedPhysicalFieldEquality fixes an OLD integer
+characteristic polynomial computed from the left context and producer. All
+of its derivatives, including order0, are evaluated at both literal complete
+words. Nonzero polynomial, left root, strict terminal-cap margin and evaluator
+access are derived internally from the current-Q Marked factory. Thom
+uniqueness handles repeated roots. Each chronological label is checked
+against its OWN birth before newest-index conversion. Native single/list
+languages have original-only PSPACE deciders; no shared-prefix, compatible-hom,
+row evaluator, frame equality or source/order equality premise is introduced.
+This new cross-context interface is FIXED MARKED mode, outer=false.
+
+Chronological compilers: Descriptor stores original producer labels; actual
+relative references shift with birth and encoded bytes stay fixed. Checked
+raw labels/free indices give the actual prefix-frame Data, rule and current-Q
+command. Midpoint compilation uses one literal scale2/refsum row with arbitrary
+retained endpoints; it is NOT assumed Atomic. Endpoint compilation appends
+its existing producer at the SAME birth, identifies exactly Descriptor.freeze,
+and proves child slice = parent slice intersect the actual endpoint level.
+Native malformed/forward/full-parent/nonfree cases are rejected. The ordered
+all-free companion macro emits EXACTLY the actual chronological code sequence,
+including all retention shifts. No sampler word or denominator enters these
+pure FP writers.
+
+Atomic endpoint signatures: frozen coordinates use old producers; free coordinate
+k+i uses companion producer birth+q-1-i because the interpreter is tail-first.
+The actual Realized run reads every signature quotient as the corresponding
+physical coordinate. Across independent complete words the native pair table
+therefore identifies p=q under their honest capture readbacks. Equal scalar
+fields alone do not prove command provenance, frozen levels or source identity.
+The temporary midpoint h row is a mean of two producer values; the atomic
+compiler/signature does not replace that sum row by a fictitious retained
+alias. A separate midpoint companion macro/mean-row readback is still needed.
+
+Fixed count: the literal Chain freezes one more coordinate per recursion.
+Each level charges up to2 fresh endpoints, its midpoint anchor+all free
+companions, and its physical endpoint+all free companions. The meaningful
+count is bounded by R(n)=n+2+(n+1)*(n+4). Actual typed critical/cut constructors
+fit the original Cut.codeBudget at creating birth initial+R; stored degree
+and choice caps are explicit, with no natDegree_FP assumption. Code/byte
+ceilings are native unary functions of original dimension/prelude/width.
+A code list padded to R BEFORE one final probe has EXACT rawcountR+1. Its
+fullBirth=initial+R+1 and actual existing Marked cap=fullBirth+2. Review caught
+and corrected an earlier missing-probe cap. This equality matters: no word is
+silently reused after changing S/B. Actual source-framed instructions have
+at most (2n+4)*fullBirth physical columns, charging prelude/probe/auxiliaries.
+
+Semantic padding: typed Row/Atom retention proves chronological bytes stable;
+repeating an ALREADY realized physical critical seed in its retained OLD frame
+constructs actual roots/hom/readbacks at every changing Q. Forward-invalid
+raw copied codes are not permitted by that proof. A future negative-query
+probe cannot supply the preceding seed. Byte padding identities alone do not
+assert arbitrary copied-record solvability.
+
+Sampling self-context: SquareSampleCompleteNaturality proves SAME ordinal
+width, validity and full candidate tuple under literal Inputs.comp, including
+singular/repeated roots. Actual IntegralFramedPhysicalSquareContext factors
+ALL finite sampler fields through root+prefix: count, rows, degrees, mass,
+annihilators, degree/height/grid metadata. Auxiliary key-context changes leave
+whole Inputs equal. Canonical root sampling can therefore allocate w before
+embedding w into the query auxiliary context; that SAME w retains the whole
+actual raw tuple. This is proved label naturality, not a label-converter,
+hom-compatibility, recapture or system-only invariance assumption. It does
+not assert unchanged labels after a different root/table/cap.
+
+Sampler width: NoInfinitySquareWordWidth derives its exact formula from the
+actual affine Macaulay/Gram dimension (not a product-of-degrees shortcut).
+A ceiling polynomial in row count and log maximum degree is monotone and
+native unary for unary count/binary degree. Binding one ORIGINAL-only common
+width for all actual bounded graph descriptors is still a composition gate.
+
+Remaining M3: whole-chain native provenance and an actual implicit finite
+graph, with BOTH edge soundness/path completeness and honest label packing.
+The syntax count is not a proved complete incidence witness or serialized
+whole branching tree. In particular, retained Fin(cap) labels must be checked
+against the CURRENT creating birth. Child freezing appends the CHOSEN slab
+endpoint producer, not the later physical endpoint record's selected g value.
+The generous grammar also permits q=0 at the last syntactic level; a native
+checker must stop with a terminal/base rule there, since no midpoint free g
+exists. Full-root metadata bytes still need a concrete bounded writer (or a
+proved numeric width-erasure theorem); arbitrary metadata are not short.
+The concrete compilers and signatures close local
+representation gates; they do not establish graph/path bisimulation.
+M4 still needs actual symbolic polynomial tables, guarded normalization,
+joint old-root pullbacks and an original-only UNSPECIALIZED mass bound.
+M5 original Boolean relative-frontier/base incidence remains open. Neither
+Connectivity.pointLanguage nor connectedLanguage has an unconditional PSPACE
+membership theorem here.
+
+Scoped immutable manifests/handoffs:
+  tmp/m3-root-fifteen-handoff.txt
+  tmp/m3-point-companion-five-handoff.txt
+  tmp/m3-padding-three-handoff.txt
+  tmp/physical-point-companion-five-handoff.txt
+  tmp/matched-slab-three-handoff.txt
+  tmp/m3-chronological-midpoint-five-handoff.txt
+  tmp/square-naturality-six-handoff.txt
+  tmp/physical-field-equality-four-handoff.txt
+  tmp/m3-chronological-endpoint-three-handoff.txt
+  tmp/no-infinity-word-width-one-handoff.txt
+Independent scoped reviews:
+  tmp/m3-root-signature-budget-review.txt
+  tmp/m3-native-signature-review.txt
+  tmp/m3-companion-native-review.txt
+The exact50-source manifest and verified hashes are retained under tmp/group55-*.
+Verification: full strict build19292 jobs PASS; all19 scripts/Check*.lean
+PASS with warningAsError/relaxedAutoImplicit=false. The new combined fixture
+needed one unnamed-section closure after a standalone fixture refresh; only
+that script was rerun, exit0. No library proof or resource limit changed.
+The complete namespace audit checked86446 declarations and found only
+propext, Classical.choice and Quot.sound. All50 entire sources separately
+passed200000-heartbeat checks with strict warnings/implicit settings, and
+all verified library hashes were preserved through integration.

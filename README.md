@@ -2044,11 +2044,31 @@ constant factors, repeated roots and boundary roots. Its PSPACE cost uses
 only original represented syntax and radius controls. The legacy language
 using normalized-context guards has not been identified with this replacement.
 
-Native descriptor interpretation, a global recursive record bound and the
-two-way bounded graph construction remain open. Fixed integer bivariate
-families have stable root-sign-pattern counts past a common mass cutoff;
-the recursive polynomial presentation and original-only uniform mass bound
-needed for global stabilization remain unproved.
+Checked chronological labels now compile prefix, scale2/refsum midpoint
+and endpoint-child frames into actual current-Q records. Critical companion
+records capture all free coordinates of one physical point, with native
+guards comparing every physical column at its own creating power. Native
+Thom tests compare retained quotients across independent full sampler words;
+atomic endpoint signatures include every frozen and free coordinate. The
+midpoint height remains a mean of two producers and needs its own binding.
+
+One matched branch family now supplies the literal clopen slab interior,
+ordinal codes, Near tests and endpoints together. A recursive record-chain
+grammar has a quadratic count, original code/byte bounds and an actual framed
+physical-column ceiling. Padding before the final probe gives an exact fixed
+raw count and the existing marked factory's cap. Semantic padding requires
+an already realized typed seed.
+
+Complete sampling preserves the same ordinal under literal input composition.
+The actual full-physical factory has identical semantic data after auxiliary
+key-context changes, so a word can be allocated before embedding it in its
+own context. An explicit sampler-width ceiling uses row count and logarithmic
+degree; its graph-wide original-input bound remains to be assembled.
+
+Full native descriptor provenance and the two-way bounded graph construction
+remain open. Fixed integer bivariate families have stable root-sign-pattern
+counts past a common mass cutoff; the recursive polynomial presentation and
+original-only uniform mass bound needed for global stabilization remain open.
 
 The dependency map and remaining mathematical obligations are recorded in
 [`ROADMAP-PROOF-AUDIT.txt`](ROADMAP-PROOF-AUDIT.txt). Unconditional PSPACE
@@ -2065,9 +2085,9 @@ at the original degree and initial cap. Path saturation then gives full
 closed-slab component covers from recursive endpoint covers. Compactness and
 finite exceptional values now produce an ordered finite sweep and a cover of
 the entire selected coarse slice, assuming covers only at its finitely many
-endpoint fibers. The mixed sampler and actual endpoint recursion are formalized. Native
-descriptor interpretation, global record bounds, label packing and effective
-graph incidence remain open.
+endpoint fibers. The mixed sampler, actual endpoint recursion and local
+native frame compilers are formalized. Whole-chain native validation, sample
+word packing and effective graph incidence remain open.
 
 Closed Boolean combinations of weak inequalities now reduce to one integer
 polynomial equation while preserving point connectivity and whole-set
