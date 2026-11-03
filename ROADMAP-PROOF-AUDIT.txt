@@ -833,3 +833,125 @@ The complete namespace audit checked86446 declarations and found only
 propext, Classical.choice and Quot.sound. All50 entire sources separately
 passed200000-heartbeat checks with strict warnings/implicit settings, and
 all verified library hashes were preserved through integration.
+
+14. NATIVE LEVELS, EXACT ENDPOINT CAPTURES AND ORIGINAL WORD BUDGETS (2026-11-03)
+
+Baseline commit2042ebf. The following23 new sources close concrete local
+representation and word-budget gates. They do not finish the connectivity
+goal or imply a native graph/path equivalence.
+
+Chronological ordinary cuts: the next-free temporary sweep frame consumes
+no alias birth, keeps the literal original source, and decodes to the actual
+current-Q sweep retargeted to its selected free coordinate. The FP writer
+copies explicit factor choice/stored degree bits into the existing ABI.
+Raw bounds construct the actual Data, current-Q cut command and original
+code ceiling. Ordinary tags0/1/2 are accepted; tag3 is excluded. Source degree
+is checked against the original cap, with no natDegree_FP computation.
+
+Mean-aware midpoint capture: all free-coordinate companion codes compile
+EXACTLY in the genuine scale2/refsum frame, in decreasing chronological
+coordinate order. The full coordinate signature uses old producers, a
+mean-of-two-labels feature at h, and actual free-capture producers. Its actual
+Realized hom reads every coordinate. Equal old frozen values, BOTH endpoint
+values and free captures imply whole point equality across unrelated banks.
+This is intentionally one-way: equal means need not mean equal endpoint
+pairs. No retained mean alias or Atomic assumption is invented. Negative Q,
+nonunit integer denominators and a mean equal to NO retained value are tested.
+
+Closed correlated endpoint construction: PairResult endpointIndex is exactly
+q+1+chosenPairRef after the actual anchor and q captures. The literal child
+slice is the original slice intersected with the chosen endpoint level.
+exists_matched_endpoint_extension constructs the anchor and all captures
+from the SAME matched M.curve midpoint, preserving original raw tuple/hom,
+then supplies BOTH endpoint records and their actual decoder/currentQ/full
+roots/powered coordinates/old bank readback. No caller-supplied capture or
+hom-extension premise remains. Endpoint birth retains the child frame for
+subsequent recursion. Each endpoint is its own extension of one common
+capture program, not an uncharged simultaneous two-endpoint script.
+
+Native ONE-LEVEL compiler: canonical endpoint specs store kind/producer/free
+coordinate/tag/choice/degree, with retained, freshCritical and freshCut cases.
+Retained labels are checked against OLD birth, right fresh birth includes
+leftFresh, and the side chooses the SLAB endpoint producer. Terminal q=0,
+forward labels, tag3 and noncanonical/extra fields are rejected. The emitted
+chronological block is optional endpoints, midpoint anchor+q captures, child
+physical point+q captures. Exact count is freshL+freshR+2+2q; next frozen count
+and all producer/free bounds are proved. Native Checked verifies the exact
+compiled slice. InRaw additionally bounds and matches its location in the
+literal original record table. Typed ledger packing is proved, with exact
+ledger_codes/ledger_word and actual constructor byte bounds. This is a real
+FP syntax/provenance checker, not a component or geometric validity oracle.
+
+One original ledger budget: widening local byte and retained-label subtypes
+changes NO code byte or producer value. Given actual endBirth<=maxBirth and
+B<=the original width ceiling, originalLevel_word identifies the same checked
+rawslice with a Level at the ONE original codeBound/maxBirth. Creating-prefix
+validity stays the checked level's own condition. Concatenating the full
+chain, binding birth=initialBirth+rawStart, sourceCap=actual auxiliaryCap and
+all semantic guards remain explicit obligations.
+
+Original word bound, without circular B: numerical scalar width and original
+integer degree ceilings ignore the raw record/metadata tail, proved through
+actual old-prefix ranks and degree readers. A short old-candidate baseline
+and existing UnaryFn.wordEnvelope give one original scalarBudget dominating
+all legal original candidate labels. Thus original codeBudget/tableBudget
+can be fixed BEFORE allocating arbitrary records. With literal metadata[],
+actual canonical sampler context length is <=4*C+4*U+10, where C is the
+proved original candidate byte bound and U the padded raw-table byte bound.
+The EXISTING actual MarkedNative.access then gives one original Unary vertex
+word budget and polynomial majorant for EVERY legal padded root and valid
+full sampler word. Exact actual/certified S/B projections and cut code fitting
+are proved. There is no extra row-degree, mass, matrix or evaluator premise.
+
+Prefixes before the reserved probe: actual native_access supports any FP
+positive prefix key. PhysicalPrefixSampler selects a positive clamped birth
+at the SAME root. Its packet has exact keyAt(root,b,[]) and WHOLE Inputs
+identity to the literal existing atPrefix factory. A bounded unary requested
+prefix plus the original context budget gives ONE original Unary word budget
+and polynomial majorant for EVERY0<b<=fixedcap+1. This covers the prepared
+parent BEFORE the reserved probe and does not misuse the fullCount word bound.
+No word or ordinal is transported to a different root or different prefix.
+Generic prefix sampling supports both modes; the original padded bound in
+this checkpoint is fixed MARKED outer=false with literal metadata[].
+
+A further M3 gate was found by review: PhysicalCutOrderedInterval's existing
+conditional iff is sound, but its FOURTH head guard requires an actual factor
+root. A valid nonzero constant or rootless factor therefore cannot witness
+that language, though interval root absence is true. ScalarStep has zero
+padding X^(N-d); the actual marked/outer width has STRICT d<2^B because its
+ceiling includes auxiliaryCap and width=ceiling.size. A RESERVED factor-only
+probe can therefore use scalar0 and the FIRST THREE coefficient guards,
+without requiring its own quotient to be a factor root. Coefficient guard
+extraction already discards the fourth clause when deriving validity and
+exact degree. That new probe language/zero-padding binding is NOT implemented
+in this checkpoint. Meaningful fresh cut endpoints MUST KEEP the creating
+cut/head actual-root guard; critical endpoints/captures likewise need the
+existing physical selected-coordinate correlation. The reserved dummy probe
+must be excluded from an indiscriminate all-record actual-root scan.
+
+Remaining M3: the coefficient-only all-bad probe, full-chain native parsing
+and semantic guard composition, actual implicit graph and TWO-WAY bounded
+path equivalence. Local word bounds do not certify arbitrary meaningful
+records, marked-point incidence or every native edge. M4 actual symbolic
+polynomial/guarded normalization/joint old-root/unspecialized mass tables and
+M5 original Boolean incidence remain open. No unconditional original point
+or whole-set connectivity PSPACE theorem is claimed.
+
+Immutable scoped handoffs:
+  tmp/g56-root-five-handoff.txt
+  tmp/roadmap-vertex-budget-two-handoff.txt
+  tmp/m3-midpoint-companion-five-handoff.txt
+  tmp/optional-captured-endpoint-five-handoff.txt
+  tmp/m3-prefix-vertex-two-handoff.txt
+  tmp/roadmap-level-four-handoff.txt
+Independent reviews:
+  tmp/g56-cut-level-review.txt
+  tmp/m3-virtual-bad-interval-review.txt
+Exact23-source manifests and verified hashes are retained under tmp/group56-*.
+Verification: full strict build19338 jobs PASS; all20 scripts/Check*.lean
+PASS with strict warnings/implicit settings, including the new combined
+CheckRoadmapLevels fixture without any integration repair. The namespace
+axiom audit checked86935 declarations and found only propext, Classical.choice
+and Quot.sound. All23 entire sources separately passed200000-heartbeat checks;
+all verified hashes were preserved through integration. Scope/design review
+for the next graph construction is tmp/m3-actual-graph-next-contract.txt.

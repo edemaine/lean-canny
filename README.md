@@ -2049,8 +2049,9 @@ and endpoint-child frames into actual current-Q records. Critical companion
 records capture all free coordinates of one physical point, with native
 guards comparing every physical column at its own creating power. Native
 Thom tests compare retained quotients across independent full sampler words;
-atomic endpoint signatures include every frozen and free coordinate. The
-midpoint height remains a mean of two producers and needs its own binding.
+atomic endpoint signatures include every frozen and free coordinate.
+Midpoint companions now compile exactly, with a mean-aware signature and
+actual readback of every coordinate. No retained midpoint alias is assumed.
 
 One matched branch family now supplies the literal clopen slab interior,
 ordinal codes, Near tests and endpoints together. A recursive record-chain
@@ -2063,10 +2064,21 @@ Complete sampling preserves the same ordinal under literal input composition.
 The actual full-physical factory has identical semantic data after auxiliary
 key-context changes, so a word can be allocated before embedding it in its
 own context. An explicit sampler-width ceiling uses row count and logarithmic
-degree; its graph-wide original-input bound remains to be assembled.
+degree. The actual native full sampler and every positive fixed-cap prefix
+now have original-only unary word bounds and polynomial majorants. Scalar
+width is unchanged by raw record-tail replacement, closing the code-budget
+circularity. These bounds use marked mode and literal empty root metadata.
 
-Full native descriptor provenance and the two-way bounded graph construction
-remain open. Fixed integer bivariate families have stable root-sign-pattern
+A native one-level compiler now checks its exact original record-table slice,
+producer bounds, ordinary cut tags and chosen child endpoint. It constructs
+the typed bounded ledger; widening to the original byte bound preserves every
+record byte. One correlated optional-pair/anchor/captures program realizes
+both geometric endpoints with reference `q + 1 + chosenPairRef`.
+
+Whole-chain parsing, semantic guard composition and the two-way bounded graph
+construction remain open. Review also identified a completeness gate in the
+rooted bad-factor interval interface: nonzero constant or rootless factors
+need a coefficient-only reserved probe, with its zero-padding construction. Fixed integer bivariate families have stable root-sign-pattern
 counts past a common mass cutoff; the recursive polynomial presentation and
 original-only uniform mass bound needed for global stabilization remain open.
 
