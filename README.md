@@ -2023,21 +2023,32 @@ and child at one prepared source, horizon and width.
 Native Near tests characterize equality with the selected branch endpoint
 on the same full tuple.
 
-All three ordinary bad-cut families now preserve their real zero sets after
-an actual clearing-denominator change. The value case uses a squared-minor
-Gram argument; valid choices need not be computed by a `natDegree` oracle.
-General bad/real-critical endpoints and a literal scale2/refsum midpoint
-anchor share one full tuple and hom, with three decoded records and an
-original native byte bound. Proper-fiber sampling supplies such an anchor
-in every nonempty regular midpoint component.
+All three ordinary bad-cut families preserve their real zero sets after
+clearing-denominator changes. They now agree across independently realized
+histories with equal numerical frozen equations, even with different banks,
+horizons and widths. Actual constant coordinate and row scales are derived;
+the value case uses weighted Gram minors.
 
-Native descriptor recognition, retained input-mark/bound references and the
-recursive bounded graph still need assembly. The native bad-factor interval
-adapter has charged original controls and a same-tuple mathematical iff for
-ordered endpoints; its concrete guard/interpretation binding remains open.
-Fixed integer bivariate families also have stable root-sign-pattern counts
-past a common outer mass cutoff. The actual recursive polynomial presentation
-and its original-only uniform mass bound remain unproved.
+Retained marks and bounds can serve directly as endpoints. Any retained/fresh
+pair and one referenced midpoint anchor use exactly one to three decoded
+records, sharing a full tuple and hom, with native byte and column bounds.
+The literal midpoint block selects a closed physical branch whose endpoint
+has an actual child critical record. That attachment uses one extra birth.
+Overlapping transported pieces connect their branch endpoints inside the
+recursively covered endpoint fiber.
+
+A new native ordered bad-factor interval recognizer checks actual endpoint
+order and derives its factor interpretation from guards on the same query
+and word. Acceptance is exactly ordered endpoint root absence, including
+constant factors, repeated roots and boundary roots. Its PSPACE cost uses
+only original represented syntax and radius controls. The legacy language
+using normalized-context guards has not been identified with this replacement.
+
+Native descriptor interpretation, a global recursive record bound and the
+two-way bounded graph construction remain open. Fixed integer bivariate
+families have stable root-sign-pattern counts past a common mass cutoff;
+the recursive polynomial presentation and original-only uniform mass bound
+needed for global stabilization remain unproved.
 
 The dependency map and remaining mathematical obligations are recorded in
 [`ROADMAP-PROOF-AUDIT.txt`](ROADMAP-PROOF-AUDIT.txt). Unconditional PSPACE
@@ -2054,8 +2065,9 @@ at the original degree and initial cap. Path saturation then gives full
 closed-slab component covers from recursive endpoint covers. Compactness and
 finite exceptional values now produce an ordered finite sweep and a cover of
 the entire selected coarse slice, assuming covers only at its finitely many
-endpoint fibers. The mixed sampler, uniform endpoint recursion, native cut
-ordering, label packing, and graph assembly remain open.
+endpoint fibers. The mixed sampler and actual endpoint recursion are formalized. Native
+descriptor interpretation, global record bounds, label packing and effective
+graph incidence remain open.
 
 Closed Boolean combinations of weak inequalities now reduce to one integer
 polynomial equation while preserving point connectivity and whole-set

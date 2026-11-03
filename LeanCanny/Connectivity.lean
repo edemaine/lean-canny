@@ -1,3 +1,25 @@
+import LeanCanny.Algebra.ClearedCoordinateFrozenCongruence
+import LeanCanny.Algebra.ClearedCoordinateNormalization
+import LeanCanny.Algebra.IntegralMixedNumericalSweep
+import LeanCanny.Algebra.IntegralMixedNumericalSweepBad
+import LeanCanny.Algebra.IntegralMixedNumericalSweepComparison
+import LeanCanny.Algebra.IntegralMixedNumericalSweepCongruence
+import LeanCanny.Algebra.IntegralMixedNumericalSweepGuards
+import LeanCanny.Algebra.IntegralMixedNumericalSweepRows
+import LeanCanny.Algebra.IntegralMixedNumericalSweepValue
+import LeanCanny.Connectivity.ComponentSlabAnchorEndpoints
+import LeanCanny.Connectivity.IntegralMixedJointMidpointBranch
+import LeanCanny.Encoding.IntegralFramedPhysicalBankOrderSource
+import LeanCanny.Encoding.IntegralMixedPhysicalCutLocalGuards
+import LeanCanny.Encoding.IntegralMixedPhysicalCutLocalInterpretation
+import LeanCanny.Encoding.IntegralMixedPhysicalCutOrderedInterval
+import LeanCanny.Geometry.IntegralMixedJointBranchEndpointRecord
+import LeanCanny.Geometry.IntegralMixedJointMidpointSweepAnchor
+import LeanCanny.Geometry.IntegralMixedOptionalEndpointTrace
+import LeanCanny.Geometry.IntegralMixedOptionalJointSlab
+import LeanCanny.Geometry.IntegralMixedOptionalSlabEndpoints
+import LeanCanny.Geometry.IntegralMixedReferencedMidpointFrame
+import LeanCanny.Geometry.IntegralMixedReferencedMidpointRealization
 import LeanCanny.Algebra.BivariateSquareTopCoefficient
 import LeanCanny.Algebra.ClearedCoordinateCommonScaling
 import LeanCanny.Algebra.ClearedCriticalCommonScaling
@@ -3990,7 +4012,8 @@ An advanced-frame point selects a continuous earlier midpoint branch with
 a literal SectionCode word; endpoint Near tests identify that same branch.
 Open-interval bad-root emptiness equals two ordered principal statistics,
 including repeated roots and endpoints; the actual all-four cut heads have
-native integer coefficient readers. Their interval adapter remains open.
+native integer coefficient readers. A same-context native ordered adapter
+now binds these statistics to the selected actual factor.
 Concrete critical and virtual cut records use the existing decoder,
 including all four chosen Kinds, exact degree and current-Q fields.
 Prefix freezing keeps the original source literal, and sweep retargeting
@@ -4011,11 +4034,25 @@ Two endpoints from one original bad/real-critical parent set and a literal
 scale2/refsum midpoint anchor now have ONE full tuple and homomorphism,
 three decoded records and an original native byte bound. Proper-fiber
 sampling supplies an anchor in each nonempty regular midpoint component.
-Existing-reference mark/bound endpoints, native descriptor recognition and
-recursive graph/incidence assembly remain open.
-The bad-factor interval adapter has original-only native costs and an exact
-same-tuple mathematical certificate on ordered endpoints; the final concrete
-guard/interpretation binding remains separate. Fixed integer bivariate
+Retained mark/bound endpoints now need no fresh cut birth. Any retained/fresh
+pair and one reference-parametric midpoint anchor use exactly one to three
+decoded records, with actual full tuple/hom, native byte and column bounds.
+The literal final midpoint block selects a closed physical branch; its
+endpoint has an actual child-frame critical record at references two/one.
+That attachment costs one additional birth, not an uncharged existence claim.
+Numerically equal frozen equations give the same actual ordinary bad sets
+even for unrelated histories with different banks, horizons and widths.
+All constant coordinate/row ratios and the value-Gram comparison are derived.
+Overlapping clopen transported pieces join their indexing branch endpoints
+inside either recursively covered endpoint fiber. Native midpoint-component
+membership is not a premise of this implication.
+A NEW same-query/word ordered interval language derives its selected factor,
+validity, nonzero proof and exact degree internally from checked local guards.
+Acceptance is equivalent to actual endpoint order AND selected-factor root
+absence; native cost uses original syntax/radius controls only. The legacy
+normalized-context language is not identified with this new recognizer.
+Native descriptor interpretation, bounded recursive charging/serialization
+and two-way graph/incidence assembly remain open. Fixed integer bivariate
 families have stable root-sign-pattern counts at a common outer mass cutoff.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.

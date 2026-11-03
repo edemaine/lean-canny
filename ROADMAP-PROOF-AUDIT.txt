@@ -1,7 +1,8 @@
 ROADMAP PROOF AUDIT
 2026-11-03. Baseline: ef7155fdbaa48e9ea052528a547924838886b255.
-Sections 1-10 record the read-only baseline review. Section 11 records
-subsequent verified implementation; its status supersedes the baseline.
+Sections 1-10 record the read-only baseline review. Sections 11-12 record
+subsequent implementation checkpoints; the latest status supersedes earlier
+open-item lists.
 
 Purpose: (1) state the exact final theorems and dependencies; (2) distinguish
 missing mathematics from formal connections; (3) give and review the remaining
@@ -593,3 +594,105 @@ audit checked 85238 declarations and allowed only propext, Classical.choice
 and Quot.sound. All built library source hashes were preserved through
 integration. Namespace-qualified regression examples resolved the only
 combined-script failure; no library proof or heartbeat limit changed.
+
+12. RETAINED ENDPOINTS AND NATIVE LOCAL GUARDS (2026-11-03)
+
+The previous checkpoint is committed as 85b6f84. The following follow-on
+packages have strict builds, whole-source200000-heartbeat checks with warnings
+as errors/relaxedAutoImplicit=false, concrete regressions and standard-only
+axiom audits. The combined strict build passed all 19192 jobs; all 18
+scripts/Check*.lean passed. The full namespace audit checked 85513 declarations,
+allowing only propext, Classical.choice and Quot.sound. The focused regression
+file needed one missing fixture-section closure when combining standalone
+examples; no library proof or resource limit changed. Checked library source
+hashes were preserved through integration.
+
+Retained endpoints: IntegralMixedOptionalJointSlab.realize_slab allows EACH
+endpoint to be an existing retained label or a fresh member of the ORIGINAL
+parent bad/real-critical set. Retained marks and signed bounds need no cut or
+critical-value premise. The literal arbitrary-reference scale2/refsum anchor
+uses exactly freshCount(left)+freshCount(right)+1 records: one, two or three.
+The actual same-source/horizon/width run, decoding at EVERY current Q, full
+root tuple, hom restriction, endpoint labels, native byte bound and physical
+column bound are constructed. This closes the missing LOCAL retained-reference
+case; native graph parsing and global record bounds are separate.
+
+Actual branch endpoints: midpoint_block_anchors_sweep reads the SAME final
+full physical block over bank[anchor,b,a,old] into the earlier selected sweep.
+The tail hom and old quotient readback are derived by actual restriction;
+the head alone is not treated as a physical witness. joint_midpoint_block_branch
+supplies a closed physical branch, matched ordinal code and joint Near iff
+endpoint equality. Its endpoint belongs to the actual child frame with refs
+two/one and old rows shifted three. selected_endpoint_real_extend constructs
+an actual physical critical record selecting p_g, retaining the entire current
+tuple and hom and yielding bank[p_g,anchor,b,a,old]. This is an explicit FOURTH
+birth for that fresh/fresh route, not a proved global three-per-level bound.
+
+Independent histories: IntegralMixedNumericalSweep.bad_iff_of_levels proves
+equality of the ACTUAL three-class ordinary bad sets for two independent
+realized states, even with different banks, algebras, horizons and widths.
+It requires the same original spatial source, coordinate order, offset,
+objective, swept coordinate and its scale; actual quotient readback; and
+equal numerical frozen levels. Every coordinate/source/gradient constant
+scale is derived from the real interpreted heights and actual integer scale
+products. Current Q cancels because the sweep slope is the actual current Q.
+Free-height slots are ignored under an exact full-block-fit proof. Principal
+subresultants scale by constant powers; independently weighted value Gram
+certificates preserve the trailing index and real zero set. Arbitrary valid
+Choices are accepted. There is no common-prefix, factor-covariance, root-label
+equality or old-hom compatibility premise. The fourth limitCoordinate kind
+is still outside this unchanged-value slab bad-set claim. Independent review
+found no mathematical objection under these explicit hypotheses.
+
+New ordered bad-factor recognizer: IntegralMixedPhysicalCutOrderedInterval
+uses LocalGuards that retain the exact SAME query q and full word w for every
+coefficient, head and endpoint test. interpreted_empty_iff constructs the
+actual older phi, same-tuple generator readback, selected factor Valid/nonzero
+and exact stored degree from checked Valid+Bounds+LocalGuards. Acceptance
+is exactly actual a<b AND absence of a selected-factor root in Ioo(a,b).
+The sparse order test has value Q^2*(b-a), handling negative denominators.
+Equal and reversed actual endpoints are rejected. The decider/mem_PSPACE
+interfaces use only the original represented syntax and radius controls;
+no ALL-cut, hom, ordering or evaluator oracle is an input. Constants and
+repeated/boundary roots are handled. This is a VERIFIED REPLACEMENT interface:
+the older IntegralMixedPhysicalCutOpenInterval.language uses legacy normalized
+context guards and has not been identified with this new language. No native
+word is silently reused or replaced. Actual real-critical emptiness remains
+the separate M1 language from section11.
+
+Keeping all anchors: ComponentSlabAnchorEndpoints proves that overlapping
+CLOPEN transported pathconnected pieces coincide. Their indexing branches
+therefore have endpoints in one connected endpoint limit; a recursive clopen
+path cover joins them INSIDE either endpoint fiber. This supports including
+ALL finite critical anchors and routing midpoint overlaps through endpoint
+child reachability. The implication has no native midpoint-component test
+as a premise. The actual InteriorData must still be constructed using the
+SAME matched-code branch family (or proved to match it), and endpoints must
+be bound to honest child descriptors before applying a two-way induction.
+
+The remaining M3 gates are concrete: native descriptor interpretation and
+point/frozen-level coherence across contexts, an original polynomial global
+record/word bound fixed BEFORE allocating words, and a native finite graph
+with BOTH soundness and completeness. One selected scalar or an old hom does
+not identify an entire physical point. A proposed next construction captures
+each free coordinate by actual critical companion records and compares ALL
+physical columns with their OWN creating powers in one full tuple. Such a
+construction would permit old integer-characteristic/Thom bank comparisons
+across contexts, with a conservative quadratic record cap. It is a design,
+not a proved global graph or bound. Sample ordinals are never assumed stable
+under root/cap/probe changes.
+
+M4 still needs actual recursive integer-polynomial tables, guarded
+normalization, joint old-root pullbacks and an original-only UNSPECIALIZED
+mass bound. Original Boolean relative-frontier/base incidence (M5) and the
+unconditional original point/whole connectivity PSPACE theorems remain open.
+
+Durable scoped evidence:
+  tmp/m3-root-ten-handoff.txt
+  tmp/m3-numerical-nine-review.txt
+  tmp/m3-optional-five-handoff.txt
+  tmp/joint-midpoint-endpoint-three-handoff.txt
+  tmp/physical-cut-local-ordered-four-handoff.txt
+Next proof contract and read-only construction plan:
+  tmp/m3-bounded-graph-contract.txt
+  tmp/m3-point-companion-plan.txt
