@@ -1151,3 +1151,54 @@ Namespace axiom audit:88547 declarations, only propext/Classical.choice/
 Quot.sound. Space audit:192409 transitive constants, no legacy foundation.
 Frozen source hashes and exact65-file manifest verified before staging;
 staged blob bytes and100644 modes are verified before the local commit.
+
+19. G61: concrete bounded native graph and exact geometric readback
+
+Every accepted atomic packet has a TOTAL original-polynomial byte bound,
+including metadata, records, probe and full sampled word. Native local guards,
+identity signatures and proper signatures have actual PSPACE evaluators.
+The fixed-width graph has concrete PSPACE connectedness and point-to-point
+reachability algorithms, requiring only original hn/ht/ha/hR0 input bounds.
+Encoding and decoding preserve raw native paths, including padding aliases.
+This closes native graph cost obligations, not its topological equivalence.
+
+Actual atomic vertices lie in one original regular source with their exact
+frozen levels and critical rank. Identity edges imply equality of the ENTIRE
+physical point, hence a path in the original zero set. Compact frozen
+components contain objective-critical samples, singular points included;
+meaningful ancestors retain the free-rank room for recursive component paths.
+A genuine global critical padding seed is derived from any accepted vertex.
+Initialization of the first accepted seed from arbitrary source data is still
+separate; nonempty source components are not yet represented by this result.
+
+Exact full-word completion retains every earlier physical column, with a NEW
+root and NEW word. Constructed critical and cut choices retain per-birth native
+guard receipts, and guarded local traces compose across both fresh endpoints
+and canonical seed tails. These receipts are deliberately stronger than an
+arbitrary NativePair; complete native Atomic.Valid acceptance remains open.
+
+Native bad probes imply actual ordinary bad heights. The converse remains
+open. Actual midpoint commands, all coordinate captures, original source and
+ordinary/mean row snapshots are read back from accepted words. Both rows have
+one constructed common interpretation; no supplied hom, source equality,
+root oracle or cross-root complete-word transport is introduced.
+
+M3 still requires proper-edge path soundness, complete native history
+construction and the two-way global graph/path theorem. M4 uniform effective
+outer stabilization and M5 original Boolean incidence remain open. Neither
+original pointLanguage nor connectedLanguage has unconditional PSPACE
+membership proved here. No final theorem has been replaced by a graph-cost
+or geometric realization assumption.
+
+Package manifests and frozen hashes: tmp/group61-package-manifests.txt and
+ tmp/group61-preintegration-hashes.txt. One extra EOF newline in frozen
+ChronologicalGuardedPair was removed; original bytes are preserved separately.
+The combined CheckRoadmapNativeGraph preserves all24 package fixture groups.
+Full checkpoint verification results will be recorded below.
+Verification: all95 entire sources passed strict200000-heartbeat checks in
+individual package QA. Full strict three-target build19782 jobs PASS; all25
+Check scripts PASS, including the1326-line CheckRoadmapNativeGraph fixture.
+Namespace axiom audit:89363 declarations, only propext/Classical.choice/
+Quot.sound. Space audit:193508 transitive constants, no legacy foundation.
+Frozen source hashes, exact99-file manifest, staged blob bytes and100644 modes
+are checked before the local commit. Only the main worktree exists.

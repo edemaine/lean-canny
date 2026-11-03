@@ -2188,14 +2188,14 @@ by the whole-space connectivity convention.
 The formula-cover interface is a sufficient criterion; the more general
 bit-cover interface also permits implicit polynomial-space adjacency routines.
 
-Canonical history construction and append now preserve the checked table
-and all earlier meaningful bytes. A full sample realizes every earlier prefix,
-and literal prefix equality transfers its raw tuple to a different root.
-Proper and degenerate single levels have exact compiled runs. Slab paths
-normalize to endpoint-fiber paths and paired endpoints of one branch. Native
-atomic vertex and proper-edge packets have original input bounds. The full
-edge semantics, whole-history sample completion and global graph/path theorem
-remain open; these results do not establish unconditional PSPACE membership.
+The native atomic roadmap graph now has concrete PSPACE algorithms for
+connectedness and point-to-point reachability. Every accepted vertex has a
+total original-polynomial byte bound, and fixed-width coding preserves paths.
+Accepted atomic points and identity edges have geometric interpretations in
+one original regular source. Proper-edge path soundness, complete accepted
+history construction and the global graph/path equivalence remain open.
+These graph algorithms do not yet establish unconditional PSPACE membership
+for the original connectivity languages.
 
 ## Attribution and report integrity
 
@@ -2255,6 +2255,14 @@ lake env lean scripts/CheckGridValueReaders.lean
 lake env lean scripts/CheckEndpointMidpoints.lean
 lake env lean scripts/CheckAffineShiftReaders.lean
 lake env lean scripts/CheckActualHeightReaders.lean
+lake env lean scripts/CheckRoadmapBridges.lean
+lake env lean scripts/CheckRoadmapChains.lean
+lake env lean scripts/CheckRoadmapEncoding.lean
+lake env lean scripts/CheckRoadmapInternal.lean
+lake env lean scripts/CheckRoadmapLevels.lean
+lake env lean scripts/CheckRoadmapNativeGraph.lean
+lake env lean scripts/CheckRoadmapOccurrences.lean
+lake env lean scripts/CheckRoadmapOrigins.lean
 ```
 
 The core import check enforces the separation from the optional tube route.
