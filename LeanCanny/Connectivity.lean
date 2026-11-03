@@ -1,3 +1,64 @@
+import LeanCanny.Algebra.IntegralMixedCausalPrefixCongruence
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalDrop
+import LeanCanny.Algebra.IntegralMixedFramedRunObservation
+import LeanCanny.Algebra.IntegralMixedFramedSlackSibling
+import LeanCanny.Algebra.IntegralMixedStaticRecordPrefix
+import LeanCanny.Connectivity.ComponentSlabAtomicEndpointPaths
+import LeanCanny.Connectivity.ComponentSlabEndpointPaths
+import LeanCanny.Encoding.IntegralFramedPhysicalPrefixObservation
+import LeanCanny.Encoding.IntegralFramedPhysicalPrefixPoint
+import LeanCanny.Encoding.IntegralFramedPhysicalPrefixRealization
+import LeanCanny.Encoding.IntegralMixedMarkedPrefixFieldReadback
+import LeanCanny.Encoding.IntegralMixedMarkedPrefixObservation
+import LeanCanny.Encoding.IntegralMixedMarkedPrefixParameters
+import LeanCanny.Encoding.IntegralMixedMarkedPrefixRecords
+import LeanCanny.Encoding.IntegralMixedMarkedPrefixRun
+import LeanCanny.Encoding.IntegralMixedMarkedPrefixTransfer
+import LeanCanny.Encoding.IntegralMixedMarkedPreludeCongruence
+import LeanCanny.Encoding.IntegralMixedMarkedReservedCutView
+import LeanCanny.Encoding.IntegralMixedMarkedReservedParent
+import LeanCanny.Encoding.IntegralMixedMarkedReservedVertex
+import LeanCanny.Encoding.IntegralMixedPhysicalMarkedContext
+import LeanCanny.Encoding.IntegralMixedReservedCutActualVertex
+import LeanCanny.Encoding.IntegralMixedRoadmapAtomicControls
+import LeanCanny.Encoding.IntegralMixedRoadmapAtomicLayout
+import LeanCanny.Encoding.IntegralMixedRoadmapAtomicVertex
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbeFields
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbeHints
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbePacket
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbeSearch
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbeTest
+import LeanCanny.Encoding.IntegralMixedRoadmapCaptureRecords
+import LeanCanny.Encoding.IntegralMixedRoadmapChainAppend
+import LeanCanny.Encoding.IntegralMixedRoadmapChainConstruction
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAllRows
+import LeanCanny.Encoding.IntegralMixedRoadmapProperBase
+import LeanCanny.Encoding.IntegralMixedRoadmapProperBaseReadback
+import LeanCanny.Encoding.IntegralMixedRoadmapProperCriticalQuery
+import LeanCanny.Encoding.IntegralMixedRoadmapProperLayout
+import LeanCanny.Encoding.IntegralMixedRoadmapProperMidSignature
+import LeanCanny.Encoding.IntegralMixedRoadmapProperNearNative
+import LeanCanny.Encoding.IntegralMixedRoadmapProperNoCritical
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRankNative
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRowQuery
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRowReadback
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRowWitness
+import LeanCanny.Geometry.IntegralMixedChronologicalAtomicFrameReadback
+import LeanCanny.Geometry.IntegralMixedChronologicalDegenerateLevel
+import LeanCanny.Geometry.IntegralMixedChronologicalLevelCodes
+import LeanCanny.Geometry.IntegralMixedChronologicalLevelCommands
+import LeanCanny.Geometry.IntegralMixedChronologicalLevelLayout
+import LeanCanny.Geometry.IntegralMixedChronologicalLevelRealization
+import LeanCanny.Geometry.IntegralMixedChronologicalLevelRecord
+import LeanCanny.Geometry.IntegralMixedChronologicalLevelRun
+import LeanCanny.Geometry.IntegralMixedChronologicalProperLevel
+import LeanCanny.Geometry.IntegralMixedDecodedAppend
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRetainedSweep
+import LeanCanny.Geometry.IntegralMixedMatchedSlabAtomicPaths
+import LeanCanny.Geometry.IntegralMixedMatchedSlabEndpointPaths
+import LeanCanny.Geometry.IntegralMixedOptionalEndpointCovers
+import LeanCanny.Geometry.IntegralMixedPointCompanionCodeReadback
+import LeanCanny.Geometry.IntegralMixedPointCompanionDecoded
 import LeanCanny.Algebra.IntegralMixedRelativeCutCoefficientIff
 import LeanCanny.Connectivity.FiniteCriticalSweepInternal
 import LeanCanny.Encoding.IntegralMixedCanonicalPaddingSeed
@@ -4255,6 +4316,16 @@ sweep endpoint has a native fresh encoding, and all four retained/fresh
 endpoint pairs have their literal chronological words, current denominators
 and realizations. Arbitrary retained endpoints remain a sound local-edge
 overapproximation under the actual avoidance and branch tests.
+
+Canonical history construction and append preserve the complete checked table
+and every earlier meaningful byte. One valid full sample realizes all earlier
+prefixes; matching literal prefixes transfers the raw tuple to a new root.
+Proper and degenerate single levels now have exact compiled commands and runs.
+Retained producer values refine the actual finite bad/critical sweep. Slab
+paths normalize to endpoint-fiber paths and paired endpoints of one branch.
+Native atomic vertex and proper-edge query packets have original input bounds.
+Their full geometric interpretation, whole-history sample completion and the
+global two-way bounded graph/path theorem remain separate obligations.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet

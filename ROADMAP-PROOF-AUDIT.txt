@@ -1109,3 +1109,45 @@ including the new720-line CheckRoadmapInternal fixture. Namespace axiom audit:
 87576 declarations, only propext/Classical.choice/Quot.sound. Frozen source
 hashes, exact27-file stage manifest, blob bytes and100644 modes verified.
 Durable checkpoint evidence is retained under tmp/group59-*.
+
+18. G60: checked history prefixes, native occurrences and branch normalization
+
+A full valid sampled word realizes every earlier prefix using the same joint
+raw tuple. Literal candidate, record count and raw prefix equality transfer
+that honest prefix to a new root. Complete sample words are not transported.
+Canonical complete seed histories and one-level append are checked internally;
+append preserves every earlier meaningful record byte and parent frame.
+
+One matched branch supplies the complete proper level: midpoint, both endpoint
+children, all coordinate companions, compiled bytes, decoded commands and run.
+A separate same-point degenerate level handles equal endpoint heights. Actual
+slab paths normalize to endpoint-fiber paths and paired endpoints of ONE branch.
+Available old producer values may refine the finite bad/critical sweep.
+These are local constructions, not the global recursive graph induction.
+
+Original-only native atomic vertex packets and proper edge subqueries have
+PSPACE bounds. Full-word readback identifies physical captures and old fields.
+A reserved-cut writer constructs a NEW full word preserving all old quotients;
+its root and word are distinct. The bad-probe predicate is a bounded witness
+search matching all old fields and testing a coefficient-guarded interval.
+Its geometric equivalence with the actual bad set is still open. The written
+probe degree is the raw field modulo auxiliaryCap+1; completeness uses a
+bounded actual degree, for which this operation preserves the value.
+
+No whole-history new-word completion, full native edge semantic equivalence or
+two-way bounded graph/path theorem is claimed. Uniform outer stabilization and
+original Boolean incidence remain open. Neither original pointLanguage nor
+connectedLanguage has unconditional PSPACE membership proved here.
+
+Package manifests: tmp/group60-package-manifests.txt (13 packages,61 sources).
+Combined CheckRoadmapOccurrences includes every package fixture and its axiom
+audits. Frozen bytes had two CRLF-only corrections before integration; the
+preintegration hash manifest records the normalized UTF-8/LF sources.
+Full checkpoint verification results will be recorded below.
+Verification: all61 entire sources passed strict200000-heartbeat checks in
+individual package QA. Full strict three-target build19592 jobs PASS; all24
+Check scripts PASS, including the new1186-line CheckRoadmapOccurrences.
+Namespace axiom audit:88547 declarations, only propext/Classical.choice/
+Quot.sound. Space audit:192409 transitive constants, no legacy foundation.
+Frozen source hashes and exact65-file manifest verified before staging;
+staged blob bytes and100644 modes are verified before the local commit.

@@ -2188,6 +2188,15 @@ by the whole-space connectivity convention.
 The formula-cover interface is a sufficient criterion; the more general
 bit-cover interface also permits implicit polynomial-space adjacency routines.
 
+Canonical history construction and append now preserve the checked table
+and all earlier meaningful bytes. A full sample realizes every earlier prefix,
+and literal prefix equality transfers its raw tuple to a different root.
+Proper and degenerate single levels have exact compiled runs. Slab paths
+normalize to endpoint-fiber paths and paired endpoints of one branch. Native
+atomic vertex and proper-edge packets have original input bounds. The full
+edge semantics, whole-history sample completion and global graph/path theorem
+remain open; these results do not establish unconditional PSPACE membership.
+
 ## Attribution and report integrity
 
 The Sturm–Tarski proof adaptation and its changes are documented in
