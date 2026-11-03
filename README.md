@@ -2011,25 +2011,25 @@ exponents, and cleared two-coordinate midpoint queries preserve arbitrary
 signed denominators. Ordered Near, native graph assembly and effective
 global stabilization remain unfinished.
 
-The full physical sampler now has exact native row degrees and a uniform
-mass bound for every saved prefix. Its complete-square factory retains all
-physical and multiplier rows, with one label and bank interpretation for
-every actual joint root. Native arity, degree sum and mass are proved; full
-coefficient access still needs the new critical-block reader.
-Native full scalar-row coefficients follow from the actual scalar-column
-injection. Affine matrices, powered representatives and arbitrary injective
-coefficient embeddings have native readers. Saved-key writers preserve the
-original root, birth packet and context.
-A sparse guard now has native same-vertex tests and a universal scan for all
-creating births; accepted active tests enforce equality of the actual bank
-quotient and selected physical-coordinate power. Native untruncated all-leaf scans derive the actual n+8/n+10 power and
-signed cutoff values. Frame grammar remains required.
-Actual principal Tarski coefficient tests now have original-only degree, mass
-and arithmetic controls. The selected whole-head bounds are derived. Their
-principal slices now use raw scalar columns of the same full physical tuple,
-without old sampler access or roots. Ordered-window stability equivalence is
-proved; native iterated-sign coupling, graph assembly and global stabilization
-remain open.
+The full physical sampler has exact native degrees, a uniform row mass
+bound and a complete-square factory retaining every physical and multiplier
+row. Original Fermat, derivative, normal and full height coefficient readers
+are proved; assembling the full row reader remains open.
+Marked and outer replay tests now check all original leaves, regular/marked
+equations, original-coordinate Thom agreement and every creating critical
+correlation on one fixed full context and word. Their controls come from
+original syntax; only the literal full-row coefficient backend remains a
+cost premise. Accepted replays project to the original candidate. Different
+accepted slack phases attach in the same full regular component.
+Actual realizations have one full sample without a scalar-only restriction.
+Raw scalar-suffix tests use native physical columns without an old sampler
+vertex or evaluator.
+Actual principal Tarski tests have native degree, mass and arithmetic
+controls. Descending principal-sign scans compute the declared iterated
+statistic. The selected-near predicate has an exact five-statistic semantic
+characterization, including derived exact degree, epsilon seed and window
+stability. Native/model matching, frame consistency, graph assembly and
+global stabilization remain open.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate

@@ -50736,3 +50736,589 @@ end ScalarEmbeddingRegression
 #print axioms MvTwoParameterCoefficient.evaluate_degree
 #print axioms MvTwoParameterCoefficient.evaluate_coefficient_degree
 end Group49Regression20
+
+
+namespace Group50Regression0
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding IntegralCriticalHistoryTask
+
+
+open IntegralMixedFramedPhysicalRowSelector
+open IntegralMixedFramedPhysicalRowOrigin
+
+-- Even the creating successor prefix remains strictly inside the native budget.
+example (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+    (T : IntegralMixedHeaderTablesBits.Tables) (ht : IntegralMixedFramedHeaderBits.Represents P D H T) (key : List Bool) (r : ℕ)
+    (hr : r<fullArity P T (pair key (BinaryNatCode.encode r)))
+    (hs : ¬IsScalar P T (pair key (BinaryNatCode.encode r))) :
+    rowBirth P T (pair key (BinaryNatCode.encode r))+1<P.cap (pairFst key) :=by
+  have HB:=nonScalar_birth_lt P D H T ht key r hr hs
+  have HC:=D.room (pairFst key)
+  omega
+
+#print axioms IntegralMixedFramedPhysicalRowOrigin.nonScalar_context
+#print axioms IntegralMixedFramedPhysicalRowOrigin.critical_before_end
+#print axioms IntegralMixedFramedPhysicalRowOrigin.nonScalar_birth_lt
+#print axioms IntegralMixedFramedPhysicalRowOrigin.nonScalar_below_cap
+#print axioms IntegralMixedFramedPhysicalRowOrigin.command_of_context
+#print axioms IntegralMixedFramedPhysicalRowOrigin.nonScalar_critical
+end Group50Regression0
+
+
+namespace Group50Regression1
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralCriticalHistoryTask IntegralMixedFramedPhysicalIndex
+namespace FullPhysicalHeightCostRegression
+private def P : Parameters:=⟨fun _=>4,fun _=>16,fun _=>0,fun _=>2,fun _=>2,fun _=>0,fun _=>6⟩
+private theorem access : Access P:=⟨UnaryFn.const 4,UnaryFn.const 16,UnaryFn.const 0,UnaryFn.const 2,
+  BinaryFn.const 2,BinaryFn.const 0,BinaryFn.const 6⟩
+private def headers := WordList.encode [IntegralMixedCommandHeaderBits.encode IntegralMixedCommandHeaderBits.zero,
+  IntegralMixedCommandHeaderBits.encode ⟨1,0,0,0,0,0,1⟩,IntegralMixedCommandHeaderBits.encode IntegralMixedCommandHeaderBits.zero]
+private def T : IntegralMixedHeaderTablesBits.Tables:=⟨fun _=>headers,fun _=>[]⟩
+private theorem native : IntegralMixedHeaderTablesBits.Access T:=⟨constFn_mem_FP _,constFn_mem_FP _⟩
+private def key :=IntegralMixedFramedHistoryFamilyBits.keyAt [true,false,true] 3 [false,true]
+
+example : IntegralMixedFramedFullScalarRowBits.columnReader P T (fun _=>key)
+    (pair [] (BinaryNatCode.encode 0))=BinaryNatCode.encode 5 := by decide
+example : IntegralMixedFramedFullScalarRowBits.columnReader P T (fun _=>key)
+    (pair [] (BinaryNatCode.encode 1))=BinaryNatCode.encode 4 := by decide
+example : IntegralMixedFramedFullScalarRowBits.columnReader P T (fun _=>key)
+    (pair [] (BinaryNatCode.encode 2))=BinaryNatCode.encode 0 := by decide
+example : IntegralMixedFramedFullScalarRowBits.columnReader P T (fun _=>key)
+    (pair [] (BinaryNatCode.encode 999))=[] := by decide
+example : IntegralMixedFramedFullScalarRowBits.columnReader P T (fun _=>key)∈FP :=
+  IntegralMixedFramedFullScalarRowBits.columnReader_FP P access T native _ (constFn_mem_FP _)
+
+#print axioms IntegralMixedFramedPhysicalHeightBits.columns_injective
+#print axioms IntegralMixedFramedPhysicalHeightBits.column_packet
+#print axioms IntegralMixedFramedPhysicalHeightBits.columns_eq
+#print axioms IntegralMixedFramedPhysicalHeightBits.full_polynomial_height
+#print axioms IntegralMixedFramedPhysicalHeightBits.full_evaluator
+end FullPhysicalHeightCostRegression
+end Group50Regression1
+
+
+namespace Group50Regression2
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralCriticalHistoryTask MatrixPower FixedWidthPolynomial
+example : FixedWidthPowerMonomial.multiplicity (fun _=>1) (fun _=>3) (fun _=>4)
+    (fun _=>BinaryNatCode.encode 4) []=1 :=by decide
+example : FixedWidthPowerMonomial.multiplicity (fun _=>2) (fun _=>0) (fun _=>0)
+    (fun _=>[]) []=2 :=by decide
+example : FixedWidthFermatHeadBits.multiply (fun _=>BinaryNatCode.encode 5) (fun _=>BinaryNatCode.encode 4)
+    (pair [] (residueBits ((-3 : ℤ) : ZMod 6)))=[] :=by decide
+example : FixedWidthFermatHeadBits.multiply (fun _=>[]) (fun _=>BinaryNatCode.encode 99)
+    (pair [] [])=[] :=by decide
+#print axioms FixedWidthFermatHeadBits.multiply_FP
+#print axioms FixedWidthFermatHeadBits.natMultiply_evaluator
+#print axioms FixedWidthFermatHeadBits.coefficient
+#print axioms FixedWidthFermatHeadBits.evaluator
+#print axioms IntegralMixedFramedPhysicalSourcePolynomialBits.leading_value
+#print axioms IntegralMixedFramedPhysicalSourcePolynomialBits.leading_space
+#print axioms IntegralMixedFramedPhysicalSourcePolynomialBits.evaluator
+end Group50Regression2
+
+
+namespace Group50Regression3
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower FixedWidthPolynomial
+example : FixedWidthFermatHeadBits.multiply (fun _=>BinaryNatCode.encode 7) (fun _=>BinaryNatCode.encode 5)
+    (pair [] (residueBits ((-3 : ℤ) : ZMod 8)))=BinaryNatCode.encode 1 :=by decide
+#print axioms IntegralMixedFramedPhysicalSourceDerivativeBits.low_task_evaluator
+#print axioms IntegralMixedFramedPhysicalSourceDerivativeBits.low_evaluator
+#print axioms IntegralMixedFramedPhysicalSourceDerivativeBits.evaluator
+end Group50Regression3
+
+
+namespace Group50Regression4
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open MatrixPower IntegralCriticalHistoryTask
+attribute [local irreducible] IntegralMixedPhysicalDenominatorPostBits.multiply BinaryNat.mulMod IntegralCriticalHistoryTask.modulus
+private def P : Parameters:=⟨fun _=>1,fun _=>1,fun _=>0,fun _=>2,fun _=>2,fun _=>0,fun _=>6⟩
+example (q : List Bool) (x y : ZMod (modulus P q)) :
+    IntegralMixedPhysicalDenominatorPostBits.multiply P (pair q (pair (residueBits x) (residueBits y)))=residueBits (x*y) :=
+  IntegralMixedPhysicalDenominatorPostBits.multiply_packet P q x y
+#print axioms IntegralMixedFramedPhysicalNormalBits.scale_space
+#print axioms IntegralMixedFramedPhysicalNormalBits.value_space
+#print axioms IntegralMixedFramedPhysicalNormalBits.value_actual
+end Group50Regression4
+
+
+namespace Group50Regression5
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+example : IntegralMixedPhysicalOriginalPullBits.packet pairFst
+    (pair (pair [true,false,true] [false,true,false]) (List.replicate 31 true))=
+      pair [true,false,true] (List.replicate 31 true) :=by
+  simp only [IntegralMixedPhysicalOriginalPullBits.packet,pairFst_pair,pairSnd_pair]
+example : IntegralCoordinateCoefficientBits.pullPacket pairFst
+    (pair (pair (pair [true] [false,false,true]) [true,true,false]) (pair [true,false] [false,true]))=
+      pair (pair [true] [true,true,false]) (pair [true,false] [false,true]) :=by
+  simp only [IntegralCoordinateCoefficientBits.pullPacket,PaddedIntegralGeneratorSource.base,PaddedIntegralGeneratorSource.modulus,
+    PaddedIntegralGeneratorSource.row,PaddedIntegralGeneratorSource.col,pairFst_pair,pairSnd_pair]
+#print axioms IntegralMixedPhysicalOriginalPullBits.coefficient
+#print axioms IntegralMixedPhysicalOriginalPullBits.scalar
+#print axioms IntegralMixedPhysicalOriginalPullBits.original_space
+#print axioms IntegralCoordinateCoefficientBits.local_pull_packet
+#print axioms IntegralCoordinateCoefficientBits.powered_pull_evaluator
+#print axioms IntegralMixedPhysicalOriginalSourceBits.evaluator_of_modulus
+#print axioms FixedWidthDerivativeBits.coefficient_evaluator
+#print axioms IntegralMixedFramedPhysicalSourceAtBits.evaluator
+#print axioms IntegralMixedFramedPhysicalHeightAtBits.full_evaluator
+
+#print axioms IntegralMixedFramedPhysicalNormalAtBits.value_space
+#print axioms IntegralMixedFramedPhysicalNormalAtBits.value_actual
+#print axioms IntegralMixedFramedPhysicalNormalAtBits.monomial_evaluator
+end Group50Regression5
+
+
+namespace Group50Regression6
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+
+open scoped Classical
+noncomputable section
+namespace FullMarkedRegression
+section Generic
+variable (B : IntegralFramedBankQuery.Bank) (h : IntegralFramedBankQuery.Access B)
+  (T : IntegralMixedHeaderTablesBits.Tables) (hr : IntegralMixedFramedHeaderBits.Represents B.parameters B.plan B.data T)
+  (word : List Bool→List Bool) (hw : word∈FP)
+example : (IntegralFramedPhysicalBankTerm.source B word).Access :=IntegralFramedPhysicalBankTerm.source_access B h word hw
+example (c d : List Bool) : (IntegralFramedPhysicalBankTerm.source B word).polynomial c d=
+    IntegralMixedFramedBankTermBits.polynomial B.parameters B.plan B.data word (B.key c) :=rfl
+example (c d : List Bool) : Function.Injective (IntegralFramedPhysicalBankTerm.columns B T hr word c d) :=
+  IntegralFramedPhysicalBankTerm.columns_injective B T hr word c d
+example (ht : IntegralMixedHeaderTablesBits.Access T) : IntegralFramedPhysicalBankTerm.index B T∈FP :=
+  IntegralFramedPhysicalBankTerm.index_FP B T h ht
+example (c w : List Bool) (hv : SquareSampleCompleteVertices.Valid (IntegralFramedPhysicalBankTerm.input B) c w)
+    (i : ℕ) (hi : i<(IntegralMixedFramedBankSnapshotBits.atKey B.parameters B.plan B.data (B.key c)).count) :
+    IntegralFramedPhysicalBankTerm.env B T hr c w hv i=
+      IntegralFramedPhysicalSquare.point B.parameters B.plan B.data B.nodes B.factor B.seed B.bounds B.key B.positive c w hv
+        (IntegralFramedPhysicalIntegerLeaves.coordinate B.parameters B.plan B.data B.key B.positive c (BinaryNatCode.encode i)) :=
+  IntegralFramedPhysicalBankTerm.env_coordinate B T hr c w hv i hi
+end Generic
+section Original
+variable {n : List Bool→ℕ} {t : List Bool→Term}
+  (hn : UnaryFn n) (ht : (fun q=>(t q).toData.toBits)∈FP) (ha : ∀q,(t q).arity≤n q)
+  {R : List Bool→ℕ} (hR : BinaryFn R) (outer : Bool)
+example : IntegralFramedBankQuery.Access (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR outer) :=
+  IntegralMixedPhysicalMarkedPlan.native hn ht ha hR outer
+example : IntegralMixedHeaderTablesBits.Access (IntegralMixedPhysicalMarkedPlan.tables hn ht ha hR outer) :=
+  IntegralMixedPhysicalMarkedPlan.tables_native hn ht ha hR outer
+example (ctx : List Bool) : pairFst ((IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR outer).key (pair ctx []))=ctx :=
+  IntegralMixedPhysicalMarkedPlan.key_root hn ht ha hR outer ctx
+example (ER : SpaceFunction (SquareSampleInput.rowCoefficient (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer))) :
+    SpaceFunction (IntegralMixedPhysicalMarkedTest.regularValue hn ht ha hR outer) :=
+  IntegralMixedPhysicalMarkedTest.regular_evaluator hn ht ha hR outer ER
+example (ER : SpaceFunction (SquareSampleInput.rowCoefficient (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer))) :
+    SpaceDecider (IntegralMixedPhysicalMarkedTest.language hn ht ha hR outer) :=
+  IntegralMixedPhysicalMarkedTest.decider hn ht ha hR outer ER
+example (ER : SpaceFunction (SquareSampleInput.rowCoefficient (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer))) :
+    IntegralMixedPhysicalMarkedTest.language hn ht ha hR outer∈PSPACE :=
+  IntegralMixedPhysicalMarkedValidity.mem_PSPACE hn ht ha hR outer ER
+example (ctx w : List Bool) (hh : pair ctx w∈IntegralMixedPhysicalMarkedTest.language hn ht ha hR outer) :
+    ∃hv : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer)
+      (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w,
+      ∃z : LeanCanny.Geometry.BoundedRegularSource.Marked
+        ((t (IntegralMixedAuxiliaryMarkedIntegerSource.original ctx)).finitePolynomial
+          (IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx))
+        (IntegralMixedMarkedPointTest.charge t ctx) (IntegralMixedMarkedPointTest.charge t ctx) (R ctx),
+        z.val.val=IntegralMixedPhysicalMarkedSemantics.point hn ht ha hR outer ctx w hv :=by
+  obtain ⟨hv,_,hz⟩:=(IntegralMixedPhysicalMarkedValidity.accepted_iff hn ht ha hR outer ctx w).mp hh
+  exact ⟨hv,hz⟩
+end Original
+#print axioms IntegralFramedPhysicalBankTerm.source_access
+#print axioms IntegralFramedPhysicalBankTerm.source_arity
+#print axioms IntegralFramedPhysicalBankTerm.index_FP
+#print axioms IntegralFramedPhysicalBankTerm.index_columns
+#print axioms IntegralFramedPhysicalBankTerm.evaluator
+#print axioms IntegralFramedPhysicalBankTerm.packet
+#print axioms IntegralFramedPhysicalBankTerm.point_rawScalar
+#print axioms IntegralFramedPhysicalBankTerm.env_coordinate
+#print axioms IntegralMixedPhysicalMarkedPlan.native
+#print axioms IntegralMixedPhysicalMarkedPlan.tables_native
+#print axioms IntegralMixedPhysicalMarkedPlan.represents
+#print axioms IntegralMixedPhysicalMarkedPlan.leafSource_access
+#print axioms IntegralMixedPhysicalMarkedPlan.key_root
+#print axioms IntegralMixedPhysicalMarkedPlan.count_bound
+#print axioms IntegralMixedPhysicalMarkedPlan.parameters
+#print axioms IntegralMixedPhysicalMarkedTest.regular_evaluator
+#print axioms IntegralMixedPhysicalMarkedTest.mark_evaluator
+#print axioms IntegralMixedPhysicalMarkedTest.leaves_decider
+#print axioms IntegralMixedPhysicalMarkedTest.decider
+#print axioms IntegralMixedPhysicalMarkedSemantics.leaves_iff
+#print axioms IntegralMixedPhysicalMarkedSemantics.mark_packet
+#print axioms IntegralMixedPhysicalMarkedSemantics.regular_packet
+#print axioms IntegralMixedPhysicalMarkedSemantics.equations
+#print axioms IntegralMixedPhysicalMarkedValidity.accepted_iff
+#print axioms IntegralMixedPhysicalMarkedValidity.mem_PSPACE
+#print axioms IntegralMixedPhysicalMarkedValidity.outer_cutoffs
+end FullMarkedRegression
+
+end
+end Group50Regression6
+
+
+namespace Group50Regression7
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding IntegralCriticalHistoryTask
+
+open IntegralFramedPhysicalSquare
+open scoped Classical
+namespace FullRealizationRegression
+variable (P : Parameters) (D : IntegralMixedFramedHistoryFamilyBits.Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+example (key : List Bool) (v : ℕ→ℝ)
+    (h : ∀i : Fin (IntegralMixedFramedHistoryFamilyBits.commands P D key).length,IntegralMixedIntegerRealization.Root (IntegralMixedFramedHistoryFamilyBits.commands P D key)[i].command (v i.val)) :
+    IntegralMixedIntegerRealization.Realizes ((IntegralMixedFramedHistoryFamilyBits.family P D H).state key) v :=realizes_integer P D H key v h
+example (L F C : List Bool→ℕ) (hs : IntegralMixedFramedStepHeight.FamilyInputs P D L F C)
+    (key : List Bool→List Bool) (hp : ∀c,0<(IntegralMixedFramedHistoryFamilyBits.family P D H).birth (key c)) (c : List Bool) (v : ℕ→ℝ)
+    (hv : IntegralMixedIntegerRealization.Realizes ((IntegralMixedFramedHistoryFamilyBits.family P D H).state (key c)) v) :
+    ∃w,∃hw : SquareSampleCompleteVertices.Valid (input P D H L F C hs key hp) c w,
+      ∀i,point P D H L F C hs key hp c w hw i=v i.val :=by
+  obtain ⟨w,hw,_,he⟩:=exists_realized P D H L F C hs key hp c v hv
+  exact ⟨w,hw,he⟩
+#print axioms IntegralFramedPhysicalSquare.exists_realized
+#print axioms IntegralFramedPhysicalSquare.realizes_integer
+#print axioms IntegralFramedPhysicalSquare.exists_integer
+end FullRealizationRegression
+end Group50Regression7
+
+
+namespace Group50Regression8
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding
+open IntegralMixedHistory IntegralMixedFullHistoryScript IntegralMixedFramedPhysicalIndex FlatAffineCriticalStage
+open scoped Classical
+noncomputable section
+namespace CriticalRowsRegression
+private def P : SpatialSource 0 where
+  low:=0
+  leading:=1
+  degree:=2
+  degree_two:=by decide
+  low_degree:=by simp
+  leading_ne_zero:=by decide
+private def r : CriticalRule 0 where
+  offset:=0
+  objective:=0
+  coordinate:=0
+  scales _:=1
+  scales_ne_zero _:=by decide
+  heights _:=.constant 0
+private def e : Fin 2≃Fin 2:=Equiv.refl _
+example : (criticalColumns (P:=P) (B:=4) r e (Sum.inl 0)).val=0 :=rfl
+example : (criticalColumns (P:=P) (B:=4) r e (Sum.inl 1)).val=1 :=rfl
+example : (criticalColumns (P:=P) (B:=4) r e (ambient 0)).val=2 :=rfl
+example : (criticalColumns (P:=P) (B:=4) r e (multiplier 0)).val=3 :=rfl
+example : (criticalColumns (P:=P) (B:=4) r e (multiplier 1)).val=4 :=rfl
+example : (stepEquiv (.critical r : Command P 4) e (Sum.inr ())).val=5 :=
+  critical_scalar_final r e
+example : (criticalColumns (P:=P) (B:=4) r (Equiv.swap (0 : Fin 2) 1) (Sum.inl 0)).val=1 :=by
+  rw [criticalColumns_old]
+  decide
+example : Function.Injective (criticalColumns (P:=P) (B:=4) r e) :=criticalColumns_injective r e
+example (j : Variables 1) : (stepEquiv (.critical r : Command P 4) e (Sum.inl (Sum.inr j))).val=
+    2+(criticalEquiv j).val :=critical_row_index r e j
+#print axioms IntegralMixedFramedPhysicalIndex.criticalColumns_injective
+#print axioms IntegralMixedFramedPhysicalIndex.criticalColumns_old
+#print axioms IntegralMixedFramedPhysicalIndex.criticalColumns_ambient
+#print axioms IntegralMixedFramedPhysicalIndex.criticalColumns_multiplier
+#print axioms IntegralMixedFramedPhysicalIndex.critical_scalar_final
+#print axioms IntegralMixedFramedPhysicalIndex.critical_row_index
+#print axioms IntegralMixedFramedPhysicalIndex.critical_new_row
+end CriticalRowsRegression
+end
+end Group50Regression8
+
+
+namespace Group50Regression9
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open IntegralFramedScalarTarskiIteratedSign
+namespace ScalarTarskiIteratedRegression
+example (c w b d e : List Bool) :
+    IntegralFramedScalarTarskiIteratedSign.query (pair (pair (pair (pair c w) b) d) e)=pair (pair c w) (datum b d e) :=by
+  simp only [IntegralFramedScalarTarskiIteratedSign.query,pairFst_pair,pairSnd_pair]
+example (c b : List Bool) (d e : ℕ) :
+    IntegralFramedScalarTarskiIteratedSign.base (pair c (datum b (BinaryNatCode.encode d) (BinaryNatCode.encode e)))=pair c b :=by
+  simp only [IntegralFramedScalarTarskiIteratedSign.base,datum,pairFst_pair,pairSnd_pair]
+example (c b : List Bool) (d e : ℕ) :
+    delta (pair c (datum b (BinaryNatCode.encode d) (BinaryNatCode.encode e)))=d :=by
+  simp only [delta,datum,pairFst_pair,pairSnd_pair,BinaryNatCode.encode,Nat.fromBitsLE_bits]
+example (c b : List Bool) (d e : ℕ) :
+    epsilon (pair c (datum b (BinaryNatCode.encode d) (BinaryNatCode.encode e)))=e :=by
+  simp only [epsilon,datum,pairSnd_pair,BinaryNatCode.encode,Nat.fromBitsLE_bits]
+-- These coefficients are selected AFTER the same-source/same-vertex writer.
+def metadata (q : List Bool) :=pair (pairFst (pairFst (IntegralFramedScalarTarskiIteratedSign.query q))) (pairSnd (IntegralFramedScalarTarskiIteratedSign.query q))
+def signs (q : List Bool) :=
+  if delta (metadata q)=0 ∧ epsilon (metadata q)=2 then [true]
+  else if delta (metadata q)=1 ∧ epsilon (metadata q)=0 then [false,true] else []
+-- Delta-epsilon^2 is negative when delta is the smaller infinitesimal.
+example : RealIteratedInfinitesimalSignSpace.value signs (fun _=>1) (fun _=>2)
+    (pair (pair [true] [false]) [true,false])=[true] :=by decide
+-- Omitting epsilon^2 would give the wrong positive answer.
+example : RealIteratedInfinitesimalSignSpace.value signs (fun _=>1) (fun _=>1)
+    (pair (pair [true] [false]) [true,false])=[false,true] :=by decide
+end ScalarTarskiIteratedRegression
+#print axioms IntegralFramedScalarTarskiIteratedSign.base_FP
+#print axioms IntegralFramedScalarTarskiIteratedSign.delta_binary
+#print axioms IntegralFramedScalarTarskiIteratedSign.epsilon_binary
+#print axioms IntegralFramedScalarTarskiIteratedSign.query_FP
+#print axioms IntegralFramedScalarTarskiIteratedSign.coefficient_packet
+#print axioms IntegralFramedScalarTarskiIteratedSign.value_at
+#print axioms IntegralFramedScalarTarskiIteratedSign.source_access
+#print axioms IntegralFramedScalarTarskiIteratedSign.coefficient_evaluator
+#print axioms IntegralFramedScalarTarskiIteratedSign.evaluator
+#print axioms IntegralFramedScalarTarskiIteratedSign.selected_principal
+#print axioms IntegralFramedScalarTarskiIteratedSign.eventually_value
+end Group50Regression9
+
+
+namespace Group50Regression10
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Connectivity Polynomial
+open scoped Classical
+namespace SelectedCoordinateNearRegression
+-- Repeated roots use distinct ordinal counts; no nonsingularity assumption.
+example : 2*RootSignQueries.tarskiQuery ((Polynomial.X-Polynomial.C (0:ℝ))^2) 1≤
+    RootSignQueries.tarskiQuery ((Polynomial.X-Polynomial.C (0:ℝ))^2) ((Polynomial.X-Polynomial.C (-1))^2)+
+      RootSignQueries.tarskiQuery ((Polynomial.X-Polynomial.C (0:ℝ))^2) (Polynomial.X-Polynomial.C (-1)) ∧
+    0<RootSignQueries.tarskiQuery ((Polynomial.X-Polynomial.C (0:ℝ))^2) ((Polynomial.X-Polynomial.C 1)^2)-
+      RootSignQueries.tarskiQuery ((Polynomial.X-Polynomial.C (0:ℝ))^2) (Polynomial.X-Polynomial.C 1) :=by
+  have HW : IntegralMixedSelectedCoordinateWindow.Window ((Polynomial.X-Polynomial.C (0:ℝ))^2) 0 0 1 :=by
+    rw [IntegralMixedSelectedCoordinateWindow.window_iff]
+    refine ⟨0,?_,?_,by norm_num⟩
+    · simp
+    · norm_num [OrderedRealRootWindow.rank,Finset.filter_insert]
+  have H:=IntegralMixedSelectedWindowQueries.window_iff ((Polynomial.X-Polynomial.C (0:ℝ))^2) 0 0 1 |>.mp HW
+  simpa using H
+-- The head already depends on delta; epsilon still gives exact seed degree.
+noncomputable def p : (ℝ[X])[X]:=Polynomial.X^2-Polynomial.C (Polynomial.X:ℝ[X])
+example : (PseudoRemainder.seed (IntegralMixedSelectedCoordinateWindowDegree.head p)
+    (IntegralMixedSelectedCoordinateWindowDegree.query 3 36 true 2) 2 4).natDegree=1 :=by
+  exact IntegralMixedSelectedCoordinateWindowDegree.seed_degree p 2 (by decide)
+    (by unfold p;compute_degree!) 3 36 (by norm_num) true 2
+example (ε δ : ℝ) : (IntegralMixedSelectedCoordinateWindowDegree.query 3 36 false 1).map
+    (RealIteratedTarski.evaluate ε δ)=Polynomial.C 36*(Polynomial.X-Polynomial.C 3+Polynomial.C ε) :=by
+  simpa using IntegralMixedSelectedCoordinateOrderedQueries.evaluated_query 3 36 false 1 ε δ
+-- This shift is anchored at -3 and approaches it from the left.
+example : ((Polynomial.evalRingHom (2:ℝ)).comp
+    (IntegralMixedSelectedCoordinateAffineDegree.shift (-3) true)) Polynomial.X= -5 :=by
+  rw [IntegralMixedSelectedCoordinateAffineDegree.shift_evaluate]
+  norm_num
+end SelectedCoordinateNearRegression
+#print axioms IntegralMixedSelectedCoordinateAffineDegree.shift_evaluate
+#print axioms IntegralMixedSelectedCoordinateAffineDegree.evaluated_degree
+#print axioms IntegralMixedSelectedCoordinateAffineDegree.head_degree
+#print axioms IntegralMixedSelectedCoordinateWindowDegree.head_degree
+#print axioms IntegralMixedSelectedCoordinateWindowDegree.seed_degree
+#print axioms IntegralMixedSelectedCoordinateWindowDegree.query_degree
+#print axioms IntegralMixedSelectedCoordinateWindowDegree.input_degree
+#print axioms IntegralMixedSelectedCoordinateWindowDegree.selected_seed_degree
+#print axioms IntegralMixedSelectedWindowQueries.window_iff
+#print axioms IntegralMixedSelectedCoordinateOrderedQueries.evaluated_head
+#print axioms IntegralMixedSelectedCoordinateOrderedQueries.evaluated_query
+#print axioms IntegralMixedSelectedCoordinateOrderedQueries.eventually_queries
+#print axioms IntegralMixedSelectedCoordinateNearQueries.window_stable
+#print axioms IntegralMixedSelectedCoordinateNearQueries.near_iff
+end Group50Regression10
+
+
+namespace Group50Regression11
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding Polynomial
+namespace ScalarTarskiStatisticRegression
+example : CanonicalSignStatisticBits.normalize [false,false]=[] :=by decide
+example : CanonicalSignStatisticBits.decode [true]=SignType.neg :=by decide
+example : CanonicalSignStatisticBits.decode [false,true]=SignType.pos :=by decide
+example (c w b i : List Bool) : IntegralFramedScalarTarskiStatistic.query (pair (pair (pair c w) b) i)=
+    pair (pair c w) (pair b i) :=by
+  simp only [IntegralFramedScalarTarskiStatistic.query,pairFst_pair,pairSnd_pair]
+example : OrderedWindowStatisticBits.Accept (OrderedWindowStatisticBits.pack
+    (BinaryNatCode.encode 0) (SignStatisticBits.integerCode 1) (SignStatisticBits.integerCode 1)
+    (SignStatisticBits.integerCode 1) (SignStatisticBits.integerCode 1) (SignStatisticBits.integerCode (-1))) :=by
+  rw [OrderedWindowStatisticBits.packet]
+  norm_num
+example : ¬OrderedWindowStatisticBits.Accept (OrderedWindowStatisticBits.pack
+    (BinaryNatCode.encode 1) (SignStatisticBits.integerCode 1) (SignStatisticBits.integerCode 1)
+    (SignStatisticBits.integerCode 1) (SignStatisticBits.integerCode 1) (SignStatisticBits.integerCode (-1))) :=by
+  rw [OrderedWindowStatisticBits.packet]
+  norm_num
+end ScalarTarskiStatisticRegression
+#print axioms CanonicalSignStatisticBits.normalize_FP
+#print axioms CanonicalSignStatisticBits.evaluator
+#print axioms CanonicalSignStatisticBits.value_at
+#print axioms IntegralFramedScalarTarskiStatistic.index_binary
+#print axioms IntegralFramedScalarTarskiStatistic.count_binary
+#print axioms IntegralFramedScalarTarskiStatistic.signs_evaluator
+#print axioms IntegralFramedScalarTarskiStatistic.evaluator
+#print axioms IntegralFramedScalarTarskiStatistic.signs_packet
+#print axioms IntegralFramedScalarTarskiStatistic.value_at
+#print axioms IntegralFramedScalarTarskiStatistic.model_at
+#print axioms OrderedWindowStatisticBits.accept_fppred
+#print axioms OrderedWindowStatisticBits.packet
+end Group50Regression11
+
+
+namespace Group50Regression12
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR LeanCanny.Geometry
+
+
+noncomputable section
+
+-- Both nested scans change only the test datum, including a nonzero derivative.
+example (ctx w : List Bool) (i k : ℕ) :
+    IntegralMixedPhysicalReplayThom.newProbe
+      (pair (pair (pair ctx w) (List.replicate i true)) (BinaryNatCode.encode k))=
+    pair (pair (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w)
+      (IntegralMixedCandidateReplayDatum.packet (pairFst ctx) i k) :=by
+  simp only [IntegralMixedPhysicalReplayThom.newProbe,IntegralMixedPhysicalReplayThom.probeDatum,
+    IntegralMixedPhysicalReplayThom.context,IntegralMixedPhysicalReplayThom.word,
+    IntegralMixedPhysicalReplayThom.oldCandidate,IntegralMixedCandidateReplayDatum.packet,
+    pairFst_pair,pairSnd_pair,List.length_replicate]
+
+-- Different full physical witnesses of one candidate lie in the same full
+-- regular component even when their slack phases differ.
+example {n : List Bool→ℕ} {t : List Bool→Term}
+    (hn : UnaryFn n) (ht : (fun q=>(t q).toData.toBits)∈FP) (ha : ∀q,(t q).arity≤n q)
+    {R : List Bool→ℕ} (hR : BinaryFn R) (outer : Bool) (ctx w v : List Bool)
+    (hw : pair ctx w∈IntegralMixedPhysicalReplayRelation.language hn ht ha hR outer)
+    (hv : pair ctx v∈IntegralMixedPhysicalReplayRelation.language hn ht ha hR outer) :
+    ∃hzw : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer) (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w,
+    ∃hzv : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer) (IntegralMixedPhysicalMarkedTest.sampleContext ctx) v,
+    ∃z y : BoundedRegularSource.Marked ((t (IntegralMixedAuxiliaryMarkedIntegerSource.original ctx)).finitePolynomial (IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx))
+      (IntegralMixedMarkedPointTest.charge t ctx) (IntegralMixedMarkedPointTest.charge t ctx) (R ctx),
+      z.val.val=IntegralMixedPhysicalMarkedSemantics.point hn ht ha hR outer ctx w hzw ∧
+      y.val.val=IntegralMixedPhysicalMarkedSemantics.point hn ht ha hR outer ctx v hzv ∧Joined z.val y.val :=by
+  obtain ⟨_,hzw,z,hz,_⟩:=IntegralMixedPhysicalReplayAttachment.exists_point hn ht ha hR outer ctx w hw
+  obtain ⟨_,hzv,y,hy,_⟩:=IntegralMixedPhysicalReplayAttachment.exists_point hn ht ha hR outer ctx v hv
+  exact ⟨hzw,hzv,z,y,hz,hy,
+    IntegralMixedPhysicalReplayAttachment.accepted_points_joined hn ht ha hR outer ctx w v hw hv hzw hzv z y hz hy⟩
+
+#print axioms IntegralMixedPhysicalReplayNew.count_unary
+#print axioms IntegralMixedPhysicalReplayNew.coordinate_unary
+#print axioms IntegralMixedPhysicalReplayNew.evaluator
+#print axioms IntegralMixedPhysicalReplayNew.coordinate_packet
+#print axioms IntegralMixedPhysicalReplayNew.packet
+#print axioms IntegralMixedPhysicalReplayThom.degree_binary
+#print axioms IntegralMixedPhysicalReplayThom.scanEvaluator
+#print axioms IntegralMixedPhysicalReplayThom.input_access
+#print axioms IntegralMixedPhysicalReplayThom.decider
+#print axioms IntegralMixedPhysicalReplayThom.coordinate_iff
+#print axioms IntegralMixedPhysicalReplayThom.language_iff
+#print axioms IntegralMixedPhysicalReplayThom.mem_PSPACE
+#print axioms IntegralMixedPhysicalReplayRelation.decider
+#print axioms IntegralMixedPhysicalReplayRelation.point_original
+#print axioms IntegralMixedPhysicalReplayRelation.projection_eq
+#print axioms IntegralMixedPhysicalReplayRelation.sound
+#print axioms IntegralMixedPhysicalReplayRelation.accepted_good
+#print axioms IntegralMixedPhysicalReplayRelation.mem_PSPACE
+#print axioms IntegralMixedPhysicalReplayAttachment.exists_point
+#print axioms IntegralMixedPhysicalReplayAttachment.accepted_points_joined
+end
+end Group50Regression12
+
+
+namespace Group50Regression13
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+noncomputable section
+
+-- The original outer packet is reused literally, including its full word.
+example (ctx w : List Bool) :
+    IntegralMixedPhysicalGuardScan.probe (pair ctx w)=
+      pair (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w :=by
+  simp only [IntegralMixedPhysicalGuardScan.probe,pairFst_pair,pairSnd_pair]
+
+-- Joining all correlations to the candidate/marked tests needs no extra
+-- caller metadata or coefficient oracle beyond the existing full backend.
+example {n : List Bool→ℕ} {t : List Bool→Term}
+    (hn : UnaryFn n) (ht : (fun q=>(t q).toData.toBits)∈FP) (ha : ∀q,(t q).arity≤n q)
+    {R : List Bool→ℕ} (hR : BinaryFn R) (outer : Bool)
+    (ER : SpaceFunction (SquareSampleInput.rowCoefficient (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer))) :
+    IntegralMixedPhysicalGuardScan.relation hn ht ha hR outer∈PSPACE :=
+  IntegralMixedPhysicalGuardScan.mem_PSPACE hn ht ha hR outer ER
+
+example {n : List Bool→ℕ} {t : List Bool→Term}
+    (hn : UnaryFn n) (ht : (fun q=>(t q).toData.toBits)∈FP) (ha : ∀q,(t q).arity≤n q)
+    {R : List Bool→ℕ} (hR : BinaryFn R) (outer : Bool) (u label metadata w : List Bool)
+    (h : pair (pair (pair u label) metadata) w∈IntegralMixedPhysicalGuardScan.relation hn ht ha hR outer) :
+    LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.Good hn ht ha u label :=
+  IntegralMixedPhysicalReplayRelation.accepted_good hn ht ha hR outer u label metadata w h.1
+
+#print axioms IntegralMixedPhysicalGuardScan.count_eq
+#print axioms IntegralMixedPhysicalGuardScan.decider
+#print axioms IntegralMixedPhysicalGuardScan.packet
+#print axioms IntegralMixedPhysicalGuardScan.relation_decider
+#print axioms IntegralMixedPhysicalGuardScan.sound
+#print axioms IntegralMixedPhysicalGuardScan.mem_PSPACE
+end
+end Group50Regression13
+
+
+namespace Group50Regression14
+set_option backward.isDefEq.respectTransparency false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedFramedHistoryScript IntegralMixedFramedPhysicalIndex
+open scoped Classical
+namespace PhysicalSuffixTestRegression
+noncomputable def P : SpatialSource 0 where
+  low:=0
+  leading:=1
+  degree:=2
+  low_degree:=by simp
+  degree_two:=by decide
+  leading_ne_zero:=by decide
+noncomputable def r : CriticalRule 0 where
+  offset:=0
+  objective:=0
+  coordinate:=0
+  scales _:=1
+  scales_ne_zero _:=by decide
+  heights _:=.constant 0
+noncomputable def integer : Instruction 0 2 where
+  source:=P
+  source_cap:=by decide
+  command:=.integer Polynomial.X Polynomial.X_ne_zero (by rw [Polynomial.natDegree_X];decide)
+noncomputable def critical : Instruction 0 2 where
+  source:=P
+  source_cap:=by decide
+  command:=.critical r
+
+-- A one-variable old suffix skips the fresh critical scalar, selecting
+-- the original integer column 0 inside five physical columns.
+noncomputable def oldColumn (i : Fin 1) : Fin 5 :=
+  enumerate [critical,integer] (scalarSlot [critical,integer] (FixedWidthSuffixLiftBits.shift 1 i))
+example : (oldColumn 0).val=0 :=by rfl
+example : (MvPolynomial.rename oldColumn
+    (MvPolynomial.X (0 : Fin 1)^3+MvPolynomial.C (-2 : ℤ))).eval₂ (Int.castRingHom ℝ)
+      (fun j : Fin 5=>(j.val+2 : ℝ))=6 :=by
+  simp only [MvPolynomial.eval₂_rename,MvPolynomial.eval₂_add,MvPolynomial.eval₂_pow,
+    MvPolynomial.eval₂_X,MvPolynomial.eval₂_C,Function.comp_apply]
+  rw [show (oldColumn 0).val=0 from rfl]
+  norm_num
+
+-- The native query shifts the scalar index before the physical injection.
+example (B : IntegralFramedBankQuery.Bank)
+    (R : SquareSampleCompleteSuffixPolynomialTest.Source (IntegralFramedBankQuery.input B))
+    (c d : List Bool) (j : ℕ) :
+    IntegralFramedPhysicalSuffixTest.shifted B R (pair (pair c d) (BinaryNatCode.encode j))=
+      pair (pair c d) (BinaryNatCode.encode (R.newer c d+j)) :=by
+  simp only [IntegralFramedPhysicalSuffixTest.shifted,pairFst_pair,pairSnd_pair,
+    BinaryNatCode.encode,Nat.fromBitsLE_bits]
+
+#print axioms IntegralFramedPhysicalSuffixTest.scalar_count
+#print axioms IntegralFramedPhysicalSuffixTest.columns_injective
+#print axioms IntegralFramedPhysicalSuffixTest.shifted_FP
+#print axioms IntegralFramedPhysicalSuffixTest.index_FP
+#print axioms IntegralFramedPhysicalSuffixTest.index_columns
+#print axioms IntegralFramedPhysicalSuffixTest.arity_unary
+#print axioms IntegralFramedPhysicalSuffixTest.evaluator
+#print axioms IntegralFramedPhysicalSuffixTest.packet
+end PhysicalSuffixTestRegression
+end Group50Regression14

@@ -1,3 +1,44 @@
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalRowOrigin
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalHeightFullSpace
+import LeanCanny.Algebra.FixedWidthFermatHeadSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalSourcePolynomialSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalSourceDerivativeSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalNormalSpace
+import LeanCanny.Algebra.IntegralMixedPhysicalOriginalPullSpace
+import LeanCanny.Algebra.IntegralMixedPhysicalOriginalSourceSpace
+import LeanCanny.Algebra.IntegralCoordinateFamilyPullSpace
+import LeanCanny.Algebra.FixedWidthDerivativeCoefficientSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalSourceAtSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalHeightAtSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalNormalAtSpace
+import LeanCanny.Encoding.IntegralFramedPhysicalBankTermSource
+import LeanCanny.Encoding.IntegralFramedPhysicalBankTermPoint
+import LeanCanny.Encoding.IntegralMixedPhysicalMarkedPlan
+import LeanCanny.Encoding.IntegralMixedPhysicalMarkedParameters
+import LeanCanny.Encoding.IntegralMixedPhysicalMarkedTest
+import LeanCanny.Encoding.IntegralMixedPhysicalMarkedSemantics
+import LeanCanny.Encoding.IntegralMixedPhysicalMarkedValidity
+import LeanCanny.Encoding.IntegralFramedPhysicalRealizedVertex
+import LeanCanny.Encoding.IntegralFramedPhysicalIntegerVertex
+import LeanCanny.Algebra.IntegralMixedFramedCriticalRows
+import LeanCanny.Encoding.IntegralFramedScalarTarskiIteratedSign
+import LeanCanny.Encoding.IntegralFramedScalarTarskiIteratedSpace
+import LeanCanny.Encoding.IntegralFramedScalarTarskiSpecialization
+import LeanCanny.Algebra.IntegralMixedSelectedCoordinateAffineDegree
+import LeanCanny.Algebra.IntegralMixedSelectedCoordinateWindowDegree
+import LeanCanny.Connectivity.IntegralMixedSelectedWindowQueries
+import LeanCanny.Algebra.IntegralMixedSelectedCoordinateOrderedQueries
+import LeanCanny.Connectivity.IntegralMixedSelectedCoordinateNearQueries
+import LeanCanny.Algebra.CanonicalSignStatisticSpace
+import LeanCanny.Encoding.IntegralFramedScalarTarskiStatistic
+import LeanCanny.Encoding.IntegralFramedScalarTarskiStatisticValue
+import LeanCanny.Encoding.OrderedWindowStatisticFP
+import LeanCanny.Encoding.IntegralMixedPhysicalReplayNew
+import LeanCanny.Encoding.IntegralMixedPhysicalReplayThom
+import LeanCanny.Encoding.IntegralMixedPhysicalReplayRelation
+import LeanCanny.Encoding.IntegralMixedPhysicalReplayAttachment
+import LeanCanny.Encoding.IntegralMixedPhysicalGuardScan
+import LeanCanny.Encoding.IntegralFramedPhysicalSuffixTest
 import LeanCanny.Algebra.RationalMonomialBivariateShift
 import LeanCanny.Algebra.RationalMonomialBivariateShiftSpace
 import LeanCanny.Algebra.IntegralMixedFramedTerminalCoordinateReader
@@ -3692,6 +3733,22 @@ Principal slices now embed the raw scalar digits into the same full physical
 tuple, without old sampler access or roots. The ordered-window stability
 equivalence is proved; native iterated-sign coupling, graph assembly and
 global stabilization remain open.
+Original marked and outer replay tests now retain one full physical sample
+through all original leaves, regular/marked equations, original-coordinate
+Thom comparisons and every chronological critical correlation guard. Their
+native controls come from original syntax; only literal full-row coefficient
+access remains. Accepted replays project to the original candidate, and two
+accepted marked phases attach inside one full regular component.
+New critical-row layouts and original Fermat, derivative, normal and full
+height readers preserve the caller modulus and external exponent word.
+Actual realizations have one full complete label without a scalar-only
+hypothesis. Generic scalar-suffix tests now inject raw suffix digits through
+native physical scalar columns, without an old vertex or evaluator.
+Native descending principal-sign scans compute the declared iterated Tarski
+statistic. The selected-near predicate has an exact five-statistic semantic
+characterization with derived degree, seed and window stability. Matching the
+native statistic to that model, full coefficient assembly, frame consistency,
+the effective graph and global stabilization remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
