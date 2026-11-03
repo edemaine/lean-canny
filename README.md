@@ -2083,8 +2083,10 @@ sampler word preserving every old quotient. An earlier-only scan retains the
 actual-root guard on every meaningful cut. The actual last typed cut now
 binds its serialized word to the literal instruction/current denominator,
 canonical parent key and complete sampler word at the same root and cap.
-Whole-chain parent/padding realization and reverse guard acceptance remain
-open.
+Native coefficient guards now characterize validity and exact degree under
+the same full-word interpretation. Canonical padding preserves an honest
+parent realization using an already known original critical seed.
+Whole-chain realization and the complete edge tests remain open.
 
 Equal-height boundary programs now realize the midpoint, endpoint and both
 capture blocks at the same point, including singular boundary components.
@@ -2097,8 +2099,12 @@ captured midpoint, using the same full word and original-only costs. Keeping
 epsilon proves the exact pseudo-remainder seed degree, including degree drops
 at epsilon zero. Anchored coordinate ranks and Near tests imply an actual
 local path. The last record before each checked level is exactly that frame's
-own first-free-coordinate critical capture. Semantic guard composition and
-the two-way bounded graph construction remain open. Fixed integer bivariate families have
+own first-free-coordinate critical capture. Actual compact slices now have critical extrema and a closed sweep cover
+from their finite bad and critical values, including a singleton case.
+Choosing the radius from the original input fixes the literal regular source
+across histories. Actual sweep endpoints and every retained/fresh pair have
+native chronological encodings with honest realizations. Semantic guard
+composition and the two-way bounded graph construction remain open. Fixed integer bivariate families have
 stable root-sign-pattern counts past a common mass cutoff; the recursive
 polynomial presentation and original-only uniform mass bound needed for
 global stabilization remain open.

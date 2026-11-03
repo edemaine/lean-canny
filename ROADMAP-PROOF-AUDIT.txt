@@ -1065,3 +1065,47 @@ including the combined CheckRoadmapOrigins fixture. Namespace axiom audit:
 exact29-file stage manifest, blob bytes and100644 modes are checked at commit.
 The completed local-edge overapproximation review is retained in
  tmp/m3-local-edge-overapprox-review.txt; source/frame agreement remains vital.
+
+17. G59: internal critical sweeps and canonical history extensions
+
+Compact nonempty frozen slices attain both critical height extrema, including
+singular extrema. A finite actual bad/critical cut set supplies its own least
+and greatest elements and closed adjacent-slab cover. Equal extrema give one
+boundary fiber. No artificial signed outer leaves or regularity oracle are
+used. This is semantic enumeration for completeness, not a native root oracle.
+
+The radius depends only on the original input. Actual marked/outer source
+polynomials, coefficients and degree consequently agree across labels, raw
+tables and auxiliary metadata; sampler caps and words are not identified.
+Under one honest full-word interpretation, coefficient-only guards are
+necessary and sufficient for actual validity and the exact specialized degree.
+The reverse open-interval theorem derives those guards internally.
+
+Every actual ordinary bad or critical sweep endpoint has a literal native
+fresh spec and current-Q encoding. Retained/fresh pairs cover all four cases,
+with exact chronological bytes, producer labels and shifted references.
+Right retained producers remain bounded by the OLD birth. Numerical frame
+identity and all realized old values survive both fresh extensions. Arbitrary
+retained endpoints are permitted by local edge soundness; fresh canonical
+endpoints supply the separate completeness construction.
+
+Actual repeated empty-frame seed padding preserves honest parent realizations
+and every old quotient. The seed is an ALREADY known original height-critical
+point. No future seed, arbitrary raw-word solvability, cap change, complete
+sample-word transport or reused ordinal is inferred.
+
+M3 still requires complete level/chain realization, the native semantic edge
+conjunction and TWO-WAY bounded graph/path equivalence. M4 effective uniform
+outer stabilization and M5 original Boolean incidence remain open. Neither
+original pointLanguage nor connectedLanguage has unconditional PSPACE
+membership proved here.
+
+Package manifests: tmp/group59-package-manifests.txt (seven packages,23sources).
+The combined CheckRoadmapInternal fixture preserves the package regressions
+and axiom audits. Verification results follow after the full checkpoint.
+Verification: all23 entire sources passed strict200000-heartbeat checks.
+Full strict three-target build19470 jobs PASS; all23 Check scripts PASS,
+including the new720-line CheckRoadmapInternal fixture. Namespace axiom audit:
+87576 declarations, only propext/Classical.choice/Quot.sound. Frozen source
+hashes, exact27-file stage manifest, blob bytes and100644 modes verified.
+Durable checkpoint evidence is retained under tmp/group59-*.

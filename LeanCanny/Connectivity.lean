@@ -1,3 +1,26 @@
+import LeanCanny.Algebra.IntegralMixedRelativeCutCoefficientIff
+import LeanCanny.Connectivity.FiniteCriticalSweepInternal
+import LeanCanny.Encoding.IntegralMixedCanonicalPaddingSeed
+import LeanCanny.Encoding.IntegralMixedChronologicalChosenCutCode
+import LeanCanny.Encoding.IntegralMixedChronologicalEndpointSpec
+import LeanCanny.Encoding.IntegralMixedChronologicalOptionalEndpointSpec
+import LeanCanny.Encoding.IntegralMixedOriginalRegularSource
+import LeanCanny.Encoding.IntegralMixedPhysicalCutCoefficientComplete
+import LeanCanny.Encoding.IntegralMixedPhysicalCutCoefficientIntervalComplete
+import LeanCanny.Encoding.IntegralMixedPhysicalOriginalSource
+import LeanCanny.Encoding.IntegralMixedSourceIntegerPaddingPrefix
+import LeanCanny.Encoding.IntegralMixedSourceIntegerPaddingRealization
+import LeanCanny.Geometry.IntegralMixedCanonicalPaddingRealization
+import LeanCanny.Geometry.IntegralMixedChronologicalEndpointRetained
+import LeanCanny.Geometry.IntegralMixedChronologicalFreshCriticalEndpoint
+import LeanCanny.Geometry.IntegralMixedChronologicalFreshCutEndpoint
+import LeanCanny.Geometry.IntegralMixedChronologicalFreshEndpoint
+import LeanCanny.Geometry.IntegralMixedChronologicalOptionalPair
+import LeanCanny.Geometry.IntegralMixedChronologicalOptionalPairData
+import LeanCanny.Geometry.IntegralMixedChronologicalOptionalPairSweep
+import LeanCanny.Geometry.IntegralMixedFrozenFrameCriticalExtrema
+import LeanCanny.Geometry.IntegralMixedFrozenFrameCriticalRange
+import LeanCanny.Geometry.IntegralMixedFrozenFrameInternalSweep
 import LeanCanny.Algebra.FixedWidthBivariateZeroLift
 import LeanCanny.Algebra.FixedWidthBivariateZeroLiftSpace
 import LeanCanny.Algebra.IntegralMixedFramedZeroTarskiAccess
@@ -4204,8 +4227,10 @@ one full sampler word preserving every old quotient; the earlier-only scan
 keeps actual-root guards on meaningful cut records. The last typed raw cut
 now derives the literal actual instruction and current Q; its canonical
 parent key gives a full sampler word at the same prepared root and cap.
-Parent/padding realization, role guards and reverse coefficient acceptance
-remain to be assembled for whole-chain completeness.
+Native coefficient guards now characterize validity and the exact degree
+under the same full-word interpretation. Canonical padding preserves an
+honest parent realization using an already known original critical seed.
+Whole-chain realization and the complete role conjunction remain open.
 Equal-height boundary programs realize midpoint/child records and both capture
 blocks at the same point, including singular boundary-component samples.
 Specialized numerical frozen equations determine the full coordinate root
@@ -4221,6 +4246,15 @@ last record before every checked level is its own first-free-coordinate
 critical capture. Concrete graph validity/guard composition and the two-way
 bounded path theorem remain open, as does original Boolean incidence. Fixed integer bivariate families have stable root-sign-pattern
 counts at a common outer mass cutoff.
+Compact frozen slices attain actual critical minimum and maximum heights,
+including singular extrema. Finite actual bad and critical values therefore
+supply their own closed sweep cover, with a singleton boundary case; no
+artificial outer cut is required. Original-only radius selection fixes the
+literal regular source across histories and auxiliary metadata. Every actual
+sweep endpoint has a native fresh encoding, and all four retained/fresh
+endpoint pairs have their literal chronological words, current denominators
+and realizations. Arbitrary retained endpoints remain a sound local-edge
+overapproximation under the actual avoidance and branch tests.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet
