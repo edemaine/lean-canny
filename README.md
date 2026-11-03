@@ -2008,39 +2008,41 @@ correlation and the trace grammar are still needed.
 Tarski parameter coefficient tests now preserve both parameter blocks and
 the complete candidate. Native coefficient reboxing rejects oversized
 exponents, and cleared two-coordinate midpoint queries preserve arbitrary
-signed denominators. Ordered Near, native graph assembly and effective
-global stabilization remain unfinished.
+signed denominators. These readers feed the native ordered Near tests;
+native graph assembly and effective global stabilization remain unfinished.
 
-The full physical sampler has native degree/mass bounds, every literal row,
-and native coefficient access from original represented metadata and actual
-CurrentQ controls at an honest caller-modulus pullback. The total clamped
-reader is proved equal to the actual complete-square rowCoefficient.
-Arbitrary exponent widths/ranks stay external; no full-row or matrix
-evaluator is supplied. Concrete original-input decider specialization is
-being assembled.
-Marked/outer tests check all original leaves, regular/marked equations,
-original-coordinate Thom agreement, critical correlations and all creating
-cuts on one full context and word. Accepted replays project to the original
-candidate and their marked phases attach in one full regular component.
-Every accepted literal cut has a valid factor and exact recorded degree
-under an older homomorphism from that same tuple. Its factor-root and
-retained-quotient certification is being assembled.
-Five native ordered statistics and validity guards characterize selected
-Near on actual retained bank quotients. Full critical rows supply actual
-geometric powered points; correlation guards identify their selected bank
-coordinate. Literal denominator and bank shifts yield the earlier midpoint
-branch through an advanced-frame point, with a concrete SectionCode word.
-Near tests characterize equality with that branch's endpoint.
-Open-interval bad-root emptiness has an exact two-statistic characterization,
-including repeated roots and endpoints. All four actual cut heads have
-native coefficient readers; their common-layout interval adapter remains
-open.
-Concrete critical and virtual cut records use the existing decoder with
-exact chosen Kind/degree/current-Q fields. Prefix freezing retains the
-original source, and correlated local realization constructs one full
-tuple and homomorphism. Arbitrary record solvability is not assumed.
-Actual real-critical-value coverage, selected choices, record-depth/graph
-assembly and effective global stabilization remain open.
+The full physical sampler and original marked/outer deciders now derive
+every row reader and native control from original syntax. Accepted creating
+cuts certify their retained quotients as roots under the same older hom.
+
+For prefix-frozen frames, a native exhaustive search now detects exactly the
+actual real critical heights inside an interval between retained parent
+values. Rejection is exactly disjointness. The proof includes singular roots,
+checks all old quotients and the new physical correlation, and keeps parent
+and child at one prepared source, horizon and width.
+Native Near tests characterize equality with the selected branch endpoint
+on the same full tuple.
+
+All three ordinary bad-cut families now preserve their real zero sets after
+an actual clearing-denominator change. The value case uses a squared-minor
+Gram argument; valid choices need not be computed by a `natDegree` oracle.
+General bad/real-critical endpoints and a literal scale2/refsum midpoint
+anchor share one full tuple and hom, with three decoded records and an
+original native byte bound. Proper-fiber sampling supplies such an anchor
+in every nonempty regular midpoint component.
+
+Native descriptor recognition, retained input-mark/bound references and the
+recursive bounded graph still need assembly. The native bad-factor interval
+adapter has charged original controls and a same-tuple mathematical iff for
+ordered endpoints; its concrete guard/interpretation binding remains open.
+Fixed integer bivariate families also have stable root-sign-pattern counts
+past a common outer mass cutoff. The actual recursive polynomial presentation
+and its original-only uniform mass bound remain unproved.
+
+The dependency map and remaining mathematical obligations are recorded in
+[`ROADMAP-PROOF-AUDIT.txt`](ROADMAP-PROOF-AUDIT.txt). Unconditional PSPACE
+membership for the original point and whole-set connectivity languages is
+still open.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate

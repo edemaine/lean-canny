@@ -1,0 +1,595 @@
+ROADMAP PROOF AUDIT
+2026-11-03. Baseline: ef7155fdbaa48e9ea052528a547924838886b255.
+Sections 1-10 record the read-only baseline review. Section 11 records
+subsequent verified implementation; its status supersedes the baseline.
+
+Purpose: (1) state the exact final theorems and dependencies; (2) distinguish
+missing mathematics from formal connections; (3) give and review the remaining
+proof argument before adding infrastructure.
+
+The central correction to the preceding status report is this:
+Qualitative finite covers, paths within components, polynomial-width candidate
+labels, endpoint validation, and the final PSPACE transfer already exist.
+The missing object is an EFFECTIVE incidence/component construction with the
+right geometric meaning, bounded joint records, and uniform parameter control.
+One unsolved edge-evaluator hypothesis packages much of this difficulty.
+
+Source references below generally use file basenames and declaration names;
+short file labels are not claims about full Lean namespaces. Exact final
+identifiers and the final function type are stated explicitly.
+
+Evidence classes used below:
+  COMMITTED: theorem is in baseline source; previous full checks passed.
+  PRESERVED: uncommitted follow-on proof; stated QA is narrower than integration.
+  PROPOSED: a specification or on-paper argument, not a new Lean theorem.
+No proposed statement is counted as proved.
+
+1. EXACT FINAL THEOREMS
+
+The wanted unconditional conclusions, using existing definitions, are:
+
+  LeanCanny.Connectivity.pointLanguage
+    ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits
+
+  LeanCanny.Connectivity.connectedLanguage
+    ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits
+
+These are arbitrary-dimensional, canonically encoded integer-polynomial Boolean
+inputs. Dimension is unary. They include malformed-input rejection.
+The point language requires BOTH endpoint formulas to denote unique points,
+and an actual continuous path in the ORIGINAL realization. It does not merely
+ask that some points satisfying the two endpoint formulas be connected.
+The whole language means IsPreconnected; it accepts the empty set.
+
+Sources:
+  LeanCanny/Connectivity/Problem.lean:35,59,75
+  LeanCanny/Connectivity/Encoding.lean:60,98,102
+
+The exact smallest EXISTING final interface is already:
+
+  ComputableTidilyInPolySpace
+    (fun p : List Bool × List Bool × List Bool =>
+      LeanCanny.Connectivity.CanonicalEndpointNative.edge
+        p.1 p.2.1 p.2.2)
+    (encPair encBits (encPair encBits encBits)) encBool
+
+CanonicalEndpointNative.point_mem_PSPACE (CanonicalEndpointDecision.lean:30)
+and CanonicalEndpointNative.connected_mem_PSPACE (CanonicalWholeDecision.lean:76)
+both take this same hypothesis
+and conclude the respective language theorem. The supplied program must be
+uniform in all raw triples, not separately chosen for each fixed input.
+
+Already COMMITTED on the far side of this interface:
+- Actual accessible covers and graph/topology equivalences:
+  CanonicalAuxiliaryBitFrontier.cover:66 and connected_language_iff:80;
+  CanonicalEndpointFrontier.point_language_iff:37.
+- Original connected iff path-connected:
+  CanonicalConnectivityGraph.connected_iff_pathConnected:45.
+- Native candidate/tag widths, original sign-word filtering and vertex validity:
+  CanonicalAuxiliaryCandidateBounds.width_bound:19, tagWidth_unary:49;
+  CanonicalAuxiliaryBitFrontier.vertex_computable:74.
+- Singleton endpoint validation, fixed endpoint words and native vertex tests:
+  CanonicalEndpointNative.endpoint_computable:32, valid_computable:43,
+  source_computable:78, target_computable:81.
+- Guarded implicit-graph reachability and whole-graph tests:
+  Computation/ImplicitGraphPSPACE.reachable_computable:253 and
+  connected_computable:291.
+
+Important limitation: the current semantic pieces are not already effective
+cells. SampledBitComponentCover.piece is defined using a connected component.
+AuxiliaryCandidateComponentCover.incident_iff:102 identifies same-source
+incidence with SAME-component membership of the samples. Treating that
+membership as a leaf routine would assume the problem we are trying to solve.
+
+2. DEPENDENCY MAP AND GAP CLASSIFICATION
+
+Final unconditional point/whole PSPACE
+  <- EXISTING final transfer + uniform actual frontier-edge evaluator [OPEN]
+      <- closed-source SAME-component decision [OPEN]
+          <- effective bounded regular-source roadmap [OPEN]
+              <- full arithmetic/sample/replay backends [substantially closed]
+              <- exact recursive descriptors and endpoint attachments [OPEN]
+              <- joint record realization and total bit budget [OPEN]
+              <- complete real-critical interval certification [OPEN]
+          <- effective outer-parameter transfer [OPEN presentation; generic
+             exhaustion and scalar cutoff lemmas already COMMITTED]
+      <- cross-sign relative-frontier and endpoint/base incidence [OPEN]
+
+An alternative effective cover/graph can replace the current canonical edge,
+but then its cover/attachment and two-way reachability properties must be
+proved. A new graph is not correct merely because it has computable edges.
+
+Classification:
+
+A. Formal connections / QA, with source statements already available:
+- Finish QA and integration of the preserved original-only marked/replay
+  wrappers. Their signatures have no advanced row-evaluator premise.
+- Compose preserved cut factor-root and retained-bank-environment identities.
+- Transport the actual exceptional cut's source/Kind/factor/degree through
+  prefix-frame source equality and the existing sweep-coordinate retargeting.
+- Adapt the old recursive cardinal estimate to the real-critical cover.
+- Once an exact local graph is supplied, apply existing native graph assembly.
+- Once a total actual edge program is supplied, the final two PSPACE results
+  are existing applications.
+
+These still require work, but should not be described as new foundational
+mathematics.
+
+B. Substantial constructive geometry / algorithm correctness:
+- Retain explicit bounded descriptors for the cover chosen by the geometric
+  recursion, with BOTH soundness and completeness.
+- Give exact semantics to endpoint selectors and recursive child membership.
+- Realize the two neighboring cuts and their midpoint in coherent saved banks;
+  do not replace an earlier-parent factor by a later current factor silently.
+- Prove that the ENTIRE record/advice/joint sample has polynomial bit length,
+  at a fixed honest target cap and width.
+- Give a complete native test for absence of actual real critical values.
+- Characterize cross-sign and endpoint/base relative-frontier incidence.
+
+C. Substantial quantitative parameter theorem:
+- Present ALL recursive graph and attachment decisions coherently by bounded
+  integer-polynomial signs in an outer parameter, with a mass bound independent
+  of the outer radius. A polynomial presentation of the initial source alone
+  does not establish this.
+
+The native arithmetic work matters: committed
+IntegralFramedPhysicalSquareNative.native_row_evaluator:21 and native_access:35
+cover the literal full physical system, including scalar, physical and
+multiplier rows and arbitrary caller moduli/widths/ranks. The preserved
+IntegralMixedPhysicalMarkedNative/ReplayNative specializations remove that
+cost premise using only original syntax and radius controls. They recognize
+finite arithmetic replays; they do not yet recognize every topological edge.
+
+3. HANDWRITTEN GEOMETRIC ARGUMENT: WHAT CLOSES AND WHAT DOES NOT
+
+Fix one compact regular pure-power source P, one target horizon/width, one
+actual full joint tuple, its older interpreting homomorphism, and its retained
+bank values. Maintain the prefix-frozen and atomic-reference invariants.
+
+Induct on k, the number of free coordinates.
+
+Base k=0:
+All coordinates are fixed. The slice is empty or a singleton. This is a
+terminal validity/sign test, not a recursive connectivity oracle.
+
+Base k=1:
+Use the ordered real roots of the actual univariate fiber equation. Distinct
+root labels give the finite point pieces. Existing native univariate slice
+and root/gap machinery is the terminal computational kernel.
+
+Step k>=2:
+Choose the deterministic next free coordinate h and a permitted auxiliary
+coordinate g. Select the valid nonzero exceptional factors under the SAME
+older homomorphism. Cut the h-axis at:
+  (a) their real bad-factor roots; and
+  (b) ACTUAL real projection-critical values.
+Properness gives a bounded range. The sets are finite with degree-derived
+bounds. Outside these cuts, a singular fiber would produce an actual critical
+value, a contradiction. Existing chart/section machinery then transports
+components across each open slab.
+
+At an endpoint of type (a), extend by the corresponding correlated scalar cut.
+At an endpoint of type (b), use its real critical-point witness and extend by
+the full physical critical command. Advance freezes h, preserves the original
+source under prefix freezing, shifts references and decreases k. Apply the
+induction hypothesis to the endpoint slice.
+
+A genuine physical point over an interior midpoint selects a continuous
+physical branch. Its ordered-coordinate word has fixed length (n+1)*B.
+The existing Near theorem identifies the branch endpoint at a cut. Connect the
+branch node to the lower-rank endpoint-component node exactly when that endpoint
+belongs to the named child component. This is the missing computational meaning
+of the selectors: Near identifies a point, not its recursive component.
+
+Form a graph of slab branches and endpoint-child nodes. Each accepted edge is
+an actual path by branch continuity or child induction. Conversely, use the
+finite accessible slab cover: any path induces a walk through incident pieces.
+These statements establish reachability iff JoinedIn.
+Existing FiniteSlabBitCover.connected_computable
+(FiniteSlabBitAlgorithms.lean:59) performs finite graph
+search once its local-cover and exact touching-fiber hypotheses (:30-51) are
+instantiated.
+
+This is a sound on-paper induction conditional on explicit local descriptor,
+attachment and record-coherence obligations. An existential finite-cover
+theorem does NOT supply those obligations.
+
+The PRESERVED FullDescending.exists_full_recursive_cover:104 and
+FullRegularCover.regular_zero_full_cover_original:53 return only 'there exists
+a finite I with a ClopenPathCover'. They repair real endpoint witnesses but
+erase the descriptor/trace relation needed by the algorithm.
+
+4. REAL CRITICAL VALUES: THE KNOWN PITFALL AND A CONCRETE REPAIR
+
+The implication
+  real root of an elimination polynomial -> real joint critical point
+is false. This is not a Lean type-alignment issue.
+
+An example within the proper pure-power form is
+  P(x,y,z)=x^4+y^4+z^4+4*y^2-6*z^2+1.
+For a real x-projection critical point,
+  dP/dy=4*y*(y^2+2)=0 forces y=0;
+  dP/dz=4*z*(z^2-3)=0 forces z=0 or z^2=3.
+The real zero equation then gives only x^4=8; the z=0 case would require
+x^4=-1. Thus actual real critical values are +/-8^(1/4).
+However the complex solution y^2=-2,z=0 gives P=x^4-3 and a REAL projected
+coordinate +/-3^(1/4). These are ghost elimination values. The interval
+(1,3/2) contains the positive ghost but no actual real critical value.
+The zero set is smooth: every real full-gradient zero has P=1 or P=-8.
+Properness follows from its positive quartic leading part.
+This is an on-paper critical-elimination example, not a newly run computation
+of a particular repository linePolynomial.
+
+Consequently, excluding all height-annihilator roots suffices for regularity
+but can destroy completeness if every cut endpoint must have a physical
+critical witness. Excluding the four selected bad-factor roots is a different
+condition: those roots are deliberately scalar cuts.
+
+A plausible native repair, worth attempting before changing the command ABI:
+- Extend the fixed parent by one actual h-critical command.
+- Scan complete words for that FULL joint system, not independent coordinate
+  roots and not just its nonsingular solutions.
+- Require agreement with ALL retained old bank quotient values.
+- Test whether the new selected h-coordinate lies strictly between the cuts.
+- Reject the slab exactly if such a word exists.
+
+Soundness follows from full critical-row readback. For completeness, an actual
+real critical point extends the same parent tuple/hom and receives a complete
+word. The sampler already captures singular roots as well:
+SquareSampleComplete.Complete/root_complete:29/37,
+SquareSampleCompleteVertices.word_valid/candidate_word:51/61, and
+IntegralFramedPhysicalSquare.complete:84.
+
+Remaining proof duties for this proposed scan:
+agreement of all old quotient values must determine old generator images and
+hence the same hom; the extra task must have honest cap/source/native bounds;
+every geometric witness must produce an accepted word.
+Multiple critical points can share a height. Count/order distinct HEIGHTS,
+for example by filtering coordinate-root ordinals with this witness predicate,
+rather than counting joint critical-point witnesses as distinct cuts.
+
+An alternative is to support scalar-only ghost-height cuts explicitly.
+That requires a new/extended record contract and cost proof; the physical
+critical tag cannot silently acquire that meaning. It is a design alternative,
+not a proved shortcut.
+
+5. BOUNDED ENCODING ARGUMENT AND ITS MISSING INVARIANT
+
+There are two different label bounds:
+- The ORIGINAL auxiliary-candidate/tag graph already has uniform polynomial-bit
+  widths and native validity.
+- The INTERNAL recursive roadmap still needs a whole-record/descriptor bound.
+The first does not prove the second.
+
+At a freely supplied external radius, let L=N+bitlength(R), including any
+already bounded query labels. The bounded algorithm should be polynomial in L.
+An original-input bound follows after R is supplied by an original-only
+BinaryFn writer. Do not silently identify these two input sizes.
+
+Available cardinal quantities:
+  U=(3*(n+1)+1)*2^B               bounds cut values per stage;
+  M=2^(B*(n+1))                  bounds physical branch codes;
+  C_k <= (U+1)*(M+2*C_(k-1))       at recursive ranks k>=2.
+Old DescendingCard.coverFactor:22 gives C_k <= coverFactor(n,B)^k.
+RealCutCard.sweepBadReal_ncard:22 preserves the cut bound after the repair.
+Hence log2 C_k is polynomial when k,n,B have the required original bounds.
+
+Use the additive node layout 'branch OR left-child OR right-child', as the
+existing selected-index construction does. Do not store the whole recursion
+tree or an exponentially long graph walk.
+
+The encoding proof must introduce one explicit invariant:
+  every visited descriptor names the same original source and an honestly
+  embedded saved bank, and all records fit a common fixed target cap.
+If one frame needs at most c new records and q(L) local bits, prove, for total
+record length ell,
+  ell(0) <= q0(L),
+  ell(k) <= ell(k-1)+q(L),
+  records(k) <= records(0)+c*k
+(or the correct explicit recurrence if this optimistic form is false).
+With k polynomial in L, these are polynomial in the augmented input length.
+Then compose an original-only bounded radius writer to obtain the final bound.
+Charge every numeric field, full physical column and terminal complete-word
+width. 'Depth is polynomial' alone does not establish these formulas.
+
+The most exposed local obligation is sibling/midpoint coherence:
+a and b may be roots chosen under an earlier parent hom. After adjoining a,
+the decoder's CURRENT factor/current-Q can differ. Prove exact transport for
+adjoining b, or give a supported old-parent construction. Then derive the
+literal scale-2/refsum midpoint constraint 2*y_h=a+b in the saved bank.
+Separate realizations of each endpoint under different homs are insufficient.
+
+For each encoded node prove:
+  valid word -> actual geometric piece/point and stated ancestry;
+  required geometric node/attachment -> bounded valid word;
+  native local edge/touch test iff the claimed attachment.
+Choosing a finite injection into bitstrings is not a decoder or a space bound.
+Local Encoded/Correlated realization does not establish these global properties.
+
+6. GLOBAL STABILIZATION: A CONDITIONAL PROOF USING EXISTING LEMMAS
+
+A stronger whole-family isotopy theorem is NOT necessary for closed-source
+SAME-component queries among fixed finitely many sample anchors.
+
+Let X be the original closed source and A=(a_i) its fixed finite good samples.
+They do not change with outer radius. Let r_marks bound their norms by
+2^r_marks. CandidateRadius and AuxiliaryCandidateOuterRadius already give
+sample bounds/persistence; they do not bound paths between samples.
+
+BoundedPathExhaustion.finite_marked_radius:37 gives SOME M such that all
+pairwise JoinedIn answers among A are preserved in X intersect closedBall(0,M).
+Proof: choose a path for each joined pair, bound each compact path image, then
+take a maximum over finitely many pairs. The converse is inclusion.
+This is already formalized, and is qualitative.
+
+Let H_ij(R) be the answer of a CORRECT bounded roadmap at dyadic radius 2^R,
+transferred through existing bounded marked regularization.
+BoundedMarkedComponents.marked_component_iff:100 and
+BoundedRegularComponents.component_iff_lift:170 supply that fixed-radius transfer.
+
+Now assume this MISSING uniform-presentation theorem:
+there are integer parameter polynomials p_alpha(T), a bound b depending only
+on original input, and R-independent Boolean dependence of all H_ij(R)
+on their signs at T=2^R, for every R>=r_marks; furthermore
+  coefficientMass(p_alpha) <= 2^b for EVERY alpha,
+and b has a uniform native polynomial-length binary code (BinaryFn b).
+
+The hypothesis must cover ALL recursive primitives, side conditions, chosen
+root/branch identifications, endpoint tests and coherent labels. Fixed-radius
+PSPACE alone does not imply it. Bounds that grow with the R being bounded
+do not give the needed noncircular conclusion.
+An older homomorphism and selected roots generally vary with T; freezing them
+while changing radius is invalid. The integer outer-sign lemma does not apply
+directly to arbitrary real/algebraic coefficient families. Include denominator
+nonvanishing, degree drops, zero branches and root/ordinal selection. A graph
+schema whose width changes with R needs a coherence theorem, or an independent
+uniform presentation of its final marked-pair answers.
+
+Then set
+  R_star=max(r_marks,b+1).
+IntegerPolynomialOuterSign.family_stable:59 stabilizes all those signs, and
+hence all H_ij, for R>=R_star.
+Choose R_big>=R_star with 2^R_big>=M. At R_big, finite-path exhaustion and
+bounded roadmap correctness give the ORIGINAL answers.
+Constancy transports exactly those answers back to R_star.
+The reverse path implication also follows immediately by inclusion.
+Binary control of r_marks and b makes R_star computable with polynomial bit
+length; compose the native bounded backend with that radius writer.
+
+This conditional argument is complete on paper. Numerical cutoff algebra is
+already proved. The genuinely missing theorem is the uniform sign presentation
+with original-only mass bound, plus the correct bounded roadmap.
+
+Existing BoundedRegularRadiusPolynomial.polynomial_eval:53,
+BoundedRegularRadiusBounds.polynomial_degree:69/parameterWidth_polynomial:99,
+and BoundedRegularRadiusMass.coefficient_bound:138 polynomialize and bound ONE
+regular source in T=2^R. They do not yet bound every recursive eliminant,
+primitive comparison and branch decision. Generic quantifier elimination may
+lose the required bounds; it is not an automatic substitute.
+
+Review the uniform statement BEFORE more parameter-reader implementation.
+If it cannot be proved with the needed bounds, consider a symbolic
+parameter-at-infinity route instead; that also needs correctness/space proofs
+and is not a completed alternative.
+
+A sample-radius shortcut is invalid. On the parabola
+  y=M*(1-x^2),
+the points (-1,0),(1,0) lie in the unit ball, but every joining path crosses
+(0,M). Bounding representative coordinates cannot bound their joining paths.
+
+7. FROM CLOSED-SOURCE CONNECTIVITY TO ORIGINAL BOOLEAN FRONTIERS
+
+This is a separate obligation, not an automatic final wrapper.
+
+For actual original pieces P_a,P_b inside S, the required edge is
+  exists x in P_a intersect closure_S(P_b),
+  OR the symmetric condition.
+It is NOT merely 'weak sign conditions are compatible', and not just
+'some closed-source candidates are in the same component'.
+
+The semantic canonical covers transport closed-source components through
+proper projection, saturation, circular retraction and radial access.
+Prove exact incidence/attachment transport for THESE operations, or construct
+a different effective accessible cover with two-way graph correctness.
+
+An explicit frontier lemma must account for:
+- a boundary point permitted by the ORIGINAL Boolean formula;
+- the named component on both sides, not merely their sign patterns;
+- approach from that component, witnessed by a coherent limiting branch;
+- endpoint-singleton/base incidence as well as base/base incidence.
+
+All closures must be relative to S. For S=R minus {0}, negative and positive
+pieces have ambient closures meeting at 0 but are disconnected in S.
+Using that excluded point as an edge is wrong.
+
+Qualitative accessibility and graph equivalence are already proved, but
+FormulaSignBoundary.boundary_envelope gives only a necessary weak-sign
+condition. A native iff for component-indexed relative closure is missing.
+Writing 'connectedComponent' or 'closure' in a predicate and invoking ETR
+is not a reduction: those predicates must first have polynomial-size/native
+algebraic witnesses. Real quantification is not free bounded BIT quantification.
+
+A closed-source roadmap algorithm should expose a boundary-access/limit query
+contract usable by this stage. Finishing SAME-component membership alone
+does not close the arbitrary Boolean target.
+
+8. PAPER CHECK AND CHOICE OF DIRECTION
+
+The supplied Berkeley report's Theorem 3.5, pages 14-15, imports the roadmap
+algorithm from [C87b]. It replaces algebraic-number approximation and sign
+operations by PSPACE sign machinery and bounds the remaining enumeration and
+graph search. Those pages are not a self-contained geometric proof of
+roadmap coverage, encoding and global truncation.
+The ETR theorem earlier in that report is distinct and is already present in
+Abstract.etr_mem_PSPACE; it is not the missing connectivity theorem.
+
+The local supplement tmp/pdfs/canny-general-roadmaps.pdf is the LATER
+'Computing Roadmaps of General Semi-Algebraic Sets', not [C87b].
+Its pages 7-8 discuss component preservation and a stratified deformation
+argument; page 8 also discusses a large outer parameter and small inner
+parameter via leading/lowest terms. This is useful context, not a theorem
+already instantiated here. Do not mix the papers or count that later argument
+as an existing local library bridge.
+
+No simpler unconditional ETR shortcut was found. Polynomial-size existential
+formulas for local feasibility help. A formula containing semantic component
+membership, or an explicit exponentially long roadmap walk, does not establish
+the desired reduction. Existing native one-dimensional slice connectivity is
+a base case, not arbitrary-dimensional adjacency.
+
+Recommended direction: finish a SINGLE effective bounded-regular roadmap
+contract before growing more arithmetic backends. Keep it as a milestone,
+not a silent weakening of the arbitrary Boolean/unbounded final targets.
+
+9. PROPOSED CLOSURE LEMMAS AND ORDER OF WORK
+
+These names specify review obligations; no declarations were added to Lean.
+
+M1. RealCriticalFreeInterval.
+  Under one full parent tuple/hom, a native test iff no actual real h-critical
+  value lies in (a,b), complete for singular joint roots too.
+  Exit test: distinguish the quartic ghost from a genuine critical value;
+  verify old-bank agreement and the extra-command cap.
+
+M2. JointDescriptorRealizationAndBudget.
+  Compile actual bad cuts, real critical endpoints and midpoint branches into
+  one coherent source/bank history with bounded FULL advice, not independent
+  one-step realizations. Prove a fixed-radius augmented-input length recurrence,
+  then account for the final original-only radius writer.
+  Exit test: ONE slab with both endpoints and midpoint has a sound/complete
+  bounded encoded witness before arbitrary recursive graphs are attempted.
+
+M3. EffectiveRecursiveRegularGraph.
+  For the actual bounded regular source, give total native validity, local
+  edge/touch, lower-rank membership and marked-node queries; prove two-way
+  reachability/JoinedIn correspondence and uniform label/record bounds.
+  Use existing finite-slab/Savitch machinery, not a new global graph engine.
+  Exit test: no cover, selector, adjacency, component or unbounded-advice oracle
+  remains among computational inputs.
+
+M4. UniformOuterSignPresentation.
+  Give a coherent R-independent symbolic presentation for ALL M3 comparisons
+  in T, with uniform coefficient-mass exponent b and native binary bound.
+  Review bounds and label/ordinal coherence before more radius readers.
+  Apply section 6 for finite-marked stabilization; full isotopy is unnecessary.
+
+M5. EffectiveRelativeFrontier.
+  Use closed-source connectivity plus certified limiting attachments to obtain
+  ORIGINAL Boolean relative-frontier and singleton incidence, or prove an
+  alternative effective cover contract.
+  Exit test: strict/open boundaries and excluded boundary points are exact;
+  no component/closure predicate is an unimplemented leaf.
+
+M6. FinalEdgeAndLanguages.
+  Supply the edge program in section 1; apply the two EXISTING final theorems.
+  If raw malformed semantic edges make that interface unnecessarily strong,
+  a guarded-on-canonical-input variant is a small possible formal simplification.
+  Prove the equivalence explicitly.
+
+Dependency priority:
+  review M2's joint-bank invariant and M4's symbolic-bound specification before
+  another large implementation batch;
+  close M1 -> M2 -> M3 as the first end-to-end implementation milestone;
+  then M4 and M5 -> M6.
+M4 can be audited in parallel with bounded graph work; do not defer it until
+after everything else is written.
+
+Measure progress by M1-M6 contracts losing assumptions, not by module count,
+commit count or total audited declarations.
+
+Most useful human review:
+- Is sibling/midpoint saved-bank/current-Q coherence sound under the proposed
+  grammar and target budget?
+- Is the uniform ALL-recursive sign-presentation claim justified at polynomial
+  bit complexity?
+- What exact finite boundary/limit certificate gives cross-sign incidence?
+These are mathematical decisions. Routine Lean type alignment is secondary.
+
+10. REVIEW EVIDENCE AND IMPLEMENTATION BOUNDARY
+
+This audit changed no Lean source, ran no Lean builds/tests and committed
+nothing. Baseline remains ef7155f. Follow-on source stays preserved uncommitted;
+this memo does not promote it to completed/integrated status.
+
+Independent read-only reports:
+  tmp/roadmap-audit-endpoint.txt
+  tmp/roadmap-audit-native.txt
+  tmp/roadmap-audit-stability.txt
+They contain fuller theorem references and proposed constructions. If a source
+line moves, its named declaration is the durable reference.
+
+The proposed final proof is explicit but NOT complete. M1-M5 contain
+substantive unproved bridges. This review exposes those bridges so another
+sequence of locally verified modules is not mistaken for end-to-end closure.
+
+11. IMPLEMENTATION CHECKPOINT AFTER THE REVIEW (2026-11-03)
+
+The audit above records the ef7155f baseline. Subsequent work has discharged
+the following narrower obligations; it has not completed the roadmap theorem.
+
+M1 semantics: IntegralMixedFrozenFrame.realCriticalWitness_iff solves ALL
+rows of one appended physical critical command, matches EVERY old quotient
+to one canonical parent interpretation, and correlates the newest retained
+quotient with the actual powered physical height. It is equivalent to
+membership in the actual real critical-value set. The corresponding
+realCriticalFreeInterval_iff proves exact open-interval absence. Repeated or
+singular roots are not excluded. The parent full tuple and sampling horizon
+are fixed. The concrete native binding is now also proved:
+PhysicalCriticalInterval.language_iff_realCritical derives the old hom and
+complete child capture internally, and not_language_iff_disjoint identifies
+native rejection with actual critical-free interval disjointness. The actual
+point-command factory discharges command provenance for canonical probes.
+
+M2 general local slab: joint_general_slab_bounded retains both endpoints
+from the SAME original three-class Hbad/real-critical parent set and one
+actual midpoint anchor in ONE full tuple and hom. The literal final bank is
+[anchor_j,b,a,old], with exactly three decoded records, an original native
+byte bound, and at most 3*(2*n+4) additional physical columns. A separate
+proper-fiber theorem supplies the anchor in every nonempty regular midpoint
+component. The anchor scalar is a free coordinate j, not the frozen midpoint
+height. Endpoint heights already retained as input marks or exterior bounds
+still need their existing-reference case. Native arbitrary descriptor
+recognition/incidence binding is not supplied by this local realization.
+
+M2 algebra: GramDeterminantSquares proves the full rectangular squared-minor
+identity over arbitrary commutative rings. GramLeadingCoefficientCovariance
+then proves exact value-degree preservation and equality of leading sweep
+coefficient REAL zero sets under independent nonzero real row weights and
+nonzero value-variable dilation. It derives maximal minor degrees internally
+from nonzero actual Gram determinant. This is a zero-set covariance theorem;
+the weighted Gram polynomials need not be common scalar multiples. The
+actual current-Q bindings for ALL THREE ordinary bad-cut classes are now
+proved. Coordinate and squarefree cuts preserve their selected choices,
+specialized degrees and real roots. The actual reflected value certificate
+preserves its trailing choice and real zeros; a fresh exact numeric degree
+is permitted. Valid-choice uniqueness removes dependence on our particular
+constructed Choices. None of these asserts unchanged-value covariance for
+the fourth limitCoordinate ABI.
+
+M4 refinement: ParameterTarski.rootCount_stable_outer proves equality of ALL
+finite root-sign-pattern counts beyond 2^(b+1), for FIXED integer bivariate
+root/query polynomials whose actual head/seed/principal tests have common
+coefficient-mass bound 2^b. This permits a finite sign-table route to ordered
+Thom root correspondence instead of assuming continuous trivialization.
+The actual recursive framed interpreter still needs a single polynomial
+presentation, guarded normalization branches, joint old-root pullbacks, and
+an original-input-only unspecialized mass bound. M4 is not closed.
+
+Verification evidence for these additions is recorded in
+  tmp/m1-m2-root-six-handoff.txt
+  tmp/m1-m2-root-seventeen-handoff.txt
+  tmp/physical-critical-language-seven-handoff.txt
+  tmp/m2-joint-critical-seven-handoff.txt
+  tmp/m2-currentq-coordinate-seven-handoff.txt
+  tmp/m2-endpoint-final-handoff.txt
+  tmp/m4-sign-pattern-infinity-one-handoff.txt
+The precise uniformity contract and finite sign-table design are in
+  tmp/m4-uniform-contract.txt
+Strict builds, whole-source 200000-heartbeat checks, explicit regressions and
+standard-axiom audits have passed for these scoped packages. The combined
+strict build passed all 19148 jobs, and all 17 scripts/Check*.lean passed
+with warnings as errors and relaxedAutoImplicit=false. The full namespace
+audit checked 85238 declarations and allowed only propext, Classical.choice
+and Quot.sound. All built library source hashes were preserved through
+integration. Namespace-qualified regression examples resolved the only
+combined-script failure; no library proof or heartbeat limit changed.

@@ -53456,3 +53456,296 @@ example : (IntegralMixedCausalUnitRecordBits.record P (by decide) 3 (d.chosenCod
 end VirtualCutRecordRegression
 end
 end Group52Regression26
+
+namespace Group53Regression1
+
+set_option autoImplicit false
+set_option relaxedAutoImplicit false
+set_option maxHeartbeats 200000
+
+open Polynomial Matrix LeanCanny.Algebra
+open GramLeadingCoefficientCovariance
+
+namespace GramCovarianceRegression
+
+noncomputable def A : Matrix (Fin 2) (Fin 1) (Polynomial ℝ)[X] :=
+  fun i _=>if i=0 then Polynomial.C Polynomial.X*Polynomial.X else 1
+def w : Fin 2→ℝ :=fun i=>if i=0 then 2 else -3
+
+theorem original : gram A=Polynomial.C (Polynomial.X^2)*Polynomial.X^2+1 :=by
+  simp only [gram,Matrix.det_fin_one,Matrix.mul_apply,Fin.sum_univ_two,
+    Matrix.transpose_apply,A,ite_true,show (1 : Fin 2)≠0 from by decide,ite_false]
+  simp only [map_pow]
+  ring
+
+theorem changed : gram (rescale A w (-2))=Polynomial.C (16*Polynomial.X^2)*Polynomial.X^2+9 :=by
+  simp only [gram,Matrix.det_fin_one,Matrix.mul_apply,Fin.sum_univ_two,
+    Matrix.transpose_apply,rescale,A,w,ite_true,show (1 : Fin 2)≠0 from by decide,ite_false,
+    Polynomial.mul_comp,Polynomial.C_comp,Polynomial.X_comp,Polynomial.one_comp]
+  norm_num [map_mul,map_pow,Polynomial.C_ofNat]
+  ring
+
+example : gram (rescale A w (-2))≠Polynomial.C 16*gram A :=by
+  intro HE
+  have HC:=congrArg (fun p : (Polynomial ℝ)[X]=>p.coeff 0) HE
+  rw [original,changed] at HC
+  norm_num at HC
+
+example (t : ℝ) :
+    (gram (rescale A w (-2))).leadingCoeff.eval t=0 ↔ (gram A).leadingCoeff.eval t=0 :=by
+  apply leading_zero_iff_of_ne_zero
+  · intro i
+    fin_cases i <;> norm_num [w]
+  · norm_num
+  · intro HE
+    have HC:=congrArg (fun p : (Polynomial ℝ)[X]=>p.coeff 0) HE
+    rw [original] at HC
+    norm_num at HC
+
+example : (gram (rescale A w (-2))).natDegree=(gram A).natDegree :=by
+  apply degree_eq_of_ne_zero
+  · intro i
+    fin_cases i <;> norm_num [w]
+  · norm_num
+  · intro HE
+    have HC:=congrArg (fun p : (Polynomial ℝ)[X]=>p.coeff 0) HE
+    rw [original] at HC
+    norm_num at HC
+
+
+end GramCovarianceRegression
+end Group53Regression1
+
+namespace Group53Regression2
+
+set_option autoImplicit false
+set_option relaxedAutoImplicit false
+set_option maxHeartbeats 200000
+
+open Polynomial LeanCanny.Algebra
+
+example : (Polynomial.X*(Polynomial.X^2 : (Polynomial ℝ)[X]).reflect 4).natTrailingDegree=3 :=by
+  rw [ReflectedValueTrailing.trailing_degree _ (pow_ne_zero 2 Polynomial.X_ne_zero) 4 (by norm_num)]
+  norm_num
+
+example : (Polynomial.X*(Polynomial.X^2 : (Polynomial ℝ)[X]).reflect 4).trailingCoeff=1 :=by
+  rw [ReflectedValueTrailing.trailing_coefficient _ (pow_ne_zero 2 Polynomial.X_ne_zero) 4 (by norm_num)]
+  simp only [Polynomial.leadingCoeff_pow,Polynomial.leadingCoeff_X,one_pow]
+
+example : (Polynomial.X*(Polynomial.X^2 : (Polynomial ℝ)[X]).reflect 4).coeff 2=0 :=
+  ReflectedValueTrailing.below _ 4 (by norm_num) 2 (by norm_num)
+
+example : (Polynomial.X*(0 : (Polynomial ℝ)[X]).reflect 4).natTrailingDegree=0 :=by
+  simp only [Polynomial.reflect_zero,mul_zero,Polynomial.natTrailingDegree_zero]
+
+end Group53Regression2
+
+namespace Group53Regression3
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding
+open IntegralMixedHistory IntegralMixedFrozenFrame IntegralHistorySampler
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+noncomputable section
+namespace JointGeneralRegression
+private def D:=BoundedZeroSource.powerDegree 0
+private theorem Dval : D=18:=rfl
+private def P : SpatialSource 1 where
+ low:=-1
+ leading:=1
+ degree:=D
+ degree_two:=by rw [Dval]; decide
+ low_degree:=by
+  simpa only [MvPolynomial.totalDegree_neg,MvPolynomial.totalDegree_one] using
+    (show 0<D from by rw [Dval]; decide)
+ leading_ne_zero:=by decide
+private def F : Frame 1:={frozen:=∅,scales:=fun _=>1,scales_ne_zero:=fun _=>one_ne_zero,heights:=fun _=>.constant 0}
+private theorem HA : AtomicRows F 0:=AtomicRows.initial 1 0
+private theorem HF : FreeNormal F:=fun _ _=>⟨rfl,rfl⟩
+private theorem HP : PrefixFrozen F:=PrefixFrozen.of_empty F rfl
+private theorem hh : (0 : Fin 2)∉F.frozen:=Finset.notMem_empty _
+private theorem hg : (1 : Fin 2)∉(line F 0).frozen:=by decide
+private theorem evalP (v : Fin 2→ℝ) :
+ (FermatCriticalHomogenization.polynomial P.low P.leading P.degree).eval₂ (Int.castRingHom ℝ) v=
+  -1+v 0^18+v 1^18:=by
+ simp [P,Dval,FermatCriticalHomogenization.polynomial,Fin.sum_univ_two]
+ ring
+private theorem gradP (v : Fin 2→ℝ) :
+ (MvPolynomial.pderiv (1 : Fin 2) (FermatCriticalHomogenization.polynomial P.low P.leading P.degree)).eval₂
+   (Int.castRingHom ℝ) v=18*v 1^17:=by
+ norm_num [P,Dval,FermatCriticalHomogenization.polynomial,Fin.sum_univ_two,MvPolynomial.pderiv_pow]
+ simp [Fin.sum_univ_two,Pi.single_apply]
+private theorem endpoint (a : ℝ) (ha : a=1 ∨ a=-1) :
+ a∈realCriticalValues P (line F 0) (Fin.elim0 : Fin 0→ℝ) 0:=by
+ apply (line_realCriticalValues_iff P F Fin.elim0 0 hh HF a).mpr
+ refine ⟨![a,0],⟨?_,fun i hi=>False.elim (Finset.notMem_empty i hi)⟩,by simp,?_⟩
+ · rw [evalP]
+   rcases ha with rfl|rfl <;> norm_num
+ · intro i _ hi
+   have HE : i=1:=by fin_cases i <;> simp_all
+   subst i
+   rw [gradP]
+   norm_num
+private theorem cap : PurePowerReductionBounds.dimension 2 P.degree≤IntegralMixedExceptionalBounds.auxiliaryCap 2 P.degree:=by
+ unfold IntegralMixedExceptionalBounds.auxiliaryCap IntegralMixedExceptionalBounds.K
+ omega
+private def initial (B : ℕ) (hc : IntegralMixedExceptionalBounds.auxiliaryCap 2 P.degree≤2^B) : State P 2 B 0 (Fin 0):=
+ IntegralMixedHistory.base P (IntegralHistorySampler.base 2 (2^B)) (cap.trans hc)
+open IntegralMixedFullHistoryScript
+example (B : ℕ) (hc : IntegralMixedExceptionalBounds.auxiliaryCap 2 P.degree≤2^B) :
+ ∃ cA cB : Command P B,
+ let x₁:=step (initial B hc) (by decide) cA
+ let x₂:=step x₁ (by decide) cB
+ let born:=criticalStep x₂ (by decide) (midpointData HA 0 1 1 hg hg).rule
+ ∃ y : CriticalIndex 1 (NextIndex (NextIndex (Fin 0) cA) cB)→ℝ,
+ ∃ ψ : born.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ,
+   (∀ i,(born.sampler.rows i).eval₂ (Int.castRingHom ℝ) y=0) ∧
+   ψ (born.bank.numerator 0)/(born.bank.denominator 0:ℝ)=1 ∧
+   ψ (born.bank.numerator 1)/(born.bank.denominator 1:ℝ)=1 ∧
+   ψ (born.bank.numerator 2)/(born.bank.denominator 2:ℝ)=(-1) :=by
+ obtain ⟨φ,hφ⟩:=(initial B hc).sampler.interpret ℝ (Fin.elim0 : Fin 0→ℝ) (fun i=>Fin.elim0 i)
+ obtain ⟨old⟩:=IntegralMixedRelativeCuts.exists_choices (initial B hc) (by decide)
+   (cutRule (initial B hc) F 0 1 hg) φ
+ have HM : (![0,1] : Fin 2→ℝ)∈slice P F (Fin.elim0 : Fin 0→ℝ):=by
+   refine ⟨?_,fun i hi=>False.elim (Finset.notMem_empty i hi)⟩
+   rw [evalP]
+   norm_num
+ obtain ⟨_,cA,_,_,cB,_,_,y,ψ,hy,_,_,_,_,HV⟩:=joint_general_slab (initial B hc) (by decide) (by decide)
+   (by decide) 0 rfl hc F HF HA HP 0 1 1 rfl hh hg hg Fin.elim0 (fun i=>Fin.elim0 i) φ hφ
+   Fin.elim0 (fun i=>Fin.elim0 i) old (-1) 1 (Or.inr (endpoint (-1) (Or.inr rfl)))
+   (Or.inr (endpoint 1 (Or.inl rfl))) ![0,1] HM (by norm_num)
+   (by intro i hi; fin_cases i <;> simp_all [line,F])
+ refine ⟨cA,cB,y,ψ,hy,?_,?_,?_⟩
+ · simpa using HV 0
+ · simpa using HV 1
+ · exact HV 2
+example (B : ℕ) (cA cB : Command P B) :
+ Fintype.card (CriticalIndex 1 (NextIndex (NextIndex (Fin 0) cA) cB))≤18:=by
+ simpa using joint_general_physical_columns (ι:=Fin 0) cA cB
+example : ([([false] : List Bool),[true],[]] : List (List Bool)).length=3:=
+ joint_general_record_count _ _ _
+example : 0+3≤2+1 ↔ 0+2≤2:=by decide
+example (B : ℕ) (hc : IntegralMixedExceptionalBounds.auxiliaryCap 2 P.degree≤2^B)
+ (φ : (initial B hc).sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ)
+ (old : IntegralMixedRelativeCuts.Choices (initial B hc) (by decide) (cutRule (initial B hc) F 0 1 hg) φ)
+ (a : ℝ) (ha : a∈LeanCanny.Connectivity.IntegralMixedSelectedCriticalCuts.bad
+   (initial B hc) (by decide) (cutRule (initial B hc) F 0 1 hg) φ old) :
+ ∃ code : List Bool,IntegralMixedChosenLocalRealization.Encoded (initial B hc) (by decide) (by decide) hc
+   Fin.elim0 φ Fin.elim0 a code :=by
+ exact joint_endpoint_record (initial B hc) (by decide) (by decide) 0 rfl hc F HF HA HP 0 hh 1 hg
+   Fin.elim0 (fun i=>Fin.elim0 i) φ (fun i=>Fin.elim0 i) Fin.elim0 (fun i=>Fin.elim0 i) old a (Or.inl ha)
+end JointGeneralRegression
+end
+end Group53Regression3
+
+namespace Group53Regression4
+set_option maxHeartbeats 200000
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open scoped Classical
+namespace PhysicalCriticalProbeRegression
+private def n (_ : List Bool) :=0
+private def t (_ : List Bool) : Term:=.const 0
+private def R (_ : List Bool) :=0
+private theorem hn : UnaryFn n :=UnaryFn.const 0
+private theorem ht : (fun q=>(t q).toData.toBits)∈FP :=by
+  simpa only [t] using (constFn_mem_FP (Term.const (0:ℤ)).toData.toBits)
+private theorem ha : ∀q,(t q).arity≤n q :=by intro q;change 0≤0;omega
+private theorem hR : BinaryFn R :=BinaryFn.const 0
+open IntegralMixedPhysicalCriticalQuery
+example (ctx code w : List Bool) (a b : ℕ) :
+    critical (packet ctx code w a b) :=critical_packet ctx code w a b
+example (ctx code w : List Bool) : leftWord (packet ctx code w 2 5)=BinaryNatCode.encode 2 :=
+  left_packet ctx code w 2 5
+example (ctx code w : List Bool) : rightWord (packet ctx code w 2 5)=BinaryNatCode.encode 5 :=
+  right_packet ctx code w 2 5
+example (ctx code : List Bool) : IntegralMixedCausalRecordPlanBits.count (prepare (pair ctx code))=
+    IntegralMixedCausalRecordPlanBits.count ctx+1 :=prepare_count ctx code
+example (ctx code : List Bool) : pairFst (prepare (pair ctx code))=pairFst ctx :=prepare_candidate ctx code
+example (q : List Bool) : IntegralMixedPhysicalCriticalPrefixes.birth n false true q=
+    IntegralMixedPhysicalCriticalPrefixes.birth n false false q+1 :=
+  IntegralMixedPhysicalCriticalPrefixes.consecutive n false q
+example (q : List Bool) : pairFst (IntegralMixedPhysicalCriticalPrefixes.key n true false q)=
+    pairFst (IntegralMixedPhysicalCriticalPrefixes.key n true true q) :=
+  IntegralMixedPhysicalCriticalPrefixes.same_root n true q
+example : (IntegralMixedPhysicalCriticalPrefixes.input hn ht ha hR false false).Access :=
+  IntegralMixedPhysicalCriticalPrefixes.access hn ht ha hR false false
+example : (IntegralMixedPhysicalCriticalPrefixes.input hn ht ha hR true true).Access :=
+  IntegralMixedPhysicalCriticalPrefixes.access hn ht ha hR true true
+example : IntegerPolynomialRootQueriesBits.Access
+    (IntegralMixedPhysicalCriticalBankEquality.source hn ht ha hR true) :=
+  IntegralMixedPhysicalCriticalBankEquality.source_access hn ht ha hR true
+example : SpaceDecider (IntegralMixedPhysicalCriticalInterval.language hn ht ha hR false) :=
+  IntegralMixedPhysicalCriticalInterval.decider hn ht ha hR false
+example : IntegralMixedPhysicalCriticalInterval.language hn ht ha hR true∈PSPACE :=
+  IntegralMixedPhysicalCriticalInterval.mem_PSPACE hn ht ha hR true
+example (q : List Bool)
+    (hbad : IntegralMixedPhysicalCriticalPrefixes.birth n false false q ≤
+      Nat.fromBitsLE (IntegralMixedPhysicalCriticalQuery.leftWord q)) :
+    q ∉ IntegralMixedPhysicalCriticalInterval.language hn ht ha hR false :=by
+  rintro ⟨w,_,hw⟩
+  have hg := hw.1.2.1
+  simp only [pairFst_pair] at hg
+  omega
+end PhysicalCriticalProbeRegression
+end Group53Regression4
+
+namespace Group53Regression5
+open LeanCanny LeanCanny.Algebra Polynomial RootSignQueries ParameterTarski
+open scoped Classical
+namespace OuterSignPatternRegression
+-- A moving, repeated root with NEGATIVE leading coefficient.
+noncomputable def p : (ℤ[X])[X]:=-(Polynomial.X-Polynomial.C (Polynomial.X : ℤ[X]))^2
+noncomputable def q : Fin 1→(ℤ[X])[X]:=fun _=>Polynomial.X
+noncomputable def b : ℕ:=patternBudget p q
+noncomputable def u : ℝ:=(2:ℝ)^(b+1)
+noncomputable def v : ℝ:=(2:ℝ)^(b+2)
+theorem p_at (t : ℝ) : p.map (evalHom t)=-(Polynomial.X-Polynomial.C t)^2 :=by
+  simp only [p,Polynomial.map_neg,Polynomial.map_pow,Polynomial.map_sub,Polynomial.map_X,
+    Polynomial.map_C,evalHom,Polynomial.coe_eval₂RingHom,Polynomial.eval₂_X]
+theorem roots_at (t : ℝ) : (p.map (evalHom t)).roots.toFinset={t} :=by
+  rw [p_at,Polynomial.roots_neg,Polynomial.roots_pow,Polynomial.roots_X_sub_C]
+  simp
+example : signCount (p.map (evalHom u)).roots.toFinset (fun i=>(q i).map (evalHom u)) (fun _=>.pos)=
+    signCount (p.map (evalHom v)).roots.toFinset (fun i=>(q i).map (evalHom v)) (fun _=>.pos) :=by
+  apply rootCount_stable_outer p q b (pattern_bounded p q) u v le_rfl
+  exact pow_le_pow_right₀ (by norm_num) (by omega)
+example : signCount (p.map (evalHom u)).roots.toFinset (fun i=>(q i).map (evalHom u)) (fun _=>.pos)=1 :=by
+  rw [roots_at]
+  have HU : 0<u:=by unfold u;positivity
+  have HS : (({u} : Finset ℝ).filter (fun x : ℝ=>SignType.sign x=.pos))={u} :=by
+    apply Finset.filter_eq_self.mpr
+    intro x hx
+    have HE:=Finset.mem_singleton.mp hx
+    subst x
+    exact sign_pos HU
+  simpa [signCount,q] using congrArg Finset.card HS
+example : signCount (p.map (evalHom v)).roots.toFinset (fun i=>(q i).map (evalHom v)) (fun _=>.neg)=0 :=by
+  rw [roots_at]
+  have HV : 0<v:=by unfold v;positivity
+  simp [signCount,q,sign_pos HV]
+-- The zero head follows the FINITE-root convention, not an existential-zero-set claim.
+example {J : Type*} (Q : J→(ℤ[X])[X]) (σ : J→SignType) (t : ℝ) :
+    signCount ((0 : (ℤ[X])[X]).map (evalHom t)).roots.toFinset (fun i=>(Q i).map (evalHom t)) σ=0 :=by
+  simp [signCount]
+end OuterSignPatternRegression
+end Group53Regression5
+
+namespace Group53Regression6
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding
+namespace NativeCriticalSelectorRegression
+open IntegralMixedFrozenFrame
+private def initial (n : ℕ) : Frame n :=
+  {frozen:=∅,scales:=fun _=>1,scales_ne_zero:=fun _=>one_ne_zero,heights:=fun _=>.constant 0}
+example : ((AtomicRows.initial 0 0).pointData (0 : Fin 1) 0 (by simp) (by simp)).rule.offset.val+
+    ((AtomicRows.initial 0 0).pointData (0 : Fin 1) 0 (by simp) (by simp)).rule.coordinate%
+      (0-((AtomicRows.initial 0 0).pointData (0 : Fin 1) 0 (by simp) (by simp)).rule.offset.val+1)=0 :=by
+  exact PrefixFrozen.pointData_selected (initial 0) (PrefixFrozen.of_empty _ rfl) (AtomicRows.initial 0 0) 0 (by simp [initial])
+example : ((AtomicRows.initial 2 0).pointData (2 : Fin 3) 2 (by simp) (by simp)).rule.offset.val+
+    ((AtomicRows.initial 2 0).pointData (2 : Fin 3) 2 (by simp) (by simp)).rule.coordinate%
+      (2-((AtomicRows.initial 2 0).pointData (2 : Fin 3) 2 (by simp) (by simp)).rule.offset.val+1)=2 :=by
+  exact PrefixFrozen.pointData_selected (initial 2) (PrefixFrozen.of_empty _ rfl) (AtomicRows.initial 2 0) 2 (by simp [initial])
+end NativeCriticalSelectorRegression
+#check LeanCanny.Encoding.IntegralMixedPhysicalCriticalInterval.language_iff_realCritical
+#check LeanCanny.Encoding.IntegralMixedPhysicalCriticalInterval.not_language_iff_disjoint
+end Group53Regression6

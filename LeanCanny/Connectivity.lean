@@ -1,3 +1,102 @@
+import LeanCanny.Algebra.BivariateSquareTopCoefficient
+import LeanCanny.Algebra.ClearedCoordinateCommonScaling
+import LeanCanny.Algebra.ClearedCriticalCommonScaling
+import LeanCanny.Algebra.FixedWidthBivariateSuffixSpace
+import LeanCanny.Algebra.GramDeterminantSquares
+import LeanCanny.Algebra.GramLeadingCoefficientCovariance
+import LeanCanny.Algebra.GramReflectedValueCovariance
+import LeanCanny.Algebra.IntegralMixedCommandClearing
+import LeanCanny.Algebra.IntegralMixedCurrentQBadCuts
+import LeanCanny.Algebra.IntegralMixedCurrentQCoordinateCuts
+import LeanCanny.Algebra.IntegralMixedCurrentQCoordinateScaling
+import LeanCanny.Algebra.IntegralMixedCurrentQNumerators
+import LeanCanny.Algebra.IntegralMixedCurrentQPrincipalScaling
+import LeanCanny.Algebra.IntegralMixedCurrentQSelectedCoordinate
+import LeanCanny.Algebra.IntegralMixedCurrentQSelectedRows
+import LeanCanny.Algebra.IntegralMixedCurrentQSquarefreeCuts
+import LeanCanny.Algebra.IntegralMixedCurrentQValueCuts
+import LeanCanny.Algebra.IntegralMixedCutSourceCast
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateCurrentQSpace
+import LeanCanny.Algebra.IntegralMixedFramedCriticalSuccessor
+import LeanCanny.Algebra.IntegralMixedFramedCriticalSuccessorRows
+import LeanCanny.Algebra.IntegralMixedFramedFullCutIntervalAccess
+import LeanCanny.Algebra.IntegralMixedFramedFullCutIntervalFamily
+import LeanCanny.Algebra.IntegralMixedFramedFullCutIntervalMass
+import LeanCanny.Algebra.IntegralMixedFramedFullCutIntervalSelected
+import LeanCanny.Algebra.IntegralMixedFramedFullCutTerminalHead
+import LeanCanny.Algebra.IntegralMixedFramedFullCutTerminalReader
+import LeanCanny.Algebra.IntegralMixedFramedFullCutTerminalSelected
+import LeanCanny.Algebra.IntegralMixedFullBankObservation
+import LeanCanny.Algebra.IntegralMixedSelectedBadChoiceUnique
+import LeanCanny.Algebra.MacaulayFullBoxScaling
+import LeanCanny.Algebra.ParameterizedSignPatternsAtInfinity
+import LeanCanny.Algebra.PurePowerCommonScaling
+import LeanCanny.Algebra.ReflectedValueTrailing
+import LeanCanny.Algebra.RelativeAffineGridValueMap
+import LeanCanny.Algebra.RelativeAffineGridValueScaling
+import LeanCanny.Algebra.RelativeProjectiveValueMap
+import LeanCanny.Algebra.RelativeProjectiveValueScaling
+import LeanCanny.Encoding.IntegralFramedFullCutIntervalStatistic
+import LeanCanny.Encoding.IntegralFramedFullCutIntervalStatisticSpace
+import LeanCanny.Encoding.IntegralFramedFullCutIntervalStatisticValue
+import LeanCanny.Encoding.IntegralFramedFullCutOpenInterval
+import LeanCanny.Encoding.IntegralFramedPhysicalBankNaturalPoint
+import LeanCanny.Encoding.IntegralFramedPhysicalBankObservationPoint
+import LeanCanny.Encoding.IntegralFramedPhysicalCutRootGuard
+import LeanCanny.Encoding.IntegralFramedPhysicalNaturalPoint
+import LeanCanny.Encoding.IntegralMixedChosenCutRecordBounds
+import LeanCanny.Encoding.IntegralMixedCutRecordBounds
+import LeanCanny.Encoding.IntegralMixedJointCriticalBudget
+import LeanCanny.Encoding.IntegralMixedJointRecordBudgetNative
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankObservations
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankReadback
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalCommand
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalCorrelation
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalCreatingCorrelation
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalInterval
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalIntervalEndpoints
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalIntervalReadback
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalLanguageCorrectness
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalNativeWitness
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalNaturalWitness
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalObservation
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalPointCorrelation
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalPrefixes
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalQuery
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalStageMetadata
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalStepCapture
+import LeanCanny.Encoding.IntegralMixedPhysicalCutOpenInterval
+import LeanCanny.Encoding.IntegralMixedPhysicalCutRoot
+import LeanCanny.Encoding.IntegralMixedPhysicalMarkedNative
+import LeanCanny.Encoding.IntegralMixedPhysicalReplayNative
+import LeanCanny.Encoding.IntegralMixedPhysicalTraceCutRoots
+import LeanCanny.Geometry.IntegralMixedBankValueInterpretation
+import LeanCanny.Geometry.IntegralMixedFrozenFrameFullDescending
+import LeanCanny.Geometry.IntegralMixedFrozenFrameFullRegularCover
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRealCriticalRecord
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRealCriticalValues
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRealCutCard
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRealInterior
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRealRegular
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRealSections
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRealSlabCover
+import LeanCanny.Geometry.IntegralMixedFrozenFrameRealSweepStep
+import LeanCanny.Geometry.IntegralMixedJointCriticalEndpoints
+import LeanCanny.Geometry.IntegralMixedJointCriticalSlab
+import LeanCanny.Geometry.IntegralMixedJointEndpointRecord
+import LeanCanny.Geometry.IntegralMixedJointEndpointRecordBounds
+import LeanCanny.Geometry.IntegralMixedJointGeneralSlab
+import LeanCanny.Geometry.IntegralMixedJointGeneralSlabBounds
+import LeanCanny.Geometry.IntegralMixedJointMidpointFrame
+import LeanCanny.Geometry.IntegralMixedJointMidpointSound
+import LeanCanny.Geometry.IntegralMixedJointMidpointWitness
+import LeanCanny.Geometry.IntegralMixedJointSlabEndpointSet
+import LeanCanny.Geometry.IntegralMixedJointSlabEndpoints
+import LeanCanny.Geometry.IntegralMixedPrefixOriginalPointRealization
+import LeanCanny.Geometry.IntegralMixedPrefixPointReadback
+import LeanCanny.Geometry.IntegralMixedRealCriticalWitness
+import LeanCanny.Geometry.IntegralMixedRetainedSweep
 import LeanCanny.Algebra.IntegralMixedFramedPhysicalRowTransport
 import LeanCanny.Algebra.IntegralMixedFramedPhysicalCreatingRows
 import LeanCanny.Encoding.IntegralFramedPhysicalCutRows
@@ -3897,9 +3996,29 @@ including all four chosen Kinds, exact degree and current-Q fields.
 Prefix freezing keeps the original source literal, and sweep retargeting
 preserves all cut factors. Local correlated realization uses one full tuple
 and homomorphism. Arbitrary record solvability is not inferred.
-Cut-factor/retained-quotient root certification, actual real-critical-value
-coverage, selected choices, record-depth/graph assembly and effective global
-stabilization remain separate obligations.
+Actual creating-cut root certification now binds accepted factors to their
+retained quotients under the same older interpretation.
+For prefix-frozen frames, a native complete-word search is equivalent to
+existence of an ACTUAL real critical height in the retained parent interval;
+its rejection is exactly disjointness. Every old bank quotient and the new
+physical correlation are checked. Parent and child share one prepared root,
+horizon and width; singular roots are included.
+Actual coordinate, squarefree and value bad-cut sets persist under the
+changing clearing denominator. The value case uses weighted squared minors,
+not a common scalar-factor identity. Any valid finite choices yield the same
+ordinary three-class bad set; the fourth limit-coordinate ABI is separate.
+Two endpoints from one original bad/real-critical parent set and a literal
+scale2/refsum midpoint anchor now have ONE full tuple and homomorphism,
+three decoded records and an original native byte bound. Proper-fiber
+sampling supplies an anchor in each nonempty regular midpoint component.
+Existing-reference mark/bound endpoints, native descriptor recognition and
+recursive graph/incidence assembly remain open.
+The bad-factor interval adapter has original-only native costs and an exact
+same-tuple mathematical certificate on ordered endpoints; the final concrete
+guard/interpretation binding remains separate. Fixed integer bivariate
+families have stable root-sign-pattern counts at a common outer mass cutoff.
+The recursive framed polynomial presentation and its original-only uniform
+mass bound, hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
