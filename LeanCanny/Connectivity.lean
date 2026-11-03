@@ -1,3 +1,71 @@
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalRowTransport
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalCreatingRows
+import LeanCanny.Encoding.IntegralFramedPhysicalCutRows
+import LeanCanny.Encoding.IntegralFramedPhysicalBankObservation
+import LeanCanny.Encoding.IntegralMixedPhysicalCutHead
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalFreshRowNatural
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalFreshRowSemantics
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalFreshRowReadback
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalRowReaderSemantics
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockObjectiveSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockGradientSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockHeightSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockHeightRowSpace
+import LeanCanny.Algebra.PhysicalCoordinateRowBranches
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockQuery
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockColumns
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockRowsSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockData
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockExact
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockPoweredExact
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBlockRowExact
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalBirthQuery
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalScalarSelection
+import LeanCanny.Algebra.FixedWidthLocalEmbeddingSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalRowPullback
+import LeanCanny.Algebra.IntegralMixedFramedCriticalNaturalRows
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalScalarRowSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalFreshRowSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalSelectorPullback
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalRowReaderSpace
+import LeanCanny.Algebra.IntegralMixedFramedPhysicalRowReaderReadback
+import LeanCanny.Encoding.IntegralFramedPhysicalSquareNative
+import LeanCanny.Encoding.IntegralFramedPhysicalNear
+import LeanCanny.Encoding.IntegralFramedPhysicalNearSpace
+import LeanCanny.Encoding.IntegralFramedPhysicalNearGuard
+import LeanCanny.Geometry.IntegralMixedCriticalReadback
+import LeanCanny.Geometry.IntegralMixedFramedCriticalReadback
+import LeanCanny.Geometry.IntegralMixedFrozenFramePointReadback
+import LeanCanny.Encoding.IntegralFramedPhysicalCriticalReadback
+import LeanCanny.Geometry.IntegralMixedFramedCriticalAnchor
+import LeanCanny.Encoding.IntegralFramedPhysicalCriticalAnchor
+import LeanCanny.Algebra.IntegralMixedFramedBankObservationShift
+import LeanCanny.Encoding.IntegralFramedPhysicalBankShift
+import LeanCanny.Geometry.IntegralMixedFrozenFrameMidpointAnchor
+import LeanCanny.Connectivity.IntegralMixedFrozenFrameMidpointBranch
+import LeanCanny.Algebra.RealRootOpenIntervalQueries
+import LeanCanny.Algebra.RealRootOpenIntervalOrdered
+import LeanCanny.Algebra.IntegralMixedFramedFullCutHead
+import LeanCanny.Algebra.IntegralMixedFramedFullCutHeadSpace
+import LeanCanny.Algebra.IntegralMixedFramedFullCutHeadBounds
+import LeanCanny.Algebra.IntegralMixedFramedFullCutHeadReader
+import LeanCanny.Encoding.IntegralMixedCausalRowConstructor
+import LeanCanny.Encoding.IntegralMixedCriticalRecordConstructor
+import LeanCanny.Encoding.IntegralMixedCriticalRecordRealization
+import LeanCanny.Geometry.IntegralMixedOriginalFrameRecord
+import LeanCanny.Geometry.IntegralMixedAtomicFrameRecord
+import LeanCanny.Encoding.IntegralMixedCriticalRecordBounds
+import LeanCanny.Encoding.IntegralMixedChosenRecordSuccessor
+import LeanCanny.Geometry.IntegralMixedOriginalCriticalRealization
+import LeanCanny.Geometry.FrozenCoordinatePrefixOrdering
+import LeanCanny.Geometry.IntegralMixedPrefixFrame
+import LeanCanny.Geometry.IntegralMixedPrefixCriticalRealization
+import LeanCanny.Algebra.IntegralMixedSweepRetarget
+import LeanCanny.Algebra.IntegralMixedSweepRetargetRealization
+import LeanCanny.Encoding.IntegralMixedCutRecordConstructor
+import LeanCanny.Encoding.IntegralMixedCutRecordKind
+import LeanCanny.Geometry.IntegralMixedOriginalSweepRecord
+import LeanCanny.Encoding.IntegralMixedChosenLocalRealization
 import LeanCanny.Encoding.IntegralFramedPhysicalTraceCutSource
 import LeanCanny.Encoding.IntegralMixedPhysicalTraceCutTest
 import LeanCanny.Encoding.IntegralMixedPhysicalTraceCutGuards
@@ -3805,6 +3873,33 @@ model, with one full-vertex older homomorphism for all six window queries.
 Source/gradient block readers keep the exact caller modulus and external
 exponent word. Final full-row coefficient assembly, Near predicate guards,
 chosen geometric grammar, graph and global stabilization remain open.
+The full physical sampler now has native coefficients for every scalar,
+critical, physical and multiplier row. Original represented headers select
+the creating block. The powered row equals its literal creating row and
+retains its oldest-first columns through arbitrary later commands.
+An honest caller-root pullback preserves the source, while arbitrary
+exponent width/rank words remain external to clipped arithmetic fields.
+The total clamped reader equals the actual complete-square rowCoefficient;
+native access charges only original metadata and genuine CurrentQ controls
+at the lifted plan. No full-row or matrix evaluator is supplied.
+Five native ordered statistics plus native guards now characterize the
+selected Near relation on retained bank quotients of one full vertex.
+Actual critical rows construct its geometric powered point, and the native
+correlation test identifies its selected coordinate with the retained bank
+quotient. Same-bank shifts retain literal powers and integer denominators.
+An advanced-frame point selects a continuous earlier midpoint branch with
+a literal SectionCode word; endpoint Near tests identify that same branch.
+Open-interval bad-root emptiness equals two ordered principal statistics,
+including repeated roots and endpoints; the actual all-four cut heads have
+native integer coefficient readers. Their interval adapter remains open.
+Concrete critical and virtual cut records use the existing decoder,
+including all four chosen Kinds, exact degree and current-Q fields.
+Prefix freezing keeps the original source literal, and sweep retargeting
+preserves all cut factors. Local correlated realization uses one full tuple
+and homomorphism. Arbitrary record solvability is not inferred.
+Cut-factor/retained-quotient root certification, actual real-critical-value
+coverage, selected choices, record-depth/graph assembly and effective global
+stabilization remain separate obligations.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

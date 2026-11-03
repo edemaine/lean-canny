@@ -2011,28 +2011,36 @@ exponents, and cleared two-coordinate midpoint queries preserve arbitrary
 signed denominators. Ordered Near, native graph assembly and effective
 global stabilization remain unfinished.
 
-The full physical sampler has native degree/mass bounds and a complete
-square factory retaining every row. Original source, derivative, normal
-and height readers are proved, including numeric critical-block source
-and gradient readers. Final full-row coefficient assembly remains open.
+The full physical sampler has native degree/mass bounds, every literal row,
+and native coefficient access from original represented metadata and actual
+CurrentQ controls at an honest caller-modulus pullback. The total clamped
+reader is proved equal to the actual complete-square rowCoefficient.
+Arbitrary exponent widths/ranks stay external; no full-row or matrix
+evaluator is supplied. Concrete original-input decider specialization is
+being assembled.
 Marked/outer tests check all original leaves, regular/marked equations,
 original-coordinate Thom agreement, critical correlations and all creating
-cuts on one fixed full context and word. Original syntax supplies their
-controls; only the literal full-row backend remains a cost premise.
-Accepted replays project to the original candidate and their marked phases
-attach in one full regular component.
-Every accepted literal cut now derives its parent interpretation from the
-same full tuple, with valid relative factor and exact recorded degree.
-Factor-root/retained-quotient binding remains separate. Raw suffix tests
-use native physical columns and old weights, without old labels or roots.
-Actual integer preludes have one full word. Marked/outer prefixes equal
-preludes rebuilt at the record target cap/width. Chosen-degree records have
-exact decoded cut realization and saved-bank instruction readback.
-Arbitrary record solvability is not inferred.
-Native terminal statistic factories now match the actual selected head,
-window queries and exact degree/seed model, under one full-vertex older
-homomorphism for all six queries. The final Near predicate guards, chosen
-geometric record grammar, graph and global stabilization remain open.
+cuts on one full context and word. Accepted replays project to the original
+candidate and their marked phases attach in one full regular component.
+Every accepted literal cut has a valid factor and exact recorded degree
+under an older homomorphism from that same tuple. Its factor-root and
+retained-quotient certification is being assembled.
+Five native ordered statistics and validity guards characterize selected
+Near on actual retained bank quotients. Full critical rows supply actual
+geometric powered points; correlation guards identify their selected bank
+coordinate. Literal denominator and bank shifts yield the earlier midpoint
+branch through an advanced-frame point, with a concrete SectionCode word.
+Near tests characterize equality with that branch's endpoint.
+Open-interval bad-root emptiness has an exact two-statistic characterization,
+including repeated roots and endpoints. All four actual cut heads have
+native coefficient readers; their common-layout interval adapter remains
+open.
+Concrete critical and virtual cut records use the existing decoder with
+exact chosen Kind/degree/current-Q fields. Prefix freezing retains the
+original source, and correlated local realization constructs one full
+tuple and homomorphism. Arbitrary record solvability is not assumed.
+Actual real-critical-value coverage, selected choices, record-depth/graph
+assembly and effective global stabilization remain open.
 
 Independent exceptional frames retain original-parent and exceptional-scalar
 labels, including endpoint-only and empty fibers. A frozen-first coordinate
