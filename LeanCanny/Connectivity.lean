@@ -1,3 +1,21 @@
+import LeanCanny.Algebra.IntegralMixedMeanCenteredSweep
+import LeanCanny.Algebra.IntegralMixedNumericalSweepSpecialization
+import LeanCanny.Algebra.IntegralMixedPaddedZeroRealExtension
+import LeanCanny.Connectivity.IntegralMixedSpecializedRootRankComparison
+import LeanCanny.Encoding.IntegralFramedPaddedCutVertex
+import LeanCanny.Encoding.IntegralMixedPhysicalCutCoefficientInterpretation
+import LeanCanny.Encoding.IntegralMixedPhysicalCutCoefficientInterval
+import LeanCanny.Encoding.IntegralMixedPhysicalCutCoefficientOnly
+import LeanCanny.Encoding.IntegralMixedPhysicalCutStrictMargin
+import LeanCanny.Encoding.IntegralMixedPhysicalTraceBeforeProbe
+import LeanCanny.Encoding.IntegralMixedRoadmapChainChecked
+import LeanCanny.Encoding.IntegralMixedRoadmapChainCode
+import LeanCanny.Encoding.IntegralMixedRoadmapChainLedger
+import LeanCanny.Encoding.IntegralMixedRoadmapChainPrefix
+import LeanCanny.Geometry.IntegralMixedDegenerateBoundarySampling
+import LeanCanny.Geometry.IntegralMixedDegenerateCodeSequence
+import LeanCanny.Geometry.IntegralMixedDegenerateEndpointCaptures
+import LeanCanny.Geometry.IntegralMixedDegenerateMidpointCaptures
 import LeanCanny.Encoding.IntegralMixedChronologicalCutActual
 import LeanCanny.Encoding.IntegralMixedChronologicalCutCode
 import LeanCanny.Encoding.IntegralMixedChronologicalCutRaw
@@ -4153,11 +4171,22 @@ that literal code list into the bounded ledger. Local byte types can be
 widened to the original chain bound without changing bytes or producer values.
 The actual correlated optional-pair/anchor/captures program realizes BOTH
 branch endpoints with the honest shifted reference q+1+chosenPairRef.
-Whole-chain parsing and semantic guards, graph edge soundness/completeness
-and original Boolean incidence remain open. The current rooted cut-interval
-interface cannot witness nonzero constant or rootless factors; its all-bad
-use still needs a coefficient-only reserved probe with proved zero padding. Fixed integer bivariate
-families have stable root-sign-pattern counts at a common outer mass cutoff.
+A native whole-chain compiler now reconstructs the typed bounded Records
+and proves exact equality of the accepted raw table with their padded word.
+Coefficient-only reserved interval probes admit nonzero constant and rootless
+factors. Actual strict padding margins and zero-padding extensions produce
+one full sampler word preserving every old quotient; the earlier-only scan
+keeps actual-root guards on meaningful cut records. Concrete probe role,
+serialization and completeness guard assembly remain to be bound together.
+Equal-height boundary programs realize midpoint/child records and both capture
+blocks at the same point, including singular boundary-component samples.
+Specialized numerical frozen equations determine the full coordinate root
+multisets and ranks across independent banks/parameters. A literal scale-two
+reference-sum row centers the midpoint mean at zero; no producer alias or
+sample-word transport is inferred. Native branch-origin verification, actual
+graph edges and two-way path equivalence remain open, as does original Boolean
+incidence. Fixed integer bivariate families have stable root-sign-pattern
+counts at a common outer mass cutoff.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet

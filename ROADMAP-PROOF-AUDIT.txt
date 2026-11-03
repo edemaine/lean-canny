@@ -955,3 +955,49 @@ axiom audit checked86935 declarations and found only propext, Classical.choice
 and Quot.sound. All23 entire sources separately passed200000-heartbeat checks;
 all verified hashes were preserved through integration. Scope/design review
 for the next graph construction is tmp/m3-actual-graph-next-contract.txt.
+
+15. G57: checked whole chains, reserved probes and equal-height programs
+
+The native whole-chain compiler/recognizer now constructs actual bounded
+Records and proves the accepted original raw table equals their paddedWord.
+Producer labels and birth offsets are derived from chronological metadata;
+no recursive growing-state FP assumption or degree-computation oracle is used.
+The payload projection preserves the enclosing original source context.
+
+Reserved probes now have a coefficient-only native interval language. The
+actual original factories give STRICT d<2^B, so their padded scalar equation
+has a correlated zero extension preserving all old quotients. Full physical
+sampling produces one full word for that final cut from a realized parent.
+An earlier-only scan keeps actual-root guards on meaningful cut births.
+Constants and rootless factors require no fake factor root. Actual script
+ordering has no extra/default stage or count reindexing. Concrete last-code
+serialization, parent realization at the same prepared root, chosen-degree
+reverse guard acceptance and conjunction with parser roles remain open.
+
+Degenerate a=b programs now realize the midpoint, child endpoint and both
+companion blocks at the SAME actual point, with literal current-Q decoder,
+raw tuple, old hom and quotient preservation. Parent critical descent and
+singular-safe boundary-component sampling supply these points. There is no
+Near/empty-Ioo premise; native Level macro composition is still explicit glue.
+
+Specialization of the actual annihilator proves equality of coordinate-root
+multisets and ranks on equal numerical frozen slices, even at different
+parameters and in different banks. A literal scale-two reference-sum rule
+centers an atomic sweep at its mean. No mean alias or complete sampler word
+transport is inferred. The native branch-origin test remains to be supplied.
+
+M3 remains open: semantic guard composition, retained endpoint provenance,
+source/prelude coherence, actual graph validity/adjacency and TWO-WAY bounded
+path equivalence. Histories are certificates, not automatic ancestry edges.
+M4 actual recursive symbolic presentation/guarded normalization/joint roots/
+original unspecialized mass and M5 original Boolean incidence remain open.
+Unconditional original point/whole-set connectivity membership is NOT proved.
+Scoped immutable handoffs: tmp/roadmap-chain-four-handoff.txt,
+tmp/m3-reserved-interval-seven-handoff.txt,
+tmp/degenerate-boundary-four-handoff.txt, tmp/g57-root-three-handoff.txt.
+Verification: all18 entire sources passed200000-heartbeat strict checks.
+Full strict three-target build19374 jobs PASS; all21 Check scripts PASS,
+including the new combined CheckRoadmapChains fixture. Namespace axiom audit:
+87183 declarations, only propext/Classical.choice/Quot.sound. Exact22-file
+stage manifest, source hashes, blob bytes and100644 modes verified. Durable
+verification evidence is retained under tmp/group57-*.

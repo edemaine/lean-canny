@@ -2075,12 +2075,24 @@ the typed bounded ledger; widening to the original byte bound preserves every
 record byte. One correlated optional-pair/anchor/captures program realizes
 both geometric endpoints with reference `q + 1 + chosenPairRef`.
 
-Whole-chain parsing, semantic guard composition and the two-way bounded graph
-construction remain open. Review also identified a completeness gate in the
-rooted bad-factor interval interface: nonzero constant or rootless factors
-need a coefficient-only reserved probe, with its zero-padding construction. Fixed integer bivariate families have stable root-sign-pattern
-counts past a common mass cutoff; the recursive polynomial presentation and
-original-only uniform mass bound needed for global stabilization remain open.
+The whole-chain compiler and native validator now reconstruct typed bounded
+records and prove exact equality with the accepted padded raw table. Reserved
+coefficient-only interval probes support nonzero constant and rootless factors.
+Actual strict padding margins and a zero-padding extension give one full
+sampler word preserving every old quotient. An earlier-only scan retains the
+actual-root guard on every meaningful cut. Concrete probe serialization and
+completeness guard assembly remain open.
+
+Equal-height boundary programs now realize the midpoint, endpoint and both
+capture blocks at the same point, including singular boundary components.
+Equal specialized numerical frozen equations give equal coordinate-root
+multisets and ranks across independent banks and parameters. A literal
+scale-two mean row centers the sweep at zero without a retained alias.
+Native branch-origin verification, semantic guard composition and the two-way
+bounded graph construction remain open. Fixed integer bivariate families have
+stable root-sign-pattern counts past a common mass cutoff; the recursive
+polynomial presentation and original-only uniform mass bound needed for
+global stabilization remain open.
 
 The dependency map and remaining mathematical obligations are recorded in
 [`ROADMAP-PROOF-AUDIT.txt`](ROADMAP-PROOF-AUDIT.txt). Unconditional PSPACE
