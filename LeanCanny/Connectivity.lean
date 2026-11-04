@@ -1,3 +1,10 @@
+import LeanCanny.Algebra.IntegralParameterExtensionMatrixSpecialization
+import LeanCanny.Algebra.IntegralParameterExtensionSpecialization
+import LeanCanny.Algebra.IntegralParameterInverseAtInfinity
+import LeanCanny.Algebra.IntegralParameterInverseSpecialization
+import LeanCanny.Algebra.PaddedIntegralParameterExtensionSpecialization
+import LeanCanny.Algebra.PaddedIntegralParameterMatrixSpecialization
+import LeanCanny.Algebra.ParameterNormalizationBounds
 import LeanCanny.Connectivity.IntegralMixedRoadmapBoundedCandidateConnectivity
 import LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorGeometry
 import LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorMarkedPaths
@@ -4752,6 +4759,14 @@ the original-equation candidate filters. Choosing the derived original-only
 candidate radius removes every external radius and validity assumption from
 this bounded-language theorem. This radius contains all candidates; preserving
 their UNBOUNDED component relation is still a separate obligation.
+The actual fixed and padded scalar-extension constructors now commute with
+arbitrary coefficient specialization, including their relative coordinates
+and relative multiplication matrices and characteristic polynomials. Normalization and
+fixed inverse shifts have proved parameter-coefficient mass and degree bounds
+before evaluation. A common mass cutoff derives the inverse constructor's
+coefficient-survival and degree/trailing-index guards internally. The next
+obligation is an original-only symbolic presentation and common bounds for
+the full recursive framed interpreter.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 The recursive framed polynomial presentation and its original-only uniform

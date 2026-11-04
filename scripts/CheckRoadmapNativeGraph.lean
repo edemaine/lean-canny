@@ -1,3 +1,12 @@
+import LeanCanny.Algebra.IntegralParameterExtensionMatrixSpecialization
+import LeanCanny.Algebra.IntegralParameterExtensionSpecialization
+import LeanCanny.Algebra.IntegralParameterInverseAtInfinity
+import LeanCanny.Algebra.IntegralParameterInverseSpecialization
+import LeanCanny.Algebra.PaddedIntegralParameterExtensionSpecialization
+import LeanCanny.Algebra.PaddedIntegralParameterMatrixSpecialization
+import LeanCanny.Algebra.ParameterNormalizationBounds
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Tactic.NormNum
 import LeanCanny.Connectivity.IntegralMixedRoadmapBoundedCandidateConnectivity
 import LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorGeometry
 import LeanCanny.Connectivity.IntegralMixedRoadmapAnchorIncidenceGeometry
@@ -9216,3 +9225,249 @@ run_cmd do
         throwError "{name} depends on unexpected axiom {ax}"
   logInfo "Bounded candidate connectivity: native semantic PSPACE, invalid-label rejection, three standard-axiom audits."
 end RoadmapInternalG71BoundedCandidateLanguage
+
+section RoadmapInternalG72InverseSpecialization
+namespace IntegralParameterInverseSpecializationRegression
+open LeanCanny.Algebra LeanCanny.Algebra.IntegralParameterInverse Polynomial
+
+example {R S :Type*} [CommRing R] [CommRing S] (φ :R→+*S) (p :R[X]) (τ :ℕ)
+    (HB :∀k<τ,φ (p.coeff k)=0) (Hτ :φ (p.coeff τ)≠0) :
+    (p.map φ).natTrailingDegree=τ ∧ denominator (p.map φ)=φ (p.coeff τ) ∧
+      inverse (p.map φ)=(inverseAt p τ).map φ:=
+  ⟨natTrailingDegree_map_at φ p τ HB Hτ,denominator_map_at φ p τ HB Hτ,
+    inverse_map_at φ p τ HB Hτ⟩
+
+example {R S :Type*} [CommRing R] [CommRing S] (φ :R→+*S) (p :R[X])
+    (H :φ p.trailingCoeff≠0) :inverse (p.map φ)=(inverse p).map φ ∧
+      denominator (p.map φ)=φ (denominator p):=
+  ⟨inverse_map_of_survives φ p H,denominator_map_of_survives φ p H⟩
+
+example {R :Type*} [CommRing R] (τ :ℕ) :inverseAt (0:R[X]) τ=0:=by
+  ext k
+  simp only [coeff_inverseAt,coeff_zero,neg_zero]
+
+noncomputable def fallingTrailing :(ℤ[X])[X]:=C X+X
+
+theorem falling_original_index :fallingTrailing.natTrailingDegree=0:=by
+  apply natTrailingDegree_eq_zero.mpr
+  right
+  simp [fallingTrailing]
+
+theorem falling_specialization :fallingTrailing.map (evalRingHom (0:ℤ))=(X:ℤ[X]):=by
+  simp [fallingTrailing]
+
+theorem no_unguarded_inverse_map :
+    (inverse fallingTrailing).map (evalRingHom (0:ℤ))≠
+      inverse (fallingTrailing.map (evalRingHom (0:ℤ))):=by
+  intro H
+  have HC:=congrArg (fun p:ℤ[X]=>p.coeff 0) H
+  rw [coeff_map,coeff_inverse,falling_original_index,falling_specialization] at HC
+  norm_num [fallingTrailing,coeff_inverse,natTrailingDegree_X,Polynomial.coeff_X] at HC
+
+theorem no_unguarded_denominator_map :
+    (evalRingHom (0:ℤ)) (denominator fallingTrailing)≠
+      denominator (fallingTrailing.map (evalRingHom (0:ℤ))):=by
+  rw [denominator,trailingCoeff,falling_original_index,falling_specialization]
+  norm_num [fallingTrailing,denominator,trailingCoeff,natTrailingDegree_X]
+
+example :(fallingTrailing.map (evalRingHom (0:ℤ))).natTrailingDegree=1:=by
+  rw [falling_specialization]
+  exact natTrailingDegree_X
+
+example :inverse (fallingTrailing.map (evalRingHom (0:ℤ)))=
+    (inverseAt fallingTrailing 1).map (evalRingHom (0:ℤ)):=by
+  apply inverse_map_at
+  · intro k hk
+    have HK:k=0:=by omega
+    subst k
+    simp [fallingTrailing]
+  · norm_num [fallingTrailing]
+
+example :denominator ((X^4-C (2:ℤ)*X^3:ℤ[X]).map (RingHom.id ℤ)) = -2:=by
+  have HD:=denominator_map_at (RingHom.id ℤ) (X^4-C (2:ℤ)*X^3) 3 (by
+    intro k hk
+    simp [coeff_sub,coeff_X_pow,show k≠4 by omega,show k≠3 by omega]) (by norm_num)
+  simpa using HD
+
+example :denominator ((C (6:ℤ)+C 2*X+X^2:ℤ[X]).map (Int.castRingHom (ZMod 6)))=2:=by
+  have HD:=denominator_map_at (Int.castRingHom (ZMod 6)) (C (6:ℤ)+C 2*X+X^2) 1 (by
+    intro k hk
+    have HK:k=0:=by omega
+    subst k
+    norm_num; decide) (by norm_num; decide)
+  simpa using HD
+
+#print axioms natTrailingDegree_map_at
+#print axioms denominator_map_at
+#print axioms inverse_map_at
+#print axioms inverseAt_map
+#print axioms inverse_map_of_survives
+#print axioms no_unguarded_inverse_map
+end IntegralParameterInverseSpecializationRegression
+end RoadmapInternalG72InverseSpecialization
+
+section RoadmapInternalG72FixedExtensionSpecialization
+namespace IntegralParameterExtensionSpecializationRegression
+open LeanCanny.Algebra Polynomial
+open IntegralParameterExtension
+
+example {A B :Type*} [CommRing A] [CommRing B] (φ :A→+*B) (p :A[X]) (d :ℕ) :
+    (FixedDegreeIntegralNormalization.polynomial p d).map φ=
+      FixedDegreeIntegralNormalization.polynomial (p.map φ) d:=
+  FixedDegreeIntegralNormalization.map p d φ
+
+example {A B :Type*} [CommRing A] [CommRing B] [Nontrivial A] [Nontrivial B]
+    (φ :A→+*B) (p :A[X]) (d :ℕ) (a :Extension p d) (i :Fin d) :
+    (relativeBasis (p.map φ) d).repr (specialize φ p d a) i=φ ((relativeBasis p d).repr a i):=
+  relativeBasis_repr_specialize φ p d a i
+
+example {R A B :Type*} [CommRing R] [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
+    (φ :A→ₐ[R]B) (p :A[X]) (d :ℕ) (a :Extension p d) :
+    specializeAlgHom φ p d a=specialize φ.toRingHom p d a:=
+  specializeAlgHom_apply φ p d a
+
+noncomputable def dropsTop :(ℤ[X])[X]:=C X*X^2+X+1
+
+example :dropsTop.map (evalRingHom (0:ℤ))=X+1:=by simp [dropsTop]
+
+example :((dropsTop.map (evalRingHom (0:ℤ))).coeff 2)=0:=by
+  simp [dropsTop,Polynomial.coeff_X,Polynomial.coeff_one]
+
+example :(FixedDegreeIntegralNormalization.polynomial (dropsTop.map (evalRingHom (0:ℤ))) 2).natDegree=2:=
+  FixedDegreeIntegralNormalization.natDegree _ _
+
+example (a :Extension dropsTop 2) (i :Fin 2) :
+    (relativeBasis (dropsTop.map (evalRingHom (0:ℤ))) 2).repr
+      (specialize (evalRingHom (0:ℤ)) dropsTop 2 a) i=
+      (evalRingHom (0:ℤ)) ((relativeBasis dropsTop 2).repr a i):=
+  relativeBasis_repr_specialize _ _ _ _ _
+
+example (a :ℤ) :specialize (Int.castRingHom (ZMod 6)) (C 6*X^2+C 2*X+1:ℤ[X]) 2
+    (AdjoinRoot.of _ a)=AdjoinRoot.of _ (a:ZMod 6):=specialize_of _ _ _ _
+
+example (p :ℤ[X]) :specialize (Int.castRingHom (ZMod 1)) p 0 (AdjoinRoot.root _)=AdjoinRoot.root _:=
+  specialize_root _ _ _
+
+example (p :ℤ[X]) (q :ℤ[X]) (d :ℕ) :
+    specialize (Int.castRingHom (ZMod 6)) p d (AdjoinRoot.mk _ q)=
+      AdjoinRoot.mk _ (q.map (Int.castRingHom (ZMod 6))):=specialize_mk _ _ _ _
+
+
+theorem actual_matrix_specializes {A B :Type*} [CommRing A] [CommRing B] [Nontrivial A] [Nontrivial B]
+    (φ :A→+*B) (p :A[X]) (d :ℕ) (a :Extension p d) :
+    (Algebra.leftMulMatrix (relativeBasis p d) a).map φ=
+      Algebra.leftMulMatrix (relativeBasis (p.map φ) d) (specialize φ p d a):=by
+  induction a using AdjoinRoot.induction_on with
+  | ih q=>
+    rw [specialize_mk]
+    exact relative_mk_matrix_map φ p q d
+
+#print axioms actual_matrix_specializes
+
+#print axioms specialize
+#print axioms specialize_mk
+#print axioms specialize_relativeBasis
+#print axioms relativeBasis_repr_specialize
+#print axioms specializeAlgHom
+end IntegralParameterExtensionSpecializationRegression
+end RoadmapInternalG72FixedExtensionSpecialization
+
+section RoadmapInternalG72PaddedExtensionSpecialization
+namespace PaddedIntegralParameterExtensionSpecializationRegression
+open LeanCanny.Algebra Polynomial
+open PaddedIntegralParameterExtension
+local instance paddedSpecializationSixFact :Fact (1<6):=⟨by decide⟩
+
+example {A B :Type*} [CommRing A] [CommRing B] (φ :A→+*B) (p :A[X]) (d N :ℕ) :
+    (PaddedIntegralNormalization.polynomial p d N).map φ=
+      PaddedIntegralNormalization.polynomial (p.map φ) d N:=PaddedIntegralNormalization.map _ _ _ _
+
+example {A B :Type*} [CommRing A] [CommRing B] [Nontrivial A] [Nontrivial B]
+    (φ :A→+*B) (p :A[X]) (d N :ℕ) (a :Extension p d N) (i :Fin N) :
+    (relativeBasis (p.map φ) d N).repr (specialize φ p d N a) i=
+      φ ((relativeBasis p d N).repr a i):=relativeBasis_repr_specialize _ _ _ _ _ _
+
+example {R A B :Type*} [CommRing R] [CommRing A] [CommRing B] [Algebra R A] [Algebra R B]
+    (φ :A→ₐ[R]B) (p :A[X]) (d N :ℕ) (a :Extension p d N) :
+    specializeAlgHom φ p d N a=specialize φ.toRingHom p d N a:=specializeAlgHom_apply _ _ _ _ _
+
+example (p :(ℤ[X])[X]) (d N :ℕ) (a :Extension p d N) (i :Fin N) :
+    (relativeBasis (p.map (evalRingHom (0:ℤ))) d N).repr
+      (specialize (evalRingHom (0:ℤ)) p d N a) i=
+      (evalRingHom (0:ℤ)) ((relativeBasis p d N).repr a i):=
+  relativeBasis_repr_specialize _ _ _ _ _ _
+
+example (p :ℤ[X]) :PaddedIntegralNormalization.polynomial p 5 3=X^3:=by
+  simp [PaddedIntegralNormalization.polynomial]
+
+example (p :ℤ[X]) :PaddedIntegralNormalization.polynomial p 0 3=X^3:=by
+  simp [PaddedIntegralNormalization.polynomial,FixedDegreeIntegralNormalization.polynomial]
+
+example (p :(ℤ[X])[X]) :specialize (evalRingHom (0:ℤ)) p 5 3
+    ((AdjoinRoot.root _)^2)=(AdjoinRoot.root _:Extension (p.map (evalRingHom (0:ℤ))) 5 3)^2:=by
+  rw [map_pow,specialize_root]
+
+example (p :ℤ[X]) :specialize (Int.castRingHom (ZMod 1)) p 5 0 (AdjoinRoot.root _)=AdjoinRoot.root _:=
+  specialize_root _ _ _ _
+
+example (p :ℤ[X]) (i :Fin 3) :
+    specialize (Int.castRingHom (ZMod 6)) p 5 3 (relativeBasis p 5 3 i)=
+      relativeBasis (p.map (Int.castRingHom (ZMod 6))) 5 3 i:=specialize_relativeBasis _ _ _ _ _
+
+#print axioms PaddedIntegralNormalization.map
+#print axioms specialize
+#print axioms specialize_mk
+#print axioms relativeBasis_repr_specialize
+#print axioms specializeAlgHom
+end PaddedIntegralParameterExtensionSpecializationRegression
+end RoadmapInternalG72PaddedExtensionSpecialization
+
+section RoadmapInternalG72ParameterConstructors
+namespace ParameterConstructorsRegression
+open LeanCanny.Algebra Polynomial
+
+-- The actual inverse choice has no surviving-coefficient hypothesis here.
+example (p :(ℤ[X])[X]) (b :ℕ) (hb :∀k,coefficientMass (p.coeff k)≤2^b)
+    (x :ℝ) (hx :(2:ℝ)^(b+1)≤x):
+    (p.map (IntegralParameterInverseAtInfinity.parameterEval x)).natDegree=p.natDegree ∧
+    (p.map (IntegralParameterInverseAtInfinity.parameterEval x)).natTrailingDegree=p.natTrailingDegree ∧
+    IntegralParameterInverse.inverse (p.map (IntegralParameterInverseAtInfinity.parameterEval x))=
+      (IntegralParameterInverse.inverse p).map (IntegralParameterInverseAtInfinity.parameterEval x):=
+  ⟨IntegralParameterInverseAtInfinity.natDegree_after_mass p b hb x hx,
+    IntegralParameterInverseAtInfinity.natTrailingDegree_after_mass p b hb x hx,
+    IntegralParameterInverseAtInfinity.inverse_after_mass p b hb x hx⟩
+
+-- Actual quotient elements need no supplied multiplication-matrix receipt.
+example {A B :Type*} [CommRing A] [Nontrivial A] [CommRing B] [Nontrivial B]
+    (φ :A→+*B) (p :A[X]) (d N :ℕ) (a :PaddedIntegralParameterExtension.Extension p d N):
+    (Algebra.leftMulMatrix (PaddedIntegralParameterExtension.relativeBasis p d N) a).map φ=
+      Algebra.leftMulMatrix (PaddedIntegralParameterExtension.relativeBasis (p.map φ) d N)
+        (PaddedIntegralParameterExtension.specialize φ p d N a):=
+  PaddedIntegralParameterExtension.relative_matrix_specialize φ p d N a
+
+end ParameterConstructorsRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Algebra.IntegralParameterExtension.relative_matrix_specialize,
+      `LeanCanny.Algebra.IntegralParameterExtension.relative_charpoly_specialize,
+      `LeanCanny.Algebra.PaddedIntegralParameterExtension.relative_matrix_specialize,
+      `LeanCanny.Algebra.PaddedIntegralParameterExtension.relative_charpoly_specialize,
+      `LeanCanny.Algebra.fixed_normalization_coefficient_mass,
+      `LeanCanny.Algebra.padded_normalization_coefficient_mass,
+      `LeanCanny.Algebra.fixed_normalization_coefficient_degree,
+      `LeanCanny.Algebra.padded_normalization_coefficient_degree,
+      `LeanCanny.Algebra.inverseAt_coefficient_mass,
+      `LeanCanny.Algebra.inverseAt_coefficient_degree,
+      `LeanCanny.Algebra.IntegralParameterInverseAtInfinity.nonzero_after_mass,
+      `LeanCanny.Algebra.IntegralParameterInverseAtInfinity.coefficient_ne_zero_iff,
+      `LeanCanny.Algebra.IntegralParameterInverseAtInfinity.natDegree_after_mass,
+      `LeanCanny.Algebra.IntegralParameterInverseAtInfinity.natTrailingDegree_after_mass,
+      `LeanCanny.Algebra.IntegralParameterInverseAtInfinity.denominator_after_mass,
+      `LeanCanny.Algebra.IntegralParameterInverseAtInfinity.inverse_after_mass] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Parameter constructors: two closed consumers and sixteen standard-axiom audits."
+end RoadmapInternalG72ParameterConstructors

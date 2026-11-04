@@ -1714,3 +1714,50 @@ cache/worktree. User baseline AuxiliaryCandidateBank and later M4/M5 WIP
 excluded. No external write or push. GoalACTIVE: the bounded native component
 decision is proved; uniform radius stabilization and original Boolean
 frontier-incidence costs remain unproved, as do both original PSPACE targets.
+
+30. G72: actual parameter constructors, bounds and inverse cutoff
+2026-11-04.
+
+The fixed-degree and padded scalar quotients now have constructed coefficient-
+specialization RingHoms/AlgHoms, preserving actual coefficients, roots, powers,
+polynomial representatives and all relative basis coordinates. Their actual
+relative multiplication matrices and characteristic polynomials specialize for EVERY
+quotient element. The coefficient map may have a kernel; nonreduced/composite
+rings and degenerate advertised-degree branches are included. No matrix table
+or finite integer basis of Z[T] is supplied as an extra premise.
+
+Inverse specialization is guarded by the ACTUAL specialized trailing index.
+The regression T+Y at T=0 witnesses failure of unguarded inverse and denominator
+mapping. Fixed-index inverseAt provides the exact alternative when lower
+specialized coefficients vanish. Repeated trailing factors, negative
+denominators and composite coefficient rings are tested.
+
+Before parameter evaluation, actual fixed/padded normalization coefficients
+have uniform mass and parameter-degree bounds. Invalid d>N padded branches
+are covered. A fixed inverseAt coefficient shift preserves both input bounds.
+For an actual integer parameter-polynomial family whose coefficient masses
+are bounded by2^b, ONE cutoff2^(b+1) proves survival of every nonzero coefficient.
+Degree and trailing index, and hence the actual inverse and denominator,
+specialize beyond this cutoff WITHOUT a supplied survivor/selected-index guard.
+
+This is local constructor uniformity from a genuine bounded presentation.
+The recursive framed interpreter's actual symbolic presentation, common
+original-only mass/degree bounds and exhaustive guarded graph family remain
+unproved. A native complexity bound alone does not supply that presentation.
+The full effective radius stabilization, original Boolean frontier-incidence
+algorithm and both original unconditional PSPACE targets remain open.
+
+All7 sources (563 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration plus three follow-on producer targets PASS20362 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:9473 lines,150 groups.
+Audited 91448 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 197187 transitive constants: no legacy space foundation.
+All11 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+The actual full symbolic framed interpreter/common original-only bounds, effective radius stabilization, Boolean frontier incidence and both original unconditional PSPACE targets remain open.
