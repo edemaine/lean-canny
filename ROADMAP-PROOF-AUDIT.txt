@@ -1391,3 +1391,64 @@ Exact60 staged paths, frozen hashes, blob bytes and100644 modes verified.
 Only the main worktree exists.
 The pre-existing untracked AuxiliaryCandidateBank and new general-proper WIP
 are excluded. No push or external write. The original goal remains active.
+
+24. G66: general appended words and native fresh-endpoint cut guards
+2026-11-04.
+
+The canonical parent is derived from the accepted old vertex, at its actual
+own birth. Genuine allowed endpoint choices construct the same retained or
+fresh left/right program, with one shared midpoint realization and a separate
+child realization for each side. All four endpoint syntax cases retain exact
+actual parent snapshots, typed command programs, raw columns and bank values.
+
+The compiled actual-root program is the endpoint program, the MID anchor and
+captures, the child anchor and captures, followed by critical seed padding.
+The exact final probe is included. One full root tuple produces a fresh
+own-context word; every constructed local raw column and all padding values
+are retained. The original word budget is proved from the actual script.
+Actual stage boundaries and physical arities are derived without assuming a
+new word, header or native guard. Distinct MID/child scalar values are read
+at their exact native selected coordinates throughout those two phases.
+
+Guarded endpoint programs supply creating cut receipts with exact degree,
+nonzero factor and factor-root data. Their full saved-family snapshots and
+commands agree with the actual new root. The same sampled word supplies
+every cut's head and all earlier bank values: WordReceipt.endpoint_native_cut_guard
+therefore derives the actual native cut guards without per-cut numerical
+readback assumptions. Initial quotient agreement comes from the old accepted
+word. The separate critical-endpoint bridge still has explicit intermediate
+head/selected-power inputs; eliminating its selected-power input is ongoing.
+
+The seven-conjunct general Atomic.Valid constructor is not claimed here.
+Physical MID/child companion binding, the remaining critical guard binding,
+global bounded roadmap completeness, effective uniform outer stabilization
+and original Boolean incidence remain open. Neither original connectivity
+language has unconditional PSPACE membership here.
+
+Integration renamed three generated local instances to unique names after
+combined imports exposed a duplicate constant. Their theorem statements and
+mathematical proofs are unchanged; exact whole-source200k and strict producer
+checks passed again. The revised hash ledger records these three naming exceptions and one
+necessary EOF-blank normalization rejected by the staged whitespace check.
+Other frozen source bytes are unchanged.
+
+All43 new source files are frozen with exact SHA256 ledgers:6243 source
+lines. Their whole-source checks use200000 heartbeats, warnings as errors and
+relaxedAutoImplicit=false. The three necessary instance-name revisions have
+separate exact source/hash and200k recheck evidence. Strict three-target
+build20176 jobs PASS. All25 Check scripts PASS; the native graph fixture has
+5576 lines and100 groups.
+Audited 90884 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 196182 transitive constants: no legacy space foundation.
+The first two native aggregate attempts exposed only fixture scope issues;
+their logs are retained. Exact original scopes in separate section wrappers
+pass on attempt3. The other24 scripts passed on their first run.
+All47 exact staged paths, frozen source hashes, blob bytes and100644 modes
+are verified. AllfilesUTF8/LF, with a single EOF newline. A staged whitespace
+check required normalizing one extra EOF blank; that source passed200k again
+and the full strict build was refreshed. Onlymain worktree.
+Baseline untracked AuxiliaryCandidateBank and subsequent proof WIP excluded.
+No push or external write. GoalACTIVE; full general Atomic.Valid, global
+completeness, stabilization and Boolean incidence still require proof.

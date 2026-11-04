@@ -1,3 +1,37 @@
+import LeanCanny.Algebra.IntegralMixedFramedRunObservationCongruence
+import LeanCanny.Connectivity.IntegralMixedRoadmapProperAppendSeed
+import LeanCanny.Encoding.IntegralMixedChronologicalOptionalEndpointSpec
+import LeanCanny.Encoding.IntegralMixedMarkedJointFieldReadback
+import LeanCanny.Encoding.IntegralMixedMarkedPrefixChronologicalField
+import LeanCanny.Encoding.IntegralMixedRoadmapCheckedCompanionReadback
+import LeanCanny.Encoding.IntegralMixedRoadmapCheckedCriticalTail
+import LeanCanny.Encoding.IntegralMixedRoadmapCheckedProperMetadata
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendCodes
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendEndpointCriticalGuard
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendEndpointCutGuard
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendEndpointSnapshot
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendEndpointWordCutGuard
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendFieldReadback
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendFieldScalar
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendGrammar
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendLevelFields
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendMarked
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendObservation
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendParentColumns
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendParentTransfer
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendPastCut
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendPhysicalArity
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendPlan
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendPrefix
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendSelectionReadback
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendWord
+import LeanCanny.Geometry.IntegralMixedChronologicalGuardedProperLevel
+import LeanCanny.Geometry.IntegralMixedChronologicalLevelPhysicalColumns
+import LeanCanny.Geometry.IntegralMixedChronologicalLevelPhysicalReadback
+import LeanCanny.Geometry.IntegralMixedChronologicalLevelScalarValues
+import LeanCanny.Geometry.IntegralMixedGuardedProgramCutAt
+import LeanCanny.Geometry.IntegralMixedGuardedProgramCutReceipts
+import LeanCanny.Geometry.IntegralMixedGuardedProgramCutValues
 import LeanCanny.Algebra.IntegralMixedFramedCompanionColumnsBase
 import LeanCanny.Algebra.IntegralMixedFramedCompanionObservationFrom
 import LeanCanny.Algebra.IntegralMixedFramedCriticalPrefixArity
@@ -3961,3 +3995,1582 @@ namespace RoadmapInternalRetainedAppendRootSupport
 #print axioms LeanCanny.Encoding.IntegralMixedRoadmapRetainedAppend.midpoint_selection_selected
 #print axioms LeanCanny.Encoding.IntegralMixedRoadmapRetainedAppend.child_selection_selected
 end RoadmapInternalRetainedAppendRootSupport
+
+section RoadmapInternalG66Fixture1
+open LeanCanny Algebra Encoding Computation
+
+private def retained (i :ℕ):=IntegralMixedRoadmapEndpointSyntax.spec 0 i 0 0 0 0
+private def fresh (i :ℕ):=IntegralMixedRoadmapEndpointSyntax.spec 1 i 0 0 0 0
+
+example : IntegralMixedRoadmapLevel.Good 2 3 4 3
+    (IntegralMixedRoadmapLevel.packet ([] :List Bool) (retained 1) (retained 2) false ([] :List Bool)):=by
+  simp only [IntegralMixedRoadmapLevel.Good, IntegralMixedChronologicalFrameCode.Good, WordListRecords.count,
+    IntegralMixedRoadmapLevel.labels, IntegralMixedRoadmapLevel.packet, retained, Bool.false_eq_true, ↓reduceIte,
+    pairFst_pair, ne_eq, List.length_nil, Finset.range_zero, Finset.filter_empty, Finset.card_empty, Nat.reduceAdd,
+    zero_le, not_lt_zero, IsEmpty.forall_iff, implies_true, and_self, IntegralMixedRoadmapLevel.g,
+    IntegralMixedRoadmapLevel.k, zero_add, Nat.one_lt_ofNat, IntegralMixedRoadmapEndpointSyntax.Good,
+    IntegralMixedRoadmapLevel.left, pairSnd_pair, IntegralMixedRoadmapEndpointSyntax.canonical_spec,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_0, IntegralMixedRoadmapEndpointSyntax.field_spec_1,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_2, IntegralMixedRoadmapEndpointSyntax.field_spec_3,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_4, IntegralMixedRoadmapEndpointSyntax.field_spec_5, zero_ne_one,
+    OfNat.one_ne_ofNat, and_true, OfNat.zero_ne_ofNat, IntegralMixedChronologicalCutCode.Bounds, Nat.reducePow,
+    false_and, or_self, or_false, IntegralMixedRoadmapLevel.right, Nat.lt_add_one, IntegralMixedRoadmapLevel.freshLeft,
+    IntegralMixedRoadmapEndpointSyntax.fresh, add_zero, Nat.reduceEqDiff, IntegralMixedRoadmapLevel.sideWord,
+    List.ne_cons_self, Nat.reduceLeDiff, IntegralMixedRoadmapLevel.side, decide_false, IntegralMixedRoadmapLevel.slice]
+example : IntegralMixedRoadmapLevel.Good 2 3 4 3
+    (IntegralMixedRoadmapLevel.packet ([] :List Bool) (fresh 3) (retained 2) true ([] :List Bool)):=by
+  simp only [IntegralMixedRoadmapLevel.Good, IntegralMixedChronologicalFrameCode.Good, WordListRecords.count,
+    IntegralMixedRoadmapLevel.labels, IntegralMixedRoadmapLevel.packet, fresh, retained, ↓reduceIte, pairFst_pair,
+    ne_eq, List.length_nil, Finset.range_zero, Finset.filter_empty, Finset.card_empty, Nat.reduceAdd, zero_le,
+    not_lt_zero, IsEmpty.forall_iff, implies_true, and_self, IntegralMixedRoadmapLevel.g, IntegralMixedRoadmapLevel.k,
+    zero_add, Nat.one_lt_ofNat, IntegralMixedRoadmapEndpointSyntax.Good, IntegralMixedRoadmapLevel.left, pairSnd_pair,
+    IntegralMixedRoadmapEndpointSyntax.canonical_spec, IntegralMixedRoadmapEndpointSyntax.field_spec_0, one_ne_zero,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_1, lt_self_iff_false, IntegralMixedRoadmapEndpointSyntax.field_spec_2,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_3, IntegralMixedRoadmapEndpointSyntax.field_spec_4,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_5, and_true, OfNat.one_ne_ofNat,
+    IntegralMixedChronologicalCutCode.Bounds, Nat.reducePow, true_and, false_and, or_false, or_true,
+    IntegralMixedRoadmapLevel.right, Nat.lt_add_one, zero_ne_one, IntegralMixedRoadmapLevel.freshLeft,
+    IntegralMixedRoadmapEndpointSyntax.fresh, Nat.reduceEqDiff, OfNat.zero_ne_ofNat, or_self,
+    IntegralMixedRoadmapLevel.sideWord, List.cons_ne_self, Nat.reduceLeDiff, IntegralMixedRoadmapLevel.side,
+    decide_true, IntegralMixedRoadmapLevel.slice]
+example : IntegralMixedRoadmapLevel.Good 2 3 4 3
+    (IntegralMixedRoadmapLevel.packet ([] :List Bool) (retained 1) (fresh 3) false ([] :List Bool)):=by
+  simp only [IntegralMixedRoadmapLevel.Good, IntegralMixedChronologicalFrameCode.Good, WordListRecords.count,
+    IntegralMixedRoadmapLevel.labels, IntegralMixedRoadmapLevel.packet, retained, fresh, Bool.false_eq_true, ↓reduceIte,
+    pairFst_pair, ne_eq, List.length_nil, Finset.range_zero, Finset.filter_empty, Finset.card_empty, Nat.reduceAdd,
+    zero_le, not_lt_zero, IsEmpty.forall_iff, implies_true, and_self, IntegralMixedRoadmapLevel.g,
+    IntegralMixedRoadmapLevel.k, zero_add, Nat.one_lt_ofNat, IntegralMixedRoadmapEndpointSyntax.Good,
+    IntegralMixedRoadmapLevel.left, pairSnd_pair, IntegralMixedRoadmapEndpointSyntax.canonical_spec,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_0, IntegralMixedRoadmapEndpointSyntax.field_spec_1,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_2, IntegralMixedRoadmapEndpointSyntax.field_spec_3,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_4, IntegralMixedRoadmapEndpointSyntax.field_spec_5, zero_ne_one,
+    OfNat.one_ne_ofNat, and_true, OfNat.zero_ne_ofNat, IntegralMixedChronologicalCutCode.Bounds, Nat.reducePow,
+    false_and, or_self, or_false, IntegralMixedRoadmapLevel.right, one_ne_zero, lt_self_iff_false,
+    IntegralMixedRoadmapLevel.freshLeft, IntegralMixedRoadmapEndpointSyntax.fresh, add_zero, true_and, or_true,
+    IntegralMixedRoadmapLevel.sideWord, List.ne_cons_self, Nat.reduceLeDiff, IntegralMixedRoadmapLevel.side,
+    decide_false, IntegralMixedRoadmapLevel.slice]
+example : IntegralMixedRoadmapLevel.Good 2 3 4 3
+    (IntegralMixedRoadmapLevel.packet ([] :List Bool) (fresh 3) (fresh 4) true ([] :List Bool)):=by
+  simp only [IntegralMixedRoadmapLevel.Good, IntegralMixedChronologicalFrameCode.Good, WordListRecords.count,
+    IntegralMixedRoadmapLevel.labels, IntegralMixedRoadmapLevel.packet, fresh, ↓reduceIte, pairFst_pair, ne_eq,
+    List.length_nil, Finset.range_zero, Finset.filter_empty, Finset.card_empty, Nat.reduceAdd, zero_le, not_lt_zero,
+    IsEmpty.forall_iff, implies_true, and_self, IntegralMixedRoadmapLevel.g, IntegralMixedRoadmapLevel.k, zero_add,
+    Nat.one_lt_ofNat, IntegralMixedRoadmapEndpointSyntax.Good, IntegralMixedRoadmapLevel.left, pairSnd_pair,
+    IntegralMixedRoadmapEndpointSyntax.canonical_spec, IntegralMixedRoadmapEndpointSyntax.field_spec_0, one_ne_zero,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_1, lt_self_iff_false, IntegralMixedRoadmapEndpointSyntax.field_spec_2,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_3, IntegralMixedRoadmapEndpointSyntax.field_spec_4,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_5, and_true, OfNat.one_ne_ofNat,
+    IntegralMixedChronologicalCutCode.Bounds, Nat.reducePow, true_and, false_and, or_false, or_true,
+    IntegralMixedRoadmapLevel.right, Nat.reduceLT, IntegralMixedRoadmapLevel.freshLeft,
+    IntegralMixedRoadmapEndpointSyntax.fresh, IntegralMixedRoadmapLevel.sideWord, List.cons_ne_self, Nat.reduceLeDiff,
+    IntegralMixedRoadmapLevel.side, decide_true, IntegralMixedRoadmapLevel.slice]
+
+-- Retaining the newly born left endpoint as the right OLD endpoint is rejected.
+example : ¬IntegralMixedRoadmapEndpointSyntax.Good 2 3 4 3 4 ([] :List Bool) (retained 3):=by
+  simp only [IntegralMixedRoadmapEndpointSyntax.Good, retained,
+    IntegralMixedRoadmapEndpointSyntax.canonical_spec, IntegralMixedRoadmapEndpointSyntax.field_spec_0,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_1, lt_self_iff_false, IntegralMixedRoadmapEndpointSyntax.field_spec_2,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_3, IntegralMixedRoadmapEndpointSyntax.field_spec_4,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_5, and_self, and_true, and_false, zero_ne_one, Nat.reduceEqDiff,
+    WordListRecords.count, ne_eq, List.length_nil, Finset.range_zero, Finset.filter_empty, Finset.card_empty,
+    OfNat.zero_ne_ofNat, IntegralMixedChronologicalCutCode.Bounds, zero_add, zero_le, Nat.reducePow, false_and, or_self,
+    not_false_eq_true]
+-- The ordinary-cut grammar still rejects the limit-coordinate tag.
+example : ¬IntegralMixedRoadmapEndpointSyntax.Good 2 3 4 3 4 ([] :List Bool)
+    (IntegralMixedRoadmapEndpointSyntax.spec 2 4 0 3 0 0):=by
+  simp only [IntegralMixedRoadmapEndpointSyntax.Good, IntegralMixedRoadmapEndpointSyntax.canonical_spec,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_0, OfNat.ofNat_ne_zero,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_1, Nat.reduceLT, IntegralMixedRoadmapEndpointSyntax.field_spec_2,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_3, IntegralMixedRoadmapEndpointSyntax.field_spec_4,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_5, and_self, and_true, and_false, OfNat.ofNat_ne_one,
+    WordListRecords.count, ne_eq, List.length_nil, Finset.range_zero, Finset.filter_empty, Finset.card_empty,
+    IntegralMixedChronologicalCutCode.Bounds, zero_add, Nat.reduceLeDiff, Nat.reducePow, zero_le, or_self,
+    not_false_eq_true]
+
+example : IntegralMixedRoadmapLevel.chosen
+    (IntegralMixedRoadmapLevel.packet ([] :List Bool) (fresh 3) (retained 2) true ([] :List Bool))=2:=by
+  simp only [IntegralMixedRoadmapLevel.chosen, IntegralMixedRoadmapLevel.sideWord,
+    IntegralMixedRoadmapLevel.packet, fresh, retained, ↓reduceIte, pairSnd_pair, pairFst_pair,
+    IntegralMixedRoadmapLevel.producer, IntegralMixedRoadmapLevel.right,
+    IntegralMixedRoadmapEndpointSyntax.field_spec_1]
+example : (IntegralMixedRoadmapLevel.codes 2
+    (IntegralMixedRoadmapLevel.packet ([] :List Bool) (fresh 3) (fresh 4) true ([] :List Bool))).length=8:=by
+  simp only [IntegralMixedRoadmapLevel.packet, fresh, ↓reduceIte, IntegralMixedRoadmapLevel.codes_length,
+    IntegralMixedRoadmapLevel.freshLeft, IntegralMixedRoadmapEndpointSyntax.fresh, IntegralMixedRoadmapLevel.left,
+    pairSnd_pair, pairFst_pair, IntegralMixedRoadmapEndpointSyntax.field_spec_0, one_ne_zero,
+    IntegralMixedRoadmapLevel.freshRight, IntegralMixedRoadmapLevel.right, Nat.reduceAdd,
+    IntegralMixedRoadmapLevel.freeCount, IntegralMixedRoadmapLevel.g, IntegralMixedRoadmapLevel.k,
+    WordListRecords.count, IntegralMixedRoadmapLevel.labels, ne_eq, List.length_nil, Finset.range_zero,
+    Finset.filter_empty, Finset.card_empty, zero_add, Nat.add_one_sub_one, Nat.reduceMul]
+
+#check IntegralMixedRoadmapProperAppend.level_good
+#check IntegralMixedRoadmapProperAppend.checked
+#check IntegralMixedRoadmapProperAppend.prepared_dimension
+#check IntegralMixedRoadmapProperAppend.begin_eq_start
+#check IntegralMixedRoadmapProperAppend.prefix_snapshot
+#check IntegralMixedRoadmapProperAppend.prefix_observation
+#print axioms IntegralMixedRoadmapProperAppend.level_good
+#print axioms IntegralMixedRoadmapProperAppend.checked
+#print axioms IntegralMixedRoadmapProperAppend.raw_count
+#print axioms IntegralMixedRoadmapProperAppend.prefix_record
+#print axioms IntegralMixedRoadmapProperAppend.prepared_cap
+#print axioms IntegralMixedRoadmapProperAppend.prepared_dimension
+#print axioms IntegralMixedRoadmapProperAppend.begin_eq_start
+#print axioms IntegralMixedRoadmapProperAppend.prefix_snapshot
+#print axioms IntegralMixedRoadmapProperAppend.prefix_observation
+end RoadmapInternalG66Fixture1
+
+section RoadmapInternalG66Fixture2
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.parent_room
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.snapshot_parent
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.canonical_snapshot_parent
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.parent_snapshot_eq
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.parent_state_heq
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.parent_commands_heq
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.parent_layout
+end RoadmapInternalG66Fixture2
+
+section RoadmapInternalG66Fixture3
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation LeanCanny.ETR
+open scoped Classical
+set_option maxHeartbeats 200000
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+namespace CheckedProperRegression
+private def endpoint (k p :Nat):=IntegralMixedRoadmapEndpointSyntax.spec k p 0 0 0 0
+private def entry (l r :Nat):=WordList.encode [endpoint l 1,endpoint r 2,[]]
+private def traceData (l r :Nat):=IntegralMixedRoadmapChain.packet (WordList.encode [entry l r]) [] []
+private def node (l r :Nat):=IntegralMixedRoadmapAtomic.packet [] (traceData l r) []
+private def freshBit (k :Nat):=if k=0 then 0 else 1
+private theorem payload_node (l r :Nat) :IntegralMixedRoadmapAtomic.payload (node l r)=traceData l r :=by
+  simp only [node,IntegralMixedRoadmapAtomic.packet,IntegralMixedRoadmapAtomic.payload,pairFst_pair,pairSnd_pair]
+private theorem depth_node (l r :Nat) :IntegralMixedRoadmapAtomic.depth (node l r)=1 :=by
+  simp only [IntegralMixedRoadmapAtomic.depth,payload_node,traceData,IntegralMixedRoadmapChain.depth,
+    IntegralMixedRoadmapChain.metadata,IntegralMixedRoadmapChain.packet,pairFst_pair,
+    WordListRecords.count_encode,List.length_cons,List.length_nil]
+private theorem fresh_trace (l r :Nat) :IntegralMixedRoadmapChain.freshCount (traceData l r) 0=freshBit l+freshBit r :=by
+  simp only [IntegralMixedRoadmapChain.freshCount,IntegralMixedRoadmapChain.left,IntegralMixedRoadmapChain.right,
+    IntegralMixedRoadmapChain.entry,traceData,IntegralMixedRoadmapChain.metadata,IntegralMixedRoadmapChain.packet,
+    pairFst_pair,entry,WordList.get_encode,List.getElem?_cons_zero,List.getElem?_cons_succ,Option.getD_some,
+    endpoint,IntegralMixedRoadmapEndpointSyntax.fresh,IntegralMixedRoadmapEndpointSyntax.field_spec_0,freshBit]
+private theorem midpoint_birth (l r :Nat) :IntegralMixedRoadmapProper.midBirth 3 8 (node l r)=13+freshBit l+freshBit r :=by
+  have HD :IntegralMixedRoadmapProper.levelIndex (node l r)=0 :=by rw [IntegralMixedRoadmapProper.levelIndex,depth_node]
+  simp only [IntegralMixedRoadmapProper.midBirth,IntegralMixedRoadmapProper.baseBirth,
+    IntegralMixedRoadmapChain.birth,HD,IntegralMixedRoadmapChain.rawStart,IntegralMixedRoadmapChain.prefixCount,
+    Finset.sum_range_zero,Nat.add_zero,payload_node,fresh_trace]
+  omega
+private theorem child_birth (l r :Nat) :IntegralMixedRoadmapAtomic.anchor 3 8 (node l r)=17+freshBit l+freshBit r :=by
+  unfold IntegralMixedRoadmapAtomic.anchor IntegralMixedRoadmapAtomic.endBirth IntegralMixedRoadmapAtomic.free
+  rw [depth_node,payload_node]
+  simp only [IntegralMixedRoadmapChain.rawStart,IntegralMixedRoadmapChain.prefixCount,Finset.sum_range_succ,
+    Finset.sum_range_zero,Nat.zero_add,IntegralMixedRoadmapChain.blockCount,fresh_trace]
+  omega
+example :IntegralMixedRoadmapChain.freshCount (traceData 0 0) 0=0 :=fresh_trace 0 0
+example :IntegralMixedRoadmapChain.freshCount (traceData 1 0) 0=1 :=fresh_trace 1 0
+example :IntegralMixedRoadmapChain.freshCount (traceData 0 2) 0=1 :=fresh_trace 0 2
+example :IntegralMixedRoadmapChain.freshCount (traceData 1 2) 0=2 :=fresh_trace 1 2
+example :IntegralMixedRoadmapProper.midBirth 3 8 (node 0 0)=13 :=midpoint_birth 0 0
+example :IntegralMixedRoadmapProper.midBirth 3 8 (node 1 0)=14 :=midpoint_birth 1 0
+example :IntegralMixedRoadmapProper.midBirth 3 8 (node 0 2)=14 :=midpoint_birth 0 2
+example :IntegralMixedRoadmapProper.midBirth 3 8 (node 1 2)=15 :=midpoint_birth 1 2
+example :IntegralMixedRoadmapAtomic.anchor 3 8 (node 0 0)=17 :=child_birth 0 0
+example :IntegralMixedRoadmapAtomic.anchor 3 8 (node 1 0)=18 :=child_birth 1 0
+example :IntegralMixedRoadmapAtomic.anchor 3 8 (node 0 2)=18 :=child_birth 0 2
+example :IntegralMixedRoadmapAtomic.anchor 3 8 (node 1 2)=19 :=child_birth 1 2
+example :IntegralMixedRoadmapProper.captureCount 3 (node 1 2)=3 :=by
+  unfold IntegralMixedRoadmapProper.captureCount IntegralMixedRoadmapProper.levelIndex
+  rw [depth_node]
+example :IntegralMixedRoadmapAtomic.free 3 (node 1 2)=3 :=by
+  unfold IntegralMixedRoadmapAtomic.free
+  rw [depth_node]
+#check IntegralMixedRoadmapCheckedProperMetadata.midpoint_anchor
+#check IntegralMixedRoadmapCheckedProperMetadata.midpoint_capture
+#check IntegralMixedRoadmapCheckedProperMetadata.child_anchor
+#check IntegralMixedRoadmapCheckedProperMetadata.child_capture
+end CheckedProperRegression
+#print axioms IntegralMixedRoadmapCheckedProperMetadata.root_dimension
+#print axioms IntegralMixedRoadmapCheckedProperMetadata.root_initial
+#print axioms IntegralMixedRoadmapCheckedProperMetadata.root_records
+#print axioms IntegralMixedRoadmapCheckedProperMetadata.full_prefix
+#print axioms IntegralMixedRoadmapCheckedProperMetadata.native_header
+#print axioms IntegralMixedRoadmapCheckedProperMetadata.midpoint_anchor
+#print axioms IntegralMixedRoadmapCheckedProperMetadata.midpoint_capture
+#print axioms IntegralMixedRoadmapCheckedProperMetadata.child_anchor
+#print axioms IntegralMixedRoadmapCheckedProperMetadata.child_capture
+end RoadmapInternalG66Fixture3
+
+section RoadmapInternalG66Fixture4
+namespace LeanCanny.Geometry.IntegralMixedChronologicalEndpoint
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity
+open IntegralMixedHistory IntegralMixedFrozenFrame IntegralMixedChronologicalFrame
+open IntegralMixedOptionalEndpoints IntegralMixedPointCompanion IntegralMixedFullHistoryScript
+open IntegralMixedFramedFixedContinuation IntegralHistorySampler UniformIntegralPowerSchedule FlatAffineCriticalStage
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+section Actual
+variable {n S B :ℕ} {P Q :SpatialSource n} (initial :State P S B 0 (Fin 0))
+  (hQ :PurePowerReductionBounds.dimension (n+1) Q.degree≤2^B)
+  (older :List (IntegralMixedFramedHistoryScript.Instruction n B)) (ho :older.length≤S+1)
+local notation "parent"=>reframe (IntegralMixedFramedHistoryScript.run initial older ho) Q hQ
+example (d :Descriptor n older.length) (hk :d.labels.length<n+1)
+    (g :Fin (n+1)) (hg :g∉(line d.frame (IntegralMixedChronologicalSweepFrame.next d hk)).frozen)
+    (HG :g.val=d.labels.length+1) (positive :0<n) (charge :ℕ)
+    (hdegree :Q.degree=BoundedZeroSource.powerDegree charge)
+    (hcapQ :IntegralMixedExceptionalBounds.auxiliaryCap (n+1) Q.degree≤2^B)
+    (z :IntegralMixedFramedHistoryScript.Index (Fin 0) older→ℝ)
+    (hz :∀i,((parent).sampler.rows i).eval₂ (Int.castRingHom ℝ) z=0)
+    (φ :(parent).sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ)
+    (hφ :∀i,φ ((parent).sampler.scalarPrefix.basis.generator i)=z ((parent).sampler.scalar i)^weights S (2^B) older.length i)
+    (values :Fin older.length→ℝ) (H :∀i,φ ((parent).bank.numerator i)/((parent).bank.denominator i:ℝ)=values i)
+    (horizon :older.length+2+2+2*(n-d.labels.length)≤S+1)
+    (choices :IntegralMixedRelativeCuts.Choices parent (by omega)
+      (cutRule parent d.frame (IntegralMixedChronologicalSweepFrame.next d hk) g hg) φ)
+    (left right :Endpoint older.length)
+    (HL :left.Allowed (jointEndpointSet parent (by omega) φ d.frame
+      (IntegralMixedChronologicalSweepFrame.next d hk) g hg values choices))
+    (HR :right.Allowed (jointEndpointSet parent (by omega) φ d.frame
+      (IntegralMixedChronologicalSweepFrame.next d hk) g hg values choices))
+    (hab :left.value values<right.value values)
+    (M :MatchedSlabInterior parent (by omega) φ (line d.frame (IntegralMixedChronologicalSweepFrame.next d hk))
+      (IntegralMixedChronologicalSweepFrame.next d hk) (Finset.mem_insert_self _ _) g hg values
+      (left.value values) (right.value values) ⟨(left.value values+right.value values)/2,by constructor <;> linarith⟩)
+    (i :IntegralMixedSelectedPhysicalFiber.physical (cutSource parent d.frame (IntegralMixedChronologicalSweepFrame.next d hk))
+      (by omega) (cutRule parent d.frame (IntegralMixedChronologicalSweepFrame.next d hk) g hg) φ
+        ((left.value values+right.value values)/2)):
+    ∃cs :List (Command Q B),∃room :older.length+cs.length≤S+1,∃u :ℕ→ℝ,
+      (IntegralMixedFramedRunObservation.ofCommands initial (cs.map (wrap Q hQ)++older)
+        (by simp only [List.length_append,List.length_map];omega)).Roots u ∧
+      ∀j :IntegralMixedFramedHistoryScript.Index (Fin 0) older,
+        u (IntegralMixedFramedPhysicalIndex.enumerate older j).val=z j:=by
+  obtain ⟨R,A,HChild⟩:=exists_guarded_proper_level initial hQ older ho d hk g hg HG positive charge hdegree hcapQ
+    z hz φ hφ values H horizon choices left right HL HR hab M i
+  obtain ⟨E,u,e,hu,_,hold,_⟩:=HChild false
+  have HC:=R.result.count
+  have HQ:=R.orderedFree_length hk
+  have HL:=R.levelCommands_length hk g hg false
+  exact ⟨R.levelCommands hk g hg false,by omega,u,hu,hold⟩
+end Actual
+
+section Distinct
+variable {n S B m :ℕ} {P :SpatialSource n} {ι :Type} [Fintype ι]
+  {x :State P S B m ι} {d :Descriptor n m} {z :ι→ℝ}
+  {φ :x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ} {values :Fin m→ℝ} {left right :Endpoint m}
+  {hn :0<n} {hcap :IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree≤2^B}
+  (R :NativePair x d z φ values left right hn hcap) (hk :d.labels.length<n+1)
+  (g :Fin (n+1)) (hg :g∉(line d.frame (IntegralMixedChronologicalSweepFrame.next d hk)).frozen)
+  (hp :m+R.result.commands.length≤S)
+  (room :m+R.result.commands.length+1+(R.orderedFree hk).length≤S+1)
+  (hroom :m+R.result.commands.length+1+(R.orderedFree hk).length≤S)
+  (side :Bool)
+  (childRoom :m+R.result.commands.length+1+(R.orderedFree hk).length+1+(R.orderedFree hk).length≤S+1)
+  (pMID pChild :Fin (n+1)→ℝ)
+  (A :R.result.MidpointCaptures hp (IntegralMixedChronologicalSweepFrame.next d hk) g g hg hg
+    pMID (R.orderedFree hk) room)
+  (E :R.LevelChildCaptures hk g hg hp pMID room A hroom side pChild childRoom)
+example (i :Fin (n+1)) (h :pMID i≠pChild i):
+    E.captures.tuple (R.levelMidAnchorColumn hk g hg side i)^physical S (2^B) (m+R.result.commands.length)≠
+      E.captures.tuple (R.levelChildAnchorColumn hk g hg side i)^
+        physical S (2^B) (m+R.result.commands.length+1+(R.orderedFree hk).length):=by
+  rw [R.captures_mid_anchor hk g hg hp room hroom side childRoom pMID pChild A E i,
+    R.captures_child_anchor hk g hg hp room hroom side childRoom pMID pChild A E i]
+  exact h
+end Distinct
+#print axioms observe_constructed_tuple
+#print axioms NativePair.level_index
+#print axioms NativePair.level_old_heq
+#print axioms NativePair.captures_pair_raw
+#print axioms NativePair.captures_old_raw
+#print axioms NativePair.captures_mid_anchor
+#print axioms NativePair.captures_mid_block
+#print axioms NativePair.captures_child_anchor
+#print axioms NativePair.captures_child_block
+#print axioms NativePair.NaturalReadback.pair_raw
+#print axioms NativePair.NaturalReadback.old_raw
+#print axioms NativePair.NaturalReadback.mid_anchor
+#print axioms NativePair.NaturalReadback.mid_block
+#print axioms NativePair.NaturalReadback.child_anchor
+#print axioms NativePair.NaturalReadback.child_block
+#print axioms exists_guarded_proper_level
+end LeanCanny.Geometry.IntegralMixedChronologicalEndpoint
+end RoadmapInternalG66Fixture4
+
+section RoadmapInternalG66Fixture5
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation LeanCanny.ETR
+open scoped Classical
+set_option maxHeartbeats 200000
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+namespace CheckedCompanionRegression
+open IntegralMixedPhysicalPointCompanionScan
+example (c w :List Bool) :Wellformed (pair (pair c w) (descriptor 15 16 3)) :=descriptor_packet c w 15 16 3
+example (c w :List Bool) :anchor (pair (pair c w) (descriptor 15 16 3))=15 :=by
+  simp only [anchor,descriptor,pairFst_pair,pairSnd_pair,List.length_replicate]
+example (c w :List Bool) :first (pair (pair c w) (descriptor 15 16 3))=16 :=by
+  simp only [first,descriptor,pairFst_pair,pairSnd_pair,List.length_replicate]
+example (c w :List Bool) :number (pair (pair c w) (descriptor 15 16 3))=3 :=by
+  simp only [number,descriptor,pairSnd_pair,List.length_replicate]
+-- The depth-zero child query is still an honest canonical packet.
+example (c w :List Bool) :Wellformed (pair (pair c w) (descriptor 8 9 4)) :=descriptor_packet c w 8 9 4
+example (d initial :Nat) (q :List Bool) :IntegralMixedRoadmapProper.midCompanions d initial q=
+    pair (pair (IntegralMixedRoadmapAtomic.context q) (IntegralMixedRoadmapAtomic.word q))
+      (descriptor (IntegralMixedRoadmapProper.midBirth d initial q)
+        (IntegralMixedRoadmapProper.midFirst d initial q) (IntegralMixedRoadmapProper.captureCount d q)) :=rfl
+example (d initial :Nat) (q :List Bool) :IntegralMixedRoadmapAtomic.companionQuery d initial q=
+    pair (pair (IntegralMixedRoadmapAtomic.context q) (IntegralMixedRoadmapAtomic.word q))
+      (descriptor (IntegralMixedRoadmapAtomic.anchor d initial q)
+        (IntegralMixedRoadmapAtomic.first d initial q) (IntegralMixedRoadmapAtomic.free d q)) :=rfl
+example (f k full :Nat) (hk :0<k) (hl :f+(k-1)<full) :f+k≤full :=by omega
+example (c :List Bool) (f k full :Nat) (hk :0<k)
+    (hl :(fun _ :List Bool=>f+(k-1)) c<full) :f+k≤full :=by dsimp only at hl;omega
+example (d depth :Nat) (h :depth≤d) :0<d+1-depth :=by omega
+example (d depth :Nat) (h :depth≤d) (hp :0<depth) :0<d-(depth-1) :=by omega
+example :16+(3-1)<19 ∧ 16+3≤19 :=by omega
+example :9+(4-1)<13 ∧ 9+4≤13 :=by omega
+#check IntegralMixedRoadmapCheckedCompanionReadback.midCaptureIndex
+#check IntegralMixedRoadmapCheckedCompanionReadback.childCaptureIndex
+#check IntegralMixedRoadmapCheckedCompanionReadback.midpoint_of_readback
+#check IntegralMixedRoadmapCheckedCompanionReadback.child_of_readback
+end CheckedCompanionRegression
+#print axioms IntegralMixedRoadmapCheckedCompanionReadback.midCaptureIndex
+#print axioms IntegralMixedRoadmapCheckedCompanionReadback.childCaptureIndex
+#print axioms IntegralMixedRoadmapCheckedCompanionReadback.midpoint_of_readback
+#print axioms IntegralMixedRoadmapCheckedCompanionReadback.child_of_readback
+end RoadmapInternalG66Fixture5
+
+section RoadmapInternalG66Fixture6
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry
+open IntegralMixedHistory IntegralMixedFullHistoryScript IntegralHistorySampler UniformIntegralPowerSchedule
+open IntegralMixedChosenLocalRealization IntegralMixedOptionalEndpoints
+open scoped Classical
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+set_option maxHeartbeats 200000
+set_option backward.isDefEq.respectTransparency false
+namespace GuardedCutReceiptsRegression
+variable {n S B m :ℕ} {P :SpatialSource n} {ι :Type} [Fintype ι]
+
+-- No initial quotient-to-values premise is needed: the theorem uses the
+-- actual bank point on every restricted tuple, including an arbitrary tail.
+example (x :State P S B m ι) (hn :0<n)
+    (hcap :IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree≤2^B)
+    (z :ι→ℝ) (φ :x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ) (values :Fin m→ℝ)
+    (cs :List (Command P B)) (room :m+cs.length≤S+1) (codes :List (List Bool))
+    (y :Index ι cs→ℝ) (ψ :(continueRun x cs room).sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ)
+    (next :Fin (m+cs.length)→ℝ) (H :GuardedProgram x hn hcap z φ values cs room codes y ψ next)
+    (HC :Canonical x)
+    (hφ :∀i,φ (x.sampler.scalarPrefix.basis.generator i)=z (x.sampler.scalar i)^weights S (2^B) m i) :
+    CutReceipts x cs room y:=H.cut_receipts HC hφ
+
+-- A one-cut receipt uses exactly the old full columns and the new value.
+example (x :State P S B m ι) (r :IntegralMixedCriticalSweep.Rule n)
+    (k :IntegralMixedRelativeCuts.Kind P r) (d :ℕ)
+    (ha :d≤IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree) (hd :d≤2^B)
+    (room :m+[Command.cut r k d ha hd].length≤S+1)
+    (y :Index ι [Command.cut r k d ha hd]→ℝ) :
+    CutReceipts x [.cut r k d ha hd] room y ↔
+      True ∧ (IntegralMixedPrefixSnapshot.ofState x).CutReceipt (by change m≤S;simpa using room)
+        (.cut r k d ha hd)
+        (IntegralMixedFramedBankObservation.extend
+          (IntegralMixedFullBankPoint.point x (y∘oldColumn (.cut r k d ha hd))))
+        (IntegralMixedFullBankPoint.point (step x (by simpa using room) (.cut r k d ha hd)) y 0):=Iff.rfl
+
+example (x :State P S B m ι) (room :m+[].length≤S+1) (y :ι→ℝ) :
+    CutReceipts x [] room y:=True.intro
+
+-- Padding alone is not a receipt for the full constant or rootless factor.
+example :((Polynomial.X^5 :Polynomial ℝ)*Polynomial.C 1).eval 0=0:=by simp
+example :((Polynomial.C 1 :Polynomial ℝ).eval 0)≠0:=by norm_num
+example :((Polynomial.X^5 :Polynomial ℝ)*(Polynomial.X^2+1)).eval 0=0:=by simp
+example (a :ℝ) :((Polynomial.X^2+1 :Polynomial ℝ).eval a)≠0:=by
+  simp only [Polynomial.eval_add,Polynomial.eval_pow,Polynomial.eval_X,Polynomial.eval_one]
+  nlinarith [sq_nonneg a]
+
+-- The natural extension preserves signs and nonunit denominator quotients.
+example :IntegralMixedFramedBankObservation.extend (fun _ :Fin 1=>(1:ℝ)/(-6)) 0=(-1:ℝ)/6:=by
+  norm_num [IntegralMixedFramedBankObservation.extend]
+example :IntegralMixedFramedBankObservation.extend (fun _ :Fin 1=>(1:ℝ)/(-6)) 1=0:=by
+  simp [IntegralMixedFramedBankObservation.extend]
+example :IntegralMixedFramedBankObservation.extend (fun i :Fin 2=>if i.val=0 then (-2:ℝ) else 3) 1=3:=by
+  norm_num [IntegralMixedFramedBankObservation.extend]
+
+#check GuardedProgram.cut_receipts
+#check IntegralMixedPrefixSnapshot.Data.cutReceipt_transport
+#print axioms GuardedProgram.cut_receipts
+#print axioms IntegralMixedPrefixSnapshot.Data.cutReceipt_transport
+#print axioms IntegralMixedRelativeCuts.coefficientGuards_iff_valid_degree
+end GuardedCutReceiptsRegression
+end RoadmapInternalG66Fixture6
+
+section RoadmapInternalG66Fixture7
+open LeanCanny Algebra Encoding Geometry Computation ETR
+open IntegralMixedRoadmapProperAppend IntegralMixedOriginalRegularSource
+open IntegralMixedChronologicalEndpoint
+open scoped Classical
+
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedMarkedReservedParent.bank
+  IntegralMixedRoadmapAtomic.dimension IntegralMixedRoadmapAtomic.initial IntegralMixedRoadmapAtomic.depth
+  IntegralMixedRoadmapAtomic.frozen IntegralMixedRoadmapAtomic.payload IntegralMixedRoadmapAtomic.root
+  preparedRoot beginBirth start
+
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+variable (old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+  (hd :IntegralMixedRoadmapAtomic.depth old<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old)
+  (left right :ParentEndpoint hn ht ha hR0 old hv hd)
+  (R :CanonicalPair hn ht ha hR0 old hv hd left right)
+local notation "D"=>IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old
+local notation "e"=>IntegralMixedRoadmapAtomic.ownBirth hn ht ha hR0 old
+local notation "he"=>IntegralMixedRoadmapRetainedAppend.own_endpoint_fit hn ht ha hR0 old
+local notation "hk"=>IntegralMixedRoadmapRetainedAppend.parent_descriptor_fit hn ht ha hR0 old hv hd e he
+local notation "g"=>IntegralMixedRoadmapProperParent.objective hn ht ha hR0 old hv hd
+local notation "hg"=>IntegralMixedRoadmapProperParent.objective_free hn ht ha hR0 old hv hd
+
+-- A real pair supplies its own syntax, count preservation and compiler fit.
+example (side :Bool):
+    IntegralMixedCausalRecordPlanBits.count (preparedRoot hn ht ha hR0 old R.leftSpec R.rightSpec side)=
+      IntegralMixedCausalRecordPlanBits.count (IntegralMixedRoadmapAtomic.root old) ∧
+    start hn ht ha hR0 old+(R.levelCodes hk g hg side).length≤
+      IntegralMixedCausalRecordPlanBits.count (preparedRoot hn ht ha hR0 old R.leftSpec R.rightSpec side):=by
+  exact ⟨prepared_count hn ht ha hR0 old hv hd R.leftSpec R.rightSpec side
+    (endpoints_good hn ht ha hR0 old hv hd left right R),
+    local_code_fit hn ht ha hR0 old hv hd left right R side⟩
+
+-- The actual appended packet, including shifted dimensions, ends at the emitted count.
+example (side :Bool) (w :List Bool):
+    IntegralMixedRoadmapAtomic.endBirth
+      (IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 (packet D old R.leftSpec R.rightSpec side w))
+      (IntegralMixedRoadmapAtomic.initial hn ht ha hR0 (packet D old R.leftSpec R.rightSpec side w))
+      (packet D old R.leftSpec R.rightSpec side w)=
+    beginBirth hn ht ha hR0 old+IntegralMixedRoadmapEndpointSyntax.fresh R.leftSpec+
+      IntegralMixedRoadmapEndpointSyntax.fresh R.rightSpec+2+2*(D-IntegralMixedRoadmapAtomic.depth old):=by
+  rw [end_birth hn ht ha hR0 old hv hd left right R side w,
+    level_code_count hn ht ha hR0 old hv hd left right R side]
+  omega
+
+#check IntegralMixedRoadmapProperAppend.CanonicalPair
+#check IntegralMixedRoadmapProperAppend.endpoints_good
+#check IntegralMixedRoadmapProperAppend.level_slice
+#check IntegralMixedRoadmapProperAppend.local_code_at
+#check IntegralMixedRoadmapProperAppend.local_code_fit
+#check IntegralMixedRoadmapProperAppend.end_birth
+#print axioms IntegralMixedRoadmapProperAppend.endpoints_good
+#print axioms IntegralMixedRoadmapProperAppend.pair_checked
+#print axioms IntegralMixedRoadmapProperAppend.level_codes_compiled
+#print axioms IntegralMixedRoadmapProperAppend.level_slice
+#print axioms IntegralMixedRoadmapProperAppend.local_code_at
+#print axioms IntegralMixedRoadmapProperAppend.local_code_fit
+#print axioms IntegralMixedRoadmapProperAppend.level_code_count
+#print axioms IntegralMixedRoadmapProperAppend.end_birth
+end RoadmapInternalG66Fixture7
+
+section RoadmapInternalG66Fixture8
+namespace LeanCanny.Algebra.IntegralMixedPrefixSnapshot
+open IntegralMixedFullHistoryScript
+example {d e :Data} (h :d=e) (cs :List (Command d.source d.width)):
+    e.castProgram h.symm (d.castProgram h cs)=cs:=by
+  subst e
+  rfl
+private theorem regression_critical_count {d e :Data} (h :d=e) (cs :List (Command d.source d.width)):
+    ((d.castProgram h cs).countP Command.isCritical)=(cs.countP Command.isCritical):=by
+  subst e
+  rfl
+end LeanCanny.Algebra.IntegralMixedPrefixSnapshot
+namespace LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+open LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR IntegralCriticalHistoryTask
+open IntegralMixedHistory IntegralMixedFramedHistoryScript IntegralMixedChronologicalFrame
+open IntegralMixedChronologicalEndpoint IntegralMixedOptionalEndpoints IntegralMixedFrozenFrame
+open IntegralMixedFramedHistoryFamilyBits (initial defaultInstruction)
+open IntegralMixedOriginalRegularSource (radius radius_binary)
+open IntegralMixedAuxiliaryMarkedIntegerSource (number)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+variable (old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+  (hd :IntegralMixedRoadmapAtomic.depth old<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old)
+local notation "P"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha (radius_binary hR0)
+local notation "PLAN"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha (radius_binary hR0)
+local notation "Q" root=>IntegralMixedAuxiliaryMarkedIntegerPlan.spatial n t (radius R0) root
+local notation "e"=>IntegralMixedRoadmapAtomic.ownBirth hn ht ha hR0 old
+local notation "he"=>IntegralMixedRoadmapRetainedAppend.own_endpoint_fit hn ht ha hR0 old
+local notation "c"=>IntegralMixedRoadmapRetainedAppend.preparedRoot hn ht ha hR0 old e
+local notation "oldCs"=>IntegralMixedRoadmapRetainedAppend.parentCommands hn ht ha hR0 old hv hd e he
+local notation "x"=>IntegralMixedRoadmapRetainedAppend.parentState hn ht ha hR0 old hv hd e he
+local notation "d"=>IntegralMixedRoadmapRetainedAppend.parentDescriptor hn ht ha hR0 old hv hd e he
+local notation "hk"=>IntegralMixedRoadmapRetainedAppend.parent_descriptor_fit hn ht ha hR0 old hv hd e he
+local notation "g"=>IntegralMixedRoadmapProperParent.objective hn ht ha hR0 old hv hd
+local notation "hg"=>IntegralMixedRoadmapProperParent.objective_free hn ht ha hR0 old hv hd
+local notation "D"=>IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old
+variable (left right :ParentEndpoint hn ht ha hR0 old hv hd)
+  (R :CanonicalPair hn ht ha hR0 old hv hd left right) (side :Bool)
+local notation "good"=>endpoints_good hn ht ha hR0 old hv hd left right R
+local notation "r"=>preparedRoot hn ht ha hR0 old R.leftSpec R.rightSpec side
+local notation "j"=>start hn ht ha hR0 old
+local notation "hj"=>prepared_start_fit hn ht ha hR0 old hv hd R.leftSpec R.rightSpec side good
+local notation "newCs"=>parentCommands hn ht ha hR0 old R.leftSpec R.rightSpec side
+local notation "newX"=>parentState hn ht ha hR0 old hv hd R.leftSpec R.rightSpec side good
+local notation "startX"=>IntegralMixedMarkedConstructedPrefix.state hn ht ha hR0 r j hj
+
+noncomputable local instance :Fintype (Index (Fin 0) oldCs):=indexFintype (Fin 0) oldCs
+
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedMarkedReservedParent.bank
+  IntegralMixedExceptionalBounds.auxiliaryCap IntegralMixedAuxiliaryMarkedIntegerSource.degreeBound
+  IntegralMixedFramedRawHeight.rootCeiling IntegralMixedFramedNormalizationBits.requiredModulus
+  preparedRoot parentCommands parentState IntegralMixedRoadmapRetainedAppend.preparedRoot
+  IntegralMixedRoadmapRetainedAppend.parentCommands IntegralMixedRoadmapRetainedAppend.parentState
+  IntegralMixedRoadmapRetainedAppend.parentDescriptor IntegralMixedRoadmapAtomic.dimension
+  IntegralMixedRoadmapAtomic.initial IntegralMixedRoadmapAtomic.depth
+
+
+example :(localProgram hn ht ha hR0 old hv hd left right R side).length=
+    IntegralMixedRoadmapEndpointSyntax.fresh R.leftSpec+IntegralMixedRoadmapEndpointSyntax.fresh R.rightSpec+2+
+      2*(D-IntegralMixedRoadmapAtomic.depth old):=
+  (local_program_length hn ht ha hR0 old hv hd left right R side).trans
+    ((level_code_command_count hn ht ha hR0 old hv hd left right R side).symm.trans
+      (level_code_count hn ht ha hR0 old hv hd left right R side))
+example :(localProgram hn ht ha hR0 old hv hd left right R side).countP
+      IntegralMixedFullHistoryScript.Command.isCritical=
+    (R.levelCommands hk g hg side).countP IntegralMixedFullHistoryScript.Command.isCritical:=
+  IntegralMixedPrefixSnapshot.regression_critical_count
+    (start_snapshot_eq hn ht ha hR0 old hv hd left right R side).symm (R.levelCommands hk g hg side)
+example :∃newer :List (Instruction ((P).ambient r) ((P).width r)),(PLAN).rules r=List.append newer newCs:=by
+  let tail :List (Instruction ((P).ambient r) ((P).width r)):=
+    List.replicate (seedTailCount hn ht ha hR0 old hv hd left right R side) (tailInstruction hn ht ha hR0 r)
+  let body :List (Instruction ((P).ambient r) ((P).width r)):=
+    (localProgram hn ht ha hR0 old hv hd left right R side).map (IntegralMixedFramedFixedContinuation.wrap (Q r)
+      (IntegralMixedStaticRecordPrefix.cap (Q r) (IntegralMixedMarkedPrefixRecords.source_cap hn ht ha hR0 r)))
+  refine ⟨List.append tail body,?_⟩
+  rw [full_commands hn ht ha hR0 old hv hd left right R side]
+  unfold compiledProgram
+  exact (List.append_assoc tail body newCs).symm
+#print axioms parent_commands_start
+#print axioms constructed_parent_snapshot
+#print axioms start_snapshot_eq
+#print axioms local_program_length
+#print axioms local_program_heq
+#print axioms level_code_command_count
+#print axioms local_program_room
+#print axioms canonical_program_room
+#print axioms local_decodes
+#print axioms local_run_heq
+#print axioms compiled_program_heq
+#print axioms local_prefix_commands
+#print axioms prepared_records_tail
+#print axioms meaningful_codes_birth
+#print axioms tail_instruction_command
+#print axioms full_commands
+end LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+#print axioms LeanCanny.Algebra.IntegralMixedPrefixSnapshot.Data.castProgram_length
+#print axioms LeanCanny.Algebra.IntegralMixedPrefixSnapshot.Data.castProgram_heq
+#print axioms LeanCanny.Algebra.IntegralMixedPrefixSnapshot.Data.castProgram_room
+#print axioms LeanCanny.Algebra.IntegralMixedPrefixSnapshot.Data.decodes_cast
+#print axioms LeanCanny.Algebra.IntegralMixedPrefixSnapshot.Data.continueRun_cast
+#print axioms LeanCanny.Algebra.IntegralMixedPrefixSnapshot.Data.programIndex_cast
+#print axioms LeanCanny.Algebra.IntegralMixedPrefixSnapshot.Data.wrappedProgram_cast
+#print axioms LeanCanny.Algebra.IntegralMixedPrefixSnapshot.Data.wrappedAppend_cast
+end RoadmapInternalG66Fixture8
+
+section RoadmapInternalG66Fixture9
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry
+open IntegralMixedHistory IntegralMixedFullHistoryScript IntegralHistorySampler UniformIntegralPowerSchedule
+open IntegralMixedChosenLocalRealization IntegralMixedOptionalEndpoints
+open scoped Classical
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+set_option maxHeartbeats 200000
+set_option backward.isDefEq.respectTransparency false
+namespace GuardedCutAtRegression
+variable {n S B m :ℕ} {P :SpatialSource n} {ι :Type} [Fintype ι]
+
+-- Every selected index consumes only the already constructed recursive receipts.
+example (x :State P S B m ι) (cs :List (Command P B)) (room :m+cs.length≤S+1)
+    (y :Index ι cs→ℝ) (H :CutReceipts x cs room y) (i :Fin cs.length) :
+    CutReceiptAt x cs room y i.val i.isLt:=H.at i.val i.isLt
+
+-- Newest-first 0, 1, 2 restrict the SAME full tuple through 0, 1, 2 literal maps.
+example (a b c :Command P B) (j :Index ι [a,b,c]) :
+    cutAtColumn [a,b,c] 0 (by simp) j=j:=rfl
+example (a b c :Command P B) (j :NextIndex (Index ι [c]) b) :
+    cutAtColumn [a,b,c] 1 (by simp) j=oldColumn a j:=rfl
+example (a b c :Command P B) (j :NextIndex ι c) :
+    cutAtColumn [a,b,c] 2 (by simp) j=oldColumns [a,b] j:=rfl
+example (a b c :Command P B) (y :Index ι [a,b,c]→ℝ) (j :NextIndex ι c) :
+    cutAtTuple [a,b,c] 2 (by simp) y j=y (oldColumn a (oldColumn b j)):=rfl
+
+-- The ≤2 endpoint case is literally the same map, not another realization.
+example (a b :Command P B) (y :Index ι [a,b]→ℝ) (j :NextIndex ι b) :
+    cutAtTuple [a,b] 1 (by simp) y j=y (oldColumns [a] j):=rfl
+example (a b :Command P B) :([a,b].drop (1+1)).length=0:=rfl
+example (a b c :Command P B) :[a,b,c].take 1++[a,b,c][1]::[a,b,c].drop 2=[a,b,c]:=rfl
+
+-- A start birth 7 and three commands create at chronological births 9,8,7.
+example (a b c :Command P B) :7+([a,b,c].drop (0+1)).length=9:=rfl
+example (a b c :Command P B) :7+([a,b,c].drop (1+1)).length=8:=rfl
+example (a b c :Command P B) :7+([a,b,c].drop (2+1)).length=7:=rfl
+example (cs :List (Command P B)) (i :ℕ) (hi :i<cs.length) :
+    m+(cs.drop (i+1)).length=m+cs.length-1-i:=cutAt_birth cs i hi
+
+-- Fully generic take/append reassociation retains the exact same values.
+example (cs :List (Command P B)) (i :ℕ) (hi :i<cs.length) (y :Index ι cs→ℝ) :
+    cutAtTuple cs i hi y=y∘cast (cutAt_index_eq cs i hi).symm∘
+      oldColumns (ι:=NextIndex (Index ι (cs.drop (i+1))) cs[i]) (cs.take i):=
+  cutAtTuple_oldColumns cs i hi y
+
+#check GuardedProgram.cut_receipt_at
+#check CutReceipts.at
+#check CutReceiptAt
+#print axioms CutReceipts.at
+#print axioms GuardedProgram.cut_receipt_at
+#print axioms cutAtColumn_oldColumns
+#print axioms cutAtTuple_oldColumns
+#print axioms cutAt_birth
+end GuardedCutAtRegression
+end RoadmapInternalG66Fixture9
+
+section RoadmapInternalG66Fixture10
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open IntegralMixedHistory IntegralMixedFramedHistoryFamilyBits
+open IntegralMixedRoadmapProperAppend
+open IntegralMixedOriginalRegularSource (radius_binary)
+noncomputable section
+set_option backward.isDefEq.respectTransparency false
+namespace ProperHistoricalGuardRegression
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedFramedHistoryFamilyBits.family
+  IntegralMixedRoadmapAtomic.root IntegralMixedRoadmapAtomic.payload IntegralMixedRoadmapAtomic.depth
+  IntegralMixedRoadmapAtomic.dimension IntegralMixedRoadmapAtomic.initial IntegralMixedRoadmapAtomic.endBirth
+  preparedRoot start IntegralMixedMarkedPrefixObservation.observation IntegralMixedPhysicalFieldEquality.point
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+variable (old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+  (hd :IntegralMixedRoadmapAtomic.depth old<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old)
+  (left right :List Bool) (side :Bool) (hE :EndpointsGood hn ht ha hR0 old left right)
+
+-- The ONLY new-word condition is its own complete validity plus exact old raw retention.
+example (w :List Bool)
+    (hw :SquareSampleCompleteVertices.Valid
+      (IntegralMixedPhysicalMarkedTest.input hn ht ha (radius_binary hR0) false)
+      (IntegralMixedMarkedPrefixFieldReadback.context (preparedRoot hn ht ha hR0 old left right side)) w)
+    (hr :∀r<IntegralMixedFramedPhysicalIndex.arity (parentCommands hn ht ha hR0 old left right side),
+      IntegralMixedMarkedPrefixFieldReadback.natural hn ht ha hR0 (preparedRoot hn ht ha hR0 old left right side) w hw r=
+        oldNatural hn ht ha hR0 old hv r)
+    (b :ℕ) (hb :b<beginBirth hn ht ha hR0 old)
+    (hc :IntegralMixedPhysicalTraceCutScan.StageCut hn ht ha (radius_binary hR0) false
+      (IntegralFramedTraceCutScan.stagePacket (pair (preparedRoot hn ht ha hR0 old left right side) w) b)) :
+    IntegralMixedPhysicalTraceCutGuards.Guards hn ht ha (radius_binary hR0) false
+      (IntegralFramedTraceCutScan.stagePacket (pair (preparedRoot hn ht ha hR0 old left right side) w) b):=
+  past_cut hn ht ha hR0 old hv hd left right side hE w hw hr b hb hc
+
+-- Initial leaves and every historical retained quotient use that SAME old word.
+example (w :List Bool)
+    (hw :SquareSampleCompleteVertices.Valid
+      (IntegralMixedPhysicalMarkedTest.input hn ht ha (radius_binary hR0) false)
+      (IntegralMixedMarkedPrefixFieldReadback.context (preparedRoot hn ht ha hR0 old left right side)) w)
+    (hr :∀r<IntegralMixedFramedPhysicalIndex.arity (parentCommands hn ht ha hR0 old left right side),
+      IntegralMixedMarkedPrefixFieldReadback.natural hn ht ha hR0 (preparedRoot hn ht ha hR0 old left right side) w hw r=
+        oldNatural hn ht ha hR0 old hv r)
+    (b :ℕ) (hb :b<beginBirth hn ht ha hR0 old) :
+    IntegralMixedPhysicalFieldEquality.point hn ht ha (radius_binary hR0)
+      (IntegralMixedMarkedPrefixFieldReadback.context (preparedRoot hn ht ha hR0 old left right side)) w hw b=
+    IntegralMixedPhysicalFieldEquality.point hn ht ha (radius_binary hR0)
+      (IntegralMixedMarkedPrefixFieldReadback.context (IntegralMixedRoadmapAtomic.root old)) (IntegralMixedRoadmapAtomic.word old)
+      (old_valid_native hn ht ha hR0 old hv) b:=past_fields hn ht ha hR0 old hv hd left right side hE w hw hr b hb
+
+-- The marked-leaf guard uses only own validity and literal raw retention.
+example (w :List Bool)
+    (hw :SquareSampleCompleteVertices.Valid
+      (IntegralMixedPhysicalMarkedTest.input hn ht ha (radius_binary hR0) false)
+      (IntegralMixedMarkedPrefixFieldReadback.context (preparedRoot hn ht ha hR0 old left right side)) w)
+    (hr :∀r<IntegralMixedFramedPhysicalIndex.arity (parentCommands hn ht ha hR0 old left right side),
+      IntegralMixedMarkedPrefixFieldReadback.natural hn ht ha hR0 (preparedRoot hn ht ha hR0 old left right side) w hw r=
+        oldNatural hn ht ha hR0 old hv r) :
+    pair (preparedRoot hn ht ha hR0 old left right side) w∈
+      IntegralMixedPhysicalMarkedTest.language hn ht ha (radius_binary hR0) false:=
+  marked_of_raw_retention hn ht ha hR0 old hv hd left right side hE w hw hr
+
+-- The shared historical prefix ends strictly before this boundary.
+example :beginBirth hn ht ha hR0 old=
+    IntegralMixedAuxiliaryMarkedIntegerSource.number n (IntegralMixedRoadmapAtomic.root old)+8+
+      start hn ht ha hR0 old:=begin_eq_old_start hn ht ha hR0 old
+
+-- Hom agreement needs only actual retained quotients, even for nonunit/negative denominators.
+example {a s B m :ℕ} {P :SpatialSource a} {ι :Type} (x :State P s B m ι) (hx :Canonical x)
+    (φ ψ :x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ)
+    (h :∀i,φ (x.bank.numerator i)/(x.bank.denominator i:ℝ)=ψ (x.bank.numerator i)/(x.bank.denominator i:ℝ)) :φ=ψ:=
+  IntegralMixedPrefixSnapshot.hom_eq_of_quotients x hx φ ψ h
+
+-- Zero root is not a fabricated nonzero-head assumption: the actual native theorem derives it.
+#check IntegralMixedPhysicalCutCoefficientSemantics.bankQuotient_zero_of_head
+#check IntegralMixedPhysicalCutCoefficientSemantics.guards_of_factor_receipt
+#check past_critical
+#check past_cut_receipt
+#check IntegralMixedMarkedCutStage.guard_of_ownReceipt
+
+#print axioms marked_of_raw_retention
+#print axioms past_critical
+#print axioms past_critical_raw_stage
+#print axioms past_fields
+#print axioms past_raw_native
+#print axioms oldNatural_eq_native
+#print axioms past_cut
+#print axioms past_cut_raw_stage
+#print axioms past_cut_receipt
+#print axioms IntegralMixedMarkedCutStage.ownReceipt_of_guard
+#print axioms IntegralMixedMarkedCutStage.guard_of_ownReceipt
+#print axioms IntegralMixedPhysicalCutCoefficientSemantics.guards_iff_factor_receipt
+#print axioms IntegralMixedPhysicalCutCoefficientSemantics.bankQuotient_zero_of_head
+#print axioms IntegralMixedPrefixSnapshot.familyCutReceipt_transport
+#print axioms IntegralMixedPrefixSnapshot.hom_eq_of_quotients
+#print axioms IntegralMixedMarkedCutStage.quotients_at
+#print axioms IntegralFramedPhysicalTraceCutSource.quotient_observation
+end ProperHistoricalGuardRegression
+end
+end RoadmapInternalG66Fixture10
+
+section RoadmapInternalG66Fixture11
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open IntegralMixedHistory IntegralMixedFramedHistoryScript IntegralCriticalHistoryTask
+open IntegralMixedChronologicalEndpoint IntegralMixedOptionalEndpoints
+open IntegralMixedRoadmapProperAppend
+open scoped Classical
+set_option maxHeartbeats 200000
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+set_option backward.isDefEq.respectTransparency false
+namespace ProperEndpointSnapshotRegression
+open IntegralMixedPrefixSnapshot
+
+-- Newer MID/CHILD and seed records cannot enter the creating endpoint prefix.
+example {a B :ℕ} (u v w a0 b0 old :Instruction a B) :
+    ([u,v,w]++[a0,b0]++[old]).drop (3+(0+1))=[b0,old]:=rfl
+example {a B :ℕ} (u v w a0 b0 old :Instruction a B) :
+    ([u,v,w]++[a0,b0]++[old]).drop (3+(1+1))=[old]:=rfl
+example {a B :ℕ} (u v w a0 b0 old :Instruction a B) :
+    chronological ([u,v,w]++[a0,b0]++[old]) (1+2-1-0)=some a0:=rfl
+example {a B :ℕ} (u v w a0 b0 old :Instruction a B) :
+    chronological ([u,v,w]++[a0,b0]++[old]) (1+2-1-1)=some b0:=rfl
+example {a B :ℕ} (fallback a0 b0 old :Instruction a B) :
+    paddedPast fallback ([a0,b0]++[old]) (1+2-1-1)=[old]:=by
+  exact partial_paddedPast fallback [] [a0,b0] [old] 1 (by simp)
+example (initial start ep i :ℕ) (hi :i<ep) :
+    initial+start+ep-1-i=initial+(start+ep-1-i):=by omega
+
+section Actual
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+variable (old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+  (hd :IntegralMixedRoadmapAtomic.depth old<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old)
+  (left right :ParentEndpoint hn ht ha hR0 old hv hd)
+  (R :CanonicalPair hn ht ha hR0 old hv hd left right) (side :Bool)
+local notation "P"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha
+  (IntegralMixedOriginalRegularSource.radius_binary hR0)
+local notation "PLAN"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha
+  (IntegralMixedOriginalRegularSource.radius_binary hR0)
+local notation "r"=>preparedRoot hn ht ha hR0 old R.leftSpec R.rightSpec side
+
+-- Exact command includes kind, degree and current-Q-dependent decoded rule.
+example (i :ℕ) (hi :i<R.result.commands.length) :
+    HEq (IntegralMixedFramedRootPullback.instructionAt P PLAN r
+      (endpointBirth hn ht ha hR0 old hv hd left right R i)).command R.result.commands[i]:=
+  endpoint_command hn ht ha hR0 old hv hd left right R side i hi
+
+-- The public raw prefix index is exactly birth minus the actual integer prelude.
+example (i :ℕ) (hi :i<R.result.commands.length) :
+    endpointRawIndex hn ht ha hR0 old hv hd left right R i=
+      endpointBirth hn ht ha hR0 old hv hd left right R i-
+        (IntegralMixedAuxiliaryMarkedIntegerSource.number n r+8):=by
+  have H:=endpoint_birth_eq hn ht ha hR0 old hv hd left right R side i hi
+  omega
+
+example (i :ℕ) (hi :i<R.result.commands.length) :
+    endpointBirth hn ht ha hR0 old hv hd left right R i<IntegralMixedAuxiliaryMarkedRecordPlan.fullCount n r:=
+  endpoint_birth_lt_full hn ht ha hR0 old hv hd left right R side i hi
+end Actual
+
+#check endpoint_snapshot
+#check endpoint_prefix_commands
+#check endpoint_instruction
+#check endpoint_command
+#print axioms endpoint_snapshot
+#print axioms endpoint_prefix_commands
+#print axioms endpoint_instruction
+#print axioms endpoint_command
+#print axioms endpoint_birth_lt_full
+#print axioms wrapped_append
+#print axioms ofCommands_heq
+#print axioms partial_paddedPast
+#print axioms partial_chronological
+end ProperEndpointSnapshotRegression
+end RoadmapInternalG66Fixture11
+
+section RoadmapInternalG66Fixture12
+namespace LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+open LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open IntegralCriticalHistoryTask IntegralMixedHistory IntegralMixedFramedHistoryScript
+open IntegralMixedFramedHistoryFamilyBits (initial)
+open IntegralMixedOriginalRegularSource (radius radius_binary)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+open IntegralMixedFramedPhysicalIndex (arity)
+local notation "P"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha (radius_binary hR0)
+local notation "B"=>IntegralMixedMarkedReservedParent.bank hn ht ha hR0
+local notation "S"=>IntegralMixedPhysicalMarkedTest.input hn ht ha (radius_binary hR0) false
+local notation "Q" root=>IntegralMixedAuxiliaryMarkedIntegerPlan.spatial n t (radius R0) root
+variable (old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+  (hd :IntegralMixedRoadmapAtomic.depth old<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old)
+  (left right :ParentEndpoint hn ht ha hR0 old hv hd)
+  (R :CanonicalPair hn ht ha hR0 old hv hd left right) (side :Bool)
+local notation "r"=>preparedRoot hn ht ha hR0 old R.leftSpec R.rightSpec side
+local notation "localCs"=>compiledProgram hn ht ha hR0 old hv hd left right R side
+local notation "tailCount"=>seedTailCount hn ht ha hR0 old hv hd left right R side
+local notation "CTX"=>pair r []
+
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedMarkedReservedParent.bank
+  compiledObservation canonicalObservation preparedRoot compiledProgram
+
+example (z :ℕ→ℝ) (p0 :Fin ((P).ambient r+1)→ℝ)
+    (W :WordReceipt hn ht ha hR0 old hv hd left right R side z p0)
+    (i :Fin (canonicalObservation hn ht ha hR0 old hv hd left right R side).arity)
+    (h :z i.val=(-2 :ℝ)):W.tuple i.val^2=4:=by
+  rw [W.column hn ht ha hR0 old hv hd left right R side i,h]
+  norm_num
+
+example (z :ℕ→ℝ) (p0 :Fin ((P).ambient r+1)→ℝ)
+    (W :WordReceipt hn ht ha hR0 old hv hd left right R side z p0)
+    (i :Fin (canonicalObservation hn ht ha hR0 old hv hd left right R side).arity):
+    W.tuple i.val^0=1:=by simp
+
+example (z :ℕ→ℝ)
+    (hz :(canonicalObservation hn ht ha hR0 old hv hd left right R side).Roots z)
+    (p0 :Fin ((P).ambient r+1)→ℝ)
+    (hp0 :(FermatCriticalHomogenization.polynomial (Q r).low (Q r).leading (Q r).degree).eval₂
+      (Int.castRingHom ℝ) p0=0)
+    (hg0 :∀i,i≠0→(MvPolynomial.pderiv i
+      (FermatCriticalHomogenization.polynomial (Q r).low (Q r).leading (Q r).degree)).eval₂
+        (Int.castRingHom ℝ) p0=0):
+    ∃w,SquareSampleCompleteVertices.Valid S CTX w ∧w.length=SquareSampleCompleteVertices.width S CTX:=by
+  obtain ⟨T⟩:=exists_word_receipt hn ht ha hR0 old hv hd left right R side z hz p0 hp0 hg0
+  exact ⟨T.word,T.valid,T.word_length⟩
+
+example (z :ℕ→ℝ) (p0 :Fin ((P).ambient r+1)→ℝ)
+    (W :WordReceipt hn ht ha hR0 old hv hd left right R side z p0)
+    (i :Fin (IntegralFramedPhysicalSquare.count (B).parameters (B).plan ((B).key CTX))):
+    IntegralFramedPhysicalSquare.joint (B).parameters (B).plan (B).data (B).nodes (B).factor (B).seed
+      (B).bounds (B).key (B).positive CTX W.word
+      (proper_valid_to_parent hn ht ha hR0 _ _ W.valid) i=W.tuple i.val:=W.joint i
+
+#print axioms tuple_roots
+#print axioms tuple_arity
+#print axioms tuple_point
+#print axioms physical_tail_instruction_eq
+#print axioms full_local_commands
+#print axioms full_local_room
+#print axioms padding_observation_eq
+#print axioms pad_local_tuple
+#print axioms proper_input_eq
+#print axioms proper_valid_to_parent
+#print axioms WordReceipt.column
+#print axioms WordReceipt.powered_column
+#print axioms exists_word_receipt
+end LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+end RoadmapInternalG66Fixture12
+
+section RoadmapInternalG66Fixture13
+open LeanCanny Algebra Encoding Computation ETR
+open IntegralMixedOriginalRegularSource (radius_binary)
+open IntegralMixedRoadmapCheckedCriticalTail
+noncomputable section
+set_option backward.isDefEq.respectTransparency false
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank
+  IntegralMixedRoadmapAtomic.dimension IntegralMixedRoadmapAtomic.initial
+  IntegralMixedRoadmapAtomic.root IntegralMixedRoadmapAtomic.context
+
+-- One positive-depth level with three captured coordinates occupies eight births
+-- after its midpoint, independently of either endpoint's retained/fresh status.
+example {q :List Bool} (hd :IntegralMixedRoadmapAtomic.depth q=1) (initial :ℕ) :
+    IntegralMixedRoadmapAtomic.endBirth 3 initial q=
+      IntegralMixedRoadmapProper.midBirth 3 initial q+8:=by
+  have H:=latest_layout (initial:=initial) (q:=q) (by omega :IntegralMixedRoadmapAtomic.depth q≤3) (by omega)
+  have HC :IntegralMixedRoadmapProper.captureCount 3 q=3:=by
+    simp only [IntegralMixedRoadmapProper.captureCount,IntegralMixedRoadmapProper.levelIndex,hd,Nat.sub_self,Nat.sub_zero]
+  rw [HC] at H
+  omega
+
+-- At terminal depth, the current selected coordinate still has its capture.
+example {q :List Bool} (hd :IntegralMixedRoadmapAtomic.depth q=3) (initial :ℕ) :
+    IntegralMixedRoadmapAtomic.free 3 q=1 ∧
+      IntegralMixedRoadmapAtomic.endBirth 3 initial q=
+        IntegralMixedRoadmapProper.midBirth 3 initial q+4:=by
+  have H:=latest_layout (initial:=initial) (q:=q) (by omega :IntegralMixedRoadmapAtomic.depth q≤3) (by omega)
+  have HC :IntegralMixedRoadmapProper.captureCount 3 q=1:=by
+    simp only [IntegralMixedRoadmapProper.captureCount,IntegralMixedRoadmapProper.levelIndex,hd]
+  rw [HC] at H
+  omega
+
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+local notation "B"=>IntegralMixedPhysicalMarkedPlan.bank hn ht ha (radius_binary hR0) false
+local notation "P"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha (radius_binary hR0)
+local notation "PLAN"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha (radius_binary hR0)
+variable (q :List Bool)
+  (H :IntegralMixedRoadmapChain.Checked (IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 q)
+    (IntegralMixedRoadmapAtomic.width hn ht ha hR0 q) (IntegralMixedRoadmapAtomic.sourceCap hn ht ha hR0 q)
+    (IntegralMixedRoadmapAtomic.initial hn ht ha hR0 q) (IntegralMixedRoadmapAtomic.scalarBudget hn ht ha q)
+    (IntegralMixedRoadmapAtomic.payload q))
+  (hp :IntegralMixedRoadmapChain.probe (IntegralMixedRoadmapAtomic.payload q)=
+    IntegralMixedRoadmapChain.seedCode (IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 q))
+  (hd :0<IntegralMixedRoadmapAtomic.depth q)
+
+-- Actual native no-cut certification consumes Checked bytes, not Atomic.Valid,
+-- a root word, a hom, or a supplied active-stage receipt.
+example (b :ℕ)
+    (hb0 :IntegralMixedRoadmapProper.midBirth (IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 q)
+      (IntegralMixedRoadmapAtomic.initial hn ht ha hR0 q) q≤b)
+    (hb1 :b<IntegralMixedFramedHistoryFamilyBits.prefixLength (B).parameters ((B).key (IntegralMixedRoadmapAtomic.context q))) :
+    IntegralMixedPhysicalPointCompanionScan.Active hn ht ha (radius_binary hR0) false
+      (IntegralMixedRoadmapAtomic.context q) b ∧
+    ¬IntegralFramedCreatingCut.IsCut
+      (IntegralMixedFramedRootPullback.instructionAt P PLAN (IntegralMixedRoadmapAtomic.root q) b).command:=
+  ⟨active_after_mid hn ht ha hR0 q H hp hd b hb0 hb1,
+    no_cut_after_mid hn ht ha hR0 q H hp hd b hb0 hb1⟩
+
+#check seed_code_after_end
+#check seed_active_after_end
+#check header_after_mid
+#print axioms latest_layout
+#print axioms seed_code_after_end
+#print axioms seed_active_after_end
+#print axioms active_after_mid
+#print axioms header_after_mid
+#print axioms no_cut_after_mid
+end
+end RoadmapInternalG66Fixture13
+
+section RoadmapInternalG66Fixture14
+namespace ProperAppendWindowsRegression
+open LeanCanny LeanCanny.Encoding
+open LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+open LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR IntegralCriticalHistoryTask
+open IntegralMixedHistory IntegralMixedFramedHistoryScript IntegralMixedChronologicalFrame
+open IntegralMixedChronologicalEndpoint IntegralMixedOptionalEndpoints IntegralMixedFrozenFrame
+open IntegralMixedFramedHistoryFamilyBits (initial defaultInstruction)
+open IntegralMixedOriginalRegularSource (radius radius_binary)
+open IntegralMixedAuxiliaryMarkedIntegerSource (number)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+variable (old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+  (hd :IntegralMixedRoadmapAtomic.depth old<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old)
+local notation "P"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha (radius_binary hR0)
+local notation "PLAN"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha (radius_binary hR0)
+local notation "Q" root=>IntegralMixedAuxiliaryMarkedIntegerPlan.spatial n t (radius R0) root
+local notation "e"=>IntegralMixedRoadmapAtomic.ownBirth hn ht ha hR0 old
+local notation "he"=>IntegralMixedRoadmapRetainedAppend.own_endpoint_fit hn ht ha hR0 old
+local notation "c"=>IntegralMixedRoadmapRetainedAppend.preparedRoot hn ht ha hR0 old e
+local notation "oldCs"=>IntegralMixedRoadmapRetainedAppend.parentCommands hn ht ha hR0 old hv hd e he
+local notation "x"=>IntegralMixedRoadmapRetainedAppend.parentState hn ht ha hR0 old hv hd e he
+local notation "d"=>IntegralMixedRoadmapRetainedAppend.parentDescriptor hn ht ha hR0 old hv hd e he
+local notation "hk"=>IntegralMixedRoadmapRetainedAppend.parent_descriptor_fit hn ht ha hR0 old hv hd e he
+local notation "g"=>IntegralMixedRoadmapProperParent.objective hn ht ha hR0 old hv hd
+local notation "hg"=>IntegralMixedRoadmapProperParent.objective_free hn ht ha hR0 old hv hd
+local notation "D"=>IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old
+variable (left right :ParentEndpoint hn ht ha hR0 old hv hd)
+  (R :CanonicalPair hn ht ha hR0 old hv hd left right) (side :Bool)
+local notation "good"=>endpoints_good hn ht ha hR0 old hv hd left right R
+local notation "r"=>preparedRoot hn ht ha hR0 old R.leftSpec R.rightSpec side
+local notation "j"=>start hn ht ha hR0 old
+local notation "hj"=>prepared_start_fit hn ht ha hR0 old hv hd R.leftSpec R.rightSpec side good
+local notation "newCs"=>parentCommands hn ht ha hR0 old R.leftSpec R.rightSpec side
+local notation "newX"=>parentState hn ht ha hR0 old hv hd R.leftSpec R.rightSpec side good
+local notation "startX"=>IntegralMixedMarkedConstructedPrefix.state hn ht ha hR0 r j hj
+
+noncomputable local instance :Fintype (Index (Fin 0) oldCs):=indexFintype (Fin 0) oldCs
+
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedMarkedReservedParent.bank
+  IntegralMixedExceptionalBounds.auxiliaryCap IntegralMixedAuxiliaryMarkedIntegerSource.degreeBound
+  IntegralMixedFramedRawHeight.rootCeiling IntegralMixedFramedNormalizationBits.requiredModulus
+  preparedRoot parentCommands parentState IntegralMixedRoadmapRetainedAppend.preparedRoot
+  IntegralMixedRoadmapRetainedAppend.parentCommands IntegralMixedRoadmapRetainedAppend.parentState
+  IntegralMixedRoadmapRetainedAppend.parentDescriptor IntegralMixedRoadmapAtomic.dimension
+  IntegralMixedRoadmapAtomic.initial IntegralMixedRoadmapAtomic.depth
+
+local notation "q"=>packet D old R.leftSpec R.rightSpec side []
+local notation "K"=>List.length (R.orderedFree hk)
+
+local notation "B"=>IntegralMixedPhysicalMarkedPlan.bank hn ht ha (radius_binary hR0) false
+local notation "PP"=>IntegralFramedBankQuery.Bank.parameters B
+local notation "T"=>IntegralMixedPhysicalMarkedPlan.tables hn ht ha (radius_binary hR0) false
+local notation "key"=>IntegralFramedBankQuery.Bank.key B (IntegralMixedRoadmapAtomic.context q)
+local notation "mid"=>IntegralMixedRoadmapProper.midBirth
+  (IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 q)
+  (IntegralMixedRoadmapAtomic.initial hn ht ha hR0 q) q
+open IntegralMixedFramedPhysicalIndex
+
+-- The actual child follows this very pair's fresh endpoint commands and both
+-- capture blocks; no numeric window or decoded-program premise is supplied.
+example :IntegralMixedRoadmapAtomic.endBirth
+    (IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 q)
+    (IntegralMixedRoadmapAtomic.initial hn ht ha hR0 q) q=
+      beginBirth hn ht ha hR0 old+R.result.commands.length+2+2*K:=by
+  rw [end_birth_finish hn ht ha hR0 old hv hd left right R side,
+    finish_midpoint hn ht ha hR0 old hv hd left right R side,
+    midpoint_birth hn ht ha hR0 old hv hd left right R side]
+
+-- The closed right boundary is included: finish is the exact compiled prefix.
+example :arity (compiledProgram hn ht ha hR0 old hv hd left right R side)=
+    prefixArity PP T (pair key (List.replicate mid true))+
+      (2*D+4)*(finishBirth hn ht ha hR0 old hv hd left right R side-mid):=by
+  have H0:=finish_midpoint hn ht ha hR0 old hv hd left right R side
+  have H1:=full_birth hn ht ha hR0 old hv hd left right R side
+  have H:=prefix_arity_after_mid hn ht ha hR0 old hv hd left right R side
+    (finishBirth hn ht ha hR0 old hv hd left right R side) (by omega) (by omega)
+  rw [prefix_arity_finish hn ht ha hR0 old hv hd left right R side] at H
+  exact H
+
+-- The full arity is the actual full plan, including the reserved seed probe.
+example :arity ((PLAN).rules r)=prefixArity PP T (pair key (List.replicate mid true))+
+    (2*D+4)*(fullBirth hn ht ha hR0 old hv hd left right R side-mid):=by
+  have H0:=finish_midpoint hn ht ha hR0 old hv hd left right R side
+  have H1:=full_birth hn ht ha hR0 old hv hd left right R side
+  have H:=prefix_arity_after_mid hn ht ha hR0 old hv hd left right R side
+    (fullBirth hn ht ha hR0 old hv hd left right R side) (by omega) le_rfl
+  rw [prefix_arity_full hn ht ha hR0 old hv hd left right R side] at H
+  exact H
+
+#check capture_count
+#check child_free
+#check midpoint_birth
+#check child_anchor
+#check finish_midpoint
+#check full_birth
+#check new_header_context
+#print axioms capture_count
+#print axioms child_free
+#print axioms midpoint_birth
+#print axioms child_anchor
+#print axioms finish_midpoint
+#print axioms compiled_program_length
+#print axioms full_birth
+#print axioms native_full_prefix
+#print axioms new_header_context
+#print axioms prefix_arity_after_mid
+#print axioms prefix_arity_finish
+#print axioms prefix_arity_full
+end ProperAppendWindowsRegression
+end RoadmapInternalG66Fixture14
+
+section RoadmapInternalG66Fixture15
+open LeanCanny.Geometry.IntegralMixedChronologicalLevelScalarValues
+
+example :levelValues (fun _ :Fin 1=> (2:ℝ)) (fun _=>3) (fun _ :Fin 1=>7) 0
+    ([] :List (LeanCanny.Geometry.IntegralMixedPointCompanion.Free (∅ :Finset (Fin 1)))) 0=3:=by
+  exact child_anchor _ _ _ _ _
+example :levelValues (fun _ :Fin 1=> (2:ℝ)) (fun _=>3) (fun _ :Fin 1=>7) 0
+    ([] :List (LeanCanny.Geometry.IntegralMixedPointCompanion.Free (∅ :Finset (Fin 1)))) 1=2:=by
+  exact midpoint_anchor _ _ _ _ _
+example :levelValues (fun _ :Fin 1=> (2:ℝ)) (fun _=>3) (fun _ :Fin 1=>7) 0
+    ([] :List (LeanCanny.Geometry.IntegralMixedPointCompanion.Free (∅ :Finset (Fin 1)))) 2=7:=by
+  exact endpoint_value _ _ _ _ _ (0 :Fin 1)
+#print axioms LeanCanny.Encoding.IntegralMixedMarkedJointFieldReadback.field_observation
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.WordReceipt.field
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.WordReceipt.local_field
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.WordReceipt.padding_field
+#print axioms LeanCanny.Geometry.IntegralMixedChronologicalLevelScalarValues.child_capture
+#print axioms LeanCanny.Geometry.IntegralMixedChronologicalLevelScalarValues.child_anchor
+#print axioms LeanCanny.Geometry.IntegralMixedChronologicalLevelScalarValues.midpoint_capture
+#print axioms LeanCanny.Geometry.IntegralMixedChronologicalLevelScalarValues.midpoint_anchor
+#print axioms LeanCanny.Geometry.IntegralMixedChronologicalLevelScalarValues.endpoint_value
+end RoadmapInternalG66Fixture15
+
+section RoadmapInternalG66Fixture16
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.WordReceipt.level_field
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.WordReceipt.child_capture_field
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.WordReceipt.child_anchor_field
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.WordReceipt.midpoint_capture_field
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.WordReceipt.midpoint_anchor_field
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.WordReceipt.endpoint_field
+end RoadmapInternalG66Fixture16
+
+section RoadmapInternalG66Fixture17
+namespace LeanCanny.Geometry.IntegralMixedChronologicalEndpoint
+open LeanCanny.Algebra LeanCanny.Encoding IntegralMixedHistory IntegralMixedFrozenFrame
+open IntegralMixedChronologicalFrame IntegralMixedOptionalEndpoints IntegralMixedPointCompanion
+open IntegralMixedFullHistoryScript IntegralMixedFramedFixedContinuation FlatAffineCriticalStage
+open IntegralMixedFramedPhysicalIndex (arity enumerate stepEquiv)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+variable {n S B m :ℕ} {P :SpatialSource n}
+  (hP :PurePowerReductionBounds.dimension (n+1) P.degree≤2^B)
+  (older :List (IntegralMixedFramedHistoryScript.Instruction n B))
+noncomputable local instance :Fintype (IntegralMixedFramedHistoryScript.Index (Fin 0) older):=
+  IntegralMixedFramedHistoryScript.indexFintype (Fin 0) older
+variable {x :State P S B m (IntegralMixedFramedHistoryScript.Index (Fin 0) older)}
+  {d :Descriptor n m} {z :IntegralMixedFramedHistoryScript.Index (Fin 0) older→ℝ}
+  {φ :x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ} {values :Fin m→ℝ} {left right :Endpoint m}
+  {hn :0<n} {hcap :IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree≤2^B}
+  (R :NativePair x d z φ values left right hn hcap) (hk :d.labels.length<n+1)
+  (g :Fin (n+1)) (hg :g∉(line d.frame (IntegralMixedChronologicalSweepFrame.next d hk)).frozen)
+  (side :Bool)
+local notation "pairCs"=>R.result.commands.map (wrap P hP)++older
+local notation "L0"=>arity pairCs
+local notation "K"=>List.length (NativePair.orderedFree R hk)
+local notation "span"=>(2*n+4)
+example {L :ℕ} (e :R.levelIndex hk g hg side≃Fin L)
+    (he :HEq (enumerate ((R.levelCommands hk g hg side).map (wrap P hP)++older)) e):
+    arity ((R.levelCommands hk g hg side).map (wrap P hP)++older)=L0+span*(2+2*K) ∧
+    (∀i,(e (R.levelMidAnchorColumn hk g hg side i)).val=L0+i.val) ∧
+    (∀k :Fin K,∀i,(e (R.levelMidColumn hk g hg side k i)).val=L0+span+span*(K-1-k.val)+i.val) ∧
+    (∀i,(e (R.levelChildAnchorColumn hk g hg side i)).val=L0+span*(1+K)+i.val) ∧
+    (∀k :Fin K,∀i,(e (R.levelChildColumn hk g hg side k i)).val=L0+span*(2+K)+span*(K-1-k.val)+i.val):=by
+  exact ⟨NativePair.level_physical_arity hP older R hk g hg side,
+    NativePair.level_mid_anchor_number hP older R hk g hg side e he,
+    NativePair.level_mid_number hP older R hk g hg side e he,
+    NativePair.level_child_anchor_number hP older R hk g hg side e he,
+    NativePair.level_child_number hP older R hk g hg side e he⟩
+
+example {L :ℕ} (e :R.levelIndex hk g hg side≃Fin L)
+    (he :HEq (enumerate ((R.levelCommands hk g hg side).map (wrap P hP)++older)) e)
+    (u :ℕ→ℝ) (i :Fin (n+1)) (midPower childPower :ℕ) (midValue childValue :ℝ)
+    (hm :u (e (R.levelMidAnchorColumn hk g hg side i)).val^midPower=midValue)
+    (hc :u (e (R.levelChildAnchorColumn hk g hg side i)).val^childPower=childValue):
+    u (L0+i.val)^midPower=midValue ∧u (L0+span*(1+K)+i.val)^childPower=childValue:=by
+  constructor
+  · rw [←NativePair.level_mid_anchor_number hP older R hk g hg side e he i]
+    exact hm
+  · rw [←NativePair.level_child_anchor_number hP older R hk g hg side e he i]
+    exact hc
+
+#print axioms NativePair.level_physical_arity
+#print axioms NativePair.level_mid_anchor_number
+#print axioms NativePair.level_mid_number
+#print axioms NativePair.level_child_anchor_number
+#print axioms NativePair.level_child_number
+end LeanCanny.Geometry.IntegralMixedChronologicalEndpoint
+end RoadmapInternalG66Fixture17
+
+section RoadmapInternalG66Fixture18
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open IntegralCriticalHistoryTask IntegralMixedHistory IntegralMixedFramedHistoryScript
+open IntegralMixedOptionalEndpoints IntegralMixedRoadmapProperAppend
+open scoped Classical
+set_option maxHeartbeats 200000
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+set_option backward.isDefEq.respectTransparency false
+namespace EndpointCutGuardRegression
+
+-- Every native guard packet retains its OWN root and word.
+example (root w :List Bool) (b :ℕ) :
+    pairFst (IntegralFramedTraceCutScan.stagePacket (pair root w) b)=pair root w:=by
+  simp only [IntegralFramedTraceCutScan.stagePacket,pairFst_pair,pairSnd_pair]
+example (root w :List Bool) (b :ℕ) :
+    pairSnd (IntegralFramedTraceCutScan.stagePacket (pair root w) b)=List.replicate b true:=by
+  simp only [IntegralFramedTraceCutScan.stagePacket,pairSnd_pair]
+example (root w :List Bool) (b :ℕ) :
+    (pairSnd (IntegralFramedTraceCutScan.stagePacket (pair root w) b)).length=b:=by
+  simp only [IntegralFramedTraceCutScan.stagePacket,pairSnd_pair,List.length_replicate]
+
+-- Signed and nonunit integer denominators remain literal numerical readbacks.
+example :IntegralMixedFramedBankObservation.extend (fun _ :Fin 1=>(4:ℝ)/(-6)) 0=(-2:ℝ)/3:=by
+  norm_num [IntegralMixedFramedBankObservation.extend]
+example :IntegralMixedFramedBankObservation.extend (fun _ :Fin 1=>(4:ℝ)/(-6)) 1=0:=by
+  simp [IntegralMixedFramedBankObservation.extend]
+
+-- Full factor roots, not padded-zero roots, are what the constructed guard carries.
+example :¬∃a :ℝ,(Polynomial.C 1 :Polynomial ℝ).eval a=0:=by simp
+example :((Polynomial.X^4 :Polynomial ℝ)*Polynomial.C 1).eval 0=0:=by simp
+
+-- Real head substitution transports the exact whole receipt, including all choices.
+example (d :IntegralMixedPrefixSnapshot.Data) (hm :d.birth≤d.horizon)
+    (cmd :IntegralMixedFullHistoryScript.Command d.source d.width) (v :ℕ→ℝ) (a b :ℝ)
+    (he :a=b) (hr :d.CutReceipt hm cmd v b) :d.CutReceipt hm cmd v a:=
+  (congrArg (d.CutReceipt hm cmd v) he).mpr hr
+
+#check EndpointGuarded
+#check endpointBeforeState
+#check endpointBeforeValues
+#check endpointNewValue
+#check endpoint_cut_ownReceipt
+#check endpoint_cut_guard
+#print axioms endpoint_raw_lt
+#print axioms endpoint_cut_ownReceipt
+#print axioms endpoint_cut_guard
+#print axioms GuardedProgram.cut_receipt_at
+#print axioms IntegralMixedMarkedCutStage.guard_of_ownReceipt
+end EndpointCutGuardRegression
+end RoadmapInternalG66Fixture18
+
+section RoadmapInternalG66Fixture19
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding
+open IntegralMixedHistory IntegralMixedFullHistoryScript IntegralMixedOptionalEndpoints
+open IntegralMixedChosenLocalRealization IntegralHistorySampler UniformIntegralPowerSchedule
+open scoped Classical
+set_option maxHeartbeats 200000
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+set_option backward.isDefEq.respectTransparency false
+namespace GuardedCutValuesRegression
+variable {n S B m :ℕ} {P :SpatialSource n} {ι :Type} [Fintype ι]
+
+-- With two initial entries and three commands, newest trace indices are0,1,2;
+-- the oldest creating prefix sees precisely the initial entries at3,4.
+example (a b c :Command P B) :(cutAtHeadIndex 2 [a,b,c] 0 (by simp)).val=0:=rfl
+example (a b c :Command P B) :(cutAtHeadIndex 2 [a,b,c] 2 (by simp)).val=2:=rfl
+example (a b c :Command P B) :
+    (cutAtBeforeIndex 2 [a,b,c] 0 (by simp) ⟨0,by simp⟩).val=1:=rfl
+example (a b c :Command P B) :
+    (cutAtBeforeIndex 2 [a,b,c] 0 (by simp) ⟨3,by simp⟩).val=4:=rfl
+example (a b c :Command P B) :
+    (cutAtBeforeIndex 2 [a,b,c] 2 (by simp) ⟨0,by simp⟩).val=3:=rfl
+example (a b c :Command P B) :
+    (cutAtBeforeIndex 2 [a,b,c] 2 (by simp) ⟨1,by simp⟩).val=4:=rfl
+
+-- Prepending a new retained value shifts each older trace value once.
+example (a b :Command P B) (v :Fin 2→ℝ) (head :ℝ) :
+    (Fin.cons head v :Fin 3→ℝ) (cutAtHeadIndex 1 [a,b] 1 (by simp))=v 0:=rfl
+example :((Fin.cons (9:ℝ) (fun _ :Fin 1=>(4:ℝ)/(-6))) :Fin 2→ℝ) 1=(-2:ℝ)/3:=by norm_num
+
+-- No degree/roots/caller-modulus premise is hidden: the agreement needed for
+-- the untouched initial bank is present explicitly, together with G/HC/hphi.
+example (x :State P S B m ι) (hn :0<n)
+    (hcap :IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree≤2^B)
+    (z :ι→ℝ) (φ :x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ) (values :Fin m→ℝ)
+    (cs :List (Command P B)) (room :m+cs.length≤S+1) (codes :List (List Bool))
+    (y :Index ι cs→ℝ) (ψ :(continueRun x cs room).sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ)
+    (next :Fin (m+cs.length)→ℝ) (H :GuardedProgram x hn hcap z φ values cs room codes y ψ next)
+    (HC :Canonical x)
+    (hφ :∀j,φ (x.sampler.scalarPrefix.basis.generator j)=z (x.sampler.scalar j)^weights S (2^B) m j)
+    (hv :∀j,φ (x.bank.numerator j)/(x.bank.denominator j:ℝ)=values j)
+    (i :ℕ) (hi :i<cs.length) :CutAtValues x cs room y next i hi:=H.cut_at_values HC hφ hv i hi
+
+#check CutAtValues
+#check GuardedProgram.cut_at_values
+#check cutAtHeadIndex
+#check cutAtBeforeIndex
+#print axioms GuardedProgram.cut_at_values
+#print axioms cutAtHeadIndex
+#print axioms cutAtBeforeIndex
+end GuardedCutValuesRegression
+end RoadmapInternalG66Fixture19
+
+section RoadmapInternalG66Fixture20
+namespace LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+open LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR IntegralCriticalHistoryTask
+open IntegralMixedHistory IntegralMixedFramedHistoryScript IntegralMixedOptionalEndpoints
+open IntegralMixedChronologicalEndpoint IntegralMixedChosenLocalRealization UniformIntegralPowerSchedule
+open IntegralMixedFramedHistoryFamilyBits (initial defaultInstruction)
+open IntegralMixedOriginalRegularSource (radius radius_binary)
+open IntegralMixedAuxiliaryMarkedIntegerSource (number)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+local notation "B"=>IntegralMixedPhysicalMarkedPlan.bank hn ht ha (radius_binary hR0) false
+local notation "P"=>IntegralFramedBankQuery.Bank.parameters B
+local notation "PLAN"=>IntegralFramedBankQuery.Bank.plan B
+local notation "H"=>IntegralFramedBankQuery.Bank.data B
+local notation "FAM"=>IntegralMixedFramedHistoryFamilyBits.family P PLAN H
+local notation "T"=>IntegralMixedPhysicalMarkedPlan.tables hn ht ha (radius_binary hR0) false
+local notation "SAMP"=>IntegralMixedPhysicalMarkedTest.input hn ht ha (radius_binary hR0) false
+local notation "CTX" root=>IntegralMixedMarkedPrefixFieldReadback.context root
+
+variable (old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+  (hd :IntegralMixedRoadmapAtomic.depth old<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old)
+local notation "e"=>IntegralMixedRoadmapAtomic.ownBirth hn ht ha hR0 old
+local notation "he"=>IntegralMixedRoadmapRetainedAppend.own_endpoint_fit hn ht ha hR0 old
+local notation "c"=>IntegralMixedRoadmapRetainedAppend.preparedRoot hn ht ha hR0 old e
+local notation "oldCs"=>IntegralMixedRoadmapRetainedAppend.parentCommands hn ht ha hR0 old hv hd e he
+local notation "x"=>IntegralMixedRoadmapRetainedAppend.parentState hn ht ha hR0 old hv hd e he
+local notation "z"=>IntegralMixedRoadmapRetainedAppend.parentTuple hn ht ha hR0 old hv hd e he
+local notation "V"=>IntegralMixedRoadmapRetainedAppend.parentValues hn ht ha hR0 old hv hd e he
+variable (left right :ParentEndpoint hn ht ha hR0 old hv hd)
+  (R :CanonicalPair hn ht ha hR0 old hv hd left right) (side :Bool)
+local notation "r"=>preparedRoot hn ht ha hR0 old R.leftSpec R.rightSpec side
+local notation "birth" i=>endpointBirth hn ht ha hR0 old hv hd left right R i
+local notation "raw" i=>endpointRawIndex hn ht ha hR0 old hv hd left right R i
+
+noncomputable local instance regressionCriticalParentFintype :Fintype (Index (Fin 0) oldCs):=indexFintype (Fin 0) oldCs
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedMarkedReservedParent.bank
+  IntegralMixedFramedHistoryFamilyBits.family IntegralMixedPhysicalFieldEquality.point
+  IntegralMixedMarkedPrefixObservation.observation IntegralMixedRoadmapRetainedAppend.parentCommands
+  IntegralMixedRoadmapRetainedAppend.parentState IntegralMixedRoadmapRetainedAppend.parentTuple
+  IntegralMixedRoadmapRetainedAppend.parentValues IntegralMixedRoadmapAtomic.dimension
+  IntegralMixedRoadmapAtomic.initial IntegralMixedRoadmapAtomic.depth
+  IntegralMixedExceptionalBounds.auxiliaryCap IntegralMixedAuxiliaryMarkedIntegerSource.degreeBound
+  IntegralMixedFramedRawHeight.rootCeiling IntegralMixedFramedNormalizationBits.requiredModulus
+  IntegralMixedAuxiliaryMarkedIntegerPlan.spatial IntegralMixedAuxiliaryMarkedIntegerPlan.degree
+  IntegralMixedRoadmapProperParent.hom
+
+example (i :ℕ) (hi :i<R.result.commands.length)
+    (hb :IntegralMixedPhysicalPointCompanionScan.Active hn ht ha (radius_binary hR0) false (CTX r) (birth i)):
+    R.result.commands[i].isCritical=true:=
+  endpoint_critical_tag hn ht ha hR0 old hv hd left right R side i hi hb
+
+example (GG :EndpointGuarded hn ht ha hR0 old hv hd left right R)
+    (w :List Bool) (hw :SquareSampleCompleteVertices.Valid SAMP (CTX r) w)
+    (i :ℕ) (hi :i<R.result.commands.length)
+    (hb :IntegralMixedPhysicalPointCompanionScan.Active hn ht ha (radius_binary hR0) false (CTX r) (birth i))
+    (hHead :IntegralMixedPhysicalFieldEquality.point hn ht ha (radius_binary hR0) (CTX r) w hw (birth i)=
+      endpointNewValue hn ht ha hR0 old hv hd left right R i hi)
+    (hPhysical :endpointNativePower hn ht ha hR0 r w hw (birth i)=
+      endpointPhysicalValue hn ht ha hR0 old hv hd left right R i hi):
+    IntegralMixedPhysicalPointCompanionScan.scalarValue hn ht ha (radius_binary hR0) false (CTX r) w (birth i)=
+      InfinitesimalSign.encode 0 ∧
+    IntegralMixedPhysicalPointCompanionScan.retained hn ht ha (radius_binary hR0) false (CTX r) w hw (birth i) hb=
+      IntegralMixedPhysicalPointCompanionScan.geometricPoint hn ht ha (radius_binary hR0) false (CTX r) w hw (birth i)
+        ⟨IntegralMixedPhysicalPointCompanionScan.selected hn ht ha (radius_binary hR0) false (CTX r) (birth i),
+          IntegralMixedPhysicalPointCompanionScan.selected_lt hn ht ha (radius_binary hR0) false (CTX r) (birth i) hb⟩:=by
+  exact ⟨endpoint_critical_scalarValue hn ht ha hR0 old hv hd left right R side GG w hw i hi hb hHead hPhysical,
+    endpoint_critical_guard hn ht ha hR0 old hv hd left right R side GG w hw i hi hb hHead hPhysical⟩
+
+#print axioms endpoint_critical_tag
+#print axioms endpoint_critical_scalarValue
+#print axioms endpoint_critical_guard
+end LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+#print axioms LeanCanny.Geometry.IntegralMixedOptionalEndpoints.BirthGuards.critical_at
+#print axioms LeanCanny.Geometry.IntegralMixedOptionalEndpoints.GuardedProgram.critical_at
+end RoadmapInternalG66Fixture20
+
+section RoadmapInternalG66Fixture21
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open scoped Classical
+set_option maxHeartbeats 200000
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+namespace PrefixChronologicalFieldRegression
+open IntegralMixedPhysicalFieldEquality
+example :newest 13 (10-1-0)=3:=by norm_num [newest]
+example :newest 13 (10-1-9)=12:=by norm_num [newest]
+example :newest 13 (13-1-12)=12:=by norm_num [newest]
+example :newest 8 (8-1-0)=0:=by norm_num [newest]
+example :newest 13 (10-1-4)=7:=by norm_num [newest]
+example :newest 13 (14-1-1)≠13-14+1:=by norm_num [newest]
+example :newest 13 (10-1-10)≠13-10+10:=by norm_num [newest]
+example (full b k :ℕ) (hb :b≤full) (hk :k<b) :newest full (b-1-k)=full-b+k:=by
+  unfold newest
+  rw [min_eq_left (by omega)]
+  omega
+example {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+    (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+    {R0 :List Bool→ℕ} (hR0 :BinaryFn R0) (root w :List Bool)
+    (hw :SquareSampleCompleteVertices.Valid
+      (IntegralMixedPhysicalMarkedTest.input hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false)
+      (IntegralMixedMarkedPrefixFieldReadback.context root) w)
+    (j :ℕ) (hj :j≤IntegralMixedCausalRecordPlanBits.count root) (k :ℕ)
+    (hk :k<IntegralMixedAuxiliaryMarkedIntegerSource.number n root+8+j) :
+    (IntegralMixedMarkedPrefixObservation.observation hn ht ha hR0 root j hj).point
+      (IntegralMixedMarkedPrefixFieldReadback.natural hn ht ha hR0 root w hw) k=
+    point hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0)
+      (IntegralMixedMarkedPrefixFieldReadback.context root) w hw
+      (IntegralMixedAuxiliaryMarkedIntegerSource.number n root+8+j-1-k):=
+  IntegralMixedMarkedPrefixChronologicalField.value hn ht ha hR0 root w hw j hj k hk
+#check IntegralMixedMarkedPrefixChronologicalField.value
+#print axioms IntegralMixedMarkedPrefixChronologicalField.value
+end PrefixChronologicalFieldRegression
+end RoadmapInternalG66Fixture21
+
+section RoadmapInternalG66Fixture22
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding
+open IntegralMixedRoadmapProperAppend
+set_option maxHeartbeats 200000
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+namespace EndpointWordCutRegression
+-- Eight old births,two endpoints,four free captures per phase: finish=20.
+example :20-1-(4+1+(4+1+0))=9:=rfl
+example :20-1-(4+1+(4+1+1))=8:=rfl
+example :8+2-1-(0+1+0)=8:=rfl
+example :8+2-1-(0+1+8)=0:=rfl
+example :8+2-1-(1+1+7)=0:=rfl
+example (older ep captures index :ℕ) :
+    (older+ep+2+2*captures)-1-(captures+1+(captures+1+index))=older+ep-1-index:=by omega
+example (older ep i k :ℕ) :
+    older+ep-1-i-1-k=older+ep-1-(i+1+k):=by omega
+-- Zero initial births are also permitted by the generic tuple/value helper.
+example :0+1-1-0=0:=rfl
+example (older ep i k :ℕ) (hk :k<older+ep-1-i) :i+1+k<older+ep:=by omega
+#check endpoint_program_values
+#check WordReceipt.endpoint_field_at
+#check WordReceipt.endpoint_new_value
+#check WordReceipt.endpoint_before_values
+#check WordReceipt.endpoint_native_cut_guard
+#print axioms endpoint_program_values
+#print axioms WordReceipt.endpoint_field_at
+#print axioms WordReceipt.endpoint_new_value
+#print axioms WordReceipt.endpoint_before_values
+#print axioms WordReceipt.endpoint_native_cut_guard
+end EndpointWordCutRegression
+end RoadmapInternalG66Fixture22
+
+section RoadmapInternalG66Fixture23
+namespace LeanCanny.Geometry.IntegralMixedChronologicalEndpoint
+open LeanCanny.Algebra LeanCanny.Encoding IntegralMixedHistory IntegralMixedFrozenFrame
+open IntegralMixedChronologicalFrame IntegralMixedOptionalEndpoints IntegralMixedPointCompanion
+open IntegralMixedFullHistoryScript IntegralMixedFramedFixedContinuation
+open IntegralMixedFramedPhysicalIndex (arity enumerate)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n S B m :ℕ} {P :SpatialSource n}
+  (hP :PurePowerReductionBounds.dimension (n+1) P.degree≤2^B)
+  (older :List (IntegralMixedFramedHistoryScript.Instruction n B))
+noncomputable local instance levelPhysicalReadbackRegressionIndexFintype :Fintype (IntegralMixedFramedHistoryScript.Index (Fin 0) older):=
+  IntegralMixedFramedHistoryScript.indexFintype (Fin 0) older
+variable {x :State P S B m (IntegralMixedFramedHistoryScript.Index (Fin 0) older)}
+  {d :Descriptor n m} {z :IntegralMixedFramedHistoryScript.Index (Fin 0) older→ℝ}
+  {φ :x.sampler.scalarPrefix.carrier→ₐ[ℤ]ℝ} {values :Fin m→ℝ} {left right :Endpoint m}
+  {hn :0<n} {hcap :IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree≤2^B}
+  (R :NativePair x d z φ values left right hn hcap) (hk :d.labels.length<n+1)
+  (g :Fin (n+1)) (hg :g∉(line d.frame (IntegralMixedChronologicalSweepFrame.next d hk)).frozen)
+local notation "K"=>List.length (NativePair.orderedFree R hk)
+variable (hp :m+R.result.commands.length≤S)
+  (room :m+R.result.commands.length+1+(R.orderedFree hk).length≤S+1)
+  (hroom :m+R.result.commands.length+1+(R.orderedFree hk).length≤S)
+  (side :Bool) (childRoom :m+R.result.commands.length+1+(R.orderedFree hk).length+1+(R.orderedFree hk).length≤S+1)
+  (pMID pChild :Fin (n+1)→ℝ)
+  (A :R.result.MidpointCaptures hp (IntegralMixedChronologicalSweepFrame.next d hk) g g hg hg
+    pMID (R.orderedFree hk) room)
+  (E :R.LevelChildCaptures hk g hg hp pMID room A hroom side pChild childRoom)
+  {L :ℕ} {u :ℕ→ℝ} {e :R.levelIndex hk g hg side≃Fin L} {bank :ℕ→ℝ}
+  (N :R.NaturalReadback hk g hg hp room hroom side childRoom pMID pChild A E u e bank)
+  (he :HEq (enumerate ((R.levelCommands hk g hg side).map (wrap P hP)++older)) e)
+local notation "L0"=>arity (R.result.commands.map (wrap P hP)++older)
+local notation "a"=>m+R.result.commands.length
+local notation "span"=>2*n+4
+
+example (i :Fin (n+1)):
+    u (L0+i.val)^UniformIntegralPowerSchedule.physical S (2^B) a=pMID i:=by
+  have H:=NativePair.NaturalReadback.powered_block hP older R hk g hg hp room hroom side childRoom
+    pMID pChild A E N he a le_rfl (by omega) i
+  rw [ite_eq_left (by omega)] at H
+  simpa only [Nat.sub_self,Nat.mul_zero,Nat.add_zero] using H
+
+example (i :Fin (n+1)):
+    u (L0+span*(1+K)+i.val)^UniformIntegralPowerSchedule.physical S (2^B) (a+1+K)=pChild i:=by
+  have H:=NativePair.NaturalReadback.powered_block hP older R hk g hg hp room hroom side childRoom
+    pMID pChild A E N he (a+1+K) (by omega) (by omega) i
+  have HB :a+1+K-a=1+K:=by omega
+  rw [HB,ite_eq_right (by omega)] at H
+  exact H
+
+#check NativePair.PhysicalReadback
+#print axioms level_block_rooms
+#print axioms NativePair.PhysicalReadback
+#print axioms NativePair.NaturalReadback.powered_block
+#print axioms NativePair.level_physical_arity
+#print axioms NativePair.level_mid_anchor_number
+#print axioms NativePair.level_mid_number
+#print axioms NativePair.level_child_anchor_number
+#print axioms NativePair.level_child_number
+end LeanCanny.Geometry.IntegralMixedChronologicalEndpoint
+end RoadmapInternalG66Fixture23
+
+section RoadmapInternalG66Fixture24
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.checked_native
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.midpoint_anchor_selected
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.child_anchor_selected
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.midpoint_capture_selected
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.child_capture_selected
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.midpoint_capture_selected_ordered
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.child_capture_selected_ordered
+end RoadmapInternalG66Fixture24
+
+section RoadmapInternalG66Fixture25
+namespace LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+open LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR IntegralCriticalHistoryTask
+open IntegralMixedHistory IntegralMixedFramedHistoryScript IntegralMixedChronologicalFrame
+open IntegralMixedChronologicalEndpoint IntegralMixedOptionalEndpoints IntegralMixedFrozenFrame
+open IntegralMixedFramedHistoryFamilyBits (initial defaultInstruction)
+open IntegralMixedOriginalRegularSource (radius radius_binary)
+open IntegralMixedAuxiliaryMarkedIntegerSource (number)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+variable (old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+  (hd :IntegralMixedRoadmapAtomic.depth old<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old)
+local notation "P"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha (radius_binary hR0)
+local notation "PLAN"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha (radius_binary hR0)
+local notation "Q" root=>IntegralMixedAuxiliaryMarkedIntegerPlan.spatial n t (radius R0) root
+local notation "e"=>IntegralMixedRoadmapAtomic.ownBirth hn ht ha hR0 old
+local notation "he"=>IntegralMixedRoadmapRetainedAppend.own_endpoint_fit hn ht ha hR0 old
+local notation "c"=>IntegralMixedRoadmapRetainedAppend.preparedRoot hn ht ha hR0 old e
+local notation "oldCs"=>IntegralMixedRoadmapRetainedAppend.parentCommands hn ht ha hR0 old hv hd e he
+local notation "x"=>IntegralMixedRoadmapRetainedAppend.parentState hn ht ha hR0 old hv hd e he
+local notation "d"=>IntegralMixedRoadmapRetainedAppend.parentDescriptor hn ht ha hR0 old hv hd e he
+local notation "hk"=>IntegralMixedRoadmapRetainedAppend.parent_descriptor_fit hn ht ha hR0 old hv hd e he
+local notation "g"=>IntegralMixedRoadmapProperParent.objective hn ht ha hR0 old hv hd
+local notation "hg"=>IntegralMixedRoadmapProperParent.objective_free hn ht ha hR0 old hv hd
+local notation "D"=>IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old
+variable (left right :ParentEndpoint hn ht ha hR0 old hv hd)
+  (R :CanonicalPair hn ht ha hR0 old hv hd left right) (side :Bool)
+local notation "good"=>endpoints_good hn ht ha hR0 old hv hd left right R
+local notation "r"=>preparedRoot hn ht ha hR0 old R.leftSpec R.rightSpec side
+local notation "j"=>start hn ht ha hR0 old
+local notation "hj"=>prepared_start_fit hn ht ha hR0 old hv hd R.leftSpec R.rightSpec side good
+local notation "newCs"=>parentCommands hn ht ha hR0 old R.leftSpec R.rightSpec side
+local notation "newX"=>parentState hn ht ha hR0 old hv hd R.leftSpec R.rightSpec side good
+local notation "startX"=>IntegralMixedMarkedConstructedPrefix.state hn ht ha hR0 r j hj
+
+noncomputable local instance properAppendScalarConsumerIndexFintype :Fintype (Index (Fin 0) oldCs):=indexFintype (Fin 0) oldCs
+
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedMarkedReservedParent.bank
+  IntegralMixedExceptionalBounds.auxiliaryCap IntegralMixedAuxiliaryMarkedIntegerSource.degreeBound
+  IntegralMixedFramedRawHeight.rootCeiling IntegralMixedFramedNormalizationBits.requiredModulus
+  preparedRoot parentCommands parentState IntegralMixedRoadmapRetainedAppend.preparedRoot
+  IntegralMixedRoadmapRetainedAppend.parentCommands IntegralMixedRoadmapRetainedAppend.parentState
+  IntegralMixedRoadmapRetainedAppend.parentDescriptor IntegralMixedRoadmapAtomic.dimension
+  IntegralMixedRoadmapAtomic.initial IntegralMixedRoadmapAtomic.depth
+
+local notation "q"=>packet D old R.leftSpec R.rightSpec side []
+local notation "K"=>List.length (R.orderedFree hk)
+
+local notation "m"=>List.length oldCs+List.length R.result.commands
+local notation "js"=>R.orderedFree hk
+local notation "C"=>canonicalObservation hn ht ha hR0 old hv hd left right R side
+local notation "localCs"=>compiledProgram hn ht ha hR0 old hv hd left right R side
+local notation "finish"=>finishBirth hn ht ha hR0 old hv hd left right R side
+local notation "SAMP"=>IntegralMixedPhysicalMarkedTest.input hn ht ha (radius_binary hR0) false
+open IntegralMixedChronologicalLevelScalarValues
+
+local notation "mid"=>IntegralMixedRoadmapProper.midBirth
+  (IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 q)
+  (IntegralMixedRoadmapAtomic.initial hn ht ha hR0 q) q
+local notation "anchor"=>IntegralMixedRoadmapAtomic.anchor
+  (IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 q)
+  (IntegralMixedRoadmapAtomic.initial hn ht ha hR0 q) q
+local notation "sel"=>IntegralMixedPhysicalPointCompanionScan.selected hn ht ha (radius_binary hR0) false
+  (IntegralMixedRoadmapAtomic.context q)
+
+example {z :ℕ→ℝ} {p0 :Fin ((P).ambient r+1)→ℝ}
+    (W :WordReceipt hn ht ha hR0 old hv hd left right R side z p0)
+    (pMID pChild :Fin ((P).ambient c+1)→ℝ)
+    (hValues :∀i :Fin (m+1+K+1+K),(C).point z i.val=levelValues pMID pChild R.result.nextValues g js i)
+    (b :ℕ) (hb0 :mid≤b) (hb1 :b<finish):
+    IntegralMixedPhysicalFieldEquality.point hn ht ha (radius_binary hR0) (pair r []) W.word W.valid b=
+      IntegralMixedFramedBankObservation.extend (if b<anchor then pMID else pChild) (sel b):=
+  W.scalar_before_finish hn ht ha hR0 old hv hd left right R side pMID pChild hValues b hb0 hb1
+
+end LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.WordReceipt.scalar_before_finish
+end RoadmapInternalG66Fixture25
+
+section RoadmapInternalG66Fixture26
+#print axioms LeanCanny.Algebra.IntegralMixedFramedRunObservation.ofCommands_heq
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.compiled_program_room
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.canonical_compiled_room
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.compiled_observation_eq
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.grammar
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.exists_padding_critical
+end RoadmapInternalG66Fixture26
