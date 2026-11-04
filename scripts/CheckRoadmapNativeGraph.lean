@@ -1,3 +1,8 @@
+import LeanCanny.Connectivity.CanonicalAuxiliaryBitPieceLabelLock
+import LeanCanny.Connectivity.CanonicalAuxiliaryCandidateLabelLock
+import LeanCanny.Connectivity.CanonicalAuxiliaryRadialClosure
+import LeanCanny.Connectivity.FormulaSignSlotRadialFormalBounds
+import LeanCanny.Connectivity.FormulaSignSlotRadialFormalEliminant
 import LeanCanny.Algebra.IntegralParameterExtensionMatrixSpecialization
 import LeanCanny.Algebra.IntegralParameterExtensionSpecialization
 import LeanCanny.Algebra.IntegralParameterInverseAtInfinity
@@ -9471,3 +9476,283 @@ run_cmd do
         throwError "{name} depends on unexpected axiom {ax}"
   logInfo "Parameter constructors: two closed consumers and sixteen standard-axiom audits."
 end RoadmapInternalG72ParameterConstructors
+
+section RoadmapInternalG73CandidateLabelLock
+namespace CandidateLabelLockRegression
+open Set LeanCanny LeanCanny.Connectivity LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open CanonicalAuxiliaryCandidateLabelLock
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+-- Finite saturation cannot turn an invalid/empty original label into a piece.
+example {X Y I :Type*} [TopologicalSpace X] [TopologicalSpace Y]
+    (C :ClopenPathCover X I) (p :X→Y) (hp :IsClosedMap p)
+    (hf :∀x z,p x=p z→JoinedIn univ x z) (i :I) (hi :C.piece i=∅):
+    FrontierCover.component (fun j=>p '' C.piece j) i=∅:=by
+  rw [C.saturated_image_eq p hp hf i,hi,image_empty]
+
+-- A given lift over THIS positive point tests the original sample label.
+example (c :List Bool) (i :Vertex (CanonicalAuxiliaryCandidateCover.width c))
+    (y :FormulaSignSlotComponentMaxima.Positive c) (z :FormulaSignSlotCircularBoundedCover.Source c)
+    (hz :positiveProjection c z=y):
+    y∈(positiveCover c).piece i ↔∃hi :Good c i,JoinedIn univ (closedSample c i hi) z:=
+  positive_mem_iff_of_lift c i y z hz
+
+-- No abstract decomposition or component-membership oracle is supplied here.
+example (d :Description) (l :CanonicalSignRefinement.Label d)
+    (i :Vertex (CanonicalAuxiliaryCandidateCover.width (CanonicalSignRefinement.source d l)))
+    (y :FormulaSignSlotComponentMaxima.Positive (CanonicalSignRefinement.source d l))
+    (z :FormulaSignSlotCircularBoundedCover.Source (CanonicalSignRefinement.source d l))
+    (hz :positiveProjection (CanonicalSignRefinement.source d l) z=y)
+    (hi :Good (CanonicalSignRefinement.source d l) i)
+    (hj :JoinedIn univ (closedSample (CanonicalSignRefinement.source d l) i hi) z):
+    y∈((CanonicalAuxiliaryCandidateCover.data d).positiveCover l).piece i:=
+  (refinement_positive_mem_iff d l i y).mpr ⟨hi,z,hz,hj⟩
+
+example (c :List Bool) (i :Vertex (CanonicalAuxiliaryCandidateCover.width c)) (hn :¬Good c i):
+    (positiveCover c).piece i=∅:=by
+  ext y
+  constructor
+  · intro HY
+    obtain ⟨hi,_,_,_⟩:=(positive_mem_iff c i y).mp HY
+    exact (hn hi).elim
+  · intro HY
+    exact HY.elim
+
+-- The sample is precisely the decoded candidate underlying the original cover.
+example (c :List Bool) (i :Vertex (CanonicalAuxiliaryCandidateCover.width c)) (hi :Good c i):
+    CanonicalAuxiliaryCandidateCover.sourceHomeomorph c (closedSample c i hi)=
+      AuxiliaryCandidateComponentCover.sample CanonicalAuxiliaryCandidateCover.dimension_unary
+        CanonicalAuxiliaryCandidateCover.equation_FP CanonicalAuxiliaryCandidateCover.equation_scope c ⟨i,hi⟩:=by
+  unfold closedSample
+  exact Homeomorph.apply_symm_apply _ _
+
+#print axioms ClopenPathCover.saturated_image_eq
+#print axioms closed_saturated_piece_eq
+#print axioms positive_piece_eq
+#print axioms positive_mem_iff
+#print axioms positive_mem_iff_of_lift
+#print axioms refinement_positive_mem_iff
+end CandidateLabelLockRegression
+end RoadmapInternalG73CandidateLabelLock
+
+section RoadmapInternalG73LiteralPieceLabelLock
+namespace LeanCanny.Connectivity.CanonicalAuxiliaryBitPieceLabelLock
+open Set LeanCanny.Encoding LeanCanny.ETR
+open scoped Classical
+
+-- Actual membership includes a lift at this exact original tuple and label.
+example (d :Description) (i :Vertex (CanonicalAuxiliaryBitFrontier.width d)) (x :d.realization):
+    x∈CanonicalAuxiliaryBitFrontier.piece d i ↔DecodedComponentLift d i.val x.val:=
+  piece_mem_iff_component d i x
+
+-- A bad sign slot denotes the empty literal piece, even at the correct width.
+example (d :Description) (i :Vertex (CanonicalAuxiliaryBitFrontier.width d))
+    (HS :CanonicalAuxiliaryCandidateLabels.source (pair (CanonicalSignRefinement.original d) i.val)∉
+      FormulaSignSlotCircuit.language):CanonicalAuxiliaryBitFrontier.piece d i=∅:=by
+  apply piece_eq_empty_of_invalid d i
+  intro HV
+  exact HS HV.2.1
+
+-- Nonzero budget padding is rejected rather than silently relabeled.
+example (d :Description) (i :Vertex (CanonicalAuxiliaryBitFrontier.width d))
+    (HP :(CanonicalAuxiliaryCandidateLabels.padding (pair (CanonicalSignRefinement.original d) i.val)).count true≠0):
+    CanonicalAuxiliaryBitFrontier.piece d i=∅:=by
+  apply piece_eq_empty_of_invalid d i
+  intro HV
+  exact HP HV.1.2
+
+-- A typed sign tag whose actual auxiliary candidate is bad also stays empty.
+example (d :Description) (i :CanonicalAuxiliaryCandidateCover.Index d)
+    (HG :¬CanonicalAuxiliaryCandidateLabelLock.Good (CanonicalSignRefinement.source d i.1) i.2):
+    CanonicalAuxiliaryCandidateCover.piece d i=∅:=by
+  ext x
+  constructor
+  · intro HX
+    obtain ⟨hi,_,_,_⟩:=(CanonicalAuxiliaryPieceLabelLock.candidate_piece_mem_iff d i x).mp HX
+    exact False.elim (HG hi)
+  · exact fun H=>False.elim H
+
+-- All three label receipts belong to the SAME actual decoded raw packet.
+example (d :Description) (w :List Bool)
+    (HV :CanonicalAuxiliaryCandidateLabels.Valid (pair (CanonicalSignRefinement.original d) w)):
+    (CanonicalAuxiliaryCandidateLabels.decode d w HV).1.val=
+        CanonicalAuxiliaryCandidateLabels.sign (pair (CanonicalSignRefinement.original d) w) ∧
+    CanonicalSignRefinement.source d (CanonicalAuxiliaryCandidateLabels.decode d w HV).1=
+        CanonicalAuxiliaryCandidateLabels.source (pair (CanonicalSignRefinement.original d) w) ∧
+    (CanonicalAuxiliaryCandidateLabels.decode d w HV).2.val=
+        CanonicalAuxiliaryCandidateLabels.candidate (pair (CanonicalSignRefinement.original d) w):=
+  ⟨decoded_sign d w HV,decoded_source d w HV,decoded_candidate d w HV⟩
+
+-- Inhabited subtype membership retains the selected sign at the tuple inverse.
+example (d :Description) (i :CanonicalAuxiliaryCandidateCover.Index d) (x :d.realization)
+    (HX :x∈CanonicalAuxiliaryCandidateCover.piece d i):
+    (FormulaSignSlotSource.stratum (CanonicalSignRefinement.source d i.1)).Holds
+      (Formula.extend ((CanonicalSignRefinement.tuple d i.1).symm x.val)):=
+  CanonicalAuxiliaryPieceLabelLock.piece_sign_slot d i x HX
+
+#check CanonicalAuxiliaryPieceLabelLock.rawPiece_mem_iff
+#check CanonicalAuxiliaryPieceLabelLock.refinement_piece_mem_iff
+#check CanonicalAuxiliaryPieceLabelLock.candidate_piece_mem_iff
+#check CanonicalAuxiliaryPieceLabelLock.lift_iff_component
+#check piece_mem_iff
+#check piece_mem_iff_component
+#check piece_sign_slot
+#print axioms CanonicalAuxiliaryPieceLabelLock.rawPiece_mem_iff
+#print axioms CanonicalAuxiliaryPieceLabelLock.refinement_piece_mem_iff
+#print axioms CanonicalAuxiliaryPieceLabelLock.candidate_piece_mem_iff
+#print axioms CanonicalAuxiliaryPieceLabelLock.lift_iff_component
+#print axioms piece_mem_iff
+#print axioms piece_mem_iff_component
+#print axioms piece_sign_slot
+end LeanCanny.Connectivity.CanonicalAuxiliaryBitPieceLabelLock
+end RoadmapInternalG73LiteralPieceLabelLock
+
+section RoadmapInternalG73RadialFormalModel
+namespace RadialFormalRegression
+open LeanCanny.Computation LeanCanny LeanCanny.Connectivity LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Algebra LeanCanny.ETR
+open FormulaSignSlotCenteredRadialGraph FormulaSignSlotCenteredRadialLimits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+-- Actual source, not a same-degree replacement: both maps use this same center.
+example (c :List Bool) (a :Fin (d c)→ℝ) (r :ℝ):
+    ((FormulaSignSlotRadialFormalCenter.polynomial c).map (FormulaSignSlotRadialFormalCenter.radiusMap c a)).map
+      (Polynomial.evalRingHom r)=FormulaSignSlotCenteredRadialLimits.polynomial c a r:=
+  FormulaSignSlotRadialFormalCenter.radius_specialization c a r
+
+-- Fixed-index guards are applied after specializing the center, over whole polynomials.
+example (c :List Bool) (a :Fin (d c)→ℝ) (i :Fin (N c+d c+1)) (τ :ℕ)
+    (HB:∀k<τ,((FormulaSignSlotRadialFormalEliminant.eliminant c i).coeff k).map
+      (FormulaSignSlotRadialFormalCenter.radiusMap c a)=0)
+    (HT:((FormulaSignSlotRadialFormalEliminant.eliminant c i).coeff τ).map
+      (FormulaSignSlotRadialFormalCenter.radiusMap c a)≠0):
+    FormulaSignSlotRadialParameterEliminant.coordinate c a i=
+      ((FormulaSignSlotRadialFormalEliminant.eliminant c i).coeff τ).map (FormulaSignSlotRadialFormalCenter.radiusMap c a):=
+  FormulaSignSlotRadialFormalEliminant.coordinate_at c a i τ HB HT
+
+-- The full integer model includes center/radius variables in its proved mass bound.
+example (c :List Bool):MvMass.mass (FormulaSignSlotRadialFormalBounds.flatten c
+    (FormulaSignSlotRadialFormalCenter.polynomial c))≤
+      2^(FormulaSignSlotCenteredRadialSource.equation c).toData.size+4*d c+4:=
+  FormulaSignSlotRadialFormalBounds.mass c
+
+example :BinaryFn (fun c=>2^(FormulaSignSlotCenteredRadialSource.equation c).toData.size+4*d c+4):=
+  FormulaSignSlotRadialFormalBounds.mass_bound_binary
+
+noncomputable def killCenter :MvPolynomial Unit ℤ→+*ℤ:=MvPolynomial.eval₂Hom (RingHom.id ℤ) (fun _=>0)
+noncomputable def changing :Polynomial (MvPolynomial Unit ℤ):=
+  Polynomial.C (MvPolynomial.X ())*Polynomial.X+Polynomial.X^2
+
+private theorem mapped_changing:changing.map killCenter=(Polynomial.X^2:Polynomial ℤ):=by
+  simp [changing,killCenter]
+
+-- Center0 kills the symbolic order1 term: actual order2 is the guarded answer.
+example :(changing.map killCenter).natTrailingDegree=2:=by
+  apply IntegralParameterInverse.natTrailingDegree_map_at killCenter changing 2
+  · intro k hk
+    rw [←Polynomial.coeff_map,mapped_changing]
+    simp [Polynomial.coeff_X_pow,ne_of_lt hk]
+  · rw [←Polynomial.coeff_map,mapped_changing]
+    simp
+
+-- The example is nontrivial: mapping the old trailing coefficient gives zero.
+example :killCenter changing.trailingCoeff=0 ∧(changing.map killCenter).trailingCoeff=1:=by
+  have HD:changing.natTrailingDegree=1:=by
+    have HB:∀k<1,(RingHom.id (MvPolynomial Unit ℤ)) (changing.coeff k)=0:=by
+      intro k hk
+      have HK:k=0:=by omega
+      subst k
+      simp [changing]
+    have HT:(RingHom.id (MvPolynomial Unit ℤ)) (changing.coeff 1)≠0:=by simp [changing]
+    simpa only [Polynomial.map_id] using
+      IntegralParameterInverse.natTrailingDegree_map_at (RingHom.id (MvPolynomial Unit ℤ)) changing 1 HB HT
+  constructor
+  · rw [Polynomial.trailingCoeff,HD]
+    simp [changing,killCenter]
+  · rw [mapped_changing]
+    norm_num [Polynomial.trailingCoeff,Polynomial.natTrailingDegree_X_pow]
+
+#print axioms FormulaSignSlotRadialFormalCenter.polynomial_specialization
+#print axioms FormulaSignSlotRadialFormalCenter.spatial_degree
+#print axioms FormulaSignSlotRadialFormalEliminant.specialization
+#print axioms FormulaSignSlotRadialFormalEliminant.natTrailingDegree_at
+#print axioms FormulaSignSlotRadialFormalEliminant.coordinate_at
+#print axioms FormulaSignSlotRadialFormalEliminant.exists_coordinate_index
+#print axioms FormulaSignSlotRadialFormalBounds.flatten_equation
+#print axioms FormulaSignSlotRadialFormalBounds.total_degree
+#print axioms FormulaSignSlotRadialFormalBounds.mass
+#print axioms FormulaSignSlotRadialFormalBounds.mass_bound_binary
+end RadialFormalRegression
+end RoadmapInternalG73RadialFormalModel
+
+section RoadmapInternalG73RadialClosureDescriptor
+namespace LeanCanny.Connectivity.CanonicalAuxiliaryRadialClosure
+open Set LeanCanny.Encoding LeanCanny.Geometry LeanCanny.ETR
+open FormulaSignSlotCenteredRadialGraph
+open scoped Classical
+
+-- Finite actual grid and limit closure follow from receipts, not a stored curve.
+example (c :List Bool) (i :Vertex (CanonicalAuxiliaryCandidateCover.width c))
+    (center :Fin (d c)→ℝ) (D :FormulaSignSlotCandidateRadialDescriptor.Descriptor c i center):
+    (FormulaSignSlotRadialParameterGrid.grid c center D.parameter.val).Finite ∧
+    center∈closure (FormulaSignSlotRadialAccess.projectedPiece c
+      ((CanonicalAuxiliaryCandidateLabelLock.positiveCover c).piece i)):=
+  ⟨D.finite_anchor_grid,D.mem_projected_closure⟩
+
+-- A genuine boundary supplies the actual grid/anchor/label receipt itself.
+example (c :List Bool) (i :Vertex (CanonicalAuxiliaryCandidateCover.width c))
+    (center :Fin (d c)→ℝ)
+    (HC :center∈closure (FormulaSignSlotRadialAccess.projectedPiece c
+      ((CanonicalAuxiliaryCandidateLabelLock.positiveCover c).piece i)))
+    (HN :center∉FormulaSignSlotRadialAccess.projectedPiece c
+      ((CanonicalAuxiliaryCandidateLabelLock.positiveCover c).piece i)):
+    Nonempty (FormulaSignSlotCandidateRadialDescriptor.Descriptor c i center):=
+  FormulaSignSlotCandidateRadialDescriptor.exists_of_projected_boundary c i center HC HN
+
+-- The actual relative closure keeps the given point in the permitted realization.
+example (desc :Description) (hd :desc.WellFormed) (i :CanonicalAuxiliaryCandidateCover.Index desc)
+    (x :desc.realization) (HC :x∈closure (CanonicalAuxiliaryCandidateCover.piece desc i))
+    (HN :x∉CanonicalAuxiliaryCandidateCover.piece desc i):Nonempty (Descriptor desc i x.val):=by
+  exact ((piece_closure_iff desc hd i x).mp HC).resolve_left HN
+
+-- Common points, including isolated ones, need no artificial radial branch.
+example (desc :Description) (hd :desc.WellFormed)
+    (i :Vertex (CanonicalAuxiliaryBitFrontier.width desc)) (x :desc.realization)
+    (HX :x∈CanonicalAuxiliaryBitFrontier.piece desc i):
+    x∈closure (CanonicalAuxiliaryBitFrontier.piece desc i):=
+  (bit_piece_closure_iff desc hd i x).mpr (Or.inl HX)
+
+-- Invalid labels have empty relative closure as well as an empty piece.
+example (desc :Description) (i :Vertex (CanonicalAuxiliaryBitFrontier.width desc))
+    (HV :¬CanonicalAuxiliaryCandidateLabels.Valid (pair (CanonicalSignRefinement.original desc) i.val))
+    (x :desc.realization):x∉closure (CanonicalAuxiliaryBitFrontier.piece desc i):=by
+  rw [CanonicalAuxiliaryBitPieceLabelLock.piece_eq_empty_of_invalid desc i HV,closure_empty]
+  exact fun H=>H
+
+-- A directional attachment retains THIS permitted center and the target label.
+example (desc :Description) (hd :desc.WellFormed) (i j :CanonicalAuxiliaryCandidateCover.Index desc)
+    (x :desc.realization) (HI :x∈CanonicalAuxiliaryCandidateCover.piece desc i)
+    (HC :x∈closure (CanonicalAuxiliaryCandidateCover.piece desc j))
+    (HN :x∉CanonicalAuxiliaryCandidateCover.piece desc j):
+    ∃y :desc.realization,y∈CanonicalAuxiliaryCandidateCover.piece desc i ∧Nonempty (Descriptor desc j y.val):=by
+  exact ⟨x,HI,((piece_closure_iff desc hd j x).mp HC).resolve_left HN⟩
+
+#check FormulaSignSlotCandidateRadialDescriptor.Descriptor.mk
+#check FormulaSignSlotCandidateRadialDescriptor.Descriptor.selected_curve
+#check FormulaSignSlotCandidateRadialDescriptor.Descriptor.source_branch
+#check FormulaSignSlotCandidateRadialDescriptor.projected_closure_iff
+#check rawPiece_closure_iff
+#check piece_closure_iff
+#check bit_piece_closure_iff
+#print axioms FormulaSignSlotCandidateRadialDescriptor.Descriptor.finite_anchor_grid
+#print axioms FormulaSignSlotCandidateRadialDescriptor.Descriptor.selected_curve
+#print axioms FormulaSignSlotCandidateRadialDescriptor.Descriptor.source_branch
+#print axioms FormulaSignSlotCandidateRadialDescriptor.Descriptor.mem_projected_closure
+#print axioms FormulaSignSlotCandidateRadialDescriptor.exists_of_projected_boundary
+#print axioms FormulaSignSlotCandidateRadialDescriptor.projected_closure_iff
+#print axioms rawPiece_closure_iff
+#print axioms piece_closure_iff
+#print axioms bit_piece_closure_iff
+end LeanCanny.Connectivity.CanonicalAuxiliaryRadialClosure
+end RoadmapInternalG73RadialClosureDescriptor

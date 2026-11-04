@@ -1,3 +1,12 @@
+import LeanCanny.Connectivity.CanonicalAuxiliaryBitPieceLabelLock
+import LeanCanny.Connectivity.CanonicalAuxiliaryCandidateLabelLock
+import LeanCanny.Connectivity.CanonicalAuxiliaryPieceLabelLock
+import LeanCanny.Connectivity.CanonicalAuxiliaryRadialClosure
+import LeanCanny.Connectivity.ClopenPathCoverProjection
+import LeanCanny.Connectivity.FormulaSignSlotCandidateRadialDescriptor
+import LeanCanny.Connectivity.FormulaSignSlotRadialFormalBounds
+import LeanCanny.Connectivity.FormulaSignSlotRadialFormalCenter
+import LeanCanny.Connectivity.FormulaSignSlotRadialFormalEliminant
 import LeanCanny.Algebra.IntegralParameterExtensionMatrixSpecialization
 import LeanCanny.Algebra.IntegralParameterExtensionSpecialization
 import LeanCanny.Algebra.IntegralParameterInverseAtInfinity
@@ -4767,6 +4776,15 @@ before evaluation. A common mass cutoff derives the inverse constructor's
 coefficient-survival and degree/trailing-index guards internally. The next
 obligation is an original-only symbolic presentation and common bounds for
 the full recursive framed interpreter.
+Literal sign-refinement and frontier-piece membership now has an exact
+closed-circular lift in the SAME decoded candidate component at the specified
+original point. The radial polynomial and eliminant have an exact integer
+formal-center model, with post-specialization trailing-index guards and
+original-only bounds for the INPUT model. Actual piece closure is equivalent
+to common membership or a same-label finite-real descriptor retaining a
+grid anchor and cut-free interval. The curve is constructed internally.
+These descriptors still need bounded algebraic words and native guard costs;
+the input bounds do not supply eliminant or descriptor bounds.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 The recursive framed polynomial presentation and its original-only uniform

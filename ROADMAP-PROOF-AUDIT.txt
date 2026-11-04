@@ -1761,3 +1761,60 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 The actual full symbolic framed interpreter/common original-only bounds, effective radius stabilization, Boolean frontier incidence and both original unconditional PSPACE targets remain open.
+
+31. G73: literal Boolean pieces and retained radial closure descriptors
+2026-11-04.
+
+Finite frontier saturation preserves each literal projected closed-source
+component image, including empty invalid labels. Membership in the actual
+positive cover is equivalent to a closed-circular lift at the SAME positive
+point joined to the SAME actual decoded candidate sample. This is specialized
+through the actual sign refinement, CandidateCover.piece and BitFrontier.piece
+at the exact original tuple. Sign/source/candidate decoding and invalid sign,
+padding or candidate emptiness are retained. No generic component oracle or
+changed FrontierCover.Incident definition is introduced.
+
+An integer formal-center/radius polynomial specializes exactly to the ACTUAL
+radial parameter polynomial and its perturbation eliminant. Extraction of the
+actual coordinate polynomial uses a stored perturbation index whose lower
+specialized coefficient polynomials vanish and whose chosen coefficient is
+nonzero AFTER center specialization. Kernel maps may shift that index. The
+full-variable integer INPUT model has original-only spatial degree and mass
+bounds. These are not bounds for the eliminant or selected descriptor.
+
+The actual same-label radial descriptor contains only finite REAL data:
+positive upper interval, interior parameter, actual OldPositive grid anchor,
+cut-free condition, candidate validity and a same-component closed anchor.
+No curve is a field or premise. The actual finite branch/pruning construction
+produces a selected curve; its anchor fixes the label, and squared distance
+equal to the parameter proves projected closure. Conversely genuine new
+boundaries produce those grid/cut/anchor receipts through the proper MARGIN
+projection. No closure is pushed through the diverging circular projection.
+
+Projected, raw and permitted-realization relative piece closure are exactly
+common membership OR such a same-label descriptor. The actual BitFrontier
+instance includes invalid-empty cases and preserves the distinction between
+ambient closure contact and a permitted relative frontier center.
+
+This is a QUALITATIVE finite-real descriptor theorem. A bounded algebraic-word
+selection theorem, original-only eliminant/descriptor bounds, actual native
+reader/guard costs and component-query radius instantiations remain unproved.
+The literal Incident/edge definitions are unchanged; no native frontier-edge
+or original Boolean PSPACE algorithm follows merely from these receipts.
+Full effective radius stabilization and both original PSPACE targets remain
+open.
+
+All9 sources (912 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration plus three follow-on producer targets PASS20384 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:9758 lines,154 groups.
+Audited 91553 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 197299 transitive constants: no legacy space foundation.
+All13 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Descriptors remain finite REAL data. Original-only eliminant/descriptor bounds, bounded algebraic-word sampling and native readers/guards/edge cost are unproved. Full effective uniform radius stabilization and both original unconditional PSPACE targets remain open.
