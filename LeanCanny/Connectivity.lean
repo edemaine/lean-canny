@@ -1,3 +1,11 @@
+import LeanCanny.Connectivity.FiniteSlabEndpointNormalization
+import LeanCanny.Connectivity.IntegralMixedRoadmapBoundaryNormalization
+import LeanCanny.Connectivity.IntegralMixedRoadmapCanonicalFiniteSweep
+import LeanCanny.Connectivity.IntegralMixedRoadmapDepthCompleteness
+import LeanCanny.Connectivity.IntegralMixedRoadmapGlobalSimulation
+import LeanCanny.Connectivity.IntegralMixedRoadmapMatchedSlabSimulation
+import LeanCanny.Connectivity.IntegralMixedRoadmapSweepSlabSimulation
+import LeanCanny.Geometry.IntegralMixedMatchedFiniteSweep
 import LeanCanny.Connectivity.FiniteSlabEndpointPaths
 import LeanCanny.Connectivity.IntegralMixedRoadmapCanonicalCriticalPoints
 import LeanCanny.Connectivity.IntegralMixedRoadmapFiberInduction
@@ -4690,18 +4698,20 @@ A retained-endpoint extension now constructs its own fully accepted word at
 any eligible child-critical point, preserving every old raw column and guard.
 Every accepted vertex consequently has a native identity extension at the
 next depth and reaches a terminal-depth vertex at the same point.
-Genuine allowed endpoint choices, a matched strict slab and its bad/critical
-interval exclusions now construct both fresh accepted words and an actual
-native proper edge at the prescribed child points. The full coordinate Near
-and rank conditions follow from that same matched branch. Native edges are
-symmetric, and native point reachability is independent of the chosen words.
-Equal-height choices construct accepted words at weak child-critical points.
-Arbitrary genuine boundary-fiber points connect to such samples geometrically.
-Canonical slices and child fibers now match their original numeric slices.
-Terminal fibers give the base case, and next-depth completeness simulates
-paths between weak critical points in one allowed boundary fiber. Finite
-slab paths reduce to finite walks through actual cut boundaries.
-The recursive global graph/path implication remains open.
+Genuine matched branches now construct actual native proper edges at their
+prescribed child points, with all acceptance, Near ranks and shared midpoint
+conditions derived internally. A finite matched sweep retains those same
+branches and constructs its endpoint and slab covers. Arbitrary used cut
+points get same-fiber weak critical representatives; artificial empty cuts
+require no endpoint code. The entire frozen-slice path is simulated natively.
+The terminal fiber and induction on remaining coordinates prove completeness
+at every legal depth. For two accepted depth-zero histories with the same
+candidate, actual native reachability is equivalent to a path between their
+points in the original fixed-radius regular zero set. No recursive hypothesis
+remains in this equivalence. This does not assert connectivity of the whole
+native graph or a reverse theorem for arbitrary different-depth histories.
+The bounded marked-anchor decision binding, effective uniform stabilization
+and original Boolean frontier-incidence algorithm remain to be discharged.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet

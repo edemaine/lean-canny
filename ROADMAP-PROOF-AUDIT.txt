@@ -1559,3 +1559,59 @@ are verified. AllfilesUTF8/LF/singleEOF. Onlymain worktree.
 Baseline untracked AuxiliaryCandidateBank and later proof WIP excluded.
 No push or external write. GoalACTIVE: recursive global native simulation,
 uniform stabilization and original Boolean incidence remain.
+
+27. G69: actual recursive depth completeness in the fixed regular source
+2026-11-04.
+
+The finite sweep constructs all cut origins, endpoint covers and closed-slab
+covers internally, retaining the same matched M and selection in each slab.
+Its bad set is exactly the supplied canonical choices' joint endpoint set.
+Every actually used cut point gets a same-height, same-fiber weak critical
+representative; artificial empty endpoints are never declared allowed.
+Native slab simulation handles empty branch indices by a genuine fiber path.
+The global simulation folds the ORIGINAL finite walk and retains each
+representative's gradient receipt at every step. It attaches both requested
+critical endpoints through their actual same-fiber paths.
+
+The only recursive assumption is next-depth DepthComplete. The terminal
+finite fiber supplies its base, and strong induction on remaining coordinates
+discharges it for EVERY legal depth. The public depth_complete theorem has
+no induction, model, hom, evaluator, native guard, new word or cover premise.
+All realization and native graph vertices are constructed inside the proofs.
+
+For independently accepted first/second histories at depth0 and the SAME
+entire candidate, depth_zero_raw_reachable_iff_joined identifies actual
+native raw reachability with JoinedIn the ORIGINAL fixed-R0 regular zero
+set between their actual points. The corresponding native algorithm is
+already PSPACE. No arbitrary-different-depth reverse or whole-graph
+connectedness assertion is made. The original bounded marked-anchor
+initialization/decision binding still needs its explicit native incidence
+relation; existence of an incident seed alone is not such an algorithm.
+
+Uniform effective radius stabilization and original arbitrary-Boolean
+frontier-incidence evaluation remain unproved. Neither original connectivity
+language has unconditional PSPACE membership at this checkpoint.
+
+Two necessary integration-only changes remove one extra EOF blank each
+from MatchedSlabSimulation and CanonicalFiniteSweep. Their original bytes
+and published hash ledgers are retained alongside revised exact hashes;
+all statements and proof bodies are unchanged. Both whole-source200k
+checks passed again before the full integration build.
+
+All8 source files (1212 LF lines) match their frozen hash ledgers except
+the two documented EOF-only integration revisions. Original bytes/published
+hashes and exact revised hashes are preserved. Both revised whole-source
+checks use200000 heartbeats/warningAsError/relaxedAutoImplicit=false and pass.
+Strict three-target build20288 jobs PASS. All25 Check scripts PASS, including
+7 new fixture groups. Native graph fixture: 8612 lines,
+136 groups. Scope wrappers preserve original theorem namespaces and
+omit fixture-only public-section headers.
+Audited 91162 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 196798 transitive constants: no legacy space foundation.
+All12 exact staged paths, source hashes, blob bytes and100644 modes verified.
+AllfilesUTF8/LF/singleEOF. Onlymain worktree; no obsolete worktree/build cache.
+Baseline untracked AuxiliaryCandidateBank and later WIP excluded. No external
+write or push. GoalACTIVE: actual bounded marked-anchor binding, effective
+uniform radius stabilization and Boolean frontier incidence remain open.
