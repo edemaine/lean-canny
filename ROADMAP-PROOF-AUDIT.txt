@@ -1202,3 +1202,60 @@ Namespace axiom audit:89363 declarations, only propext/Classical.choice/
 Quot.sound. Space audit:193508 transitive constants, no legacy foundation.
 Frozen source hashes, exact99-file manifest, staged blob bytes and100644 modes
 are checked before the local commit. Only the main worktree exists.
+
+20. G62: native graph-path soundness and complete depth-zero seed acceptance
+2026-11-04.
+
+Two concrete M3 milestones are now proved. LocalFrame.local_joined derives
+an actual child-to-MID path from the complete native Local guard alone. Its
+per-coordinate ordinary and mean queries keep their own words; literal older
+prefix snapshots and all bank quotients identify their interpretations. Actual
+mean root multisets and distinct-root ranks make the coordinate Near tests
+refer to the actual MID capture. On the checked canonical raw-table domain,
+with its own valid full word and fitted ordered endpoints, native no-bad probes
+characterize exactly the ordinary parent bad heights needed by the closed
+anchored physical arc theorem. No-critical semantics is unnecessary
+for this soundness direction; its existing native conjunct is retained.
+
+Graph.proper_joined identifies the entire two MID tuples and composes the two
+paths in one original regular zero set. adjacent_joined covers identity edges;
+path_joined and raw_reachable_joined cover arbitrary guarded raw paths. The
+reflexive RTC case explicitly requires a valid starting vertex, and each tail
+obtains intermediate validity and candidate equality from the actual edge.
+No graph/path/evaluator/source oracle is a new premise.
+
+Graph.exists_resampled_seed starts from any accepted vertex and constructs a
+fully accepted canonical depth-zero packet with the same candidate. The global
+critical point exists in its EXACT prepared source, and the complete word is
+sampled afresh at that root. Every critical block reads the same point; own
+creating powers, chronological selected fields, latest companions, no-cut
+metadata, grammar/budget and the initial marked fields are proved internally.
+SeedResampling.exists_valid additionally retains the exact all-block readback.
+No accepted native guard or history, hom, degree or evaluator is supplied.
+This is resampling from an old accepted node, not first-candidate initialization
+or an old-to-seed graph-reachability theorem.
+
+Remaining M3: accepted general level/history construction, first-candidate
+initialization and the reverse bounded graph/path implication. M4 effective
+uniform outer stabilization and M5 original Boolean incidence remain open.
+Neither original pointLanguage nor connectedLanguage has unconditional PSPACE
+membership proved here. No final theorem is weakened or replaced.
+
+The checkpoint contains 77 new source files in 25 frozen packages. Original
+package hashes remain preserved. Nineteen CRLF files were normalized to LF
+only: original bytes are in tmp/group62-format-originals and the old/new hash
+ledger is tmp/group62-format-normalization.json. All nineteen normalized whole
+sources were rechecked at 200000 heartbeats with warnings as errors and
+relaxedAutoImplicit=false. The other final whole-source package checks use the
+same limits. Exact post-format hashes: tmp/group62-preintegration-hashes.txt.
+The existing24 fixture groups are retained; 26 new groups exercise the actual
+readbacks, native acceptance and final path/seed theorems.
+Verification: strict three-target build19936 jobs PASS; all25 Check scripts
+PASS, including the2670-line/50-group CheckRoadmapNativeGraph. The combined
+scalar-point fixture needed its parent Encoding namespace opened after being
+wrapped; only this affected script was rerun. All other24 passed on the first
+run. Namespace axiom audit:89909 declarations, standard3 only. Space audit:
+194381 transitive constants, no legacy foundation. Exact81-file staging,
+post-format77 source hashes, staged blob bytes and100644 modes are checked by
+ tmp/group62-verify-and-stage.py before the local commit. Only the main worktree
+exists; the pre-existing untracked AuxiliaryCandidateBank is excluded.

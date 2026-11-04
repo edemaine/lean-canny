@@ -1,3 +1,80 @@
+import LeanCanny.Algebra.IntegralMixedCutCreationInstruction
+import LeanCanny.Algebra.IntegralMixedCutCreationReceipt
+import LeanCanny.Algebra.IntegralMixedFramedCompanionColumns
+import LeanCanny.Algebra.IntegralMixedFramedCutSelectionReceipt
+import LeanCanny.Algebra.IntegralMixedFramedFixedTupleContinuation
+import LeanCanny.Algebra.IntegralMixedFramedFixedTupleObservation
+import LeanCanny.Algebra.IntegralMixedFullBankObservationOrigin
+import LeanCanny.Algebra.IntegralMixedPrefixSnapshotCodedFactor
+import LeanCanny.Algebra.IntegralMixedStaticRecordHeaderReceipt
+import LeanCanny.Connectivity.IntegralMixedRoadmapLocalPath
+import LeanCanny.Connectivity.IntegralMixedRoadmapProperGeometry
+import LeanCanny.Connectivity.IntegralMixedRoadmapSeedGeometry
+import LeanCanny.Connectivity.IntegralMixedSelectedCoordinateLocalPath
+import LeanCanny.Encoding.IntegralFramedPhysicalBankChronologicalPoint
+import LeanCanny.Encoding.IntegralFramedPhysicalNearWord
+import LeanCanny.Encoding.IntegralFramedPhysicalScalarPoint
+import LeanCanny.Encoding.IntegralMixedMarkedConstructedInstruction
+import LeanCanny.Encoding.IntegralMixedMarkedConstructedObservation
+import LeanCanny.Encoding.IntegralMixedMarkedConstructedPrefix
+import LeanCanny.Encoding.IntegralMixedMarkedReservedFieldVertex
+import LeanCanny.Encoding.IntegralMixedMarkedReservedSelectionReceipt
+import LeanCanny.Encoding.IntegralMixedPhysicalChronologicalCritical
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalContext
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalFieldReadback
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalParentFields
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalScanSemantics
+import LeanCanny.Encoding.IntegralMixedPhysicalMarkedFieldRetention
+import LeanCanny.Encoding.IntegralMixedPhysicalMarkedRetention
+import LeanCanny.Encoding.IntegralMixedPhysicalTraceCutGuardComplete
+import LeanCanny.Encoding.IntegralMixedPrefixSnapshotCodedHint
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbeCodedTransport
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbeComplete
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbeParentMetadata
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbePreparedWord
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbeRootAcceptance
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbeRuntime
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbeSemantics
+import LeanCanny.Encoding.IntegralMixedRoadmapBadProbeTask
+import LeanCanny.Encoding.IntegralMixedRoadmapLocalCoordinates
+import LeanCanny.Encoding.IntegralMixedRoadmapLocalFrame
+import LeanCanny.Encoding.IntegralMixedRoadmapLocalFreeIndex
+import LeanCanny.Encoding.IntegralMixedRoadmapMidSignatureLookup
+import LeanCanny.Encoding.IntegralMixedRoadmapMidSignatureReadback
+import LeanCanny.Encoding.IntegralMixedRoadmapMidpointPoint
+import LeanCanny.Encoding.IntegralMixedRoadmapProperBadEndpoint
+import LeanCanny.Encoding.IntegralMixedRoadmapProperBadSound
+import LeanCanny.Encoding.IntegralMixedRoadmapProperCriticalFields
+import LeanCanny.Encoding.IntegralMixedRoadmapProperCriticalMetadata
+import LeanCanny.Encoding.IntegralMixedRoadmapProperCriticalSound
+import LeanCanny.Encoding.IntegralMixedRoadmapProperNoCriticalSound
+import LeanCanny.Encoding.IntegralMixedRoadmapProperOrder
+import LeanCanny.Encoding.IntegralMixedRoadmapProperProducerBounds
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRowCoordinateTransport
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRowQuotients
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRowSelected
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRowValue
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedAcceptance
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedFieldReadback
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedHeader
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedMetadataCode
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedNativeMetadata
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedNativeReadback
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedNoCut
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedPreludeReadback
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedRealization
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedResampling
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedResamplingLayout
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedScan
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedTuple
+import LeanCanny.Encoding.IntegralMixedRoadmapSeedWord
+import LeanCanny.Encoding.IntegralMixedSourceIntegerCutReceipt
+import LeanCanny.Geometry.IntegralMixedChronologicalPointRecord
+import LeanCanny.Geometry.IntegralMixedChronologicalSeedProgram
+import LeanCanny.Geometry.IntegralMixedChronologicalSweepReadback
+import LeanCanny.Geometry.IntegralMixedGuardedProgramBirths
+import LeanCanny.Geometry.IntegralMixedSelectedNearTransport
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRowMeanRule
 import LeanCanny.Connectivity.IntegralMixedRoadmapGraphCoding
 import LeanCanny.Connectivity.IntegralMixedRoadmapGraphGeometry
 import LeanCanny.Algebra.IntegralMixedCausalUnitContinuation
@@ -4425,11 +4502,16 @@ global two-way bounded graph/path theorem remain separate obligations.
 The native atomic roadmap now has a total original-polynomial vertex byte
 bound, concrete PSPACE edge and vertex tests, and concrete PSPACE connectedness
 and point-to-point reachability algorithms. Fixed-width labels faithfully
-represent raw vertices and paths. Atomic points belong to one original regular
-source; identity edges give equal physical points. Critical component samples,
-exact new-word old-column retention, guarded local traces and actual midpoint
-readback are verified. Proper-edge path soundness, complete native history
-acceptance and the global two-way graph/path theorem remain open.
+represent raw vertices and paths. Every native identity or proper edge gives
+a path in one original regular zero set. Consequently every guarded raw graph
+path has that geometric meaning. The proper case joins the two actual local
+paths at their shared physical midpoint, using native coordinate Near ranks.
+Every accepted vertex also admits a fresh, fully accepted canonical depth-zero
+seed at its own prepared root, with the same candidate. Its critical point,
+complete word, all native guards and marked-prelude retention are constructed.
+This resampling theorem does not assert old-to-seed graph reachability.
+General accepted history construction, initialization from original candidates
+and the reverse global graph/path implication remain open.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet
