@@ -1346,3 +1346,48 @@ Namespace audit90023 declarations: only propext/Classical.choice/Quot.sound.
 Space audit194679 transitive constants: no legacy space foundation. Exact10
 staged paths, frozen hashes, blob bytes and100644 modes verified before the
 local commit. Only the main worktree exists; no push or external write.
+
+23. G65: accepted retained-endpoint extensions and terminal identity paths
+2026-11-04.
+
+RetainedAppend.exists_valid_at starts with an accepted old vertex, a remaining
+depth, one fitted old producer and a genuine child-critical point in the
+corresponding frozen slice and retained height. The two endpoints use that
+same producer. The point need not be critical for the old objective. The
+constructor realizes the actual MID and child programs, adds genuine critical
+seed padding, and samples one fresh full word at its own appended root.
+Every old raw column, all new physical blocks and all bank values are retained.
+Literal program bytes and each creating birth determine the physical powers
+and selected scalar coordinates. These readbacks construct all seven native
+Atomic.Valid conjuncts, including old cut guards at the changed root. The
+returned vertex's actual point is the prescribed point. No new word, native
+guard, interpretation hom, evaluator or whole-history model is assumed.
+
+Own-point eligibility is proved from the old accepted word. Consequently
+Graph.exists_identity_extension constructs a native identity edge raising
+the depth by one while preserving the entire point and candidate. Iteration
+reaches terminal depth; exists_terminal_raw_reachable states this in the
+actual bounded native graph. Ancestry alone is never inserted as an edge.
+
+This closes the equal-retained-endpoint construction. General proper levels,
+including fresh endpoints and different MID/child points, and reverse global
+bounded graph/path completeness remain open. M4 effective uniform outer
+stabilization and M5 original Boolean incidence remain open. Neither original
+pointLanguage nor connectedLanguage has unconditional PSPACE membership here.
+
+All56 new source files are frozen with exact hash ledgers; their final
+whole-source checks use200000 heartbeats, warnings as errors and
+relaxedAutoImplicit=false. Source size:6852 lines. Verification: full strict
+three-target build20090 jobs PASS; all25 Check scripts PASS, including the
+3963-line native graph fixture with74 groups.
+Audited 90467 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 195423 transitive constants: no legacy space foundation.
+The first aggregate native-graph fixture run exposed namespace-wrapper errors
+in four standalone fixtures. Only that script was rerun after correcting the
+wrappers; the other24 checks passed on their first run.
+Exact60 staged paths, frozen hashes, blob bytes and100644 modes verified.
+Only the main worktree exists.
+The pre-existing untracked AuxiliaryCandidateBank and new general-proper WIP
+are excluded. No push or external write. The original goal remains active.

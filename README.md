@@ -2203,7 +2203,11 @@ frozen slice. Native order and no-bad guards have exact original-word meanings,
 and ordinary/mean probes have fresh own-root words retaining all old fields.
 Geometric coordinate certificates now construct both native Near and Rank
 tests with one bounded rank word; the actual all-coordinates scan is derived.
-General accepted history construction and the reverse global graph/path
+Equal retained endpoints now admit fully accepted extensions at any eligible
+child-critical point, with fresh own-context words and every old raw column
+retained. Every accepted vertex reaches a terminal-depth vertex at the same
+point through native identity edges.
+General proper history construction and the reverse global graph/path
 implication remain open.
 These graph algorithms do not yet establish unconditional PSPACE membership
 for the original connectivity languages.
