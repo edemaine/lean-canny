@@ -1496,3 +1496,66 @@ are verified. AllfilesUTF8/LF/singleEOF. Onlymain worktree.
 Baseline untracked AuxiliaryCandidateBank and later proof WIP excluded.
 No push or external write. GoalACTIVE: native proper-edge binding, recursive
 bounded completeness, uniform stabilization and Boolean incidence remain.
+
+26. G68: genuine native proper edges and recursive fiber interfaces
+2026-11-04.
+
+The actual matched-branch factory now constructs an Edge.Proper witness.
+Its only geometric inputs are genuine allowed endpoints in strict order,
+no selected bad values and no real critical heights inside the interval,
+and the actual matched slab/fiber. It internally supplies one canonical
+pair, both own-context words, all seven Atomic.Valid guards, prescribed
+whole child points, both Local incidences and common MID signature.
+No supplied new word, evaluator, hom, compatibility or native guard is used.
+Original row/source and normalized polynomial readback prove all native
+Near ranks on that same family, including negative scaling and ghost roots.
+
+Actual native edges and raw paths are symmetric. PointReachable composes
+actual paths through independently sampled histories at the same point,
+and is equivalent to raw reachability for any accepted representatives.
+The final branch theorem returns this relation on original canonical point
+casts. Soundness in the original regular zero set is retained.
+
+Canonical slices and paths agree with actual original numeric slices.
+An accepted child describes the old slice intersected with its actual
+height fiber. Accepted same-depth points provide genuine real-critical
+height membership and weak child derivative equations internally.
+Arbitrary allowed fresh boundary-fiber points have same-fiber paths to
+weak child-critical samples, and therefore accepted representatives in
+their fiber component without a supplied gradient assumption.
+
+DepthComplete is the exact actual same-depth frozen-slice statement.
+Its terminal base is proved. The next-depth hypothesis simulates a path
+between two weak child-critical points in one allowed endpoint fiber by
+constructing accepted representatives. Retained endpoints use Allowed=True;
+no false joint-height membership is inferred. Ambient paths between finite
+sweep cuts separately reduce to finite walks of single closed-slab paths
+with every intermediate point on an actual cut.
+
+Complete recursive finite sweep/native simulation, uniform effective
+stabilization and original Boolean incidence remain open. Neither original
+connectivity language has unconditional PSPACE membership.
+
+All22 frozen source files (2919 LF lines) match their published SHA256
+ledgers, except one necessary EOF-only integration revision: the Local
+source extra final blank was removed. Original bytes/hash and revised
+exact hash plus refreshed whole-source/strict checks are retained. Their whole-source checks use200000 heartbeats,
+warnings as errors and relaxedAutoImplicit=false. Strict three-target
+build20272 jobs PASS. All25 Check scripts PASS, including13 new native
+fixture groups. The native graph fixture has8035
+lines and129 groups.
+Audited 91089 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 196700 transitive constants: no legacy space foundation.
+An early parallel native precheck ran during replacement of Connectivity.olean
+and reported that missing object; its log is retained. The full native
+aggregate then exposed three unclosed anonymous public fixture sections.
+Their section closures were added, with all source statements and frozen
+source bytes unchanged. The second aggregate passes; the other24 scripts
+pass in the first full run. All failure and repair logs are retained.
+All26 exact staged paths, frozen source hashes, blob bytes and100644 modes
+are verified. AllfilesUTF8/LF/singleEOF. Onlymain worktree.
+Baseline untracked AuxiliaryCandidateBank and later proof WIP excluded.
+No push or external write. GoalACTIVE: recursive global native simulation,
+uniform stabilization and original Boolean incidence remain.

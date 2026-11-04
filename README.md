@@ -2207,14 +2207,18 @@ Equal retained endpoints now admit fully accepted extensions at any eligible
 child-critical point, with fresh own-context words and every old raw column
 retained. Every accepted vertex reaches a terminal-depth vertex at the same
 point through native identity edges.
-Genuine allowed endpoint choices and a matched strict slab now construct
-both fresh full words, with all seven atomic validity guards, their prescribed
-child points and their shared native midpoint signature. Equal-height choices
-also construct accepted words at a prescribed weak child-critical point.
-Same-point accepted vertices are joined by native identity edges; joined
-terminal-fiber vertices have equal points and therefore native reachability.
-The general native proper edge and reverse global graph/path implication
-remain open.
+Genuine allowed endpoint choices, a matched strict slab and its bad/critical
+interval exclusions now construct both fresh accepted words and an actual
+native proper edge at the prescribed child points. The full coordinate Near
+and rank conditions follow from that same matched branch. Native edges are
+symmetric, and native point reachability is independent of the chosen words.
+Equal-height choices construct accepted words at weak child-critical points.
+Arbitrary genuine boundary-fiber points connect to such samples geometrically.
+Canonical slices and child fibers now match their original numeric slices.
+Terminal fibers give the base case, and next-depth completeness simulates
+paths between weak critical points in one allowed boundary fiber. Finite
+slab paths reduce to finite walks through actual cut boundaries.
+The recursive global graph/path implication remains open.
 These graph algorithms do not yet establish unconditional PSPACE membership
 for the original connectivity languages.
 

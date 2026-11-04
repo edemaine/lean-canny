@@ -1,3 +1,25 @@
+import LeanCanny.Connectivity.FiniteSlabEndpointPaths
+import LeanCanny.Connectivity.IntegralMixedRoadmapCanonicalCriticalPoints
+import LeanCanny.Connectivity.IntegralMixedRoadmapFiberInduction
+import LeanCanny.Connectivity.IntegralMixedRoadmapFrozenSliceTransport
+import LeanCanny.Connectivity.IntegralMixedRoadmapPointReachability
+import LeanCanny.Connectivity.IntegralMixedRoadmapProperBranchReachability
+import LeanCanny.Connectivity.IntegralMixedRoadmapProperEdgeConstruct
+import LeanCanny.Encoding.IntegralMixedRoadmapEdgeSymmetry
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendBoundaryCritical
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendCriticalFree
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendLocal
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendLocalBad
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendLocalCaptures
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendLocalFields
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendLocalNear
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendLocalRule
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendLocalSweep
+import LeanCanny.Encoding.IntegralMixedRoadmapProperOriginalInterpretation
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRowGood
+import LeanCanny.Geometry.IntegralMixedChronologicalSweepNumerical
+import LeanCanny.Geometry.IntegralMixedNumericalSweepNear
+import LeanCanny.Geometry.IntegralMixedOptionalEndpointCriticalPaths
 import LeanCanny.Connectivity.IntegralMixedRoadmapPointGlue
 import LeanCanny.Connectivity.IntegralMixedRoadmapProperAppendConstruct
 import LeanCanny.Connectivity.IntegralMixedRoadmapTerminalFiber
@@ -4668,14 +4690,18 @@ A retained-endpoint extension now constructs its own fully accepted word at
 any eligible child-critical point, preserving every old raw column and guard.
 Every accepted vertex consequently has a native identity extension at the
 next depth and reaches a terminal-depth vertex at the same point.
-Genuine allowed endpoint choices and a matched strict slab now construct
-both fresh full words, with all seven atomic validity guards, their prescribed
-child points and their shared native midpoint signature. Equal-height choices
-also construct accepted words at a prescribed weak child-critical point.
-Same-point accepted vertices are joined by native identity edges; joined
-terminal-fiber vertices have equal points and therefore native reachability.
-The general native proper edge and reverse global graph/path implication
-remain open.
+Genuine allowed endpoint choices, a matched strict slab and its bad/critical
+interval exclusions now construct both fresh accepted words and an actual
+native proper edge at the prescribed child points. The full coordinate Near
+and rank conditions follow from that same matched branch. Native edges are
+symmetric, and native point reachability is independent of the chosen words.
+Equal-height choices construct accepted words at weak child-critical points.
+Arbitrary genuine boundary-fiber points connect to such samples geometrically.
+Canonical slices and child fibers now match their original numeric slices.
+Terminal fibers give the base case, and next-depth completeness simulates
+paths between weak critical points in one allowed boundary fiber. Finite
+slab paths reduce to finite walks through actual cut boundaries.
+The recursive global graph/path implication remains open.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet
