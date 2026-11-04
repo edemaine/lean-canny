@@ -1,3 +1,13 @@
+import LeanCanny.Connectivity.IntegralMixedRoadmapAnchorIncidenceGeometry
+import LeanCanny.Connectivity.IntegralMixedRoadmapCanonicalRetainedSweep
+import LeanCanny.Connectivity.IntegralMixedRoadmapMarkedComponents
+import LeanCanny.Connectivity.IntegralMixedRoadmapMarkedPointAt
+import LeanCanny.Connectivity.IntegralMixedRoadmapRetainedTargetChild
+import LeanCanny.Connectivity.IntegralMixedRoadmapSeedReplayReinitialization
+import LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorCost
+import LeanCanny.Encoding.IntegralMixedRoadmapMarkedPreludeRetention
+import LeanCanny.Encoding.IntegralMixedRoadmapMarkerAt
+import LeanCanny.Geometry.PolynomialComponentPaths
 import LeanCanny.Connectivity.IntegralMixedRoadmapBoundaryNormalization
 import LeanCanny.Connectivity.IntegralMixedRoadmapCanonicalFiniteSweep
 import LeanCanny.Connectivity.IntegralMixedRoadmapDepthCompleteness
@@ -8610,3 +8620,500 @@ example (candidate first second :List Bool)
 #print axioms depth_zero_raw_reachable_iff_joined
 end LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
 end RoadmapInternalG69DepthCompleteness
+
+section RoadmapInternalG70MarkedSupport
+namespace MarkedMarkerRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open IntegralMixedRoadmapMarkedPrelude
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+attribute [local irreducible] IntegralMixedRoadmapAtomic.dimension IntegralMixedRoadmapAtomic.initial
+  IntegralMixedPhysicalMarkedPlan.bank IntegralMixedRoadmapAtomic.point value point
+
+-- A preserving append supplies fields below begin, not a native Replay oracle.
+example (a b :List Bool) (hA :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 a)
+    (hB :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 b)
+    (hc :IntegralMixedRoadmapAtomic.candidate a=IntegralMixedRoadmapAtomic.candidate b)
+    (hr :Replay hn ht ha hR0 a)
+    (he :∀i<IntegralMixedRoadmapRetainedAppend.beginBirth hn ht ha hR0 a,
+      value hn ht ha hR0 a hA i=value hn ht ha hR0 b hB i):
+    Replay hn ht ha hR0 b ∧HEq (point hn ht ha hR0 a hA) (point hn ht ha hR0 b hB):=by
+  have HV:∀i≤IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 a,
+      value hn ht ha hR0 a hA i=value hn ht ha hR0 b hB i:=
+    fun i hi=>he i (coordinate_before_parent hn ht ha hR0 a i hi)
+  exact ⟨replay_of_values hn ht ha hR0 a b hA hB hc hr HV,
+    point_heq_of_values hn ht ha hR0 a b hA hB hc HV⟩
+
+-- Equality at terminal depth discharges the actual native marker comparison.
+example (q :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 q)
+    (hd :IntegralMixedRoadmapAtomic.depth q=IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 q)
+    (hr :Replay hn ht ha hR0 q)
+    (hp :HEq (IntegralMixedRoadmapAtomic.point hn ht ha hR0 q hv) (point hn ht ha hR0 q hv)):
+    q∈IntegralMixedRoadmapMarkerAt.language hn ht ha hR0:=
+  (IntegralMixedRoadmapMarkerAt.language_iff hn ht ha hR0 q hv).mpr ⟨hd,hr,hp⟩
+
+-- The cost uses only the original factories, including Replay and all coordinates.
+example :IntegralMixedRoadmapMarkerAt.language hn ht ha hR0∈PSPACE:=
+  IntegralMixedRoadmapMarkerAt.mem_PSPACE hn ht ha hR0
+
+example :WordListRecords.count (IntegralMixedRoadmapMarkerAt.initialSignature 0)=1:=by decide
+example :WordListRecords.count (IntegralMixedRoadmapMarkerAt.initialSignature 3)=4:=by decide
+example :Nat.fromBitsLE (WordList.get (IntegralMixedRoadmapMarkerAt.initialSignature 3) 3)=3:=by decide
+
+-- The final geometric coordinate, including the slack coordinates, is retained.
+example (q :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 q)
+    (hd :IntegralMixedRoadmapAtomic.depth q<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 q)
+    (e :ℕ) (he :e<IntegralMixedRoadmapRetainedAppend.beginBirth hn ht ha hR0 q):
+    IntegralMixedRoadmapRetainedAppend.parentValues hn ht ha hR0 q hv hd e he
+      (parentIndex hn ht ha hR0 q hv hd e he (IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 q) le_rfl)=
+      value hn ht ha hR0 q hv (IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 q):=
+  canonical_value hn ht ha hR0 q hv hd e he _ le_rfl
+
+#print axioms exists_marked
+#print axioms point_source_zero
+#print axioms coordinate_before_parent
+#print axioms canonical_value
+#print axioms replay_of_values
+#print axioms point_heq_of_values
+#print axioms IntegralMixedRoadmapMarkerAt.decider
+#print axioms IntegralMixedRoadmapMarkerAt.query_iff
+#print axioms IntegralMixedRoadmapMarkerAt.language_iff
+end MarkedMarkerRegression
+end RoadmapInternalG70MarkedSupport
+
+section RoadmapInternalG70MarkedPointAt
+namespace MarkedPointAtRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open LeanCanny.Connectivity.IntegralMixedRoadmapGraph
+open IntegralMixedRoadmapMarkedPrelude
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+attribute [local irreducible] IntegralMixedRoadmapAtomic.dimension IntegralMixedPhysicalMarkedPlan.bank
+  IntegralMixedRoadmapAtomic.point IntegralMixedRoadmapMarkedPrelude.value
+  preludeAt pointAt
+
+-- Native acceptance yields the entire fixed-source point and its supplied mark.
+example (c q :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 q)
+    (hc :IntegralMixedRoadmapAtomic.candidate q=c)
+    (hm :q∈IntegralMixedRoadmapMarkerAt.language hn ht ha hR0):
+    pointAt hn ht ha hR0 c q hv hc=preludeAt hn ht ha hR0 c q hv hc ∧
+      preludeAt hn ht ha hR0 c q hv hc∈zeroSet (n:=n) (t:=t) (R0:=R0) c ∧
+      ∃hp :IntegralMixedAuxiliaryCandidate.Valid hn ht ha c,∀i :Fin (n (pairFst c)),
+        preludeAt hn ht ha hR0 c q hv hc (i.castAdd 4)=IntegralMixedAuxiliaryCandidate.point hn ht ha c hp i:=by
+  obtain ⟨_,HR,HE⟩:=(markerAt_iff hn ht ha hR0 c q hv hc).mp hm
+  exact ⟨HE,preludeAt_zero hn ht ha hR0 c q hv hc HR,
+    preludeAt_projection hn ht ha hR0 c q hv hc HR⟩
+
+-- The asymmetric induction carries one target vector across different own words.
+example (c a b :List Bool) (hA :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 a)
+    (hB :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 b)
+    (hc :IntegralMixedRoadmapAtomic.candidate a=c) (hd :IntegralMixedRoadmapAtomic.candidate b=c)
+    (hr :Replay hn ht ha hR0 a)
+    (he :∀i<IntegralMixedRoadmapRetainedAppend.beginBirth hn ht ha hR0 a,
+      value hn ht ha hR0 a hA i=value hn ht ha hR0 b hB i):
+    Replay hn ht ha hR0 b ∧preludeAt hn ht ha hR0 c a hA hc=preludeAt hn ht ha hR0 c b hB hd:=by
+  have HV:∀i≤IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 a,
+      value hn ht ha hR0 a hA i=value hn ht ha hR0 b hB i:=
+    fun i hi=>he i (coordinate_before_parent hn ht ha hR0 a i hi)
+  exact ⟨replay_of_values hn ht ha hR0 a b hA hB (hc.trans hd.symm) hr HV,
+    preludeAt_eq_of_fields hn ht ha hR0 c a b hA hB hc hd HV⟩
+
+-- A vector invariant alone transfers Replay; no field assignment is supplied.
+example (c a b :List Bool) (hA :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 a)
+    (hB :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 b)
+    (hc :IntegralMixedRoadmapAtomic.candidate a=c) (hd :IntegralMixedRoadmapAtomic.candidate b=c)
+    (hr :Replay hn ht ha hR0 a)
+    (he :preludeAt hn ht ha hR0 c a hA hc=preludeAt hn ht ha hR0 c b hB hd):Replay hn ht ha hR0 b:=
+  replay_of_preludeAt_eq hn ht ha hR0 c a b hA hB hc hd hr he
+
+local notation "P"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0)
+local notation "E" old=>IntegralMixedRoadmapAtomic.ownBirth hn ht ha hR0 old
+local notation "F" old=>IntegralMixedRoadmapRetainedAppend.own_endpoint_fit hn ht ha hR0 old
+local notation "R" old=>IntegralMixedRoadmapRetainedAppend.preparedRoot hn ht ha hR0 old (E old)
+
+-- The target-coordinate reference is constructed from the actual canonical bank.
+example (old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+    (hd :IntegralMixedRoadmapAtomic.depth old<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old)
+    (q :Fin ((P).ambient (R old)+1)→ℝ)
+    (HPoint:canonicalPointAt hn ht ha hR0 (IntegralMixedRoadmapAtomic.candidate old) old rfl q=
+      preludeAt hn ht ha hR0 (IntegralMixedRoadmapAtomic.candidate old) old hv rfl):
+    Nonempty (Fin (IntegralMixedRoadmapRetainedAppend.parentCommands hn ht ha hR0 old hv hd (E old) (F old)).length):=by
+  obtain ⟨ref,_⟩:=prelude_target_reference hn ht ha hR0 old hv hd q HPoint
+  exact ⟨ref⟩
+
+#print axioms preludeAt_heq
+#print axioms preludeAt_zero
+#print axioms markerAt_iff
+#print axioms preludeAt_eq_of_fields
+#print axioms preludeAt_projection
+#print axioms replay_of_preludeAt_eq
+#print axioms prelude_target_reference
+end MarkedPointAtRegression
+end RoadmapInternalG70MarkedPointAt
+
+section RoadmapInternalG70MarkedComponents
+namespace MarkedComponentsRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open LeanCanny.Connectivity.IntegralMixedRoadmapGraph
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedRoadmapAtomic.point
+  preludeAt pointAt zeroSet
+
+-- Different OWN words and slack phases still attach to the same original mark.
+example (c a b :List Bool) (hA :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 a)
+    (hB :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 b)
+    (hc :IntegralMixedRoadmapAtomic.candidate a=c) (hd :IntegralMixedRoadmapAtomic.candidate b=c)
+    (hrA :IntegralMixedRoadmapMarkedPrelude.Replay hn ht ha hR0 a)
+    (hrB :IntegralMixedRoadmapMarkedPrelude.Replay hn ht ha hR0 b):
+    JoinedIn (zeroSet (n:=n) (t:=t) (R0:=R0) c)
+      (preludeAt hn ht ha hR0 c a hA hc) (preludeAt hn ht ha hR0 c b hB hd):=
+  preludeAt_joined_same_candidate hn ht ha hR0 c a b hA hB hc hd hrA hrB
+
+-- Native terminal markers are therefore joined; no radius or phase equality is supplied.
+example (c a b :List Bool) (hA :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 a)
+    (hB :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 b)
+    (hc :IntegralMixedRoadmapAtomic.candidate a=c) (hd :IntegralMixedRoadmapAtomic.candidate b=c)
+    (hmA :a∈IntegralMixedRoadmapMarkerAt.language hn ht ha hR0)
+    (hmB :b∈IntegralMixedRoadmapMarkerAt.language hn ht ha hR0):
+    JoinedIn (zeroSet (n:=n) (t:=t) (R0:=R0) c)
+      (pointAt hn ht ha hR0 c a hA hc) (pointAt hn ht ha hR0 c b hB hd):=by
+  obtain ⟨_,HRa,HEa⟩:=(markerAt_iff hn ht ha hR0 c a hA hc).mp hmA
+  obtain ⟨_,HRb,HEb⟩:=(markerAt_iff hn ht ha hR0 c b hB hd).mp hmB
+  rw [HEa,HEb]
+  exact preludeAt_joined_same_candidate hn ht ha hR0 c a b hA hB hc hd HRa HRb
+
+#print axioms preludeAt_marked
+#print axioms preludeAt_joined_same_candidate
+#print axioms LeanCanny.Geometry.BoundedRegularSource.joined_to_lift
+end MarkedComponentsRegression
+end RoadmapInternalG70MarkedComponents
+
+section RoadmapInternalG70SeedReplay
+namespace SeedReplayRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open LeanCanny.Connectivity.IntegralMixedRoadmapGraph
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedRoadmapAtomic.point
+  IntegralMixedRoadmapAtomic.dimension pointAt
+
+-- An arbitrary accepted seed needs no initial Replay or source/point receipt.
+example (u label old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+    (hc :IntegralMixedRoadmapAtomic.candidate old=pair u label)
+    (hd :IntegralMixedRoadmapAtomic.depth old=0)
+    (hg :LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.Good hn ht ha u label)
+    (hR :IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha u≤R0 u):
+    ∃fresh,∃hFresh :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 fresh,
+      ∃_hcFresh :IntegralMixedRoadmapAtomic.candidate fresh=IntegralMixedRoadmapAtomic.candidate old,
+        IntegralMixedRoadmapMarkedPrelude.Replay hn ht ha hR0 fresh ∧
+        HEq (IntegralMixedRoadmapAtomic.point hn ht ha hR0 fresh hFresh)
+          (IntegralMixedRoadmapAtomic.point hn ht ha hR0 old hv) ∧
+        RawReachable hn ht ha hR0 (IntegralMixedRoadmapAtomic.candidate old) old fresh:=by
+  obtain ⟨fresh,hFresh,hcFresh,_,HR,HP,HReach⟩:=seed_reinitialize_replay hn ht ha hR0 u label old hv hc hd hg hR
+  exact ⟨fresh,hFresh,hcFresh,HR,HP,HReach⟩
+
+-- The reinitialized node remains at the original rank; this is not a descent edge.
+example (u label old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+    (hc :IntegralMixedRoadmapAtomic.candidate old=pair u label)
+    (hd :IntegralMixedRoadmapAtomic.depth old=0)
+    (hg :LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.Good hn ht ha u label)
+    (hR :IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha u≤R0 u):
+    ∃fresh,IntegralMixedRoadmapAtomic.depth fresh=IntegralMixedRoadmapAtomic.depth old ∧
+      RawReachable hn ht ha hR0 (IntegralMixedRoadmapAtomic.candidate old) old fresh:=by
+  obtain ⟨fresh,_,_,HD,_,_,HReach⟩:=seed_reinitialize_replay hn ht ha hR0 u label old hv hc hd hg hR
+  exact ⟨fresh,HD.trans hd.symm,HReach⟩
+
+#print axioms IntegralMixedRoadmapFirstSeed.exists_at_replay
+#print axioms seed_reinitialize_replay
+#print axioms raw_reachable_of_pointAt_eq
+end SeedReplayRegression
+end RoadmapInternalG70SeedReplay
+
+section RoadmapInternalG70RetainedSweep
+namespace LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+open LeanCanny.Connectivity LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR IntegralCriticalHistoryTask
+open IntegralMixedHistory IntegralMixedFramedHistoryScript IntegralMixedChronologicalFrame
+open IntegralMixedChronologicalEndpoint IntegralMixedOptionalEndpoints IntegralMixedRelativeCuts
+open IntegralMixedFrozenFrame IntegralMixedChosenLocalRealization IntegralMixedCriticalSweep
+open IntegralMixedOriginalRegularSource (radius radius_binary)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+variable (old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+  (hd :IntegralMixedRoadmapAtomic.depth old<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old)
+local notation "P"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha (radius_binary hR0)
+local notation "PLAN"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha (radius_binary hR0)
+local notation "E"=>IntegralMixedRoadmapAtomic.ownBirth hn ht ha hR0 old
+local notation "he"=>IntegralMixedRoadmapRetainedAppend.own_endpoint_fit hn ht ha hR0 old
+local notation "c"=>IntegralMixedRoadmapRetainedAppend.preparedRoot hn ht ha hR0 old E
+local notation "cs"=>IntegralMixedRoadmapRetainedAppend.parentCommands hn ht ha hR0 old hv hd E he
+local notation "ho"=>IntegralMixedRoadmapRetainedAppend.parent_room hn ht ha hR0 old hv hd E he
+local notation "x"=>IntegralMixedRoadmapRetainedAppend.parentState hn ht ha hR0 old hv hd E he
+local notation "d"=>IntegralMixedRoadmapRetainedAppend.parentDescriptor hn ht ha hR0 old hv hd E he
+local notation "hk"=>IntegralMixedRoadmapRetainedAppend.parent_descriptor_fit hn ht ha hR0 old hv hd E he
+local notation "V"=>IntegralMixedRoadmapRetainedAppend.parentValues hn ht ha hR0 old hv hd E he
+local notation "Q"=>IntegralMixedAuxiliaryMarkedIntegerPlan.spatial n t (radius R0) c
+local notation "hQ"=>IntegralMixedStaticRecordPrefix.cap Q (IntegralMixedMarkedPrefixRecords.source_cap hn ht ha hR0 c)
+local notation "phi"=>IntegralMixedRoadmapProperParent.hom hn ht ha hR0 old hv hd
+local notation "hm"=>Nat.le_of_succ_le (IntegralMixedRoadmapProperParent.parent_room hn ht ha hR0 old hv hd)
+local notation "g"=>IntegralMixedRoadmapProperParent.objective hn ht ha hR0 old hv hd
+local notation "hg"=>IntegralMixedRoadmapProperParent.objective_free hn ht ha hR0 old hv hd
+local notation "h"=>IntegralMixedChronologicalSweepFrame.next d hk
+local notation "choices"=>IntegralMixedRoadmapProperParent.choices hn ht ha hR0 old hv hd
+noncomputable local instance canonicalRetainedSweepRegressionIndexFintype :Fintype (Index (Fin 0) cs):=indexFintype (Fin 0) cs
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedMarkedReservedParent.bank
+  IntegralMixedRoadmapAtomic.dimension IntegralMixedRoadmapAtomic.initial IntegralMixedRoadmapAtomic.depth
+  IntegralMixedRoadmapAtomic.payload IntegralMixedRoadmapChain.metadata IntegralMixedRoadmapChain.rawStart
+  IntegralMixedRoadmapRetainedAppend.start IntegralMixedRoadmapChain.depth
+  IntegralMixedRoadmapChain.prefixCount IntegralMixedRoadmapChain.entry IntegralMixedRoadmapChain.frozen
+  IntegralMixedRoadmapRetainedAppend.preparedRoot IntegralMixedRoadmapRetainedAppend.parentCommands
+  IntegralMixedRoadmapRetainedAppend.parentDescriptor IntegralMixedRoadmapRetainedAppend.parentTuple
+  IntegralMixedRoadmapRetainedAppend.parentValues IntegralMixedExceptionalBounds.auxiliaryCap
+  IntegralMixedAuxiliaryMarkedIntegerSource.degreeBound IntegralMixedFramedRawHeight.rootCeiling
+  IntegralMixedFramedNormalizationBits.requiredModulus
+  IntegralMixedFramedHistoryScript.run IntegralMixedHistory.reframe
+  IntegralMixedFramedHistoryFamilyBits.initial IntegralMixedRoadmapProperParent.hom
+  IntegralMixedRoadmapProperParent.choices IntegralMixedRoadmapRetainedAppend.parentState
+
+
+-- A retained value is legal without any bad/critical-root assertion.
+example :(Endpoint.retained (0:Fin 1)).Allowed (∅:Set ℝ) ∧
+    Endpoint.value (fun _ :Fin 1=>(7:ℝ)) (.retained 0)=7 ∧ (7:ℝ)∉(∅:Set ℝ):=by
+  exact ⟨True.intro,rfl,fun H=>H⟩
+-- Actual old-only target inclusion, finite index, and full cover, with no supplied cover.
+example (targetRef :Fin (cs).length):
+    ∃W :RetainedMatchedFiniteSweep x hm phi (d).frame h g hg V choices targetRef,
+      (∃j :Fin (W.slabs+2),W.cut j.val=V targetRef) ∧
+      Finite (Σi,W.Index i) ∧ Nonempty (ClopenPathCover (slice Q (d).frame V) (Σi,W.Index i)):=by
+  obtain ⟨W⟩:=exists_canonical_retained_sweep hn ht ha hR0 old hv hd targetRef
+  exact ⟨W,W.includes_target,W.finite_cover_index,⟨W.cover (IntegralMixedChronologicalSweepFrame.next_free d hk)⟩⟩
+#check exists_retained_matched_finite_sweep
+#check RetainedMatchedFiniteSweep.finite_index
+#check RetainedMatchedFiniteSweep.finite_cover_index
+#check RetainedMatchedFiniteSweep.slabCover
+#check RetainedMatchedFiniteSweep.cover
+#check exists_canonical_retained_sweep
+#print axioms exists_retained_matched_finite_sweep
+#print axioms RetainedMatchedFiniteSweep.finite_index
+#print axioms RetainedMatchedFiniteSweep.finite_cover_index
+#print axioms RetainedMatchedFiniteSweep.slabCover
+#print axioms RetainedMatchedFiniteSweep.cover
+#print axioms exists_canonical_retained_sweep
+end LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+end RoadmapInternalG70RetainedSweep
+
+section RoadmapInternalG70RetainedTarget
+namespace LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+open LeanCanny.Connectivity LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR IntegralCriticalHistoryTask
+open IntegralMixedHistory IntegralMixedFramedHistoryScript IntegralMixedChronologicalFrame
+open IntegralMixedChronologicalEndpoint IntegralMixedOptionalEndpoints IntegralMixedRelativeCuts
+open IntegralMixedFrozenFrame IntegralMixedChosenLocalRealization IntegralMixedCriticalSweep
+open IntegralMixedOriginalRegularSource (radius radius_binary)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+variable (old :List Bool) (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 old)
+  (hd :IntegralMixedRoadmapAtomic.depth old<IntegralMixedRoadmapAtomic.dimension hn ht ha hR0 old)
+local notation "P"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha (radius_binary hR0)
+local notation "PLAN"=>IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha (radius_binary hR0)
+local notation "E"=>IntegralMixedRoadmapAtomic.ownBirth hn ht ha hR0 old
+local notation "he"=>IntegralMixedRoadmapRetainedAppend.own_endpoint_fit hn ht ha hR0 old
+local notation "c"=>IntegralMixedRoadmapRetainedAppend.preparedRoot hn ht ha hR0 old E
+local notation "cs"=>IntegralMixedRoadmapRetainedAppend.parentCommands hn ht ha hR0 old hv hd E he
+local notation "ho"=>IntegralMixedRoadmapRetainedAppend.parent_room hn ht ha hR0 old hv hd E he
+local notation "x"=>IntegralMixedRoadmapRetainedAppend.parentState hn ht ha hR0 old hv hd E he
+local notation "d"=>IntegralMixedRoadmapRetainedAppend.parentDescriptor hn ht ha hR0 old hv hd E he
+local notation "hk"=>IntegralMixedRoadmapRetainedAppend.parent_descriptor_fit hn ht ha hR0 old hv hd E he
+local notation "V"=>IntegralMixedRoadmapRetainedAppend.parentValues hn ht ha hR0 old hv hd E he
+local notation "Q"=>IntegralMixedAuxiliaryMarkedIntegerPlan.spatial n t (radius R0) c
+local notation "hQ"=>IntegralMixedStaticRecordPrefix.cap Q (IntegralMixedMarkedPrefixRecords.source_cap hn ht ha hR0 c)
+local notation "phi"=>IntegralMixedRoadmapProperParent.hom hn ht ha hR0 old hv hd
+local notation "hm"=>Nat.le_of_succ_le (IntegralMixedRoadmapProperParent.parent_room hn ht ha hR0 old hv hd)
+local notation "g"=>IntegralMixedRoadmapProperParent.objective hn ht ha hR0 old hv hd
+local notation "hg"=>IntegralMixedRoadmapProperParent.objective_free hn ht ha hR0 old hv hd
+local notation "h"=>IntegralMixedChronologicalSweepFrame.next d hk
+local notation "choices"=>IntegralMixedRoadmapProperParent.choices hn ht ha hR0 old hv hd
+noncomputable local instance retainedTargetChildRegressionIndexFintype :Fintype (Index (Fin 0) cs):=indexFintype (Fin 0) cs
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedMarkedReservedParent.bank
+  IntegralMixedRoadmapAtomic.dimension IntegralMixedRoadmapAtomic.initial IntegralMixedRoadmapAtomic.depth
+  IntegralMixedRoadmapAtomic.payload IntegralMixedRoadmapChain.metadata IntegralMixedRoadmapChain.rawStart
+  IntegralMixedRoadmapRetainedAppend.start IntegralMixedRoadmapChain.depth
+  IntegralMixedRoadmapChain.prefixCount IntegralMixedRoadmapChain.entry IntegralMixedRoadmapChain.frozen
+  IntegralMixedRoadmapRetainedAppend.preparedRoot IntegralMixedRoadmapRetainedAppend.parentCommands
+  IntegralMixedRoadmapRetainedAppend.parentDescriptor IntegralMixedRoadmapRetainedAppend.parentTuple
+  IntegralMixedRoadmapRetainedAppend.parentValues IntegralMixedExceptionalBounds.auxiliaryCap
+  IntegralMixedAuxiliaryMarkedIntegerSource.degreeBound IntegralMixedFramedRawHeight.rootCeiling
+  IntegralMixedFramedNormalizationBits.requiredModulus
+  IntegralMixedFramedHistoryScript.run IntegralMixedHistory.reframe
+  IntegralMixedFramedHistoryFamilyBits.initial IntegralMixedRoadmapProperParent.hom
+  IntegralMixedRoadmapProperParent.choices IntegralMixedRoadmapRetainedAppend.parentState
+
+open IntegralMixedRoadmapGraph
+attribute [local irreducible] canonicalPointAt pointAt IntegralMixedRoadmapRetainedAppend.ownPoint
+
+
+-- Full actual child/path/ALLoldfields contract, without a Replay/Marker premise.
+example (targetRef :Fin (cs).length)
+    (q :Fin ((P).ambient c+1)→ℝ) (Hqh :q h=V targetRef)
+    (HPath :JoinedIn (slice Q (d).frame V)
+      (IntegralMixedRoadmapRetainedAppend.ownPoint hn ht ha hR0 old hv) q):
+    ∃child,∃hChild :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 child,
+      ∃hcCandidate :IntegralMixedRoadmapAtomic.candidate child=IntegralMixedRoadmapAtomic.candidate old,
+        IntegralMixedRoadmapAtomic.depth child=IntegralMixedRoadmapAtomic.depth old+1 ∧
+        RawReachable hn ht ha hR0 (IntegralMixedRoadmapAtomic.candidate old) old child ∧
+        (∀b,b<beginBirth hn ht ha hR0 old→
+          IntegralMixedRoadmapLocalFrame.field hn ht ha hR0 child hChild b=
+            IntegralMixedRoadmapLocalFrame.field hn ht ha hR0 old hv b) ∧
+        JoinedIn (frozenSlice (n:=n) (t:=t) (R0:=R0) (IntegralMixedRoadmapAtomic.candidate old)
+          (IntegralMixedRoadmapAtomic.depth child) (IntegralMixedRoadmapAtomic.levels hn ht ha hR0 child hChild))
+          (pointAt hn ht ha hR0 (IntegralMixedRoadmapAtomic.candidate old) child hChild hcCandidate)
+          (canonicalPointAt hn ht ha hR0 (IntegralMixedRoadmapAtomic.candidate old) old rfl q):=by
+  exact exists_child_toward_target hn ht ha hR0 old hv hd targetRef q Hqh HPath
+
+-- In particular the target belongs to the ACTUAL child frozen slice.
+example (targetRef :Fin (cs).length) (q :Fin ((P).ambient c+1)→ℝ) (Hqh :q h=V targetRef)
+    (HPath :JoinedIn (slice Q (d).frame V) (IntegralMixedRoadmapRetainedAppend.ownPoint hn ht ha hR0 old hv) q):
+    ∃child,∃hChild :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 child,
+      IntegralMixedRoadmapAtomic.depth child=IntegralMixedRoadmapAtomic.depth old+1 ∧
+        RawReachable hn ht ha hR0 (IntegralMixedRoadmapAtomic.candidate old) old child ∧
+        canonicalPointAt hn ht ha hR0 (IntegralMixedRoadmapAtomic.candidate old) old rfl q∈
+          frozenSlice (n:=n) (t:=t) (R0:=R0) (IntegralMixedRoadmapAtomic.candidate old)
+            (IntegralMixedRoadmapAtomic.depth child) (IntegralMixedRoadmapAtomic.levels hn ht ha hR0 child hChild):=by
+  obtain ⟨child,hChild,_,hdepth,HR,_,HJ⟩:=exists_child_toward_target hn ht ha hR0 old hv hd targetRef q Hqh HPath
+  exact ⟨child,hChild,hdepth,HR,HJ.target_mem⟩
+#check exists_child_toward_target
+#print axioms exists_child_toward_target
+end LeanCanny.Encoding.IntegralMixedRoadmapProperAppend
+end RoadmapInternalG70RetainedTarget
+
+section RoadmapInternalG70TwoAnchorCost
+namespace LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorCost
+open LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open IntegralMixedOriginalRegularSource (radius_binary)
+open scoped Classical
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+
+-- This is the standalone point comparator: different candidate labels are allowed.
+example (q a b :List Bool)
+    (hA :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 a)
+    (hB :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 b)
+    (HDa :IntegralMixedRoadmapAtomic.depth a=0)
+    (HRa :IntegralMixedRoadmapMarkedPrelude.Replay hn ht ha hR0 a)
+    (HIa :IntegralMixedRoadmapAnchorIncidence.Incidence hn ht ha hR0 (candidate false q) a)
+    (HDb :IntegralMixedRoadmapAtomic.depth b=0)
+    (HRb :IntegralMixedRoadmapMarkedPrelude.Replay hn ht ha hR0 b)
+    (HIb :IntegralMixedRoadmapAnchorIncidence.Incidence hn ht ha hR0 (candidate true q) b)
+    (HE :HEq (IntegralMixedRoadmapIdentity.point hn ht ha hR0 a hA)
+      (IntegralMixedRoadmapIdentity.point hn ht ha hR0 b hB)):
+    q∈language hn ht ha hR0:=by
+  exact (language_iff_points hn ht ha hR0 q).mpr ⟨a,b,hA,hB,HDa,HRa,HIa,HDb,HRb,HIb,HE⟩
+
+-- BOTH independently searched anchors must have native Replay.
+example (q :List Bool) (H :q∈language hn ht ha hR0):
+    ∃a b,IntegralMixedRoadmapMarkedPrelude.Replay hn ht ha hR0 a ∧
+      IntegralMixedRoadmapMarkedPrelude.Replay hn ht ha hR0 b ∧
+      IntegralMixedRoadmapAtomic.depth a=0 ∧IntegralMixedRoadmapAtomic.depth b=0:=by
+  obtain ⟨a,b,HDa,HRa,_,HDb,HRb,_,_⟩:=H
+  exact ⟨a,b,HRa,HRb,HDa,HDb⟩
+
+-- Incidence supplies the real accepted seed and its fixed-width native label.
+example (q a :List Bool)
+    (H :IntegralMixedRoadmapAnchorIncidence.Incidence hn ht ha hR0 (candidate false q) a):
+    ∃word :List Bool,word.length=width hn ht ha hR0 false q ∧
+      IntegralMixedRoadmapWordLabel.decode word=a:=by
+  obtain ⟨_,_,HR⟩:=H
+  exact ⟨IntegralMixedRoadmapGraph.label hn ht ha hR0 _ a,
+    IntegralMixedRoadmapGraph.label_length hn ht ha hR0 _ a HR.1 HR.2.2.1,
+    IntegralMixedRoadmapGraph.label_decode hn ht ha hR0 _ a⟩
+
+example :language hn ht ha hR0∈PSPACE:=mem_PSPACE hn ht ha hR0
+
+-- The two labels are separate even though the original source is shared.
+example (u :List Bool):candidate false (pair u (pair [] [true]))≠
+    candidate true (pair u (pair [] [true])):=by
+  intro H
+  have HC:=congrArg pairSnd H
+  simp only [candidate,pairFst_pair,pairSnd_pair,Bool.false_eq_true,ite_false,ite_true] at HC
+  contradiction
+
+example (u :List Bool):¬IntegralMixedRoadmapIdentity.SameCandidate
+    (pair (IntegralMixedRoadmapAtomic.packet (pair u []) [] [])
+      (IntegralMixedRoadmapAtomic.packet (pair u [true]) [] [])):=by
+  intro H
+  have HC:=congrArg pairSnd H
+  simp only [IntegralMixedRoadmapIdentity.left,
+    IntegralMixedRoadmapIdentity.right,IntegralMixedRoadmapAtomic.candidate,
+    IntegralMixedRoadmapAtomic.packet,pairFst_pair,pairSnd_pair] at HC
+  contradiction
+
+#check bounded_iff
+#check language_iff_points
+#check decider
+#check mem_PSPACE
+#print axioms bounded_iff
+#print axioms language_iff_points
+#print axioms decider
+#print axioms mem_PSPACE
+end LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorCost
+end RoadmapInternalG70TwoAnchorCost
+
+section RoadmapInternalG70AnchorGeometry
+namespace LeanCanny.Connectivity.AnchorGeometryRegression
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open IntegralMixedRoadmapGraph
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+
+-- The executable packet has exactly the claimed geometric meaning.
+example (candidate seed :List Bool)
+    (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 seed)
+    (hc :IntegralMixedRoadmapAtomic.candidate seed=candidate)
+    (hd :IntegralMixedRoadmapAtomic.depth seed=0)
+    (hr :IntegralMixedRoadmapMarkedPrelude.Replay hn ht ha hR0 seed):
+    pair candidate seed∈IntegralMixedRoadmapAnchorIncidence.language hn ht ha hR0 ↔
+      JoinedIn (zeroSet (n:=n) (t:=t) (R0:=R0) candidate)
+        (pointAt hn ht ha hR0 candidate seed hv hc)
+        (preludeAt hn ht ha hR0 candidate seed hv hc):=
+  (IntegralMixedRoadmapAnchorIncidence.packet_iff hn ht ha hR0 candidate seed).trans
+    (IntegralMixedRoadmapAnchorIncidence.incidence_iff_joined_prelude hn ht ha hR0
+      candidate seed hv hc hd hr)
+
+-- The actual bounded marker search is a native PSPACE language.
+example :IntegralMixedRoadmapAnchorIncidence.language hn ht ha hR0∈PSPACE:=
+  IntegralMixedRoadmapAnchorIncidence.mem_PSPACE hn ht ha hR0
+
+end LeanCanny.Connectivity.AnchorGeometryRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.prelude_target_complete,
+      `LeanCanny.Encoding.IntegralMixedRoadmapProperAppend.incidence_of_prelude_path,
+      `LeanCanny.Connectivity.IntegralMixedRoadmapAnchorIncidence.incidence_iff_joined_prelude,
+      `LeanCanny.Connectivity.IntegralMixedRoadmapAnchorIncidence.mem_PSPACE,
+      `LeanCanny.Geometry.PolynomialComponentPaths.joinedIn_of_component] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Anchor geometry: two closed consumers and five standard-axiom audits."
+end RoadmapInternalG70AnchorGeometry

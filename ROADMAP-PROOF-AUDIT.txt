@@ -1615,3 +1615,56 @@ AllfilesUTF8/LF/singleEOF. Onlymain worktree; no obsolete worktree/build cache.
 Baseline untracked AuxiliaryCandidateBank and later WIP excluded. No external
 write or push. GoalACTIVE: actual bounded marked-anchor binding, effective
 uniform radius stabilization and Boolean frontier incidence remain open.
+
+28. G70: native marked-component attachment and bounded anchor search
+2026-11-04.
+
+The terminal MarkerAt predicate checks actual validity, terminal depth,
+native Replay and equality of the entire physical point to the bound prelude.
+The PSPACE anchor-incidence search enumerates fixed-width native labels and
+tests actual marker acceptance plus actual raw reachability. Its bounds come
+from accepted native words, without any geometric search oracle.
+
+The marked-target induction keeps the original prelude vector. Each next
+target height is an actual retained parent-bank field, even if not a joint
+critical cut. The same finite matched sweep now includes that retained cut;
+allowed cut witnesses or genuinely empty fibers justify all origins. Actual
+equal children preserve all old fields and native Replay. Strong induction
+constructs a reachable terminal marker from a path to the prelude, with no
+recursive hypothesis or supplied terminal marker in the final theorem.
+
+For a valid Replay depth-zero seed, native incidence is equivalent to JoinedIn
+the original fixed-radius regular zero set from the actual seed point to its
+OWN marked prelude. Soundness uses native path soundness and the component
+identity of same-candidate Replay preludes. Completeness is the constructed
+attachment. No inference identifies arbitrary critical points with the
+candidate component merely from candidate tags or depth zero.
+
+FirstSeed.exists_at_replay retains actual initial-field receipts for its OWN
+word. An accepted depth-zero seed can be rebuilt at the same ENTIRE physical
+point with Replay and an actual native identity path. Polynomial connected
+component membership now supplies an actual path without a regularity premise.
+
+The two-anchor PSPACE search uses two independent candidates, actual depth-zero
+Replay seeds, two native incidences and standalone entire-point equality.
+It deliberately does not require SameCandidate across different anchor labels.
+The equivalence to original bounded candidate connectivity is still a separate
+binding. Uniform effective radius stabilization and the original Boolean
+frontier-incidence algorithm remain open. Neither original connectivity
+language has unconditional PSPACE membership at this checkpoint.
+
+All20 sources (2805 LF lines) match their frozen hash ledgers without
+source revisions. Strict three-target build20328 jobs PASS. All25 Check
+scripts PASS, including8 added native-graph groups. Native graph fixture:
+9119 lines,144 groups. Focused anchor geometry has
+two closed consumers and five standard-axiom audits.
+Audited 91356 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 197074 transitive constants: no legacy space foundation.
+All24 exact staged paths, frozen hashes, index100644 modes and blob bytes
+verified. All files UTF8/LF/singleEOF/no trailing whitespace/chmod-x. Only
+main worktree. Baseline untracked AuxiliaryCandidateBank and later algebra,
+bounded two-anchor geometric binding and Boolean label-lock WIP excluded.
+No external write or push. GoalACTIVE; neither original unbounded PSPACE
+target is asserted by this checkpoint.

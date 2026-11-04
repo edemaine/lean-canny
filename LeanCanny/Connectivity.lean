@@ -1,3 +1,23 @@
+import LeanCanny.Connectivity.IntegralMixedRoadmapAllowedBoundaryNormalization
+import LeanCanny.Connectivity.IntegralMixedRoadmapAnchorIncidence
+import LeanCanny.Connectivity.IntegralMixedRoadmapAnchorIncidenceGeometry
+import LeanCanny.Connectivity.IntegralMixedRoadmapCanonicalRetainedSweep
+import LeanCanny.Connectivity.IntegralMixedRoadmapMarkedComponents
+import LeanCanny.Connectivity.IntegralMixedRoadmapMarkedPointAt
+import LeanCanny.Connectivity.IntegralMixedRoadmapMarkedTargetAttachment
+import LeanCanny.Connectivity.IntegralMixedRoadmapRetainedSweepSlabSimulation
+import LeanCanny.Connectivity.IntegralMixedRoadmapRetainedTargetChild
+import LeanCanny.Connectivity.IntegralMixedRoadmapRetainedTargetSimulation
+import LeanCanny.Connectivity.IntegralMixedRoadmapSeedReplayReinitialization
+import LeanCanny.Connectivity.IntegralMixedRoadmapTerminalPoint
+import LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorCost
+import LeanCanny.Encoding.IntegralMixedRoadmapEqualPreservingChild
+import LeanCanny.Encoding.IntegralMixedRoadmapFirstSeedReplay
+import LeanCanny.Encoding.IntegralMixedRoadmapMarkedPrelude
+import LeanCanny.Encoding.IntegralMixedRoadmapMarkedPreludeRetention
+import LeanCanny.Encoding.IntegralMixedRoadmapMarkerAt
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendEndpointCritical
+import LeanCanny.Geometry.PolynomialComponentPaths
 import LeanCanny.Connectivity.FiniteSlabEndpointNormalization
 import LeanCanny.Connectivity.IntegralMixedRoadmapBoundaryNormalization
 import LeanCanny.Connectivity.IntegralMixedRoadmapCanonicalFiniteSweep
@@ -4710,8 +4730,19 @@ candidate, actual native reachability is equivalent to a path between their
 points in the original fixed-radius regular zero set. No recursive hypothesis
 remains in this equivalence. This does not assert connectivity of the whole
 native graph or a reverse theorem for arbitrary different-depth histories.
-The bounded marked-anchor decision binding, effective uniform stabilization
-and original Boolean frontier-incidence algorithm remain to be discharged.
+The native bounded marker search is now a PSPACE decision procedure.
+For an accepted depth-zero seed with native Replay, it is equivalent to a
+path from that seed to its own marked prelude in the fixed-radius zero set.
+The attachment proof constructs a reachable terminal marker by induction,
+retaining prelude fields and using actual retained target heights. It assumes
+no marker exists in advance. Replay-aware first seeds can be constructed at
+a prescribed global critical point, and arbitrary accepted depth-zero seeds
+can be reinitialized at the same entire point with native Replay.
+A bounded two-anchor search checks both incidences and compares their entire
+points, allowing the candidate labels to differ. Its native PSPACE bound is
+proved; its equivalence to original bounded candidate connectivity is the
+next binding. Effective uniform radius stabilization and the original Boolean
+frontier-incidence algorithm also remain to be discharged.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet
