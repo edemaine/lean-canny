@@ -2195,8 +2195,13 @@ Every native edge, and hence every valid raw graph path, now gives a path in
 one original regular zero set. Any accepted vertex also yields a fresh,
 fully accepted canonical depth-zero seed with the same candidate; the critical
 point and complete sampled word are constructed internally. This does not
-assert graph reachability from the old vertex to that seed. General history
-construction, first-candidate initialization and the reverse global graph/path
+assert graph reachability from the old vertex to that seed. An original Good
+candidate within the required radius now initializes a fresh fully accepted
+seed; its actual graph point lies in the marked lift's source component.
+Native no-critical witnesses follow from critical freedom of the original
+frozen slice. Native order and no-bad guards have exact original-word meanings,
+and ordinary/mean probes have fresh own-root words retaining all old fields.
+General accepted history construction and the reverse global graph/path
 implication remain open.
 These graph algorithms do not yet establish unconditional PSPACE membership
 for the original connectivity languages.

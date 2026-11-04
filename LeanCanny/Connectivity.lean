@@ -1,3 +1,18 @@
+import LeanCanny.Connectivity.IntegralMixedRoadmapFirstSeedComponent
+import LeanCanny.Connectivity.IntegralMixedRoadmapFirstSeedGeometry
+import LeanCanny.Connectivity.IntegralMixedRoadmapFirstSeedIncidence
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerVectorPoint
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalParentContext
+import LeanCanny.Encoding.IntegralMixedRoadmapFirstSeedAcceptance
+import LeanCanny.Encoding.IntegralMixedRoadmapFirstSeedLayout
+import LeanCanny.Encoding.IntegralMixedRoadmapFirstSeedPrelude
+import LeanCanny.Encoding.IntegralMixedRoadmapFirstSeedWord
+import LeanCanny.Encoding.IntegralMixedRoadmapProperCriticalOriginalSlice
+import LeanCanny.Encoding.IntegralMixedRoadmapProperCriticalPreparedParent
+import LeanCanny.Encoding.IntegralMixedRoadmapProperNoCriticalComplete
+import LeanCanny.Encoding.IntegralMixedRoadmapProperOriginalGuards
+import LeanCanny.Encoding.IntegralMixedRoadmapProperProbeWords
+import LeanCanny.Encoding.IntegralMixedRoadmapRowMidpointPhysical
 import LeanCanny.Algebra.IntegralMixedCutCreationInstruction
 import LeanCanny.Algebra.IntegralMixedCutCreationReceipt
 import LeanCanny.Algebra.IntegralMixedFramedCompanionColumns
@@ -4510,8 +4525,13 @@ Every accepted vertex also admits a fresh, fully accepted canonical depth-zero
 seed at its own prepared root, with the same candidate. Its critical point,
 complete word, all native guards and marked-prelude retention are constructed.
 This resampling theorem does not assert old-to-seed graph reachability.
-General accepted history construction, initialization from original candidates
-and the reverse global graph/path implication remain open.
+Original Good candidates within the required radius now initialize a fully
+accepted seed. Its actual graph point lies in the connected component of the
+candidate's canonical marked lift. Native no-critical witnesses can also be
+constructed from critical freedom of the original frozen slice; order and
+no-bad guards characterize original-word fields and the original snapshot.
+General accepted history construction and the reverse global graph/path
+implication remain open.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet

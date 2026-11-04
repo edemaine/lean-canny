@@ -1259,3 +1259,54 @@ run. Namespace axiom audit:89909 declarations, standard3 only. Space audit:
 post-format77 source hashes, staged blob bytes and100644 modes are checked by
  tmp/group62-verify-and-stage.py before the local commit. Only the main worktree
 exists; the pre-existing untracked AuxiliaryCandidateBank is excluded.
+
+21. G63: first original seed incidence and reverse original guard construction
+2026-11-04.
+
+FirstSeed.exists_valid starts with an original Good auxiliary candidate and
+the actual candidate-radius lower bound. It constructs a fresh full Atomic.Valid
+canonical seed without an old accepted vertex. The actual final prelude is
+realized at its own horizon and width; its initial vector is the canonical
+marked lift. FirstSeed.exists_at retains any chosen genuine critical point
+and all critical-block readbacks. No old word, hom, evaluator, native guard or
+whole-history model is a new input.
+
+Graph.exists_first_seed_incident chooses that critical point in the connected
+component of the candidate's canonical marked lift. The returned accepted
+seed's actual graph point (with only its parser dimension cast removed) lies
+in that same component. This is source-component incidence, not native graph
+reachability from arbitrary old vertices.
+
+ProperCritical.noCritical_of_original_critical_free constructs its own fully
+valid prepared parent before inserting that word in the query, then its own
+agreeing critical-child word. The only geometric premise is critical freedom
+of the original source's decoded frozen slice over original endpoint fields.
+Both words retain all required fields, and actual empty_iff rejects a native
+critical witness. No caller-supplied word, hom or model is needed.
+
+ProperRow.exists_own_words constructs both ordinary and mean probe words at
+their own roots and exact canonical widths. Degree-zero reserved cuts remain
+solvable through the padded monic polynomial. Every old field is retained.
+LocalFrame.row_midpoint_physical and row_midpoint_free place the actual MID
+point in every coordinate query, with its actual captured coordinate.
+order_iff_original_fields and noBad_iff_original_bad_free characterize the
+actual native guards using only the original word and its original pre-probe
+snapshot. The selected-coordinate native converse is subsequent work.
+
+Remaining M3: accepted general level/history construction and the reverse
+bounded graph/path implication. M4 effective uniform outer stabilization and
+M5 original Boolean incidence remain open. Neither original pointLanguage nor
+connectedLanguage has unconditional PSPACE membership proved here.
+
+The checkpoint adds 15 sources in five frozen packages. One CRLF source was
+normalized to LF only; its original bytes and hash ledger are preserved in
+tmp/group63-format-originals and tmp/group63-format-normalization.json. Its
+normalized entire source passed the same 200000-heartbeat/warnings-as-errors/
+relaxedAutoImplicit=false check. All other final entire package sources passed
+that check. Five fixture groups are added to the existing fifty.
+Verification: strict three-target build 19966 jobs PASS; all25 Check scripts
+PASS, including the2975-line native graph fixture (55 groups). Namespace audit:
+90006 declarations, only propext/Classical.choice/Quot.sound. Space audit:
+194633 transitive constants, no legacy foundation. Exact19-file staging,
+post-format hashes, staged blob bytes and100644 modes were checked before
+the local commit. Only the main worktree exists. No push or external write.

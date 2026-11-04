@@ -1,3 +1,11 @@
+import LeanCanny.Connectivity.IntegralMixedRoadmapFirstSeedGeometry
+import LeanCanny.Connectivity.IntegralMixedRoadmapFirstSeedIncidence
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerVectorPoint
+import LeanCanny.Encoding.IntegralMixedRoadmapFirstSeedAcceptance
+import LeanCanny.Encoding.IntegralMixedRoadmapProperNoCriticalComplete
+import LeanCanny.Encoding.IntegralMixedRoadmapProperOriginalGuards
+import LeanCanny.Encoding.IntegralMixedRoadmapProperProbeWords
+import LeanCanny.Encoding.IntegralMixedRoadmapRowMidpointPhysical
 import LeanCanny.Connectivity.IntegralMixedRoadmapLocalPath
 import LeanCanny.Connectivity.IntegralMixedRoadmapProperGeometry
 import LeanCanny.Connectivity.IntegralMixedRoadmapSeedGeometry
@@ -2668,3 +2676,300 @@ end
 #print axioms LeanCanny.Connectivity.IntegralMixedRoadmapGraph.path_joined
 #print axioms LeanCanny.Connectivity.IntegralMixedRoadmapGraph.raw_reachable_joined
 end RoadmapInternalGraphPathSoundnessActual
+
+namespace RoadmapInternalNoCriticalConverse
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.Encoding LeanCanny.ETR
+open Set IntegralMixedHistory
+open IntegralMixedRoadmapProperCritical
+noncomputable section
+set_option backward.isDefEq.respectTransparency false
+namespace NoCriticalConverseRegression
+variable {n : List Bool→ℕ} {t : List Bool→Term} (hn : UnaryFn n)
+ (ht : (fun q=>(t q).toData.toBits)∈FP) (ha : ∀q,(t q).arity≤n q)
+ {R0 : List Bool→ℕ} (hR0 : BinaryFn R0)
+-- The actual public converse has no word, interpretation, model or evaluator input.
+example (q : List Bool) (hv : IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 q)
+ (hd : 0<IntegralMixedRoadmapAtomic.depth q)
+ (HF : OriginalSliceCriticalFree hn ht ha hR0 q hv hd) : NoCritical hn ht ha hR0 q :=
+ noCritical_of_original_critical_free hn ht ha hR0 q hv hd HF
+-- An empty open interval still needs, and internally obtains, a valid critical child.
+example (q : List Bool) (hv : IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 q)
+ (hd : 0<IntegralMixedRoadmapAtomic.depth q)
+ (he : originalField hn ht ha hR0 q hv (IntegralMixedRoadmapProper.producer false q)=
+   originalField hn ht ha hR0 q hv (IntegralMixedRoadmapProper.producer true q)) :
+ NoCritical hn ht ha hR0 q :=by
+ apply noCritical_of_original_critical_free hn ht ha hR0 q hv hd
+ unfold OriginalSliceCriticalFree
+ rw [he,Ioo_self]
+ exact Set.disjoint_left.mpr (fun _ h _=>False.elim h)
+-- Critical existence is singular-safe and derived from an accepted actual point.
+example (q : List Bool) (hv : IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 q)
+ (hd : 0<IntegralMixedRoadmapAtomic.depth q) :
+ (originalCriticalValues hn ht ha hR0 q hv hd).Nonempty :=
+ original_critical_nonempty hn ht ha hR0 q hv hd
+-- Preparing a parent context does not require a preselected word or copied ordinal.
+example (q : List Bool) (hv : IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 q) :
+ IntegralMixedIntegerRealization.Realizes
+  ((IntegralMixedFramedHistoryFamilyBits.family
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false).parameters
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false).plan
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false).data).state
+    (IntegralMixedPhysicalCriticalPrefixes.key n false false (canonical hn ht ha hR0 q)))
+  (originalNaturalValues hn ht ha hR0 q hv) :=
+ canonical_parent_realizes hn ht ha hR0 q hv
+-- The fixed AUX self-reference is handled by actual complete-input naturality.
+example (a b w : List Bool) (he : pairFst a=pairFst b) :
+ SquareSampleCompleteVertices.Valid
+  (IntegralMixedPhysicalCriticalPrefixes.input hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false false) a w↔
+ SquareSampleCompleteVertices.Valid
+  (IntegralMixedPhysicalCriticalPrefixes.input hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false false) b w :=
+ IntegralMixedPhysicalCriticalParentContext.valid_iff hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) a b w he
+#print axioms noCritical_of_original_critical_free
+#print axioms original_slice_nonempty
+#print axioms original_critical_nonempty
+#print axioms canonical_parent_realizes
+#print axioms exists_parent_word
+#print axioms IntegralMixedPhysicalCriticalParentContext.input_factor
+#print axioms IntegralMixedPhysicalCriticalParentContext.natural_eq
+#print axioms IntegralMixedPhysicalCriticalParentContext.point_eq
+end NoCriticalConverseRegression
+end
+end RoadmapInternalNoCriticalConverse
+
+namespace RoadmapInternalOwnProbeWords
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR Polynomial
+open IntegralMixedOriginalRegularSource (radius_binary)
+open IntegralMixedRoadmapProperRow
+open scoped Classical
+namespace ProperProbeWordsRegression
+example (p :Polynomial ℝ) :FixedDegreeIntegralNormalization.polynomial p 0=1:=by
+  simp only [FixedDegreeIntegralNormalization.polynomial,pow_zero,Finset.range_zero,
+    Finset.sum_empty,add_zero]
+example :PaddedIntegralNormalization.polynomial (1:Polynomial ℝ) 0 4=X^4:=by
+  simp only [PaddedIntegralNormalization.polynomial,show (0:ℕ)≤4 by omega,ite_true,Nat.sub_zero,
+    FixedDegreeIntegralNormalization.polynomial,pow_zero,Finset.range_zero,Finset.sum_empty,add_zero,mul_one]
+example :(PaddedIntegralNormalization.polynomial (X^2+1:Polynomial ℝ) 0 4).eval 0=0:=by
+  norm_num [PaddedIntegralNormalization.polynomial,FixedDegreeIntegralNormalization.polynomial]
+example :(X^2+1:Polynomial ℝ).eval 0≠0:=by norm_num
+example :(PaddedIntegralNormalization.polynomial (0:Polynomial ℝ) 0 2).eval 0=0:=by
+  norm_num [PaddedIntegralNormalization.polynomial,FixedDegreeIntegralNormalization.polynomial]
+example :(-3:ℝ)≠0:=by norm_num
+example {n m :ℕ} (d :IntegralMixedCutRecordConstructor.Data n m) (h:d.current=true) :
+    (d.rule (-3) (by decide)).slope=(-3):=by
+  change (if d.current then (-3:ℤ) else 1)=(-3)
+  rw [h]
+  rfl
+example {n m :ℕ} (d :IntegralMixedCutRecordConstructor.Data n m) :
+    (d.code .coordinate 0 0)=IntegralMixedCausalRecordDegree.withDegree (d.baseCode .coordinate 0) 0:=rfl
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank
+  IntegralMixedRoadmapAtomic.dimension IntegralMixedRoadmapAtomic.initial
+  IntegralMixedRoadmapProperCoordinateSearch.fullWidth
+example (q :List Bool) (j :ℕ) (hA:IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 q)
+    (HR:IntegralMixedRoadmapProperRowWitness.RowGood hn ht ha hR0 (pair q (BinaryNatCode.encode j))) :
+    ∃ordinary mean,
+      ordinary.length=IntegralMixedRoadmapProperCoordinateSearch.fullWidth hn ht ha hR0 false (pair q (BinaryNatCode.encode j)) ∧
+      mean.length=IntegralMixedRoadmapProperCoordinateSearch.fullWidth hn ht ha hR0 true (pair q (BinaryNatCode.encode j)) ∧
+      IntegralMixedRoadmapProperRowWitness.fieldMatch hn ht ha hR0 false
+        (IntegralMixedRoadmapProperRowWitness.packet (pair q (BinaryNatCode.encode j)) ordinary mean [])∈
+        IntegralMixedPhysicalFieldEqualityList.language hn ht ha (radius_binary hR0) ∧
+      IntegralMixedRoadmapProperRowWitness.fieldMatch hn ht ha hR0 true
+        (IntegralMixedRoadmapProperRowWitness.packet (pair q (BinaryNatCode.encode j)) ordinary mean [])∈
+        IntegralMixedPhysicalFieldEqualityList.language hn ht ha (radius_binary hR0):=by
+  have HV:IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 (atomic (pair q (BinaryNatCode.encode j))):=by
+    simpa only [atomic,pairFst_pair] using hA
+  obtain ⟨ordinary,mean,HO,HM,_,_,HS⟩:=exists_own_words hn ht ha hR0 _ HV HR
+  exact ⟨ordinary,mean,HO,HM,HS []⟩
+example (z :List Bool) (hA:IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 (atomic z))
+    (HR:IntegralMixedRoadmapProperRowWitness.RowGood hn ht ha hR0 z) :
+    ∃ordinary mean,
+      SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha (radius_binary hR0) false)
+        (context hn ht ha hR0 false z) ordinary ∧
+      SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha (radius_binary hR0) false)
+        (context hn ht ha hR0 true z) mean:=by
+  obtain ⟨ordinary,mean,_,_,HO,HM,_⟩:=exists_own_words hn ht ha hR0 z hA HR
+  exact ⟨ordinary,mean,HO,HM⟩
+end ProperProbeWordsRegression
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.exists_own_words
+#print axioms LeanCanny.Encoding.IntegralMixedMarkedReservedVertex.exists_vertex
+#print axioms LeanCanny.Encoding.IntegralMixedMarkedReservedFieldVertex.exists_parent_fields
+#print axioms LeanCanny.Encoding.IntegralMixedMarkedReservedParent.prepared_canonical_realizes
+#print axioms LeanCanny.Algebra.IntegralMixedHistory.normalizedScalar_padding_zero_extend
+end RoadmapInternalOwnProbeWords
+
+namespace RoadmapInternalFirstOriginalSeed
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open IntegralCriticalHistoryTask IntegralMixedHistory
+open IntegralMixedOriginalRegularSource (radius radius_binary)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+-- The first-node interface has only original syntax, Good and radius bounds.
+example {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+    (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+    {R0 :List Bool→ℕ} (hR0 :BinaryFn R0) (u label :List Bool)
+    (hg :LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.Good hn ht ha u label)
+    (hLower :IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha u≤R0 u) :
+    ∃w,IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 (IntegralMixedRoadmapAtomic.packet (pair u label)
+      (IntegralMixedRoadmapSeedResampling.payload (n u+3)) w):=
+  IntegralMixedRoadmapFirstSeed.exists_valid hn ht ha hR0 u label hg hLower
+
+-- The existing native candidate radius supplies the lower bound internally.
+example {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+    (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q) (u label :List Bool)
+    (hg :LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.Good hn ht ha u label) :
+    ∃w,IntegralMixedRoadmapAtomic.Valid hn ht ha (IntegralMixedAuxiliaryCandidateRadius.radius_binary hn ht ha)
+      (IntegralMixedRoadmapAtomic.packet (pair u label) (IntegralMixedRoadmapSeedResampling.payload (n u+3)) w):=
+  IntegralMixedRoadmapFirstSeed.exists_valid hn ht ha (IntegralMixedAuxiliaryCandidateRadius.radius_binary hn ht ha)
+    u label hg (Nat.le_refl _)
+
+-- Radius zero really excludes the zero of X-2; a selected-radius bound is essential.
+example :¬Nonempty (BoundedZeroSource.Bounded
+    (MvPolynomial.X (0 :Fin 1)-MvPolynomial.C (2 :ℤ)) 0):=by
+  rintro ⟨a⟩
+  have H:=a.property.1
+  simp only [MvPolynomial.eval₂_sub,MvPolynomial.eval₂_X,MvPolynomial.eval₂_C] at H
+  norm_num at H
+  have HX :a.val 0=2:=by linarith
+  have HR:=a.property.2
+  norm_num [BoundedZeroSource.radial,BoundedZeroSource.radiusSquared,Fin.sum_univ_one,HX] at HR
+
+namespace FirstSeedZero
+abbrev dimension (_ :List Bool) :ℕ:=0
+abbrev term (_ :List Bool) :Term:=.const 0
+theorem hn :UnaryFn dimension:=UnaryFn.const 0
+theorem ht :(fun q=>(term q).toData.toBits)∈FP:=by
+  exact constFn_mem_FP ((Term.const 0).toData.toBits)
+theorem ha :∀q,(term q).arity≤dimension q:=by
+  intro q
+  simp only [dimension,Term.arity,le_refl]
+
+theorem good_exists :∃label,LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.Good hn ht ha [] label:=by
+  let x :LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.Space dimension term []:=⟨Fin.elim0,by
+    change (AuxiliaryTiltedTerm.polynomial 0 (.const 0)).eval Fin.elim0=0
+    rw [LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.evaluation]
+    simp only [Term.eval,Int.cast_zero]⟩
+  obtain ⟨i,_⟩:=(LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.samples hn ht ha []).hit
+    Set.univ isClopen_univ ⟨x,Set.mem_univ x⟩
+  exact ⟨i.val.val,i.property⟩
+
+-- A concrete nonempty original zero set initializes with NO accepted input node.
+example :∃label w,IntegralMixedRoadmapAtomic.Valid hn ht ha
+    (IntegralMixedAuxiliaryCandidateRadius.radius_binary hn ht ha)
+    (IntegralMixedRoadmapAtomic.packet (pair [] label) (IntegralMixedRoadmapSeedResampling.payload 3) w):=by
+  obtain ⟨label,hg⟩:=good_exists
+  obtain ⟨w,hw⟩:=IntegralMixedRoadmapFirstSeed.exists_valid hn ht ha
+    (IntegralMixedAuxiliaryCandidateRadius.radius_binary hn ht ha) [] label hg (Nat.le_refl _)
+  exact ⟨label,w,hw⟩
+end FirstSeedZero
+
+#print axioms IntegralMixedRoadmapFirstSeed.checked
+#print axioms IntegralMixedRoadmapFirstSeed.grammar
+#print axioms IntegralMixedRoadmapFirstSeed.prelude_commands
+#print axioms IntegralMixedRoadmapFirstSeed.prelude_realizes
+#print axioms IntegralMixedRoadmapFirstSeed.bounded_witness
+#print axioms IntegralMixedRoadmapFirstSeed.exists_tuple
+#print axioms IntegralMixedRoadmapFirstSeed.exists_word
+#print axioms IntegralMixedRoadmapFirstSeed.exists_at
+#print axioms IntegralMixedRoadmapFirstSeed.exists_valid
+#print axioms FirstSeedZero.good_exists
+end RoadmapInternalFirstOriginalSeed
+
+namespace RoadmapInternalFirstSeedComponent
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.Encoding LeanCanny.ETR
+open Set LeanCanny.Connectivity.IntegralMixedRoadmapGraph
+noncomputable section
+set_option backward.isDefEq.respectTransparency false
+namespace FirstSeedIncidenceRegression
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+
+-- No old accepted history or chosen hom is an input to this incidence theorem.
+example (u label :List Bool)
+    (hg :LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.Good hn ht ha u label)
+    (hR :IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha u≤R0 u) :
+    ∃w,∃hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0
+      (IntegralMixedRoadmapAtomic.packet (pair u label)
+        (IntegralMixedRoadmapSeedResampling.payload (n u+3)) w),
+      firstSeedPoint hn ht ha hR0 u label w hv∈
+        connectedComponentIn (firstZeroSet (n:=n) (t:=t) (R0:=R0) u)
+          (firstMarkedPoint hn ht ha u label hg hR):=
+  exists_first_seed_incident hn ht ha hR0 u label hg hR
+
+-- Incidence implies actual source zero, without a separate lifting/validity premise.
+example (u label :List Bool)
+    (hg :LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.Good hn ht ha u label)
+    (hR :IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha u≤R0 u) :
+    ∃w,∃hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0
+      (IntegralMixedRoadmapAtomic.packet (pair u label)
+        (IntegralMixedRoadmapSeedResampling.payload (n u+3)) w),
+      firstSeedPoint hn ht ha hR0 u label w hv∈firstZeroSet (n:=n) (t:=t) (R0:=R0) u:=by
+  obtain ⟨w,hv,H⟩:=exists_first_seed_incident hn ht ha hR0 u label hg hR
+  exact ⟨w,hv,connectedComponentIn_subset _ _ H⟩
+
+-- Entire point equality follows from the native block readback, including all coordinates.
+example (u label w :List Bool)
+    (hv :IntegralMixedRoadmapAtomic.Valid hn ht ha hR0
+      (IntegralMixedRoadmapAtomic.packet (pair u label)
+        (IntegralMixedRoadmapSeedResampling.payload (n u+3)) w))
+    (p :Fin (n u+3+1)→ℝ)
+    (hp :HEq (IntegralMixedRoadmapAtomic.point hn ht ha hR0
+      (IntegralMixedRoadmapAtomic.packet (pair u label)
+        (IntegralMixedRoadmapSeedResampling.payload (n u+3)) w) hv) p) :
+    ∀i,firstSeedPoint hn ht ha hR0 u label w hv i=p i:=by
+  rw [firstSeedPoint_of_point_heq hn ht ha hR0 u label w hv p hp]
+  exact fun _=>rfl
+
+-- The canonical marked point belongs to precisely the original regular source used above.
+example (u label :List Bool)
+    (hg :LeanCanny.Connectivity.AuxiliaryCandidateComponentCover.Good hn ht ha u label)
+    (hR :IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha u≤R0 u) :
+    firstMarkedPoint hn ht ha u label hg hR∈firstZeroSet (n:=n) (t:=t) (R0:=R0) u:=
+  firstMarkedPoint_mem hn ht ha u label hg hR
+
+#print axioms firstMarkedPoint_mem
+#print axioms exists_original_component_critical
+#print axioms first_seed_point_of_readback
+#print axioms exists_first_seed_in_component
+#print axioms firstSeed_candidate
+#print axioms firstSeedPoint_of_point_heq
+#print axioms exists_first_seed_incident
+end FirstSeedIncidenceRegression
+end
+end RoadmapInternalFirstSeedComponent
+
+namespace RoadmapInternalOriginalGeometryGuards
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding
+open LeanCanny.Computation LeanCanny.ETR IntegralCriticalHistoryTask
+open IntegralMixedOriginalRegularSource (radius_binary)
+open scoped Classical
+
+-- The no-bad converse needs original fields and the original pre-probe
+-- snapshot, with neither a new sampled word nor an interpretation hom.
+example {n : List Bool→ℕ} {t : List Bool→Term} (hn : UnaryFn n)
+    (ht : (fun q=>(t q).toData.toBits)∈FP) (ha : ∀q,(t q).arity≤n q)
+    {R0 : List Bool→ℕ} (hR0 : BinaryFn R0) (q : List Bool)
+    (hv : IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 q)
+    (hrow : IntegralMixedRoadmapProperRowWitness.RowGood hn ht ha hR0
+      (IntegralMixedRoadmapLocalFrame.rowKey q))
+    (horder : IntegralMixedRoadmapLocalFrame.field hn ht ha hR0 q hv
+        (IntegralMixedRoadmapProper.producer false q)<
+      IntegralMixedRoadmapLocalFrame.field hn ht ha hR0 q hv
+        (IntegralMixedRoadmapProper.producer true q))
+    (hfree : IntegralMixedRoadmapLocalFrame.OriginalBadFree hn ht ha hR0 q hv) :
+    IntegralMixedRoadmapProper.NoBad hn ht ha hR0 q:=
+  (IntegralMixedRoadmapLocalFrame.noBad_iff_original_bad_free hn ht ha hR0 q hv hrow horder).mpr hfree
+
+#print axioms LeanCanny.Connectivity.IntegralMixedRoadmapGraph.exists_original_critical
+#print axioms LeanCanny.Connectivity.IntegralMixedRoadmapGraph.exists_first_critical
+#print axioms IntegralMixedAuxiliaryMarkedIntegerSource.values_markedLift
+#print axioms IntegralMixedRoadmapLocalFrame.row_ambient_eq
+#print axioms IntegralMixedRoadmapLocalFrame.row_parent_width
+#print axioms IntegralMixedRoadmapLocalFrame.row_midpoint_physical
+#print axioms IntegralMixedRoadmapLocalFrame.row_midpoint_free
+#print axioms IntegralMixedRoadmapLocalFrame.order_iff_original_fields
+#print axioms IntegralMixedRoadmapLocalFrame.noBad_iff_original_bad_free
+end RoadmapInternalOriginalGeometryGuards
