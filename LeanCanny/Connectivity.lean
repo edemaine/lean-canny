@@ -1,3 +1,9 @@
+import LeanCanny.Encoding.IntegralMixedRoadmapLocalCoordinateComplete
+import LeanCanny.Encoding.IntegralMixedRoadmapProperCoordinateComplete
+import LeanCanny.Encoding.IntegralMixedRoadmapProperNearComplete
+import LeanCanny.Encoding.IntegralMixedRoadmapProperProbeMetadata
+import LeanCanny.Encoding.IntegralMixedRoadmapProperProbeValues
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRankComplete
 import LeanCanny.Connectivity.IntegralMixedRoadmapFirstSeedComponent
 import LeanCanny.Connectivity.IntegralMixedRoadmapFirstSeedGeometry
 import LeanCanny.Connectivity.IntegralMixedRoadmapFirstSeedIncidence
@@ -4530,6 +4536,9 @@ accepted seed. Its actual graph point lies in the connected component of the
 candidate's canonical marked lift. Native no-critical witnesses can also be
 constructed from critical freedom of the original frozen slice; order and
 no-bad guards characterize original-word fields and the original snapshot.
+Genuine coordinate meaning now constructs both native statistic tests using
+one bounded rank word and independent full words at their own query roots.
+The actual bounded all-coordinates scan follows from these local certificates.
 General accepted history construction and the reverse global graph/path
 implication remain open.
 The recursive framed polynomial presentation and its original-only uniform

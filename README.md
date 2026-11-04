@@ -2201,6 +2201,8 @@ seed; its actual graph point lies in the marked lift's source component.
 Native no-critical witnesses follow from critical freedom of the original
 frozen slice. Native order and no-bad guards have exact original-word meanings,
 and ordinary/mean probes have fresh own-root words retaining all old fields.
+Geometric coordinate certificates now construct both native Near and Rank
+tests with one bounded rank word; the actual all-coordinates scan is derived.
 General accepted history construction and the reverse global graph/path
 implication remain open.
 These graph algorithms do not yet establish unconditional PSPACE membership

@@ -1,3 +1,7 @@
+import LeanCanny.Encoding.FixedWidthNatVector
+import LeanCanny.Encoding.IntegralMixedRoadmapLocalCoordinateComplete
+import LeanCanny.Encoding.IntegralMixedRoadmapProperNearComplete
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRankComplete
 import LeanCanny.Connectivity.IntegralMixedRoadmapFirstSeedGeometry
 import LeanCanny.Connectivity.IntegralMixedRoadmapFirstSeedIncidence
 import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedIntegerVectorPoint
@@ -2973,3 +2977,86 @@ example {n : List Bool→ℕ} {t : List Bool→Term} (hn : UnaryFn n)
 #print axioms IntegralMixedRoadmapLocalFrame.order_iff_original_fields
 #print axioms IntegralMixedRoadmapLocalFrame.noBad_iff_original_bad_free
 end RoadmapInternalOriginalGeometryGuards
+
+namespace RoadmapInternalCoordinateHelperConverse
+open LeanCanny LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Computation
+open scoped Classical
+set_option maxHeartbeats 200000
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+
+example : Nat.fromBitsLE (List.ofFn (fun k : Fin 2=> (3:Nat).testBit k.val))=3 :=by
+  exact FixedWidthNatVector.fromBitsLE_ofFn_testBit 2 3 (by decide)
+example : Nat.fromBitsLE (List.ofFn (fun k : Fin 2=> (0:Nat).testBit k.val))=0 :=by
+  exact FixedWidthNatVector.fromBitsLE_ofFn_testBit 2 0 (by decide)
+example : (List.ofFn (fun k : Fin 2=> (3:Nat).testBit k.val)).length=2 :=by simp
+example : ¬(4:Nat)<2^2 :=by decide
+example : OrderedRealRootWindow.rank ({-2,0,5}:Finset ℝ) 0=1 :=by
+  norm_num [OrderedRealRootWindow.rank, Finset.filter_insert, Finset.filter_singleton]
+example : OrderedRealRootWindow.rank ({0,1,2,3}:Finset ℝ) 4=4 :=by
+  norm_num [OrderedRealRootWindow.rank, Finset.filter_insert, Finset.filter_singleton]
+example : ¬OrderedRealRootWindow.rank ({0,1,2,3}:Finset ℝ) 4<2^2 :=by
+  norm_num [OrderedRealRootWindow.rank, Finset.filter_insert, Finset.filter_singleton]
+example (z ordinary mean rank : List Bool) :
+    IntegralMixedRoadmapProperRowWitness.query false
+      (IntegralMixedRoadmapProperRowWitness.packet z ordinary mean rank)=pair (pair z ordinary) rank :=by
+  simp only [IntegralMixedRoadmapProperRowWitness.query,IntegralMixedRoadmapProperRowWitness.packet,
+    IntegralMixedRoadmapProperRowWitness.key,IntegralMixedRoadmapProperRowWitness.ownWord,
+    IntegralMixedRoadmapProperRowWitness.rank,pairFst_pair,pairSnd_pair,Bool.false_eq_true,ite_false]
+example (z ordinary mean rank : List Bool) :
+    IntegralMixedRoadmapProperRowWitness.query true
+      (IntegralMixedRoadmapProperRowWitness.packet z ordinary mean rank)=pair (pair z mean) rank :=by
+  simp only [IntegralMixedRoadmapProperRowWitness.query,IntegralMixedRoadmapProperRowWitness.packet,
+    IntegralMixedRoadmapProperRowWitness.key,IntegralMixedRoadmapProperRowWitness.ownWord,
+    IntegralMixedRoadmapProperRowWitness.rank,pairFst_pair,pairSnd_pair,ite_true]
+
+#print axioms IntegralMixedRoadmapProperRow.probe_metadata
+#print axioms IntegralMixedRoadmapProperRow.probe_scalar_value
+#print axioms IntegralMixedRoadmapProperRow.probe_parent_values
+#print axioms IntegralMixedRoadmapProperRow.probe_near_of_semantics
+#print axioms IntegralMixedRoadmapProperRow.probe_rank_of_semantics
+end RoadmapInternalCoordinateHelperConverse
+
+namespace RoadmapInternalCoordinateNativeConverse
+open LeanCanny LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Computation
+open scoped Classical
+set_option maxHeartbeats 200000
+set_option warningAsError true
+set_option relaxedAutoImplicit false
+
+example : Nat.fromBitsLE (List.ofFn (fun k : Fin 2=> (3:Nat).testBit k.val))=3 :=by
+  exact FixedWidthNatVector.fromBitsLE_ofFn_testBit 2 3 (by decide)
+example : Nat.fromBitsLE (List.ofFn (fun k : Fin 2=> (0:Nat).testBit k.val))=0 :=by
+  exact FixedWidthNatVector.fromBitsLE_ofFn_testBit 2 0 (by decide)
+example : (List.ofFn (fun k : Fin 2=> (3:Nat).testBit k.val)).length=2 :=by simp
+example : ¬(4:Nat)<2^2 :=by decide
+example : OrderedRealRootWindow.rank ({-2,0,5}:Finset ℝ) 0=1 :=by
+  norm_num [OrderedRealRootWindow.rank, Finset.filter_insert, Finset.filter_singleton]
+example : OrderedRealRootWindow.rank ({0,1,2,3}:Finset ℝ) 4=4 :=by
+  norm_num [OrderedRealRootWindow.rank, Finset.filter_insert, Finset.filter_singleton]
+example : ¬OrderedRealRootWindow.rank ({0,1,2,3}:Finset ℝ) 4<2^2 :=by
+  norm_num [OrderedRealRootWindow.rank, Finset.filter_insert, Finset.filter_singleton]
+example (z ordinary mean rank : List Bool) :
+    IntegralMixedRoadmapProperRowWitness.query false
+      (IntegralMixedRoadmapProperRowWitness.packet z ordinary mean rank)=pair (pair z ordinary) rank :=by
+  simp only [IntegralMixedRoadmapProperRowWitness.query,IntegralMixedRoadmapProperRowWitness.packet,
+    IntegralMixedRoadmapProperRowWitness.key,IntegralMixedRoadmapProperRowWitness.ownWord,
+    IntegralMixedRoadmapProperRowWitness.rank,pairFst_pair,pairSnd_pair,Bool.false_eq_true,ite_false]
+example (z ordinary mean rank : List Bool) :
+    IntegralMixedRoadmapProperRowWitness.query true
+      (IntegralMixedRoadmapProperRowWitness.packet z ordinary mean rank)=pair (pair z mean) rank :=by
+  simp only [IntegralMixedRoadmapProperRowWitness.query,IntegralMixedRoadmapProperRowWitness.packet,
+    IntegralMixedRoadmapProperRowWitness.key,IntegralMixedRoadmapProperRowWitness.ownWord,
+    IntegralMixedRoadmapProperRowWitness.rank,pairFst_pair,pairSnd_pair,ite_true]
+
+#print axioms IntegralMixedRoadmapProperRow.probe_metadata
+#print axioms IntegralMixedRoadmapProperRow.probe_scalar_value
+#print axioms IntegralMixedRoadmapProperRow.probe_parent_values
+#print axioms IntegralMixedRoadmapProperRow.probe_near_of_semantics
+#print axioms IntegralMixedRoadmapProperRow.probe_rank_of_semantics
+#print axioms IntegralMixedRoadmapProperRow.holds_of_coordinate_meaning
+
+example : 4-(2-1)=3 :=by decide
+example : (List.map (fun i=>2+i) (List.range (4-(2-1))))=[2,3,4] :=by decide
+#print axioms IntegralMixedRoadmapLocalEdge.allCoordinates_of_coordinate_meaning
+end RoadmapInternalCoordinateNativeConverse

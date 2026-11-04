@@ -1310,3 +1310,39 @@ PASS, including the2975-line native graph fixture (55 groups). Namespace audit:
 194633 transitive constants, no legacy foundation. Exact19-file staging,
 post-format hashes, staged blob bytes and100644 modes were checked before
 the local commit. Only the main worktree exists. No push or external write.
+
+22. G64: genuine coordinate meaning constructs both native statistic tests
+2026-11-04.
+
+ProperRow.holds_of_coordinate_meaning takes exactly an accepted atomic word,
+the existing proper Base, depth<=j<=dimension and the existing CoordinateMeaning.
+It constructs a native bounded-coordinate-search witness. The actual physical
+MID in the ordinary query gives genuine selected-root membership; its ordinal
+gives a STRICT rank below2^originalWidth. A mere polynomial degree bound would
+not suffice. One fixed-width rank word is shared by the two statistic queries.
+Their complete sample words are constructed independently at their own roots,
+retaining all original pre-reserved fields. Actual mean root multisets and
+canonical bank-quotient uniqueness bind their interpretations to the same
+MID rank and geometric Near condition. No caller-supplied new word, native
+Near/Rank, source/evaluator, root solvability or additional hom is needed.
+
+LocalEdge.allCoordinates_of_coordinate_meaning composes this converse over
+the ACTUAL writer depth+i, with its unary index and fitted captureCount.
+The two new fixture groups include a saturated absent-root negative case,
+fixed-width rank bits, shared rank with distinct full words and the literal
+depth+i enumeration. Base construction and other native Local conjuncts are
+not replaced by a stronger hypothesis or treated as already proved.
+
+Remaining M3: accepted general history construction and reverse bounded
+graph/path completeness. Retained-endpoint append construction is ongoing
+outside this checkpoint. M4 effective uniform stabilization and M5 original
+Boolean incidence remain open; neither original PSPACE target is proved.
+
+Six frozen sources use UTF8/LF. All exact entire-source checks passed at
+200000 heartbeats with warnings as errors and relaxedAutoImplicit=false.
+Verification: full strict three-target build 19978 jobs PASS; all25 Check
+scripts PASS, including the3062-line native graph fixture (57 groups).
+Namespace audit90023 declarations: only propext/Classical.choice/Quot.sound.
+Space audit194679 transitive constants: no legacy space foundation. Exact10
+staged paths, frozen hashes, blob bytes and100644 modes verified before the
+local commit. Only the main worktree exists; no push or external write.
