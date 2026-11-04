@@ -1452,3 +1452,47 @@ and the full strict build was refreshed. Onlymain worktree.
 Baseline untracked AuxiliaryCandidateBank and subsequent proof WIP excluded.
 No push or external write. GoalACTIVE; full general Atomic.Valid, global
 completeness, stabilization and Boolean incidence still require proof.
+
+25. G67: accepted proper/equal geometric extensions and terminal fiber glue
+2026-11-04.
+
+The proper constructor starts with an accepted old vertex, depth room,
+genuine allowed endpoints in strict order and an actual matched slab branch.
+It constructs one canonical pair and both own-context words. Their seven
+Atomic.Valid conjuncts, prescribed whole child points and common actual
+MID signature are derived. Old raw columns, fresh endpoint cuts, critical
+guards, MID/child companions, padding and the final probe are accounted for.
+The public constructor supplies the pair, realizations, word receipts and
+full words internally; none is an additional final hypothesis.
+
+Equal-height allowed choices construct accepted extensions at a prescribed
+point in the old frozen slice with weak child-critical derivatives. This
+works for retained and fresh endpoint origins without strict interval order
+or an old-objective gradient hypothesis. It does not assert a proper edge.
+
+Point equality characterizes actual native identity acceptance and yields
+raw/fixed-label reachability. At terminal depth the actual frozen fiber is
+finite. Joined accepted vertices in that fiber have equal points and hence
+native identity and raw reachability, even without a depth hypothesis on
+the second vertex.
+
+The general native Local/Proper edge still needs the genuine no-bad,
+critical-free and coordinate Near bindings. Recursive bounded completeness,
+uniform effective stabilization and original Boolean incidence remain open.
+Neither original connectivity language has unconditional PSPACE membership.
+
+All26 frozen source files (3981 LF lines) match their published SHA256
+ledgers without revisions. Their whole-source checks use200000 heartbeats,
+warnings as errors and relaxedAutoImplicit=false. Strict three-target
+build20228 jobs PASS. All25 Check scripts PASS, including all16 new native
+fixture groups on their first combined attempt. The native graph fixture
+has7020 lines and116 groups.
+Audited 91007 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 196515 transitive constants: no legacy space foundation.
+All30 exact staged paths, frozen source hashes, blob bytes and100644 modes
+are verified. AllfilesUTF8/LF/singleEOF. Onlymain worktree.
+Baseline untracked AuxiliaryCandidateBank and later proof WIP excluded.
+No push or external write. GoalACTIVE: native proper-edge binding, recursive
+bounded completeness, uniform stabilization and Boolean incidence remain.

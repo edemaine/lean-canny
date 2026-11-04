@@ -2207,10 +2207,14 @@ Equal retained endpoints now admit fully accepted extensions at any eligible
 child-critical point, with fresh own-context words and every old raw column
 retained. Every accepted vertex reaches a terminal-depth vertex at the same
 point through native identity edges.
-General retained/fresh endpoint programs now compile into fresh full words,
-retaining their endpoint, midpoint, child and padding values. Fresh endpoint
-cut guards follow from those same words. General critical-guard acceptance
-and the reverse global graph/path implication remain open.
+Genuine allowed endpoint choices and a matched strict slab now construct
+both fresh full words, with all seven atomic validity guards, their prescribed
+child points and their shared native midpoint signature. Equal-height choices
+also construct accepted words at a prescribed weak child-critical point.
+Same-point accepted vertices are joined by native identity edges; joined
+terminal-fiber vertices have equal points and therefore native reachability.
+The general native proper edge and reverse global graph/path implication
+remain open.
 These graph algorithms do not yet establish unconditional PSPACE membership
 for the original connectivity languages.
 

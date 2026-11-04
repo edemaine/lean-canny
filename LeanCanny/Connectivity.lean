@@ -1,3 +1,29 @@
+import LeanCanny.Connectivity.IntegralMixedRoadmapPointGlue
+import LeanCanny.Connectivity.IntegralMixedRoadmapProperAppendConstruct
+import LeanCanny.Connectivity.IntegralMixedRoadmapTerminalFiber
+import LeanCanny.Encoding.IntegralMixedMarkedJointNatural
+import LeanCanny.Encoding.IntegralMixedRoadmapCheckedSeedSelected
+import LeanCanny.Encoding.IntegralMixedRoadmapEqualAppendGeometry
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendAcceptance
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendAllCritical
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendBeforeProbe
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendCompanions
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendCriticalSuffix
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendEndpointCriticalMetadata
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendEndpointWordCriticalGuard
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendGeometry
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendGeometryBudget
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendMidSignature
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendOwnPoint
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendPhysical
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendRawRetention
+import LeanCanny.Encoding.IntegralMixedRoadmapProperAppendSampledExtension
+import LeanCanny.Encoding.IntegralMixedRoadmapProperMidSignatureBounds
+import LeanCanny.Geometry.IntegralMixedChronologicalEndpointPhysicalColumns
+import LeanCanny.Geometry.IntegralMixedChronologicalEqualLevelCaptures
+import LeanCanny.Geometry.IntegralMixedChronologicalGuardedEqualLevel
+import LeanCanny.Geometry.IntegralMixedChronologicalGuardedProperLevelState
+import LeanCanny.Geometry.IntegralMixedGuardedCriticalColumns
 import LeanCanny.Algebra.IntegralMixedFramedRunObservationCongruence
 import LeanCanny.Algebra.IntegralMixedPrefixProgramPartial
 import LeanCanny.Algebra.IntegralMixedPrefixProgramTransport
@@ -4642,10 +4668,14 @@ A retained-endpoint extension now constructs its own fully accepted word at
 any eligible child-critical point, preserving every old raw column and guard.
 Every accepted vertex consequently has a native identity extension at the
 next depth and reaches a terminal-depth vertex at the same point.
-General retained/fresh endpoint programs now compile into fresh full words,
-retaining their endpoint, midpoint, child and padding values. Fresh endpoint
-cut guards follow from those same words. General critical-guard acceptance
-and the reverse global graph/path implication remain open.
+Genuine allowed endpoint choices and a matched strict slab now construct
+both fresh full words, with all seven atomic validity guards, their prescribed
+child points and their shared native midpoint signature. Equal-height choices
+also construct accepted words at a prescribed weak child-critical point.
+Same-point accepted vertices are joined by native identity edges; joined
+terminal-fiber vertices have equal points and therefore native reachability.
+The general native proper edge and reverse global graph/path implication
+remain open.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet
