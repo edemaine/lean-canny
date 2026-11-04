@@ -1668,3 +1668,49 @@ main worktree. Baseline untracked AuxiliaryCandidateBank and later algebra,
 bounded two-anchor geometric binding and Boolean label-lock WIP excluded.
 No external write or push. GoalACTIVE; neither original unbounded PSPACE
 target is asserted by this checkpoint.
+
+29. G71: actual bounded original candidate connectivity is in native PSPACE
+2026-11-04.
+
+The actual two-anchor language now has its full geometric interpretation:
+under Good labels and candidateRadius(u)<=R0(u), acceptance is equivalent
+to CandidateB belonging to connectedComponentIn(Bounded(originalPolynomial,
+R0(u)),CandidateA). Soundness needs no radius lower bound. The two different
+candidate labels use independent native histories and whole-point identity.
+Completeness chooses ONE genuine global critical point in the marked source
+component, constructs BOTH OWN accepted Replay seeds at that entire point,
+and derives both actual marker incidences internally. No word, marker, path,
+hom, native guard or component evaluator is a final extra premise.
+
+The native original-equation candidate filters are combined with this actual
+decision. The semantic bounded original component language itself has a
+SpaceDecider and belongs to PSPACE. At the derived candidate_radius, its
+public candidate_radius_mem_PSPACE theorem takes only the original syntax
+families' unary dimension, FP term encoding and arity bound. Invalid candidate
+labels are rejected. Packet canonicalization is explicit in the reduction.
+
+This is a BOUNDED component theorem. A radius containing every candidate
+does not by itself preserve their unbounded component relation. Effective
+uniform stabilization remains necessary for that transfer. The original
+Boolean frontier-incidence algorithm also remains open. Neither original
+pointLanguage nor connectedLanguage has unconditional PSPACE membership here.
+
+All5 sources (495 LF lines) match their frozen hash ledgers without
+revisions. All5 whole-source200k checks PASS; strict three-target build20338
+jobs PASS. The preceding committed integration passed ALL25 Check scripts.
+This additive binding passes the affected native-graph, axiom and space-
+foundation scripts again, with2 new native groups. Native graph fixture:
+9218 lines,146 groups. Focused checks include
+two-anchor completeness at a single shared critical point, diagonal native
+acceptance without supplied words, semantic bounded PSPACE, invalid-label
+rejection and12 standard-axiom audits in the new groups.
+Audited 91389 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 197116 transitive constants: no legacy space foundation.
+All9 exact staged paths, source hashes, index100644 modes and blob bytes
+verified. AllUTF8/LF/singleEOF/chmod-x. Onlymain worktree; no obsolete build
+cache/worktree. User baseline AuxiliaryCandidateBank and later M4/M5 WIP
+excluded. No external write or push. GoalACTIVE: the bounded native component
+decision is proved; uniform radius stabilization and original Boolean
+frontier-incidence costs remain unproved, as do both original PSPACE targets.

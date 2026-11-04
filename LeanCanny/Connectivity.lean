@@ -1,3 +1,8 @@
+import LeanCanny.Connectivity.IntegralMixedRoadmapBoundedCandidateConnectivity
+import LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorGeometry
+import LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorMarkedPaths
+import LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorOriginalPoints
+import LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorReplaySeed
 import LeanCanny.Connectivity.IntegralMixedRoadmapAllowedBoundaryNormalization
 import LeanCanny.Connectivity.IntegralMixedRoadmapAnchorIncidence
 import LeanCanny.Connectivity.IntegralMixedRoadmapAnchorIncidenceGeometry
@@ -4738,11 +4743,17 @@ retaining prelude fields and using actual retained target heights. It assumes
 no marker exists in advance. Replay-aware first seeds can be constructed at
 a prescribed global critical point, and arbitrary accepted depth-zero seeds
 can be reinitialized at the same entire point with native Replay.
-A bounded two-anchor search checks both incidences and compares their entire
-points, allowing the candidate labels to differ. Its native PSPACE bound is
-proved; its equivalence to original bounded candidate connectivity is the
-next binding. Effective uniform radius stabilization and the original Boolean
-frontier-incidence algorithm also remain to be discharged.
+The bounded two-anchor search now decides whether the two ORIGINAL candidate
+points lie in the same bounded original-polynomial component. It constructs
+both Replay words at one shared actual critical point and compares their
+entire physical points, allowing the candidate labels to differ.
+The semantic bounded-component language itself is in native PSPACE, including
+the original-equation candidate filters. Choosing the derived original-only
+candidate radius removes every external radius and validity assumption from
+this bounded-language theorem. This radius contains all candidates; preserving
+their UNBOUNDED component relation is still a separate obligation.
+Effective uniform radius stabilization and the original Boolean frontier-
+incidence algorithm remain to be discharged.
 The recursive framed polynomial presentation and its original-only uniform
 mass bound, hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet

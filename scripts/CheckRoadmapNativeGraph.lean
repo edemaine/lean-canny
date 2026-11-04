@@ -1,3 +1,5 @@
+import LeanCanny.Connectivity.IntegralMixedRoadmapBoundedCandidateConnectivity
+import LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorGeometry
 import LeanCanny.Connectivity.IntegralMixedRoadmapAnchorIncidenceGeometry
 import LeanCanny.Connectivity.IntegralMixedRoadmapCanonicalRetainedSweep
 import LeanCanny.Connectivity.IntegralMixedRoadmapMarkedComponents
@@ -9117,3 +9119,100 @@ run_cmd do
         throwError "{name} depends on unexpected axiom {ax}"
   logInfo "Anchor geometry: two closed consumers and five standard-axiom audits."
 end RoadmapInternalG70AnchorGeometry
+
+section RoadmapInternalG71TwoAnchorGeometry
+namespace LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorGeometry
+open Set LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open scoped Classical
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+  {R0 :List Bool→ℕ} (hR0 :BinaryFn R0)
+attribute [local irreducible] IntegralMixedAuxiliaryCandidate.pointAt AuxiliaryCandidateOuterRadius.boundedPoint
+
+-- Native acceptance gives the genuine bounded original component, without a radius premise.
+example (u a b :List Bool) (hA :AuxiliaryCandidateComponentCover.Good hn ht ha u a)
+    (hB :AuxiliaryCandidateComponentCover.Good hn ht ha u b)
+    (H :pair u (pair a b)∈IntegralMixedRoadmapTwoAnchorCost.language hn ht ha hR0):
+    IntegralMixedAuxiliaryCandidate.pointAt hn ht ha u b (Classical.choose hB)∈
+      connectedComponentIn (BoundedZeroSource.Bounded ((t u).finitePolynomial (n u)) (R0 u))
+        (IntegralMixedAuxiliaryCandidate.pointAt hn ht ha u a (Classical.choose hA)):=
+  component_of_language hn ht ha hR0 u a b hA hB H
+
+-- Bounded component membership constructs BOTH own accepted Replay anchors.
+example (u a b :List Bool) (hA :AuxiliaryCandidateComponentCover.Good hn ht ha u a)
+    (hB :AuxiliaryCandidateComponentCover.Good hn ht ha u b)
+    (hR :IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha u≤R0 u)
+    (H :IntegralMixedAuxiliaryCandidate.pointAt hn ht ha u b (Classical.choose hB)∈
+      connectedComponentIn (BoundedZeroSource.Bounded ((t u).finitePolynomial (n u)) (R0 u))
+        (IntegralMixedAuxiliaryCandidate.pointAt hn ht ha u a (Classical.choose hA))):
+    pair u (pair a b)∈IntegralMixedRoadmapTwoAnchorCost.language hn ht ha hR0:=
+  (language_iff_component hn ht ha hR0 u a b hA hB hR).mpr H
+
+-- The diagonal does not require a pre-existing roadmap node or a supplied full word.
+example (u a :List Bool) (hA :AuxiliaryCandidateComponentCover.Good hn ht ha u a)
+    (hR :IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha u≤R0 u):
+    pair u (pair a a)∈IntegralMixedRoadmapTwoAnchorCost.language hn ht ha hR0:=by
+  apply (language_iff_component hn ht ha hR0 u a a hA hA hR).mpr
+  have HB:=(AuxiliaryCandidateOuterRadius.boundedPoint hn ht ha u a hA (R0 u) hR).property
+  have HE:(AuxiliaryCandidateOuterRadius.boundedPoint hn ht ha u a hA (R0 u) hR).val=
+      IntegralMixedAuxiliaryCandidate.pointAt hn ht ha u a (Classical.choose hA):=
+    funext fun i=>AuxiliaryCandidateOuterRadius.coordinate hn ht ha u a hA (R0 u) hR i
+  rw [HE] at HB
+  exact mem_connectedComponentIn HB
+
+-- The same language has the original-only native cost, with no geometric oracle.
+example :IntegralMixedRoadmapTwoAnchorCost.language hn ht ha hR0∈PSPACE:=
+  IntegralMixedRoadmapTwoAnchorCost.mem_PSPACE hn ht ha hR0
+
+#check point_heq
+#check incidence_iff_joined
+#check prelude_marked
+#check source_joined_of_component
+#check marked_joined_iff
+#check prelude_joined_first_marked
+#check exists_replay_at_original
+#check component_of_language
+#check language_iff_component
+#print axioms point_heq
+#print axioms incidence_iff_joined
+#print axioms prelude_marked
+#print axioms source_joined_of_component
+#print axioms marked_joined_iff
+#print axioms prelude_joined_first_marked
+#print axioms exists_replay_at_original
+#print axioms component_of_language
+#print axioms language_iff_component
+end LeanCanny.Connectivity.IntegralMixedRoadmapTwoAnchorGeometry
+end RoadmapInternalG71TwoAnchorGeometry
+
+section RoadmapInternalG71BoundedCandidateLanguage
+namespace LeanCanny.Connectivity.BoundedCandidateRegression
+open LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open IntegralMixedRoadmapBoundedCandidateConnectivity
+variable {n :List Bool→ℕ} {t :List Bool→Term} (hn :UnaryFn n)
+  (ht :(fun q=>(t q).toData.toBits)∈FP) (ha :∀q,(t q).arity≤n q)
+
+-- The semantic language itself has native PSPACE cost with only syntax bounds.
+example :language hn ht ha (R0:=IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha)∈PSPACE:=
+  candidate_radius_mem_PSPACE hn ht ha
+
+-- A malformed or nonzero candidate cannot enter the decision language.
+example (u a b :List Bool) (H :¬AuxiliaryCandidateComponentCover.Good hn ht ha u a):
+    pair u (pair a b)∉language hn ht ha (R0:=IntegralMixedAuxiliaryCandidateRadius.radius hn ht ha):=by
+  rintro ⟨hA,_,_⟩
+  apply H
+  simpa only [original,label,pairFst_pair,pairSnd_pair,Bool.false_eq_true,ite_false] using hA
+
+end LeanCanny.Connectivity.BoundedCandidateRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Connectivity.IntegralMixedRoadmapBoundedCandidateConnectivity.guarded_iff,
+      `LeanCanny.Connectivity.IntegralMixedRoadmapBoundedCandidateConnectivity.decider,
+      `LeanCanny.Connectivity.IntegralMixedRoadmapBoundedCandidateConnectivity.candidate_radius_mem_PSPACE] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Bounded candidate connectivity: native semantic PSPACE, invalid-label rejection, three standard-axiom audits."
+end RoadmapInternalG71BoundedCandidateLanguage
