@@ -2251,6 +2251,10 @@ formal-center model, with post-specialization trailing-index guards and
 original-only bounds for the INPUT model. Actual piece closure is equivalent
 to common membership or a same-label finite-real descriptor retaining a
 grid anchor and cut-free interval. The curve is constructed internally.
+The original formal input and actual tilted homogeneous eliminant system
+now have native coefficient readers in polynomial space, including formal
+center/radius and signed perturbation rows. The normalized universal
+eliminant quotient itself still needs a reader.
 These descriptors still need bounded algebraic words and native guard costs;
 the input bounds do not supply eliminant or descriptor bounds.
 Generic coefficient-base constructions now specialize to the actual native

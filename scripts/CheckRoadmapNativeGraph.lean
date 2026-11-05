@@ -1,3 +1,5 @@
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantInput
+import LeanCanny.Encoding.FormulaSignSlotRadialFormalInput
 import LeanCanny.Algebra.CoefficientCoordinateBasis
 import LeanCanny.Algebra.CoefficientCoordinateBasisMatrix
 import LeanCanny.Algebra.CoefficientCoordinateBasisSpecialization
@@ -10911,3 +10913,211 @@ example : SignType.sign (-1 : ℝ) ≠ SignType.sign (1 : ℝ) := by
 
 end ParameterizedRootSignTransportRegression
 end RoadmapInternalG74RootSignTransport
+
+section RoadmapInternalG75RadialOriginalInput
+namespace LeanCanny.Encoding.FormulaSignSlotRadialFormalInput
+open ETR LeanCanny.Computation LeanCanny.Connectivity LeanCanny.Geometry LeanCanny.Algebra MvPolynomial
+open FormulaSignSlotCenteredRadialGraph FormulaSignSlotCenteredRadialLimits
+open scoped Classical
+
+-- Closed original-only n/t/scope inputs for the native original frontend.
+example :UnaryFn dimension ∧(fun c=>(equation c).toData.toBits)∈FP ∧∀c,(equation c).arity≤dimension c:=
+  ⟨dimension_unary,equation_FP,scope⟩
+
+-- Exact full integer polynomial: no supplied source/evaluation oracle.
+example (c :List Bool):(equation c).finitePolynomial (dimension c)=
+    rename (layout c) (FormulaSignSlotRadialFormalBounds.flatten c (FormulaSignSlotRadialFormalCenter.polynomial c)):=
+  finitePolynomial_eq c
+
+-- The formal center is AFTER the entire old spatial block.
+example (c :List Bool) (i :Fin (d c)):
+    (layout c (FormulaSignSlotRadialFormalBounds.centerVar c i)).val=spatial c+i.val:=by
+  rw [layout_center]
+  rfl
+example (c :List Bool):(layout c (FormulaSignSlotRadialFormalBounds.radiusVar c)).val=spatial c+d c:=by
+  rw [layout_radius]
+  rfl
+
+-- Spatial center copies are distinct from the new formal coefficient variables.
+example (c :List Bool) (i :Fin (d c)):
+    (spatialIndex c (centerIndex c i)).val<(formalCenterIndex c i).val:=by
+  change N c+i.val<spatial c+i.val
+  unfold spatial
+  omega
+
+-- Negative centers/radius are specialized literally, with no absolute value/clamp.
+example (c :List Bool):specialize c (fun _=>-2) (-3) ((equation c).finitePolynomial (dimension c))=
+    FormulaSignSlotCenteredRadialLimits.polynomial c (fun _=>-2) (-3):=
+  specialization c _ _
+
+-- Specialization leaves spatial copies variable and freezes ONLY coefficient slots.
+example (c :List Bool) (a :Fin (d c)→ℝ) (r :ℝ) (i :Fin (d c)):
+    specialize c a r (X (spatialIndex c (centerIndex c i)))-specialize c a r (X (formalCenterIndex c i))=
+      X (centerIndex c i)-C (a i):=by
+  exact congrArg₂ (fun x y :MvPolynomial (Fin (spatial c)) ℝ=>x-y)
+    (specialize_spatial c a r (centerIndex c i)) (specialize_center c a r i)
+
+-- Empty formal-center block still retains the separate radius block.
+example (c :List Bool) (hd :d c=0):centerSquares c=Term.const 0:=by
+  simp only [centerSquares,centerTerms,hd,List.range_zero,List.map_nil,SumSquares.accumulate,List.foldl_nil]
+
+#check equation_FP
+#check scope
+#check equation_size_unary
+#check finitePolynomial_eq
+#check polynomial_degree
+#check polynomial_mass
+#check specialize_spatial
+#check specialize_center
+#check specialize_radius
+#check specialization
+#print axioms equation_FP
+#print axioms scope
+#print axioms equation_size_unary
+#print axioms finitePolynomial_eq
+#print axioms polynomial_degree
+#print axioms polynomial_mass
+#print axioms specialize_spatial
+#print axioms specialize_center
+#print axioms specialize_radius
+#print axioms specialization
+end LeanCanny.Encoding.FormulaSignSlotRadialFormalInput
+end RoadmapInternalG75RadialOriginalInput
+
+section RoadmapInternalG75RadialEliminantFrontend
+namespace LeanCanny.RadialEliminantFrontendRegression
+open LeanCanny.Algebra LeanCanny.Encoding MvPolynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+
+abbrev Center := MvPolynomial (Fin 1) ℤ
+abbrev Radius := Polynomial Center
+noncomputable local instance radialFixtureCenterCommRing : CommRing Center := inferInstance
+noncomputable local instance radialFixtureRadiusCommRing : CommRing Radius := inferInstance
+noncomputable local instance radialFixtureTargetCommRing : CommRing (Polynomial Radius) := inferInstance
+noncomputable local instance radialFixturePerturbationCommRing : CommRing (Polynomial (Polynomial Radius)) := inferInstance
+
+noncomputable def input : MvPolynomial (Fin 1) Radius :=
+  X 0 - C (Polynomial.C (X 0)) - C Polynomial.X
+
+noncomputable def coefficient (e : Option (Fin 1) →₀ ℕ) (s t r : ℕ) (v : Fin 1 →₀ ℕ) : ℤ :=
+  (FormulaSignSlotRadialEliminantRows.flatten
+    (ParametricTiltedCoerciveEliminant.system input 1 0 0 (CoerciveCriticalHomogenization.layout (some 0)))).coeff
+      (FormulaSignSlotRadialEliminantRows.exponent (e.mapDomain CoerciveCriticalHomogenization.layout) s t r v)
+
+private theorem coefficient_formula (e : Option (Fin 1) →₀ ℕ) (s t r : ℕ) (v : Fin 1 →₀ ℕ) :
+    coefficient e s t r v =
+      (((((TiltedCoerciveCriticalFibers.nativeSystem (input.map ParametricTiltedCoerciveEliminant.constants)
+        1 0 Polynomial.X (Polynomial.C Polynomial.X) 0 (some 0)).coeff e).coeff s).coeff t).coeff r).coeff v := by
+  rw [coefficient, FormulaSignSlotRadialEliminantRows.flatten_coefficient]
+  unfold ParametricTiltedCoerciveEliminant.system
+  rw [Equiv.symm_apply_apply, coeff_rename_mapDomain _ CoerciveCriticalHomogenization.layout.injective]
+
+noncomputable def coordinateCoefficient (e : Option (Fin 1) →₀ ℕ) (s t : ℕ) : Radius :=
+  (((ParametricTiltedCoerciveEliminant.system input 1 0 0 (CoerciveCriticalHomogenization.layout none)).coeff
+    (e.mapDomain CoerciveCriticalHomogenization.layout)).coeff s).coeff t
+
+example : coordinateCoefficient (Finsupp.single none 1) 0 1 = 1 := by
+  rw [coordinateCoefficient, ParametricTiltedCoerciveEliminant.system,
+    Equiv.symm_apply_apply, coeff_rename_mapDomain _ CoerciveCriticalHomogenization.layout.injective,
+    ParametricTiltedCoerciveCoefficient.coordinate]
+  norm_num [Finsupp.single_eq_single_iff]
+
+example : coordinateCoefficient (Finsupp.single (some 0) 1) 0 0 = -1 := by
+  rw [coordinateCoefficient, ParametricTiltedCoerciveEliminant.system,
+    Equiv.symm_apply_apply, coeff_rename_mapDomain _ CoerciveCriticalHomogenization.layout.injective,
+    ParametricTiltedCoerciveCoefficient.coordinate]
+  norm_num [Finsupp.single_eq_single_iff]
+
+example : coefficient (Finsupp.single none 3) 1 0 0 0 = -1 := by
+  rw [coefficient_formula, ParametricTiltedCoerciveCoefficient.gradient]
+  norm_num [WeightedHomogenization.weights, Finsupp.weight_single, smul_eq_mul, Finsupp.single_eq_single_iff]
+
+example : coefficient (Finsupp.single (some 0) 3) 2 0 0 0 = 4 := by
+  rw [coefficient_formula, ParametricTiltedCoerciveCoefficient.gradient]
+  norm_num [WeightedHomogenization.weights, Finsupp.weight_single, smul_eq_mul, Finsupp.single_eq_single_iff]
+
+example : coefficient (Finsupp.single (some 0) 3) 2 0 1 0 = 0 := by
+  rw [coefficient_formula, ParametricTiltedCoerciveCoefficient.gradient]
+  norm_num [WeightedHomogenization.weights, Finsupp.weight_single, smul_eq_mul, Finsupp.single_eq_single_iff]
+
+example : coefficient (Finsupp.single (some 0) 3) 2 0 0 (Finsupp.single 0 1) = 0 := by
+  rw [coefficient_formula, ParametricTiltedCoerciveCoefficient.gradient]
+  norm_num [WeightedHomogenization.weights, Finsupp.weight_single, smul_eq_mul, Finsupp.single_eq_single_iff]
+
+example : coefficient (Finsupp.single none 3) 3 0 0 0 = 0 := by
+  rw [coefficient_formula, ParametricTiltedCoerciveCoefficient.gradient]
+  norm_num [WeightedHomogenization.weights, Finsupp.weight_single, smul_eq_mul, Finsupp.single_eq_single_iff]
+
+private theorem derivative_input : pderiv 0 (input ^ 2) =
+    C (2 : Radius) * X 0 - C (2 * (Polynomial.C (X 0) + Polynomial.X)) := by
+  simp only [input, pderiv_pow, map_sub, pderiv_X_self, pderiv_C, sub_zero, pow_one,
+    Nat.reduceSub, mul_one]
+  simp only [map_add, map_mul, map_ofNat]
+  ring
+
+example : coefficient (Finsupp.single none 3) 0 0 0 (Finsupp.single 0 1) = -2 := by
+  rw [coefficient_formula, ParametricTiltedCoerciveCoefficient.gradient, derivative_input]
+  norm_num [WeightedHomogenization.weights, Finsupp.weight_single, smul_eq_mul, Finsupp.single_eq_single_iff, coeff_C_mul,
+    Polynomial.mul_coeff_zero]
+  change ((C (2 : ℤ) * X (0 : Fin 1) : MvPolynomial (Fin 1) ℤ).coeff (Finsupp.single 0 1)) = 2
+  rw [coeff_C_mul, coeff_X]
+  norm_num
+
+example : coefficient (Finsupp.single none 3) 0 0 1 0 = -2 := by
+  rw [coefficient_formula, ParametricTiltedCoerciveCoefficient.gradient, derivative_input]
+  norm_num [WeightedHomogenization.weights, Finsupp.weight_single, smul_eq_mul, Finsupp.single_eq_single_iff, coeff_C_mul,
+    Polynomial.coeff_mul]
+
+example : ((pderiv 0 (((X 0 : MvPolynomial (Fin 1) ℝ) - C (-3) - C (-2)) ^ 2)).coeff 0) = 10 := by
+  simp only [pderiv_pow, map_sub, pderiv_X_self, pderiv_C, sub_zero, pow_one,
+    Nat.reduceSub, mul_one]
+  norm_num only [Nat.cast_ofNat]
+  have H : (2 : MvPolynomial (Fin 1) ℝ) * (X 0 - C (-3) - C (-2)) =
+      C 2 * X 0 + C 10 := by simp only [map_ofNat, map_neg]; ring
+  rw [H, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, coeff_C_mul, coeff_X, coeff_C]
+  norm_num
+
+example (q : List Bool) (hm : FormulaSignSlotRadialEliminantInput.field 7 q = []) :
+    FormulaSignSlotRadialEliminantInput.value q = [] := by
+  rw [FormulaSignSlotRadialEliminantInput.correct, hm]
+  have HZ : (((FormulaSignSlotRadialEliminantRows.polynomial (pairFst q)
+      (FormulaSignSlotRadialEliminantInput.coordinate q) (FormulaSignSlotRadialEliminantInput.row q)).coeff
+        (FormulaSignSlotRadialEliminantInput.exponent q) : ℤ) : ZMod 1) = 0 := Subsingleton.elim _ _
+  change Algebra.MatrixPower.residueBits (_ : ZMod 1) = []
+  rw [HZ]
+  rfl
+
+#check FormulaSignSlotRadialFormalInput.equation_FP
+#check FormulaSignSlotRadialFormalInput.finitePolynomial_eq
+#check FormulaSignSlotRadialEliminantSource.source_derivative_coefficient
+#check FormulaSignSlotRadialEliminantCoefficientQuery.reconstruct
+#check FormulaSignSlotRadialEliminantCoefficientNative.gradient_evaluator
+#check FormulaSignSlotRadialEliminantCoefficientNative.coordinate_value_FP
+#check FormulaSignSlotRadialEliminantCoefficientNative.gradientValue_correct
+#check FormulaSignSlotRadialEliminantCoefficientNative.coordinateValue_correct
+#check FormulaSignSlotRadialEliminantInput.evaluator
+#check FormulaSignSlotRadialEliminantInput.correct
+#check FormulaSignSlotRadialEliminantInput.full_dimension_unary
+#check FormulaSignSlotRadialEliminantInput.spatial_homogeneous
+
+#print axioms NestedPolynomial.coefficient
+#print axioms ParametricTiltedCoerciveCoefficient.gradient
+#print axioms ParametricTiltedCoerciveCoefficient.coordinate
+#print axioms FormulaSignSlotRadialEliminantSource.flatten_eq
+#print axioms FormulaSignSlotRadialEliminantSource.source_derivative_coefficient
+#print axioms FormulaSignSlotRadialEliminantRows.coefficient
+#print axioms FormulaSignSlotRadialEliminantDerivative.evaluator
+#print axioms FormulaSignSlotRadialEliminantCoefficientModel.gradient_eq
+#print axioms FormulaSignSlotRadialEliminantCoefficientQuery.reconstruct
+#print axioms FormulaSignSlotRadialEliminantCoefficientNative.homogeneous_FP
+#print axioms FormulaSignSlotRadialEliminantCoefficientNative.monomial_FP
+#print axioms FormulaSignSlotRadialEliminantCoefficientNative.gradient_evaluator
+#print axioms FormulaSignSlotRadialEliminantCoefficientNative.coordinate_value_FP
+#print axioms FormulaSignSlotRadialEliminantCoefficientNative.gradientValue_correct
+#print axioms FormulaSignSlotRadialEliminantCoefficientNative.coordinateValue_correct
+#print axioms FormulaSignSlotRadialEliminantInput.evaluator
+#print axioms FormulaSignSlotRadialEliminantInput.correct
+
+end LeanCanny.RadialEliminantFrontendRegression
+end RoadmapInternalG75RadialEliminantFrontend

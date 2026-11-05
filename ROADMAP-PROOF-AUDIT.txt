@@ -1871,3 +1871,50 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Full recursive symbolic presentation, original-only common recursive-family bounds, native graph transport, effective radius stabilization and Boolean frontier incidence remain unproved. Both original unconditional PSPACE targets remain open.
+
+33. G75: original formal input and actual tilted eliminant coefficient readers
+2026-11-04.
+
+The native original-term writer constructs the literal centered radial
+polynomial on separate spatial, center and radius blocks. Scope, size,
+degree and mass bounds use original syntax. Negative center/radius and
+empty center blocks retain exact specialization semantics.
+
+The coefficient frontend now reads the ACTUAL homogeneous tilted coercive
+critical system over formal center/radius variables. The old untilted
+reader is not silently substituted. Gradient rows contain the actual
+squared-source derivative, the negative perturbation margin tilt and the
+quadratic-perturbation diagonal. Nested parameter coefficients and their
+full integer flattening are identified literally.
+
+A fixed eight-field packet constructs coordinate/row clamping, original
+input reindexing, width and exponent readers, and all sparse guards.
+Its final evaluator has NO premises and returns the exact canonical residue
+of an actual system-row coefficient modulo the requested predecessor plus
+one. Coordinate-row coefficients are FP; gradient coefficients are native
+polynomial-space computations, including their original-source child cost.
+The supplied spatial homogeneous degrees and full integer dimension are
+proved for this same system.
+
+This is the system coefficient frontend. MacaulayUniversal.polynomialValue
+and its normalized universal quotient still need exact evaluator binding.
+A Gram alternative does not supply that binding. Eliminant/descriptor
+bounds, bounded algebraic descriptor selection and native frontier guards
+remain open. No specialized trailing index is commuted without its guards.
+Full effective radius stabilization and both original PSPACE targets remain
+unproved.
+
+All14 sources (1445 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS20440 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:11123 lines,169 groups.
+Audited 92034 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 197856 transitive constants: no legacy space foundation.
+All18 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+The normalized universal eliminant quotient reader, original-only descriptor bounds, bounded algebraic descriptor selection and native frontier incidence remain open. Effective radius stabilization and both original unconditional PSPACE targets remain unproved.

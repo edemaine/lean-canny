@@ -1,3 +1,17 @@
+import LeanCanny.Algebra.NestedPolynomialCoefficient
+import LeanCanny.Algebra.ParametricTiltedCoerciveCoefficient
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantCoefficientGuards
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantCoefficientModel
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantCoefficientQuery
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantCoefficientReadback
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantCoefficientSpace
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantCoordinateCoefficient
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantDerivative
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantInput
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantRows
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantSource
+import LeanCanny.Encoding.FormulaSignSlotRadialFormalInput
+import LeanCanny.Encoding.FormulaSignSlotRadialFormalSyntax
 import LeanCanny.Algebra.CoefficientCanonicalScalarAppend
 import LeanCanny.Algebra.CoefficientCoordinateBasis
 import LeanCanny.Algebra.CoefficientCoordinateBasisMatrix
@@ -4804,6 +4818,10 @@ formal-center model, with post-specialization trailing-index guards and
 original-only bounds for the INPUT model. Actual piece closure is equivalent
 to common membership or a same-label finite-real descriptor retaining a
 grid anchor and cut-free interval. The curve is constructed internally.
+The original formal input and actual tilted homogeneous eliminant system
+now have native coefficient readers in polynomial space, including formal
+center/radius and signed perturbation rows. The normalized universal
+eliminant quotient itself still needs a reader.
 These descriptors still need bounded algebraic words and native guard costs;
 the input bounds do not supply eliminant or descriptor bounds.
 Generic coefficient-base constructions now specialize to the actual native
