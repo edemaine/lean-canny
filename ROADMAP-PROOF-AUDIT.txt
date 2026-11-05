@@ -2359,3 +2359,54 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Full sparse field and other actual graph query families/common bounds, physical-edge transport/global stabilization, joint bounded radial descriptors/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
+
+43. G85: whole causal-cut coefficient families and actual prefix query controls
+2026-11-05.
+
+The actual canonical prefix constructs the ENTIRE raw-cut polynomial over
+its scalar quotient and its canonical coefficient representative over Z[T].
+Above the effective cutoff, every target coefficient maps to the literal
+computed-current-Q causal recipe, covering every tag/current mode. No supplied
+source, homomorphism, degree/survival or row model is needed.
+
+Every actual raw coefficient matrix has the original affine radius height;
+this extends the earlier declared-leading-coefficient estimate. Native
+truncation and out-of-matrix zero extension are retained. Scalar representative
+mass and tail dyadic interpolation give original parameter degree/mass
+budgets at EVERY target coefficient/scalar monomial. Raw target degree and
+scalar degree have finite original bounds; all budgets are BinaryFn. These
+are scalar-prefix representatives, not yet full physical cut tests.
+
+NoCritical uses its exact saved PARENT characteristic, not the terminal
+full-bank selector. Its root, count, width, source and degree have original
+structural catalogs, total planning transport and actual certified-bank
+source/derivative heights. Both consecutive own-prefix query polynomials,
+including literal physical-column tests with even clearing, have actual
+affine bounds. No sample word or ordinal is transported.
+
+Shared generic univariate clearing commutes with arbitrary ring maps and
+recovers the literal integer recipe under noninjective specialization.
+Computed common denominators and total natural-index cofactors of the actual
+canonical prefix specialize to the literal explicit-key bank snapshot at ANY
+prefix/AUX above the effective cutoff. Certified planning keeps that same
+snapshot. Invalid natural indices retain their total-product semantics.
+
+Full physical cut/principal query parameter families, remaining graph roles
+and common bounds, physical-edge transport/global stabilization, joint bounded
+radial descriptor/native Boolean frontier incidence and both original
+unconditional PSPACE targets remain open.
+
+All9 sources (978 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration plus the formal FieldQuery producer target PASS20664 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:14281 lines,215 groups.
+Audited 93524 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 199711 transitive constants: no legacy space foundation.
+All13 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Alternative cut-query choices and full physical/principal families, remaining graph query roles/common bounds, physical-edge transport/global stabilization, joint bounded radial descriptors/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.

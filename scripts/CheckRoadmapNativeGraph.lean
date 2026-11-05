@@ -1,3 +1,7 @@
+import LeanCanny.Algebra.CoefficientBankUnivariateQuery
+import LeanCanny.Encoding.CoefficientMarkedRecordBankProducts
+import LeanCanny.Encoding.CoefficientMarkedRecordCutCoefficientBounds
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankQueryHeight
 import LeanCanny.Algebra.IntegralMixedFramedCoordinateCharacteristicActual
 import LeanCanny.Encoding.CoefficientMarkedRecordFieldSource
 import LeanCanny.Encoding.CoefficientMarkedRecordRowBounds
@@ -14041,3 +14045,237 @@ example : BinaryFn (CoefficientMarkedRecordFieldSource.coefficientBudget hn ht h
 #print axioms CoefficientMarkedRecordFieldSource.derivative_coefficient_degree_mass
 end ActualFieldSourceRegression
 end RoadmapInternalG84ActualInstalledFieldSource
+
+section RoadmapInternalG85ActualAllCutCoefficients
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+namespace AllCutCoefficientRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+attribute [local irreducible] CoefficientMarkedRecordNative.run CoefficientMarkedRecordPrefix.build
+  CoefficientMarkedRecordCutSource.polynomial CoefficientMarkedRecordCutSource.raw CoefficientMarkedRecordCutSource.nativeRaw
+
+-- The entire literal current-Q raw cut specializes; no per-coefficient reader or source map is supplied.
+example (ctx : List Bool) (R : List Bool → ℕ) (k : ℕ)
+    (hk : k ≤ IntegralMixedCausalRecordPlanBits.count ctx)
+    (hR : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx) :
+    (CoefficientMarkedRecordCutSource.polynomial hn ht ha ctx k).map (MvPolynomial.map (evalRingHom ((2 : ℤ) ^ R ctx))) =
+      (CoefficientMarkedRecordCutSource.state hn ht ha ctx R k hk).sampler.scalarPrefix.basis.polynomial
+        (CoefficientMarkedRecordCutSource.nativeRaw hn ht ha ctx R k hk) :=
+  CoefficientMarkedRecordCutSource.specializes hn ht ha ctx R k hk hR
+
+-- Uniformly includes coefficient0, the declared leading coefficient, oversized targets and all scalar monomials.
+example (ctx : List Bool) (k : ℕ) (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false)
+    (tau : ℕ) (e : Fin (CoefficientMarkedRecordCutSource.birth (n := n) ctx k) →₀ ℕ) :
+    (((CoefficientMarkedRecordCutSource.polynomial hn ht ha ctx k).coeff tau).coeff e).natDegree ≤
+      IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawSlope hn ht ha ctx ∧
+      coefficientMass (((CoefficientMarkedRecordCutSource.polynomial hn ht ha ctx k).coeff tau).coeff e) ≤
+        2 ^ CoefficientMarkedRecordCutCoefficientBounds.coefficientBudget hn ht ha ctx :=
+  CoefficientMarkedRecordCutCoefficientBounds.coefficient_degree_mass hn ht ha ctx k hk hc tau e
+
+example (ctx : List Bool) (k : ℕ) (hk : k ≤ IntegralMixedCausalRecordPlanBits.count ctx) (tau : ℕ) :
+    (CoefficientMarkedRecordCutSource.polynomial hn ht ha ctx k).natDegree ≤
+      2 ^ CoefficientMarkedIntegerBirth.width hn ht ha ctx ∧
+      ((CoefficientMarkedRecordCutSource.polynomial hn ht ha ctx k).coeff tau).totalDegree ≤
+        CoefficientMarkedRecordCutCoefficientBounds.scalarDegree hn ht ha ctx :=
+  ⟨CoefficientMarkedRecordCutCoefficientBounds.target_degree hn ht ha ctx k,
+    CoefficientMarkedRecordCutCoefficientBounds.scalar_degree hn ht ha ctx k hk tau⟩
+
+example : BinaryFn (CoefficientMarkedRecordCutCoefficientBounds.coefficientBudget hn ht ha) ∧
+    BinaryFn (CoefficientMarkedRecordCutCoefficientBounds.scalarDegree hn ht ha) :=
+  ⟨CoefficientMarkedRecordCutCoefficientBounds.coefficientBudget_binary hn ht ha,
+    CoefficientMarkedRecordCutCoefficientBounds.scalarDegree_binary hn ht ha⟩
+
+#print axioms CoefficientMarkedRecordCutSource.specializes
+#print axioms CoefficientMarkedRecordAllCutProfile.native_coefficient_bound
+#print axioms CoefficientMarkedRecordAllCutProfile.raw_coefficient_bound
+#print axioms CoefficientMarkedRecordCutCoefficientBounds.coefficientOffset_binary
+#print axioms CoefficientMarkedRecordCutCoefficientBounds.coefficientBudget_binary
+#print axioms CoefficientMarkedRecordCutCoefficientBounds.coefficient_degree_mass
+#print axioms CoefficientMarkedRecordCutCoefficientBounds.scalarDegree_binary
+#print axioms CoefficientMarkedRecordCutCoefficientBounds.scalar_degree
+#print axioms CoefficientMarkedRecordCutCoefficientBounds.target_degree
+end AllCutCoefficientRegression
+end RoadmapInternalG85ActualAllCutCoefficients
+
+section RoadmapInternalG85ActualNoCriticalQueryProfile
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR Polynomial
+open IntegralMixedPhysicalCriticalBankEquality
+namespace CriticalBankProfileRegression
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R : List Bool → ℕ} (hR : BinaryFn R)
+attribute [local irreducible] IntegralMixedSourceIntegerRecordAppend.plan IntegralMixedSourceIntegerRecordAppend.data
+  IntegralMixedAuxiliaryMarkedIntegerPlan.seed IntegralMixedFramedHistoryFamilyBits.family
+
+-- Derivative zero keeps the actual parent characteristic root test.
+theorem derivative_zero (q : List Bool) (i : ℕ) :
+    (derivatives hn ht ha hR false).polynomial (pair q (pair (BinaryNatCode.encode i) (BinaryNatCode.encode 0))) =
+      (source hn ht ha hR false).polynomial (pair q (BinaryNatCode.encode i)) := by
+  rw [derivative_polynomial]
+  rfl
+
+-- Above-degree queries vanish, including in repeated-root cases.
+theorem derivative_above_degree (q : List Bool) (i : ℕ) :
+    (derivatives hn ht ha hR false).polynomial
+      (pair q (pair (BinaryNatCode.encode i) (BinaryNatCode.encode (catalogDegree hn ht ha q + 1)))) = 0 := by
+  rw [derivative_polynomial]
+  apply Polynomial.iterate_derivative_eq_zero
+  have HB := (source hn ht ha hR false).degree_bound (pair q (BinaryNatCode.encode i))
+  have HD := degree_catalog hn ht ha hR (pair q []) i
+  simp only [IntegralMixedPhysicalCriticalBankEquality.degree, pairFst_pair, pairSnd_pair, List.length_replicate] at HD
+  rw [HD] at HB
+  omega
+
+-- The shift is the appended newest quotient, with no ordinal correspondence.
+theorem consecutive_selected (q d : List Bool) :
+    selected n false true (pair q d) = selected n false false (pair q d) + 1 := by
+  simp only [selected, Bool.false_eq_true, ite_false, ite_true, Nat.add_zero]
+
+-- Both literal physical queries satisfy the same original-only ceiling.
+theorem both_queries (q : List Bool) (i k : ℕ) :
+    coefficientMass ((querySource hn ht ha hR false).polynomial (pair q (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k)))) ≤
+      2 ^ (querySlope hn ht ha q * R (IntegralMixedPhysicalCriticalQuery.root q) + queryOffset hn ht ha q) ∧
+    coefficientMass ((querySource hn ht ha hR true).polynomial (pair q (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k)))) ≤
+      2 ^ (querySlope hn ht ha q * R (IntegralMixedPhysicalCriticalQuery.root q) + queryOffset hn ht ha q) :=
+  ⟨query_mass hn ht ha hR false q i k, query_mass hn ht ha hR true q i k⟩
+
+-- The radius-zero case needs no positivity assumption on common denominators.
+theorem radius_zero (child : Bool) (q : List Bool) (i k : ℕ) :
+    coefficientMass ((querySource hn ht ha (BinaryFn.const 0) child).polynomial
+      (pair q (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k)))) ≤ 2 ^ queryOffset hn ht ha q := by
+  simpa only [Nat.mul_zero, Nat.zero_add] using query_mass hn ht ha (BinaryFn.const 0) child q i k
+
+theorem original_budgets : BinaryFn (catalogDegree hn ht ha) ∧ BinaryFn (querySlope hn ht ha) ∧
+    BinaryFn (queryOffset hn ht ha) :=
+  ⟨catalogDegree_binary hn ht ha, querySlope_binary hn ht ha, queryOffset_binary hn ht ha⟩
+end CriticalBankProfileRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.source_polynomial_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.source_polynomial_base
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.derivative_polynomial_base
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.argument_root_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.characteristic_count_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.characteristic_width_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.degree_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.catalogDegree_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.fieldSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.fieldOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.derivativeOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.source_mass
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.derivative_mass
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.querySlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.queryOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.query_mass
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalCriticalBankEquality.physical_query_mass
+#print axioms CriticalBankProfileRegression.derivative_zero
+#print axioms CriticalBankProfileRegression.derivative_above_degree
+#print axioms CriticalBankProfileRegression.consecutive_selected
+#print axioms CriticalBankProfileRegression.both_queries
+#print axioms CriticalBankProfileRegression.radius_zero
+#print axioms CriticalBankProfileRegression.original_budgets
+end RoadmapInternalG85ActualNoCriticalQueryProfile
+
+section RoadmapInternalG85CoefficientUnivariateClearing
+open LeanCanny.Algebra Polynomial
+open CoefficientBankUnivariateQuery
+namespace BankUnivariateRegression
+open scoped Classical
+
+-- Specialization may kill a genuine top coefficient; D and w remain literal.
+theorem kernel_map (D w : ℕ) (a b : ℤ[X]) :
+    (polynomial (C (X : ℤ[X]) * X ^ 2 + 1) D w a b).map (evalRingHom 0) =
+      polynomial (1 : ℤ[X]) D w (a.eval 0) (b.eval 0) := by
+  rw [polynomial_map]
+  have HX : (evalRingHom (0 : ℤ)) (X : ℤ[X]) = 0 := Polynomial.eval_X
+  simp only [Polynomial.map_add, Polynomial.map_mul, Polynomial.map_C, Polynomial.map_pow,
+    Polynomial.map_X, Polynomial.map_one, HX, Polynomial.C_0, zero_mul, zero_add]
+  rfl
+
+-- No denominator sign or unit premise enters coefficient specialization.
+theorem negative_nonunit (D w : ℕ) (p : Polynomial ℤ[X]) :
+    (polynomial p D w (-2) (-3)).map (evalRingHom 0) =
+      polynomial (p.map (evalRingHom 0)) D w (-2) (-3) := by
+  simpa only [map_neg, map_ofNat] using polynomial_map (evalRingHom 0) p D w (-2) (-3)
+
+theorem physical_kernel (i : ℕ) (D w : ℕ) (a b : ℤ[X]) :
+    MvPolynomial.map (evalRingHom 0) (physical (C (X : ℤ[X]) * X ^ 2 + 1) D w a b i) =
+      physical (1 : ℤ[X]) D w (a.eval 0) (b.eval 0) i := by
+  rw [physical, RelativeValueSystemMap.coordinate, kernel_map]
+  rfl
+
+-- The whole installed native recipe is used, including EVEN advertised degree.
+theorem installed (S : IntegerPolynomialRootQueriesBits.Source)
+    (A : IntegerPolynomialRationalPointSource.Scalars) (w : List Bool → ℕ) (c : List Bool) :
+    polynomial (S.polynomial c) (2*S.degree c) (w c) (A.numerator c) (A.denominator c) =
+      (IntegerPolynomialRationalPointSource.source S A w).polynomial c :=
+  polynomial_native S A w c
+end BankUnivariateRegression
+
+#print axioms LeanCanny.Algebra.CoefficientBankUnivariateQuery.polynomial_map
+#print axioms LeanCanny.Algebra.CoefficientBankUnivariateQuery.physical_map
+#print axioms LeanCanny.Algebra.CoefficientBankUnivariateQuery.bankPolynomial_map
+#print axioms LeanCanny.Algebra.CoefficientBankUnivariateQuery.bankPhysical_map
+#print axioms LeanCanny.Algebra.CoefficientBankUnivariateQuery.cofactor_ite
+#print axioms LeanCanny.Algebra.CoefficientBankUnivariateQuery.polynomial_native
+#print axioms BankUnivariateRegression.kernel_map
+#print axioms BankUnivariateRegression.negative_nonunit
+#print axioms BankUnivariateRegression.physical_kernel
+#print axioms BankUnivariateRegression.installed
+end RoadmapInternalG85CoefficientUnivariateClearing
+
+section RoadmapInternalG85ActualBankProductFamily
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open CoefficientMarkedRecordBankProducts
+open scoped Classical BigOperators
+namespace MarkedBankProductsRegression
+
+-- Total malformed indices omit no factor; they are not silently clamped.
+theorem outside {R A : Type*} [CommRing R] [CommRing A] {m : ℕ}
+    (x : CoefficientHeightBank R A m) (i : ℕ) (hi : m ≤ i) : x.totalCofactor i = x.commonDenominator := by
+  unfold CoefficientHeightBank.totalCofactor CoefficientHeightBank.commonDenominator
+  apply Finset.prod_congr rfl
+  intro j _
+  exact ite_eq_right (by have := j.isLt; omega)
+
+example {R A : Type*} [CommRing R] [CommRing A] (x : CoefficientHeightBank R A 0) (i : ℕ) :
+    x.totalCofactor i = 1 := by simp only [CoefficientHeightBank.totalCofactor, Finset.univ_eq_empty, Finset.prod_empty]
+
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+theorem own_aux_common (ctx : List Bool) (R : List Bool → ℕ) (k : ℕ)
+    (hk : k ≤ IntegralMixedCausalRecordPlanBits.count ctx) (a b : List Bool)
+    (hr : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx) :
+    (IntegralMixedFramedBankSnapshotBits.atKey (IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha)
+      (IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha R) (IntegralMixedAuxiliaryMarkedRecordPlan.data hn ht ha R)
+      (CoefficientMarkedRecordRowLayout.key (n:=n) ctx k a)).common =
+    (IntegralMixedFramedBankSnapshotBits.atKey (IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha)
+      (IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha R) (IntegralMixedAuxiliaryMarkedRecordPlan.data hn ht ha R)
+      (CoefficientMarkedRecordRowLayout.key (n:=n) ctx k b)).common :=
+  (common_specializes hn ht ha ctx R k hk a hr).symm.trans (common_specializes hn ht ha ctx R k hk b hr)
+
+theorem own_aux_cofactor (ctx : List Bool) (R : List Bool → ℕ) (k : ℕ)
+    (hk : k ≤ IntegralMixedCausalRecordPlanBits.count ctx) (a b : List Bool)
+    (hr : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx) (i : ℕ) :
+    (IntegralMixedFramedBankSnapshotBits.atKey (IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha)
+      (IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha R) (IntegralMixedAuxiliaryMarkedRecordPlan.data hn ht ha R)
+      (CoefficientMarkedRecordRowLayout.key (n:=n) ctx k a)).cofactor i =
+    (IntegralMixedFramedBankSnapshotBits.atKey (IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha)
+      (IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha R) (IntegralMixedAuxiliaryMarkedRecordPlan.data hn ht ha R)
+      (CoefficientMarkedRecordRowLayout.key (n:=n) ctx k b)).cofactor i :=
+  (cofactor_specializes hn ht ha ctx R k hk a hr i).symm.trans (cofactor_specializes hn ht ha ctx R k hk b hr i)
+
+end MarkedBankProductsRegression
+#print axioms LeanCanny.Algebra.CoefficientHeightBank.totalCofactor_fin
+#print axioms LeanCanny.Algebra.CoefficientHeightBank.Specializes.totalCofactor
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordBankProducts.snapshot_planned
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordBankProducts.products_specialize
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordBankProducts.common_specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordBankProducts.cofactor_specializes
+#print axioms MarkedBankProductsRegression.outside
+#print axioms MarkedBankProductsRegression.own_aux_common
+#print axioms MarkedBankProductsRegression.own_aux_cofactor
+end RoadmapInternalG85ActualBankProductFamily
