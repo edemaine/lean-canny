@@ -2265,3 +2265,48 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Complete guarded graph polynomial families/common bounds, physical-edge transport/global stabilization, bounded descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
+
+41. G83: native finite guards at the actual retained chronological center
+2026-11-05.
+
+The actual formal center-coefficient polynomial is pulled back through
+chronological bank references at one fixed full physical sampler context.
+Raw columns retain their creating powers. Clearing uses the actual common
+nonzero Q, with an even allowance preserving signs for negative and nonunit
+denominators. Invalid references retain literal native zero extension.
+
+Sparse coefficient readers at arbitrary caller modulus derive from original
+CurrentQ access. Full-row native access is supplied internally. The marked
+and outer sign evaluators retain the SAME sampler context, word and complete
+physical tuple while coefficient selectors vary. The fixed center reference
+table and radial-context writers are local FP inputs; no root, homomorphism,
+sign evaluator or center model is supplied.
+
+A finite native zero-test scan gives the EXACT same-center specialized
+perturbation index and target degree. Both indices are bounded by original
+resultDegree, and valid selections exist for every own valid sample word.
+The radius marker records zero/nonzero status, not the sign of that marker.
+Its constant nonzero coefficient-scan head does not replace geometric endpoint
+guards. Focused consumers include negative/nonunit Q, odd creating power,
+invalid reference zero and the necessary Q-ne-zero condition.
+
+This closes actual retained-center coefficient guard tests. A joint native
+descriptor/center word and its bounded existence are not constructed here.
+Selected squarefree/PSC and other radial cut families, native Boolean frontier
+incidence, global graph stabilization and both original unconditional PSPACE
+targets remain open.
+
+All7 sources (977 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS20624 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:13782 lines,208 groups.
+Audited 93307 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 199426 transitive constants: no legacy space foundation.
+All11 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Joint bounded descriptor/center sampling, selected squarefree/PSC and other radial cuts, native Boolean frontier incidence, complete global graph stabilization and both original unconditional PSPACE targets remain open.

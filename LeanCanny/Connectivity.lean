@@ -1,3 +1,10 @@
+import LeanCanny.Encoding.FormulaSignSlotRadialBankCenterNumerator
+import LeanCanny.Encoding.FormulaSignSlotRadialBankCenterPolynomial
+import LeanCanny.Encoding.FormulaSignSlotRadialBankCenterSource
+import LeanCanny.Encoding.FormulaSignSlotRadialBankCenterSpace
+import LeanCanny.Encoding.FormulaSignSlotRadialBankCenterTest
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedCenterGuards
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedCenterTest
 import LeanCanny.Encoding.CoefficientMarkedRecordUniformCutoff
 import LeanCanny.Encoding.IntegralMixedPhysicalFieldEqualityCatalog
 import LeanCanny.Encoding.IntegralMixedPhysicalFieldEqualityQueryHeight
@@ -4914,8 +4921,11 @@ The actual original source now supplies input-row and normalized eliminant
 height bounds, including arbitrary nested coefficients. Concrete center
 coefficient polynomials have closed native readers, degree/mass bounds and
 finite same-center guards for actual specialized trailing/target degrees.
-Bounds retain center variables formally. Bounded descriptor words, actual
-retained-center tests and native frontier incidence remain to be discharged.
+Bounds retain center variables formally. Actual native finite tests now
+pull these center polynomials back through the same chronological bank
+references and current common denominator. They select the specialized
+perturbation index and target degree with original-only bounds. Joint bounded
+descriptor words and native frontier incidence remain to be discharged.
 Generic coefficient-base constructions now specialize to the actual native
 basis, rows, banks, and all four mixed cut recipes, including their computed
 moving slope. Matrix coefficient bounds give a local normalization cutoff.

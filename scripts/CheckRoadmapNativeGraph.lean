@@ -1,3 +1,4 @@
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedCenterGuards
 import LeanCanny.Encoding.CoefficientMarkedRecordUniformCutoff
 import LeanCanny.Encoding.IntegralMixedPhysicalFieldEqualityQueryHeight
 import LeanCanny.Encoding.IntegralMixedRoadmapProperRowStructuralCatalog
@@ -13693,3 +13694,89 @@ end FieldProfileRegression
 #print axioms FieldProfileRegression.constant_radius
 #print axioms FieldProfileRegression.original_budgets
 end RoadmapInternalG82ActualFieldQueryProfile
+
+section RoadmapInternalG83ActualRetainedCenterGuards
+namespace RadialRetainedCenterRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Computation LeanCanny.ETR
+open scoped Classical
+
+noncomputable def affine : MvPolynomial (Fin 1) ℤ := MvPolynomial.C 7 - MvPolynomial.C 3 * MvPolynomial.X 0
+noncomputable def powered (_ : Fin 1) : MvPolynomial (Fin 1) ℤ := MvPolynomial.C 6 * MvPolynomial.X 0 ^ 3
+theorem affine_degree : affine.totalDegree ≤ 2 := by
+  unfold affine
+  apply (MvPolynomial.totalDegree_sub _ _).trans
+  apply max_le
+  · rw [MvPolynomial.totalDegree_C]
+    omega
+  · exact (MvPolynomial.totalDegree_mul _ _).trans (by rw [MvPolynomial.totalDegree_C]; simp)
+
+-- Negative, nonunit common denominator; the odd raw power is retained.
+example : (CommonDenominatorSpecialization.clear 2 (-2) powered affine).eval₂
+    (Int.castRingHom ℝ) (fun _ => 1) = 64 := by
+  rw [CommonDenominatorSpecialization.eval (Int.castRingHom ℝ) 2 (-2) powered affine affine_degree (by norm_num)]
+  norm_num [affine, powered]
+
+example : SignType.sign ((CommonDenominatorSpecialization.clear 2 (-2) powered affine).eval₂
+    (Int.castRingHom ℝ) (fun _ => 1)) = 1 := by
+  rw [CommonDenominatorSpecialization.eval (Int.castRingHom ℝ) 2 (-2) powered affine affine_degree (by norm_num)]
+  norm_num [affine, powered]
+
+-- Clearing with Q=0 would be unsound: actual bank Q is derived nonzero.
+example : CommonDenominatorSpecialization.clear 2 (0 : ℤ)
+    (fun _ : Fin 1 => (0 : MvPolynomial (Fin 1) ℤ)) (MvPolynomial.C 1) = 0 := by
+  change CommonDenominatorSpecialization.clear 2 (0 : ℤ) _ (MvPolynomial.monomial 0 1) = 0
+  rw [CommonDenominatorSpecialization.monomial]
+  simp [CommonDenominatorSpecialization.factor]
+
+example (B : IntegralFramedBankQuery.Bank) (refs : List Bool → List Bool) (z : List Bool) (i k W : ℕ)
+    (hi : ¬FormulaSignSlotRadialBankCenterPolynomial.reference refs z i <
+      (IntegralMixedFramedBankSnapshotBits.atKey B.parameters B.plan B.data
+        (FormulaSignSlotRadialBankCenterPolynomial.key B z)).count) :
+    (FixedWidthKronecker.encode _ W (FormulaSignSlotRadialBankCenterPolynomial.numerator B refs z i)).coeff k = 0 := by
+  rw [FormulaSignSlotRadialBankCenterNumerator.encoded_numerator, ite_eq_right hi, Polynomial.coeff_zero]
+
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+  {R : List Bool → ℕ} (hR : BinaryFn R) (outer : Bool) (radial refs : List Bool → List Bool)
+
+example (hs : radial ∈ FP) (hf : refs ∈ FP) :
+    SpaceFunction (fun q => [decide (FormulaSignSlotRadialRetainedCenterGuards.Guards hn ht ha hR outer radial refs q)]) :=
+  FormulaSignSlotRadialRetainedCenterGuards.evaluator hn ht ha hR outer radial refs hs hf
+
+example (c w : List Bool)
+    (hv : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer) c w) :
+    ∃ tau ≤ FormulaSignSlotRadialCenterSelection.bound (radial c),
+      ∃ d ≤ FormulaSignSlotRadialCenterSelection.bound (radial c),
+        FormulaSignSlotRadialRetainedCenterGuards.Guards hn ht ha hR outer radial refs
+          (pair (pair c w) (pair (BinaryNatCode.encode tau) (BinaryNatCode.encode d))) :=
+  FormulaSignSlotRadialRetainedCenterGuards.exists_guards hn ht ha hR outer radial refs c w hv
+
+example (c w : List Bool)
+    (hv : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer) c w)
+    (tau d : ℕ) (h : FormulaSignSlotRadialRetainedCenterGuards.Guards hn ht ha hR outer radial refs
+      (pair (pair c w) (pair (BinaryNatCode.encode tau) (BinaryNatCode.encode d)))) :
+    (BinaryNatCode.encode tau).length ≤ (FormulaSignSlotRadialCenterSelection.bound (radial c)).size := by
+  have H := (FormulaSignSlotRadialRetainedCenterGuards.guards_packet hn ht ha hR outer radial refs c w hv tau d).mp h
+  rw [BinaryNatCode.length_encode]
+  exact Nat.size_le_size H.1
+
+#check FormulaSignSlotRadialBankCenterSource.access
+#check FormulaSignSlotRadialMarkedCenterTest.evaluator
+#check FormulaSignSlotRadialRetainedCenterTest.zero_packet
+#check FormulaSignSlotRadialRetainedCenterGuards.guards_packet
+#print axioms FormulaSignSlotRadialBankCenterPolynomial.sign
+#print axioms FormulaSignSlotRadialBankCenterPolynomial.polynomial_mass
+#print axioms FormulaSignSlotRadialBankCenterNumerator.evaluator
+#print axioms FormulaSignSlotRadialBankCenterNumerator.correct
+#print axioms FormulaSignSlotRadialBankCenterSpace.access
+#print axioms FormulaSignSlotRadialBankCenterSpace.row_evaluator
+#print axioms FormulaSignSlotRadialBankCenterSource.access
+#print axioms FormulaSignSlotRadialBankCenterSource.sign
+#print axioms FormulaSignSlotRadialBankCenterTest.packet
+#print axioms FormulaSignSlotRadialMarkedCenterTest.evaluator
+#print axioms FormulaSignSlotRadialRetainedCenterTest.zero_packet
+#print axioms FormulaSignSlotRadialRetainedCenterGuards.evaluator
+#print axioms FormulaSignSlotRadialRetainedCenterGuards.guards_packet
+#print axioms FormulaSignSlotRadialRetainedCenterGuards.exists_guards
+end RadialRetainedCenterRegression
+end RoadmapInternalG83ActualRetainedCenterGuards
