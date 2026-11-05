@@ -1,8 +1,9 @@
 Component-labelled implicit-stratum prototype
 Construction and dependency ledger, 2026-11-05
 Base checkpoint: 0983bb6. Milestone A and the geometric cutoff required by C
-are proved. B and final two-label integration remain in progress. This is
-not an unconditional connectivity PSPACE proof.
+are proved. The native provider backend for B is implemented; bounded
+association correctness and final two-label integration remain in progress.
+This is not an unconditional connectivity PSPACE proof.
 
 Acceptance target
 
@@ -147,10 +148,11 @@ unbounded zero sets are covered. The actual implicit binary-count feature
 family is instantiated without expanding it into a Term.
 
 This proves sampling, not association with either prescribed old candidate
-label. The external coordinate algebra, same-point interpretation and native
-provider prelude are under construction for B. The geometric cutoff for C
-is proved, but bounded association correctness and its integration with both
-labels remain open. The full component-labelled prototype and both original
+label. The actual OLD/EXTERNAL coordinate algebra, marked root vectors,
+full causal record backend and native atomic checker are now constructed.
+Both root vectors realize the actual planned saved prelude at the complete
+record horizon. The geometric cutoff for C is proved, but bounded association
+correctness and its integration with both labels remain open. The full component-labelled prototype and both original
 connectivity PSPACE endpoints therefore remain unproved.
 
 Checkpoint verification: strict three-library build (21634 jobs), the
@@ -158,3 +160,31 @@ focused actual-sampler fixture, complete axiom and native-space audits,
 and the existing native-roadmap regression all pass. Every new whole source
 also passes at 200000 heartbeats with warnings as errors and strict implicit
 variables. See ROADMAP-PROOF-AUDIT.txt, section 59, for recorded evidence.
+
+Implemented native provider foundation for B
+
+FormulaSignSlotRadialProviderAtomic.mem_PSPACE decides the actual seven-part
+atomic predicate: checked grammar, one complete OWN word, all earlier cut
+and creating-critical guards, latest coordinate companions, literal integer
+leaves/regular/mark equations, and actual OLD or EXTERNAL replay. The source,
+all native controls and caller-modulus bounds are derived. EXTERNAL replay
+checks a canonical source/header/side association and actual Q=0 at the SAME
+own grid point; it never requires the prescribed old label to name that
+external point. All original coordinates compare every derivative sign.
+
+Canonical OLD and EXTERNAL endpoints supply actual n+8 root vectors whose
+first n+4 coordinates equal the canonical marked lift. Both vectors realize
+the actual planned record saved state, with its full record cap and width.
+ProviderPair.oldOf changes only the role flag and retains all joint metadata;
+the two actual radii and spatial sources are proved equal. Provider-only
+vertex and OWN-word budgets are UnaryFn. Original joint-header bounds remain
+an integration obligation.
+
+The remaining B contracts are source-aware point/frame and signature
+readback, a fresh accepted first seed from each marked endpoint, accepted
+recursive child/proper-edge constructors with native edge guards, and the
+path induction and marked attachment proving bounded association iff.
+Vertex PSPACE and Replay alone imply none of those component statements.
+The two-label feasibility equivalence and both original unconditional
+connectivity PSPACE endpoints remain open. This checkpoint introduces no
+component, path, model, native evaluator or solvability oracle.

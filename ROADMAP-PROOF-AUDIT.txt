@@ -3084,3 +3084,58 @@ A correct bounded provider checker at the shared cutoff will decide the
 original component relation; that checker is not inferred from this theorem.
 Full bounded association, both-label feasibility, interval/frontier incidence
 and BOTH original unconditional connectivity PSPACE endpoints remain open.
+
+61. Native OLD/EXTERNAL provider and actual saved endpoint roots
+2026-11-05. This implements the native provider foundation for milestone B;
+bounded association correctness and the final two-label iff remain open.
+
+The actual coordinate Source, charged slack matrices and n+8 provider leaves
+are constructed internally. OLD uses the genuine old coordinate source;
+EXTERNAL uses its accepted joint-stratum OWN point. Every derivative sign
+compares that point to one full retained-bank word. EXTERNAL replay checks
+the literal canonical source/header/side/flag/own-word association and actual
+Q=0; it never assumes the external point equals the prescribed old label.
+The causal record plan retains the entire literal provider field, constructs
+all native current-Q/caller-modulus controls, and supplies the real record
+cap and width. No expanded integer coefficient word or matrix is emitted.
+
+Canonical OLD Good candidates and accepted EXTERNAL OWN samples each supply
+all actual marked-prelude leaf roots. The first n+4 coordinates are one
+canonical marked lift, with the original coordinates retained exactly.
+Both root vectors realize the actual planned saved prelude inside the full
+record plan. No smaller-plan horizon, interpreting hom or pre-existing word
+is supplied. ProviderPair.oldOf flips only the role flag and preserves the
+actual radius and spatial source, retaining all external joint metadata.
+The concrete provider cutoff then preserves original component membership
+for any two endpoints already in that bounded original zero set.
+
+The native Atomic.Valid conjunction checks actual grammar, one complete OWN
+word, all earlier cut and creating-critical guards, latest all-coordinate
+companions, literal integer leaves and marked equations, and source-aware
+OLD/EXTERNAL Replay. Its PSPACE theorem has no source, row, coefficient,
+height, stage evaluator or native-model premise. Accepted vertices have a
+UnaryFn byte allowance for each fixed literal provider. This is not yet an
+original joint-header allowance or a component-association theorem.
+
+All 45 new dependency-closed modules (4978 LF lines) pass whole-source checks
+at 200000 heartbeats, warnings as errors and strict implicit variables,
+and strict producers. The strict three-library build passes 21758 jobs.
+scripts/CheckProviderAtomic.lean passes four consumers, two endpoint API
+checks and eight standard-three-axiom dependency closures. All delegated
+focused fixtures pass; 30 distinct frozen source hashes match, with the
+15 root additions recorded separately. CheckAxioms passes 98338 declarations
+with only propext, Classical.choice and Quot.sound. CheckSpaceFoundation
+passes 205895 transitive constants with no legacy space foundation.
+CheckRoadmapNativeGraph passes; its 10815-line output is byte-identical to
+the preceding cutoff checkpoint. Sources use UTF8/LF, a single final newline,
+no trailing whitespace and mode100644. Only the main worktree exists.
+Unique earlier WIP and active semantic proof files are excluded from this
+checkpoint. No external write or push.
+
+The remaining concrete contracts are source-aware point/frame/signature
+readback; fresh accepted first-seed construction; accepted recursive child
+and proper-edge construction with native NoBad/NoCrit/Near readback; and
+the path induction and marked attachment proving bounded association iff.
+Neither Replay nor vertex PSPACE supplies these statements. Both-label
+feasibility, full interval/frontier incidence and BOTH original unconditional
+connectivity PSPACE endpoints remain unproved. Work continues at those gaps.

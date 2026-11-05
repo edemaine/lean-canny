@@ -2414,6 +2414,14 @@ sets are included; the cutoff has native binary controls. See
 two-label integration and both original connectivity PSPACE endpoints remain
 unfinished.
 
+The actual OLD/EXTERNAL provider atomic checker now has a native PSPACE
+theorem, with derived record-bank controls and same-point replay. Canonical
+marked endpoint roots realize its actual saved prelude, and accepted words
+have a polynomial size bound for each provider. Point/frame readback,
+accepted recursive child and edge construction, and path correctness for
+the new providers remain unfinished; this does not yet prove component
+association or either original connectivity PSPACE endpoint.
+
 ## Build and verification
 
 Install [elan](https://github.com/leanprover/elan), then run:
@@ -2453,6 +2461,7 @@ lake env lean scripts/CheckPolyTimeFoundation.lean
 lake env lean scripts/CheckConnectivity.lean
 lake env lean scripts/CheckImplicitStratumSampler.lean
 lake env lean scripts/CheckEffectiveBallConnections.lean
+lake env lean scripts/CheckProviderAtomic.lean
 lake env lean scripts/CheckAlgebraicArcs.lean
 lake env lean scripts/CheckAffineShiftArcs.lean
 lake env lean scripts/CheckIntegerGridValues.lean
