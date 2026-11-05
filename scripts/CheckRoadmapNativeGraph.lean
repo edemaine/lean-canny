@@ -1,3 +1,11 @@
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterCoefficientSource
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterSelection
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantFormalMass
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantMass
+import LeanCanny.Encoding.IntegralFramedZeroTarskiStatistic
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusCertifiedWindow
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeadHeight
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusWindowHeight
 import LeanCanny.Algebra.CoefficientCoordinateCutoffIteration
 import LeanCanny.Algebra.CoefficientCoordinateDyadicBounds
 import LeanCanny.Connectivity.IntegralMixedRoadmapPhysicalGraph
@@ -12778,3 +12786,316 @@ end MarkedRecordRadiusRowRegression
 #print axioms MarkedRecordRadiusRowRegression.original_budget
 #print axioms MarkedRecordRadiusRowRegression.indexed_full_mass
 end RoadmapInternalG79ActualPhysicalRowGrowth
+
+section RoadmapInternalG80ActualEliminantMass
+namespace RadialEliminantMassRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.Connectivity
+open Polynomial FormulaSignSlotCenteredRadialGraph FormulaSignSlotCenteredRadialLimits
+open FormulaSignSlotRadialEliminantCoefficientModel FormulaSignSlotRadialEliminantPackingLayout
+open scoped Classical
+
+-- Sparse tilt signs and the coercive term are included in the actual scalar budget.
+example (c : List Bool) (j : Fin (FormulaSignSlotRadialFormalInput.spatial c)) :
+    kernel c j (Finsupp.single (some j) (2 * degreeBudget c + 1)) 2 0 0 0 (-19) =
+      ((2 * degreeBudget c + 2 : ℕ) : ℤ) := by
+  simp [kernel]
+
+example (c : List Bool) :
+    kernel c (marginIndex c) (Finsupp.single none (2 * degreeBudget c + 1)) 1 0 0 0 27 = -1 := by
+  simp [kernel, Finsupp.weight_single, WeightedHomogenization.weights]
+  rfl
+
+noncomputable def retained : Polynomial (Polynomial (Polynomial (MvPolynomial (Fin 1) ℤ))) :=
+  C (C (C (MvPolynomial.C 7 - MvPolynomial.C 3 * MvPolynomial.X 0))) + C (C X) + C X + X
+
+example : (TriplePolynomialParameterFlatten.flatten retained).coeff
+    (TriplePolynomialParameterFlatten.exponent 0 0 0 (Finsupp.single 0 1)) = -3 := by
+  rw [TriplePolynomialParameterFlatten.coefficient]
+  simp [retained]
+  change (MvPolynomial.C (3 : ℤ) * MvPolynomial.X (0 : Fin 1)).coeff (Finsupp.single 0 1) = 3
+  rw [MvPolynomial.coeff_C_mul]
+  simp
+
+example : (TriplePolynomialParameterFlatten.flatten retained).coeff
+    (TriplePolynomialParameterFlatten.exponent 1 0 0 0) = 1 := by
+  rw [TriplePolynomialParameterFlatten.coefficient]
+  simp [retained]
+
+example : (TriplePolynomialParameterFlatten.flatten retained).coeff
+    (TriplePolynomialParameterFlatten.exponent 0 1 0 0) = 1 := by
+  rw [TriplePolynomialParameterFlatten.coefficient]
+  simp [retained]
+
+example : (TriplePolynomialParameterFlatten.flatten retained).coeff
+    (TriplePolynomialParameterFlatten.exponent 0 0 1 0) = 1 := by
+  rw [TriplePolynomialParameterFlatten.coefficient]
+  simp [retained]
+
+-- The actual source and output estimates have no supplied height or model premise.
+example (c : List Bool) :
+    MvMass.mass (FormulaSignSlotRadialFormalInput.polynomial c) ≤
+      2 ^ FormulaSignSlotRadialEliminantScalarMass.sourceSize c :=
+  FormulaSignSlotRadialEliminantScalarMass.source_mass c
+
+example (c : List Bool) (row : Fin (spatial c + 1)) (e : Fin (spatial c + 1) →₀ ℕ) :
+    coefficientMass ((FormulaSignSlotRadialEliminantPacked.system c row).coeff e) ≤
+      2 ^ FormulaSignSlotRadialEliminantMass.rowBudget c :=
+  FormulaSignSlotRadialEliminantMass.row_mass c row e
+
+example (c : List Bool) :
+    coefficientMass (FormulaSignSlotRadialEliminantPacked.eliminant c) ≤
+      2 ^ FormulaSignSlotRadialEliminantMass.resultBudget c :=
+  FormulaSignSlotRadialEliminantMass.eliminant_mass c
+
+#check FormulaSignSlotRadialEliminantMass.parameter_abs
+#check FormulaSignSlotRadialEliminantMass.coefficient_abs
+#check FormulaSignSlotRadialEliminantMass.rowBudget_unary
+#check FormulaSignSlotRadialEliminantMass.resultBudget_binary
+#print axioms FormulaSignSlotRadialEliminantScalarMass.source_mass
+#print axioms FormulaSignSlotRadialEliminantScalarMass.dense_abs
+#print axioms FormulaSignSlotRadialEliminantScalarMass.gradient_abs
+#print axioms FormulaSignSlotRadialEliminantScalarMass.coordinate_abs
+#print axioms FormulaSignSlotRadialEliminantScalarMass.scalar_budget
+#print axioms FormulaSignSlotRadialEliminantMass.nested_abs
+#print axioms FormulaSignSlotRadialEliminantMass.parameter_abs
+#print axioms FormulaSignSlotRadialEliminantMass.rowBudget_unary
+#print axioms FormulaSignSlotRadialEliminantMass.row_mass
+#print axioms FormulaSignSlotRadialEliminantMass.resultBudget_binary
+#print axioms FormulaSignSlotRadialEliminantMass.eliminant_mass
+#print axioms FormulaSignSlotRadialEliminantMass.coefficient_abs
+end RadialEliminantMassRegression
+end RoadmapInternalG80ActualEliminantMass
+
+section RoadmapInternalG80AllFormalCoefficients
+namespace RadialEliminantFormalMassRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.Computation
+open FormulaSignSlotCenteredRadialGraph
+
+example : BinaryFn FormulaSignSlotRadialEliminantPacked.resultDegree :=
+  FormulaSignSlotRadialEliminantFormalMass.degree_binary
+
+example (c : List Bool) (f : Fin (d (pairFst c) + 3) →₀ ℕ) :
+    ((FormulaSignSlotRadialEliminantParameterRows.eliminant (pairFst c)
+      (FormulaSignSlotRadialEliminantInput.coordinate c)).coeff f).natAbs ≤
+        2 ^ FormulaSignSlotRadialEliminantFormalMass.budget c :=
+  FormulaSignSlotRadialEliminantFormalMass.coefficient_abs c f
+
+-- Every nested index is allowed: no finite-box, degree or nonzero premise.
+example (c : List Bool) (epsilon target radius : ℕ) (center : Fin (d (pairFst c)) →₀ ℕ) :
+    (((((FormulaSignSlotRadialFormalEliminant.eliminant (pairFst c)
+      (FormulaSignSlotRadialEliminantInput.coordinate c)).coeff epsilon).coeff target).coeff radius).coeff center).natAbs ≤
+        2 ^ FormulaSignSlotRadialEliminantFormalMass.budget c :=
+  FormulaSignSlotRadialEliminantFormalMass.nested_abs c epsilon target radius center
+
+#check FormulaSignSlotRadialEliminantFormalMass.parameter_mass
+#check FormulaSignSlotRadialEliminantFormalMass.budget_binary
+#print axioms FormulaSignSlotRadialEliminantFormalMass.budget_binary
+#print axioms FormulaSignSlotRadialEliminantFormalMass.degree_binary
+#print axioms FormulaSignSlotRadialEliminantFormalMass.parameter_mass
+#print axioms FormulaSignSlotRadialEliminantFormalMass.coefficient_abs
+#print axioms FormulaSignSlotRadialEliminantFormalMass.nested_abs
+end RadialEliminantFormalMassRegression
+end RoadmapInternalG80AllFormalCoefficients
+
+section RoadmapInternalG80SameCenterCoefficients
+namespace RadialCenterCoefficientRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.Computation
+open FormulaSignSlotCenteredRadialGraph Polynomial
+open scoped Classical
+
+example (c : List Bool) (a : Fin (d (pairFst c)) → ℝ) :
+    ∃ tau ≤ FormulaSignSlotRadialCenterSelection.bound c,
+      ∃ degree ≤ FormulaSignSlotRadialCenterSelection.bound c,
+        FormulaSignSlotRadialCenterSelection.Guards c a tau degree :=
+  FormulaSignSlotRadialCenterSelection.exists_guards c a
+
+example (c : List Bool) (a : Fin (d (pairFst c)) → ℝ) :
+    ¬FormulaSignSlotRadialCenterSelection.Guards c a
+      (FormulaSignSlotRadialCenterSelection.bound c + 1) 0 := by
+  intro H
+  have := H.1
+  omega
+
+example (c : List Bool) (s t r : ℕ)
+    (hr : FormulaSignSlotRadialEliminantPacked.resultDegree c < r) :
+    FormulaSignSlotRadialCenterCoefficient.polynomial c s t r = 0 :=
+  FormulaSignSlotRadialCenterCoefficient.zero_of_large_index c s t r (Or.inr (Or.inr hr))
+
+-- Center specialization can kill the symbolic lowest perturbation coefficient.
+noncomputable def model : Polynomial (Polynomial (Polynomial (MvPolynomial (Fin 1) ℤ))) :=
+  C (C (C (MvPolynomial.X 0))) + X * C X
+noncomputable def atZero : Polynomial (Polynomial (Polynomial ℝ)) :=
+  model.map (Polynomial.mapRingHom (Polynomial.mapRingHom
+    (MvPolynomial.eval₂Hom (Int.castRingHom ℝ) (fun _ => 0))))
+
+example : model.natTrailingDegree = 0 := by
+  apply natTrailingDegree_eq_zero.mpr
+  right
+  simp only [model, coeff_add, coeff_C_zero]
+  intro H
+  have HH := congrArg (fun p => ((p.coeff 0).coeff 0).coeff (Finsupp.single (0 : Fin 1) 1)) H
+  simp at HH
+
+example : atZero = X * C X := by
+  simp [atZero, model]
+
+example : atZero.natTrailingDegree = 1 := by
+  rw [show atZero = X * C X by simp [atZero, model]]
+  rw [natTrailingDegree_mul (by simp) (by simp)]
+  simp
+
+example : (atZero.coeff 1).natDegree = 1 := by
+  rw [show atZero = X * C X by simp [atZero, model]]
+  simp
+
+#check FormulaSignSlotRadialCenterCoefficientNative.evaluator
+#check FormulaSignSlotRadialCenterCoefficientSource.evaluator
+#check FormulaSignSlotRadialCenterCoefficientSource.packet
+#check FormulaSignSlotRadialCenterSelection.guards_iff
+#check FormulaSignSlotRadialCenterSelection.coordinate_at
+#print axioms FormulaSignSlotRadialCenterCoefficient.coefficient_weight
+#print axioms FormulaSignSlotRadialCenterCoefficient.mass
+#print axioms FormulaSignSlotRadialCenterCoefficient.specialization
+#print axioms FormulaSignSlotRadialCenterCoefficientNative.evaluator
+#print axioms FormulaSignSlotRadialCenterCoefficientNative.correct
+#print axioms FormulaSignSlotRadialCenterCoefficientSource.evaluator
+#print axioms FormulaSignSlotRadialCenterCoefficientSource.packet
+#print axioms FormulaSignSlotRadialCenterSelection.guards_iff
+#print axioms FormulaSignSlotRadialCenterSelection.exists_guards
+#print axioms FormulaSignSlotRadialCenterSelection.coordinate_at
+end RadialCenterCoefficientRegression
+end RoadmapInternalG80SameCenterCoefficients
+
+section RoadmapInternalG80ActualHeadWindowMass
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR
+open IntegralMixedAuxiliaryMarkedRecordRadiusHeight
+open IntegralMixedAuxiliaryMarkedRecordPlan (parameters plan data factor)
+attribute [local irreducible] IntegralMixedSourceIntegerRecordAppend.plan IntegralMixedSourceIntegerRecordAppend.data
+  IntegralMixedFramedHistoryFamilyBits.family
+
+namespace RadiusHeadWindowRegression
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+-- Arbitrary original metadata, including invalid saved selectors, is covered.
+theorem head_zero_radius (parent terminal : List Bool → List Bool) (d e : List Bool → ℕ) (q : List Bool) (y : ℕ) :
+    MvMass.mass ((IntegralMixedFramedTerminalCoordinateHeadBits.polynomial
+      (parameters hn ht ha) (plan hn ht ha (fun _ => 0)) (data hn ht ha (fun _ => 0))
+      parent terminal d e q).coeff y) ≤ 2 ^ headOffset hn ht ha parent e q := by
+  simpa only [Nat.mul_zero, Nat.zero_add] using head_coefficient_mass hn ht ha (fun _ => 0) parent terminal d e q y
+
+-- Parameter width is charged even when the declared degree is zero.
+theorem zero_degree_head (R : List Bool → ℕ) (parent terminal : List Bool → List Bool)
+    (e : List Bool → ℕ) (q : List Bool) (y : ℕ) :
+    MvMass.mass ((IntegralMixedFramedZeroTarskiBits.head
+      (parameters hn ht ha) (plan hn ht ha R) (data hn ht ha R)
+      parent terminal (fun _ => 0) e q).coeff y) ≤
+      2 ^ (rawSlope hn ht ha (pairFst (IntegralMixedVirtualTaskBits.saved (parameters hn ht ha) (parent q))) *
+        R (pairFst (IntegralMixedVirtualTaskBits.saved (parameters hn ht ha) (parent q))) + headOffset hn ht ha parent e q) :=
+  zero_head_coefficient_mass hn ht ha R parent terminal (fun _ => 0) e q y
+
+theorem powered (R : List Bool → ℕ) (terminal : List Bool → List Bool) (selected : List Bool → ℕ)
+    (power : List Bool → Fin 3) (negative : Bool) (q : List Bool) (y : ℕ) :
+    MvMass.mass ((IntegralMixedFramedZeroTarskiBits.query (parameters hn ht ha) (plan hn ht ha R)
+      (data hn ht ha R) (fun _ => 3) (factor hn ht ha) (seed hn ht ha R) (familyInputs hn ht ha R)
+      terminal selected power negative q).coeff y) ≤
+      2 ^ ((4 * coordinateSlope hn ht ha (pairFst (terminal q))) * R (pairFst (terminal q)) +
+        (4 * coordinateOffset hn ht ha (pairFst (terminal q)) + 4)) :=
+  powered_window_coefficient_mass hn ht ha R terminal selected power negative q y
+
+theorem head_budget (parent : List Bool → List Bool) (e : List Bool → ℕ)
+    (hp : parent ∈ FP) (he : BinaryFn e) : BinaryFn (headOffset hn ht ha parent e) :=
+  headOffset_binary hn ht ha parent e hp he
+
+theorem window_budgets (terminal : List Bool → List Bool) (hterminal : terminal ∈ FP) :
+    BinaryFn (fun q => 4 * coordinateSlope hn ht ha (pairFst (terminal q))) ∧
+    BinaryFn (fun q => 4 * coordinateOffset hn ht ha (pairFst (terminal q)) + 4) := by
+  have HR : (fun q => pairFst (terminal q)) ∈ FP := mem_FP_comp hterminal pairFst_mem_FP
+  have HS : BinaryFn (fun q => coordinateSlope hn ht ha (pairFst (terminal q))) :=
+    (coordinateSlope_binary hn ht ha).comp HR
+  have HO : BinaryFn (fun q => coordinateOffset hn ht ha (pairFst (terminal q))) :=
+    (coordinateOffset_binary hn ht ha).comp HR
+  exact ⟨(BinaryFn.const 4).mul HS, ((BinaryFn.const 4).mul HO).add (BinaryFn.const 4)⟩
+
+end RadiusHeadWindowRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.headSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.headOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.head_coefficient_mass
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.zero_head_coefficient_mass
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.coordinate_mass_affine
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.window_coefficient_mass
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.powered_window_coefficient_mass
+#print axioms RadiusHeadWindowRegression.head_zero_radius
+#print axioms RadiusHeadWindowRegression.zero_degree_head
+#print axioms RadiusHeadWindowRegression.powered
+#print axioms RadiusHeadWindowRegression.head_budget
+#print axioms RadiusHeadWindowRegression.window_budgets
+end RoadmapInternalG80ActualHeadWindowMass
+
+section RoadmapInternalG80CertifiedGraphQueryMass
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR
+open IntegralMixedAuxiliaryMarkedRecordRadiusHeight
+open IntegralMixedAuxiliaryMarkedRecordPlan (parameters plan data)
+attribute [local irreducible] IntegralMixedSourceIntegerRecordAppend.plan IntegralMixedSourceIntegerRecordAppend.data
+
+namespace CertifiedRadiusRegression
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R : List Bool → ℕ} (hR : BinaryFn R)
+local notation "B" => IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false
+
+-- Exact graph bank, actual enumerated full sampler, no caller row premise.
+theorem graph_rows (key : List Bool) (i : Fin (IntegralFramedPhysicalSquare.count (B).parameters (B).plan key)) :
+    MvMass.mass ((IntegralFramedPhysicalSquare.sampler (B).parameters (B).plan (B).data key).rows i) ≤
+      2 ^ (rowSlope hn ht ha (pairFst key) * R (pairFst key) + rowOffset hn ht ha (pairFst key)) :=
+  PolynomialSystemReindex.mass_le _ _ _ (fun j => certified_full_row_mass hn ht ha hR key j) i
+
+-- Exact graph principal-family head, using its actual fullDegree/fullParameter.
+theorem graph_head (parent : List Bool → List Bool) (selected : List Bool → ℕ)
+    (power : Fin 3) (negative : Bool) (q : List Bool) (y : ℕ) :
+    MvMass.mass (((IntegralFramedZeroTarskiStatistic.mf (B).parameters (B).plan (B).data (B).nodes (B).factor (B).seed (B).bounds
+      parent (B).key selected power negative).head q).coeff y) ≤
+      2 ^ (rawSlope hn ht ha (RankedHistoryTask.root (parent q)) * R (RankedHistoryTask.root (parent q)) +
+        nativeHeadOffset hn ht ha (RankedHistoryTask.root (parent q))) :=
+  certified_native_head_mass hn ht ha hR parent (B).key
+    (IntegralMixedSelectedCoordinateHead.fullDegree (B).parameters (IntegralMixedFramedHistoryFamilyBits.family (B).parameters (B).plan (B).data) parent) q y
+
+-- Exact graph family query; the installed WordEnvelope seed is not assumed affine.
+theorem graph_query (parent : List Bool → List Bool) (selected : List Bool → ℕ)
+    (power : Fin 3) (negative : Bool) (q : List Bool) (y : ℕ) :
+    MvMass.mass (((IntegralFramedZeroTarskiStatistic.mf (B).parameters (B).plan (B).data (B).nodes (B).factor (B).seed (B).bounds
+      parent (B).key selected power negative).query q).coeff y) ≤
+      2 ^ ((4 * coordinateSlope hn ht ha (pairFst ((B).key q))) * R (pairFst ((B).key q)) +
+        (4 * coordinateOffset hn ht ha (pairFst ((B).key q)) + 4)) :=
+  certified_powered_window_coefficient_mass hn ht ha hR (B).key selected (fun _ => power) negative q y
+
+theorem graph_zero_radius_rows (key : List Bool)
+    (i : (IntegralMixedFramedHistoryFamilyBits.family
+      (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha (BinaryFn.const 0))
+      (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha (BinaryFn.const 0))
+      (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedData hn ht ha (BinaryFn.const 0))).physical key) :
+    MvMass.mass (((IntegralMixedFramedHistoryFamilyBits.family
+      (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha (BinaryFn.const 0))
+      (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha (BinaryFn.const 0))
+      (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedData hn ht ha (BinaryFn.const 0))).state key).sampler.rows i) ≤
+      2 ^ rowOffset hn ht ha (pairFst key) := by
+  simpa only [Nat.mul_zero, Nat.zero_add] using certified_full_row_mass hn ht ha (BinaryFn.const 0) key i
+
+theorem original_budget : BinaryFn (nativeHeadOffset hn ht ha) := nativeHeadOffset_binary hn ht ha
+end CertifiedRadiusRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.certified_full_row_mass
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.certified_affine_inputs
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.certified_head_coefficient_mass
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.certified_coordinate_mass_affine
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.certified_window_coefficient_mass
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.certified_powered_window_coefficient_mass
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.certified_native_head_mass
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.nativeHeadOffset_binary
+#print axioms CertifiedRadiusRegression.graph_rows
+#print axioms CertifiedRadiusRegression.graph_head
+#print axioms CertifiedRadiusRegression.graph_query
+#print axioms CertifiedRadiusRegression.graph_zero_radius_rows
+#print axioms CertifiedRadiusRegression.original_budget
+end RoadmapInternalG80CertifiedGraphQueryMass

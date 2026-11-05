@@ -2256,9 +2256,12 @@ eliminant now have native coefficient readers in polynomial space. The final
 evaluator retains all formal center/radius/epsilon/T coefficients and takes
 only original input packets. A monic characteristic quotient constructs the
 normalized value even when the extraneous determinant vanishes at zero.
-A proved input-row mass bound implies a mass bound for the actual normalized
-value. Concrete original-only eliminant heights, bounded descriptor words
-and native frontier guard costs remain to be discharged.
+The actual original source now supplies input-row and normalized eliminant
+height bounds, including arbitrary nested coefficients. Concrete center
+coefficient polynomials have closed native readers, degree/mass bounds and
+finite same-center guards for actual specialized trailing/target degrees.
+Bounds retain center variables formally. Bounded descriptor words, actual
+retained-center tests and native frontier incidence remain to be discharged.
 Generic coefficient-base constructions now specialize to the actual native
 basis, rows, banks, and all four mixed cut recipes, including their computed
 moving slope. Matrix coefficient bounds give a local normalization cutoff.
@@ -2279,6 +2282,9 @@ root labels cover every independent root tuple and preserve bounded query
 signs after one common input-based cutoff. Native reachability is equivalent
 to walks in the actual finite physical-point graph, independent of endpoint
 word choices. Matching its entire edge family across radii remains open.
+Actual head/window/query bounds now cover the installed certified graph
+sampler, with its actual decoded saved parents and native degree requests.
+This supplies evaluated heights; selector and edge transport remain separate.
 The full recursive symbolic presentation and
 original-only common bounds for its entire guarded graph remain open.
 Effective uniform radius stabilization and the original Boolean frontier-

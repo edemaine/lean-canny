@@ -2125,3 +2125,55 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Full mixed-record specialization and original-only family bounds, physical-edge incidence transport, uniform stabilization, Boolean frontier incidence and both original unconditional PSPACE targets remain open.
+
+38. G80: original eliminant heights and actual certified query profiles
+2026-11-04.
+
+Original native syntax bounds the actual formal source mass. Squaring and
+differentiating the literal source, including signed sparse tilt/diagonal
+terms, yields an original unary row coefficient budget. Carry-free packing
+and the committed normalized quotient estimate give an original BinaryFn
+mass bound for the ENTIRE actual eliminant. Every nested epsilon/T/radius/
+center coefficient is bounded, including oversized selectors which are zero.
+No input/result height, source model or extraneous-survival premise is supplied.
+
+The concrete triple-coefficient center polynomial has a closed original-input
+native reader at arbitrary caller modulus, with literal zero extension and
+no exponent wrap. Degree and mass controls are original-only. Finite tests
+on THESE center polynomials are equivalent to the actual same-center
+specialized trailing perturbation index and selected target degree; both
+indices have original bounds and valid selections exist for every center.
+Center variables stay formal: arbitrary real specialization is not asserted
+to preserve an integer coefficient-height bound. The actual retained-center
+native test and descriptor word existence bindings remain separate.
+
+Evaluated native coordinate-head and window/query mass bounds are affine in
+requested radius. Base profiles keep parent/terminal/d/e fixed across radius
+and charge explicit saved roots/e metadata. The certified profiles instead
+use the ACTUAL certified parser and installed WordEnvelope-seed graph bank.
+They do not identify arbitrary same-byte base and certified head requests.
+New affine FamilyInputs are proved for the certified plan; the resource
+controller seed is not assumed affine. Window rebudgeting changes only the
+mass certificate at the SAME family. Native fullParameter and arbitrary
+actual fullDegree requests are included. Focused consumers bind the exact
+graph indexed sampler and installed Statistic.mf head/query.
+
+These close concrete polynomial input and evaluated height obligations.
+Full recursive mixed-record specialization, physical-edge incidence transport,
+uniform radius stabilization, bounded descriptor words/native Boolean frontier
+incidence and both original unconditional PSPACE targets remain open.
+
+All11 sources (1265 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS20576 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:13101 lines,198 groups.
+Audited 92869 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 198891 transitive constants: no legacy space foundation.
+All15 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Full recursive effective radius bound, physical-edge transport/uniform stabilization, actual retained-center guard tests and bounded descriptors/native Boolean frontier incidence remain open; both original unconditional PSPACE targets are unproved.
