@@ -2404,6 +2404,16 @@ The downloaded file has 936,246 bytes and SHA-256
 `7606d41dea23ac1160562a759c196267906d8aec0f754cd4998fdd14fcd185f8`.
 The report retains its original rights; the source-code license does not apply to it.
 
+The polynomial-zero connectivity extension now proves an effective ball
+cutoff from the original dimension, degree and coefficient mass. Beyond it,
+any two endpoints in the ball are joined in the bounded zero set exactly
+when they are joined in the entire zero set. Singular and unbounded zero
+sets are included; the cutoff has native binary controls. See
+`EffectivePolynomialBallConnections.joined_iff_after_cutoff` and
+`component_iff_after_cutoff`. The bounded external-sample association checker,
+two-label integration and both original connectivity PSPACE endpoints remain
+unfinished.
+
 ## Build and verification
 
 Install [elan](https://github.com/leanprover/elan), then run:
@@ -2442,6 +2452,7 @@ lake env lean scripts/CheckSpaceFoundation.lean
 lake env lean scripts/CheckPolyTimeFoundation.lean
 lake env lean scripts/CheckConnectivity.lean
 lake env lean scripts/CheckImplicitStratumSampler.lean
+lake env lean scripts/CheckEffectiveBallConnections.lean
 lake env lean scripts/CheckAlgebraicArcs.lean
 lake env lean scripts/CheckAffineShiftArcs.lean
 lake env lean scripts/CheckIntegerGridValues.lean

@@ -3040,3 +3040,47 @@ with no legacy space foundation. CheckRoadmapNativeGraph passed unchanged.
 Frozen delegated source hashes, LF bytes and non-executable file modes are
 verified. Only the main worktree exists; previous unique WIP is excluded.
 No external write or push. The original connectivity goal remains incomplete.
+
+60. Effective original ball cutoff for polynomial-zero connections
+2026-11-05. This closes the geometric joining-radius obligation in the
+construction-first prototype. The bounded two-provider association checker
+and final two-label equivalence remain in progress.
+
+EffectivePolynomialBallConnections.joined_iff_after_cutoff and
+component_iff_after_cutoff compare the entire original integer-polynomial
+zero set with the literal BoundedZeroSource ball. For original dimension n,
+degree bound D and mass bound 2^H, the constructed radiusExponent(n,D,H)
+has BinaryFn controls. EVERY larger radius preserves all connections between
+endpoints already in that ball. Singular and unbounded zero sets are allowed.
+No caller supplies regularity, a head, exceptional parameter, interval,
+component model or stabilization theorem.
+
+The same fixed parameterized coercive Gram eliminant supplies the boundary
+norm head. Original dyadic mass bounds charge all formal coefficients and
+bound its parameter-lowest integer head. Its root bound excludes actual
+Lagrange boundary critical points in every compact outer norm band for
+all sufficiently small positive residual levels; multipliers may diverge.
+A proper two-circle sublevel map transports those residual components.
+Compact shrinking-residual limits recover the zero components, and compact
+path exhaustion compares the bounded and entire zero sets. This directly
+supplies the needed geometric cutoff without per-record radius transport.
+
+All 16 new source modules (1845 LF lines) pass whole-source checks at
+200000 heartbeats, warnings as errors and strict implicit variables, and
+strict producers. The strict three-library integration passes 21668 jobs.
+scripts/CheckEffectiveBallConnections.lean passes five consumers, including
+two-radius equivalence and a singular unbounded squared-coordinate example,
+and six standard-three-axiom dependency closures. CheckAxioms passes 97421
+declarations allowing only propext, Classical.choice and Quot.sound.
+CheckSpaceFoundation passes 204786 transitive constants with no legacy
+space foundation. CheckRoadmapNativeGraph passes unchanged (10815 lines).
+The 11 delegated source hashes match their frozen ledgers; root-owned
+transport sources are included in the same strict integration. Sources use
+UTF8/LF, a single final newline, no trailing whitespace and mode100644.
+Only the main worktree exists. Unique prior WIP and in-progress B sources
+are excluded from this cutoff commit. No external write or push.
+
+A correct bounded provider checker at the shared cutoff will decide the
+original component relation; that checker is not inferred from this theorem.
+Full bounded association, both-label feasibility, interval/frontier incidence
+and BOTH original unconditional connectivity PSPACE endpoints remain open.

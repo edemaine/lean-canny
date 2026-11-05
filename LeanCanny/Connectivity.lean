@@ -1,3 +1,5 @@
+import LeanCanny.Geometry.EffectivePolynomialBallConnections
+import LeanCanny.Geometry.PolynomialInnerBallConnections
 import LeanCanny.Encoding.FormulaSignSlotRadialJointStratumSampler
 import LeanCanny.Encoding.CoefficientMarkedRecordCompanionScan
 import LeanCanny.Encoding.CoefficientMarkedRecordMarkedTransport
@@ -5335,8 +5337,10 @@ coefficient-stratum sampler. Its native PSPACE checker filters the SAME
 decoded point by Core and the exact zero-feature-count certificate. Every
 component has an accepted own word with an original-header polynomial
 budget, including singular and unbounded strata. This closes milestone A
-of CONNECTIVITY-PROTOTYPE.txt. External-point component association, its
-aggregate radius stabilization, and the full two-label prototype remain open.
+of CONNECTIVITY-PROTOTYPE.txt. The effective original-degree/mass ball cutoff now preserves all
+connections between endpoints in the ball, including singular and unbounded
+zero sets. External-point bounded association and the full two-label
+prototype remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

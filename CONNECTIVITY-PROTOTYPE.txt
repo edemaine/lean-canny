@@ -1,7 +1,8 @@
 Component-labelled implicit-stratum prototype
 Construction and dependency ledger, 2026-11-05
-Base checkpoint: f55dace. Milestone A is implemented below; B and C remain
-designs. This is not an unconditional connectivity PSPACE proof.
+Base checkpoint: 0983bb6. Milestone A and the geometric cutoff required by C
+are proved. B and final two-label integration remain in progress. This is
+not an unconditional connectivity PSPACE proof.
 
 Acceptance target
 
@@ -96,18 +97,21 @@ bound give endpoint containment. They do not bound a joining path.
 The old closed-circular source can be unbounded; proper projection does not
 make its entire zero set bounded.
 
-The required additional contract is effective aggregate marked-relation
-stabilization. Hold the external descriptor/algebra/word fixed, vary only R,
-and prove one original binary cutoff beyond which the two-provider bounded
-answer is constant. Its proof must include distinguished Replay/identity
-and whole shared-tuple predicates. A numeric envelope may bound a PROVED
-cutoff over all polynomial-length descriptors; FP complexity alone cannot
-establish this logical stabilization.
+EffectivePolynomialBallConnections now proves the needed geometric contract
+directly. For an integer polynomial q with degree at most D and coefficient
+mass at most 2^H, a cutoff radiusExponent(n,D,H) has BinaryFn controls.
+For every R above that cutoff and every pair of endpoints already in the
+literal bounded zero set, JoinedIn and connectedComponentIn agree with the
+entire original zero set. Singular and unbounded zero sets are covered.
+No regularity, parameter head, exclusion interval or stabilization oracle
+is an input. Actual boundary Gram heads derive a small-residual critical
+band exclusion; proper two-circle transport and compact residual limits
+then identify the bounded and original connections.
 
-Combine actual stabilization with qualitative bounded-path exhaustion to
-identify Assoc_R with unbounded old-component membership. This contract is
-currently unproved. It is a real prerequisite for full prototype acceptance,
-not a premise to hide in the proposed association checker.
+Consequently a correct bounded two-provider association checker at this
+common radius will also decide unbounded component association. It need not
+first transport every record word as R varies. The bounded checker and its
+correctness remain necessary; the geometric theorem does not supply them.
 
 Milestones and stopping rule
 
@@ -115,8 +119,9 @@ A. Closed actual Q Source; implicit Gram reader; diagonal OWN word/filter;
    component-hit and original polynomial certificate budget.
 B. Actual EXTERNAL n+8-leaf prelude with derived Source.Access and Replay;
    two-provider bounded association correctness and PSPACE cost.
-C. Aggregate original-cutoff stabilization; then unbounded association and
-   both-label feasibility iff. The prototype is complete only at C.
+C. Effective original ball cutoff (proved); use B to identify unbounded
+   association and prove both-label feasibility iff (integration remains).
+   The prototype is complete only after that iff is proved.
 
 Use bounded checkpoints at these interfaces. Record the exact missing
 contract if a checkpoint fails; do not replace it with more unrelated
@@ -142,10 +147,11 @@ unbounded zero sets are covered. The actual implicit binary-count feature
 family is instantiated without expanding it into a Term.
 
 This proves sampling, not association with either prescribed old candidate
-label. B has no implemented two-provider prelude/checker yet. C still lacks
-the aggregate stabilization theorem described above. Endpoint containment
-cannot discharge that theorem. The full component-labelled prototype and
-both original connectivity PSPACE endpoints therefore remain unproved.
+label. The external coordinate algebra, same-point interpretation and native
+provider prelude are under construction for B. The geometric cutoff for C
+is proved, but bounded association correctness and its integration with both
+labels remain open. The full component-labelled prototype and both original
+connectivity PSPACE endpoints therefore remain unproved.
 
 Checkpoint verification: strict three-library build (21634 jobs), the
 focused actual-sampler fixture, complete axiom and native-space audits,
