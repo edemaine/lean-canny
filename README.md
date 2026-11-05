@@ -2331,6 +2331,10 @@ Actual same-bank principal and trailing-index guards now select witnesses
 after center specialization while retaining radius as a polynomial. The
 literal branch cut has a constructed integer coefficient reader with
 nonwrapping exponent boxes and original budgets.
+Untruncated alternative-factor and actual critical-correlation queries now
+have constructed parameter families and original coefficient boxes. Joint
+radius/center coefficient degree is bounded for the literal affine value
+certificate, with its actual Macaulay box and declared degrees.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership

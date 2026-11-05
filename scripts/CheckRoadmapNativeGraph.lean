@@ -1,3 +1,6 @@
+import LeanCanny.Algebra.RelativeAffineGridValueParameterDegree
+import LeanCanny.Encoding.CoefficientMarkedRecordCriticalQuery
+import LeanCanny.Encoding.CoefficientMarkedRecordFactorQueryBounds
 import LeanCanny.Encoding.FormulaSignSlotRadialRetainedBranchCutTest
 import LeanCanny.Encoding.FormulaSignSlotRadialRetainedPrincipalSelection
 import LeanCanny.Encoding.FormulaSignSlotRadialRetainedTrailingGuards
@@ -15331,3 +15334,215 @@ example (c : List Bool) (a : Fin (FormulaSignSlotCenteredRadialGraph.d (pairFst 
 #print axioms FormulaSignSlotRadialRetainedTrailingGuards.trailing_packet
 end RadialTrailingGuardsRegression
 end RoadmapInternalG88SameCenterTrailingIndex
+
+section RoadmapInternalG89ActualFullFactorGuards
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open CoefficientMarkedRecordFactorQueryBounds
+open scoped Classical
+namespace FullFactorGuardRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+-- A coefficient strictly ABOVE the stored truncation degree remains a literal
+-- full-factor query. No native word or nonvanishing/degree guard is a premise.
+theorem higher_guard (ctx : List Bool) (R : List Bool → ℕ) (k choice tau : ℕ)
+    (hk : k ≤ IntegralMixedCausalRecordPlanBits.count ctx)
+    (hR : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx)
+    (_higher : (CoefficientMarkedRecordCutSource.cut hn ht ha ctx k).degree < tau) :
+    ((CoefficientMarkedRecordFactorQuery.polynomial hn ht ha ctx k choice).coeff tau).map
+      (evalRingHom ((2 : ℤ) ^ R ctx)) =
+    (((CoefficientMarkedRecordCutSource.state hn ht ha ctx R k hk).sampler.scalarPrefix.basis.polynomial
+      (CoefficientMarkedRecordFactorQuery.native hn ht ha ctx R k hk choice)).coeff tau) := by
+  simpa only [Polynomial.coeff_map] using
+    congrArg (fun p => p.coeff tau) (CoefficientMarkedRecordFactorQuery.specializes hn ht ha ctx R k hk hR choice)
+
+-- Every alternative shares ONE original finite box, including coefficients
+-- tested after the actual stored degree. The parser choice is unrestricted.
+theorem all_alternatives (ctx : List Bool) (k : ℕ)
+    (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false) :
+    ∀ choice, (CoefficientMarkedRecordFactorQuery.polynomial hn ht ha ctx k choice).natDegree ≤
+      2 ^ CoefficientMarkedIntegerBirth.width hn ht ha ctx ∧
+    ∀ tau, ((CoefficientMarkedRecordFactorQuery.polynomial hn ht ha ctx k choice).coeff tau).totalDegree ≤
+      CoefficientMarkedRecordCutCoefficientBounds.scalarDegree hn ht ha ctx ∧
+    ∀ e, (((CoefficientMarkedRecordFactorQuery.polynomial hn ht ha ctx k choice).coeff tau).coeff e).natDegree ≤
+      IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawSlope hn ht ha ctx ∧
+      coefficientMass (((CoefficientMarkedRecordFactorQuery.polynomial hn ht ha ctx k choice).coeff tau).coeff e) ≤
+        2 ^ CoefficientMarkedRecordCutCoefficientBounds.coefficientBudget hn ht ha ctx := by
+  intro choice
+  refine ⟨target_degree hn ht ha ctx k hk.le choice, ?_⟩
+  intro tau
+  exact ⟨scalar_degree hn ht ha ctx k hk.le choice tau,
+    coefficient_degree_mass hn ht ha ctx k hk hc choice tau⟩
+
+-- The first coefficient OUTSIDE the universal target box vanishes formally,
+-- before any radius or scalar center is chosen.
+theorem outside_target (ctx : List Bool) (k choice : ℕ)
+    (hk : k ≤ IntegralMixedCausalRecordPlanBits.count ctx) :
+    (CoefficientMarkedRecordFactorQuery.polynomial hn ht ha ctx k choice).coeff
+      (2 ^ CoefficientMarkedIntegerBirth.width hn ht ha ctx + 1) = 0 :=
+  Polynomial.coeff_eq_zero_of_natDegree_lt
+    ((target_degree hn ht ha ctx k hk choice).trans_lt (Nat.lt_succ_self _))
+end FullFactorGuardRegression
+#print axioms CoefficientMixedFactorSpecialization.map_native
+#print axioms CoefficientMixedFactorSpecialization.native_retarget
+#print axioms CoefficientMarkedRecordFactorQuery.specializes
+#print axioms CoefficientMarkedRecordRuleSelection.instruction_heq
+#print axioms CoefficientMarkedRecordRuleSelection.rule_heq
+#print axioms CoefficientMarkedRecordFactorQueryProfile.native_kind_bound
+#print axioms CoefficientMarkedRecordFactorQueryProfile.coefficient_bound
+#print axioms CoefficientMarkedRecordFactorQueryBounds.coefficient_degree_mass
+#print axioms CoefficientMarkedRecordFactorQueryBounds.scalar_degree
+#print axioms CoefficientMarkedRecordFactorQueryBounds.target_degree
+#print axioms FullFactorGuardRegression.higher_guard
+#print axioms FullFactorGuardRegression.all_alternatives
+#print axioms FullFactorGuardRegression.outside_target
+end RoadmapInternalG89ActualFullFactorGuards
+
+section RoadmapInternalG89ActualCriticalCorrelationQuery
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open scoped Classical
+namespace CriticalQueryRegression
+open CoefficientCriticalCorrelationQuery
+
+theorem inactive (N age a b u v:ℕ) (d:ℤ[X]):
+    polynomial (⟨N,age,a,b,u,v,false⟩:Metadata) d=0:=rfl
+
+theorem empty_physical (d:ℤ[X]):
+    polynomial (⟨0,0,0,0,1,7,true⟩:Metadata) d=0:=by
+  simp only [polynomial,CoefficientCriticalCorrelationQuery.monomial,Nat.not_lt_zero,dite_false,sub_self]
+  rfl
+
+-- Repeated monomials may cancel completely; no nonsingularity assumption.
+theorem collision (w:ℕ):
+    polynomial (⟨1,0,0,0,w,w,true⟩:Metadata) (1:ℤ[X])=0:=by
+  simp only [polynomial,sub_self]
+  rfl
+
+theorem kernel_drops_term:
+    MvPolynomial.map (evalRingHom (0:ℤ)) (polynomial (⟨2,0,0,1,1,7,true⟩:Metadata) (X:ℤ[X]))=
+      CoefficientCriticalCorrelationQuery.monomial 2 0 1 (1:ℤ):=by
+  rw [polynomial_map]
+  simp [polynomial,CoefficientCriticalCorrelationQuery.monomial]
+
+theorem shared_coefficient_bound (e:Fin 1→₀ ℕ):
+    coefficientMass ((polynomial (⟨1,0,0,0,1,1,true⟩:Metadata) (X:ℤ[X])).coeff e)≤2^1:=
+  (coefficient_degree_mass (⟨1,0,0,0,1,1,true⟩:Metadata) (X:ℤ[X]) 1 0
+    (by rw [Polynomial.natDegree_X]) (by
+      have HX:(X:ℤ[X])=C (1:ℤ)*X^1:=by simp
+      rw [HX,Polynomial.C_mul_X_pow_eq_monomial,coefficientMass_monomial]
+      decide) e).2
+
+variable {n:List Bool→ℕ} {t:List Bool→LeanCanny.ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+
+theorem actual_header_lock {R S:List Bool→ℕ} (hR:BinaryFn R) (hS:BinaryFn S):
+    IntegralMixedPhysicalMarkedPlan.tables hn ht ha hR false=
+      IntegralMixedPhysicalMarkedPlan.tables hn ht ha hS false:=
+  (CoefficientMarkedRecordCriticalMetadata.tables_eq hn ht ha hR).trans
+    (CoefficientMarkedRecordCriticalMetadata.tables_eq hn ht ha hS).symm
+
+attribute [local irreducible] CoefficientMarkedRecordCriticalQuery.metadata
+  CoefficientMarkedRecordCriticalQuery.polynomial IntegralMixedFramedCriticalGuardBits.polynomial
+  IntegralMixedSourceIntegerRecordAppend.plan IntegralMixedFramedHistoryFamilyBits.family
+
+-- The target is the literal installed CERTIFIED full-physical guard.
+theorem installed_full_guard (ctx:List Bool) {R:List Bool→ℕ} (hR:BinaryFn R) (stage:ℕ)
+    (hc:CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx≤R ctx):
+    HEq (MvPolynomial.map (evalRingHom ((2:ℤ)^R ctx))
+      (CoefficientMarkedRecordCriticalQuery.polynomial hn ht ha ctx
+        (IntegralMixedCausalRecordPlanBits.count ctx) [] stage))
+      (IntegralMixedFramedCriticalGuardBits.polynomial
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha hR)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha hR)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedData hn ht ha hR)
+        (IntegralMixedPhysicalMarkedPlan.tables hn ht ha hR false)
+        (fun _=>CoefficientMarkedRecordRowLayout.key (n:=n) ctx (IntegralMixedCausalRecordPlanBits.count ctx) [])
+        (fun _=>stage) []):=
+  CoefficientMarkedRecordCriticalQuery.specializes hn ht ha ctx hR _ le_rfl [] stage hc
+
+theorem original_budget:BinaryFn (CoefficientMarkedRecordCriticalQuery.coefficientBudget hn ht ha):=
+  CoefficientMarkedRecordCriticalQuery.coefficientBudget_binary hn ht ha
+
+theorem full_query_coefficients (ctx:List Bool) (stage:ℕ)
+    (e:Fin (CoefficientMarkedRecordCriticalQuery.metadata hn ht ha ctx
+      (IntegralMixedCausalRecordPlanBits.count ctx) [] stage).count→₀ ℕ):
+    ((CoefficientMarkedRecordCriticalQuery.polynomial hn ht ha ctx
+      (IntegralMixedCausalRecordPlanBits.count ctx) [] stage).coeff e).natDegree≤
+        IntegralMixedAuxiliaryMarkedRecordRadiusHeight.bankSlope hn ht ha ctx ∧
+      coefficientMass ((CoefficientMarkedRecordCriticalQuery.polynomial hn ht ha ctx
+        (IntegralMixedCausalRecordPlanBits.count ctx) [] stage).coeff e)≤
+          2^CoefficientMarkedRecordCriticalQuery.coefficientBudget hn ht ha ctx:=
+  CoefficientMarkedRecordCriticalQuery.coefficient_degree_mass hn ht ha ctx _ le_rfl [] stage e
+
+end CriticalQueryRegression
+#print axioms LeanCanny.Algebra.CoefficientCriticalCorrelationQuery.polynomial_map
+#print axioms LeanCanny.Algebra.CoefficientCriticalCorrelationQuery.polynomial_native
+#print axioms LeanCanny.Algebra.CoefficientCriticalCorrelationQuery.coefficient_degree_mass
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordCriticalMetadata.tables_eq
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordCriticalQuery.metadata_eq
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordCriticalQuery.header_eq
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordCriticalQuery.specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordCriticalQuery.coefficient_degree_mass
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordCriticalQuery.coefficientBudget_binary
+#print axioms CriticalQueryRegression.inactive
+#print axioms CriticalQueryRegression.empty_physical
+#print axioms CriticalQueryRegression.collision
+#print axioms CriticalQueryRegression.kernel_drops_term
+#print axioms CriticalQueryRegression.shared_coefficient_bound
+#print axioms CriticalQueryRegression.actual_header_lock
+#print axioms CriticalQueryRegression.installed_full_guard
+#print axioms CriticalQueryRegression.original_budget
+#print axioms CriticalQueryRegression.full_query_coefficients
+end RoadmapInternalG89ActualCriticalCorrelationQuery
+
+section RoadmapInternalG89JointValueParameterDegree
+open LeanCanny.Algebra Polynomial MvPolynomial
+namespace JointValueDegreeRegression
+
+-- The degree box remains valid with arbitrary advertised coordinate degrees;
+-- all center and radius variables stay in the integer coefficient ring.
+theorem all_coefficients {n A : ℕ}
+    (p : Fin n → Polynomial (Polynomial (MvPolynomial (Fin A) ℤ)))
+    (q : MvPolynomial (Fin n) (Polynomial (MvPolynomial (Fin A) ℤ)))
+    (d : Fin n → ℕ) (e E : ℕ)
+    (hp : ∀ i j, (TriplePolynomialParameterFlatten.one ((p i).coeff j)).totalDegree ≤ E)
+    (hq : ∀ v, (TriplePolynomialParameterFlatten.one (q.coeff v)).totalDegree ≤ E) :
+    ∀ j, (TriplePolynomialParameterFlatten.one
+      ((RelativeAffineGridValueGram.annihilator p q d e).coeff j)).totalDegree ≤
+        RelativeProjectiveValueGram.dimension n (RelativeAffineGridValueGram.width d e) * E :=
+  RelativeAffineGridValueParameterDegree.degree p q d e E hp hq
+
+-- Radius/center specialization may drop the actual degrees; the assigned
+-- d/e and matrix box do not have to survive as exact specialized degrees.
+theorem after_noninjective_map {n A : ℕ}
+    (p : Fin n → Polynomial (Polynomial (MvPolynomial (Fin A) ℤ)))
+    (q : MvPolynomial (Fin n) (Polynomial (MvPolynomial (Fin A) ℤ)))
+    (d : Fin n → ℕ) (e E : ℕ)
+    (hp : ∀ i j, (TriplePolynomialParameterFlatten.one ((p i).coeff j)).totalDegree ≤ E)
+    (hq : ∀ v, (TriplePolynomialParameterFlatten.one (q.coeff v)).totalDegree ≤ E)
+    (f : Fin (A + 1) → Fin 1) (j : ℕ) :
+    (MvPolynomial.rename f (TriplePolynomialParameterFlatten.one
+      ((RelativeAffineGridValueGram.annihilator p q d e).coeff j))).totalDegree ≤
+        RelativeProjectiveValueGram.dimension n (RelativeAffineGridValueGram.width d e) * E :=
+  (MvPolynomial.totalDegree_rename_le _ _).trans
+    (RelativeAffineGridValueParameterDegree.degree p q d e E hp hq j)
+
+-- Constant inputs need no positivity or nonzero premise, including empty grids.
+theorem constant_box {n A : ℕ}
+    (p : Fin n → Polynomial (Polynomial (MvPolynomial (Fin A) ℤ)))
+    (q : MvPolynomial (Fin n) (Polynomial (MvPolynomial (Fin A) ℤ)))
+    (d : Fin n → ℕ) (e : ℕ)
+    (hp : ∀ i j, (TriplePolynomialParameterFlatten.one ((p i).coeff j)).totalDegree ≤ 0)
+    (hq : ∀ v, (TriplePolynomialParameterFlatten.one (q.coeff v)).totalDegree ≤ 0) (j : ℕ) :
+    (TriplePolynomialParameterFlatten.one
+      ((RelativeAffineGridValueGram.annihilator p q d e).coeff j)).totalDegree = 0 :=
+  Nat.eq_zero_of_le_zero (by simpa only [Nat.mul_zero] using
+    RelativeAffineGridValueParameterDegree.degree p q d e 0 hp hq j)
+end JointValueDegreeRegression
+#print axioms RelativeAffineGridValueParameterDegree.mapped_degree
+#print axioms RelativeAffineGridValueParameterDegree.degree
+#print axioms JointValueDegreeRegression.all_coefficients
+#print axioms JointValueDegreeRegression.after_noninjective_map
+#print axioms JointValueDegreeRegression.constant_box
+end RoadmapInternalG89JointValueParameterDegree

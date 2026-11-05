@@ -1,3 +1,11 @@
+import LeanCanny.Algebra.CoefficientCriticalCorrelationQuery
+import LeanCanny.Algebra.RelativeAffineGridValueParameterDegree
+import LeanCanny.Encoding.CoefficientMarkedRecordCriticalMetadata
+import LeanCanny.Encoding.CoefficientMarkedRecordCriticalQuery
+import LeanCanny.Encoding.CoefficientMarkedRecordFactorQuery
+import LeanCanny.Encoding.CoefficientMarkedRecordFactorQueryBounds
+import LeanCanny.Encoding.CoefficientMarkedRecordFactorQueryProfile
+import LeanCanny.Encoding.CoefficientMarkedRecordRuleSelection
 import LeanCanny.Algebra.DomainSquarefreeLeadingCoefficient
 import LeanCanny.Algebra.FixedWidthBivariateRebox
 import LeanCanny.Algebra.ScaledPolynomialQuotientTopCoefficient
@@ -5057,6 +5065,10 @@ Actual same-bank principal and trailing-index guards now select witnesses
 after center specialization while retaining radius as a polynomial. The
 literal branch cut has a constructed integer coefficient reader with
 nonwrapping exponent boxes and original budgets.
+Untruncated alternative-factor and actual critical-correlation queries now
+have constructed parameter families and original coefficient boxes. Joint
+radius/center coefficient degree is bounded for the literal affine value
+certificate, with its actual Macaulay box and declared degrees.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 Common bounds for every guarded graph query and physical-edge transport,
