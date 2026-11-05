@@ -2863,3 +2863,67 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Whole Atomic/Proper/Local/Edge radius transport, uniform all-role stabilization, full descriptor feature strata/own sampler and native cross-source association, and both original unconditional PSPACE endpoints remain open.
+
+57. G99: whole native NoCritical and original leaves; actual interval and selection strata
+2026-11-05.
+
+The WHOLE native NoCritical predicate now transports to a freshly sampled
+OWN target full word beyond an original Binary cutoff. The same word
+preserves the complete critical scan. The interval theorem exposes that
+SAME original root curve and both entire decoded tuples for composition.
+Prepared parent/full and universal child families are constructed internally;
+all Field matches, bank incidences and rejection tests retain their shared
+tuples. Literal candidate/payload metadata erase replaced sampled words.
+No supplied native guard, prepared word, branch family or compatibility model.
+
+Every original integer leaf has an original spatial/mass query bound and
+same-curve sign cutoff. The literal untruncated native leaf reader equals
+its formal full-prefix physical polynomial at its OWN entire tuple. The
+advertised even clearing degree and actual creating odd powers are copied
+exactly, including maps that kill leading coefficients. Resource planning,
+source packet and physical-column metadata are derived internally.
+The WHOLE original leaf language transports. A single fresh own target word
+preserves ALL original leaves AND the WHOLE before-probe guard scan AND the
+WHOLE critical scan, with its own exact sampler-width receipt. Original
+regular/mark term tests and point companions remain to complete Atomic.
+
+The literal native rawRight-minus-rawLeft order query is constructed on the
+SAME physical columns, retaining outside-zero selectors and collisions.
+Actual affine integer mass bounds and dyadic interpolation derive original
+coefficient boxes and a same-curve sign cutoff. ALL coefficient-only guard
+clauses transport together. The WHOLE native cut-coefficient interval
+language now preserves truth with every order/comparison/Bounds/guard
+conjunct; non-cut rejection is handled internally. Actual BadProbe request,
+field packet and installed interval clock metadata retain BOTH own word
+slots under replacement. Stored scalar width is not asserted to equal a
+radius-independent complete sampler width. Whole NoBad search is still next.
+
+A closed actual coefficient catalogue enumerates coordinate x perturbation
+x target degree x radius degree with Binary count and original degree/mass
+bounds. Its bounded ordinal encoder proves every required coefficient occurs.
+Literal feature evaluation equals the actual same-center coefficient value.
+On a preconnected compact zero-count equation stratum these actual features
+preserve the ACTUAL perturbation and degree-selection Guards, derived from
+polynomial continuity and the equation rather than an assumed zero pattern.
+No integer-height claim is made after arbitrary real specialization.
+Other cut/statistic features, OWN implicit stratum sampling and native
+cross-source candidate-component association remain explicit obligations.
+
+Whole Atomic/NoBad/Near/Rank/Local/Edge transport, uniform all-role bounds,
+complete descriptor sampling/frontier incidence, and both original
+unconditional PSPACE endpoints remain open.
+
+All24 sources (3059 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS21546 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:18424 lines,292 groups.
+Audited 96650 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 203821 transitive constants: no legacy space foundation.
+All28 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Whole Atomic regular/mark and companion tests, NoBad bounded search, Near/Rank/Local/Edge transport, uniform all-role stabilization, complete descriptor stratum sampling/native cross-source association and both original unconditional PSPACE endpoints remain open.

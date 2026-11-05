@@ -1,3 +1,27 @@
+import LeanCanny.Encoding.ChargedPolynomialCatalogue
+import LeanCanny.Encoding.CoefficientMarkedCriticalInnerBranchTransport
+import LeanCanny.Encoding.CoefficientMarkedProperCriticalBranchTransport
+import LeanCanny.Encoding.CoefficientMarkedProperCriticalRadiusTransport
+import LeanCanny.Encoding.CoefficientMarkedProperCriticalWordErasure
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutCoefficientGuards
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutIntervalTransport
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutOrderBounds
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutOrderQuery
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutOrderSign
+import LeanCanny.Encoding.CoefficientMarkedRecordLeafNative
+import LeanCanny.Encoding.CoefficientMarkedRecordLeafRecipe
+import LeanCanny.Encoding.CoefficientMarkedRecordLeafSign
+import LeanCanny.Encoding.CoefficientMarkedRecordLeafSpatial
+import LeanCanny.Encoding.CoefficientMarkedRecordLeafTransport
+import LeanCanny.Encoding.CoefficientMarkedRecordLeafValue
+import LeanCanny.Encoding.CoefficientMarkedRecordLeafWordTransport
+import LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeMetadata
+import LeanCanny.Encoding.FormulaSignSlotRadialJointCoefficientCatalogue
+import LeanCanny.Encoding.FormulaSignSlotRadialJointCoefficientMeaning
+import LeanCanny.Encoding.FormulaSignSlotRadialJointCoefficientOrdinal
+import LeanCanny.Encoding.FormulaSignSlotRadialJointCoefficientSource
+import LeanCanny.Encoding.FormulaSignSlotRadialJointSelectionStratum
+import LeanCanny.Encoding.FormulaSignSlotRadialJointTrailingStratum
 import LeanCanny.Computation.FiniteCoefficientGuardTransport
 import LeanCanny.Encoding.CoefficientMarkedCriticalIntervalSign
 import LeanCanny.Encoding.CoefficientMarkedCriticalPredicateContext
@@ -5264,15 +5288,15 @@ correlation and both endpoint signs. Joint descriptor roots now yield
 same-component core candidates and fresh own Replay words, with actual
 center/value guard binding. Full grid/cut-stratum sampling and native
 cross-source component checking remain open, as does whole graph transport.
-The whole native before-probe guard scan and critical-zero scan now
-transport together to one fresh own word at the target radius. The literal
-NoCritical predicate compiles to one shared tuple formula, and native
-Field match tables transport on actual full-row curves. Actual joint-grid
-features have closed coefficient access and exact native equation binding.
-Whole outer predicates and graph transport, full descriptor stratum
-sampling and native cross-source component checking remain open.
-Effective uniform radius stabilization and the original Boolean frontier-
-incidence algorithm remain to be discharged.
+The whole native NoCritical predicate now transports to a fresh own word
+on a shared full-row branch. One fresh own word also preserves all original
+leaves and both entire historical scans. The actual cut-coefficient interval
+predicate transports with all native clauses. Concrete joint coefficient
+strata preserve the actual perturbation and degree-selection guards.
+Whole Atomic/Local/Edge transport, full descriptor stratum sampling and
+native cross-source component checking remain open. Effective uniform
+radius stabilization and the original Boolean frontier-incidence
+algorithm remain to be discharged.
 Common bounds for every guarded graph query and physical-edge transport,
 hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet
