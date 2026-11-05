@@ -2219,3 +2219,49 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Indexed sampler projection and all guarded graph query bounds, physical-edge transport/uniform stabilization, actual retained-center guards and bounded descriptors/native Boolean frontier incidence remain open; both original unconditional PSPACE targets are unproved.
+
+40. G82: common original script bounds and actual graph query catalogs
+2026-11-05.
+
+The canonical recursive normalization cutoff is now enveloped across ALL
+structural contexts within the original padded-table word allowance. One
+original BinaryFn works for all bounded candidate labels, record tables,
+seed/probe choices and canonical prefixes. A second original BinaryFn bounds
+the formal next-cut matrix coefficient-mass exponents throughout that catalog.
+Neither bound receives a requested radius or chosen sample.
+
+Proper ordinary/mean row keys and native degree/parameter requests factor
+through original structural selectors. Actual parser clipping is excluded by
+proved native caps. Arbitrary independent sample words are permitted; their
+ordinals are not identified. Parent-key claims retain actual Valid or the
+proved nonempty-table condition, and slot13 claims retain genuine RowGood.
+
+Actual cross-context field equality has an original structural source catalog.
+Both derivative probes use the SAME LEFT characteristic polynomial and their
+own sampler context/word. Counts, chronological selectors and native scan
+degrees have no radius input. Source and derivative mass bounds come from
+the actual certified bank. Positive-cleared query heights charge left-source
+and right-own-row radii separately, including negative/nonunit common
+denominators, derivative zero and oversized derivative requests. The literal
+installed Mv test is covered, not merely an abstract polynomial query.
+
+These are concrete interpreter and query-profile obligations. They do not
+assert unchanged signs, selectors or physical edges across radius. Complete
+guarded graph polynomial families/common bounds and transport, global radius
+stabilization, bounded descriptor/native Boolean frontier incidence and both
+original unconditional PSPACE targets remain open.
+
+All5 sources (691 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS20610 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:13695 lines,207 groups.
+Audited 93139 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 199236 transitive constants: no legacy space foundation.
+All9 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Complete guarded graph polynomial families/common bounds, physical-edge transport/global stabilization, bounded descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.

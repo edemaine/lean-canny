@@ -2292,6 +2292,13 @@ The actual canonical mixed-record family now specializes above an
 original-input effective cutoff, uniformly over every prefix. The remaining
 common bounds and physical-edge transport for its entire guarded graph
 are still open.
+One original-input cutoff now covers every bounded padded record table,
+candidate label, seed/probe choice and canonical prefix. A common original
+exponent also bounds their formal next-cut matrix coefficient masses. Actual
+proper-row keys and degree selectors have radius-independent structural
+catalogs. Field equality retains the same left characteristic source for both
+probes and has original affine height bounds charging each source radius
+and its own sampled row separately. No word ordinal transport is assumed.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership

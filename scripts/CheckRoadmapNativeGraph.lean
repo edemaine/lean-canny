@@ -1,3 +1,6 @@
+import LeanCanny.Encoding.CoefficientMarkedRecordUniformCutoff
+import LeanCanny.Encoding.IntegralMixedPhysicalFieldEqualityQueryHeight
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRowStructuralCatalog
 import LeanCanny.Encoding.CoefficientMarkedRecordActual
 import LeanCanny.Encoding.CoefficientMarkedRecordEffectiveCutoff
 import LeanCanny.Encoding.CoefficientMarkedRecordNative
@@ -13444,3 +13447,249 @@ example (ctx:List Bool) (k:ℕ) (hk:k<IntegralMixedCausalRecordPlanBits.count ct
 #print axioms CoefficientMarkedRecordEffectiveCutoff.specializes_above_effective
 end EffectiveCutoffRegression
 end RoadmapInternalG81OriginalEffectiveCutoff
+
+section RoadmapInternalG82UniformRecordCutoff
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedRoadmapRecordChain IntegralMixedRoadmapWidth Polynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+namespace UniformRecordCutoffRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+attribute [local irreducible] CoefficientMarkedRecordNative.run CoefficientMarkedRecordPrefix.build
+
+-- Neither original bound receives a requested radius or a chosen table.
+example : BinaryFn (CoefficientMarkedRecordUniformCutoff.cutoff hn ht ha) ∧
+    BinaryFn (CoefficientMarkedRecordUniformCutoff.topHeight hn ht ha) :=
+  ⟨CoefficientMarkedRecordUniformCutoff.cutoff_binary hn ht ha,
+    CoefficientMarkedRecordUniformCutoff.topHeight_binary hn ht ha⟩
+
+-- Arbitrary padded tables and both independent seed/probe choices share C(original).
+example (original label : List Bool)
+    (hlabel : label.length ≤ IntegralMixedAuxiliaryCandidate.labelWidth hn ht ha original)
+    {labels : ℕ} (records : Records (dimension (n := n) original) (recordBudget hn ht ha original) labels)
+    (seed probe : Word (recordBudget hn ht ha original)) (radius : List Bool → ℕ) (k : ℕ)
+    (hk : k ≤ IntegralMixedCausalRecordPlanBits.count (records.root seed probe (pair original label) []))
+    (hR : CoefficientMarkedRecordUniformCutoff.cutoff hn ht ha original ≤
+      radius (records.root seed probe (pair original label) [])) :
+    let ctx := records.root seed probe (pair original label) []
+    let F := CoefficientMarkedRecordPrefix.build hn ht ha ctx (CoefficientMarkedRecordActual.horizon hn ht ha ctx)
+      (CoefficientMarkedRecordActual.codes ctx k)
+    let x := CoefficientMarkedRecordNative.run hn ht ha ctx radius (CoefficientMarkedRecordActual.horizon hn ht ha ctx)
+      (CoefficientMarkedRecordActual.codes ctx k) (CoefficientMarkedRecordActual.prefix_room hn ht ha ctx k hk)
+    (∀ j, MvPolynomial.map (evalRingHom ((2 : ℤ) ^ radius ctx)) (F.rows j) = x.sampler.rows j) ∧
+      F.scalar = x.sampler.scalar := by
+  obtain ⟨_, _, _, hr, hs⟩ :=
+    (CoefficientMarkedRecordUniformCutoff.specializes_padded hn ht ha original label hlabel records seed probe radius k hk hR).pointwise
+  exact ⟨hr, hs⟩
+
+-- One original mass exponent covers all short contexts and actual next-cut slots.
+example (original ctx : List Bool) (hctx : ctx.length ≤ contextBudget hn ht ha original) (k : ℕ)
+    (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false) :
+    CoefficientMarkedRecordSpecialization.topEntryBound hn ht ha ctx
+      (CoefficientMarkedRecordPrefix.build hn ht ha ctx (CoefficientMarkedRecordActual.horizon hn ht ha ctx)
+        (CoefficientMarkedRecordActual.codes ctx k)) (IntegralMixedCausalRecordPlanBits.code ctx k)
+      (CoefficientMarkedRecordUniformCutoff.topHeight hn ht ha original) :=
+  CoefficientMarkedRecordUniformCutoff.topEntryBound hn ht ha original ctx hctx k hk hc
+
+#print axioms CoefficientMarkedRecordUniformCutoff.cutoff_binary
+#print axioms CoefficientMarkedRecordUniformCutoff.padded_cutoff_le
+#print axioms CoefficientMarkedRecordUniformCutoff.specializes_padded
+#print axioms CoefficientMarkedRecordUniformCutoff.topHeight_binary
+#print axioms CoefficientMarkedRecordUniformCutoff.topEntryBound
+end UniformRecordCutoffRegression
+end RoadmapInternalG82UniformRecordCutoff
+
+section RoadmapInternalG82ProperRowStructuralCatalog
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR
+open IntegralMixedRoadmapProperRow
+namespace ProperRowCatalogRegression
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+-- The structural writers have original-only costs, with no radius reader.
+include hn ht ha in
+theorem original_cost (mean : Bool) : catalogCode n mean ∈ FP ∧ catalogRoot n mean ∈ FP ∧ catalogTerminal n mean ∈ FP :=
+  ⟨mem_FP_of_eq (code_FP hn ht ha (BinaryFn.const 0) mean) (code_catalog hn ht ha (BinaryFn.const 0) mean),
+   mem_FP_of_eq (root_FP hn ht ha (BinaryFn.const 0) mean) (root_catalog hn ht ha (BinaryFn.const 0) mean),
+   mem_FP_of_eq (terminal_FP hn ht ha (BinaryFn.const 0) mean) (terminal_catalog hn ht ha (BinaryFn.const 0) mean)⟩
+
+-- A structural nonempty record table suffices, without any accepted node.
+theorem parent_key_of_count {R0 : List Bool → ℕ} (hR0 : BinaryFn R0) (mean : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) :
+    parentKey hn ht ha hR0 mean z = catalogParent n mean z := by
+  rw [parentKey_eq hn ht ha hR0 mean z hc, parent_context, root_catalog, creating_catalog]
+  rfl
+
+-- Independent own words at distinct radii, with equal syntax, yield equal KEYS.
+theorem independent_parent_keys {R1 R2 : List Bool → ℕ} (h1 : BinaryFn R1) (h2 : BinaryFn R2)
+    (mean : Bool) (c payload w1 w2 index : List Bool)
+    (hv1 : IntegralMixedRoadmapAtomic.Valid hn ht ha h1 (IntegralMixedRoadmapAtomic.packet c payload w1))
+    (hv2 : IntegralMixedRoadmapAtomic.Valid hn ht ha h2 (IntegralMixedRoadmapAtomic.packet c payload w2)) :
+    parentKey hn ht ha h1 mean (pair (IntegralMixedRoadmapAtomic.packet c payload w1) index) =
+      parentKey hn ht ha h2 mean (pair (IntegralMixedRoadmapAtomic.packet c payload w2) index) := by
+  rw [parentKey_catalog hn ht ha h1 mean (pair (IntegralMixedRoadmapAtomic.packet c payload w1) index)
+    (by simpa only [atomic, pairFst_pair] using hv1),
+    parentKey_catalog hn ht ha h2 mean (pair (IntegralMixedRoadmapAtomic.packet c payload w2) index)
+    (by simpa only [atomic, pairFst_pair] using hv2)]
+  exact (catalog_ignores_word n mean c payload w1 w2 index).2.2
+
+theorem independent_terminal_keys {R1 R2 : List Bool → ℕ} (h1 : BinaryFn R1) (h2 : BinaryFn R2)
+    (mean : Bool) (c payload w1 w2 index : List Bool) :
+    terminal hn ht ha h1 mean (pair (IntegralMixedRoadmapAtomic.packet c payload w1) index) =
+      terminal hn ht ha h2 mean (pair (IntegralMixedRoadmapAtomic.packet c payload w2) index) := by
+  rw [terminal_catalog hn ht ha h1, terminal_catalog hn ht ha h2]
+  exact (catalog_ignores_word n mean c payload w1 w2 index).2.1
+
+-- Native d is the original relative-dimension entry, without a degree oracle.
+theorem actual_degree {R0 : List Bool → ℕ} (hR0 : BinaryFn R0) (mean : Bool) (z : List Bool)
+    (hv : IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 (atomic z))
+    (hg : IntegralMixedRoadmapProperRowWitness.RowGood hn ht ha hR0 z) :
+    IntegralMixedSelectedCoordinateHead.fullDegree
+      (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false).parameters
+      (IntegralMixedFramedHistoryFamilyBits.family
+        (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false).parameters
+        (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false).plan
+        (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false).data)
+      (parent hn ht ha hR0 mean) z =
+      PurePowerReductionBounds.dimension (catalogDimension n z - offset z + 1)
+        ((IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha).degree (catalogRoot n mean z)) :=
+  degree_catalog hn ht ha hR0 mean z hv hg
+
+end ProperRowCatalogRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.catalog_ignores_word
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.dimension_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.initial_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.creating_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.code_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.root_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.terminal_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.parentKey_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.coordinate_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.parameter_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.degree_catalog
+#print axioms ProperRowCatalogRegression.original_cost
+#print axioms ProperRowCatalogRegression.independent_parent_keys
+#print axioms ProperRowCatalogRegression.independent_terminal_keys
+#print axioms ProperRowCatalogRegression.actual_degree
+
+#print axioms ProperRowCatalogRegression.parent_key_of_count
+end RoadmapInternalG82ProperRowStructuralCatalog
+
+section RoadmapInternalG82ActualFieldQueryProfile
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR Polynomial
+open IntegralMixedPhysicalFieldEquality
+attribute [local irreducible] IntegralMixedSourceIntegerRecordAppend.plan IntegralMixedSourceIntegerRecordAppend.data
+  IntegralMixedAuxiliaryMarkedIntegerPlan.seed IntegralMixedFramedHistoryFamilyBits.family
+namespace FieldProfileRegression
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R : List Bool → ℕ} (hR : BinaryFn R)
+
+-- Both independent contexts test exactly the same old derivative source.
+theorem same_source (z : List Bool) (k : ℕ) :
+    (derivatives hn ht ha hR).polynomial (probe hn ht ha hR false (pair z (BinaryNatCode.encode k))) =
+      (derivatives hn ht ha hR).polynomial (probe hn ht ha hR true (pair z (BinaryNatCode.encode k))) := by
+  rw [derivative_polynomial_catalog, derivative_polynomial_catalog]
+
+-- Derivative zero is retained; it supplies the original root test.
+theorem derivative_zero (right : Bool) (z : List Bool) :
+    (derivatives hn ht ha hR).polynomial (probe hn ht ha hR right (pair z (BinaryNatCode.encode 0))) =
+      IntegralMixedFramedCoordinateCharacteristicBits.polynomial
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha hR)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha hR)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedData hn ht ha hR) (catalogOldArgument n z) := by
+  simpa only [Function.iterate_zero, Function.id_def] using derivative_polynomial_catalog hn ht ha hR right z 0
+
+-- Total higher requests vanish using the actual untruncated characteristic degree.
+theorem derivative_above_degree (right : Bool) (z : List Bool) :
+    (derivatives hn ht ha hR).polynomial (probe hn ht ha hR right
+      (pair z (BinaryNatCode.encode (catalogDegree hn ht ha (pairFst (context false z)) + 1)))) = 0 := by
+  rw [derivative_polynomial_catalog]
+  apply Polynomial.iterate_derivative_eq_zero
+  rw [IntegralMixedFramedCoordinateCharacteristicBits.degree, IntegralMixedFramedCoordinateCharacteristicBits.dimension,
+    characteristic_count_catalog, characteristic_width_catalog]
+  change catalogDegree hn ht ha (pairFst (context false z)) < catalogDegree hn ht ha (pairFst (context false z)) + 1
+  omega
+
+-- Selector metadata is independent of both own words and the radius reader.
+theorem old_argument_independent {R1 R2 : List Bool → ℕ} (h1 : BinaryFn R1) (h2 : BinaryFn R2)
+    (cL cR wL wR wL' wR' : List Bool) (a b : ℕ) :
+    oldArgument hn ht ha h1 (packet cL wL cR wR a b) = oldArgument hn ht ha h2 (packet cL wL' cR wR' a b) := by
+  rw [oldArgument_catalog, oldArgument_catalog]
+  simp only [catalogOldArgument, catalogSelected, context, sample, label, labelWord, packet,
+    Bool.false_eq_true, ite_false, pairFst_pair, pairSnd_pair]
+
+noncomputable def nativeTest := SquareSampleCompleteUnivariateTest.test
+  (IntegralFramedPhysicalSquare.input
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).parameters
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).plan
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).data
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).nodes
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).factor
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).seed
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).bounds
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).key
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).positive) (querySource hn ht ha hR)
+  (IntegralFramedPhysicalUnivariateTest.column
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).parameters
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).plan
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).data
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hR false).key (coordinate hn ht ha hR))
+
+-- The literal native test has the bound on its own computed physical column.
+theorem actual_mv_test (right : Bool) (z : List Bool) (k : ℕ) :
+    MvMass.mass ((nativeTest hn ht ha hR).polynomial (context right z)
+      (pair (catalogOldArgument n z) (pair (BinaryNatCode.encode (catalogSelected n right z)) (BinaryNatCode.encode k)))) ≤
+      2 ^ (fieldSlope hn ht ha (pairFst (context false z)) * R (pairFst (context false z)) +
+        queryRightSlope hn ht ha (pair (pairFst (context false z)) (pairFst (context right z))) * R (pairFst (context right z)) +
+        queryOffset hn ht ha (pair (pairFst (context false z)) (pairFst (context right z)))) :=
+  physical_query_mass hn ht ha hR right z k
+
+-- Constant radius collapses the two-root ceiling without compatibility assumptions.
+theorem constant_radius (r : ℕ) (right : Bool) (z : List Bool) (k : ℕ) :
+    coefficientMass ((querySource hn ht ha (BinaryFn.const r)).polynomial (contextProbe n right z k)) ≤
+      2 ^ ((fieldSlope hn ht ha (pairFst (context false z)) +
+        queryRightSlope hn ht ha (pair (pairFst (context false z)) (pairFst (context right z)))) * r +
+        queryOffset hn ht ha (pair (pairFst (context false z)) (pairFst (context right z)))) := by
+  simpa only [Nat.add_mul] using query_mass hn ht ha (BinaryFn.const r) right z k
+
+theorem original_budgets : BinaryFn (fieldSlope hn ht ha) ∧ BinaryFn (derivativeOffset hn ht ha) ∧
+    BinaryFn (queryRightSlope hn ht ha) ∧ BinaryFn (queryOffset hn ht ha) :=
+  ⟨fieldSlope_binary hn ht ha, derivativeOffset_binary hn ht ha, queryRightSlope_binary hn ht ha, queryOffset_binary hn ht ha⟩
+end FieldProfileRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.bank_key_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.count_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.selected_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.oldArgument_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.probe_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.derivative_key_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.source_polynomial_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.derivative_polynomial_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.argument_root_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.characteristic_count_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.characteristic_width_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.degree_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.catalogDegree_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.fieldSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.fieldOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.derivativeOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.source_mass
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.derivative_mass
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.power_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.query_degree_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.queryRightSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.queryOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.query_mass
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.physical_query_mass
+#print axioms FieldProfileRegression.same_source
+#print axioms FieldProfileRegression.derivative_zero
+#print axioms FieldProfileRegression.derivative_above_degree
+#print axioms FieldProfileRegression.old_argument_independent
+#print axioms FieldProfileRegression.actual_mv_test
+#print axioms FieldProfileRegression.constant_radius
+#print axioms FieldProfileRegression.original_budgets
+end RoadmapInternalG82ActualFieldQueryProfile
