@@ -2302,6 +2302,13 @@ proper-row keys and degree selectors have radius-independent structural
 catalogs. Field equality retains the same left characteristic source for both
 probes and has original affine height bounds charging each source radius
 and its own sampled row separately. No word ordinal transport is assumed.
+Actual indexed sampler rows and scalar columns now specialize from the
+constructed family in their literal native order, with original parameter
+coefficient degree/mass bounds. Retained-bank characteristic polynomials
+specialize to the actual saved keys and installed field source, including all
+derivatives. Their target degrees and parameter coefficient bounds are
+original-only. The entire sparse graph-query family and physical-edge
+transport remain open.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership

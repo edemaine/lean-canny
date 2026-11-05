@@ -1,3 +1,7 @@
+import LeanCanny.Algebra.IntegralMixedFramedCoordinateCharacteristicActual
+import LeanCanny.Encoding.CoefficientMarkedRecordFieldSource
+import LeanCanny.Encoding.CoefficientMarkedRecordRowBounds
+import LeanCanny.Encoding.IntegralMixedPhysicalFieldEqualityPlanning
 import LeanCanny.Encoding.FormulaSignSlotRadialRetainedCenterGuards
 import LeanCanny.Encoding.CoefficientMarkedRecordUniformCutoff
 import LeanCanny.Encoding.IntegralMixedPhysicalFieldEqualityQueryHeight
@@ -13780,3 +13784,260 @@ example (c w : List Bool)
 #print axioms FormulaSignSlotRadialRetainedCenterGuards.exists_guards
 end RadialRetainedCenterRegression
 end RoadmapInternalG83ActualRetainedCenterGuards
+
+section RoadmapInternalG84ActualIndexedRowFamily
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedFramedHistoryScript IntegralMixedCausalRecordBits Polynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+namespace IndexedRowsRegression
+
+-- Literal integer and cut instructions add the same unit column.
+example {a B:ℕ} (P Q:SpatialSource a)
+    (hP:PurePowerReductionBounds.dimension (a+1) P.degree≤2^B)
+    (hQ:PurePowerReductionBounds.dimension (a+1) Q.degree≤2^B)
+    (p:ℤ[X]) (hp:p≠0) (hd:p.natDegree≤2^B) (c:Cut Q B) (z:ℤ) (hz:z≠0):
+    IntegralMixedFramedPhysicalLayoutCongruence.layout [⟨P,hP,.integer p hp hd⟩]=
+      IntegralMixedFramedPhysicalLayoutCongruence.layout [⟨Q,hQ,(Template.cut c).command z hz⟩]:=
+  IntegralMixedFramedPhysicalLayoutCongruence.layout_eq _ _ rfl
+
+-- Critical offsets and coefficients do not alter oldest-first physical enumeration.
+example {a B:ℕ} (P Q:SpatialSource a)
+    (hP:PurePowerReductionBounds.dimension (a+1) P.degree≤2^B)
+    (hQ:PurePowerReductionBounds.dimension (a+1) Q.degree≤2^B)
+    (r s:CriticalRule a):
+    IntegralMixedFramedPhysicalLayoutCongruence.layout [⟨P,hP,.critical r⟩]=
+      IntegralMixedFramedPhysicalLayoutCongruence.layout [⟨Q,hQ,.critical s⟩]:=
+  IntegralMixedFramedPhysicalLayoutCongruence.layout_eq _ _ rfl
+
+variable {n:List Bool→ℕ} {t:List Bool→LeanCanny.ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+
+example (ctx:List Bool) (R:List Bool→ℕ) (k:ℕ)
+    (hk:k≤IntegralMixedCausalRecordPlanBits.count ctx) (aux:List Bool):
+    IntegralFramedPhysicalSquare.count (IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha)
+      (IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha R) (CoefficientMarkedRecordRowLayout.key (n:=n) ctx k aux)=
+      (CoefficientMarkedRecordRowLayout.fixed hn ht ha ctx k hk).count:=
+  CoefficientMarkedRecordRowLayout.count_eq hn ht ha ctx R k hk aux
+
+-- Direct ACTUAL sampler target, rather than a Native.run predicate.
+example (ctx:List Bool) (R:List Bool→ℕ) (k:ℕ)
+    (hk:k≤IntegralMixedCausalRecordPlanBits.count ctx) (aux:List Bool)
+    (hR:CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx≤R ctx):
+    HEq (fun i=>MvPolynomial.map (evalRingHom ((2:ℤ)^R ctx))
+      ((CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).rows i))
+      (IntegralFramedPhysicalSquare.sampler (IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha R) (IntegralMixedAuxiliaryMarkedRecordPlan.data hn ht ha R)
+        (CoefficientMarkedRecordRowLayout.key (n:=n) ctx k aux)).rows:=
+by
+  have HH:=CoefficientMarkedRecordRows.rows_map_heq hn ht ha ctx R k hk aux hR
+  dsimp only [CoefficientMarkedRecordRows.indexed] at HH
+  exact HH
+
+example (ctx:List Bool) (R:List Bool→ℕ) (k:ℕ)
+    (hk:k≤IntegralMixedCausalRecordPlanBits.count ctx) (aux:List Bool)
+    (hR:CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx≤R ctx):
+    HEq (CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).scalar
+      (IntegralFramedPhysicalSquare.sampler (IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha R) (IntegralMixedAuxiliaryMarkedRecordPlan.data hn ht ha R)
+        (CoefficientMarkedRecordRowLayout.key (n:=n) ctx k aux)).scalar:=
+by
+  have HH:=CoefficientMarkedRecordRows.scalar_column_heq hn ht ha ctx R k hk aux hR
+  dsimp only [CoefficientMarkedRecordRows.indexed] at HH
+  exact HH
+
+-- Planning transport is at this explicit key; no query parsing is equated.
+example (ctx:List Bool) {R:List Bool→ℕ} (hR:BinaryFn R) (k:ℕ)
+    (hk:k≤IntegralMixedCausalRecordPlanBits.count ctx) (aux:List Bool)
+    (hlarge:CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx≤R ctx):
+    HEq (fun i=>MvPolynomial.map (evalRingHom ((2:ℤ)^R ctx))
+      ((CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).rows i))
+      (IntegralFramedPhysicalSquare.sampler (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha hR)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha hR)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedData hn ht ha hR)
+        (CoefficientMarkedRecordRowLayout.key (n:=n) ctx k aux)).rows:=by
+  have rows_heq (A B:CoefficientMarkedRecordRows.Data ℤ) (e:A=B):HEq A.rows B.rows:=by
+    cases e
+    rfl
+  have HH:=rows_heq _ _ (CoefficientMarkedRecordRowBounds.map_certified hn ht ha ctx hR k hk aux hlarge)
+  dsimp only [CoefficientMarkedRecordRows.map,CoefficientMarkedRecordRowBounds.certifiedIndexed,
+    CoefficientMarkedRecordRowBounds.samplerData] at HH
+  exact HH
+
+example (ctx:List Bool) {R:List Bool→ℕ} (hR:BinaryFn R) (k:ℕ)
+    (hk:k≤IntegralMixedCausalRecordPlanBits.count ctx) (aux:List Bool)
+    (hlarge:CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx≤R ctx):
+    HEq (CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).scalar
+      (IntegralFramedPhysicalSquare.sampler (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha hR)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha hR)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedData hn ht ha hR)
+        (CoefficientMarkedRecordRowLayout.key (n:=n) ctx k aux)).scalar:=by
+  have scalar_heq (A B:CoefficientMarkedRecordRows.Data ℤ) (e:A=B):HEq A.scalar B.scalar:=by
+    cases e
+    rfl
+  have HH:=scalar_heq _ _ (CoefficientMarkedRecordRowBounds.map_certified hn ht ha ctx hR k hk aux hlarge)
+  dsimp only [CoefficientMarkedRecordRows.map,CoefficientMarkedRecordRowBounds.certifiedIndexed,
+    CoefficientMarkedRecordRowBounds.samplerData] at HH
+  exact HH
+
+example:BinaryFn (CoefficientMarkedRecordRowBounds.coefficientBudget hn ht ha):=
+  CoefficientMarkedRecordRowBounds.coefficientBudget_binary hn ht ha
+
+example (ctx:List Bool) (k:ℕ) (hk:k≤IntegralMixedCausalRecordPlanBits.count ctx)
+    (i:Fin (CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).count)
+    (e:Fin (CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).count→₀ ℕ):
+    (((CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).rows i).coeff e).natDegree≤
+      IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rowSlope hn ht ha ctx ∧
+    coefficientMass (((CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).rows i).coeff e)≤
+      2^CoefficientMarkedRecordRowBounds.coefficientBudget hn ht ha ctx:=
+  CoefficientMarkedRecordRowBounds.coefficient_degree_mass hn ht ha ctx k hk i e
+
+#print axioms IntegralMixedFramedPhysicalLayoutCongruence.layout_eq
+#print axioms IntegralMixedFramedPhysicalLayoutCongruence.enumerate_heq
+#print axioms IntegralMixedFramedPhysicalLayoutCongruence.commands_tags
+#print axioms CoefficientMarkedRecordRowLayout.tags_eq
+#print axioms CoefficientMarkedRecordRowLayout.family_layout
+#print axioms CoefficientMarkedRecordRowLayout.count_eq
+#print axioms CoefficientMarkedRecordRows.family_ambient
+#print axioms CoefficientMarkedRecordRows.family_cap
+#print axioms CoefficientMarkedRecordRows.family_width
+#print axioms CoefficientMarkedRecordRows.family_birth
+#print axioms CoefficientMarkedRecordRows.family_source
+#print axioms CoefficientMarkedRecordRows.native_eq_indexed
+#print axioms CoefficientMarkedRecordRows.map_indexed
+#print axioms CoefficientMarkedRecordRows.rows_map_heq
+#print axioms CoefficientMarkedRecordRows.scalar_column_heq
+#print axioms CoefficientMarkedRecordRowBounds.certifiedIndexed_eq
+#print axioms CoefficientMarkedRecordRowBounds.map_certified
+#print axioms CoefficientMarkedRecordRowBounds.certified_row_mass
+#print axioms CoefficientMarkedRecordRowBounds.coefficientBudget_binary
+#print axioms CoefficientMarkedRecordRowBounds.coefficient_degree_mass
+end IndexedRowsRegression
+end RoadmapInternalG84ActualIndexedRowFamily
+
+section RoadmapInternalG84ActualCharacteristicPlanning
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR Polynomial
+open IntegralMixedFramedNormalizationBits (planned plannedPlan plannedData)
+open IntegralMixedFramedHistoryFamilyBits (Plan)
+open IntegralCriticalHistoryTask
+open IntegralMixedPhysicalFieldEquality
+namespace CharacteristicPlanningRegression
+open IntegralMixedFramedCoordinateCharacteristicBits
+variable (P : Parameters) (D : Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
+variable (L F C : List Bool → ℕ)
+
+-- Total source behavior includes inactive stages and out-of-range retained labels.
+theorem inactive (c : List Bool) (hc : ¬Active P c) :
+    matrix (planned P L F C) (plannedPlan P D L F C) (plannedData P D H L F C) c = 0 := by
+  rw [matrix_planned]
+  exact matrix_inactive P D H c hc
+
+theorem outside (c : List Bool) (hc : count P D H c ≤ index c) :
+    matrix (planned P L F C) (plannedPlan P D L F C) (plannedData P D H L F C) c = 0 := by
+  rw [matrix_planned]
+  exact matrix_outside P D H c hc
+
+-- Planning needs no positivity or truthful height-certificate premise for this equality.
+theorem zero_budgets (c : List Bool) :
+    polynomial (planned P (fun _ => 0) (fun _ => 0) (fun _ => 0))
+      (plannedPlan P D (fun _ => 0) (fun _ => 0) (fun _ => 0))
+      (plannedData P D H (fun _ => 0) (fun _ => 0) (fun _ => 0)) c = polynomial P D H c :=
+  polynomial_planned P D H _ _ _ c
+
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R : List Bool → ℕ} (hR : BinaryFn R)
+attribute [local irreducible] IntegralMixedSourceIntegerRecordAppend.plan IntegralMixedSourceIntegerRecordAppend.data
+  IntegralMixedAuxiliaryMarkedIntegerPlan.seed IntegralMixedFramedHistoryFamilyBits.family
+
+-- Both own samples use the same LEFT characteristic, also for derivative zero.
+theorem sides (z : List Bool) (k : ℕ) :
+    (derivatives hn ht ha hR).polynomial (probe hn ht ha hR false (pair z (BinaryNatCode.encode k))) =
+      (derivatives hn ht ha hR).polynomial (probe hn ht ha hR true (pair z (BinaryNatCode.encode k))) := by
+  rw [derivative_polynomial_base, derivative_polynomial_base]
+
+theorem zero_derivative (right : Bool) (z : List Bool) :
+    (derivatives hn ht ha hR).polynomial (probe hn ht ha hR right (pair z (BinaryNatCode.encode 0))) =
+      (originalSource hn ht ha hR).polynomial (oldArgument hn ht ha hR z) := by
+  rw [derivative_polynomial_base, old_polynomial_base]
+  rfl
+
+-- Literal source selection is radius independent; coefficient values are not identified across radii.
+theorem base_key (z : List Bool) :
+    (originalSource hn ht ha hR).polynomial (oldArgument hn ht ha hR z) =
+      polynomial (IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha R)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.data hn ht ha R) (catalogOldArgument n z) :=
+  old_polynomial_base hn ht ha hR z
+end CharacteristicPlanningRegression
+
+#print axioms LeanCanny.Algebra.IntegralMixedFramedCoordinateCharacteristicBits.count_planned
+#print axioms LeanCanny.Algebra.IntegralMixedFramedCoordinateCharacteristicBits.dimension_planned
+#print axioms LeanCanny.Algebra.IntegralMixedFramedCoordinateCharacteristicBits.common_planned
+#print axioms LeanCanny.Algebra.IntegralMixedFramedCoordinateCharacteristicBits.matrix_planned
+#print axioms LeanCanny.Algebra.IntegralMixedFramedCoordinateCharacteristicBits.polynomial_planned
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.source_polynomial_base
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.old_polynomial_base
+#print axioms LeanCanny.Encoding.IntegralMixedPhysicalFieldEquality.derivative_polynomial_base
+#print axioms CharacteristicPlanningRegression.inactive
+#print axioms CharacteristicPlanningRegression.outside
+#print axioms CharacteristicPlanningRegression.zero_budgets
+#print axioms CharacteristicPlanningRegression.sides
+#print axioms CharacteristicPlanningRegression.zero_derivative
+#print axioms CharacteristicPlanningRegression.base_key
+end RoadmapInternalG84ActualCharacteristicPlanning
+
+section RoadmapInternalG84ActualInstalledFieldSource
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+namespace ActualFieldSourceRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+attribute [local irreducible] CoefficientMarkedRecordPrefix.build CoefficientMarkedRecordNative.run
+  CoefficientMarkedRecordBankSource.polynomial CoefficientMarkedRecordFieldSource.polynomial
+
+-- The same original constructed source feeds BOTH native derivative probes.
+example {R : List Bool → ℕ} (hR : BinaryFn R) (right : Bool) (z : List Bool) (k : ℕ)
+    (hC : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha
+      (CoefficientMarkedRecordFieldSource.root z) ≤ R (CoefficientMarkedRecordFieldSource.root z)) :
+    (Polynomial.derivative^[k] (CoefficientMarkedRecordFieldSource.polynomial hn ht ha z)).map
+      (evalRingHom ((2 : ℤ) ^ R (CoefficientMarkedRecordFieldSource.root z))) =
+      (IntegralMixedPhysicalFieldEquality.derivatives hn ht ha hR).polynomial
+        (IntegralMixedPhysicalFieldEquality.probe hn ht ha hR right (pair z (BinaryNatCode.encode k))) :=
+  CoefficientMarkedRecordFieldSource.derivative_specializes hn ht ha hR right z hC k
+
+-- A finite symbolic head bound is the literal original native scan degree.
+example (z : List Bool) :
+    (CoefficientMarkedRecordFieldSource.polynomial hn ht ha z).natDegree ≤
+      IntegralMixedPhysicalFieldEquality.catalogDegree hn ht ha (CoefficientMarkedRecordFieldSource.root z) :=
+  CoefficientMarkedRecordFieldSource.target_degree hn ht ha z
+
+-- Derivative0 and arbitrarily oversized derivative/coefficient selectors are included.
+example (z : List Bool) (k j : ℕ) :
+    ((Polynomial.derivative^[k] (CoefficientMarkedRecordFieldSource.polynomial hn ht ha z)).coeff j).natDegree ≤
+      IntegralMixedPhysicalFieldEquality.fieldSlope hn ht ha (CoefficientMarkedRecordFieldSource.root z) ∧
+      coefficientMass ((Polynomial.derivative^[k] (CoefficientMarkedRecordFieldSource.polynomial hn ht ha z)).coeff j) ≤
+        2 ^ CoefficientMarkedRecordFieldSource.derivativeBudget hn ht ha z :=
+  CoefficientMarkedRecordFieldSource.derivative_coefficient_degree_mass hn ht ha z k j
+
+-- No coefficient model, homomorphism, radius input or evaluator enters these budgets.
+example : BinaryFn (CoefficientMarkedRecordFieldSource.coefficientBudget hn ht ha) ∧
+    BinaryFn (CoefficientMarkedRecordFieldSource.derivativeBudget hn ht ha) :=
+  ⟨CoefficientMarkedRecordFieldSource.coefficientBudget_binary hn ht ha,
+    CoefficientMarkedRecordFieldSource.derivativeBudget_binary hn ht ha⟩
+
+#print axioms CoefficientMarkedRecordBankPolynomial.formal_degree
+#print axioms CoefficientMarkedRecordBankPolynomial.specializes
+#print axioms CoefficientMarkedRecordBankActual.native_family
+#print axioms CoefficientMarkedRecordBankActual.specializes_family
+#print axioms CoefficientMarkedRecordBankSource.specializes
+#print axioms CoefficientMarkedRecordFieldSource.specializes
+#print axioms CoefficientMarkedRecordFieldSource.derivative_specializes
+#print axioms CoefficientMarkedRecordFieldSource.target_degree
+#print axioms CoefficientMarkedRecordFieldSource.coefficientBudget_binary
+#print axioms CoefficientMarkedRecordFieldSource.coefficient_degree_mass
+#print axioms CoefficientMarkedRecordFieldSource.derivativeBudget_binary
+#print axioms CoefficientMarkedRecordFieldSource.derivative_coefficient_degree_mass
+end ActualFieldSourceRegression
+end RoadmapInternalG84ActualInstalledFieldSource
