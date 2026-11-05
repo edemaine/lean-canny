@@ -1972,3 +1972,54 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Recursive framed interpretation, whole-family original-only bounds, independent-grid query binding and native graph truth transport remain open. Effective uniform radius stabilization, Boolean frontier incidence and both original unconditional PSPACE targets are unproved.
+
+35. G77: literal prelude specialization and actual native affine bounds
+2026-11-04.
+
+The formal prefix stores constructed rings, bases, banks, physical rows and
+scalar slots, without specialization hypotheses. Integer and critical births
+construct maps to the literal native quotient. The actual marked prelude
+recurses over one radius-independent leaf list and specializes at EVERY
+radius, including every physical row and slot. Its reversed original range
+is proved equal to the native command order and to the oldest suffix of the
+full marked record plan. Cut kind, code and command transport depend on the
+source degree alone; original current-Q commands are preserved literally.
+
+The actual marked integer mass reader is affine in requested radius, derived
+from its original tagged source definitions. Dyadic interpolation bounds the
+formal source coefficient masses. Independently constructed affine seeds
+supply native FamilyInputs for the unchanged actual causal plan. They bound
+ALL actual saved-prefix banks, cleared bank multiplication matrices, all four
+raw-cut coefficient matrices and normalization tops, and critical-polynomial
+coefficient matrices. Their slopes and offsets are original-only BinaryFn.
+No unjustified affinity of the old WordEnvelope resource seed is used.
+
+An actual query annihilator on the INDEPENDENT Cartesian root grid proves
+query-sign transport before any correlated defining row is assumed. Its
+mass is bounded directly from actual head/query coefficient input bounds.
+The resulting explicit sign cutoff is BinaryFn and its mass budget is affine
+in input height. Nonmonic heads are supported: one leading-coefficient
+surviving specialization is derived from mass, without evaluation injectivity.
+The regression includes an off-diagonal root tuple violating the row whose
+sign will eventually need transport, and a head killed at parameter zero.
+
+These are verified local and prelude results. The entire actual raw-record
+recursion and its original-only common cutoff still need assembling.
+Actual head/query family bounds, native word and graph truth transport,
+effective uniform stabilization, original Boolean frontier incidence and
+both original unconditional PSPACE targets remain open.
+
+All13 sources (1639 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS20496 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:12291 lines,185 groups.
+Audited 92396 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 198299 transitive constants: no legacy space foundation.
+All17 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Full mixed-record recursion and common cutoff, actual head/query bounds and graph transport, uniform radius stabilization, Boolean frontier incidence and both original unconditional PSPACE targets remain open.

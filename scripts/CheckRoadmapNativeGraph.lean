@@ -1,3 +1,15 @@
+import LeanCanny.Algebra.CoefficientMixedCriticalBirth
+import LeanCanny.Algebra.CoefficientMixedCutSourceDegree
+import LeanCanny.Algebra.IntegralMixedFullHistoryScript
+import LeanCanny.Encoding.CoefficientMarkedIntegerBirth
+import LeanCanny.Encoding.CoefficientMarkedPreludeActual
+import LeanCanny.Encoding.CoefficientMarkedPreludePrefix
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusGrowth
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusCriticalHeight
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusMatrixHeight
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusRawHeight
+import LeanCanny.Geometry.ParameterizedGridQueryMass
+import LeanCanny.Geometry.ParameterizedGridQuerySign
 import LeanCanny.Algebra.CoefficientMixedCutAtInfinity
 import LeanCanny.Algebra.CoefficientMixedCutSpecialization
 import LeanCanny.Algebra.CoefficientRelativeNormalizationMatrixBounds
@@ -11684,3 +11696,596 @@ end AuxiliaryMarkedRadiusDegreeRegression
 #print axioms AuxiliaryMarkedRadiusDegreeRegression.actual_leading
 #print axioms AuxiliaryMarkedRadiusDegreeRegression.zero_radius_sphere
 end RoadmapInternalG76NativeIntegerDegree
+
+section RoadmapInternalG77CoefficientBirth
+open LeanCanny
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory Polynomial
+open scoped Classical
+namespace Critical
+variable {R A:Type*} [CommRing R] [CommRing A] [Algebra R A]
+  {n cap width m:ℕ} {P:SpatialSource n} {ι:Type} [Fintype ι]
+  (bank:CoefficientHeightBank R A m) (b:CoefficientCoordinateBasis R A m (2^width))
+  (low:MvPolynomial (Fin (n+1)) R) (a:R) (x:State P cap width m ι) (hm:m≤cap)
+  (r:CriticalRule n) (φ:R→+*ℤ) (ψ:A→+*x.sampler.scalarPrefix.carrier)
+  (HB:CoefficientHeightBank.Specializes φ ψ bank (CoefficientHeightBank.ofState x))
+  (Hb:CoefficientCoordinateBasis.Specializes φ ψ b
+    (CoefficientCoordinateBasis.ofIntegral x.sampler.scalarPrefix.basis))
+  (HL:low.map φ=P.low) (HA:φ a=P.leading)
+example : (CoefficientMixedCriticalPolynomial.polynomial bank low a P.degree r).map ψ=
+    IntegralMixedFullHistoryScript.polynomial x hm (.critical r):=
+  CoefficientMixedCriticalBirth.polynomial_map_native bank low a x hm r φ ψ HB HL HA
+example [Nontrivial A] : CoefficientCoordinateBasis.Specializes φ
+    (CoefficientMixedCriticalBirth.specialize bank low a x hm r φ ψ HB HL HA)
+    (b.paddedStep (CoefficientMixedCriticalPolynomial.polynomial bank low a P.degree r)
+      (PurePowerReductionBounds.dimension (n-r.offset.val+1) P.degree))
+    (CoefficientCoordinateBasis.ofIntegral
+      (IntegralMixedFullHistoryScript.step x hm (.critical r)).sampler.scalarPrefix.basis):=
+  CoefficientMixedCriticalBirth.basis_specializes bank b low a x hm r φ ψ HB Hb HL HA
+example : CoefficientHeightBank.Specializes φ
+    (CoefficientMixedCriticalBirth.specialize bank low a x hm r φ ψ HB HL HA)
+    (bank.rootStep (CoefficientMixedCriticalPolynomial.polynomial bank low a P.degree r)
+      (PurePowerReductionBounds.dimension (n-r.offset.val+1) P.degree) (2^width)
+      (CoefficientMixedCriticalPolynomial.leadingValue bank a P.degree r))
+    (CoefficientHeightBank.ofState (IntegralMixedFullHistoryScript.step x hm (.critical r))):=
+  CoefficientMixedCriticalBirth.bank_specializes bank low a x hm r φ ψ HB HL HA
+example (q:ι→MvPolynomial ι R) (HQ:∀j,MvPolynomial.map φ (q j)=x.sampler.rows j):
+    (fun j=>MvPolynomial.map φ (CoefficientMixedCriticalBirth.rows (cap:=cap)
+      bank b low a r q x.sampler.scalar P.degree j))=
+      (IntegralMixedFullHistoryScript.step x hm (.critical r)).sampler.rows:=
+  CoefficientMixedCriticalBirth.rows_map_native bank b low a x hm r φ ψ HB Hb HL HA q HQ
+end Critical
+namespace Integer
+variable {n:List Bool→ℕ} {t:List Bool→LeanCanny.ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+  {A:Type*} [CommRing A] [Algebra ℤ[X] A]
+  {ambient cap m:ℕ} {P:SpatialSource ambient} {ι:Type} [Fintype ι]
+  (ctx:List Bool) (i:ℕ) (radius:List Bool→ℕ)
+  (bank:CoefficientHeightBank ℤ[X] A m)
+  (b:CoefficientCoordinateBasis ℤ[X] A m (2^CoefficientMarkedIntegerBirth.width hn ht ha ctx))
+  (x:State P cap (CoefficientMarkedIntegerBirth.width hn ht ha ctx) m ι) (hm:m≤cap)
+  (ψ:A→+*x.sampler.scalarPrefix.carrier)
+  (HB:CoefficientHeightBank.Specializes (Polynomial.evalRingHom ((2:ℤ)^radius ctx)) ψ bank
+    (CoefficientHeightBank.ofState x))
+  (Hb:CoefficientCoordinateBasis.Specializes (Polynomial.evalRingHom ((2:ℤ)^radius ctx)) ψ b
+    (CoefficientCoordinateBasis.ofIntegral x.sampler.scalarPrefix.basis))
+example : (CoefficientMarkedIntegerBirth.polynomial hn ht ha ctx i (A:=A)).map ψ=
+    ((IntegralMixedAuxiliaryMarkedIntegerSource.source hn ht ha radius).polynomial
+      (pair ctx (BinaryNatCode.encode i))).map (Int.castRingHom x.sampler.scalarPrefix.carrier):=
+  CoefficientMarkedIntegerBirth.polynomial_map_native hn ht ha ctx i radius bank x ψ HB
+example [Nontrivial A]:CoefficientCoordinateBasis.Specializes (Polynomial.evalRingHom ((2:ℤ)^radius ctx))
+    (CoefficientMarkedIntegerBirth.specialize hn ht ha ctx i radius bank x hm ψ HB)
+    (b.paddedStep (CoefficientMarkedIntegerBirth.polynomial hn ht ha ctx i (A:=A))
+      (CoefficientMarkedIntegerBirth.leaf hn ht ha ctx i).natDegree)
+    (CoefficientCoordinateBasis.ofIntegral
+      (CoefficientMarkedIntegerBirth.nativeStep hn ht ha ctx i radius x hm).sampler.scalarPrefix.basis):=
+  CoefficientMarkedIntegerBirth.basis_specializes hn ht ha ctx i radius bank b x hm ψ HB Hb
+example : CoefficientHeightBank.Specializes (Polynomial.evalRingHom ((2:ℤ)^radius ctx))
+    (CoefficientMarkedIntegerBirth.specialize hn ht ha ctx i radius bank x hm ψ HB)
+    (bank.rootStep (CoefficientMarkedIntegerBirth.polynomial hn ht ha ctx i (A:=A))
+      (CoefficientMarkedIntegerBirth.leaf hn ht ha ctx i).natDegree
+      (2^CoefficientMarkedIntegerBirth.width hn ht ha ctx)
+      (CoefficientMarkedIntegerBirth.leaf hn ht ha ctx i).leadingCoeff)
+    (CoefficientHeightBank.ofState (CoefficientMarkedIntegerBirth.nativeStep hn ht ha ctx i radius x hm)):=
+  CoefficientMarkedIntegerBirth.bank_specializes hn ht ha ctx i radius bank x hm ψ HB
+example (q:ι→MvPolynomial ι ℤ[X])
+    (HQ:∀j,MvPolynomial.map (Polynomial.evalRingHom ((2:ℤ)^radius ctx)) (q j)=x.sampler.rows j):
+    (fun j=>MvPolynomial.map (Polynomial.evalRingHom ((2:ℤ)^radius ctx))
+      (CoefficientCanonicalScalarAppend.rows cap q x.sampler.scalar b
+        (CoefficientMarkedIntegerBirth.polynomial hn ht ha ctx i (A:=A))
+        (CoefficientMarkedIntegerBirth.leaf hn ht ha ctx i).natDegree j))=
+      (CoefficientMarkedIntegerBirth.nativeStep hn ht ha ctx i radius x hm).sampler.rows:=
+  CoefficientMarkedIntegerBirth.rows_map_native hn ht ha ctx i radius bank b x hm ψ HB Hb q HQ
+end Integer
+#print axioms CoefficientMixedCriticalBirth.polynomial_map_native
+#print axioms CoefficientMixedCriticalBirth.leading_map_native
+#print axioms CoefficientMixedCriticalBirth.specialize
+#print axioms CoefficientMixedCriticalBirth.specialize_of
+#print axioms CoefficientMixedCriticalBirth.specialize_root
+#print axioms CoefficientMixedCriticalBirth.basis_specializes
+#print axioms CoefficientMixedCriticalBirth.bank_specializes
+#print axioms CoefficientMixedCriticalBirth.physicalRows_map_native
+#print axioms CoefficientMixedCriticalBirth.rows_map_native
+#print axioms CoefficientMarkedIntegerBirth.polynomial_map_native
+#print axioms CoefficientMarkedIntegerBirth.specialize
+#print axioms CoefficientMarkedIntegerBirth.specialize_of
+#print axioms CoefficientMarkedIntegerBirth.specialize_root
+#print axioms CoefficientMarkedIntegerBirth.basis_specializes
+#print axioms CoefficientMarkedIntegerBirth.bank_specializes
+#print axioms CoefficientMarkedIntegerBirth.rows_map_native
+end RoadmapInternalG77CoefficientBirth
+
+section RoadmapInternalG77MarkedPrefix
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory Polynomial
+open scoped Classical
+namespace PrefixFixture
+variable {n:List Bool→ℕ} {t:List Bool→ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+  (ctx:List Bool)
+
+def leaves (n:List Bool→ℕ) (ctx:List Bool):List ℕ:=
+  let N:=IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx
+  [N+7,N+6,N+5,N+4,N+3,N+2,N+1,N,0]
+
+example (S:ℕ) (is:List ℕ) (h:is.length≤S+1):
+    ∃F:CoefficientHistoryPrefix.Prefix ℤ[X] S (CoefficientMarkedIntegerBirth.width hn ht ha ctx)
+      is.length (CoefficientMarkedPreludePrefix.Index is),
+    ∀radius:List Bool→ℕ,
+    ∃ψ:F.carrier→+*(CoefficientMarkedPreludePrefix.nativeRun hn ht ha ctx radius S is h).sampler.scalarPrefix.carrier,
+      CoefficientCoordinateBasis.Specializes (Polynomial.evalRingHom ((2:ℤ)^radius ctx)) ψ F.basis
+        (CoefficientCoordinateBasis.ofIntegral
+          (CoefficientMarkedPreludePrefix.nativeRun hn ht ha ctx radius S is h).sampler.scalarPrefix.basis) ∧
+      CoefficientHeightBank.Specializes (Polynomial.evalRingHom ((2:ℤ)^radius ctx)) ψ F.bank
+        (CoefficientHeightBank.ofState (CoefficientMarkedPreludePrefix.nativeRun hn ht ha ctx radius S is h)) ∧
+      (∀j,MvPolynomial.map (Polynomial.evalRingHom ((2:ℤ)^radius ctx)) (F.rows j)=
+        (CoefficientMarkedPreludePrefix.nativeRun hn ht ha ctx radius S is h).sampler.rows j) ∧
+      F.scalar=(CoefficientMarkedPreludePrefix.nativeRun hn ht ha ctx radius S is h).sampler.scalar:=by
+  exact ⟨CoefficientMarkedPreludePrefix.build hn ht ha ctx S is,
+    fun radius=>CoefficientMarkedPreludePrefix.specializes hn ht ha ctx radius S is h⟩
+
+example : (CoefficientMarkedPreludePrefix.build hn ht ha ctx 8 (leaves n ctx)).bank.denominator ⟨0,by simp [leaves]⟩=
+    (CoefficientMarkedIntegerBirth.leaf hn ht ha ctx
+      (IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx+7)).leadingCoeff:=rfl
+
+example (radius:List Bool→ℕ):
+    HEq (CoefficientMarkedPreludePrefix.nativeRun hn ht ha ctx radius 8 (leaves n ctx)
+      (by simp [leaves]))
+      (reframe (IntegralMixedFramedHistoryScript.run
+        (CoefficientMarkedPreludePrefix.initial hn ht ha ctx radius 8)
+        (CoefficientMarkedPreludePrefix.commands hn ht ha ctx radius (leaves n ctx))
+        (by change 9≤9;exact le_rfl))
+        (IntegralMixedAuxiliaryMarkedIntegerPlan.spatial n t radius ctx)
+        (CoefficientMarkedPreludePrefix.initial hn ht ha ctx radius 8).critical_cap):=
+  CoefficientMarkedPreludePrefix.nativeRun_framed hn ht ha ctx radius 8 (leaves n ctx) (by simp [leaves])
+end PrefixFixture
+#print axioms CoefficientHistoryPrefix.base
+#print axioms CoefficientHistoryPrefix.scalarStep
+#print axioms CoefficientHistoryPrefix.criticalBlock
+#print axioms CoefficientHistoryPrefix.criticalStep
+#print axioms CoefficientMarkedPreludePrefix.build
+#print axioms CoefficientMarkedPreludePrefix.initial
+#print axioms CoefficientMarkedPreludePrefix.nativeRun
+#print axioms CoefficientMarkedPreludePrefix.specializes
+#print axioms CoefficientMarkedPreludePrefix.index_eq
+#print axioms CoefficientMarkedPreludePrefix.nativeRun_framed
+end RoadmapInternalG77MarkedPrefix
+
+section RoadmapInternalG77CausalPreludeCut
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedRelativeCuts IntegralMixedCausalRecordBits Polynomial
+open scoped Classical
+namespace ActualPrelude
+variable {n:List Bool→ℕ} {t:List Bool→ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+  (ctx:List Bool) (radius:List Bool→ℕ)
+example : ((IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha radius).rules ctx).drop
+      (IntegralMixedCausalRecordPlanBits.count ctx)=
+    (IntegralMixedAuxiliaryMarkedIntegerPlan.plan hn ht ha radius).rules ctx:=by
+  exact (CoefficientMarkedPreludeActual.record_suffix hn ht ha ctx radius).trans
+    (CoefficientMarkedPreludeActual.commands_eq hn ht ha ctx radius)
+example : (((IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha radius).rules ctx).drop
+      (IntegralMixedCausalRecordPlanBits.count ctx)).length=
+    IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx+8:=by
+  calc
+    _=(CoefficientMarkedPreludePrefix.commands hn ht ha ctx radius
+        (CoefficientMarkedPreludeActual.indices n ctx)).length:=
+      congrArg List.length (CoefficientMarkedPreludeActual.record_suffix hn ht ha ctx radius)
+    _=(CoefficientMarkedPreludeActual.indices n ctx).length:=
+      CoefficientMarkedPreludePrefix.commands_length hn ht ha ctx radius _
+    _=_:=CoefficientMarkedPreludeActual.indices_length (n:=n) ctx
+end ActualPrelude
+namespace CutShape
+variable {n width S m N:ℕ} {P Q:SpatialSource n}
+  {R A:Type*} [CommRing R] [CommRing A] [Algebra R A]
+  (h:P.degree=Q.degree) (b:CoefficientCoordinateBasis R A m N)
+  (bank:CoefficientHeightBank R A m) (low:MvPolynomial (Fin (n+1)) R) (a:R)
+  (r:IntegralMixedCriticalSweep.Rule n) (current:Bool) (c:Kind P r) (d τ:ℕ)
+example : CoefficientMixedCutSpecialization.polynomial b bank low a r current
+      (CoefficientMixedCutSourceDegree.kind h r c) d τ=
+    CoefficientMixedCutSpecialization.polynomial b bank low a r current c d τ:=
+  CoefficientMixedCutSourceDegree.polynomial_eq h b bank low a r current c d τ
+example {ι:Type} (x:State P S width m ι) (C:Cut P width):
+    IntegralMixedFullHistoryScript.Command.cut
+      (CoefficientMixedCutSpecialization.nativeRule x (C.rule 1 one_ne_zero) C.current)
+      (CoefficientMixedCutSpecialization.nativeKind x (C.rule 1 one_ne_zero) C.current
+        (C.kind 1 one_ne_zero)) C.degree C.source_cap C.degree_cap=
+    (Template.cut C).command (commonDenominator x) (commonDenominator_ne_zero x):=
+  CoefficientMixedCutSourceDegree.native_command x C
+example (hn:0<n) (birth:ℕ) (code:List Bool)
+    (hP:IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree≤2^width)
+    (hQ:IntegralMixedExceptionalBounds.auxiliaryCap (n+1) Q.degree≤2^width):
+    CoefficientMixedCutSourceDegree.cut h (IntegralMixedCausalUnitRecordBits.cut P hn birth code hP)=
+      IntegralMixedCausalUnitRecordBits.cut Q hn birth code hQ:=
+  CoefficientMixedCutSourceDegree.cut_of_code h hn birth code hP hQ
+end CutShape
+#print axioms CoefficientMarkedPreludeActual.commands_eq
+#print axioms CoefficientMarkedPreludeActual.record_suffix
+#print axioms CoefficientMixedCutSourceDegree.kind
+#print axioms CoefficientMixedCutSourceDegree.factor_eq
+#print axioms CoefficientMixedCutSourceDegree.raw_eq
+#print axioms CoefficientMixedCutSourceDegree.polynomial_eq
+#print axioms CoefficientMixedCutSourceDegree.leading_eq
+#print axioms CoefficientMixedCutSourceDegree.cut_kind
+#print axioms CoefficientMixedCutSourceDegree.cut_of_code
+#print axioms CoefficientMixedCutSourceDegree.native_command
+end RoadmapInternalG77CausalPreludeCut
+
+section RoadmapInternalG77NativeLeafGrowth
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Geometry Polynomial
+open IntegralMixedAuxiliaryMarkedRadiusModel
+open IntegralMixedFramedSlackMatrixBounds
+
+namespace MarkedRadiusGrowthRegression
+
+def sphereMass (R : ℕ) := ScaledCharacteristicIntegerBounds.massHeight 4
+  (sphereHeight 2 3 4 5 R) 20
+
+def regularMass (R : ℕ) := ScaledCharacteristicIntegerBounds.massHeight 4
+  (regularHeight 2 3 4 5 4 R (3 + 2 * R) (4 + 3 * R)) (43 + 2 * R)
+
+example : sphereMass 0 = 336 := by decide
+example : sphereMass 1 = 344 := by decide
+example : sphereMass 7 = 392 := by decide
+example : regularMass 0 = 1368 := by decide
+example : regularMass 1 = 1428 := by decide
+example : regularMass 7 = 1788 := by decide
+example : regularMass 7 + 7 * regularMass 0 = regularMass 0 + 7 * regularMass 1 := by decide
+
+example (R : ℕ) : sphereMass R = 336 + 8 * R := by
+  simp only [sphereMass, ScaledCharacteristicIntegerBounds.massHeight,
+    ScaledCharacteristicIntegerBounds.coefficientHeight, CharacteristicIntegerBounds.budget,
+    sphereHeight, powerSumHeight, baseHeight]
+  rw [show Nat.size 3 = 2 by decide, show Nat.size 4 = 3 by decide]
+  ring
+
+example (R : ℕ) : regularMass R = 1368 + 60 * R := by
+  simp only [regularMass, ScaledCharacteristicIntegerBounds.massHeight,
+    ScaledCharacteristicIntegerBounds.coefficientHeight, CharacteristicIntegerBounds.budget,
+    regularHeight, regularDiagonalHeight, sphereHeight, powerSumHeight, baseHeight]
+  rw [show Nat.size 3 = 2 by decide, show Nat.size 4 = 3 by decide]
+  ring
+
+example : IntegerPolynomialDyadic.massBudget 0 1 0 = 7 := by decide
+
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+
+theorem actual_coefficients (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (q : List Bool) (k : ℕ) :
+    coefficientMass ((polynomial hn ht ha q).coeff k) ≤ 2 ^ parameterMassBudget hn ht ha q :=
+  coefficient_parameter_mass hn ht ha q k
+
+theorem actual_binary_budget (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) : BinaryFn (parameterMassBudget hn ht ha) :=
+  parameterMassBudget_binary hn ht ha
+
+theorem actual_degree_and_mass (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (q : List Bool) (k : ℕ) :
+    ((polynomial hn ht ha q).coeff k).natDegree ≤ massOne hn ht ha q ∧
+      coefficientMass ((polynomial hn ht ha q).coeff k) ≤ 2 ^ parameterMassBudget hn ht ha q :=
+  IntegerPolynomialDyadic.degree_mass_of_growth _ 0 _ _
+    (fun R _ => coefficient_growth hn ht ha q k R)
+
+end MarkedRadiusGrowthRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.nativeMass_affine
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.nativeMass_le
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.massZero_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.massOne_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.parameterMassBudget_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.coefficient_growth
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.coefficient_parameter_mass
+#print axioms MarkedRadiusGrowthRegression.actual_coefficients
+#print axioms MarkedRadiusGrowthRegression.actual_binary_budget
+#print axioms MarkedRadiusGrowthRegression.actual_degree_and_mass
+end RoadmapInternalG77NativeLeafGrowth
+
+section RoadmapInternalG77NativeBankMatrixGrowth
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR
+open IntegralMixedAuxiliaryMarkedRecordRadiusHeight
+open IntegralMixedAuxiliaryMarkedRecordPlan (parameters plan data factor)
+open IntegralMixedFramedStepHeight
+open IntegralMixedFramedClearedMatrixBits (rank matrix)
+
+namespace MarkedRecordRadiusHeightRegression
+
+-- Both source growth and the actual causal amplification are linear in the seed.
+example (a b R E : ℕ) : E * (a * R + b + 1) = E * a * R + E * (b + 1) := by ring
+example : 7 ^ 3 * (2 * 5 + 3 + 1) = 4802 := by decide
+example : 7 ^ 3 * 2 * 5 + 7 ^ 3 * (3 + 1) = 4802 := by decide
+example : (6 + 2) * (9 * 7 + 5) = 544 := by decide
+example (m cap G : ℕ) (h : m ≤ cap + 1) :
+    IntegralMixedFramedSlackMatrixBounds.baseHeight m G ≤ (cap + 2) * G := by
+  have HT := Nat.mul_le_mul_right G h
+  unfold IntegralMixedFramedSlackMatrixBounds.baseHeight
+  nlinarith only [HT]
+
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+
+-- The public bank theorem has no supplied per-stage bank, source, or mass bound.
+theorem actual_bank (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) (key : List Bool) :
+    ((IntegralMixedFramedHistoryFamilyBits.family (parameters hn ht ha) (plan hn ht ha R)
+      (data hn ht ha R)).state key).bank.Bounds
+      (bankSlope hn ht ha (pairFst key) * R (pairFst key) + bankOffset hn ht ha (pairFst key)) :=
+  bank_bounds hn ht ha R key
+
+theorem actual_matrix (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) (key : List Bool) (i : ℕ)
+    (r s : Fin (rank (parameters hn ht ha) (plan hn ht ha R) (data hn ht ha R) key)) :
+    (matrix (parameters hn ht ha) (plan hn ht ha R) (data hn ht ha R) key i r s).natAbs ≤
+      2 ^ (matrixSlope hn ht ha (pairFst key) * R (pairFst key) + matrixOffset hn ht ha (pairFst key)) :=
+  matrix_bound hn ht ha R key i r s
+
+theorem original_budgets (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) :
+    BinaryFn (bankSlope hn ht ha) ∧ BinaryFn (bankOffset hn ht ha) ∧
+      BinaryFn (matrixSlope hn ht ha) ∧ BinaryFn (matrixOffset hn ht ha) :=
+  ⟨bankSlope_binary hn ht ha, bankOffset_binary hn ht ha,
+    matrixSlope_binary hn ht ha, matrixOffset_binary hn ht ha⟩
+
+theorem actual_causal_syntax (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) :
+    FamilyInputs (parameters hn ht ha) (plan hn ht ha R) (fun _ => 3) (factor hn ht ha)
+      (seed hn ht ha R) := familyInputs hn ht ha R
+
+end MarkedRecordRadiusHeightRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.familyInputs
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.seedSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.seedOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.bankSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.bankOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.bank_bounds
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.certified_bank_bounds
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.matrix_bound
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.certified_matrix_bound
+#print axioms MarkedRecordRadiusHeightRegression.actual_bank
+#print axioms MarkedRecordRadiusHeightRegression.actual_matrix
+#print axioms MarkedRecordRadiusHeightRegression.original_budgets
+#print axioms MarkedRecordRadiusHeightRegression.actual_causal_syntax
+end RoadmapInternalG77NativeBankMatrixGrowth
+
+section RoadmapInternalG77NativeRawGrowth
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR FixedWidthPolynomial
+open IntegralMixedAuxiliaryMarkedRecordRadiusHeight
+
+namespace MarkedRecordRadiusRawRegression
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+
+theorem actual_raw (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) (key : List Bool) (k : ℕ)
+    (r s : Fin (count ((actualFamily hn ht ha R).birth key) ((actualFamily hn ht ha R).width key))) :
+    (IntegralMixedCutMatrix.coefficientMatrix ((actualFamily hn ht ha R).state key)
+      ((actualFamily hn ht ha R).birth_bound key) ((actualFamily hn ht ha R).rule key)
+      ((actualFamily hn ht ha R).kind key) k r s).natAbs ≤
+      2 ^ (rawSlope hn ht ha (pairFst key) * R (pairFst key) + rawOffset hn ht ha (pairFst key)) :=
+  raw_coefficient_bound hn ht ha R key k r s
+
+theorem arbitrary_natural_top (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) (key : List Bool) (r s : ℕ) :
+    (IntegralCriticalTotalSnapshotBits.integerEntry
+      (IntegralMixedNormalizationTopBits.top (actualFamily hn ht ha R) key) r s).natAbs ≤
+      2 ^ (rawSlope hn ht ha (pairFst key) * R (pairFst key) + rawOffset hn ht ha (pairFst key)) :=
+  natural_top_bound hn ht ha R key r s
+
+theorem zero_radius_raw (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (key : List Bool) (k : ℕ)
+    (r s : Fin (count ((actualFamily hn ht ha (fun _ => 0)).birth key)
+      ((actualFamily hn ht ha (fun _ => 0)).width key))) :
+    (IntegralMixedCutMatrix.coefficientMatrix ((actualFamily hn ht ha (fun _ => 0)).state key)
+      ((actualFamily hn ht ha (fun _ => 0)).birth_bound key) ((actualFamily hn ht ha (fun _ => 0)).rule key)
+      ((actualFamily hn ht ha (fun _ => 0)).kind key) k r s).natAbs ≤ 2 ^ rawOffset hn ht ha (pairFst key) := by
+  simpa only [Nat.mul_zero, Nat.zero_add] using raw_coefficient_bound hn ht ha (fun _ => 0) key k r s
+
+theorem original_budget (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) : BinaryFn (rawSlope hn ht ha) ∧ BinaryFn (rawOffset hn ht ha) :=
+  ⟨rawSlope_binary hn ht ha, rawOffset_binary hn ht ha⟩
+
+end MarkedRecordRadiusRawRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.fallback_bounds
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.originalBounds
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.raw_ceiling_affine
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.raw_coefficient_bound
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.top_bound
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.natural_top_bound
+#print axioms MarkedRecordRadiusRawRegression.actual_raw
+#print axioms MarkedRecordRadiusRawRegression.arbitrary_natural_top
+#print axioms MarkedRecordRadiusRawRegression.zero_radius_raw
+#print axioms MarkedRecordRadiusRawRegression.original_budget
+end RoadmapInternalG77NativeRawGrowth
+
+section RoadmapInternalG77NativeCriticalGrowth
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR FixedWidthPolynomial
+open IntegralMixedAuxiliaryMarkedRecordRadiusHeight
+open IntegralMixedAuxiliaryMarkedRecordPlan (parameters plan)
+attribute [local irreducible] criticalState IntegralMixedSourceIntegerRecordAppend.plan
+  IntegralMixedSourceIntegerRecordAppend.data
+
+namespace MarkedRecordRadiusCriticalRegression
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+
+theorem actual_critical (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) (key : List Bool)
+    (rule : IntegralMixedHistory.CriticalRule ((parameters hn ht ha).ambient (pairFst key)))
+    (hc : (IntegralMixedFramedHistoryFamilyBits.instruction (parameters hn ht ha) (plan hn ht ha R) key).command =
+      .critical rule) (k : ℕ)
+    (r s : Fin (count ((actualFamily hn ht ha R).birth key) ((actualFamily hn ht ha R).width key))) :
+    (Algebra.leftMulMatrix (criticalState hn ht ha R key).sampler.scalarPrefix.basis.finBasis
+      ((IntegralMixedHistory.criticalPolynomial (criticalState hn ht ha R key)
+        ((actualFamily hn ht ha R).birth_bound key) rule).coeff k) r s).natAbs ≤
+      2 ^ (criticalSlope hn ht ha (pairFst key) * R (pairFst key) + criticalOffset hn ht ha (pairFst key)) :=
+  critical_coefficient_bound hn ht ha R key rule hc k r s
+
+theorem zero_radius_critical (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (key : List Bool)
+    (rule : IntegralMixedHistory.CriticalRule ((parameters hn ht ha).ambient (pairFst key)))
+    (hc : (IntegralMixedFramedHistoryFamilyBits.instruction (parameters hn ht ha) (plan hn ht ha (fun _ => 0)) key).command =
+      .critical rule) (k : ℕ)
+    (r s : Fin (count ((actualFamily hn ht ha (fun _ => 0)).birth key) ((actualFamily hn ht ha (fun _ => 0)).width key))) :
+    (Algebra.leftMulMatrix (criticalState hn ht ha (fun _ => 0) key).sampler.scalarPrefix.basis.finBasis
+      ((IntegralMixedHistory.criticalPolynomial (criticalState hn ht ha (fun _ => 0) key)
+        ((actualFamily hn ht ha (fun _ => 0)).birth_bound key) rule).coeff k) r s).natAbs ≤
+      2 ^ criticalOffset hn ht ha (pairFst key) := by
+  simpa only [Nat.mul_zero, Nat.zero_add] using critical_coefficient_bound hn ht ha (fun _ => 0) key rule hc k r s
+
+theorem original_budget (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) : BinaryFn (criticalSlope hn ht ha) ∧ BinaryFn (criticalOffset hn ht ha) :=
+  ⟨criticalSlope_binary hn ht ha, criticalOffset_binary hn ht ha⟩
+
+end MarkedRecordRadiusCriticalRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.criticalFactor_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.criticalSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.criticalOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.criticalState_eq
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.critical_coefficient_bound
+#print axioms MarkedRecordRadiusCriticalRegression.actual_critical
+#print axioms MarkedRecordRadiusCriticalRegression.zero_radius_critical
+#print axioms MarkedRecordRadiusCriticalRegression.original_budget
+end RoadmapInternalG77NativeCriticalGrowth
+
+section RoadmapInternalG77CartesianQuerySigns
+namespace ParameterizedGridQuerySignRegression
+open LeanCanny.Algebra LeanCanny.Geometry Polynomial Set
+open ParameterizedGridQuerySign SymbolicScaledSquarefree
+open scoped Classical
+
+noncomputable def head : (ℤ[X])[X] := Polynomial.X ^ 2 - Polynomial.C 1
+noncomputable def query : MvPolynomial (Fin 2) ℤ[X] := MvPolynomial.X 0 - MvPolynomial.X 1
+
+theorem independent_roots (r : ℝ) (i : Fin 2) :
+    head.eval₂ (scalarEvaluation r) (![1, -1] i) = 0 := by
+  fin_cases i <;> norm_num [head]
+
+theorem independent_query_value (r : ℝ) : query.eval₂ (scalarEvaluation r) ![1, -1] = 2 := by
+  norm_num [query]
+
+-- This Cartesian tuple violates x₀=x₁. Its query value is nevertheless
+-- annihilated by the constructed certificate, without assuming that constraint.
+theorem off_diagonal_annihilated (r : ℝ) :
+    (annihilator (fun _ : Fin 2 => head) query).eval₂ (scalarEvaluation r) 2 = 0 := by
+  simpa only [independent_query_value] using
+    annihilator_root (fun _ : Fin 2 => head) query r ![1, -1] (independent_roots r)
+
+example : annihilator (fun _ : Fin 2 => head) query ≠ 0 := by
+  apply annihilator_ne_zero
+  · intro i
+    exact Polynomial.monic_X_pow_sub_C 1 (by decide)
+  · intro i
+    rw [head, Polynomial.natDegree_X_pow_sub_C]
+    decide
+
+example (r : ℝ) : query.eval₂ (scalarEvaluation r) ![1, -1] ≠ 0 := by
+  rw [independent_query_value]
+  norm_num
+
+-- Zero queries and the empty Cartesian grid are covered too.
+example : annihilator (fun i : Fin 0 => Fin.elim0 i) (0 : MvPolynomial (Fin 0) ℤ[X]) ≠ 0 :=
+  annihilator_ne_zero _ _ (fun i => Fin.elim0 i) (fun i => Fin.elim0 i)
+
+example {n : ℕ} (p : Fin n → (ℤ[X])[X]) (q : MvPolynomial (Fin n) ℤ[X])
+    (hp : ∀ i, (p i).Monic) (hpos : ∀ i, 0 < (p i).natDegree) :
+    ∃ M : ℕ, ∀ a b : ℝ, (M : ℝ) + 1 ≤ a →
+      ∀ x : C(Ioo a b, Fin n → ℝ),
+        (∀ t i, (p i).eval₂ (scalarEvaluation t.val) (x t i) = 0) →
+        ∀ s t : Ioo a b,
+          SignType.sign (q.eval₂ (scalarEvaluation s.val) (x s)) =
+            SignType.sign (q.eval₂ (scalarEvaluation t.val) (x t)) :=
+  exists_sign_cutoff p q hp hpos
+
+end ParameterizedGridQuerySignRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.annihilator_ne_zero,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.annihilator_root,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.continuous_query,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.sign_transport,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.exists_sign_cutoff,
+      `ParameterizedGridQuerySignRegression.off_diagonal_annihilated] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Independent Cartesian grid query signs: constructed annihilator, off-diagonal tuple, zero query, actual finite cutoff; six standard-axiom audits."
+end RoadmapInternalG77CartesianQuerySigns
+
+section RoadmapInternalG77CartesianQueryMass
+namespace ParameterizedGridQueryMassRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry Polynomial Set
+open ParameterizedGridQuerySign
+
+example : massBudget 0 0 3 = 12 := by decide
+example : massBudget 2 3 0 = 12800 := by decide
+
+noncomputable def nonmonicHead : (ℤ[X])[X] :=
+  Polynomial.C (Polynomial.X : ℤ[X]) * Polynomial.X - Polynomial.C Polynomial.X
+
+theorem nonmonic_mass (k : ℕ) : coefficientMass (nonmonicHead.coeff k) ≤ 2 ^ 0 := by
+  simp only [nonmonicHead, Polynomial.coeff_sub, Polynomial.coeff_C_mul,
+    Polynomial.coeff_X, Polynomial.coeff_C]
+  split_ifs <;> simp only [mul_one, mul_zero, zero_sub, sub_zero, sub_self,
+    coefficientMass_zero, coefficientMass_neg] <;> simp [coefficientMass]
+
+theorem nonmonic_positive_degree : 0 < nonmonicHead.natDegree := by
+  have h : nonmonicHead.coeff 1 ≠ 0 := by simp [nonmonicHead]
+  exact Nat.zero_lt_one.trans_le (Polynomial.le_natDegree_of_ne_zero h)
+
+-- A bad specialization kills this head completely; no injective map is used.
+example : nonmonicHead.map (Polynomial.evalRingHom (0 : ℤ)) = 0 := by
+  simp [nonmonicHead]
+
+example : annihilator (fun _ : Fin 1 => nonmonicHead) (MvPolynomial.X (0 : Fin 1)) ≠ 0 :=
+  annihilator_ne_zero_of_mass _ _ (fun _ => nonmonic_positive_degree) 0 (fun _ => nonmonic_mass)
+
+example (n W H K : ℕ) :
+    massBudget n W (H + K) = massBudget n W H + 2 * FixedWidthPolynomial.count (n + 1) W * K := by
+  rw [massBudget_affine n W (H + K), massBudget_affine n W H]
+  ring
+
+-- The bound concerns the constructed certificate, not a caller-supplied χ.
+example {n : ℕ} (p : Fin n → (ℤ[X])[X]) (q : MvPolynomial (Fin n) ℤ[X]) (H k : ℕ)
+    (hp : ∀ i j, coefficientMass ((p i).coeff j) ≤ 2 ^ H)
+    (hq : ∀ v, coefficientMass (q.coeff v) ≤ 2 ^ H) :
+    coefficientMass ((annihilator p q).coeff k) ≤
+      2 ^ massBudget n (RelativeAffineGridValueGram.width (fun i => (p i).natDegree) (q.totalDegree + 1)) H :=
+  (NestedMass.coeff_le _ k).trans (annihilator_mass p q H hp hq)
+
+example {n W H : List Bool → ℕ} (hn : UnaryFn n) (hW : UnaryFn W) (hH : BinaryFn H) :
+    BinaryFn (fun q => cutoffBudget (n q) (W q) (H q)) := cutoffBudget_binary hn hW hH
+
+-- All hypotheses concern actual heads, query, roots and an explicit input budget.
+-- No bound or survival premise for an already constructed cut family occurs.
+example {n : ℕ} {a b : ℝ} (p : Fin n → (ℤ[X])[X]) (q : MvPolynomial (Fin n) ℤ[X])
+    (hpos : ∀ i, 0 < (p i).natDegree) (H : ℕ)
+    (hp : ∀ i k, coefficientMass ((p i).coeff k) ≤ 2 ^ H)
+    (hq : ∀ v, coefficientMass (q.coeff v) ≤ 2 ^ H)
+    (ha : (2 : ℝ) ^ cutoffBudget n
+      (RelativeAffineGridValueGram.width (fun i => (p i).natDegree) (q.totalDegree + 1)) H ≤ a)
+    (x : C(Ioo a b, Fin n → ℝ))
+    (hx : ∀ t i, (p i).eval₂ (SymbolicScaledSquarefree.scalarEvaluation t.val) (x t i) = 0)
+    (s t : Ioo a b) :
+    SignType.sign (q.eval₂ (SymbolicScaledSquarefree.scalarEvaluation s.val) (x s)) =
+      SignType.sign (q.eval₂ (SymbolicScaledSquarefree.scalarEvaluation t.val) (x t)) :=
+  sign_after_input_bounds p q hpos H hp hq ha x hx s t
+
+end ParameterizedGridQueryMassRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.massBudget_affine,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.massBudget_binary,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.annihilator_mass,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.annihilator_ne_zero_of_mass,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.cutoffBudget_binary,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.sign_after_input_bounds] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Actual Cartesian query mass: affine operator budget, nonmonic heads, native binary cutoff and sign transport from input bounds; six standard-axiom audits."
+end RoadmapInternalG77CartesianQueryMass

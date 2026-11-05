@@ -1,3 +1,16 @@
+import LeanCanny.Algebra.CoefficientHistoryPrefix
+import LeanCanny.Algebra.CoefficientMixedCriticalBirth
+import LeanCanny.Algebra.CoefficientMixedCutSourceDegree
+import LeanCanny.Encoding.CoefficientMarkedIntegerBirth
+import LeanCanny.Encoding.CoefficientMarkedPreludeActual
+import LeanCanny.Encoding.CoefficientMarkedPreludePrefix
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusGrowth
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusCriticalHeight
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusMatrixHeight
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusRawHeight
+import LeanCanny.Geometry.ParameterizedGridQueryMass
+import LeanCanny.Geometry.ParameterizedGridQuerySign
 import LeanCanny.Algebra.CoefficientMixedCutAtInfinity
 import LeanCanny.Algebra.CoefficientMixedCutDispatcher
 import LeanCanny.Algebra.CoefficientMixedCutSpecialization
@@ -4848,6 +4861,11 @@ factors and repeated roots. The marked integer prelude now has a literal radius-
 with exact native degree/leading preservation. Interpolation converts
 proved native dyadic growth to parameter mass bounds; actual cut births
 specialize to the native next quotient beyond a proved local cutoff.
+The constructed formal marked prelude now specializes at every radius,
+with its command order bound to the literal full-record-plan suffix.
+Actual native banks, raw cuts and critical polynomials have proved affine
+radius height bounds. Independent Cartesian queries have constructed
+annihilators and input-derived sign cutoffs, including nonmonic heads.
 The full recursive symbolic presentation and
 original-only common bounds for its entire guarded graph remain open.
 Effective uniform radius stabilization and the original Boolean frontier-
