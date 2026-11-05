@@ -2323,6 +2323,10 @@ does not identify resource seeds with a constant-radius reader. Alternative
 typed raw-cut kinds at the same saved rule share the original affine height
 bound. The radial same-center squarefree/PSC integer families and their
 closed coefficient frontends are also constructed.
+Constructed canonical term and mandatory leaf queries now have original
+parameter coefficient budgets. The actual single-bank denominator and proper
+rank/near queries have original affine radius bounds, preserving their
+literal native degrees, eta shifts and physical columns.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership

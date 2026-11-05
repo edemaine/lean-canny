@@ -1,3 +1,17 @@
+import LeanCanny.Algebra.CoefficientBankLeafQuery
+import LeanCanny.Algebra.CoefficientBankTermQuery
+import LeanCanny.Algebra.CoefficientIndexedRationalClearing
+import LeanCanny.Algebra.FixedWidthTarskiAffineMass
+import LeanCanny.Algebra.IntegralMixedFramedShiftDegreeCeiling
+import LeanCanny.Encoding.CoefficientMarkedRecordBankDenominator
+import LeanCanny.Encoding.CoefficientMarkedRecordLeafBounds
+import LeanCanny.Encoding.CoefficientMarkedRecordLeafQuery
+import LeanCanny.Encoding.CoefficientMarkedRecordMarkedQueries
+import LeanCanny.Encoding.CoefficientMarkedRecordTermBounds
+import LeanCanny.Encoding.CoefficientMarkedRecordTermQuery
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusShiftHead
+import LeanCanny.Encoding.IntegralMixedRoadmapProperNearRadiusHeight
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRankRadiusHeight
 import LeanCanny.Algebra.IntegralMixedRawKindHeight
 import LeanCanny.Encoding.CoefficientMarkedRecordFieldPhysical
 import LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery
@@ -5014,6 +5028,10 @@ does not identify resource seeds with a constant-radius reader. Alternative
 typed raw-cut kinds at the same saved rule share the original affine height
 bound. The radial same-center squarefree/PSC integer families and their
 closed coefficient frontends are also constructed.
+Constructed canonical term and mandatory leaf queries now have original
+parameter coefficient budgets. The actual single-bank denominator and proper
+rank/near queries have original affine radius bounds, preserving their
+literal native degrees, eta shifts and physical columns.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 Common bounds for every guarded graph query and physical-edge transport,

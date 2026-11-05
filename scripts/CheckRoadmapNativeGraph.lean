@@ -1,3 +1,12 @@
+import LeanCanny.Algebra.CoefficientBankTermQuery
+import LeanCanny.Algebra.FixedWidthTarskiAffineMass
+import LeanCanny.Encoding.CoefficientMarkedRecordBankDenominator
+import LeanCanny.Encoding.CoefficientMarkedRecordLeafBounds
+import LeanCanny.Encoding.CoefficientMarkedRecordLeafQuery
+import LeanCanny.Encoding.CoefficientMarkedRecordMarkedQueries
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusShiftHead
+import LeanCanny.Encoding.IntegralMixedRoadmapProperNearRadiusHeight
+import LeanCanny.Encoding.IntegralMixedRoadmapProperRankRadiusHeight
 import LeanCanny.Encoding.CoefficientMarkedRecordFieldPhysical
 import LeanCanny.Encoding.CoefficientMarkedRecordFieldQueryBounds
 import LeanCanny.Encoding.CoefficientMarkedRecordFieldRadius
@@ -14577,3 +14586,520 @@ example (c : List Bool) (a : Fin (Connectivity.FormulaSignSlotCenteredRadialGrap
 #print axioms FormulaSignSlotRadialCenterPrincipalSource.polynomial_mass
 end RadialCenterPrincipalRegression
 end RoadmapInternalG86ActualCenterPrincipalSource
+
+section RoadmapInternalG87CanonicalBankTermQueries
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open scoped Classical
+namespace BankTermQueryRegression
+
+noncomputable def data : CoefficientBankTermQuery.Arguments ℤ :=
+  ⟨4,1,2,3,-6,fun j=>if j=0 then 3 else 2,
+    fun i=>⟨i.val,lt_trans i.isLt (by decide : 2<3)⟩⟩
+
+-- Logical chronological variable zero uses newest index one, with its OWN power.
+theorem oldest : CoefficientBankTermQuery.numerator data 0=
+    MvPolynomial.C (2:ℤ)*MvPolynomial.X (⟨1,by decide⟩:Fin 3)^
+      UniformIntegralPowerSchedule.birth 4 (2^1) 0 := rfl
+
+theorem newest : CoefficientBankTermQuery.numerator data 1=
+    MvPolynomial.C (3:ℤ)*MvPolynomial.X (⟨0,by decide⟩:Fin 3)^
+      UniformIntegralPowerSchedule.birth 4 (2^1) 1 := rfl
+
+theorem outside : CoefficientBankTermQuery.numerator data 2=0 := rfl
+
+theorem negative_common : CoefficientBankTermQuery.denominator data 27=MvPolynomial.C (-6:ℤ) := rfl
+
+theorem zero_birth (S W N i:ℕ) (q:ℤ) (c:ℕ→ℤ) :
+    CoefficientBankTermQuery.numerator (⟨S,W,0,N,q,c,Fin.elim0⟩:CoefficientBankTermQuery.Arguments ℤ) i=0 := by
+  simp only [CoefficientBankTermQuery.numerator,Nat.not_lt_zero,dite_false]
+
+-- A specialization with a kernel is allowed, and no denominator unit is required.
+theorem vanishing_common (p:LeanCanny.ETR.Term) (A:CoefficientBankTermQuery.Arguments ℤ[X]) :
+    MvPolynomial.map (evalRingHom 0) (CoefficientBankTermQuery.polynomial A p)=
+      CoefficientBankTermQuery.polynomial (A.map (evalRingHom 0)) p :=
+  CoefficientBankTermQuery.polynomial_map _ _ _
+
+-- Noninjective physical-column renaming commutes with the literal clearing sum.
+theorem collapsed_columns (p:LeanCanny.ETR.Term) (n d:ℕ→MvPolynomial (Fin 2) ℤ[X]) :
+    MvPolynomial.rename (fun _:Fin 2=>(0:Fin 1)) (CoefficientIndexedRationalClearing.term p n d)=
+      CoefficientIndexedRationalClearing.term p
+        (fun i=>MvPolynomial.rename (fun _:Fin 2=>(0:Fin 1)) (n i))
+        (fun i=>MvPolynomial.rename (fun _:Fin 2=>(0:Fin 1)) (d i)) :=
+  CoefficientIndexedRationalClearing.term_rename _ _ _ _
+
+end BankTermQueryRegression
+
+#print axioms LeanCanny.Algebra.CoefficientIndexedRationalClearing.cleared_map
+#print axioms LeanCanny.Algebra.CoefficientIndexedRationalClearing.term_map
+#print axioms LeanCanny.Algebra.CoefficientIndexedRationalClearing.term_rename
+#print axioms LeanCanny.Algebra.CoefficientBankTermQuery.numerator_map
+#print axioms LeanCanny.Algebra.CoefficientBankTermQuery.polynomial_map
+#print axioms LeanCanny.Algebra.CoefficientBankTermQuery.ofBank_map
+#print axioms LeanCanny.Algebra.CoefficientBankTermQuery.polynomial_native
+#print axioms BankTermQueryRegression.oldest
+#print axioms BankTermQueryRegression.newest
+#print axioms BankTermQueryRegression.outside
+#print axioms BankTermQueryRegression.negative_common
+#print axioms BankTermQueryRegression.zero_birth
+#print axioms BankTermQueryRegression.vanishing_common
+#print axioms BankTermQueryRegression.collapsed_columns
+end RoadmapInternalG87CanonicalBankTermQueries
+
+section RoadmapInternalG87ActualMarkedTermQueries
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open scoped Classical
+namespace MarkedTermQueriesRegression
+set_option backward.isDefEq.respectTransparency false
+variable {n:List Bool→ℕ} {t:List Bool→LeanCanny.ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+
+-- The serialized graph expressions use variables for the large radius leaves.
+theorem regular_literal (ctx:List Bool):
+    CoefficientMarkedRecordTermQuery.termSyntax (IntegralMixedMarkedPointTest.regularWord n t) ctx=
+      LeanCanny.ETR.BoundedMarkedParameterTerm.regular
+        (t (IntegralMixedAuxiliaryMarkedIntegerSource.original ctx)) (IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx)
+        (IntegralMixedMarkedPointTest.degree t ctx):=
+  CoefficientMarkedRecordMarkedQueries.literal_term false ctx
+
+theorem mark_literal (ctx:List Bool):
+    CoefficientMarkedRecordTermQuery.termSyntax (IntegralMixedMarkedPointTest.markWord n t) ctx=
+      LeanCanny.ETR.BoundedMarkedParameterTerm.mark
+        (t (IntegralMixedAuxiliaryMarkedIntegerSource.original ctx)) (IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx):=
+  CoefficientMarkedRecordMarkedQueries.literal_term true ctx
+
+attribute [local irreducible] IntegralMixedSourceIntegerRecordAppend.plan
+  IntegralMixedFramedHistoryFamilyBits.family IntegralFramedPhysicalSquare.sampler
+  IntegralMixedFramedBankTermBits.polynomial CoefficientMarkedRecordTermQuery.arguments
+  CoefficientMarkedRecordTermQuery.polynomial
+
+-- This target names the literal CERTIFIED sampler, rather than a supplied map.
+theorem full_regular (ctx:List Bool) {R:List Bool→ℕ} (hR:BinaryFn R)
+    (hlarge:CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx≤R ctx):
+    HEq (MvPolynomial.map (evalRingHom ((2:ℤ)^R ctx))
+      (CoefficientMarkedRecordTermQuery.polynomial hn ht ha (IntegralMixedMarkedPointTest.regularWord n t)
+        ctx (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl))
+      (MvPolynomial.rename
+        (IntegralFramedPhysicalSquare.sampler (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha hR)
+          (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha hR)
+          (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedData hn ht ha hR)
+          (CoefficientMarkedRecordRowLayout.key (n:=n) ctx (IntegralMixedCausalRecordPlanBits.count ctx) [])).scalar
+        (IntegralMixedFramedBankTermBits.polynomial (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha hR)
+          (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha hR)
+          (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedData hn ht ha hR)
+          (IntegralMixedMarkedPointTest.regularWord n t)
+          (CoefficientMarkedRecordRowLayout.key (n:=n) ctx (IntegralMixedCausalRecordPlanBits.count ctx) []))):=by
+  have H:=CoefficientMarkedRecordMarkedQueries.specializes hn ht ha false ctx hR
+    (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl [] hlarge
+  dsimp only [CoefficientMarkedRecordMarkedQueries.polynomial,CoefficientMarkedRecordMarkedQueries.word] at H
+  exact H
+
+theorem original_budget : BinaryFn (CoefficientMarkedRecordTermQuery.coefficientBudget hn ht ha
+    (CoefficientMarkedRecordMarkedQueries.word n t true)):=
+  CoefficientMarkedRecordMarkedQueries.coefficientBudget_binary hn ht ha true
+
+theorem mark_parameter_coefficients (ctx:List Bool) (k:ℕ) (hk:k≤IntegralMixedCausalRecordPlanBits.count ctx)
+    (e:Fin (CoefficientMarkedRecordTermQuery.arguments hn ht ha ctx k hk).dimension→₀ ℕ):
+    ((CoefficientMarkedRecordMarkedQueries.polynomial hn ht ha true ctx k hk).coeff e).natDegree≤
+        CoefficientMarkedRecordTermQuery.slope hn ht ha (CoefficientMarkedRecordMarkedQueries.word n t true) ctx ∧
+      coefficientMass ((CoefficientMarkedRecordMarkedQueries.polynomial hn ht ha true ctx k hk).coeff e)≤
+        2^CoefficientMarkedRecordTermQuery.coefficientBudget hn ht ha (CoefficientMarkedRecordMarkedQueries.word n t true) ctx:=
+  CoefficientMarkedRecordMarkedQueries.coefficient_degree_mass hn ht ha true ctx k hk e
+end MarkedTermQueriesRegression
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTermQuery.arguments_specialize
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTermQuery.polynomial_specialize
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTermQuery.mapped_mass
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTermQuery.coefficient_degree_mass
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTermQuery.coefficientBudget_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordMarkedQueries.specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordMarkedQueries.literal_term
+#print axioms MarkedTermQueriesRegression.regular_literal
+#print axioms MarkedTermQueriesRegression.mark_literal
+#print axioms MarkedTermQueriesRegression.full_regular
+#print axioms MarkedTermQueriesRegression.original_budget
+#print axioms MarkedTermQueriesRegression.mark_parameter_coefficients
+end RoadmapInternalG87ActualMarkedTermQueries
+
+section RoadmapInternalG87MandatoryLeafQuery
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open scoped Classical
+namespace BankLeafQueryRegression
+
+theorem zero_birth (p:ℤ[X]) (D i S W N:ℕ) (a:ℤ) (c:ℕ→ℤ):
+    CoefficientBankLeafQuery.polynomial
+      (⟨S,W,0,N,a,c,Fin.elim0⟩:CoefficientBankTermQuery.Arguments ℤ) p D i=0:=by
+  simp only [CoefficientBankLeafQuery.polynomial,Nat.not_lt_zero,dite_false]
+
+-- Killing the true top coefficient DOES NOT change the fixed clearing degree.
+theorem kernel_fixed_degree (A:CoefficientBankTermQuery.Arguments ℤ[X]) (D i:ℕ):
+    MvPolynomial.map (evalRingHom 0)
+      (CoefficientBankLeafQuery.polynomial A (C (X:ℤ[X])*X^2+1) D i)=
+        CoefficientBankLeafQuery.polynomial (A.map (evalRingHom 0)) 1 D i:=by
+  rw [CoefficientBankLeafQuery.polynomial_map]
+  have HP:(C (X:ℤ[X])*X^2+1).map (evalRingHom (0:ℤ))=1:=by
+    simp only [Polynomial.map_add,Polynomial.map_mul,Polynomial.map_C,Polynomial.map_pow,
+      Polynomial.map_X,Polynomial.map_one,Polynomial.coe_evalRingHom,Polynomial.eval_X,
+      Polynomial.C_0,zero_mul,zero_add]
+  rw [HP]
+
+variable {n:List Bool→ℕ} {t:List Bool→LeanCanny.ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+
+-- All native dispatch branches, including default, retain their actual bound.
+theorem all_tags_advertised (ctx:List Bool) (R:List Bool→ℕ) (i:ℕ):
+    CoefficientMarkedRecordLeafQuery.degree hn ht ha ctx i=
+      (IntegralMixedAuxiliaryMarkedIntegerSource.source hn ht ha R).degree
+        (pair ctx (BinaryNatCode.encode i)):=
+  CoefficientMarkedRecordLeafQuery.degree_native hn ht ha ctx R i
+
+theorem original_full_prefix (ctx:List Bool) (R:List Bool→ℕ) (i:ℕ)
+    (hc:CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx≤R ctx):
+    HEq (MvPolynomial.map (evalRingHom ((2:ℤ)^R ctx))
+      (CoefficientMarkedRecordLeafQuery.polynomial hn ht ha ctx
+        (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl i))
+      (CoefficientMarkedRecordLeafQuery.nativePolynomial hn ht ha ctx R
+        (IntegralMixedCausalRecordPlanBits.count ctx) [] i):=
+  CoefficientMarkedRecordLeafQuery.specializes hn ht ha ctx R _ le_rfl [] i hc
+
+attribute [local irreducible] CoefficientMarkedRecordLeafQuery.nativeArguments
+  CoefficientMarkedRecordLeafQuery.nativePolynomial CoefficientBankLeafQuery.scalars
+  IntegralMixedAuxiliaryMarkedIntegerSource.source
+
+theorem literal_native_recipe (ctx:List Bool) (R:List Bool→ℕ) (k i:ℕ)
+    (hi:i<(CoefficientMarkedRecordLeafQuery.nativeArguments hn ht ha ctx R k []).birth):
+    CoefficientMarkedRecordLeafQuery.nativePolynomial hn ht ha ctx R k [] i=
+      ((IntegerPolynomialRationalPointSource.source (IntegralMixedAuxiliaryMarkedIntegerSource.source hn ht ha R)
+        (CoefficientBankLeafQuery.scalars (CoefficientMarkedRecordLeafQuery.nativeArguments hn ht ha ctx R k []) i)
+        (fun _=>UniformIntegralPowerSchedule.birth (CoefficientMarkedRecordLeafQuery.nativeArguments hn ht ha ctx R k []).horizon
+          (2^(CoefficientMarkedRecordLeafQuery.nativeArguments hn ht ha ctx R k []).width) i)).polynomial
+            (pair ctx (BinaryNatCode.encode i))).toMvPolynomial
+              ((CoefficientMarkedRecordLeafQuery.nativeArguments hn ht ha ctx R k []).column
+                ⟨(CoefficientMarkedRecordLeafQuery.nativeArguments hn ht ha ctx R k []).birth-1-i,by omega⟩):=
+  CoefficientMarkedRecordLeafQuery.native_recipe hn ht ha ctx R k [] i hi
+
+end BankLeafQueryRegression
+#print axioms LeanCanny.Algebra.CoefficientBankLeafQuery.polynomial_map
+#print axioms LeanCanny.Algebra.CoefficientBankLeafQuery.polynomial_native
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordLeafQuery.degree_native
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordLeafQuery.specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordLeafQuery.native_recipe
+#print axioms BankLeafQueryRegression.zero_birth
+#print axioms BankLeafQueryRegression.kernel_fixed_degree
+#print axioms BankLeafQueryRegression.all_tags_advertised
+#print axioms BankLeafQueryRegression.original_full_prefix
+#print axioms BankLeafQueryRegression.literal_native_recipe
+end RoadmapInternalG87MandatoryLeafQuery
+
+section RoadmapInternalG87MandatoryLeafQueryBounds
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open scoped Classical
+namespace RecordLeafBoundsRegression
+set_option backward.isDefEq.respectTransparency false
+variable {n:List Bool→ℕ} {t:List Bool→LeanCanny.ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+
+theorem original_only : BinaryFn (CoefficientMarkedRecordLeafQuery.coefficientBudget hn ht ha):=
+  CoefficientMarkedRecordLeafQuery.coefficientBudget_binary hn ht ha
+
+-- The final prelude leaf is covered by the SAME budget as every other leaf.
+theorem final_leaf_cap (ctx:List Bool):
+    CoefficientMarkedRecordLeafQuery.degree hn ht ha ctx
+      (IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx+7)≤
+        CoefficientMarkedRecordLeafQuery.degreeCap hn ht ha ctx:=
+  CoefficientMarkedRecordLeafQuery.degree_le_cap hn ht ha ctx _ (by omega)
+
+attribute [local irreducible] CoefficientMarkedRecordLeafQuery.polynomial
+  CoefficientMarkedRecordTermQuery.arguments
+
+theorem full_last_leaf (ctx:List Bool) (r:ℕ)
+    (hc:CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx≤r):
+    MvMass.mass (MvPolynomial.map (evalRingHom ((2:ℤ)^r))
+      (CoefficientMarkedRecordLeafQuery.polynomial hn ht ha ctx
+        (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl
+        (IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx+7)))≤
+      2^(CoefficientMarkedRecordLeafQuery.slope hn ht ha ctx*r+
+        CoefficientMarkedRecordLeafQuery.offset hn ht ha ctx):=
+  CoefficientMarkedRecordLeafQuery.mapped_mass hn ht ha ctx (fun _=>r) _ le_rfl [] _ (by omega) hc
+
+theorem all_full_leaf_coefficients (ctx:List Bool) (i:ℕ)
+    (hi:i<IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx+8)
+    (e:Fin (CoefficientMarkedRecordTermQuery.arguments hn ht ha ctx
+      (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl).dimension→₀ ℕ):
+    ((CoefficientMarkedRecordLeafQuery.polynomial hn ht ha ctx
+      (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl i).coeff e).natDegree≤
+        CoefficientMarkedRecordLeafQuery.slope hn ht ha ctx ∧
+      coefficientMass ((CoefficientMarkedRecordLeafQuery.polynomial hn ht ha ctx
+        (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl i).coeff e)≤
+          2^CoefficientMarkedRecordLeafQuery.coefficientBudget hn ht ha ctx:=
+  CoefficientMarkedRecordLeafQuery.coefficient_degree_mass hn ht ha ctx _ le_rfl i hi e
+
+theorem empty_raw_prefix (ctx:List Bool) (i:ℕ)
+    (hi:i<IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx+8)
+    (e:Fin (CoefficientMarkedRecordTermQuery.arguments hn ht ha ctx 0 (Nat.zero_le _)).dimension→₀ ℕ):
+    ((CoefficientMarkedRecordLeafQuery.polynomial hn ht ha ctx 0 (Nat.zero_le _) i).coeff e).natDegree≤
+      CoefficientMarkedRecordLeafQuery.slope hn ht ha ctx ∧
+      coefficientMass ((CoefficientMarkedRecordLeafQuery.polynomial hn ht ha ctx 0 (Nat.zero_le _) i).coeff e)≤
+        2^CoefficientMarkedRecordLeafQuery.coefficientBudget hn ht ha ctx:=
+  CoefficientMarkedRecordLeafQuery.coefficient_degree_mass hn ht ha ctx 0 (Nat.zero_le _) i hi e
+
+end RecordLeafBoundsRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordLeafQuery.degreeCap_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordLeafQuery.slope_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordLeafQuery.offset_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordLeafQuery.coefficientBudget_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordLeafQuery.mapped_mass
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordLeafQuery.coefficient_degree_mass
+#print axioms RecordLeafBoundsRegression.original_only
+#print axioms RecordLeafBoundsRegression.final_leaf_cap
+#print axioms RecordLeafBoundsRegression.full_last_leaf
+#print axioms RecordLeafBoundsRegression.all_full_leaf_coefficients
+#print axioms RecordLeafBoundsRegression.empty_raw_prefix
+end RoadmapInternalG87MandatoryLeafQueryBounds
+
+section RoadmapInternalG87ActualBankDenominator
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open scoped Classical
+namespace BankDenominatorRegression
+
+theorem empty_bank (i:ℕ):
+    CoefficientMarkedRecordBankDenominator.zeroExtended (R:=ℤ[X]) (m:=0) Fin.elim0 i=0:=by
+  simp only [CoefficientMarkedRecordBankDenominator.zeroExtended,Nat.not_lt_zero,dite_false]
+
+theorem boundary {R:Type*} [Zero R] {m:ℕ} (d:Fin m→R):
+    CoefficientMarkedRecordBankDenominator.zeroExtended d m=0:=by
+  simp only [CoefficientMarkedRecordBankDenominator.zeroExtended,Nat.lt_irrefl,dite_false]
+
+variable {n:List Bool→ℕ} {t:List Bool→LeanCanny.ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+
+theorem full_native_denominator (ctx:List Bool) (R:List Bool→ℕ) (aux:List Bool) (i:ℕ)
+    (hc:CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx≤R ctx):
+    (CoefficientMarkedRecordBankDenominator.polynomial hn ht ha ctx
+      (IntegralMixedCausalRecordPlanBits.count ctx) i).eval ((2:ℤ)^R ctx)=
+        IntegralMixedFramedCriticalGuardBits.atKey (IntegralMixedAuxiliaryMarkedRecordRadiusHeight.actualFamily hn ht ha R)
+          (CoefficientMarkedRecordRowLayout.key (n:=n) ctx (IntegralMixedCausalRecordPlanBits.count ctx) aux) i:=
+  CoefficientMarkedRecordBankDenominator.specializes hn ht ha ctx R _ le_rfl aux hc i
+
+theorem all_slot_coefficients (ctx:List Bool) (k:ℕ) (hk:k≤IntegralMixedCausalRecordPlanBits.count ctx) (i:ℕ):
+    (CoefficientMarkedRecordBankDenominator.polynomial hn ht ha ctx k i).natDegree≤
+        IntegralMixedAuxiliaryMarkedRecordRadiusHeight.bankSlope hn ht ha ctx ∧
+      coefficientMass (CoefficientMarkedRecordBankDenominator.polynomial hn ht ha ctx k i)≤
+        2^CoefficientMarkedRecordBankDenominator.coefficientBudget hn ht ha ctx:=
+  CoefficientMarkedRecordBankDenominator.degree_mass hn ht ha ctx k hk i
+
+theorem original_budget:BinaryFn (CoefficientMarkedRecordBankDenominator.coefficientBudget hn ht ha):=
+  CoefficientMarkedRecordBankDenominator.coefficientBudget_binary hn ht ha
+
+end BankDenominatorRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordBankDenominator.specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordBankDenominator.degree_mass
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordBankDenominator.coefficientBudget_binary
+#print axioms BankDenominatorRegression.empty_bank
+#print axioms BankDenominatorRegression.boundary
+#print axioms BankDenominatorRegression.full_native_denominator
+#print axioms BankDenominatorRegression.all_slot_coefficients
+#print axioms BankDenominatorRegression.original_budget
+end RoadmapInternalG87ActualBankDenominator
+
+section RoadmapInternalG87DirectPrincipalAffineMass
+open LeanCanny.Algebra LeanCanny.Encoding Polynomial
+open FixedWidthTarskiMass
+open scoped Classical
+namespace PrincipalAffineRegression
+
+-- The installed polynomial is independent of the arithmetic encoding width.
+theorem width_irrelevant (F : FixedWidthTarskiPrincipalBits.Family) (c : List Bool) (j W : ℕ) :
+    FixedWidthTarskiPrincipalBits.polynomial {F with width := fun _ => W} c j =
+      FixedWidthTarskiPrincipalBits.polynomial F c j := rfl
+
+-- Even width zero needs no native degree-fit or mass certificate premise here.
+theorem zero_width (F : FixedWidthTarskiPrincipalBits.Family) (c : List Bool) (j dp dq bp bq : ℕ)
+    (hp : (F.head c).natDegree ≤ dp) (hq : (F.query c).natDegree ≤ dq)
+    (hP : ∀ i, MvMass.mass ((F.head c).coeff i) ≤ 2^bp)
+    (hQ : ∀ i, MvMass.mass ((F.query c).coeff i) ≤ 2^bq) :
+    MvMass.mass (FixedWidthTarskiPrincipalBits.polynomial {F with width := fun _ => 0} c j) ≤
+      2^principalMass (F.degree c) (F.seedDegree c) (F.bound c) dp dq bp bq :=
+  principal_mass_direct _ c j dp dq bp bq hp hq hP hQ
+
+-- An undersized encoder CAN cancel monomials; the support-box proof is essential.
+theorem collision : FixedWidthKronecker.encode 2 1
+    ((MvPolynomial.X (0 : Fin 2))^2 - MvPolynomial.X (1 : Fin 2) : MvPolynomial (Fin 2) ℤ) = 0 := by
+  simp only [map_sub, map_pow, FixedWidthKronecker.encode]
+  norm_num
+
+example (r : ℕ) : principalMass 2 1 4 2 2 (3*r+7) (5*r+11) ≤
+    principalSlope 2 1 4 3 5*r+principalOffset 2 1 4 2 2 7 11 :=
+  principalMass_affine 2 1 4 2 2 3 5 7 11 r
+end PrincipalAffineRegression
+#print axioms LeanCanny.Algebra.FixedWidthTarskiMass.mass_le_encoded_exact
+#print axioms LeanCanny.Algebra.FixedWidthTarskiMass.principal_mass_direct
+#print axioms LeanCanny.Algebra.FixedWidthTarskiMass.seedMass_affine
+#print axioms LeanCanny.Algebra.FixedWidthTarskiMass.principalMass_affine
+#print axioms LeanCanny.Algebra.FixedWidthTarskiMass.seedSlope_binary
+#print axioms LeanCanny.Algebra.FixedWidthTarskiMass.principalSlope_binary
+#print axioms LeanCanny.Algebra.FixedWidthTarskiMass.principalOffset_binary
+#print axioms PrincipalAffineRegression.width_irrelevant
+#print axioms PrincipalAffineRegression.zero_width
+#print axioms PrincipalAffineRegression.collision
+end RoadmapInternalG87DirectPrincipalAffineMass
+
+section RoadmapInternalG87ActualProperRankHeight
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open IntegralMixedRoadmapProperRow
+open IntegralMixedOriginalRegularSource (radius_binary)
+namespace ProperRankProfileRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R0 : List Bool → ℕ} (hR0 : BinaryFn R0)
+
+-- Exactly the native mean rank family, with all five epsilon-window statistics.
+theorem all_statistics (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z))
+    (hg : IntegralMixedRoadmapProperRowWitness.RowGood hn ht ha hR0 z) :
+    ∀ power : Fin 3, ∀ negative : Bool, ∀ j,
+      MvMass.mass (FixedWidthTarskiPrincipalBits.polynomial (rankFamily hn ht ha hR0 power negative) z j) ≤
+        2^(rankMassSlope hn ht ha z * R0 (IntegralMixedAuxiliaryMarkedIntegerSource.original (catalogRoot n true z)) +
+          rankMassOffset hn ht ha z) := by
+  intro power negative j
+  exact rank_principal_mass hn ht ha hR0 power negative z j hc ((rank_row_good_iff hn ht ha hR0 z).mp hg)
+
+-- Every extracted delta/epsilon coefficient uses actual own full scalar slots.
+theorem raw_slices (power : Fin 3) (negative : Bool) (z : List Bool) (j delta epsilon : ℕ)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z) :
+    MvMass.mass (rankPhysicalPrincipal hn ht ha hR0 power negative z j delta epsilon) ≤
+      2^(rankMassSlope hn ht ha z * R0 (IntegralMixedAuxiliaryMarkedIntegerSource.original (catalogRoot n true z)) +
+        rankMassOffset hn ht ha z) :=
+  rank_physical_principal_mass hn ht ha hR0 power negative z j delta epsilon hc hg
+
+-- This transports only the concrete syntactic row checks, not words or coefficients.
+theorem syntax_readers {R1 : List Bool → ℕ} (hR1 : BinaryFn R1) (z : List Bool) :
+    IntegralMixedRoadmapProperRowWitness.RowGood hn ht ha hR0 z ↔
+      IntegralMixedRoadmapProperRowWitness.RowGood hn ht ha hR1 z :=
+  (rank_row_good_iff hn ht ha hR0 z).trans (rank_row_good_iff hn ht ha hR1 z).symm
+
+theorem budgets : BinaryFn (rankMassSlope hn ht ha) ∧ BinaryFn (rankMassOffset hn ht ha) :=
+  ⟨rankMassSlope_binary hn ht ha, rankMassOffset_binary hn ht ha⟩
+end ProperRankProfileRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.rank_catalogRoot_FP
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.rank_catalogDegree_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.rankDegree_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.rankMassSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.rankMassOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.rankFamily_installed
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.rank_degree_catalog_of_count
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.rank_row_good_iff
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.rank_principal_mass
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.rank_physical_principal_mass
+#print axioms ProperRankProfileRegression.all_statistics
+#print axioms ProperRankProfileRegression.raw_slices
+#print axioms ProperRankProfileRegression.syntax_readers
+#print axioms ProperRankProfileRegression.budgets
+end RoadmapInternalG87ActualProperRankHeight
+
+section RoadmapInternalG87CertifiedIndependentRadiusShift
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedAuxiliaryMarkedRecordRadiusHeight
+open scoped Classical
+namespace ShiftHeadProfileRegression
+example : IntegralMixedFramedShiftDegreeCeiling.headCeiling 0 0 = 0 := by
+  norm_num [IntegralMixedFramedShiftDegreeCeiling.headCeiling]
+example : IntegralMixedFramedShiftDegreeCeiling.shiftCeiling 0 0 0 = 1 := by
+  norm_num [IntegralMixedFramedShiftDegreeCeiling.shiftCeiling, IntegralMixedFramedShiftDegreeCeiling.headCeiling]
+
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+-- Both genuine eta directions have the same bound, without deleting eta.
+theorem both_directions {R : List Bool → ℕ} (hRad : BinaryFn R)
+    (parent terminal : List Bool → List Bool) (d center : List Bool → ℕ) (q : List Bool) (y : ℕ) :
+    ∀ negative : Bool, MvMass.mass ((shiftedHead hn ht ha hRad parent terminal d center negative q).coeff y) ≤
+      2^(rawSlope hn ht ha (RankedHistoryTask.root (parent q))*R (RankedHistoryTask.root (parent q))+
+        nativeHeadOffset hn ht ha (RankedHistoryTask.root (parent q))+
+        2*shiftAllowance hn ht ha (pair (RankedHistoryTask.root (parent q)) (pairFst (terminal q)))*
+          (coordinateSlope hn ht ha (pairFst (terminal q))*R (pairFst (terminal q))+
+            coordinateOffset hn ht ha (pairFst (terminal q))+1)) :=
+  fun negative => certified_shifted_head_mass hn ht ha hRad parent terminal d center negative q y
+
+-- Equal requested radii collapse the independently charged roots by arithmetic.
+theorem constant_reader (r : ℕ) (parent terminal : List Bool → List Bool) (d center : List Bool → ℕ)
+    (negative : Bool) (q : List Bool) (y : ℕ) :
+    MvMass.mass ((shiftedHead hn ht ha (BinaryFn.const r) parent terminal d center negative q).coeff y) ≤
+      2^((rawSlope hn ht ha (RankedHistoryTask.root (parent q))+
+        2*shiftAllowance hn ht ha (pair (RankedHistoryTask.root (parent q)) (pairFst (terminal q)))*
+          coordinateSlope hn ht ha (pairFst (terminal q)))*r+
+        (nativeHeadOffset hn ht ha (RankedHistoryTask.root (parent q))+
+          2*shiftAllowance hn ht ha (pair (RankedHistoryTask.root (parent q)) (pairFst (terminal q)))*
+            (coordinateOffset hn ht ha (pairFst (terminal q))+1))) := by
+  have HM := certified_shifted_head_mass hn ht ha (BinaryFn.const r) parent terminal d center negative q y
+  exact HM.trans (Nat.pow_le_pow_right (by decide) (le_of_eq (by ring)))
+
+theorem allowance_original : BinaryFn (shiftAllowance hn ht ha) := shiftAllowance_binary hn ht ha
+end ShiftHeadProfileRegression
+#print axioms LeanCanny.Algebra.IntegralMixedFramedShiftDegreeCeiling.headCeiling_binary
+#print axioms LeanCanny.Algebra.IntegralMixedFramedShiftDegreeCeiling.shiftCeiling_binary
+#print axioms LeanCanny.Algebra.IntegralMixedFramedShiftDegreeCeiling.head_degree_bound
+#print axioms LeanCanny.Algebra.IntegralMixedFramedShiftDegreeCeiling.source_degree_bound
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.shiftAllowance_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.certified_shifted_head_mass
+#print axioms ShiftHeadProfileRegression.both_directions
+#print axioms ShiftHeadProfileRegression.constant_reader
+#print axioms ShiftHeadProfileRegression.allowance_original
+end RoadmapInternalG87CertifiedIndependentRadiusShift
+
+section RoadmapInternalG87ActualProperNearHeight
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open IntegralMixedRoadmapProperRow
+open IntegralMixedOriginalRegularSource (radius_binary)
+namespace ProperNearProfileRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R0 : List Bool → ℕ} (hR0 : BinaryFn R0)
+
+-- The installed ordinary Near family keeps both eta directions and epsilon windows.
+theorem all_statistics (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z))
+    (hg : IntegralMixedRoadmapProperRowWitness.RowGood hn ht ha hR0 z) :
+    ∀ right : Bool, ∀ power : Fin 3, ∀ negativeEta negativeEpsilon : Bool, ∀ j,
+      MvMass.mass (FixedWidthTarskiPrincipalBits.polynomial (nearFamily hn ht ha hR0 right power negativeEta negativeEpsilon) z j) ≤
+        2^(nearMassSlope hn ht ha z * R0 (IntegralMixedAuxiliaryMarkedIntegerSource.original (catalogRoot n false z)) +
+          nearMassOffset hn ht ha z) := by
+  intro right power negativeEta negativeEpsilon j
+  exact near_principal_mass hn ht ha hR0 right power negativeEta negativeEpsilon z j hc ((rank_row_good_iff hn ht ha hR0 z).mp hg)
+
+-- Every extracted delta/epsilon coefficient uses actual own full scalar slots.
+theorem raw_slices (right : Bool) (power : Fin 3) (negativeEta negativeEpsilon : Bool) (z : List Bool) (j delta epsilon : ℕ)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z) :
+    MvMass.mass (nearPhysicalPrincipal hn ht ha hR0 right power negativeEta negativeEpsilon z j delta epsilon) ≤
+      2^(nearMassSlope hn ht ha z * R0 (IntegralMixedAuxiliaryMarkedIntegerSource.original (catalogRoot n false z)) +
+        nearMassOffset hn ht ha z) :=
+  near_physical_principal_mass hn ht ha hR0 right power negativeEta negativeEpsilon z j delta epsilon hc hg
+
+-- This transports only the concrete syntactic row checks, not words or coefficients.
+theorem syntax_readers {R1 : List Bool → ℕ} (hR1 : BinaryFn R1) (z : List Bool) :
+    IntegralMixedRoadmapProperRowWitness.RowGood hn ht ha hR0 z ↔
+      IntegralMixedRoadmapProperRowWitness.RowGood hn ht ha hR1 z :=
+  (rank_row_good_iff hn ht ha hR0 z).trans (rank_row_good_iff hn ht ha hR1 z).symm
+
+theorem budgets : BinaryFn (nearMassSlope hn ht ha) ∧ BinaryFn (nearMassOffset hn ht ha) :=
+  ⟨nearMassSlope_binary hn ht ha, nearMassOffset_binary hn ht ha⟩
+end ProperNearProfileRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.near_catalogRoot_FP
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.near_catalogDegree_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.nearDegree_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.nearMassSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.nearMassOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.nearFamily_installed
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.near_degree_catalog_of_count
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.nearShiftAllowance_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.nearHeadSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.nearHeadOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.near_dimensions
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.near_principal_mass
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.near_physical_principal_mass
+#print axioms ProperNearProfileRegression.all_statistics
+#print axioms ProperNearProfileRegression.raw_slices
+#print axioms ProperNearProfileRegression.syntax_readers
+#print axioms ProperNearProfileRegression.budgets
+end RoadmapInternalG87ActualProperNearHeight
