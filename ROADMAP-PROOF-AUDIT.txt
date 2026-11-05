@@ -2740,3 +2740,58 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Whole NoCritical tuple incidence, complete actual principal query maps/common all-role bounds, full graph/global radius transport, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open. General term spatial-degree API remains separate.
+
+44. G92: actual physical field queries and selected radial principal sources
+2026-11-05.
+
+The constructed field query specializes to the literal installed native
+scalar query and actual certified full physical column. Power expansion,
+common-denominator clearing and renameFin.val commute with specialization.
+Original BinaryFn cutoff, creating power and finite target degree are
+derived; actual native affine mass gives every constructed parameter
+coefficient degree/mass. A new binding uses ARBITRARY actual BinaryFn R
+with explicit equal radius VALUES at the two queried roots, including the
+graph R0(original) reader. Source and both own banks use that R directly;
+no equality with constant-function metadata or resource seeds is assumed.
+
+Changing the typed cut tag/coordinate/choice while keeping the same actual
+bank, spatial source and critical rule preserves the original input bounds.
+Every resulting untruncated factor coefficient matrix has the SAME original
+affine radius height, including alternative lower choices. This evaluated
+query-kind bound does not assert parser constancy or construct a formal
+untruncated alternative-factor family by itself.
+
+The actual radial coordinate is truncated at the degree validated AFTER
+center specialization. Its selected squarefree index and exceptional factor
+are identified exactly, including degree0. Concrete radius-first/center MV
+principal families have original degree/mass and closed coefficient programs
+at arbitrary caller modulus. The concrete center-only radius coefficients
+have finite zero guards, and a native Source/Access frontend uses no supplied
+reader. Tests include a repeated root and degree0. SAME-bank PSC acceptance
+and joint bounded descriptor/center existence remain separate.
+
+Reference-lookup clarification for earlier retained-center handoffs: missing
+WordList.get entries return [] and decode to producer label0, which MAY be
+valid. Only decoded labels OUTSIDE the bank count have native zero extension.
+The frozen source theorems and tests use this exact behavior; they do not
+assert that a missing table entry has value zero.
+
+Remaining graph roles, untruncated factor/physical/principal families and
+common bounds, physical-edge transport/global stabilization, joint bounded
+radial descriptor/native Boolean frontier incidence and both original
+unconditional PSPACE targets remain open.
+
+All7 sources (1077 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS20818 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:16094 lines,246 groups.
+Audited 94624 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 201073 transitive constants: no legacy space foundation.
+All11 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Actual Cartesian row-root/native-word transport, final principal graph query composition, full guard/search/edge incidence/common all-role cutoff/global stabilization, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.

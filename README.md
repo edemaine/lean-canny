@@ -2344,6 +2344,11 @@ annihilators for EVERY raw column, with original declared row degrees.
 NoCritical interval and consecutive-prefix comparison queries specialize
 to their own native physical columns, with original coefficient budgets
 and one finite target bound for both probes and all derivative orders.
+All complete raw sampler heads now have original Binary uniform degree,
+positivity and parameter coefficient budgets over EVERY prefix/AUX. Actual
+term queries also have original spatial-degree boxes. Proper parent and
+terminal heads and windows have literal parameter maps; final principal
+query composition and complete graph predicate transport remain separate.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership
