@@ -1,3 +1,6 @@
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedBranchCutTest
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedPrincipalSelection
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedTrailingGuards
 import LeanCanny.Algebra.CoefficientBankTermQuery
 import LeanCanny.Algebra.FixedWidthTarskiAffineMass
 import LeanCanny.Encoding.CoefficientMarkedRecordBankDenominator
@@ -15103,3 +15106,228 @@ end ProperNearProfileRegression
 #print axioms ProperNearProfileRegression.syntax_readers
 #print axioms ProperNearProfileRegression.budgets
 end RoadmapInternalG87ActualProperNearHeight
+
+section RoadmapInternalG88SameBankNativePrincipalSelection
+namespace RadialRetainedPrincipalRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR Polynomial PrincipalSubresultant
+open scoped Classical
+
+noncomputable def changing : Polynomial (Polynomial ℤ) := X ^ 2 - C X
+
+-- The radius polynomial PSC is nonzero, although it vanishes at radius0.
+theorem changing_principal : signedPsc changing changing.derivative 2 1 0 = C 4 * X := by
+  have H : LeanCanny.Algebra.PrincipalSubresultant.subresultantMatrix changing changing.derivative 2 1 0 =
+      !![(0 : Polynomial ℤ), 0, -X; 2, 0, 0; 0, 2, 1] := by
+    ext i j
+    induction j using Fin.addCases <;> simp only [subresultantMatrix_castAdd, subresultantMatrix_natAdd]
+    · rename_i j
+      fin_cases i <;> fin_cases j <;>
+        norm_num [changing, Polynomial.coeff_sub, Polynomial.coeff_C_mul, Polynomial.coeff_one,
+          Polynomial.coeff_X, Fin.castAdd, Fin.natAdd, Fin.castLE]
+    · rename_i j
+      fin_cases i <;> fin_cases j <;>
+        norm_num [changing, Polynomial.coeff_sub, Polynomial.coeff_C_mul, Polynomial.coeff_one,
+          Polynomial.coeff_X, Fin.castAdd, Fin.natAdd, Fin.castLE]
+  rw [signedPsc_of_le _ _ (by decide), psc_def, H, Matrix.det_fin_three]
+  norm_num
+  ring
+
+example : (signedPsc changing changing.derivative 2 1 0).eval 0 = 0 := by rw [changing_principal]; norm_num
+example : (signedPsc changing changing.derivative 2 1 0).coeff 1 = 4 := by rw [changing_principal]; simp
+
+-- Missing table entries decode as producer0, not necessarily an invalid reference.
+example (z : List Bool) (i : ℕ) :
+    FormulaSignSlotRadialBankCenterPolynomial.reference (fun _ => WordList.encode []) z i = 0 := by
+  simp [FormulaSignSlotRadialBankCenterPolynomial.reference, WordList.get_encode]
+  simpa only [Nat.zero_bits] using Nat.fromBitsLE_bits 0
+
+example (B : IntegralFramedBankQuery.Bank) (refs : List Bool → List Bool) (V : List Bool → ℕ)
+    (z : List Bool) (i k : ℕ) :
+    IntegralFramedBankNumeratorAtWidth.value B refs V
+      (pair (pair z (pair (BinaryNatCode.encode i) (BinaryNatCode.encode k))) []) = [] := by
+  rw [IntegralFramedBankNumeratorAtWidth.packet]
+  calc
+    _ = MatrixPower.residueBits (0 : ZMod 1) := congrArg MatrixPower.residueBits (Subsingleton.elim _ _)
+    _ = [] := rfl
+
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+  {R : List Bool → ℕ} (hR : BinaryFn R) (outer : Bool) (radial refs : List Bool → List Bool)
+
+example (hr : radial ∈ FP) (hf : refs ∈ FP) :
+    SpaceFunction (fun q => [decide (FormulaSignSlotRadialRetainedPrincipalGuards.Guards hn ht ha hR outer radial refs q)]) :=
+  FormulaSignSlotRadialRetainedPrincipalGuards.evaluator hn ht ha hR outer radial refs hr hf
+
+example (c w : List Bool)
+    (hv : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer) c w) :
+    ∃ tau ≤ FormulaSignSlotRadialCenterSelection.bound (radial c),
+      ∃ D ≤ FormulaSignSlotRadialCenterSelection.bound (radial c), ∃ k ≤ D,
+        FormulaSignSlotRadialRetainedPrincipalGuards.Guards hn ht ha hR outer radial refs
+          (FormulaSignSlotRadialRetainedPrincipalSelection.query c w tau D k) :=
+  FormulaSignSlotRadialRetainedPrincipalSelection.exists_guards hn ht ha hR outer radial refs c w hv
+
+example (c w : List Bool)
+    (hv : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer) c w)
+    (tau D k : ℕ) (H : FormulaSignSlotRadialRetainedPrincipalGuards.Guards hn ht ha hR outer radial refs
+      (FormulaSignSlotRadialRetainedPrincipalSelection.query c w tau D k)) :
+    (BinaryNatCode.encode k).length ≤ (FormulaSignSlotRadialCenterSelection.bound (radial c)).size := by
+  have HG := (FormulaSignSlotRadialRetainedPrincipalSelection.guards_packet hn ht ha hR outer radial refs c w hv tau D k).mp H
+  have HK : k ≤ D := by
+    by_cases hD : D = 0
+    · have HE : k = 0 := by simpa only [hD, ite_true] using HG.2
+      omega
+    · have HE := HG.2
+      rw [ite_eq_right hD] at HE
+      exact HE.1.le
+  rw [BinaryNatCode.length_encode]
+  exact Nat.size_le_size (HK.trans HG.1.2.1)
+
+#check IntegralFramedBankPolynomialSpace.row_evaluator
+#check IntegralFramedBankPolynomialSource.access
+#check FormulaSignSlotRadialRetainedPrincipalTest.zero_packet
+#check FormulaSignSlotRadialRetainedPrincipalSelection.guards_packet
+#print axioms IntegralFramedBankNumeratorAtWidth.correct
+#print axioms IntegralFramedBankNumeratorAtWidth.evaluator
+#print axioms IntegralFramedBankPolynomialModel.sign
+#print axioms IntegralFramedBankPolynomialModel.mass_bound
+#print axioms IntegralFramedBankPolynomialSpace.access
+#print axioms IntegralFramedBankPolynomialSpace.row_evaluator
+#print axioms IntegralFramedBankPolynomialSource.access
+#print axioms IntegralFramedBankPolynomialTest.packet
+#print axioms IntegralFramedMarkedPolynomialTest.evaluator
+#print axioms FormulaSignSlotRadialRetainedPrincipalTest.evaluator
+#print axioms FormulaSignSlotRadialRetainedPrincipalTest.zero_packet
+#print axioms FormulaSignSlotRadialRetainedPrincipalGuards.evaluator
+#print axioms FormulaSignSlotRadialRetainedPrincipalSelection.guards_packet
+#print axioms FormulaSignSlotRadialRetainedPrincipalSelection.exists_guards
+end RadialRetainedPrincipalRegression
+end RoadmapInternalG88SameBankNativePrincipalSelection
+
+section RoadmapInternalG88SameCenterLiteralBranchCut
+namespace RadialBranchCutRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry LeanCanny.Computation Polynomial PrincipalSubresultant
+open scoped Classical
+
+example : (ScaledPolynomialQuotient.quotient (C (-2) * X + C 3 : Polynomial ℤ)
+    (X ^ 3 + C 7) 1 2).coeff 2 = 4 := by
+  rw [ScaledPolynomialQuotient.top_coefficient]
+  · norm_num
+  · compute_degree
+
+example : (ScaledPolynomialQuotient.quotient (C (-3) : Polynomial ℤ) (X ^ 2) 0 2).coeff 2 = 9 := by
+  rw [ScaledPolynomialQuotient.top_coefficient]
+  · norm_num
+  · simp
+
+example : RealParameterRootBranches.cut (C (-3) : Polynomial (Polynomial ℝ)) = -3 := by
+  rw [FormulaSignSlotRadialCenterBranchCut.cut_formula]
+  norm_num
+
+noncomputable def repeated : Polynomial (Polynomial ℝ) := X ^ 2
+private theorem repeated_degree : repeated.natDegree = 2 := by simp [repeated]
+private theorem repeated_psc_zero : psc repeated repeated.derivative 2 1 0 = 0 := by
+  have H : LeanCanny.Algebra.PrincipalSubresultant.subresultantMatrix repeated repeated.derivative 2 1 0 =
+      !![0, 0, 0; 2, 0, 0; 0, 2, 1] := by
+    funext i j
+    induction j using Fin.addCases <;>
+      simp only [subresultantMatrix_castAdd, subresultantMatrix_natAdd]
+    · rename_i j
+      fin_cases i <;> fin_cases j <;>
+        norm_num [repeated, Fin.castAdd, Fin.natAdd, Fin.castLE]
+    · rename_i j
+      fin_cases i <;> fin_cases j <;>
+        norm_num [repeated, Fin.castAdd, Fin.natAdd, Fin.castLE]
+  rw [psc_def, H, Matrix.det_fin_three]
+  norm_num
+private theorem repeated_psc_one : psc repeated repeated.derivative 2 1 1 = 2 := by
+  rw [psc_right_bound]
+  norm_num [repeated]
+private theorem repeated_index : DomainSquarefree.index repeated = 1 := by
+  have HV := DomainSquarefree.valid_fraction repeated (by rw [repeated_degree]; decide)
+  rw [repeated_degree] at HV
+  by_contra HI
+  have HK : DomainSquarefree.index repeated = 0 := by have H := HV.index_lt; omega
+  have HS := HV.selected
+  rw [HK, repeated_psc_zero, map_zero] at HS
+  exact HS rfl
+
+-- The repeated target has no discriminant, yet its selected branch cut is 4.
+example : RealParameterRootBranches.cut repeated = 4 := by
+  rw [FormulaSignSlotRadialCenterBranchCut.cut_formula, repeated_degree, ite_eq_right (by decide),
+    repeated_index, repeated_psc_one]
+  norm_num [repeated]
+
+example : SpaceFunction FormulaSignSlotRadialCenterBranchCutSource.coefficient :=
+  FormulaSignSlotRadialCenterBranchCutSource.evaluator
+example (c : List Bool) (k : ℕ) : MvMass.mass
+    (FormulaSignSlotRadialCenterBranchCutFamily.polynomial c k) ≤
+      2 ^ FormulaSignSlotRadialCenterBranchCutFamily.massBound c :=
+  FormulaSignSlotRadialCenterBranchCutFamily.polynomial_mass c k
+example (z bits modulus : List Bool) :
+    FormulaSignSlotRadialCenterBranchCutSource.coefficient (pair (pair z bits) modulus) =
+      MatrixPower.residueBits ((((FormulaSignSlotRadialCenterBranchCutSource.polynomial z).coeff
+        (FixedWidthPolynomial.nativeExponent (Equiv.refl _) (FormulaSignSlotRadialCenterBranchCutSource.width z)
+          (Nat.fromBitsLE bits))) : ℤ) : ZMod (Nat.fromBitsLE modulus + 1)) :=
+  FormulaSignSlotRadialCenterBranchCutSource.packet z bits modulus
+#check FormulaSignSlotRadialRetainedBranchCutTest.evaluator
+#check FormulaSignSlotRadialRetainedBranchCutTest.cut_packet
+#check FormulaSignSlotRadialCenterBranchCut.specialization
+#print axioms ScaledPolynomialQuotient.top_coefficient
+#print axioms DomainSquarefree.leading_coefficient
+#print axioms FixedWidthBivariateRebox.reader
+#print axioms FormulaSignSlotRadialCenterBranchCut.cut_formula
+#print axioms FormulaSignSlotRadialCenterBranchCut.specialization
+#print axioms FormulaSignSlotRadialCenterBranchCutFamily.polynomial_degree
+#print axioms FormulaSignSlotRadialCenterBranchCutFamily.polynomial_mass
+#print axioms FormulaSignSlotRadialCenterBranchCutPacked.evaluator
+#print axioms FormulaSignSlotRadialCenterBranchCutCoefficient.specialization
+#print axioms FormulaSignSlotRadialCenterBranchCutCoefficientNative.evaluator
+#print axioms FormulaSignSlotRadialCenterBranchCutCoefficientNative.correct
+#print axioms FormulaSignSlotRadialCenterBranchCutSource.evaluator
+#print axioms FormulaSignSlotRadialRetainedBranchCutTest.evaluator
+#print axioms FormulaSignSlotRadialRetainedBranchCutTest.cut_packet
+end RadialBranchCutRegression
+end RoadmapInternalG88SameCenterLiteralBranchCut
+
+section RoadmapInternalG88SameCenterTrailingIndex
+namespace RadialTrailingGuardsRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation LeanCanny.Connectivity Polynomial
+open scoped Classical
+
+noncomputable def varying (a : ℝ) : Polynomial (Polynomial ℝ) := X ^ 2 + C (C a) * X
+example : (varying 0).natTrailingDegree = 2 := by norm_num [varying]
+example : (varying 0).coeff 1 = 0 := by norm_num [varying]
+example : (varying 1).coeff 1 = 1 := by norm_num [varying]
+example : (varying 1).natTrailingDegree = 1 := by
+  have HC : (varying 1).coeff 1 ≠ 0 := by norm_num [varying]
+  have HN : varying 1 ≠ 0 := by intro H; exact HC (by rw [H, Polynomial.coeff_zero])
+  apply Nat.le_antisymm (Polynomial.natTrailingDegree_le_of_ne_zero HC)
+  by_contra H
+  have HT : (varying 1).natTrailingDegree = 0 := by omega
+  have HS := Polynomial.coeff_natTrailingDegree_ne_zero.mpr HN
+  rw [HT] at HS
+  exact HS (by norm_num [varying])
+
+-- Radius zero at the sampled value does not make the radius polynomial zero.
+example : (X : Polynomial ℝ).eval 0 = 0 ∧ (X : Polynomial ℝ) ≠ 0 := by simp
+
+example (c : List Bool) (a : Fin (FormulaSignSlotCenteredRadialGraph.d (pairFst c)) → ℝ)
+    (tau D ell : ℕ) : FormulaSignSlotRadialCenterTrailingSelection.Guards c a tau D ell ↔
+      FormulaSignSlotRadialCenterSelection.Guards c a tau D ∧
+        ell = (FormulaSignSlotRadialCenterSquarefreeSelection.coordinate c a).natTrailingDegree :=
+  FormulaSignSlotRadialCenterTrailingSelection.guards_iff c a tau D ell
+
+#check FormulaSignSlotRadialRetainedTrailingGuards.evaluator
+#check FormulaSignSlotRadialRetainedTrailingGuards.guards_packet
+#check FormulaSignSlotRadialRetainedTrailingGuards.exists_guards
+#check FormulaSignSlotRadialRetainedTrailingGuards.trailing_packet
+#print axioms FormulaSignSlotRadialCenterTrailingSelection.radius_zero_iff
+#print axioms FormulaSignSlotRadialCenterTrailingSelection.guards_iff
+#print axioms FormulaSignSlotRadialCenterTrailingSelection.coefficient
+#print axioms FormulaSignSlotRadialCenterTrailingSelection.exists_guards
+#print axioms FormulaSignSlotRadialRetainedTrailingGuards.evaluator
+#print axioms FormulaSignSlotRadialRetainedTrailingGuards.guards_packet
+#print axioms FormulaSignSlotRadialRetainedTrailingGuards.exists_guards
+#print axioms FormulaSignSlotRadialRetainedTrailingGuards.trailing_packet
+end RadialTrailingGuardsRegression
+end RoadmapInternalG88SameCenterTrailingIndex

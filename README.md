@@ -2327,6 +2327,10 @@ Constructed canonical term and mandatory leaf queries now have original
 parameter coefficient budgets. The actual single-bank denominator and proper
 rank/near queries have original affine radius bounds, preserving their
 literal native degrees, eta shifts and physical columns.
+Actual same-bank principal and trailing-index guards now select witnesses
+after center specialization while retaining radius as a polynomial. The
+literal branch cut has a constructed integer coefficient reader with
+nonwrapping exponent boxes and original budgets.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership

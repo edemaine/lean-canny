@@ -1,3 +1,24 @@
+import LeanCanny.Algebra.DomainSquarefreeLeadingCoefficient
+import LeanCanny.Algebra.FixedWidthBivariateRebox
+import LeanCanny.Algebra.ScaledPolynomialQuotientTopCoefficient
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterBranchCut
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterBranchCutCoefficient
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterBranchCutCoefficientNative
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterBranchCutFamily
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterBranchCutPacked
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterBranchCutReader
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterBranchCutSource
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterTrailingSelection
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedBranchCutTest
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedPrincipalGuards
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedPrincipalSelection
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedPrincipalTest
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedTrailingGuards
+import LeanCanny.Encoding.IntegralFramedBankNumeratorAtWidth
+import LeanCanny.Encoding.IntegralFramedBankPolynomialModel
+import LeanCanny.Encoding.IntegralFramedBankPolynomialSource
+import LeanCanny.Encoding.IntegralFramedBankPolynomialSpace
+import LeanCanny.Encoding.IntegralFramedBankPolynomialTest
 import LeanCanny.Algebra.CoefficientBankLeafQuery
 import LeanCanny.Algebra.CoefficientBankTermQuery
 import LeanCanny.Algebra.CoefficientIndexedRationalClearing
@@ -5032,6 +5053,10 @@ Constructed canonical term and mandatory leaf queries now have original
 parameter coefficient budgets. The actual single-bank denominator and proper
 rank/near queries have original affine radius bounds, preserving their
 literal native degrees, eta shifts and physical columns.
+Actual same-bank principal and trailing-index guards now select witnesses
+after center specialization while retaining radius as a polynomial. The
+literal branch cut has a constructed integer coefficient reader with
+nonwrapping exponent boxes and original budgets.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 Common bounds for every guarded graph query and physical-edge transport,
