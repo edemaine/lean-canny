@@ -1,3 +1,30 @@
+import LeanCanny.Computation.FiniteCoefficientGuardTransport
+import LeanCanny.Encoding.CoefficientMarkedCriticalIntervalSign
+import LeanCanny.Encoding.CoefficientMarkedCriticalPredicateContext
+import LeanCanny.Encoding.CoefficientMarkedCriticalWordContext
+import LeanCanny.Encoding.CoefficientMarkedProperCriticalLayout
+import LeanCanny.Encoding.CoefficientMarkedProperCriticalPredicate
+import LeanCanny.Encoding.CoefficientMarkedRecordFieldListTransport
+import LeanCanny.Encoding.CoefficientMarkedRecordFieldSign
+import LeanCanny.Encoding.CoefficientMarkedRecordFieldVariables
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceBeforeTransport
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceBeforeWordTransport
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceGuardMetadata
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceHeadMetadata
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceHeadQuery
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceHeadSign
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceRawGuards
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceStageBinding
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantRootProfiles
+import LeanCanny.Encoding.FormulaSignSlotRadialGridSlice
+import LeanCanny.Encoding.FormulaSignSlotRadialGridSliceEvaluation
+import LeanCanny.Encoding.FormulaSignSlotRadialGridSliceNative
+import LeanCanny.Encoding.FormulaSignSlotRadialGridSliceSource
+import LeanCanny.Encoding.FormulaSignSlotRadialJointGridCatalogue
+import LeanCanny.Encoding.FormulaSignSlotRadialJointGridCatalogueNative
+import LeanCanny.Encoding.FormulaSignSlotRadialJointGridLayout
+import LeanCanny.Encoding.FormulaSignSlotRadialJointGridSource
+import LeanCanny.Encoding.IntegralFramedBankPolynomialEmbedding
 import LeanCanny.Algebra.SquareFeatureBivariateProduct
 import LeanCanny.Algebra.SquareFeatureCoefficientReader
 import LeanCanny.Algebra.SquareFeaturePackedReader
@@ -5237,12 +5264,13 @@ correlation and both endpoint signs. Joint descriptor roots now yield
 same-component core candidates and fresh own Replay words, with actual
 center/value guard binding. Full grid/cut-stratum sampling and native
 cross-source component checking remain open, as does whole graph transport.
-Native historical full-factor coefficient signs now equal the constructed
-full-tuple queries, with one coherent branch and fresh own words at each
-radius. The actual NoBad comparison also preserves truth on that same
-branch. The compact zero-count stratum has a closed native coefficient
-reader. Whole trace guards, outer predicates, descriptor stratum sampling
-and native cross-source component checking remain open.
+The whole native before-probe guard scan and critical-zero scan now
+transport together to one fresh own word at the target radius. The literal
+NoCritical predicate compiles to one shared tuple formula, and native
+Field match tables transport on actual full-row curves. Actual joint-grid
+features have closed coefficient access and exact native equation binding.
+Whole outer predicates and graph transport, full descriptor stratum
+sampling and native cross-source component checking remain open.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 Common bounds for every guarded graph query and physical-edge transport,
