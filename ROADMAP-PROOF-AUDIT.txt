@@ -2989,3 +2989,54 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Companion coordinate tests and whole Atomic, complete Near/Rank witnesses, Local/Edge transport, uniform all-role stabilization, complete descriptor stratum sampling/native cross-source association and both original unconditional PSPACE endpoints remain open.
+
+59. Construction-first checkpoint A: actual implicit component sampler
+2026-11-05. Supersedes the earlier sampling open-item for the joint
+coefficient stratum, not the remaining graph or association obligations.
+
+The literal Q equation uses the actual binary-count joint coefficient
+feature family and ONE new final variable. Its native modular reader is
+constructed from the original Core and implicit product Source; no product
+Term or expanded coefficient list is emitted. The original joint columns
+are retained. FormulaSignSlotRadialJointStratum.zero_iff identifies Q=0
+with Core=0 and the exact zero-feature-count certificate on that tuple.
+
+Actual coercive block Gram determinants supply integer coordinate heads.
+Every original zero-set component meets their simultaneous trailing-head
+grid, with a path INSIDE the original zero set. One bounded table encodes
+the selected epsilon slices and witnessed nonzero coefficients. On EVERY
+table each selected annihilator is nonzero by the witnessed coefficient
+or constant-one fallback. Diagonal rows give Complete internally; native
+Inputs.Access is derived from the original Source.Access, including exact
+foreign-coordinate guards and every caller modulus.
+
+One OWN exact-width complete vertex encodes the SAME critical-limit tuple.
+The native polynomial-sign test filters that decoded tuple by Q=0. The
+actual checker has a closed native PSPACE theorem, without caller-supplied
+Source, evaluator, square system, Complete or component association.
+The original-header table and sample-word allowances are UnaryFn.
+component_hit retains the original component path and decoded point;
+nonempty_iff equates actual source feasibility with bounded accepted words.
+Singular, positive-dimensional and unbounded zero sets are covered.
+
+This closes milestone A of CONNECTIVITY-PROTOTYPE.txt. B remains the
+unimplemented actual EXTERNAL n+8-leaf prelude/Replay and bounded two-provider
+association checker. C remains the aggregate radius stabilization theorem
+for the whole marked relation, holding the external algebra and word fixed.
+Endpoint containment bounds do not bound a joining path. A numeric word
+envelope cannot establish logical stabilization. Both prescribed old labels,
+full interval features/frontier incidence and BOTH original unconditional
+connectivity PSPACE endpoints remain unproved. No endpoint completion is
+claimed by the sampler checkpoint.
+
+Verification: all 15 new source modules (2056 LF lines) passed entire-source
+checks at maxHeartbeats=200000, warnings as errors, relaxedAutoImplicit=false,
+and strict producers. The strict three-library build passed 21634 jobs.
+scripts/CheckImplicitStratumSampler.lean passed seven consumers, including
+same-decoded-point exact zero count, and 13 standard-axiom dependency closures.
+CheckAxioms passed 97248 declarations with only propext, Classical.choice
+and Quot.sound. CheckSpaceFoundation passed 204551 transitive constants
+with no legacy space foundation. CheckRoadmapNativeGraph passed unchanged.
+Frozen delegated source hashes, LF bytes and non-executable file modes are
+verified. Only the main worktree exists; previous unique WIP is excluded.
+No external write or push. The original connectivity goal remains incomplete.

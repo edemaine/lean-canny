@@ -1,0 +1,154 @@
+Component-labelled implicit-stratum prototype
+Construction and dependency ledger, 2026-11-05
+Base checkpoint: f55dace. Milestone A is implemented below; B and C remain
+designs. This is not an unconditional connectivity PSPACE proof.
+
+Acceptance target
+
+For original joint packet u, bounded zero-count index K, and two prescribed
+old candidate labels a,b, construct a polynomial-space bounded checker such
+that its accepted words exist iff the actual joint stratum has a real point
+whose two closed-source projections belong to the components named by a,b.
+Both directions must use the SAME decoded point. No caller-supplied JoinedIn,
+component association, native evaluator, complete square system or expanded
+product Term is an acceptable missing implementation.
+
+1. Actual implicit equation
+
+Use the existing JointCoefficientCatalogue, with its actual integer features
+f_i and binary count M. Put P(T,x)=product_{i<M}(T+f_i(x)^2).
+Let C(x) be the literal joint Core polynomial, U_K=[T^K]P, and L_K=0 for K=0,
+otherwise [T^(K-1)]P. Add ONE last variable z and define
+
+  Q(x,z)=C(x)^2+L_K(x)^2+(U_K(x)*z^2-1)^2.
+
+Q=0 enforces the actual Core and exactly K zero features. All x columns stay
+literal. No product Term is serialized. If feature degree/mass charges are
+d,h, set dP=M*(2*d+1), hP=M*(2*h+1). A safe degree charge is
+D=max(2*dC,2*dP+4), and a safe mass exponent is H=2*max(hC,hP)+4.
+Dimension m=jointDimension+1 is unary; D,H,M,K are binary. Modular coefficients
+come from a fixed number of renames, sums and convolutions of the Core and
+the already constructed product-coefficient Source. Loops enumerate exponent
+splits with polynomial-length counters; coefficient integers are not emitted.
+
+2. Finite grid instead of an expanded critical sampler
+
+For each coordinate i, use the actual CoerciveBoxGramEliminant G_i(epsilon,T)
+of Q. This is a fixed padded block determinant, with no chosen maximal minor
+or universal-resultant quotient. Existing theorems prove G_i nonzero and
+G_i(epsilon,x_i)=0 at actual coercive critical points.
+
+Let W be the binary size of the maximum of the homogeneous degree and
+Macaulay level, N=2^((m+1)*W), and L=(m+3)*N. Both parameter degrees of G_i
+are bounded by L. The block determinant has binary degree/mass charges and
+PSPACE coefficient access from the actual homogeneous Q rows.
+
+A short table Gamma stores (tau_i,r_i), each at most L. Set p_i=[epsilon^tau_i]G_i
+and let h_i=p_i when its r_i coefficient is nonzero, otherwise h_i=1.
+Nonzeroness is internal on EVERY table: one witnessed nonzero coefficient,
+or the constant-one fallback. Its test uses modular coefficient access and
+an integer-zero program, not an exponentially long exact coefficient.
+The encoded Gamma length is at most (6*size(L+1)+6)*m. True trailing tau_i and suitable r_i exist
+by G_i nonzeroness. Soundness does not require Gamma to be trailing.
+
+Build diagonal rows h_i(X_i), with annihilators h_i. Completeness is then a
+direct row-evaluation identity; repeated roots use the existing squarefree
+grid machinery. Decode an OWN exact-width complete-sampler word and test
+Q=0 at that SAME tuple using the native polynomial-sign test. Arbitrary grid
+points are not assumed to satisfy Q.
+
+Component hit uses ONE actual critical-limit vector in the original stratum
+component. All G_i pass to their true trailing coefficients at that same
+limit. The resulting grid point still satisfies Q, remains in that component,
+and has an exact OWN word. CoerciveGramComponentGrid formalizes this geometric
+step. Native Gram access, the actual equation Source and the word/filter
+assembly are separate implementation steps; that geometric file is not the
+completed sampler.
+
+3. External-point component association
+
+Use a typed endpoint provider OLD(candidate) or EXTERNAL(own grid point).
+The connected spatial source stays the old closed-circular polynomial in
+both cases. Its integer marked prelude retains n+8 leaves:
+
+  y_1,...,y_n, u,0,v,0, radius,regularization,beta,penalty.
+
+Only coordinate/slack sources and Replay matching vary. For EXTERNAL, use
+the selected coordinate annihilators and the actual fixed external algebra.
+Compute slack characteristic polynomials using selected coordinate references.
+Compare ALL derivative signs to the external OWN point; annihilator roots
+alone admit wrong conjugates. Derive the correlated prelude realization and
+validate the actual lift equations. Neither projection equality to an old
+candidate nor an association premise is permitted.
+
+The existing two-prefix geometry can then compare OLD and EXTERNAL through
+one common genuine critical point. The initial count stays n+8, but source,
+Replay, initialization and width wrappers must be generalized honestly.
+For external algebra rank B, log B is polynomial; coordinate and slack
+degree bounds are binary (including 2B and spatialDegree*B). Choose one
+unary scalar width covering both providers BEFORE either prefix word.
+
+4. Essential distinction: containment and joining radius
+
+This construction first gives Assoc_R: membership in the same component
+INSIDE the chosen ball. Head height/degree root bounds and the old candidate
+bound give endpoint containment. They do not bound a joining path.
+The old closed-circular source can be unbounded; proper projection does not
+make its entire zero set bounded.
+
+The required additional contract is effective aggregate marked-relation
+stabilization. Hold the external descriptor/algebra/word fixed, vary only R,
+and prove one original binary cutoff beyond which the two-provider bounded
+answer is constant. Its proof must include distinguished Replay/identity
+and whole shared-tuple predicates. A numeric envelope may bound a PROVED
+cutoff over all polynomial-length descriptors; FP complexity alone cannot
+establish this logical stabilization.
+
+Combine actual stabilization with qualitative bounded-path exhaustion to
+identify Assoc_R with unbounded old-component membership. This contract is
+currently unproved. It is a real prerequisite for full prototype acceptance,
+not a premise to hide in the proposed association checker.
+
+Milestones and stopping rule
+
+A. Closed actual Q Source; implicit Gram reader; diagonal OWN word/filter;
+   component-hit and original polynomial certificate budget.
+B. Actual EXTERNAL n+8-leaf prelude with derived Source.Access and Replay;
+   two-provider bounded association correctness and PSPACE cost.
+C. Aggregate original-cutoff stabilization; then unbounded association and
+   both-label feasibility iff. The prototype is complete only at C.
+
+Use bounded checkpoints at these interfaces. Record the exact missing
+contract if a checkpoint fails; do not replace it with more unrelated
+catalogues or conditional wrappers. Full interval features/frontier edges
+and the original two PSPACE endpoints remain later obligations.
+
+Implemented checkpoint A
+
+FormulaSignSlotRadialJointStratumSampler.mem_PSPACE is the closed native
+checker theorem for the actual Q Source. No source, row, matrix, evaluator,
+complete-system or component-association hypothesis is supplied by a caller.
+accepted_iff tests the literal Core and zero-count certificate at its OWN
+decoded point. component_hit constructs bounded Gamma and an exact-width
+own word whose decoded point is joined to the requested point INSIDE Q=0.
+The original-header tableBound and ownwordBound are UnaryFn; nonempty_iff
+identifies source feasibility with bounded accepted certificates.
+
+The generic construction is ImplicitSourceComponentSampler: actual fixed
+Gram determinants, witnessed nonzero slices with a total fallback, derived
+diagonal Inputs.Access and Complete, original-header word envelope, and
+same-point source equation test. Positive-dimensional, singular and
+unbounded zero sets are covered. The actual implicit binary-count feature
+family is instantiated without expanding it into a Term.
+
+This proves sampling, not association with either prescribed old candidate
+label. B has no implemented two-provider prelude/checker yet. C still lacks
+the aggregate stabilization theorem described above. Endpoint containment
+cannot discharge that theorem. The full component-labelled prototype and
+both original connectivity PSPACE endpoints therefore remain unproved.
+
+Checkpoint verification: strict three-library build (21634 jobs), the
+focused actual-sampler fixture, complete axiom and native-space audits,
+and the existing native-roadmap regression all pass. Every new whole source
+also passes at 200000 heartbeats with warnings as errors and strict implicit
+variables. See ROADMAP-PROOF-AUDIT.txt, section 59, for recorded evidence.

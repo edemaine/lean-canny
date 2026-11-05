@@ -108,6 +108,14 @@ The separate `LeanCannyConnectivity` target (`import LeanCanny.Connectivity`)
 develops point-to-point path reachability and whole-space connectivity for
 semialgebraic sets. **Neither geometric language has a PSPACE theorem yet.**
 
+The current focused checkpoint is an actual implicit joint-stratum sampler:
+[`FormulaSignSlotRadialJointStratumSampler.lean`](LeanCanny/Encoding/FormulaSignSlotRadialJointStratumSampler.lean)
+provides a native PSPACE checker and polynomial-length accepted certificates
+meeting every stratum component. The equation test uses the sampler's own
+decoded point and retains the binary feature product. External-point
+component association and uniform radius stabilization remain open; see
+[`CONNECTIVITY-PROTOTYPE.txt`](CONNECTIVITY-PROTOTYPE.txt) for that boundary.
+
 The checked ingredients are:
 
 - Formula-based inputs with unary dimension and unique-solution endpoint
@@ -2433,6 +2441,7 @@ lake env lean scripts/CheckGrammar.lean
 lake env lean scripts/CheckSpaceFoundation.lean
 lake env lean scripts/CheckPolyTimeFoundation.lean
 lake env lean scripts/CheckConnectivity.lean
+lake env lean scripts/CheckImplicitStratumSampler.lean
 lake env lean scripts/CheckAlgebraicArcs.lean
 lake env lean scripts/CheckAffineShiftArcs.lean
 lake env lean scripts/CheckIntegerGridValues.lean

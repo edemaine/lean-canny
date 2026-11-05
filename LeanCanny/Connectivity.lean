@@ -1,3 +1,4 @@
+import LeanCanny.Encoding.FormulaSignSlotRadialJointStratumSampler
 import LeanCanny.Encoding.CoefficientMarkedRecordCompanionScan
 import LeanCanny.Encoding.CoefficientMarkedRecordMarkedTransport
 import LeanCanny.Encoding.CoefficientMarkedRecordMarkedWordTransport
@@ -5329,6 +5330,13 @@ descriptor stratum sampling and native cross-source component association
 remain open. Both original unconditional PSPACE endpoints remain unproved.
 Common bounds for every guarded graph query and physical-edge transport,
 hence effective global stabilization, remain unproved.
+The construction-first checkpoint now supplies the actual implicit joint
+coefficient-stratum sampler. Its native PSPACE checker filters the SAME
+decoded point by Core and the exact zero-feature-count certificate. Every
+component has an accepted own word with an original-header polynomial
+budget, including singular and unbounded strata. This closes milestone A
+of CONNECTIVITY-PROTOTYPE.txt. External-point component association, its
+aggregate radius stabilization, and the full two-label prototype remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
