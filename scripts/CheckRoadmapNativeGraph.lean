@@ -1,3 +1,7 @@
+import LeanCanny.Encoding.CoefficientMarkedRecordRootBranches
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedCoordinateTest
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedValueGuards
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedValueTest
 import LeanCanny.Encoding.CoefficientMarkedCriticalIntervalQuery
 import LeanCanny.Encoding.CoefficientMarkedRecordFullHeadBounds
 import LeanCanny.Encoding.CoefficientMarkedRecordFullHeadControls
@@ -16092,3 +16096,198 @@ end ProperWindowRegression
 #print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_window_specializes
 #print axioms ProperWindowRegression.installed_window
 end RoadmapInternalG92ActualProperWindow
+
+section RoadmapInternalG93CoherentActualRootBranches
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial Set
+open scoped Classical
+
+section
+variable {n : List Bool → ℕ} {t : List Bool → ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+example : BinaryFn (CoefficientMarkedRecordCartesianRows.cutoff hn ht ha) :=
+  CoefficientMarkedRecordCartesianRows.cutoff_binary hn ht ha
+
+example (ctx : List Bool) (k : ℕ) (hk : k ≤ IntegralMixedCausalRecordPlanBits.count ctx)
+    (aux : List Bool) (i : Fin (CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).count) :
+    ((CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).rows i).totalDegree ≤
+      CoefficientMarkedRecordFullHeads.degrees hn ht ha ctx k aux i.val :=
+  CoefficientMarkedRecordRowDegree.declared_row_degree hn ht ha ctx k hk aux i
+
+example (ctx : List Bool) (k : ℕ) (hk : k ≤ IntegralMixedCausalRecordPlanBits.count ctx)
+    (aux : List Bool) (β : ℝ)
+    (z : Fin (CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).count → ℝ)
+    (hz : ∀ i, ((CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).rows i).eval₂
+      (SymbolicScaledSquarefree.scalarEvaluation β) z = 0) :
+    ∀ i, (CoefficientMarkedRecordFullHeads.polynomial hn ht ha ctx k hk aux i).eval₂
+      (SymbolicScaledSquarefree.scalarEvaluation β) (z i) = 0 :=
+  CoefficientMarkedRecordRowDegree.heads_root hn ht ha ctx k hk aux β z hz
+
+example (ctx : List Bool) (k : ℕ) (hk : k ≤ IntegralMixedCausalRecordPlanBits.count ctx)
+    {a b : ℝ} (ha0 : (2 : ℝ)^CoefficientMarkedRecordCartesianRows.cutoff hn ht ha ctx ≤ a) (s : Ioo a b)
+    (z : Fin (CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk).count → ℝ)
+    (hz : CoefficientMarkedRecordRootBranches.RowsAt hn ht ha ctx k hk s.val z) :
+    ∃ curve : CoefficientMarkedRecordRootBranches.Curve hn ht ha ctx k hk a b s,
+      ∃ l : CoefficientMarkedRecordRootBranches.RootIndex hn ht ha ctx k hk s curve, curve l.val s = z := by
+  obtain ⟨curve, _, _, hc⟩ := CoefficientMarkedRecordRootBranches.exists_branches hn ht ha ctx k hk ha0 s
+  obtain ⟨l, hl, _⟩ := (hc s z).mp hz
+  exact ⟨curve, l, hl⟩
+
+example (ctx : List Bool) {R : List Bool → ℕ} (hR : BinaryFn R)
+    (hlarge : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx)
+    (z : Fin (CoefficientMarkedRecordRows.symbolic hn ht ha ctx (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl).count → ℝ)
+    (hz : ∀ i, ((CoefficientMarkedRecordRows.symbolic hn ht ha ctx (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl).rows i).eval₂
+      (SymbolicScaledSquarefree.scalarEvaluation ((2 : ℝ)^R ctx)) z = 0) :
+    ∃ w, ∃ hv : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false)
+      (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w,
+      HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false)
+        (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w hv).val z := by
+  obtain ⟨w, hv, _, he⟩ := CoefficientMarkedRecordFullRealization.exists_word hn ht ha ctx hR hlarge z hz
+  exact ⟨w, hv, he⟩
+
+example (ctx : List Bool) {a b : ℝ}
+    (ha0 : (2 : ℝ)^CoefficientMarkedRecordCartesianRows.cutoff hn ht ha ctx ≤ a) (s : Ioo a b) :
+    ∃ curve : CoefficientMarkedRecordRootBranches.Curve hn ht ha ctx (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl a b s,
+      Finite (CoefficientMarkedRecordRootBranches.RootIndex hn ht ha ctx (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl s curve) ∧
+      (∀ l : CoefficientMarkedRecordRootBranches.RootIndex hn ht ha ctx (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl s curve,
+        ∀ {R : List Bool → ℕ} (hR : BinaryFn R), CoefficientMarkedRecordCartesianRows.cutoff hn ht ha ctx ≤ R ctx →
+        ∀ u : Ioo a b, u.val = (2 : ℝ)^R ctx →
+        ∃ w, ∃ hv : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false)
+          (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w,
+          HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false)
+            (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w hv).val (curve l.val u)) := by
+  obtain ⟨curve, hf, _, hw⟩ := CoefficientMarkedRecordRootBranches.exists_full_branches hn ht ha ctx ha0 s
+  refine ⟨curve, hf, ?_⟩
+  intro l R hR hlarge u hu
+  obtain ⟨w, hv, _, he⟩ := hw l hR hlarge u hu
+  exact ⟨w, hv, he⟩
+end
+
+#print axioms CoefficientMarkedRecordRowDegree.spatialDegree_binary
+#print axioms CoefficientMarkedRecordRowDegree.row_degree
+#print axioms CoefficientMarkedRecordRowDegree.declared_row_degree
+#print axioms CoefficientMarkedRecordRowDegree.heads_root
+#print axioms CoefficientMarkedRecordCartesianRows.cutoff_binary
+#print axioms CoefficientMarkedRecordCartesianRows.exists_branches
+#print axioms CoefficientMarkedRecordFullRealization.exists_word
+#print axioms CoefficientMarkedRecordRootBranches.exists_branches
+#print axioms CoefficientMarkedRecordRootBranches.exists_full_branches
+end RoadmapInternalG93CoherentActualRootBranches
+
+section RoadmapInternalG93LiteralValueCertificateReader
+namespace RadialCenterValueRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open scoped Classical
+
+-- Field zero is a WordList slot, rather than a bare binary natural.
+example : Nat.fromBitsLE (WordList.get (WordList.encode [BinaryNatCode.encode 3]) 0) = 3 := by
+  simp [WordList.get_encode, BinaryNatCode.encode, Nat.fromBitsLE_bits]
+example : Nat.fromBitsLE (WordList.get (BinaryNatCode.encode 3) 0) ≠ 3 := by decide
+
+noncomputable def radiusCenter : Polynomial (MvPolynomial (Fin 1) ℤ) :=
+  C (MvPolynomial.X 0) * X ^ 2 + C (-3)
+
+-- Radius and center exponents remain distinct before real specialization.
+example : (TriplePolynomialParameterFlatten.one radiusCenter).coeff
+    ((Finsupp.single (0 : Fin 1) 1).cons 2) = 1 := by
+  rw [TriplePolynomialParameterFlatten.one_coefficient]
+  norm_num [radiusCenter]
+example : (TriplePolynomialParameterFlatten.one radiusCenter).coeff
+    ((0 : Fin 1 →₀ ℕ).cons 0) = -3 := by
+  rw [TriplePolynomialParameterFlatten.one_coefficient]
+  norm_num [radiusCenter]
+
+-- Repeated coordinate equations are retained by the value-system frontend.
+example : FormulaSignSlotRadialCenterSquarefreeSelection.truncate (X ^ 2 : Polynomial ℤ) 2 = X ^ 2 := by
+  ext j
+  rw [FormulaSignSlotRadialCenterSquarefreeSelection.truncate_coefficient]
+  split_ifs with H
+  · rfl
+  · exact (Polynomial.coeff_eq_zero_of_natDegree_lt (by simp; omega)).symm
+
+example : SpaceFunction FormulaSignSlotRadialCenterValueSource.coefficient :=
+  FormulaSignSlotRadialCenterValueSource.evaluator
+example (z bits modulus : List Bool) :
+    FormulaSignSlotRadialCenterValueSource.coefficient (pair (pair z bits) modulus) =
+      MatrixPower.residueBits ((((FormulaSignSlotRadialCenterValueSource.polynomial z).coeff
+        (FixedWidthPolynomial.nativeExponent (Equiv.refl _)
+          (FormulaSignSlotRadialCenterValueSource.width z) (Nat.fromBitsLE bits))) : ℤ) :
+            ZMod (Nat.fromBitsLE modulus + 1)) :=
+  FormulaSignSlotRadialCenterValueSource.packet z bits modulus
+example (c : List Bool) (j : ℕ) : MvMass.mass
+    (TriplePolynomialParameterFlatten.one ((FormulaSignSlotRadialCenterValuePacking.source c).coeff j)) ≤
+      2 ^ FormulaSignSlotRadialCenterValueMass.budget c :=
+  FormulaSignSlotRadialCenterValueMass.mass c j
+
+#check FormulaSignSlotRadialCenterValueFamily.specialization
+#check FormulaSignSlotRadialCenterValueSelection.exists_bounded_guards
+#check FormulaSignSlotRadialRetainedCoordinateTest.coordinate_packet
+#check FormulaSignSlotRadialRetainedValueTest.evaluator
+#check FormulaSignSlotRadialRetainedValueTest.value_packet
+#print axioms RelativeAffineGridValueParameterMap.annihilator
+#print axioms FormulaSignSlotRadialCoordinatePacket.actual_eliminant
+#print axioms FormulaSignSlotRadialCenterValueFamily.specialization
+#print axioms FormulaSignSlotRadialCenterValueBounds.polynomial_degree
+#print axioms FormulaSignSlotRadialCenterValueCoordinateReader.evaluator
+#print axioms FormulaSignSlotRadialCenterValueTestSource.evaluator
+#print axioms FormulaSignSlotRadialCenterValueSpace.evaluator
+#print axioms FormulaSignSlotRadialCenterValueMass.mass
+#print axioms FormulaSignSlotRadialCenterValueCoefficient.specialization
+#print axioms FormulaSignSlotRadialCenterValueCoefficientNative.evaluator
+#print axioms FormulaSignSlotRadialCenterValueCoefficientNative.correct
+#print axioms FormulaSignSlotRadialCenterValueSource.evaluator
+#print axioms FormulaSignSlotRadialRetainedCoordinateTest.evaluator
+#print axioms FormulaSignSlotRadialRetainedValueTest.value_packet
+end RadialCenterValueRegression
+end RoadmapInternalG93LiteralValueCertificateReader
+
+section RoadmapInternalG93NativeSameCenterValueGuards
+namespace RadialRetainedValueGuardsRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.Computation Polynomial LeanCanny.ETR
+open scoped Classical
+
+-- Vanishing at radius zero does not make the whole radius polynomial zero.
+example : (X : Polynomial ℝ).eval 0 = 0 ∧ (X : Polynomial ℝ) ≠ 0 := by simp
+example : (X : Polynomial ℝ).natTrailingDegree = 1 := Polynomial.natTrailingDegree_X
+-- The library assigns index zero to the ZERO polynomial; the new guard rejects it.
+example : (0 : Polynomial (Polynomial ℝ)).natTrailingDegree = 0 := by simp
+example (c : List Bool)
+    (a : Fin (FormulaSignSlotCenteredRadialGraph.d (FormulaSignSlotRadialCenterValueLayout.original c)) → ℝ)
+    (ell : ℕ) (h : FormulaSignSlotRadialCenterValueTrailingSelection.specialized c a = 0) :
+    ¬FormulaSignSlotRadialCenterValueTrailingSelection.Guards c a ell := by
+  intro HG
+  exact ((FormulaSignSlotRadialCenterValueTrailingSelection.guards_iff c a ell).mp HG).1 h
+
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+  {R : List Bool → ℕ} (hR : BinaryFn R) (outer : Bool) (radial refs : List Bool → List Bool)
+
+example (hr : radial ∈ FP) (hf : refs ∈ FP) : SpaceFunction (fun q =>
+    [decide (FormulaSignSlotRadialRetainedValueCoordinateGuards.Guards hn ht ha hR outer radial refs q)]) :=
+  FormulaSignSlotRadialRetainedValueCoordinateGuards.evaluator hn ht ha hR outer radial refs hr hf
+example (hr : radial ∈ FP) (hf : refs ∈ FP) : SpaceFunction (fun q =>
+    [decide (FormulaSignSlotRadialRetainedValueGuards.Guards hn ht ha hR outer radial refs q)]) :=
+  FormulaSignSlotRadialRetainedValueGuards.evaluator hn ht ha hR outer radial refs hr hf
+example (c w : List Bool)
+    (hv : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR outer) c w)
+    (ell : ℕ) (HG : FormulaSignSlotRadialRetainedValueGuards.Guards hn ht ha hR outer radial refs
+      (FormulaSignSlotRadialRetainedValueGuards.query c w ell)) :
+    FormulaSignSlotRadialValueCertificate.polynomial (FormulaSignSlotRadialCenterValueLayout.original (radial c))
+      (fun i => FormulaSignSlotRadialRetainedValueTest.center hn ht ha hR outer refs c w hv i.val) ≠ 0 :=
+  ((FormulaSignSlotRadialRetainedValueGuards.guards_actual hn ht ha hR outer radial refs c w hv ell).mp HG).2.1
+
+#check FormulaSignSlotRadialRetainedValueCoordinateGuards.guards_packet
+#check FormulaSignSlotRadialRetainedValueGuards.trailing_packet
+#check FormulaSignSlotRadialRetainedValueGuards.exists_guards
+#print axioms FormulaSignSlotRadialRetainedValueCoordinateGuards.evaluator
+#print axioms FormulaSignSlotRadialRetainedValueCoordinateGuards.guards_packet
+#print axioms FormulaSignSlotRadialCenterValueTrailingSelection.radius_zero_iff
+#print axioms FormulaSignSlotRadialCenterValueTrailingSelection.guards_iff
+#print axioms FormulaSignSlotRadialCenterValueTrailingSelection.guards_actual
+#print axioms FormulaSignSlotRadialCenterValueTrailingSelection.exists_guards
+#print axioms FormulaSignSlotRadialRetainedValueGuards.evaluator
+#print axioms FormulaSignSlotRadialRetainedValueGuards.guards_actual
+#print axioms FormulaSignSlotRadialRetainedValueGuards.trailing_packet
+#print axioms FormulaSignSlotRadialRetainedValueGuards.exists_guards
+end RadialRetainedValueGuardsRegression
+end RoadmapInternalG93NativeSameCenterValueGuards

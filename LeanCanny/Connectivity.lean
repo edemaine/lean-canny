@@ -1,3 +1,28 @@
+import LeanCanny.Algebra.RelativeAffineGridValueParameterMap
+import LeanCanny.Encoding.CoefficientMarkedRecordCartesianRows
+import LeanCanny.Encoding.CoefficientMarkedRecordFullRealization
+import LeanCanny.Encoding.CoefficientMarkedRecordRootBranches
+import LeanCanny.Encoding.CoefficientMarkedRecordRowDegree
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueBounds
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueCoefficient
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueCoefficientNative
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueCoordinateReader
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueFamily
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueLayout
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueMass
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueNativeFamily
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValuePacking
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueSelection
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueSource
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueSpace
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueTestQuery
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueTestSource
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterValueTrailingSelection
+import LeanCanny.Encoding.FormulaSignSlotRadialCoordinatePacket
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedCoordinateTest
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedValueCoordinateGuards
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedValueGuards
+import LeanCanny.Encoding.FormulaSignSlotRadialRetainedValueTest
 import LeanCanny.Algebra.CoefficientBankTermDegree
 import LeanCanny.Encoding.CoefficientMarkedRecordFullHeadBounds
 import LeanCanny.Encoding.CoefficientMarkedRecordFullHeadControls
@@ -5104,6 +5129,12 @@ positivity and parameter coefficient budgets over EVERY prefix/AUX. Actual
 term queries also have original spatial-degree boxes. Proper parent and
 terminal heads and windows have literal parameter maps; final principal
 query composition and complete graph predicate transport remain separate.
+One finite coherent family now covers EVERY actual full-row root across
+the large-parameter interval, with fresh literal native words at dyadic
+radii. The literal radial value-certificate reader, coefficient source and
+same-center native selection/trailing guards are also closed. Joint
+descriptor feasibility/component association and full graph guard/edge
+transport remain separate.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 Common bounds for every guarded graph query and physical-edge transport,

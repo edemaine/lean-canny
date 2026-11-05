@@ -2349,6 +2349,12 @@ positivity and parameter coefficient budgets over EVERY prefix/AUX. Actual
 term queries also have original spatial-degree boxes. Proper parent and
 terminal heads and windows have literal parameter maps; final principal
 query composition and complete graph predicate transport remain separate.
+One finite coherent family now covers EVERY actual full-row root across
+the large-parameter interval, with fresh literal native words at dyadic
+radii. The literal radial value-certificate reader, coefficient source and
+same-center native selection/trailing guards are also closed. Joint
+descriptor feasibility/component association and full graph guard/edge
+transport remain separate.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership
