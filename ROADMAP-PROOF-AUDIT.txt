@@ -2069,3 +2069,59 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Concrete original eliminant heights, bounded descriptors and native Boolean frontier incidence remain open, along with full recursive radius presentation, graph stabilization and both original unconditional PSPACE targets.
+
+37. G79: common normalization budgets and actual physical graph erasure
+2026-11-04.
+
+Parent basis specialization at all radii beyond C identifies each formal
+coordinate-matrix entry with an actual native integer matrix entry. Native
+growth bounded by 2^(K*r+H) derives parameter degree<=K and coefficient mass.
+The resulting actual cut-normalization threshold is EXACTLY affine in C.
+A proved geometric recurrence bounds unary-many max/normalization updates
+by one original BinaryFn stage budget, including varying smaller ranks and
+native K/H. Closed regression consumers instantiate actual original rank,
+rawSlope/rawOffset and horizon controls without supplied numeric profiles.
+This does not by itself assemble the full recursive specialization proof.
+
+One common head/query degree ceiling gives a common unary grid width from
+Binary degree controls. Input-derived mass/cutoffs cover the actual query
+annihilators without computing each member degree. Actual Cartesian root
+labels at one anchor form a finite product. Continuous branches, complete
+unique coverage of EVERY independent root tuple, coordinate order and ALL
+bounded query signs are constructed from the actual heads. No continuous
+path/label oracle or correlated defining-row guard is supplied.
+
+The native graph is now explicitly erased to actual physical points.
+Its vertices are the literal points of accepted native words, with finiteness
+derived from the original native byte bound. An edge retains existential
+ACTUAL native adjacent words at its endpoints. Finite physical walks are
+proved equivalent to native reachability between ANY accepted endpoint
+representatives. Actual identity edges join independently sampled words at
+the same entire point; no ordinal/hash constancy or fiber-connectivity premise
+is assumed. The physical graph remains geometrically sound.
+
+Whole mixed-record specialization, actual physical-edge incidence transport
+under radius, uniform graph stabilization and original Boolean frontier
+incidence remain open. Neither unconditional original PSPACE target follows
+from these local budgets or graph-erasure equivalences alone.
+
+Actual complete native sampler rows, including critical physical and multiplier
+blocks, scalar companions and cut rows, now have original-only affine radius
+log-mass bounds. Every monomial coefficient shares this bound. The proof uses
+proved FamilyInputs and the actual physical-row mass envelope; numeric seed
+nodes zero/one are not assumed to be valid native radius specializations.
+
+All6 sources (655 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS20554 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:12780 lines,193 groups.
+Audited 92729 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 198706 transitive constants: no legacy space foundation.
+All10 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Full mixed-record specialization and original-only family bounds, physical-edge incidence transport, uniform stabilization, Boolean frontier incidence and both original unconditional PSPACE targets remain open.

@@ -1,3 +1,9 @@
+import LeanCanny.Algebra.CoefficientCoordinateCutoffIteration
+import LeanCanny.Algebra.CoefficientCoordinateDyadicBounds
+import LeanCanny.Connectivity.IntegralMixedRoadmapPhysicalGraph
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusRowHeight
+import LeanCanny.Geometry.ParameterizedCartesianBranches
+import LeanCanny.Geometry.ParameterizedGridQueryUniformBounds
 import LeanCanny.Algebra.EvenPolynomialCharacteristicSpace
 import LeanCanny.Algebra.MacaulayFixedPaddedPolynomialValue
 import LeanCanny.Algebra.MacaulayNormalizedPolynomialMass
@@ -4890,6 +4896,12 @@ with its command order bound to the literal full-record-plan suffix.
 Actual native banks, raw cuts and critical polynomials have proved affine
 radius height bounds. Independent Cartesian queries have constructed
 annihilators and input-derived sign cutoffs, including nonmonic heads.
+Native matrix growth now derives formal entry bounds and a common BinaryFn
+budget for unary-many normalization cutoffs. Constructed finite Cartesian
+root labels cover every independent root tuple and preserve bounded query
+signs after one common input-based cutoff. Native reachability is equivalent
+to walks in the actual finite physical-point graph, independent of endpoint
+word choices. Matching its entire edge family across radii remains open.
 The full recursive symbolic presentation and
 original-only common bounds for its entire guarded graph remain open.
 Effective uniform radius stabilization and the original Boolean frontier-

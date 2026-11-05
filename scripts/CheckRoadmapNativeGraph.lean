@@ -1,3 +1,10 @@
+import LeanCanny.Algebra.CoefficientCoordinateCutoffIteration
+import LeanCanny.Algebra.CoefficientCoordinateDyadicBounds
+import LeanCanny.Connectivity.IntegralMixedRoadmapPhysicalGraph
+import LeanCanny.Encoding.IntegralFramedPhysicalSquare
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusRowHeight
+import LeanCanny.Geometry.ParameterizedCartesianBranches
+import LeanCanny.Geometry.ParameterizedGridQueryUniformBounds
 import LeanCanny.Algebra.MacaulayNormalizedPolynomialMass
 import LeanCanny.Encoding.FormulaSignSlotRadialEliminantSpace
 import Mathlib.Tactic
@@ -12458,3 +12465,316 @@ run_cmd do
         throwError "{name} depends on unexpected axiom {ax}"
   logInfo "Normalized Macaulay mass: input matrix budgets, actual Cramer quotient, vanishing extraneous determinant with surviving coefficient; three standard-axiom audits."
 end RoadmapInternalG78NormalizedMass
+
+section RoadmapInternalG79DyadicCoordinates
+namespace CoefficientCoordinateDyadicRegression
+open LeanCanny LeanCanny.Algebra Polynomial
+open CoefficientCoordinateDyadicBounds
+open scoped Classical
+
+example : cutBudget 1 0 0 0 = 5 := by decide
+example : cutBudget 2 3 4 5 = 149 := by decide
+
+-- Increasing the inherited cutoff costs only a linear increment.
+example (rank C delta K H : ℕ) :
+    cutBudget rank (C + delta) K H = cutBudget rank C K H + 2 * rank * K * delta := by
+  rw [cutBudget_affine rank (C + delta) K H, cutBudget_affine rank C K H]
+  ring
+
+-- This bound consumes evaluated native entries, not formal parameter mass.
+example {A : Type*} [CommRing A] [Algebra ℤ[X] A]
+    {B : ℕ → Type*} [∀ r, CommRing (B r)] {m width : ℕ}
+    (b : CoefficientCoordinateBasis ℤ[X] A m (2 ^ width))
+    (c : ∀ r, IntegralCoordinateBasis (B r) m (2 ^ width))
+    (p : A[X]) (ψ : ∀ r, A →+* B r) (d C K H : ℕ)
+    (hb : ∀ r, C ≤ r → CoefficientCoordinateBasis.Specializes
+      (evalRingHom ((2 : ℤ) ^ r)) (ψ r) b (CoefficientCoordinateBasis.ofIntegral (c r)))
+    (hn : ∀ r, C ≤ r → ∀ i j,
+      (Algebra.leftMulMatrix (c r).finBasis ((p.map (ψ r)).coeff d) i j).natAbs ≤ 2 ^ (K * r + H))
+    (i j : Fin m → Fin (2 ^ width)) :
+    (Algebra.leftMulMatrix b.basis (p.coeff d) i j).natDegree ≤ K ∧
+      coefficientMass (Algebra.leftMulMatrix b.basis (p.coeff d) i j) ≤
+        2 ^ IntegerPolynomialDyadic.massBudget C K H := by
+  apply degree_mass_finBasis b c (p.coeff d) ψ C K H hb _ i j
+  intro r hr s t
+  simpa only [Polynomial.coeff_map] using hn r hr s t
+
+end CoefficientCoordinateDyadicRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Algebra.CoefficientCoordinateDyadicBounds.degree_mass,
+      `LeanCanny.Algebra.CoefficientCoordinateDyadicBounds.degree_mass_finBasis,
+      `LeanCanny.Algebra.CoefficientCoordinateDyadicBounds.cutBudget_affine,
+      `LeanCanny.Algebra.CoefficientCoordinateDyadicBounds.cutBudget_binary,
+      `LeanCanny.Algebra.CoefficientCoordinateDyadicBounds.normalizeAt_map_native_after_growth] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Coordinate dyadic bounds: actual native finite matrix growth yields formal degree/mass and fixed-index normalization; affine incoming cutoff; five standard-axiom audits."
+end RoadmapInternalG79DyadicCoordinates
+
+section RoadmapInternalG79CutoffIteration
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.ETR FixedWidthPolynomial
+open CoefficientCoordinateDyadicBounds
+open IntegralMixedAuxiliaryMarkedRecordPlan (parameters plan data access)
+open IntegralMixedAuxiliaryMarkedRecordRadiusHeight (rawSlope rawOffset actualFamily)
+
+namespace CoefficientCoordinateCutoffRegression
+
+example : cutBudget 0 0 0 0 = 1 := by decide
+example : cutoffGrowth 0 0 0 = 2 := by decide
+example : cutoffStep 0 0 0 9 = 9 := by decide
+example : cutoffIteration 0 0 0 0 3 = 1 := by decide
+example : stageBudget 0 0 0 0 3 = 8 := by decide
+example : cutBudget 1 7 1 0 = 24 := by decide
+example : cutoffGrowth 1 1 0 = 13 := by decide
+example : cutoffIteration 1 1 0 0 3 = 70 := by decide
+example : stageBudget 1 1 0 0 3 = 2197 := by decide
+example : cutoffIteration 1 1 0 5 0 = 5 := by decide
+example : ¬ cutoffStep 0 0 0 0 ≤ cutoffGrowth 0 0 0 * 0 := by decide
+
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+
+theorem actual_original_budget (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) :
+    BinaryFn (fun root => stageBudget
+      (IntegralMixedFramedOriginalBounds.rootRank (parameters hn ht ha) root)
+      (rawSlope hn ht ha root) (rawOffset hn ht ha root) 0 ((parameters hn ht ha).cap root + 1)) :=
+  stageBudget_binary
+    (IntegralMixedFramedRawHeight.rootRank_binary (parameters hn ht ha) (access hn ht ha))
+    (IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawSlope_binary hn ht ha)
+    (IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawOffset_binary hn ht ha)
+    (BinaryFn.const 0) ((access hn ht ha).cap.add (UnaryFn.const 1))
+
+theorem actual_prefix_step (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) (key : List Bool) (stage C : ℕ)
+    (hc : C ≤ stageBudget (IntegralMixedFramedOriginalBounds.rootRank (parameters hn ht ha) (pairFst key))
+      (rawSlope hn ht ha (pairFst key)) (rawOffset hn ht ha (pairFst key)) 0 stage) :
+    cutoffStep (count ((actualFamily hn ht ha R).birth key) ((actualFamily hn ht ha R).width key))
+      (rawSlope hn ht ha (pairFst key)) (rawOffset hn ht ha (pairFst key)) C ≤
+        stageBudget (IntegralMixedFramedOriginalBounds.rootRank (parameters hn ht ha) (pairFst key))
+          (rawSlope hn ht ha (pairFst key)) (rawOffset hn ht ha (pairFst key)) 0 (stage + 1) := by
+  have HR := IntegralMixedFramedOriginalBounds.family_rank_bound (parameters hn ht ha)
+    (plan hn ht ha R) (data hn ht ha R) key
+  have HM : count ((actualFamily hn ht ha R).birth key) ((actualFamily hn ht ha R).width key) ≤
+      IntegralMixedFramedOriginalBounds.rootRank (parameters hn ht ha) (pairFst key) :=
+    (Nat.pow_le_pow_right (Nat.two_pow_pos _) (by omega :
+      (actualFamily hn ht ha R).birth key ≤ (actualFamily hn ht ha R).birth key + 2)).trans HR
+  exact step_le_budget_succ _ _ _ _ _ HM le_rfl le_rfl hc
+
+end CoefficientCoordinateCutoffRegression
+
+#print axioms LeanCanny.Algebra.CoefficientCoordinateDyadicBounds.cutBudget_mono
+#print axioms LeanCanny.Algebra.CoefficientCoordinateDyadicBounds.step_le_budget_succ
+#print axioms LeanCanny.Algebra.CoefficientCoordinateDyadicBounds.step_le_uniform
+#print axioms LeanCanny.Algebra.CoefficientCoordinateDyadicBounds.cutoffIteration_le
+#print axioms LeanCanny.Algebra.CoefficientCoordinateDyadicBounds.stageBudget_binary
+#print axioms CoefficientCoordinateCutoffRegression.actual_original_budget
+#print axioms CoefficientCoordinateCutoffRegression.actual_prefix_step
+end RoadmapInternalG79CutoffIteration
+
+section RoadmapInternalG79CommonGridCutoff
+namespace ParameterizedGridQueryUniformRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry Polynomial
+open ParameterizedGridQuerySign
+
+example : commonWidth 0 0 0 = 1 := by decide
+example : commonWidth 2 4 3 = 4 := by decide
+-- A safe common width can be strictly greater than the actual member's width.
+example : RelativeAffineGridValueGram.width (fun _ : Fin 2 => 2) 2 = 3 := by decide
+example : commonWidth 2 3 2 = 4 := by decide
+
+example {n : ℕ} (p : Fin n → (ℤ[X])[X]) (q : MvPolynomial (Fin n) ℤ[X])
+    (D E : ℕ) (hp : ∀ i, (p i).natDegree ≤ D) (hq : q.totalDegree ≤ E) :
+    RelativeAffineGridValueGram.width (fun i => (p i).natDegree) (q.totalDegree + 1) ≤
+      commonWidth n D E := width_le p q D E hp hq
+
+example {n D E H : List Bool → ℕ} (hn : UnaryFn n) (hd : BinaryFn D)
+    (he : BinaryFn E) (hh : BinaryFn H) :
+    BinaryFn (fun c => cutoffBudget (n c) (commonWidth (n c) (D c) (E c)) (H c)) :=
+  commonCutoff_binary hn hd he hh
+
+end ParameterizedGridQueryUniformRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.width_le,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.massBudget_mono_width,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.commonWidth_unary,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.commonCutoff_binary,
+      `LeanCanny.Geometry.ParameterizedGridQuerySign.sign_after_common_input_bounds] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Common Cartesian query cutoff: uniform input degree ceilings, native unary width from binary degree bounds, no per-member degree computation; five standard-axiom audits."
+end RoadmapInternalG79CommonGridCutoff
+
+section RoadmapInternalG79ActualCartesianBranches
+namespace ParameterizedCartesianBranchesRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry Polynomial Set
+open ParameterizedCartesianBranches
+open scoped Classical
+
+-- Empty products and zero query degree still have a defined original cutoff.
+example : cutoff 0 0 0 0 > 0 := by decide
+
+-- Actual anchor-root labels, with no caller-provided label set or path family.
+example {n : ℕ} (p : Fin n → (ℤ[X])[X]) (D E H : ℕ)
+    (hpos : ∀ i, 0 < (p i).natDegree) (hd : ∀ i, (p i).natDegree ≤ D)
+    (hp : ∀ i k, coefficientMass ((p i).coeff k) ≤ 2 ^ H)
+    {a b : ℝ} (ha : (2 : ℝ) ^ cutoff n D E H ≤ a) (s : Ioo a b) :
+    Finite (Index p a b s) := finite_index p D E H hpos hd hp ha s
+
+-- The output constructs all paths from actual root labels and covers EVERY root tuple.
+example {n : ℕ} {J : Type*} (p : Fin n → (ℤ[X])[X])
+    (Q : J → MvPolynomial (Fin n) ℤ[X]) (D E H : ℕ)
+    (hpos : ∀ i, 0 < (p i).natDegree) (hd : ∀ i, (p i).natDegree ≤ D)
+    (he : ∀ j, (Q j).totalDegree ≤ E)
+    (hp : ∀ i k, coefficientMass ((p i).coeff k) ≤ 2 ^ H)
+    (hq : ∀ j v, coefficientMass ((Q j).coeff v) ≤ 2 ^ H)
+    {a b : ℝ} (ha : (2 : ℝ) ^ cutoff n D E H ≤ a) (s : Ioo a b) :
+    ∃ curve : Index p a b s → C(Ioo a b, Fin n → ℝ),
+      (∀ l i, curve l s i = (l i).val.val.val.2 0) ∧
+      (∀ l t i, (p i).eval₂ (SymbolicScaledSquarefree.scalarEvaluation t.val) (curve l t i) = 0) ∧
+      (∀ t : Ioo a b, ∀ x : Fin n → ℝ,
+        (∀ i, (p i).eval₂ (SymbolicScaledSquarefree.scalarEvaluation t.val) (x i) = 0) ↔
+          ∃! l, curve l t = x) ∧
+      (∀ l k i u v, curve l u i < curve k u i ↔ curve l v i < curve k v i) ∧
+      (∀ l j u v,
+        SignType.sign ((Q j).eval₂ (SymbolicScaledSquarefree.scalarEvaluation u.val) (curve l u)) =
+          SignType.sign ((Q j).eval₂ (SymbolicScaledSquarefree.scalarEvaluation v.val) (curve l v))) :=
+  exists_branches p Q D E H hpos hd he hp hq ha s
+
+end ParameterizedCartesianBranchesRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Geometry.ParameterizedCartesianBranches.cutoff_binary,
+      `LeanCanny.Geometry.ParameterizedCartesianBranches.finite_index,
+      `LeanCanny.Geometry.ParameterizedCartesianBranches.exists_branches] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Actual Cartesian branches: finite anchor-root labels, constructed continuous full-grid covering, order and all bounded query signs; three standard-axiom audits."
+end RoadmapInternalG79ActualCartesianBranches
+
+section RoadmapInternalG79ActualPhysicalGraph
+namespace RoadmapPhysicalGraphRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.Geometry LeanCanny.ETR
+open IntegralMixedRoadmapGraph IntegralMixedRoadmapPhysicalGraph
+open scoped Classical
+variable {n : List Bool → ℕ} {t : List Bool → Term} (hn : UnaryFn n)
+  (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+  {R0 : List Bool → ℕ} (hR0 : BinaryFn R0)
+
+example (c : List Bool) : (IntegralMixedRoadmapPhysicalGraph.vertices hn ht ha hR0 c).Finite :=
+  vertices_finite hn ht ha hR0 c
+
+-- Both sampled histories keep their independent words; only the entire point is equal.
+example (c a b : List Bool)
+    (hA : IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 a)
+    (hB : IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 b)
+    (hc : IntegralMixedRoadmapAtomic.candidate a = c) (hd : IntegralMixedRoadmapAtomic.candidate b = c)
+    (hp : pointAt hn ht ha hR0 c a hA hc = pointAt hn ht ha hR0 c b hB hd) :
+    IntegralMixedRoadmapPhysicalGraph.Reachable hn ht ha hR0 c
+      (pointAt hn ht ha hR0 c a hA hc) (pointAt hn ht ha hR0 c b hB hd) :=
+  (reachable_iff_raw hn ht ha hR0 c a b hA hB hc hd).mpr
+    (raw_reachable_of_pointAt_eq hn ht ha hR0 c a b hA hB hc hd hp)
+
+example (c a b : List Bool)
+    (hA : IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 a)
+    (hB : IntegralMixedRoadmapAtomic.Valid hn ht ha hR0 b)
+    (hc : IntegralMixedRoadmapAtomic.candidate a = c) (hd : IntegralMixedRoadmapAtomic.candidate b = c) :
+    IntegralMixedRoadmapPhysicalGraph.Reachable hn ht ha hR0 c
+      (pointAt hn ht ha hR0 c a hA hc) (pointAt hn ht ha hR0 c b hB hd) ↔
+      RawReachable hn ht ha hR0 c a b := reachable_iff_raw hn ht ha hR0 c a b hA hB hc hd
+
+example (c : List Bool) (x y : Fin (n (pairFst c) + 3 + 1) → ℝ)
+    (h : IntegralMixedRoadmapPhysicalGraph.Reachable hn ht ha hR0 c x y) :
+    JoinedIn (zeroSet (n := n) (t := t) (R0 := R0) c) x y := reachable_joined hn ht ha hR0 h
+
+end RoadmapPhysicalGraphRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Connectivity.IntegralMixedRoadmapPhysicalGraph.word_finite,
+      `LeanCanny.Connectivity.IntegralMixedRoadmapPhysicalGraph.vertices_finite,
+      `LeanCanny.Connectivity.IntegralMixedRoadmapPhysicalGraph.edge_reachable,
+      `LeanCanny.Connectivity.IntegralMixedRoadmapPhysicalGraph.reachable_iff,
+      `LeanCanny.Connectivity.IntegralMixedRoadmapPhysicalGraph.reachable_iff_raw,
+      `LeanCanny.Connectivity.IntegralMixedRoadmapPhysicalGraph.vertices_subset_zero,
+      `LeanCanny.Connectivity.IntegralMixedRoadmapPhysicalGraph.reachable_joined] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Actual finite physical roadmap graph: existential native edges, independent same-point words, exact native reachability equivalence and geometric soundness; seven standard-axiom audits."
+end RoadmapInternalG79ActualPhysicalGraph
+
+section RoadmapInternalG79ActualPhysicalRowGrowth
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.ETR
+open IntegralMixedAuxiliaryMarkedRecordRadiusHeight
+open IntegralMixedAuxiliaryMarkedRecordPlan (parameters plan data)
+open IntegralMixedFramedPhysicalIndex (enumerate arity)
+open IntegralMixedFramedHistoryFamilyBits (commands)
+attribute [local irreducible] IntegralMixedSourceIntegerRecordAppend.plan IntegralMixedSourceIntegerRecordAppend.data
+
+namespace MarkedRecordRadiusRowRegression
+
+example : IntegralMixedPhysicalRowBudget.exponent 0 0 0 0 0 0 0 0 = 13 := by decide
+example : IntegralMixedPhysicalRowBudget.exponent 0 0 0 0 0 0 0 1 = 25 := by decide
+example : IntegralMixedPhysicalRowBudget.exponent 0 0 0 0 0 0 0 2 = 37 := by decide
+example : IntegralMixedPhysicalRowBudget.exponent 1 2 3 4 6 3 2 0 = 50 := by decide
+example : IntegralMixedPhysicalRowBudget.exponent 1 2 3 4 6 3 2 1 = 167 := by decide
+example : IntegralMixedPhysicalRowBudget.exponent 1 2 3 4 6 3 2 2 = 284 := by decide
+
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+
+theorem actual_full_mass (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) (key : List Bool)
+    (i : (actualFamily hn ht ha R).physical key) :
+    MvMass.mass (((actualFamily hn ht ha R).state key).sampler.rows i) ≤
+      2 ^ (rowSlope hn ht ha (pairFst key) * R (pairFst key) + rowOffset hn ht ha (pairFst key)) :=
+  full_row_mass hn ht ha R key i
+
+theorem actual_coefficient (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) (key : List Bool)
+    (i : (actualFamily hn ht ha R).physical key) (e : (actualFamily hn ht ha R).physical key →₀ ℕ) :
+    ((((actualFamily hn ht ha R).state key).sampler.rows i).coeff e).natAbs ≤
+      2 ^ (rowSlope hn ht ha (pairFst key) * R (pairFst key) + rowOffset hn ht ha (pairFst key)) :=
+  full_row_coefficient_bound hn ht ha R key i e
+
+theorem zero_radius_mass (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (key : List Bool) (i : (actualFamily hn ht ha (fun _ => 0)).physical key) :
+    MvMass.mass (((actualFamily hn ht ha (fun _ => 0)).state key).sampler.rows i) ≤
+      2 ^ rowOffset hn ht ha (pairFst key) := by
+  simpa only [Nat.mul_zero, Nat.zero_add] using full_row_mass hn ht ha (fun _ => 0) key i
+
+theorem original_budget (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) : BinaryFn (rowSlope hn ht ha) ∧ BinaryFn (rowOffset hn ht ha) :=
+  ⟨rowSlope_binary hn ht ha, rowOffset_binary hn ht ha⟩
+
+theorem indexed_full_mass (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) (key : List Bool)
+    (i : Fin (arity (commands (parameters hn ht ha) (plan hn ht ha R) key))) :
+    MvMass.mass ((IntegralFramedPhysicalSquare.sampler (parameters hn ht ha) (plan hn ht ha R) (data hn ht ha R) key).rows i) ≤
+      2 ^ (rowSlope hn ht ha (pairFst key) * R (pairFst key) + rowOffset hn ht ha (pairFst key)) :=
+  PolynomialSystemReindex.mass_le _ _ _ (fun j => full_row_mass hn ht ha R key j) i
+
+end MarkedRecordRadiusRowRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rowSlope_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rowOffset_binary
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.row_ceiling_le
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.full_row_mass
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusHeight.full_row_coefficient_bound
+#print axioms MarkedRecordRadiusRowRegression.actual_full_mass
+#print axioms MarkedRecordRadiusRowRegression.actual_coefficient
+#print axioms MarkedRecordRadiusRowRegression.zero_radius_mass
+#print axioms MarkedRecordRadiusRowRegression.original_budget
+#print axioms MarkedRecordRadiusRowRegression.indexed_full_mass
+end RoadmapInternalG79ActualPhysicalRowGrowth
