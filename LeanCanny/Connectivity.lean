@@ -1,3 +1,15 @@
+import LeanCanny.Algebra.CoefficientCoordinateDyadicTailBounds
+import LeanCanny.Algebra.CoefficientHistoryPrefixSpecialization
+import LeanCanny.Encoding.CoefficientMarkedRecordActual
+import LeanCanny.Encoding.CoefficientMarkedRecordBirthSpecialization
+import LeanCanny.Encoding.CoefficientMarkedRecordCoefficientBounds
+import LeanCanny.Encoding.CoefficientMarkedRecordEffectiveCutoff
+import LeanCanny.Encoding.CoefficientMarkedRecordNative
+import LeanCanny.Encoding.CoefficientMarkedRecordPrefix
+import LeanCanny.Encoding.CoefficientMarkedRecordProfile
+import LeanCanny.Encoding.CoefficientMarkedRecordRawGrowth
+import LeanCanny.Encoding.CoefficientMarkedRecordSerializer
+import LeanCanny.Encoding.CoefficientMarkedRecordSpecialization
 import LeanCanny.Encoding.FormulaSignSlotRadialCenterCoefficient
 import LeanCanny.Encoding.FormulaSignSlotRadialCenterCoefficientNative
 import LeanCanny.Encoding.FormulaSignSlotRadialCenterCoefficientSource
@@ -4541,7 +4553,7 @@ trace/graph assembly remains unfinished.
 Actual old-bank multiplication matrices now provide both slack annihilators.
 Their coefficients, degree and mass controls are native original-only programs;
 the expanded sources have degrees twice the old rank and d times the old rank.
-One old interpretation evaluates their algebra elements as Q²u² and λQ^d v^d
+One old interpretation evaluates their algebra elements as QÂ²uÂ² and Î»Q^d v^d
 for the prescribed real marked slacks. A joint root constructs this one
 interpretation from literal original-coordinate readbacks. Expanded
 characteristic polynomials therefore vanish at those prescribed values.
@@ -4875,9 +4887,12 @@ arbitrary coefficient specialization, including their relative coordinates
 and relative multiplication matrices and characteristic polynomials. Normalization and
 fixed inverse shifts have proved parameter-coefficient mass and degree bounds
 before evaluation. A common mass cutoff derives the inverse constructor's
-coefficient-survival and degree/trailing-index guards internally. The next
-obligation is an original-only symbolic presentation and common bounds for
-the full recursive framed interpreter.
+coefficient-survival and degree/trailing-index guards internally. The actual
+canonical mixed-record interpreter now has a constructed polynomial
+presentation and one original-input effective cutoff for all its prefixes.
+Specialization preserves the quotient basis, bank, all physical rows and
+scalar slots. Common bounds and transport for the entire guarded graph
+remain open.
 Literal sign-refinement and frontier-piece membership now has an exact
 closed-circular lift in the SAME decoded candidate component at the specified
 original point. The radial polynomial and eliminant have an exact integer
@@ -4919,12 +4934,14 @@ word choices. Matching its entire edge family across radii remains open.
 Actual head/window/query bounds now cover the installed certified graph
 sampler, with its actual decoded saved parents and native degree requests.
 This supplies evaluated heights; selector and edge transport remain separate.
-The full recursive symbolic presentation and
-original-only common bounds for its entire guarded graph remain open.
+The actual canonical mixed-record family now specializes above an
+original-input effective cutoff, uniformly over every prefix. The remaining
+common bounds and physical-edge transport for its entire guarded graph
+are still open.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
-The recursive framed polynomial presentation and its original-only uniform
-mass bound, hence effective global stabilization, remain unproved.
+Common bounds for every guarded graph query and physical-edge transport,
+hence effective global stabilization, remain unproved.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

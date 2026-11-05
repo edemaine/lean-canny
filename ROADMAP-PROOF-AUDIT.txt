@@ -2177,3 +2177,45 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Full recursive effective radius bound, physical-edge transport/uniform stabilization, actual retained-center guard tests and bounded descriptors/native Boolean frontier incidence remain open; both original unconditional PSPACE targets are unproved.
+
+39. G81: actual recursive record presentation and original effective cutoff
+2026-11-05.
+
+The canonical original mixed-record trace has a constructed polynomial
+coefficient family. Its literal serialized commands, saved prefixes and
+actual Native.run states agree, including critical and all eight cut modes.
+Specialization constructs the coefficient homomorphism and preserves the
+quotient basis, bank, ALL physical rows and scalar slots. The induction
+requires no supplied row, model, source-evaluation or survival premise.
+
+An original affine radius profile bounds the actual native cut top matrices.
+Tail-only dyadic interpolation uses the maps above the already proved cutoff;
+no map at smaller radius is assumed. This bounds the formal top coefficients
+and their bit lengths, including the one-bit charge in the cutoff recurrence.
+The actual qualitative cutoff for EVERY canonical prefix is bounded by one
+BinaryFn computed solely from original syntax and the literal record count.
+Above this effective cutoff the entire canonical family specializes at any
+requested radius function. No requested-radius input enters the cutoff.
+
+These close the actual recursive mixed-record presentation and its effective
+normalization-cutoff obligation. A context cutoff is not yet a common global
+graph stabilization theorem. Indexed sampler projection, every guarded graph
+query family and its common bounds, physical-edge incidence transport, actual
+retained-center guards and bounded descriptor/native Boolean frontier
+incidence remain separate. Both original unconditional PSPACE targets remain
+unproved.
+
+All12 sources (1987 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS20600 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:13446 lines,204 groups.
+Audited 93046 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 199126 transitive constants: no legacy space foundation.
+All16 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Indexed sampler projection and all guarded graph query bounds, physical-edge transport/uniform stabilization, actual retained-center guards and bounded descriptors/native Boolean frontier incidence remain open; both original unconditional PSPACE targets are unproved.

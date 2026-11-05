@@ -2241,9 +2241,12 @@ arbitrary coefficient specialization, including their relative coordinates
 and relative multiplication matrices and characteristic polynomials. Normalization and
 fixed inverse shifts have proved parameter-coefficient mass and degree bounds
 before evaluation. A common mass cutoff derives the inverse constructor's
-coefficient-survival and degree/trailing-index guards internally. The next
-obligation is an original-only symbolic presentation and common bounds for
-the full recursive framed interpreter.
+coefficient-survival and degree/trailing-index guards internally. The actual
+canonical mixed-record interpreter now has a constructed polynomial
+presentation and one original-input effective cutoff for all its prefixes.
+Specialization preserves the quotient basis, bank, all physical rows and
+scalar slots. Common bounds and transport for the entire guarded graph
+remain open.
 Literal sign-refinement and frontier-piece membership now has an exact
 closed-circular lift in the SAME decoded candidate component at the specified
 original point. The radial polynomial and eliminant have an exact integer
@@ -2285,8 +2288,10 @@ word choices. Matching its entire edge family across radii remains open.
 Actual head/window/query bounds now cover the installed certified graph
 sampler, with its actual decoded saved parents and native degree requests.
 This supplies evaluated heights; selector and edge transport remain separate.
-The full recursive symbolic presentation and
-original-only common bounds for its entire guarded graph remain open.
+The actual canonical mixed-record family now specializes above an
+original-input effective cutoff, uniformly over every prefix. The remaining
+common bounds and physical-edge transport for its entire guarded graph
+are still open.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership

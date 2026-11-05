@@ -1,3 +1,10 @@
+import LeanCanny.Encoding.CoefficientMarkedRecordActual
+import LeanCanny.Encoding.CoefficientMarkedRecordEffectiveCutoff
+import LeanCanny.Encoding.CoefficientMarkedRecordNative
+import LeanCanny.Encoding.CoefficientMarkedRecordPrefix
+import LeanCanny.Encoding.CoefficientMarkedRecordProfile
+import LeanCanny.Encoding.CoefficientMarkedRecordRawGrowth
+import LeanCanny.Encoding.CoefficientMarkedRecordSerializer
 import LeanCanny.Encoding.FormulaSignSlotRadialCenterCoefficientSource
 import LeanCanny.Encoding.FormulaSignSlotRadialCenterSelection
 import LeanCanny.Encoding.FormulaSignSlotRadialEliminantFormalMass
@@ -13099,3 +13106,341 @@ end CertifiedRadiusRegression
 #print axioms CertifiedRadiusRegression.graph_zero_radius_rows
 #print axioms CertifiedRadiusRegression.original_budget
 end RoadmapInternalG80CertifiedGraphQueryMass
+
+section RoadmapInternalG81RecordPrefix
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory Polynomial
+open scoped Classical
+namespace RecordPrefixFixture
+variable {n:List Bool→ℕ} {t:List Bool→ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+  (ctx:List Bool) (S:ℕ)
+
+def criticalCode:List Bool:=WordList.encode [[true]]
+example :IntegralMixedUnitRecordCode.critical criticalCode=true:=by decide
+example :IntegralMixedUnitRecordCode.critical []=false:=by decide
+example (radius:ℕ):
+    (CoefficientMarkedRecordPrefix.low (n:=n) (t:=t) ctx).map (Polynomial.evalRingHom ((2:ℤ)^radius))=
+      (IntegralMixedAuxiliaryMarkedIntegerPlan.spatial n t (fun _=>radius) ctx).low ∧
+    (CoefficientMarkedRecordPrefix.leading (n:=n) (t:=t) ctx).eval ((2:ℤ)^radius)=
+      (IntegralMixedAuxiliaryMarkedIntegerPlan.spatial n t (fun _=>radius) ctx).leading:=
+  CoefficientMarkedRecordPrefix.source_fields ctx radius
+example : CoefficientMarkedRecordPrefix.build hn ht ha ctx S []=
+    CoefficientMarkedPreludePrefix.build hn ht ha ctx S (CoefficientMarkedPreludeActual.indices n ctx):=rfl
+example : (CoefficientMarkedRecordPrefix.build hn ht ha ctx S [criticalCode]).bank.denominator
+      ⟨0,by change 0<(CoefficientMarkedPreludeActual.indices n ctx).length+1;omega⟩=
+    CoefficientMixedCriticalPolynomial.leadingValue
+      (CoefficientMarkedPreludePrefix.build hn ht ha ctx S (CoefficientMarkedPreludeActual.indices n ctx)).bank
+      (CoefficientMarkedRecordPrefix.leading (n:=n) (t:=t) ctx)
+      (CoefficientMarkedRecordPrefix.source (n:=n) (t:=t) ctx 0).degree
+      (IntegralMixedCausalUnitRecordBits.physical (IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx+3)
+        (CoefficientMarkedPreludeActual.indices n ctx).length criticalCode):=rfl
+example (i:Fin (CoefficientMarkedPreludeActual.indices n ctx).length):
+    (CoefficientMarkedRecordPrefix.build hn ht ha ctx S [[]]).bank.denominator i.succ=
+      (CoefficientMarkedPreludePrefix.build hn ht ha ctx S (CoefficientMarkedPreludeActual.indices n ctx)).bank.denominator i:=rfl
+end RecordPrefixFixture
+#print axioms CoefficientMarkedRecordPrefix.source_fields
+#print axioms CoefficientMarkedRecordPrefix.source_degree
+#print axioms CoefficientMarkedRecordPrefix.source_cap
+#print axioms CoefficientMarkedRecordPrefix.cut
+#print axioms CoefficientMarkedRecordPrefix.cutIndex
+#print axioms CoefficientMarkedRecordPrefix.build
+end RoadmapInternalG81RecordPrefix
+
+section RoadmapInternalG81RecordNative
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory Polynomial
+open scoped Classical
+namespace RecordNativeFixture
+variable {n:List Bool→ℕ} {t:List Bool→ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+  (ctx:List Bool) (radius:List Bool→ℕ)
+  {S m:ℕ} {ι:Type} [Fintype ι]
+  (x:State (CoefficientMarkedRecordNative.source (n:=n) (t:=t) ctx radius) S
+    (CoefficientMarkedIntegerBirth.width hn ht ha ctx) m ι) (hm:m≤S)
+
+def criticalCode:List Bool:=WordList.encode [[true]]
+example (code:List Bool):
+    HEq (CoefficientMarkedRecordNative.next hn ht ha ctx radius x hm code)
+      (IntegralMixedFullHistoryScript.step x hm
+        (CoefficientMarkedRecordNative.instruction hn ht ha ctx radius x code).command):=
+  CoefficientMarkedRecordNative.next_command hn ht ha ctx radius x hm code
+example (i:Fin m):
+    (CoefficientMarkedRecordNative.next hn ht ha ctx radius x hm criticalCode).bank.denominator i.succ=
+      x.bank.denominator i:=rfl
+example (i:Fin m):
+    (CoefficientMarkedRecordNative.next hn ht ha ctx radius x hm []).bank.denominator i.succ=
+      x.bank.denominator i:=rfl
+example (S:ℕ) (h:(CoefficientMarkedPreludeActual.indices n ctx).length≤S+1):
+    HEq (CoefficientMarkedRecordNative.run hn ht ha ctx radius S []
+      (by simpa only [List.length_nil,Nat.add_zero] using h))
+      (CoefficientMarkedPreludePrefix.nativeRun hn ht ha ctx radius S
+        (CoefficientMarkedPreludeActual.indices n ctx) h):=HEq.rfl
+end RecordNativeFixture
+#print axioms CoefficientMarkedRecordNative.source_fields
+#print axioms CoefficientMarkedRecordNative.source_degree
+#print axioms CoefficientMarkedRecordNative.source_cap
+#print axioms CoefficientMarkedRecordNative.cut
+#print axioms CoefficientMarkedRecordNative.instruction
+#print axioms CoefficientMarkedRecordNative.next
+#print axioms CoefficientMarkedRecordNative.next_command
+#print axioms CoefficientMarkedRecordNative.run
+end RoadmapInternalG81RecordNative
+
+section RoadmapInternalG81RecordSerializer
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory Polynomial
+open scoped Classical
+namespace SerializerFixture
+variable {n:List Bool→ℕ} {t:List Bool→ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+  (ctx:List Bool) (radius:List Bool→ℕ) (S:ℕ) (cs:List (List Bool))
+  (h:(CoefficientMarkedPreludeActual.indices n ctx).length+cs.length≤S+1)
+example : (CoefficientMarkedRecordSerializer.records hn ht ha ctx radius cs).length=
+    (CoefficientMarkedPreludeActual.indices n ctx).length+cs.length:=
+  CoefficientMarkedRecordSerializer.records_length hn ht ha ctx radius cs
+example : CoefficientMarkedRecordPrefix.Index (IntegralMixedAuxiliaryMarkedIntegerSource.number n ctx+3)
+    (CoefficientMarkedPreludePrefix.Index (CoefficientMarkedPreludeActual.indices n ctx)) cs=
+    IntegralMixedFramedHistoryScript.Index (Fin 0)
+      (CoefficientMarkedRecordSerializer.commands hn ht ha ctx radius S cs h):=
+  CoefficientMarkedRecordSerializer.index_eq hn ht ha ctx radius S cs h
+example : HEq (CoefficientMarkedRecordNative.run hn ht ha ctx radius S cs h)
+    (reframe (IntegralMixedFramedHistoryScript.run (CoefficientMarkedPreludePrefix.initial hn ht ha ctx radius S)
+      (CoefficientMarkedRecordSerializer.commands hn ht ha ctx radius S cs h)
+      (by rw [CoefficientMarkedRecordSerializer.commands_length];exact h))
+      (CoefficientMarkedRecordNative.source (n:=n) (t:=t) ctx radius)
+      (CoefficientMarkedPreludePrefix.initial hn ht ha ctx radius S).critical_cap):=
+  CoefficientMarkedRecordSerializer.run_framed hn ht ha ctx radius S cs h
+example (h0:(CoefficientMarkedPreludeActual.indices n ctx).length+([]:List (List Bool)).length≤S+1):
+    CoefficientMarkedRecordSerializer.commands hn ht ha ctx radius S [] h0=
+      (IntegralMixedAuxiliaryMarkedIntegerPlan.plan hn ht ha radius).rules ctx:=
+  (CoefficientMarkedRecordSerializer.commands_nil hn ht ha ctx radius S h0).trans
+    (CoefficientMarkedPreludeActual.commands_eq hn ht ha ctx radius)
+end SerializerFixture
+#print axioms CoefficientMarkedRecordSerializer.prelude
+#print axioms CoefficientMarkedRecordSerializer.record
+#print axioms CoefficientMarkedRecordSerializer.records_length
+#print axioms CoefficientMarkedRecordSerializer.commands_nil
+#print axioms CoefficientMarkedRecordSerializer.index_eq
+#print axioms CoefficientMarkedRecordSerializer.run_framed
+end RoadmapInternalG81RecordSerializer
+
+section RoadmapInternalG81ActualRecordProfile
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedFramedHistoryScript
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+namespace RecordActualProfileRegression
+variable {n:List Bool→ℕ} {t:List Bool→LeanCanny.ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+
+-- The canonical chronological code list has one new head, not a reversed birth.
+example (ctx:List Bool) (k:ℕ):
+    CoefficientMarkedRecordActual.codes ctx (k+1)=
+      IntegralMixedCausalRecordPlanBits.code ctx k::CoefficientMarkedRecordActual.codes ctx k:=
+  CoefficientMarkedRecordActual.codes_succ ctx k
+
+-- Full original serialization is the existing plan, with no command receipt premise.
+example (ctx:List Bool) (R:List Bool→ℕ):
+    (IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha R).rules ctx=
+    CoefficientMarkedRecordSerializer.commands hn ht ha ctx R
+      (CoefficientMarkedRecordActual.horizon hn ht ha ctx)
+      (CoefficientMarkedRecordActual.codes ctx (IntegralMixedCausalRecordPlanBits.count ctx))
+      (CoefficientMarkedRecordActual.prefix_room hn ht ha ctx _ le_rfl):=
+  CoefficientMarkedRecordActual.plan_rules hn ht ha ctx R
+
+-- Every AUX context reaches that exact same native prefix state; no sampled word occurs.
+example (ctx aux:List Bool) (R:List Bool→ℕ) (k:ℕ) (hk:k≤IntegralMixedCausalRecordPlanBits.count ctx):
+    HEq (CoefficientMarkedRecordNative.run hn ht ha ctx R
+      (CoefficientMarkedRecordActual.horizon hn ht ha ctx) (CoefficientMarkedRecordActual.codes ctx k)
+      (CoefficientMarkedRecordActual.prefix_room hn ht ha ctx k hk))
+      ((IntegralMixedFramedHistoryFamilyBits.family (IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.plan hn ht ha R)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.data hn ht ha R)).state
+        (IntegralMixedFramedHistoryFamilyBits.keyAt ctx ((CoefficientMarkedPreludeActual.indices n ctx).length+k) aux)):=
+  CoefficientMarkedRecordActual.native_family hn ht ha ctx R k hk aux
+
+-- Direct consumer uses literal original raw, with no height/map/evaluator premise.
+example (ctx:List Bool) (R:List Bool→ℕ) (k:ℕ)
+    (hk:k<IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc:IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k)=false)
+    (i j:ℕ):
+    let x:=CoefficientMarkedRecordNative.run hn ht ha ctx R
+      (CoefficientMarkedRecordActual.horizon hn ht ha ctx) (CoefficientMarkedRecordActual.codes ctx k)
+      (CoefficientMarkedRecordActual.prefix_room hn ht ha ctx k hk.le)
+    let c:=CoefficientMarkedRecordNative.cut hn ht ha ctx R
+      ((CoefficientMarkedPreludeActual.indices n ctx).length+(CoefficientMarkedRecordActual.codes ctx k).length)
+      (IntegralMixedCausalRecordPlanBits.code ctx k)
+    (IntegralCriticalTotalSnapshotBits.integerEntry
+      (Algebra.leftMulMatrix x.sampler.scalarPrefix.basis.finBasis
+        ((IntegralMixedCutMatrix.raw x (by
+          rw [CoefficientMarkedRecordActual.codes_length]
+          exact CoefficientMarkedRecordActual.birth_room hn ht ha ctx k hk.le)
+          (c.rule (commonDenominator x) (commonDenominator_ne_zero x))
+          (c.kind (commonDenominator x) (commonDenominator_ne_zero x)) c.degree).coeff c.degree)) i j).natAbs≤
+      2^(IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawSlope hn ht ha ctx*R ctx+
+        IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawOffset hn ht ha ctx):=
+  CoefficientMarkedRecordProfile.original_cut_top_bound hn ht ha ctx R k hk hc i j
+
+#print axioms CoefficientMarkedRecordActual.codes_succ
+#print axioms CoefficientMarkedRecordActual.records_prefix
+#print axioms CoefficientMarkedRecordActual.plan_rules
+#print axioms CoefficientMarkedRecordActual.commands_prefix
+#print axioms CoefficientMarkedRecordActual.family_commands
+#print axioms CoefficientMarkedRecordActual.native_runAt
+#print axioms CoefficientMarkedRecordActual.native_family
+#print axioms CoefficientMarkedRecordProfile.instruction_eq
+#print axioms CoefficientMarkedRecordProfile.native_top_bound
+#print axioms CoefficientMarkedRecordProfile.original_cut_top_bound
+end RecordActualProfileRegression
+end RoadmapInternalG81ActualRecordProfile
+
+section RoadmapInternalG81ActualRawGrowth
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory IntegralMixedCausalRecordBits
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+namespace RecordRawGrowthRegression
+example {a S B m:ℕ} {P Q:SpatialSource a} {I:Type}
+    (hd:P.degree=Q.degree) (x:State Q S B m I) (hm:m≤S) (original:Cut P B):
+    let c:Cut P B:={original with current:=false};
+    CoefficientMixedCutSpecialization.nativeRaw x hm (c.rule 1 one_ne_zero) c.current
+      (CoefficientMixedCutSourceDegree.kind hd (c.rule 1 one_ne_zero) (c.kind 1 one_ne_zero)) c.degree=
+    IntegralMixedCutMatrix.raw x hm
+      ((CoefficientMixedCutSourceDegree.cut hd c).rule (commonDenominator x) (commonDenominator_ne_zero x))
+      ((CoefficientMixedCutSourceDegree.cut hd c).kind (commonDenominator x) (commonDenominator_ne_zero x))
+      (CoefficientMixedCutSourceDegree.cut hd c).degree:=by
+  dsimp only
+  exact CoefficientMarkedRecordRawGrowth.nativeRaw_retarget hd x hm _
+
+example {a S B m:ℕ} {P Q:SpatialSource a} {I:Type}
+    (hd:P.degree=Q.degree) (x:State Q S B m I) (hm:m≤S) (original:Cut P B):
+    let c:Cut P B:={original with current:=true};
+    CoefficientMixedCutSpecialization.nativeRaw x hm (c.rule 1 one_ne_zero) c.current
+      (CoefficientMixedCutSourceDegree.kind hd (c.rule 1 one_ne_zero) (c.kind 1 one_ne_zero)) c.degree=
+    IntegralMixedCutMatrix.raw x hm
+      ((CoefficientMixedCutSourceDegree.cut hd c).rule (commonDenominator x) (commonDenominator_ne_zero x))
+      ((CoefficientMixedCutSourceDegree.cut hd c).kind (commonDenominator x) (commonDenominator_ne_zero x))
+      (CoefficientMixedCutSourceDegree.cut hd c).degree:=by
+  dsimp only
+  exact CoefficientMarkedRecordRawGrowth.nativeRaw_retarget hd x hm _
+
+variable {n:List Bool→ℕ} {t:List Bool→LeanCanny.ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+attribute [local irreducible] CoefficientMarkedRecordNative.run
+  CoefficientMarkedRecordPrefix.cut CoefficientMarkedRecordNative.cut
+
+example {S m:ℕ} {I:Type} (ctx:List Bool) (radius:List Bool→ℕ)
+    (x:State (CoefficientMarkedRecordNative.source (n:=n) (t:=t) ctx radius)
+      S (CoefficientMarkedIntegerBirth.width hn ht ha ctx) m I) (hm:m≤S) (code:List Bool):
+    let c:=CoefficientMarkedRecordPrefix.cut hn ht ha ctx m code
+    (CoefficientMixedCutSpecialization.nativeRaw x hm (c.rule 1 one_ne_zero) c.current
+      (CoefficientMixedCutSourceDegree.kind
+        (CoefficientMarkedRecordNative.source_degree (n:=n) (t:=t) ctx radius)
+        (c.rule 1 one_ne_zero) (c.kind 1 one_ne_zero)) c.degree).coeff c.degree=
+    let actual:=CoefficientMarkedRecordNative.cut hn ht ha ctx radius m code
+    (IntegralMixedCutMatrix.raw x hm
+      (actual.rule (commonDenominator x) (commonDenominator_ne_zero x))
+      (actual.kind (commonDenominator x) (commonDenominator_ne_zero x)) actual.degree).coeff actual.degree:=
+  CoefficientMarkedRecordRawGrowth.raw_coefficient_eq_original hn ht ha ctx radius x hm code
+
+example (ctx:List Bool) (radius:List Bool→ℕ) (k:ℕ)
+    (hk:k<IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc:IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k)=false)
+    (i j:Fin (FixedWidthPolynomial.count
+      ((CoefficientMarkedPreludeActual.indices n ctx).length+(CoefficientMarkedRecordActual.codes ctx k).length)
+      (CoefficientMarkedIntegerBirth.width hn ht ha ctx))):
+    let x:=CoefficientMarkedRecordNative.run hn ht ha ctx radius
+      (CoefficientMarkedRecordActual.horizon hn ht ha ctx)
+      (CoefficientMarkedRecordActual.codes ctx k)
+      (CoefficientMarkedRecordActual.prefix_room hn ht ha ctx k hk.le)
+    let c:=CoefficientMarkedRecordPrefix.cut hn ht ha ctx
+      ((CoefficientMarkedPreludeActual.indices n ctx).length+(CoefficientMarkedRecordActual.codes ctx k).length)
+      (IntegralMixedCausalRecordPlanBits.code ctx k)
+    (Algebra.leftMulMatrix x.sampler.scalarPrefix.basis.finBasis
+      ((CoefficientMixedCutSpecialization.nativeRaw x
+        (by
+          rw [CoefficientMarkedRecordActual.codes_length]
+          exact CoefficientMarkedRecordActual.birth_room hn ht ha ctx k hk.le)
+        (c.rule 1 one_ne_zero) c.current
+        (CoefficientMixedCutSourceDegree.kind
+          (CoefficientMarkedRecordNative.source_degree (n:=n) (t:=t) ctx radius)
+          (c.rule 1 one_ne_zero) (c.kind 1 one_ne_zero)) c.degree).coeff c.degree) i j).natAbs≤
+      2^(IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawSlope hn ht ha ctx*radius ctx+
+        IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawOffset hn ht ha ctx):=
+  CoefficientMarkedRecordRawGrowth.finite_basis_bound hn ht ha ctx radius k hk hc i j
+
+#print axioms CoefficientMarkedRecordRawGrowth.nativeRaw_retarget
+#print axioms CoefficientMarkedRecordRawGrowth.nativeTop_retarget
+#print axioms CoefficientMarkedRecordRawGrowth.raw_eq_original
+#print axioms CoefficientMarkedRecordRawGrowth.raw_coefficient_eq_original
+#print axioms CoefficientMarkedRecordRawGrowth.finite_basis_bound
+end RecordRawGrowthRegression
+end RoadmapInternalG81ActualRawGrowth
+
+section RoadmapInternalG81OriginalEffectiveCutoff
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedHistory Polynomial
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+namespace EffectiveCutoffRegression
+variable {n:List Bool→ℕ} {t:List Bool→LeanCanny.ETR.Term}
+  (hn:UnaryFn n) (ht:(fun q=>(t q).toData.toBits)∈FP) (ha:∀q,(t q).arity≤n q)
+attribute [local irreducible] CoefficientMarkedRecordNative.run CoefficientMarkedRecordPrefix.build
+  CoefficientMarkedRecordPrefix.cut CoefficientMarkedRecordNative.cut
+
+-- Requested radius is absent from the computable bound.
+example:BinaryFn (CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha):=
+  CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff_binary hn ht ha
+
+example (ctx:List Bool) (k:ℕ) (hk:k≤IntegralMixedCausalRecordPlanBits.count ctx):
+    CoefficientMarkedRecordSpecialization.cutoff hn ht ha ctx (CoefficientMarkedRecordActual.horizon hn ht ha ctx)
+      (CoefficientMarkedRecordActual.codes ctx k)≤CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx:=
+  CoefficientMarkedRecordEffectiveCutoff.cutoff_le_effective hn ht ha ctx k hk
+
+-- Whole actual canonical raw table, with no per-birth receipt or Model.
+example (ctx:List Bool) (R:List Bool→ℕ)
+    (hR:CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx≤R ctx):
+    CoefficientHistoryPrefix.Specializes (R ctx)
+      (CoefficientMarkedRecordPrefix.build hn ht ha ctx (CoefficientMarkedRecordActual.horizon hn ht ha ctx)
+        (CoefficientMarkedRecordActual.codes ctx (IntegralMixedCausalRecordPlanBits.count ctx)))
+      (CoefficientMarkedRecordNative.run hn ht ha ctx R (CoefficientMarkedRecordActual.horizon hn ht ha ctx)
+        (CoefficientMarkedRecordActual.codes ctx (IntegralMixedCausalRecordPlanBits.count ctx))
+        (CoefficientMarkedRecordActual.prefix_room hn ht ha ctx _ le_rfl)):=
+  CoefficientMarkedRecordEffectiveCutoff.specializes_above_effective hn ht ha ctx R _ le_rfl hR
+
+-- All physical row and retained-slot specialization is obtained constructively.
+example (ctx:List Bool) (R:List Bool→ℕ) (k:ℕ) (hk:k≤IntegralMixedCausalRecordPlanBits.count ctx)
+    (hR:CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx≤R ctx):
+    let F:=CoefficientMarkedRecordPrefix.build hn ht ha ctx (CoefficientMarkedRecordActual.horizon hn ht ha ctx)
+      (CoefficientMarkedRecordActual.codes ctx k)
+    let x:=CoefficientMarkedRecordNative.run hn ht ha ctx R (CoefficientMarkedRecordActual.horizon hn ht ha ctx)
+      (CoefficientMarkedRecordActual.codes ctx k) (CoefficientMarkedRecordActual.prefix_room hn ht ha ctx k hk)
+    ∃ψ:F.carrier→+*x.sampler.scalarPrefix.carrier,
+      CoefficientCoordinateBasis.Specializes (evalRingHom ((2:ℤ)^R ctx)) ψ F.basis
+        (CoefficientCoordinateBasis.ofIntegral x.sampler.scalarPrefix.basis) ∧
+      (∀j,MvPolynomial.map (evalRingHom ((2:ℤ)^R ctx)) (F.rows j)=x.sampler.rows j) ∧F.scalar=x.sampler.scalar:=by
+  obtain ⟨ψ,hb,_,hr,hs⟩:=(CoefficientMarkedRecordEffectiveCutoff.specializes_above_effective hn ht ha ctx R k hk hR).pointwise
+  exact ⟨ψ,hb,hr,hs⟩
+
+-- Actual formal top-matrix mass now has a derived original-only exponent.
+example (ctx:List Bool) (k:ℕ) (hk:k<IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc:IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k)=false):
+    CoefficientMarkedRecordSpecialization.topEntryBound hn ht ha ctx
+      (CoefficientMarkedRecordPrefix.build hn ht ha ctx (CoefficientMarkedRecordActual.horizon hn ht ha ctx)
+        (CoefficientMarkedRecordActual.codes ctx k)) (IntegralMixedCausalRecordPlanBits.code ctx k)
+      (IntegerPolynomialDyadic.massBudget (CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx)
+        (IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawSlope hn ht ha ctx)
+        (IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawOffset hn ht ha ctx)):=
+  CoefficientMarkedRecordCoefficientBounds.topEntryBound_of_cutoff_le hn ht ha ctx k hk hc _
+    (CoefficientMarkedRecordEffectiveCutoff.cutoff_le_effective hn ht ha ctx k hk.le)
+
+#print axioms CoefficientMarkedRecordEffectiveCutoff.rankCap_binary
+#print axioms CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff_binary
+#print axioms CoefficientMarkedRecordEffectiveCutoff.rank_le
+#print axioms CoefficientMarkedRecordEffectiveCutoff.budget_step
+#print axioms CoefficientMarkedRecordEffectiveCutoff.cutoff_le_budget
+#print axioms CoefficientMarkedRecordEffectiveCutoff.cutoff_le_effective
+#print axioms CoefficientMarkedRecordEffectiveCutoff.specializes_above_effective
+end EffectiveCutoffRegression
+end RoadmapInternalG81OriginalEffectiveCutoff
