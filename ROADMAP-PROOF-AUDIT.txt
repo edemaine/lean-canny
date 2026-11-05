@@ -3139,3 +3139,62 @@ the path induction and marked attachment proving bounded association iff.
 Neither Replay nor vertex PSPACE supplies these statements. Both-label
 feasibility, full interval/frontier incidence and BOTH original unconditional
 connectivity PSPACE endpoints remain unproved. Work continues at those gaps.
+
+62. Genuine provider seeds and retained-history semantic receipts
+
+The source-aware checker now has actual point/frame/signature readback.
+Every accepted point is an occurrence for its literal provider source, and
+every current signature coordinate reads that same entire point. Both OLD
+and EXTERNAL Replay identify the marked prelude's original projection with
+the actual replayed endpoint. FullValid-only reverse marked guards let fresh
+constructors derive validity from their own tuple equations.
+
+FormulaSignSlotRadialProviderFirstSeed.exists_external_seed consumes only
+the actual external own-word validity and joint Q acceptance.
+exists_old_seed consumes only the genuine original Good candidate. Each
+constructs a fresh complete OWN word satisfying ALL seven Atomic.Valid
+conjuncts at depth zero, with the entire point equal to a genuine critical
+point in the marked endpoint's component. Every initial marked coordinate
+and original endpoint projection is retained. The proper critical chooser,
+full-record realization, padding, sampler completeness, physical captures,
+critical/companion scans, marked guards and both role-specific replays are
+derived internally. No new word, model, evaluator, homomorphism or guard is
+assumed.
+
+Literal provider/count/raw-prefix preservation now gives equal full prefix
+algebras and observations, creating instructions, headers and chronological
+bank fields. Retaining the old natural columns preserves every historical
+critical correlation and the FULL cut receipt, including first-nonzero
+choice, actual degree and untruncated root. Replay transfers to a fresh own
+word from initial-field equality. These are intermediate persistence
+receipts, not yet an accepted recursive-child theorem; native cut guards
+still need their new-provider receipt equivalence.
+
+Native proper Near, field equality, NoBad, NoCritical and local-edge searches
+have actual provider controls and independent own-word budgets. Identity
+reads entire current-point equality. Recursive Edge retains one literal
+provider; separate CrossPoint compares current points across providers with
+equal actual originals AND radii. Initial endpoint fields are not compared
+across roles. Native search cost alone supplies no geometric edge iff.
+
+This checkpoint contains 70 dependency-closed new modules, 8073 LF lines.
+All pass whole-source checks at 200000 heartbeats, warnings as errors and
+strict implicit variables. Ten delegated manifests contribute 58 distinct
+matching frozen source hashes; the 12 root additions are recorded separately.
+The 17-source genuine-seed fixture passes seven consumers, five API checks
+and seven standard-three-axiom closures. Other delegated focused fixtures
+and strict producers pass. scripts/CheckProviderSemantics.lean adds three
+actual consumers, seven API checks and sixteen standard-three-axiom audits.
+The strict three-library build passes 21898 jobs. CheckAxioms passes 99360
+declarations, and CheckSpaceFoundation passes 207199 transitive constants
+with no legacy space foundation.
+CheckRoadmapNativeGraph passes with 10815 lines byte-identical to the
+preceding provider-foundation checkpoint. All source files have UTF8/LF,
+one final newline, no trailing whitespace and mode100644. Only the main
+worktree exists; unique earlier WIP and active next-stage proofs are
+excluded. No external write or push.
+
+Accepted recursive children, proper-edge geometric correctness, fixed-provider
+path induction and marked attachment remain open. Bounded component
+association iff, both-label feasibility, full interval/frontier incidence,
+and BOTH original unconditional connectivity PSPACE endpoints remain open.

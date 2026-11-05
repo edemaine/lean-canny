@@ -2417,10 +2417,13 @@ unfinished.
 The actual OLD/EXTERNAL provider atomic checker now has a native PSPACE
 theorem, with derived record-bank controls and same-point replay. Canonical
 marked endpoint roots realize its actual saved prelude, and accepted words
-have a polynomial size bound for each provider. Point/frame readback,
-accepted recursive child and edge construction, and path correctness for
-the new providers remain unfinished; this does not yet prove component
-association or either original connectivity PSPACE endpoint.
+have a polynomial size bound for each provider. Point/frame/signature and
+replay-to-prelude readbacks are proved. Genuine OLD and EXTERNAL endpoints
+now construct fresh accepted depth-zero seeds in the same marked component.
+Historical fields, critical guards and full cut receipts survive retained
+resampling. Accepted recursive children, proper-edge correctness and path
+induction remain unfinished; component association and both original
+connectivity PSPACE endpoints remain open.
 
 ## Build and verification
 

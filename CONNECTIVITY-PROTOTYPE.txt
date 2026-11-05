@@ -180,10 +180,19 @@ the two actual radii and spatial sources are proved equal. Provider-only
 vertex and OWN-word budgets are UnaryFn. Original joint-header bounds remain
 an integration obligation.
 
-The remaining B contracts are source-aware point/frame and signature
-readback, a fresh accepted first seed from each marked endpoint, accepted
-recursive child/proper-edge constructors with native edge guards, and the
-path induction and marked attachment proving bounded association iff.
+Source-aware point/frame/signature readback and BOTH replay-to-prelude
+projections are proved. Genuine OLD candidates and accepted EXTERNAL own
+points construct fresh accepted depth-zero seeds in the same marked-source
+component, preserving every initial marked coordinate. Retained histories
+preserve actual prefix algebras, all earlier bank values, critical guards,
+full cut receipts and replay on independently sampled own words.
+
+The remaining B contracts are accepted recursive child/proper-edge
+constructors with native edge correctness, and the path induction and marked
+attachment proving bounded association iff. Native identity and cross-point
+comparisons read the entire current point; recursive edges retain one literal
+provider, while cross-point comparison requires the same original and radius.
+Native NoBad/NoCritical/Near cost theorems alone do not supply geometric iff.
 Vertex PSPACE and Replay alone imply none of those component statements.
 The two-label feasibility equivalence and both original unconditional
 connectivity PSPACE endpoints remain open. This checkpoint introduces no
