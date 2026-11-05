@@ -1,3 +1,46 @@
+import LeanCanny.Algebra.SquareFeatureBivariateProduct
+import LeanCanny.Algebra.SquareFeatureCoefficientReader
+import LeanCanny.Algebra.SquareFeaturePackedReader
+import LeanCanny.Algebra.SquareFeatureProductEvaluation
+import LeanCanny.Algebra.SquareFeatureProductFamily
+import LeanCanny.Algebra.SquareFeatureProductPositive
+import LeanCanny.Algebra.SquareFeatureProductStratum
+import LeanCanny.Encoding.CoefficientMarkedCriticalBankSign
+import LeanCanny.Encoding.CoefficientMarkedCriticalBankVariables
+import LeanCanny.Encoding.CoefficientMarkedRecordFieldContext
+import LeanCanny.Encoding.CoefficientMarkedRecordFieldIncidence
+import LeanCanny.Encoding.CoefficientMarkedRecordFieldListIncidence
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutBounds
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutComparison
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutInstalled
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutLex
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutPhysical
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipal
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipalHeight
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipalSign
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutQueries
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutSign
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutSpatial
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutTerminalHead
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutTransport
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutWindow
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutWordTuple
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutWordValue
+import LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata
+import LeanCanny.Encoding.CoefficientMarkedRecordRowPersistence
+import LeanCanny.Encoding.CoefficientMarkedRecordSelectedMetadata
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceCutMetadata
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceProbeEvaluation
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceProbeNative
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceProbePhysical
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceProbeQuery
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceProbeReadback
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceProbeSign
+import LeanCanny.Encoding.FormulaSignSlotRadialJointIndexedContext
+import LeanCanny.Encoding.FormulaSignSlotRadialJointMarginGuard
+import LeanCanny.Encoding.FormulaSignSlotRadialJointPrincipalGuard
+import LeanCanny.Encoding.SquareFeatureProductSource
+import LeanCanny.Geometry.SquareFeatureSignStratum
 import LeanCanny.Algebra.CoefficientFinitePhysicalQuery
 import LeanCanny.Algebra.CoefficientFullCutHeadQueries
 import LeanCanny.Encoding.CoefficientMarkedCriticalBankIncidence
@@ -5194,6 +5237,12 @@ correlation and both endpoint signs. Joint descriptor roots now yield
 same-component core candidates and fresh own Replay words, with actual
 center/value guard binding. Full grid/cut-stratum sampling and native
 cross-source component checking remain open, as does whole graph transport.
+Native historical full-factor coefficient signs now equal the constructed
+full-tuple queries, with one coherent branch and fresh own words at each
+radius. The actual NoBad comparison also preserves truth on that same
+branch. The compact zero-count stratum has a closed native coefficient
+reader. Whole trace guards, outer predicates, descriptor stratum sampling
+and native cross-source component checking remain open.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 Common bounds for every guarded graph query and physical-edge transport,

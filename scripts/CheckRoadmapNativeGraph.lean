@@ -1,3 +1,19 @@
+import LeanCanny.Algebra.SquareFeatureProductEvaluation
+import LeanCanny.Encoding.CoefficientMarkedCriticalBankSign
+import LeanCanny.Encoding.CoefficientMarkedRecordFieldListIncidence
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutBounds
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutComparison
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutInstalled
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutLex
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipalHeight
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipalSign
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutTerminalHead
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutTransport
+import LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceProbeSign
+import LeanCanny.Encoding.FormulaSignSlotRadialJointMarginGuard
+import LeanCanny.Encoding.SquareFeatureProductSource
+import LeanCanny.Geometry.SquareFeatureSignStratum
 import LeanCanny.Algebra.CoefficientFinitePhysicalQuery
 import LeanCanny.Algebra.CoefficientFullCutHeadQueries
 import LeanCanny.Encoding.CoefficientMarkedCriticalIntervalIncidence
@@ -16927,3 +16943,606 @@ example (q : List Bool)
 #print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointComponentTransport.continuous_project
 #print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointComponentTransport.label_retained
 end RoadmapInternalG96JointDescriptorCore
+
+section RoadmapInternalG97HistoricalNativeProbe
+namespace HistoricalNativeProbeRegression
+open LeanCanny LeanCanny.Encoding
+open LeanCanny.Algebra LeanCanny.Computation Polynomial Set
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+example (ctx : List Bool) {R S : List Bool → ℕ} (hR : BinaryFn R) (hS : BinaryFn S)
+    (hRlarge : CoefficientMarkedRecordFullCutSign.cutoff hn ht ha ctx ≤ R ctx)
+    (hSlarge : CoefficientMarkedRecordFullCutSign.cutoff hn ht ha ctx ≤ S ctx)
+    {a b : ℝ} (ha0 : (2 : ℝ)^CoefficientMarkedRecordFullCutSign.cutoff hn ht ha ctx ≤ a)
+    (x : C(Ioo a b, Fin (CoefficientMarkedRecordFullCutSign.count hn ht ha ctx) → ℝ))
+    (hx : ∀ y : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha ctx
+      (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl y.val (x y))
+    (u v : Ioo a b) (hu : u.val = (2 : ℝ)^R ctx) (hv : v.val = (2 : ℝ)^S ctx)
+    (aux aux' w w' : List Bool)
+    (hw : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) (pair ctx aux) w)
+    (hw' : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false) (pair ctx aux') w')
+    (hz : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false)
+      (pair ctx aux) w hw).val (x u))
+    (hz' : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false)
+      (pair ctx aux') w' hw').val (x v))
+    (q : CoefficientMarkedRecordFullCutQueries.CutLabel ctx)
+    (he : q.coefficient ≤ 2^(IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha).width ctx)
+    (hk : q.requested ≤ 2^(IntegralMixedAuxiliaryMarkedRecordPlan.parameters hn ht ha).width ctx) :
+    IntegralMixedPhysicalTraceCutTest.value hn ht ha hR false
+      (pair (pair (pair ctx aux) w) (IntegralFramedPhysicalTraceCutSource.datum
+        (List.replicate (CoefficientMarkedRecordCutSource.birth (n := n) ctx q.stage) true) q.coefficient q.requested)) =
+    IntegralMixedPhysicalTraceCutTest.value hn ht ha hS false
+      (pair (pair (pair ctx aux') w') (IntegralFramedPhysicalTraceCutSource.datum
+        (List.replicate (CoefficientMarkedRecordCutSource.birth (n := n) ctx q.stage) true) q.coefficient q.requested)) := by
+  exact LeanCanny.Encoding.CoefficientMarkedRecordTraceProbeSign.value_on_curve hn ht ha ctx hR hS
+    hRlarge hSlarge ha0 x hx u v hu hv aux aux' w w' hw hw' hz hz' q he hk
+end HistoricalNativeProbeRegression
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRowPersistence.rows_persist
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutTransport.transport_word
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTraceProbeQuery.value
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTraceProbeSign.value_on_curve
+end RoadmapInternalG97HistoricalNativeProbe
+
+section RoadmapInternalG97ActualRawCutMetadata
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open CoefficientMarkedRecordRawCutMetadata
+open IntegralMixedAuxiliaryMarkedRecordPlan (certifiedParameters certifiedPlan certifiedData)
+namespace RawCutMetadataRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R : List Bool → ℕ} (hR : BinaryFn R)
+local notation "P" => certifiedParameters hn ht ha hR
+local notation "D" => certifiedPlan hn ht ha hR
+local notation "H" => certifiedData hn ht ha hR
+
+theorem parent_receipt (ctx : List Bool) (k : ℕ) (hk : k < IntegralMixedCausalRecordPlanBits.count ctx) :
+    IntegralMixedFramedFullCutProbeBits.Active P (parent hn ht ha hR ctx k) ∧
+    IntegralMixedVirtualTaskBits.saved P (parent hn ht ha hR ctx k) =
+      CoefficientMarkedRecordRowLayout.key (n := n) ctx k (BinaryNatCode.encode 2) :=
+  ⟨parent_active hn ht ha hR ctx k hk, parent_saved hn ht ha hR ctx k hk⟩
+
+theorem terminal_receipt (ctx : List Bool) (k : ℕ) (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false) :
+    IntegralMixedFramedFullCutTerminalHead.Valid P D H
+      (fun _ => parent hn ht ha hR ctx k) (fun _ => terminal (n := n) ctx) [] ∧
+    IntegralMixedFramedFullCutHead.degree P (fun _ => parent hn ht ha hR ctx k)
+      (fun _ => (CoefficientMarkedRecordCutSource.cut hn ht ha ctx k).degree) [] =
+      (CoefficientMarkedRecordCutSource.cut hn ht ha ctx k).degree :=
+  ⟨terminal_valid hn ht ha hR ctx k hk, degree_clip hn ht ha hR ctx k hk hc⟩
+end RawCutMetadataRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata.raw_birth_lt_cap
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata.parent_root
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata.parent_birth
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata.parent_saved
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata.parent_active
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata.parent_arity
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata.declared_degree
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata.terminal_count
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata.terminal_valid
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata.suffix_newer
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordRawCutMetadata.degree_clip
+#print axioms RawCutMetadataRegression.parent_receipt
+#print axioms RawCutMetadataRegression.terminal_receipt
+end RoadmapInternalG97ActualRawCutMetadata
+
+section RoadmapInternalG97ActualFullCutTerminalHead
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open IntegralMixedAuxiliaryMarkedRecordPlan (certifiedParameters certifiedPlan certifiedData)
+namespace FullCutTerminalHeadRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R : List Bool → ℕ} (hR : BinaryFn R)
+local notation "P" => certifiedParameters hn ht ha hR
+local notation "D" => certifiedPlan hn ht ha hR
+local notation "H" => certifiedData hn ht ha hR
+
+theorem actual_terminal_head (ctx : List Bool) (k : ℕ)
+    (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false)
+    (hlarge : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx) :
+    HEq ((CoefficientMarkedRecordFullCutTerminalHead.polynomial hn ht ha ctx k hk).map
+      (MvPolynomial.map (evalRingHom ((2 : ℤ)^R ctx))))
+      (IntegralMixedFramedFullCutTerminalHead.polynomial P D H
+        (fun _ => CoefficientMarkedRecordRawCutMetadata.parent hn ht ha hR ctx k)
+        (fun _ => CoefficientMarkedRecordRawCutMetadata.terminal (n := n) ctx)
+        (fun _ => (CoefficientMarkedRecordCutSource.cut hn ht ha ctx k).degree) []) :=
+  CoefficientMarkedRecordFullCutTerminalHead.specializes hn ht ha hR ctx k hk hc hlarge
+end FullCutTerminalHeadRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutTerminalHead.fits
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutTerminalHead.specializes
+#print axioms FullCutTerminalHeadRegression.actual_terminal_head
+end RoadmapInternalG97ActualFullCutTerminalHead
+
+section RoadmapInternalG97ActualFullCutComposition
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+namespace FullCutCompositionRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R : List Bool → ℕ} (hR : BinaryFn R)
+
+theorem actual_interval_principal (ctx : List Bool) (k : ℕ)
+    (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false)
+    (left right : ℕ) (side : Bool) (negative : Bool)
+    (hlarge : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx) (j : ℕ) :
+    HEq (MvPolynomial.map (evalRingHom ((2 : ℤ)^R ctx))
+      (CoefficientMarkedRecordFullCutPrincipal.polynomial hn ht ha ctx k hk
+        (if side then right else left) 1 negative j))
+      (FixedWidthTarskiPrincipalBits.polynomial
+        (CoefficientMarkedRecordFullCutInstalled.installedFamily hn ht ha hR side 1 negative)
+        (CoefficientMarkedRecordFullCutInstalled.context (n := n) ctx k left right) j) :=
+  CoefficientMarkedRecordFullCutInstalled.specializes hn ht ha hR ctx k hk hc left right side 1 negative hlarge j
+
+theorem actual_mass (ctx : List Bool) (k index : ℕ) (negative : Bool) (j : ℕ) :
+    MvMass.mass (FixedWidthTarskiPrincipalBits.polynomial
+      (CoefficientMarkedRecordFullCutPrincipal.nativeFamily hn ht ha hR ctx k index 1 negative) [] j) ≤
+      2^(CoefficientMarkedRecordFullCutPrincipalHeight.slope hn ht ha ctx k*R ctx+
+        CoefficientMarkedRecordFullCutPrincipalHeight.offset hn ht ha ctx k) :=
+  CoefficientMarkedRecordFullCutPrincipalHeight.principal_mass hn ht ha hR ctx k index negative j
+
+theorem original_budget_readers {ctx : List Bool → List Bool} {k : List Bool → ℕ}
+    (hctx : ctx ∈ FP) (hk : BinaryFn k) :
+    BinaryFn (fun q => CoefficientMarkedRecordFullCutPrincipalHeight.slope hn ht ha (ctx q) (k q)) ∧
+    BinaryFn (fun q => CoefficientMarkedRecordFullCutPrincipalHeight.offset hn ht ha (ctx q) (k q)) :=
+  ⟨CoefficientMarkedRecordFullCutPrincipalHeight.slope_binary hn ht ha hctx hk,
+    CoefficientMarkedRecordFullCutPrincipalHeight.offset_binary hn ht ha hctx hk⟩
+
+example (q a : ℤ) (w : ℕ) (negative : Bool) :
+    CoefficientTarskiParameterQueries.window (m := 0) q a 0 w negative =
+      Polynomial.C (MvPolynomial.C (q^2))*Polynomial.X+
+        Polynomial.C (if negative then -(MvPolynomial.C (q^2)*MvPolynomial.X 0)
+          else MvPolynomial.C (q^2)*MvPolynomial.X 0) := by
+  simp [CoefficientTarskiParameterQueries.window, CoefficientTarskiParameterQueries.monomial]
+end FullCutCompositionRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutWindow.terminal_products
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutWindow.weight_native
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutWindow.specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipal.head_map
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipal.query_map
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipal.specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutInstalled.parent_context
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutInstalled.terminal_context
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutInstalled.degree_context
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutInstalled.specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipalHeight.cut_degree_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipalHeight.slope_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipalHeight.offset_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipalHeight.principal_mass
+#print axioms FullCutCompositionRegression.actual_interval_principal
+#print axioms FullCutCompositionRegression.actual_mass
+#print axioms FullCutCompositionRegression.original_budget_readers
+end RoadmapInternalG97ActualFullCutComposition
+
+section RoadmapInternalG97ActualFullCutBoxes
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+namespace FullCutBoxesRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R : List Bool → ℕ} (hR : BinaryFn R)
+
+theorem actual_physical_map (ctx : List Bool) (k : ℕ)
+    (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false)
+    (index : ℕ) (negative : Bool)
+    (hlarge : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx) (j delta epsilon : ℕ) :
+    MvPolynomial.map (evalRingHom ((2 : ℤ)^R ctx))
+      (CoefficientMarkedRecordFullCutPhysical.polynomial hn ht ha ctx k hk index 1 negative j delta epsilon) =
+      MvPolynomial.rename Fin.val (CoefficientMarkedRecordFullCutPhysical.native hn ht ha hR ctx k index 1 negative j delta epsilon) :=
+  CoefficientMarkedRecordFullCutPhysical.specializes hn ht ha hR ctx k hk hc index 1 negative hlarge j delta epsilon
+
+theorem complete_finite_box (ctx : List Bool) (k : ℕ)
+    (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false)
+    (index : ℕ) (negative : Bool) (j delta epsilon : ℕ) :
+    (CoefficientMarkedRecordFullCutBounds.finite hn ht ha ctx k hk index negative j delta epsilon).totalDegree ≤
+      CoefficientMarkedRecordFullCutBounds.spatialDegree hn ht ha ctx ∧
+    ∀ e : Fin (CoefficientMarkedRecordFullCutPhysical.rawData hn ht ha ctx).count →₀ ℕ,
+      ((CoefficientMarkedRecordFullCutBounds.finite hn ht ha ctx k hk index negative j delta epsilon).coeff e).natDegree ≤
+        CoefficientMarkedRecordFullCutBounds.slope hn ht ha ctx ∧
+      coefficientMass ((CoefficientMarkedRecordFullCutBounds.finite hn ht ha ctx k hk index negative j delta epsilon).coeff e) ≤
+        2^CoefficientMarkedRecordFullCutBounds.coefficientBudget hn ht ha ctx :=
+  ⟨CoefficientMarkedRecordFullCutBounds.finite_degree hn ht ha ctx k hk index negative j delta epsilon,
+    CoefficientMarkedRecordFullCutBounds.finite_coefficient_degree_mass hn ht ha ctx k hk hc index negative j delta epsilon⟩
+
+theorem original_readers :
+    UnaryFn (fun ctx => (CoefficientMarkedRecordFullCutPhysical.rawData hn ht ha ctx).count) ∧
+    BinaryFn (CoefficientMarkedRecordFullCutBounds.spatialDegree hn ht ha) ∧
+    BinaryFn (CoefficientMarkedRecordFullCutBounds.coefficientBudget hn ht ha) :=
+  ⟨CoefficientMarkedRecordFullCutPhysical.count_unary hn ht ha,
+    CoefficientMarkedRecordFullCutBounds.spatialDegree_binary hn ht ha,
+    CoefficientMarkedRecordFullCutBounds.coefficientBudget_binary hn ht ha⟩
+end FullCutBoxesRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPhysical.specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPhysical.count_pos
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPhysical.variable_box
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutSpatial.head_coefficient_degree
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutSpatial.window_weight_le
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutSpatial.query_coefficient_degree
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutSpatial.physical_degree
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutBounds.coefficient_degree_mass
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutBounds.spatialDegree_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutBounds.coefficientBudget_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutBounds.finite_coefficient_degree_mass
+#print axioms FullCutBoxesRegression.actual_physical_map
+#print axioms FullCutBoxesRegression.complete_finite_box
+#print axioms FullCutBoxesRegression.original_readers
+end RoadmapInternalG97ActualFullCutBoxes
+
+section RoadmapInternalG97ActualFullCutPrincipalSigns
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial Set
+open scoped Classical
+namespace FullCutPrincipalSignRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+theorem original_cutoff : BinaryFn (CoefficientMarkedRecordFullCutPrincipalSign.cutoff hn ht ha) :=
+  CoefficientMarkedRecordFullCutPrincipalSign.cutoff_binary hn ht ha
+
+theorem actual_coherent_curves (ctx : List Bool) {a b : ℝ}
+    (ha0 : (2 : ℝ)^CoefficientMarkedRecordFullCutPrincipalSign.cutoff hn ht ha ctx ≤ a) (s : Ioo a b) :
+    ∃ curve : CoefficientMarkedRecordRootBranches.Curve hn ht ha ctx
+      (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl a b s,
+      (∀ l : CoefficientMarkedRecordRootBranches.RootIndex hn ht ha ctx
+        (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl s curve,
+        ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha ctx
+          (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl u.val (curve l.val u)) ∧
+      (∀ l : CoefficientMarkedRecordRootBranches.RootIndex hn ht ha ctx
+        (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl s curve,
+        ∀ q : CoefficientMarkedRecordFullCutPrincipalSign.Label ctx, ∀ u v : Ioo a b,
+        SignType.sign ((CoefficientMarkedRecordFullCutPrincipalSign.polynomial hn ht ha ctx q).eval₂
+          (SymbolicScaledSquarefree.scalarEvaluation u.val) (curve l.val u)) =
+        SignType.sign ((CoefficientMarkedRecordFullCutPrincipalSign.polynomial hn ht ha ctx q).eval₂
+          (SymbolicScaledSquarefree.scalarEvaluation v.val) (curve l.val v))) := by
+  have hrow : (2 : ℝ)^CoefficientMarkedRecordCartesianRows.cutoff hn ht ha ctx ≤ a :=
+    (pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2)
+      (CoefficientMarkedRecordFullCutPrincipalSign.row_cutoff_le hn ht ha ctx)).trans ha0
+  obtain ⟨curve, _, hr, _⟩ := CoefficientMarkedRecordRootBranches.exists_branches hn ht ha ctx
+    (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl hrow s
+  exact ⟨curve, hr, fun l q u v => CoefficientMarkedRecordFullCutPrincipalSign.sign_on_root_curve
+    hn ht ha ctx ha0 (curve l.val) (hr l) q u v⟩
+end FullCutPrincipalSignRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipalSign.signCutoff_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipalSign.cutoff_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutPrincipalSign.sign_on_root_curve
+#print axioms FullCutPrincipalSignRegression.original_cutoff
+#print axioms FullCutPrincipalSignRegression.actual_coherent_curves
+end RoadmapInternalG97ActualFullCutPrincipalSigns
+
+section RoadmapInternalG97ActualFullCutLex
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial Set
+open scoped Classical
+namespace FullCutLexRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+theorem actual_lex_curves (ctx : List Bool) {a b : ℝ}
+    (ha0 : (2 : ℝ)^CoefficientMarkedRecordFullCutPrincipalSign.cutoff hn ht ha ctx ≤ a) (s : Ioo a b) :
+    ∃ curve : CoefficientMarkedRecordRootBranches.Curve hn ht ha ctx
+      (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl a b s,
+      (∀ l : CoefficientMarkedRecordRootBranches.RootIndex hn ht ha ctx
+        (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl s curve,
+        ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha ctx
+          (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl u.val (curve l.val u)) ∧
+      (∀ l : CoefficientMarkedRecordRootBranches.RootIndex hn ht ha ctx
+        (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl s curve,
+        ∀ k, ∀ hk : k < IntegralMixedCausalRecordPlanBits.count ctx,
+        ∀ _hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false,
+        ∀ index negative j, ∀ u v : Ioo a b,
+        SignType.sign (RealIteratedTarski.lex (CoefficientMarkedRecordFullCutLex.principal hn ht ha ctx k hk index negative j u.val (curve l.val u))) =
+          SignType.sign (RealIteratedTarski.lex (CoefficientMarkedRecordFullCutLex.principal hn ht ha ctx k hk index negative j v.val (curve l.val v)))) := by
+  have hrow : (2 : ℝ)^CoefficientMarkedRecordCartesianRows.cutoff hn ht ha ctx ≤ a :=
+    (pow_le_pow_right₀ (by norm_num : (1 : ℝ) ≤ 2)
+      (CoefficientMarkedRecordFullCutPrincipalSign.row_cutoff_le hn ht ha ctx)).trans ha0
+  obtain ⟨curve, _, hr, _⟩ := CoefficientMarkedRecordRootBranches.exists_branches hn ht ha ctx
+    (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl hrow s
+  exact ⟨curve, hr, fun l k hk hc index negative j u v => CoefficientMarkedRecordFullCutLex.lex_on_root_curve
+    hn ht ha ctx ha0 (curve l.val) (hr l) k hk hc index negative j u v⟩
+
+example : RealIteratedTarski.lex (0 : (ℝ[X])[X]) = 0 := by simp [RealIteratedTarski.lex]
+example : RealIteratedTarski.lex (Polynomial.monomial 2 (Polynomial.monomial 3 (-1 : ℝ))) = -1 := by
+  have hinner : Polynomial.monomial 3 (-1 : ℝ) ≠ 0 := by
+    intro h
+    have he := congrArg (fun p : ℝ[X] => p.coeff 3) h
+    norm_num at he
+  change ((Polynomial.monomial 2 (Polynomial.monomial 3 (-1 : ℝ))).coeff
+    (Polynomial.monomial 2 (Polynomial.monomial 3 (-1 : ℝ))).natTrailingDegree).trailingCoeff = -1
+  rw [Polynomial.natTrailingDegree_monomial hinner, Polynomial.coeff_monomial]
+  simp only [ite_true]
+  change (Polynomial.monomial 3 (-1 : ℝ)).coeff (Polynomial.monomial 3 (-1 : ℝ)).natTrailingDegree = -1
+  rw [Polynomial.natTrailingDegree_monomial (by norm_num : (-1 : ℝ) ≠ 0), Polynomial.coeff_monomial]
+  simp
+end FullCutLexRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutLex.coefficient
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutLex.lex_on_root_curve
+#print axioms FullCutLexRegression.actual_lex_curves
+end RoadmapInternalG97ActualFullCutLex
+
+section RoadmapInternalG97ActualFullCutComparison
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial PrincipalSubresultant Set
+namespace FullCutWordComparisonRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R : List Bool → ℕ} (hR : BinaryFn R)
+local notation "CTX" => CoefficientMarkedRecordFullCutInstalled.context (n := n)
+
+theorem constant_bypass (q w : List Bool)
+    (hz : IntegralMixedPhysicalCutOpenInterval.degree hn ht ha hR false q = 0) :
+    pair q w ∈ IntegralMixedPhysicalCutOpenInterval.comparison hn ht ha hR false :=
+  (CoefficientMarkedRecordFullCutComparison.comparison_at hn ht ha hR q w).mpr (Or.inl hz)
+
+theorem native_value (ctx : List Bool) (k : ℕ) (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false)
+    (left right : ℕ) (side negative : Bool)
+    (hlarge : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx) (w : List Bool)
+    (hv : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) (CTX ctx k left right) w)
+    (z : Fin (CoefficientMarkedRecordFullCutPhysical.rawData hn ht ha ctx).count → ℝ)
+    (hj : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) (CTX ctx k left right) w hv).val z) :
+    CoefficientMarkedRecordFullCutWordValue.statistic hn ht ha hR side negative (CTX ctx k left right) w =
+      permanencesMinusVariations ((List.range (CoefficientMarkedRecordFullCutPrincipalHeight.degree hn ht ha ctx k+1)).reverse.map
+        (fun j => RealIteratedTarski.lex (CoefficientMarkedRecordFullCutLex.principal hn ht ha ctx k hk
+          (if side then right else left) negative j ((2 : ℝ)^R ctx) z))) :=
+  CoefficientMarkedRecordFullCutWordValue.value_eq hn ht ha hR ctx k hk hc left right side negative hlarge w hv z hj
+
+theorem sampled_curve_comparison (ctx : List Bool) (k : ℕ) (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false)
+    (left right : ℕ) {S : List Bool → ℕ} (hS : BinaryFn S)
+    (hRlarge : CoefficientMarkedRecordFullCutComparison.cutoff hn ht ha ctx ≤ R ctx)
+    (hSlarge : CoefficientMarkedRecordFullCutComparison.cutoff hn ht ha ctx ≤ S ctx)
+    {a b : ℝ} (ha0 : (2 : ℝ)^CoefficientMarkedRecordFullCutComparison.cutoff hn ht ha ctx ≤ a)
+    (x : C(Ioo a b, Fin (CoefficientMarkedRecordFullCutPrincipalSign.count hn ht ha ctx) → ℝ))
+    (hx : ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha ctx
+      (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl u.val (x u))
+    (u v : Ioo a b) (hu : u.val = (2 : ℝ)^R ctx) (hv : v.val = (2 : ℝ)^S ctx)
+    (wR wS : List Bool)
+    (hwR : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false)
+      (IntegralMixedPhysicalMarkedTest.sampleContext ctx) wR)
+    (hwS : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false)
+      (IntegralMixedPhysicalMarkedTest.sampleContext ctx) wS)
+    (hjR : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false)
+      (IntegralMixedPhysicalMarkedTest.sampleContext ctx) wR hwR).val (x u))
+    (hjS : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false)
+      (IntegralMixedPhysicalMarkedTest.sampleContext ctx) wS hwS).val (x v)) :
+    pair (CTX ctx k left right) wR ∈ IntegralMixedPhysicalCutOpenInterval.comparison hn ht ha hR false ↔
+      pair (CTX ctx k left right) wS ∈ IntegralMixedPhysicalCutOpenInterval.comparison hn ht ha hS false :=
+  CoefficientMarkedRecordFullCutComparison.comparison_on_sampled_curve hn ht ha hR ctx k hk hc left right hS
+    hRlarge hSlarge ha0 x hx u v hu hv wR wS hwR hwS hjR hjS
+end FullCutWordComparisonRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutWordTuple.scalar_tuple
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutWordTuple.principal_eq
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutWordValue.statistic_principals
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutWordValue.value_eq
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutComparison.cutoff_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutComparison.statistic_on_curve
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutComparison.candidate_context
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutComparison.comparison_on_curve
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFullCutComparison.comparison_on_sampled_curve
+#print axioms FullCutWordComparisonRegression.constant_bypass
+#print axioms FullCutWordComparisonRegression.native_value
+#print axioms FullCutWordComparisonRegression.sampled_curve_comparison
+end RoadmapInternalG97ActualFullCutComparison
+
+section RoadmapInternalG97OuterCriticalReaders
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open scoped Classical
+
+section
+variable {n : List Bool → ℕ} {t : List Bool → ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+example (cL cR wL wR vL vR : List Bool) (a b k : ℕ) (right : Bool) :
+    CoefficientMarkedRecordFieldQuery.physical hn ht ha right
+      (IntegralMixedPhysicalFieldEquality.packet cL wL cR wR a b) k =
+    CoefficientMarkedRecordFieldQuery.physical hn ht ha right
+      (IntegralMixedPhysicalFieldEquality.packet cL vL cR vR a b) k :=
+  CoefficientMarkedRecordFieldContext.polynomial_packet_words hn ht ha right cL cR wL wR vL vR a b k
+
+example (cL cR : List Bool) (β : ℝ)
+    (x : CoefficientMarkedRecordFieldListIncidence.Point hn ht ha cL)
+    (y : CoefficientMarkedRecordFieldListIncidence.Point hn ht ha cR) :
+    CoefficientMarkedRecordFieldListIncidence.Holds hn ht ha cL cR (WordList.encode []) β x y := by
+  intro i hi
+  simp only [WordListRecords.count_encode, List.length_nil] at hi
+  omega
+
+example {R : List Bool → ℕ} (hR : BinaryFn R) (cL wL cR wR table : List Bool)
+    (hEq : R (pairFst cL) = R (pairFst cR))
+    (hL : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha (pairFst cL) ≤ R (pairFst cL))
+    (hRight : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha (pairFst cR) ≤ R (pairFst cR))
+    (hwL : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) cL wL)
+    (hwR : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) cR wR)
+    (x : CoefficientMarkedRecordFieldListIncidence.Point hn ht ha cL)
+    (y : CoefficientMarkedRecordFieldListIncidence.Point hn ht ha cR)
+    (hx : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) cL wL hwL).val x)
+    (hy : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) cR wR hwR).val y) :
+    IntegralMixedPhysicalFieldEqualityList.packet cL wL cR wR table ∈
+        IntegralMixedPhysicalFieldEqualityList.language hn ht ha hR ↔
+      CoefficientMarkedRecordFieldListIncidence.Holds hn ht ha cL cR table
+        ((2 : ℝ)^R (pairFst cL)) x y :=
+  CoefficientMarkedRecordFieldListIncidence.language_iff hn ht ha hR cL wL cR wR table
+    hEq hL hRight hwL hwR x y hx hy
+
+example (child : Bool) (q : List Bool)
+    (hc : 0 < IntegralMixedCausalRecordPlanBits.count (IntegralMixedPhysicalCriticalQuery.root q))
+    (i : Fin (CoefficientMarkedCriticalBankSource.birth n q)) (k : ℕ) :
+    (CoefficientMarkedCriticalBankVariables.polynomial hn ht ha child q hc i k).totalDegree ≤
+      CoefficientMarkedCriticalBankSign.spatialDegree hn ht ha q :=
+  CoefficientMarkedCriticalBankSign.query_degree hn ht ha child q hc i k
+
+example : BinaryFn (CoefficientMarkedCriticalBankSign.cutoff hn ht ha) :=
+  CoefficientMarkedCriticalBankSign.cutoff_binary hn ht ha
+
+end
+
+#print axioms CoefficientMarkedCriticalBankVariables.column_lt
+#print axioms CoefficientMarkedCriticalBankVariables.value_eq
+#print axioms CoefficientMarkedRecordFieldIncidence.value_eq
+#print axioms CoefficientMarkedRecordFieldIncidence.language_iff
+#print axioms CoefficientMarkedRecordFieldContext.polynomial_packet_words
+#print axioms CoefficientMarkedRecordFieldListIncidence.packet_iff
+#print axioms CoefficientMarkedRecordFieldListIncidence.language_iff
+#print axioms CoefficientMarkedCriticalBankSign.query_degree
+#print axioms CoefficientMarkedCriticalBankSign.cutoff_binary
+#print axioms CoefficientMarkedCriticalBankSign.exists_branches
+end RoadmapInternalG97OuterCriticalReaders
+
+section RoadmapInternalG97JointActualSelections
+open LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.ETR
+open FormulaSignSlotRadialJointSample
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+example (p : List Bool) (i : ℕ) : node (indexed p i) = node p := indexed_node p i
+example (p : List Bool) (i : ℕ) : word (indexed p i) = word p := indexed_word p i
+example (p : List Bool) (i : ℕ) : header (indexed p i) = header p := indexed_header p i
+example (p : List Bool) (i : ℕ) (hv : Valid p) :
+    values (indexed p i) (indexed_valid p i hv) = values p hv := indexed_values p i hv
+example (p : List Bool) (i : ℕ) : indexedRadial (context (indexed p i)) =
+    FormulaSignSlotRadialCoordinatePacket.packet (FormulaSignSlotRadialJointLayout.source true (header p)) i :=
+  indexed_source p i
+example (p : List Bool) (hv : Valid p) : PrincipalGuard p ↔ PrincipalMeaning p hv := principal_guard_actual p hv
+example (p : List Bool) (hv : Valid p) : MarginGuard p ↔ MarginMeaning p hv := margin_guard_actual p hv
+example (p : List Bool) :
+    (FormulaSignSlotRadialEliminantInput.coordinate
+      (FormulaSignSlotRadialCoordinatePacket.packet (FormulaSignSlotRadialJointLayout.source true (header p))
+        (marginCoordinate p))).val = (FormulaSignSlotCenteredRadialGraph.marginIndex
+          (FormulaSignSlotRadialJointLayout.source true (header p))).val := margin_coordinate_selected p
+#check principal_guard_evaluator
+#check margin_guard_evaluator
+#check principal_at_actual
+#check indexedRadial_FP
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.indexedPacket_FP
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.indexed_source
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.indexed_values
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.principalQuery_FP
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.principal_at_evaluator
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.principal_guard_evaluator
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.principal_at_actual
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.principal_guard_actual
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.marginCoordinate_unary
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.marginQuery_FP
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.margin_guard_evaluator
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.margin_guard_actual
+#print axioms LeanCanny.Encoding.FormulaSignSlotRadialJointSample.margin_coordinate_selected
+end RoadmapInternalG97JointActualSelections
+
+section RoadmapInternalG97CompactStratumMathematics
+open LeanCanny.Algebra LeanCanny.Geometry Polynomial Set
+open SquareFeatureProduct
+open scoped Classical
+example : (∃ w : ℝ, equation [] 0 w = 0) := by
+  rw [exists_equation_iff]
+  rfl
+example : ¬ ∃ w : ℝ, equation [] 1 w = 0 := no_equation_above_count [] 1 (by decide)
+example : (∃ w : ℝ, equation [0,0] 2 w = 0) := by
+  rw [exists_equation_iff]
+  simp [zeroCount]
+example : ¬ ∃ w : ℝ, equation [0,0] 1 w = 0 := by
+  rw [exists_equation_iff]
+  simp [zeroCount]
+example : 0 < (polynomial [-2,0,3]).coeff 1 := by
+  rw [coefficient_pos_iff]
+  norm_num [zeroCount]
+example : 0 < (polynomial [-2,0,3]).coeff 2 := by
+  rw [coefficient_pos_iff]
+  norm_num [zeroCount]
+example : ¬ ∃ w : ℝ, equation [-2,0,3] 2 w = 0 := by
+  rw [exists_equation_iff]
+  norm_num [zeroCount]
+-- The no-gap property is essential: arbitrary polynomials do not satisfy it.
+example : (1+X^2 : Polynomial ℝ).coeff 1 = 0 ∧
+    0 < (1+X^2 : Polynomial ℝ).coeff 2 ∧ 0 < (1+X^2 : Polynomial ℝ).coeff 0 := by
+  norm_num [Polynomial.coeff_one, Polynomial.coeff_X_pow]
+-- Equal zero count without connectedness does not fix the coordinate signs.
+example : zeroCount [0,1] = zeroCount [1,0] ∧ SignType.sign (0 : ℝ) ≠ SignType.sign (1 : ℝ) := by
+  norm_num [zeroCount]
+example {X : Type*} [TopologicalSpace X] (n : ℕ) (f : Fin n → X → ℝ)
+    (hf : ∀ i, Continuous (f i)) (k : ℕ) {s : Set X} (hs : IsPreconnected s)
+    (hEq : ∀ x ∈ s, ∃ w : ℝ, equation (List.ofFn (fun i => f i x)) k w = 0)
+    {x y : X} (hx : x ∈ s) (hy : y ∈ s) (i : Fin n) : SignType.sign (f i x) = SignType.sign (f i y) :=
+  SquareFeatureSignStratum.sign_eq_on_equation_stratum n f hf k hs hEq hx hy i
+#print axioms LeanCanny.Algebra.SquareFeatureProduct.coefficient_nonneg
+#print axioms LeanCanny.Algebra.SquareFeatureProduct.coefficient_pos_iff
+#print axioms LeanCanny.Algebra.SquareFeatureProduct.coefficient_zero_iff
+#print axioms LeanCanny.Algebra.SquareFeatureProduct.lower_positive_iff
+#print axioms LeanCanny.Algebra.SquareFeatureProduct.exists_certificate_iff
+#print axioms LeanCanny.Algebra.SquareFeatureProduct.equation_zero_iff
+#print axioms LeanCanny.Algebra.SquareFeatureProduct.exists_equation_iff
+#print axioms LeanCanny.Algebra.SquareFeatureProduct.no_equation_above_count
+#print axioms LeanCanny.Geometry.SquareFeatureSignStratum.locally_constant_zeros
+#print axioms LeanCanny.Geometry.SquareFeatureSignStratum.locally_constant_sign
+#print axioms LeanCanny.Geometry.SquareFeatureSignStratum.zeroCount_ofFn
+#print axioms LeanCanny.Geometry.SquareFeatureSignStratum.sign_eq_on_equation_stratum
+end RoadmapInternalG97CompactStratumMathematics
+
+section RoadmapInternalG97CompactStratumNativeSource
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial MatrixPower
+open scoped Classical
+namespace SquareFeatureSourceRegression
+noncomputable def F : SquareFeatureProductFamily.Family where
+  arity _ := 0
+  count _ := 3
+  degree _ := 0
+  mass _ := 2
+  feature _ i := MvPolynomial.C (if i=0 then -2 else if i=1 then 0 else 3)
+  feature_degree _ _ _ := by exact le_of_eq (MvPolynomial.totalDegree_C _)
+  feature_mass _ i _ := by
+    rw [MvMass.C]
+    split_ifs <;> norm_num
+
+theorem values_exact (z : Fin (F.arity []) → ℝ) : SquareFeatureProductEvaluation.values F [] z = [-2,0,3] := by
+  change [MvPolynomial.eval₂ (Int.castRingHom ℝ) z (MvPolynomial.C (-2)),
+    MvPolynomial.eval₂ (Int.castRingHom ℝ) z (MvPolynomial.C 0),
+    MvPolynomial.eval₂ (Int.castRingHom ℝ) z (MvPolynomial.C 3)] = _
+  rw [MvPolynomial.eval₂_C,MvPolynomial.eval₂_C,MvPolynomial.eval₂_C]
+  norm_num
+
+example (z : Fin (F.arity []) → ℝ) :
+    ∃w : ℝ, ((if (1:ℕ)=0 then 0 else (MvTwoParameterCoefficient.one
+      (SquareFeatureProductFamily.polynomial F []) 0).eval₂ (Int.castRingHom ℝ) z)^2+
+      ((MvTwoParameterCoefficient.one (SquareFeatureProductFamily.polynomial F []) 1).eval₂
+        (Int.castRingHom ℝ) z*w^2-1)^2)=0 := by
+  rw [show (0:ℕ)=1-1 from rfl]
+  apply (SquareFeatureProductEvaluation.compact_iff F [] z 1).mpr
+  have HE := values_exact z
+  rw [HE]
+  norm_num [SquareFeatureProduct.zeroCount]
+
+example (z : Fin (F.arity []) → ℝ) :
+    (SquareFeatureCoefficientReader.coefficient F [] 3).eval₂ (Int.castRingHom ℝ) z=1 := by
+  change (MvTwoParameterCoefficient.one (SquareFeatureProductFamily.polynomial F []) 3).eval₂ _ _=1
+  rw [SquareFeatureProductEvaluation.coefficient]
+  have HE := values_exact z
+  rw [HE]
+  have HP : SquareFeatureProduct.polynomial ([-2,0,3] : List ℝ) = X^3+C 13*X^2+C 36*X := by
+    simp only [SquareFeatureProduct.polynomial,List.map_cons,List.map_nil,List.prod_cons,List.prod_nil,mul_one]
+    norm_num only [map_ofNat,map_zero,map_neg]
+    ring
+  rw [HP]
+  norm_num [Polynomial.coeff_add,Polynomial.coeff_C_mul]
+
+example (G : SquareFeatureProductFamily.Family) (c bits modulus : List Bool) (k : ℕ) :
+    SquareFeatureCoefficientReader.value G
+      (pair (pair (pair c (BinaryNatCode.encode k)) bits) modulus) =
+    LeanCanny.Algebra.MatrixPower.residueBits (((SquareFeatureCoefficientReader.coefficient G c k).coeff
+      (FixedWidthPolynomial.nativeExponent (Equiv.refl _) (SquareFeatureProductFamily.width G c)
+        (Nat.fromBitsLE bits)) : ℤ) : ZMod (Nat.fromBitsLE modulus+1)) :=
+  SquareFeatureCoefficientReader.packet G c bits modulus k
+
+#check SquareFeatureProductSource.access
+#check SquareFeatureBivariateProduct.product_map
+#check SquareFeatureCoefficientReader.evaluator
+#check SquareFeatureProductEvaluation.compact_iff
+#print axioms SquareFeaturePackedReader.packed_evaluator
+#print axioms SquareFeatureBivariateProduct.coefficient_evaluator
+#print axioms SquareFeatureBivariateProduct.product_map
+#print axioms SquareFeatureCoefficientReader.evaluator
+#print axioms SquareFeatureProductSource.access
+#print axioms SquareFeatureProductEvaluation.compact_iff
+end SquareFeatureSourceRegression
+end RoadmapInternalG97CompactStratumNativeSource
