@@ -1,3 +1,9 @@
+import LeanCanny.Algebra.CoefficientSelectedMultivariateLift
+import LeanCanny.Algebra.CoefficientTarskiParameterQueries
+import LeanCanny.Algebra.CoefficientTarskiZeroParameterQueries
+import LeanCanny.Encoding.CoefficientMarkedRecordCoordinateHeadActual
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalIncidence
+import LeanCanny.Encoding.IntegralMixedRoadmapProperPrincipalCatalog
 import LeanCanny.Algebra.RelativeAffineGridValueParameterDegree
 import LeanCanny.Encoding.CoefficientMarkedRecordCriticalQuery
 import LeanCanny.Encoding.CoefficientMarkedRecordFactorQueryBounds
@@ -15546,3 +15552,173 @@ end JointValueDegreeRegression
 #print axioms JointValueDegreeRegression.after_noninjective_map
 #print axioms JointValueDegreeRegression.constant_box
 end RoadmapInternalG89JointValueParameterDegree
+
+section RoadmapInternalG90ActualPrincipalMetadataAndLift
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open IntegralMixedRoadmapProperRow
+namespace PrincipalCatalogRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R0 R1 : List Bool → ℕ} (hR0 : BinaryFn R0) (hR1 : BinaryFn R1)
+-- Literal native width is stable; no sampler word or ordinal is identified.
+theorem near_width_readers (right : Bool) (power : Fin 3) (eta eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z) :
+    (nearFamily hn ht ha hR0 right power eta eps).width z =
+      (nearFamily hn ht ha hR1 right power eta eps).width z :=
+  (near_width_catalog hn ht ha hR0 right power eta eps z hc hg).trans
+    (near_width_catalog hn ht ha hR1 right power eta eps z hc hg).symm
+
+theorem rank_width_readers (power : Fin 3) (eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z) :
+    (rankFamily hn ht ha hR0 power eps).width z = (rankFamily hn ht ha hR1 power eps).width z :=
+  (rank_width_catalog hn ht ha hR0 power eps z hc hg).trans
+    (rank_width_catalog hn ht ha hR1 power eps z hc hg).symm
+
+-- Truncation is fixed even when specialization kills the original leading term.
+example : (CoefficientSelectedMultivariateLift.lift
+    (Polynomial.C (Polynomial.C (Polynomial.X : Polynomial ℤ)) : Polynomial (Polynomial (Polynomial ℤ)))
+    (fun a => MvPolynomial.C a : Polynomial ℤ → MvPolynomial (Fin 0) (Polynomial ℤ)) 0 0).map
+      (MvPolynomial.map (Polynomial.evalRingHom (0 : ℤ))) =
+    CoefficientSelectedMultivariateLift.lift
+      ((Polynomial.C (Polynomial.C (Polynomial.X : Polynomial ℤ)) : Polynomial (Polynomial (Polynomial ℤ))).map
+        (Polynomial.mapRingHom (Polynomial.evalRingHom (0 : ℤ))))
+      (fun a => MvPolynomial.C a : ℤ → MvPolynomial (Fin 0) ℤ) 0 0 :=
+    CoefficientSelectedMultivariateLift.map (Polynomial.evalRingHom (0 : ℤ)) (Polynomial.evalRingHom (0 : ℤ))
+      (Polynomial.C (Polynomial.C (Polynomial.X : Polynomial ℤ)))
+      (fun a => MvPolynomial.C a : Polynomial ℤ → MvPolynomial (Fin 0) (Polynomial ℤ))
+      (fun a => MvPolynomial.C a : ℤ → MvPolynomial (Fin 0) ℤ)
+      (fun a => MvPolynomial.map_C (Polynomial.evalRingHom (0 : ℤ)) a) 0 0
+example : (Polynomial.evalRingHom (0 : ℤ)) Polynomial.X = 0 := Polynomial.eval_X
+end PrincipalCatalogRegression
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.principal_parent_birth
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.principal_terminal_count
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.principal_packed_degree
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.principal_native_width
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.principal_shift_degree
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.principal_center_index
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.principal_point_index
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.principal_window_weight
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.near_width_catalog
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.rank_width_catalog
+#print axioms LeanCanny.Algebra.CoefficientSelectedMultivariateLift.coefficient
+#print axioms LeanCanny.Algebra.CoefficientSelectedMultivariateLift.map
+#print axioms LeanCanny.Algebra.CoefficientSelectedMultivariateLift.lift_int
+#print axioms LeanCanny.Algebra.CoefficientSelectedMultivariateLift.powered_map
+#print axioms LeanCanny.Algebra.CoefficientSelectedMultivariateLift.powered_ofIntegral
+#print axioms PrincipalCatalogRegression.near_width_readers
+#print axioms PrincipalCatalogRegression.rank_width_readers
+end RoadmapInternalG90ActualPrincipalMetadataAndLift
+
+section RoadmapInternalG90ActualEtaAndZeroPrincipalOperators
+open LeanCanny.Algebra Polynomial
+open CoefficientTarskiParameterQueries CoefficientTarskiZeroParameterQueries
+namespace ParameterQueryRegression
+variable {R S : Type*} [CommRing R] [CommRing S] {m : ℕ}
+-- The complete eta/epsilon/principal recipe commutes, even for maps with a kernel.
+theorem near_pipeline (φ : R →+* S) (p : Polynomial (MvPolynomial (Fin (m+1)) R))
+    (D : ℕ) (q a b : R) (center point wc wp k d s bound j : ℕ) (eta eps : Bool) :
+    MvPolynomial.map φ (principal (pairLift true (shiftedHead p D q a center wc eta))
+      (pairLift false (window q b point wp eps)^k) d s bound j) =
+    principal (pairLift true (shiftedHead (p.map (MvPolynomial.map φ)) D (φ q) (φ a) center wc eta))
+      (pairLift false (window (φ q) (φ b) point wp eps)^k) d s bound j := by
+  rw [principal_map, pairLift_map, shiftedHead_map, Polynomial.map_pow, pairLift_map, window_map]
+
+-- Mean rank kills source eta but retains the independent epsilon window.
+theorem rank_pipeline (φ : R →+* S) (p : Polynomial (MvPolynomial (Fin (m+1)) R))
+    (q a : R) (point wp k d s bound j : ℕ) (eps : Bool) :
+    MvPolynomial.map φ (principal (zeroHead p) (epsilonHead (window q a point wp eps)^k) d s bound j) =
+    principal (zeroHead (p.map (MvPolynomial.map φ)))
+      (epsilonHead (window (φ q) (φ a) point wp eps)^k) d s bound j := by
+  rw [principal_map, zeroHead_map, Polynomial.map_pow, epsilonHead_map, window_map]
+
+example : CoefficientTarskiParameterQueries.monomial (m := 1) 1 5 (-2 : ℤ) = 0 := by simp [CoefficientTarskiParameterQueries.monomial]
+example : (window (m := 1) (-2 : ℤ) 3 0 5 false).coeff 1 = MvPolynomial.C 4 := by
+  norm_num [window]
+example : zeroHom ℤ 1 (MvPolynomial.X (0 : Fin 2)) = 0 := by
+  simp [zeroHom, MvPolynomial.finSuccEquiv_X_zero]
+end ParameterQueryRegression
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.clear_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.monomial_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.numerators_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.shifted_coefficient
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.shiftedHead_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.window_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.pairLift_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.principal_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.shiftedHead_int
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.window_int
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.principal_int
+#print axioms LeanCanny.Algebra.CoefficientTarskiZeroParameterQueries.zeroHom_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiZeroParameterQueries.zeroHead_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiZeroParameterQueries.epsilonHead_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiZeroParameterQueries.zeroHead_int
+#print axioms LeanCanny.Algebra.CoefficientTarskiZeroParameterQueries.epsilonHead_int
+#print axioms ParameterQueryRegression.near_pipeline
+#print axioms ParameterQueryRegression.rank_pipeline
+end RoadmapInternalG90ActualEtaAndZeroPrincipalOperators
+
+section RoadmapInternalG90ConstructedSavedCoordinateHead
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open IntegralMixedAuxiliaryMarkedRecordRadiusHeight
+namespace CoordinateHeadRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+theorem saved_head (ctx : List Bool) (R : List Bool → ℕ) (k : ℕ)
+    (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false)
+    (aux : List Bool) (hR : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx)
+    (d e : ℕ) :
+    HEq (fun j => (CoefficientMarkedRecordCoordinateHead.polynomial hn ht ha ctx k j d e).map (MvPolynomial.map (evalRingHom ((2 : ℤ)^R ctx))))
+      (CoefficientMixedCoordinateHead.heads
+        ((actualFamily hn ht ha R).state (CoefficientMarkedRecordRowLayout.key (n := n) ctx k aux))
+        ((actualFamily hn ht ha R).birth_bound _) ((actualFamily hn ht ha R).rule _) d e) := CoefficientMarkedRecordCoordinateHead.specializes_family hn ht ha ctx R k hk hc aux hR d e
+end CoordinateHeadRegression
+#print axioms LeanCanny.Algebra.CoefficientMixedCoordinateHead.map_native
+#print axioms LeanCanny.Algebra.CoefficientMixedCoordinateHead.heads_transport
+#print axioms LeanCanny.Algebra.CoefficientMixedCoordinateHead.heads_retarget
+#print axioms LeanCanny.Algebra.CoefficientMixedCoordinateHead.cut_rule
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordCoordinateHead.specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordCoordinateHead.specializes_family
+#print axioms CoordinateHeadRegression.saved_head
+end RoadmapInternalG90ConstructedSavedCoordinateHead
+
+section RoadmapInternalG90NativeCriticalTupleIncidence
+open LeanCanny LeanCanny.Encoding LeanCanny.Computation LeanCanny.ETR
+open IntegralMixedPhysicalMarkedTest (input sampleContext)
+
+section
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+  {R : List Bool → ℕ} (hR : BinaryFn R) (outer : Bool)
+
+example (ctx w : List Bool)
+    (hv : SquareSampleCompleteVertices.Valid (input hn ht ha hR outer) (sampleContext ctx) w) :
+    pair ctx w ∈ IntegralMixedPhysicalGuardScan.language hn ht ha hR outer ↔
+      IntegralMixedPhysicalCriticalIncidence.CriticalZeros hn ht ha hR outer ctx
+        (SquareSampleCompleteVertices.candidate (input hn ht ha hR outer) (sampleContext ctx) w hv).val :=
+  IntegralMixedPhysicalCriticalIncidence.packet_iff hn ht ha hR outer ctx w hv
+
+example (ctx : List Bool)
+    (z : Fin ((input hn ht ha hR outer).count (sampleContext ctx)) → ℝ)
+    (hz : ∀ i, ((input hn ht ha hR outer).system (sampleContext ctx) i).eval₂ (Int.castRingHom ℝ) z = 0)
+    (hc : IntegralMixedPhysicalCriticalIncidence.CriticalZeros hn ht ha hR outer ctx z) :
+    ∃ w, ∃ hv : SquareSampleCompleteVertices.Valid (input hn ht ha hR outer) (sampleContext ctx) w,
+      w.length = SquareSampleCompleteVertices.width (input hn ht ha hR outer) (sampleContext ctx) ∧
+      (SquareSampleCompleteVertices.candidate (input hn ht ha hR outer) (sampleContext ctx) w hv).val = z ∧
+      pair ctx w ∈ IntegralMixedPhysicalGuardScan.language hn ht ha hR outer :=
+  (IntegralMixedPhysicalCriticalIncidence.exists_word_iff hn ht ha hR outer ctx z).mp ⟨hz, hc⟩
+
+example (ctx : List Bool)
+    (z : Fin ((input hn ht ha hR outer).count (sampleContext ctx)) → ℝ)
+    (hc : ¬ IntegralMixedPhysicalCriticalIncidence.CriticalZeros hn ht ha hR outer ctx z) :
+    ¬ ∃ w, ∃ hv : SquareSampleCompleteVertices.Valid (input hn ht ha hR outer) (sampleContext ctx) w,
+      w.length = SquareSampleCompleteVertices.width (input hn ht ha hR outer) (sampleContext ctx) ∧
+      (SquareSampleCompleteVertices.candidate (input hn ht ha hR outer) (sampleContext ctx) w hv).val = z ∧
+      pair ctx w ∈ IntegralMixedPhysicalGuardScan.language hn ht ha hR outer := by
+  intro h
+  exact hc ((IntegralMixedPhysicalCriticalIncidence.exists_word_iff hn ht ha hR outer ctx z).mpr h).2
+
+end
+#print axioms IntegralMixedPhysicalCriticalIncidence.packet_iff
+#print axioms IntegralMixedPhysicalCriticalIncidence.exists_word_iff
+end RoadmapInternalG90NativeCriticalTupleIncidence

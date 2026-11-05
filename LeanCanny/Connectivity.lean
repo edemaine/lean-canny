@@ -1,3 +1,10 @@
+import LeanCanny.Algebra.CoefficientSelectedMultivariateLift
+import LeanCanny.Algebra.CoefficientTarskiParameterQueries
+import LeanCanny.Algebra.CoefficientTarskiZeroParameterQueries
+import LeanCanny.Encoding.CoefficientMarkedRecordCoordinateHead
+import LeanCanny.Encoding.CoefficientMarkedRecordCoordinateHeadActual
+import LeanCanny.Encoding.IntegralMixedPhysicalCriticalIncidence
+import LeanCanny.Encoding.IntegralMixedRoadmapProperPrincipalCatalog
 import LeanCanny.Algebra.CoefficientCriticalCorrelationQuery
 import LeanCanny.Algebra.RelativeAffineGridValueParameterDegree
 import LeanCanny.Encoding.CoefficientMarkedRecordCriticalMetadata
@@ -5069,6 +5076,10 @@ Untruncated alternative-factor and actual critical-correlation queries now
 have constructed parameter families and original coefficient boxes. Joint
 radius/center coefficient degree is bounded for the literal affine value
 certificate, with its actual Macaulay box and declared degrees.
+The actual saved-rule coordinate head now has a constructed parameter
+family. Original metadata catalogs and exact eta/zero-window principal
+operators preserve literal native padding and shifts. A tuple-level native
+critical-scan equivalence constructs fresh own words internally.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 Common bounds for every guarded graph query and physical-edge transport,

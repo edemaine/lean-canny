@@ -2335,6 +2335,10 @@ Untruncated alternative-factor and actual critical-correlation queries now
 have constructed parameter families and original coefficient boxes. Joint
 radius/center coefficient degree is bounded for the literal affine value
 certificate, with its actual Macaulay box and declared degrees.
+The actual saved-rule coordinate head now has a constructed parameter
+family. Original metadata catalogs and exact eta/zero-window principal
+operators preserve literal native padding and shifts. A tuple-level native
+critical-scan equivalence constructs fresh own words internally.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership
