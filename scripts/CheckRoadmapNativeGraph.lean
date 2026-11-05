@@ -1,3 +1,6 @@
+import LeanCanny.Algebra.MacaulayNormalizedPolynomialMass
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantSpace
+import Mathlib.Tactic
 import LeanCanny.Algebra.CoefficientMixedCriticalBirth
 import LeanCanny.Algebra.CoefficientMixedCutSourceDegree
 import LeanCanny.Algebra.IntegralMixedFullHistoryScript
@@ -12289,3 +12292,169 @@ run_cmd do
         throwError "{name} depends on unexpected axiom {ax}"
   logInfo "Actual Cartesian query mass: affine operator budget, nonmonic heads, native binary cutoff and sign transport from input bounds; six standard-axiom audits."
 end RoadmapInternalG77CartesianQueryMass
+
+section RoadmapInternalG78NormalizedEliminant
+namespace RadialNormalizedRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation MatrixPower
+open Polynomial
+open scoped Classical
+
+noncomputable def retained : Polynomial (Polynomial ℤ) := C (C 7 - C 3 * X) + X
+
+theorem quotient_retained :
+    ScaledPolynomialQuotient.quotient (X ^ 2) (X ^ 2 * retained) 2 2 = retained := by
+  have HP : (X ^ 2 : Polynomial (Polynomial ℤ)).natDegree ≤ 2 := by simp
+  have HH : retained.natDegree ≤ 2 := by
+    unfold retained
+    apply (natDegree_add_le _ _).trans
+    apply max_le
+    · rw [natDegree_C]
+      decide
+    · rw [natDegree_X]
+      decide
+  simpa only [coeff_X_pow, ite_true, one_pow, C_1, one_mul] using
+    ScaledPolynomialQuotient.quotient_mul (X ^ 2) retained 2 2 HP HH
+
+-- The divisor's value at zero vanishes, while the recovered value does not.
+example : (X ^ 2 : Polynomial (Polynomial ℤ)).coeff 0 = 0 := by simp
+example : (ScaledPolynomialQuotient.quotient (X ^ 2) (X ^ 2 * retained) 2 2).coeff 0 = C 7 - C 3 * X := by
+  rw [quotient_retained]
+  simp only [retained, coeff_add, coeff_C_zero, coeff_X_zero, add_zero]
+theorem quotient_negative : ((ScaledPolynomialQuotient.quotient (X ^ 2) (X ^ 2 * retained) 2 2).coeff 0).coeff 1 = -3 := by
+  rw [quotient_retained]
+  simp only [retained, coeff_add, coeff_C_zero, coeff_X_zero, add_zero, coeff_sub, coeff_C_mul, coeff_X_one]
+  norm_num
+example : residueBits (((ScaledPolynomialQuotient.quotient (X ^ 2) (X ^ 2 * retained) 2 2).coeff 0).coeff 1 : ZMod 6) =
+    BinaryNatCode.encode 3 := by
+  rw [quotient_negative]
+  decide
+
+example :
+    (MacaulayFixedPaddedPolynomialValue.quotient
+      (Macaulay.powers (R := Polynomial ℤ) (fun _ : Fin 1 => 1)) (fun _ => 1) 1).coeff 0 = 1 := by
+  have HD : ∀ _ : Fin 1, (1 : ℕ) < 2 ^ 1 := by intro _; norm_num
+  have HW : Macaulay.level (fun _ : Fin 1 => 1) < 2 ^ 1 := by norm_num [Macaulay.level]
+  have HP : ∀ i : Fin 1, (Macaulay.powers (R := Polynomial ℤ) (fun _ : Fin 1 => 1) i).IsHomogeneous 1 := by
+    intro i
+    exact MvPolynomial.isHomogeneous_monomial (1 : Polynomial ℤ) (by simp)
+  have HV := MacaulayFixedPaddedPolynomialValue.value_eq_coefficient_zero
+    (R := Polynomial ℤ) (n := 0) (fun _ : Fin 1 => 1) 1 HD HW
+    (Macaulay.powers (R := Polynomial ℤ) (fun _ : Fin 1 => 1)) HP (fun _ => by decide)
+  have HU := MacaulayUniversal.polynomialValue_powers (R := Polynomial ℤ) (n := 0)
+    (fun _ : Fin 1 => 1) 1 HD HW (fun _ => by decide)
+  exact HV.symm.trans HU
+
+private theorem modulus_one (z : ℤ) : residueBits (z : ZMod 1) = [] := by
+  have H : (z : ZMod 1) = 0 := Subsingleton.elim _ _
+  rw [H]
+  rfl
+
+private theorem primitive_modulus_one (p : List Bool → Polynomial ℤ) (c r : List Bool) :
+    PrimitivePairBits.coefficient p (pair (pair c r) []) = [] := by
+  simp only [PrimitivePairBits.coefficient, RationalSubstitution.IntegerBits.context,
+    RationalSubstitution.IntegerBits.selectedDegree, RationalSubstitution.IntegerBits.mValue,
+    pairFst_pair, pairSnd_pair]
+  exact modulus_one _
+
+example (c r : List Bool) : FormulaSignSlotRadialEliminantSpace.value (pair (pair c r) []) = [] :=
+  primitive_modulus_one _ c r
+
+example : SpaceFunction FormulaSignSlotRadialEliminantSpace.nativeValue :=
+  FormulaSignSlotRadialEliminantSpace.native_evaluator
+
+example (c : List Bool) : FormulaSignSlotRadialEliminantPacked.resultDegree c <
+    2 ^ FormulaSignSlotRadialEliminantPackingLayout.parameterWidth c :=
+  FormulaSignSlotRadialEliminantPacked.result_fit c
+
+example (q : List Bool) :
+    FormulaSignSlotRadialEliminantParameterQuery.sourceEntry q 0 <
+      2 ^ FormulaSignSlotRadialEliminantParameterQuery.sourceWidth q :=
+  FormulaSignSlotRadialEliminantParameterQuery.sourceEntry_lt q 0
+
+example (c coordinate : List Bool) :
+    pairFst (FormulaSignSlotRadialEliminantSpace.sourceContext c coordinate) = c :=
+  FormulaSignSlotRadialEliminantSpace.sourceContext_original c coordinate
+
+#check FormulaSignSlotRadialEliminantSpace.evaluator
+#check FormulaSignSlotRadialEliminantSpace.native_evaluator
+#check FormulaSignSlotRadialEliminantSpace.coefficient_packet
+#check FormulaSignSlotRadialEliminantSpace.nested_coefficient_packet
+#check FormulaSignSlotRadialEliminantParameterCoefficient.source_packet
+#check MacaulayNormalizedPolynomialBits.evaluator
+
+#print axioms MacaulayPaddedPolynomialValue.factorization
+#print axioms MacaulayPaddedPolynomialValue.quotient_eq
+#print axioms MacaulayFixedPaddedPolynomialValue.value_eq_coefficient_zero
+#print axioms PaddedCharacteristicFactorBits.evaluator
+#print axioms EvenPolynomialCharacteristicBits.reader
+#print axioms PaddedCharacteristicQuotientBits.evaluator
+#print axioms TriplePolynomialParameterFlatten.coefficient
+#print axioms MacaulayPaddedExtraneousPolynomialBits.entry_packet
+#print axioms FormulaSignSlotRadialEliminantNormalized.coefficient_zero
+#print axioms FormulaSignSlotRadialEliminantParameterRows.polynomialValue
+#print axioms FormulaSignSlotRadialEliminantParameterBounds.gradient_bounds
+#print axioms FormulaSignSlotRadialEliminantParameterSupport.degree_bound
+#print axioms MacaulayPaddedValueParameterDegree.normalized_value
+#print axioms FormulaSignSlotRadialEliminantPackingLayout.parameterWidth_unary
+#print axioms MacaulayNormalizedPolynomialBits.evaluator
+#print axioms FormulaSignSlotRadialEliminantParameterQuery.packet_FP
+#print axioms FormulaSignSlotRadialEliminantPacked.result_degree
+#print axioms FormulaSignSlotRadialEliminantPacked.result_fit
+#print axioms FormulaSignSlotRadialEliminantParameterQuery.homogeneous_readback
+#print axioms FormulaSignSlotRadialEliminantParameterCoefficient.evaluator
+#print axioms FormulaSignSlotRadialEliminantParameterCoefficient.correct
+#print axioms FormulaSignSlotRadialEliminantParameterCoefficient.source_packet
+#print axioms FormulaSignSlotRadialEliminantSpace.evaluator
+#print axioms FormulaSignSlotRadialEliminantSpace.native_evaluator
+#print axioms FormulaSignSlotRadialEliminantSpace.nested_coefficient_packet
+
+end RadialNormalizedRegression
+end RoadmapInternalG78NormalizedEliminant
+
+section RoadmapInternalG78NormalizedMass
+namespace PaddedCharacteristicQuotientMassRegression
+open LeanCanny LeanCanny.Algebra Polynomial
+open PaddedCharacteristicQuotientMass
+open scoped Classical
+
+example : budget 1 1 0 = 14 := by decide
+example : budget 2 2 0 = 36 := by decide
+
+-- The divisor's determinant at zero vanishes, while the normalized coefficient survives.
+example : (0 : Matrix (Fin 1) (Fin 1) ℤ[X]).det = 0 := by simp
+
+example : (ScaledPolynomialQuotient.quotient
+    (0 : Matrix (Fin 1) (Fin 1) ℤ[X]).charpoly
+    ((0 : Matrix (Fin 1) (Fin 1) ℤ[X]).charpoly * (1 - X) ^ 1) 1 1).coeff 0 = 1 := by
+  simp only [Matrix.charpoly_zero, Fintype.card_fin, pow_one]
+  rw [ScaledPolynomialQuotient.quotient_mul X (1 - X) 1 1 (by simp) (by compute_degree)]
+  simp
+
+example (H : ℕ) : coefficientMass ((ScaledPolynomialQuotient.quotient
+    (0 : Matrix (Fin 1) (Fin 1) ℤ[X]).charpoly
+    ((0 : Matrix (Fin 1) (Fin 1) ℤ[X]).charpoly * (1 - X) ^ 1) 1 1).coeff 0) ≤
+      2 ^ budget 1 1 H :=
+  coefficient 1 1 H 0 0 (fun _ _ => by simp) (fun _ _ => by simp) 0
+
+example {n : ℕ} (p : Fin (n + 1) → MvPolynomial (Fin (n + 1)) ℤ[X])
+    (d : Fin (n + 1) → ℕ) (W H : ℕ)
+    (hdegree : ∀ i, d i < 2 ^ W) (hW : Macaulay.level d < 2 ^ W)
+    (hhom : ∀ i, (p i).IsHomogeneous (d i)) (hd : ∀ i, 0 < d i)
+    (hp : ∀ i e, coefficientMass ((p i).coeff e) ≤ 2 ^ H) :
+    coefficientMass (MacaulayUniversal.polynomialValue d W hdegree hW p) ≤
+      2 ^ budget (FixedWidthPolynomial.count (n + 1) W) (FixedWidthPolynomial.count (n + 1) W) H :=
+  MacaulayNormalizedPolynomialMass.normalized_value p d W H hdegree hW hhom hd hp
+
+end PaddedCharacteristicQuotientMassRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Algebra.PaddedCharacteristicQuotientMass.budget_binary,
+      `LeanCanny.Algebra.PaddedCharacteristicQuotientMass.coefficient,
+      `LeanCanny.Algebra.MacaulayNormalizedPolynomialMass.normalized_value] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Normalized Macaulay mass: input matrix budgets, actual Cramer quotient, vanishing extraneous determinant with surviving coefficient; three standard-axiom audits."
+end RoadmapInternalG78NormalizedMass

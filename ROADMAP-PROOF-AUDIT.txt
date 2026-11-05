@@ -2023,3 +2023,49 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Full mixed-record recursion and common cutoff, actual head/query bounds and graph transport, uniform radius stabilization, Boolean frontier incidence and both original unconditional PSPACE targets remain open.
+
+36. G78: original-input normalized radial eliminant coefficients
+2026-11-04.
+
+The final normalized eliminant coefficient evaluator now has ZERO hypotheses:
+its input is the original formula source with coordinate selector, coefficient
+rank and modulus packet. It returns the exact original formal eliminant's
+nested epsilon/T/radius/center coefficient residue. The original row reader,
+all degree/homogeneity/layout guards and every packet are constructed from
+that input, with no supplied row oracle, model, homomorphism or result reader.
+Composite moduli and raw-index zero extensions are covered.
+
+The normalized universal polynomial value is the constant coefficient of an
+actual quotient of the full padded matrix characteristic polynomials. The
+extraneous characteristic polynomial is monic even when its determinant at
+zero is zero. A fixed full-dimension padding exponent eliminates any need for
+a native reduced-count writer. Original parameter support bounds give a
+carry-free Kronecker coefficient readback for the ENTIRE normalized result.
+
+The actual Cramer quotient also has a proved input-derived coefficient-mass
+bound. Padded input matrices with entry mass<=2^H give an explicit BinaryFn
+budget from their dimension and padding exponent. Mask/identity entries are
+bounded internally when instantiating the actual Macaulay normalized value.
+The mass regression has zero full/extraneous matrices: their determinants
+vanish, but the actual quotient constant coefficient is one. No extraneous
+survival or result-mass oracle is used.
+
+The concrete original packed row mass binding remains separate, as do bounded
+algebraic descriptor words, native frontier incidence, full recursive framed
+radius specialization and graph stabilization. Neither original unconditional
+PSPACE connectivity target is claimed by the coefficient evaluator.
+
+All22 sources (2067 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS20540 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:12460 lines,187 groups.
+Audited 92663 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 198624 transitive constants: no legacy space foundation.
+All26 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Concrete original eliminant heights, bounded descriptors and native Boolean frontier incidence remain open, along with full recursive radius presentation, graph stabilization and both original unconditional PSPACE targets.

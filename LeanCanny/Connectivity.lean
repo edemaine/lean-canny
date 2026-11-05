@@ -1,3 +1,25 @@
+import LeanCanny.Algebra.EvenPolynomialCharacteristicSpace
+import LeanCanny.Algebra.MacaulayFixedPaddedPolynomialValue
+import LeanCanny.Algebra.MacaulayNormalizedPolynomialMass
+import LeanCanny.Algebra.MacaulayNormalizedPolynomialSpace
+import LeanCanny.Algebra.MacaulayPaddedExtraneousPolynomialSpace
+import LeanCanny.Algebra.MacaulayPaddedPolynomialValue
+import LeanCanny.Algebra.MacaulayPaddedValueParameterDegree
+import LeanCanny.Algebra.PaddedCharacteristicFactorSpace
+import LeanCanny.Algebra.PaddedCharacteristicQuotientMass
+import LeanCanny.Algebra.PaddedCharacteristicQuotientSpace
+import LeanCanny.Algebra.TriplePolynomialParameterFlatten
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantNormalized
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantPacked
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantPackingLayout
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantParameterBounds
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantParameterCoefficient
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantParameterPacket
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantParameterQuery
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantParameterReadback
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantParameterRows
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantParameterSupport
+import LeanCanny.Encoding.FormulaSignSlotRadialEliminantSpace
 import LeanCanny.Algebra.CoefficientHistoryPrefix
 import LeanCanny.Algebra.CoefficientMixedCriticalBirth
 import LeanCanny.Algebra.CoefficientMixedCutSourceDegree
@@ -4846,12 +4868,14 @@ formal-center model, with post-specialization trailing-index guards and
 original-only bounds for the INPUT model. Actual piece closure is equivalent
 to common membership or a same-label finite-real descriptor retaining a
 grid anchor and cut-free interval. The curve is constructed internally.
-The original formal input and actual tilted homogeneous eliminant system
-now have native coefficient readers in polynomial space, including formal
-center/radius and signed perturbation rows. The normalized universal
-eliminant quotient itself still needs a reader.
-These descriptors still need bounded algebraic words and native guard costs;
-the input bounds do not supply eliminant or descriptor bounds.
+The original formal input, actual tilted homogeneous system and normalized
+eliminant now have native coefficient readers in polynomial space. The final
+evaluator retains all formal center/radius/epsilon/T coefficients and takes
+only original input packets. A monic characteristic quotient constructs the
+normalized value even when the extraneous determinant vanishes at zero.
+A proved input-row mass bound implies a mass bound for the actual normalized
+value. Concrete original-only eliminant heights, bounded descriptor words
+and native frontier guard costs remain to be discharged.
 Generic coefficient-base constructions now specialize to the actual native
 basis, rows, banks, and all four mixed cut recipes, including their computed
 moving slope. Matrix coefficient bounds give a local normalization cutoff.
