@@ -1,3 +1,10 @@
+import LeanCanny.Encoding.CoefficientMarkedRecordFieldPhysical
+import LeanCanny.Encoding.CoefficientMarkedRecordFieldQueryBounds
+import LeanCanny.Encoding.CoefficientMarkedRecordFieldRadius
+import LeanCanny.Encoding.CoefficientMarkedRecordQueryKindProfile
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterPrincipalGuards
+import LeanCanny.Encoding.FormulaSignSlotRadialCenterPrincipalSource
+import LeanCanny.Encoding.IntegralMixedOriginalRegularSource
 import LeanCanny.Algebra.CoefficientBankUnivariateQuery
 import LeanCanny.Encoding.CoefficientMarkedRecordBankProducts
 import LeanCanny.Encoding.CoefficientMarkedRecordCutCoefficientBounds
@@ -14279,3 +14286,294 @@ end MarkedBankProductsRegression
 #print axioms MarkedBankProductsRegression.own_aux_common
 #print axioms MarkedBankProductsRegression.own_aux_cofactor
 end RoadmapInternalG85ActualBankProductFamily
+
+section RoadmapInternalG86ActualAlternativeCutKinds
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedAuxiliaryMarkedRecordRadiusHeight
+open scoped Classical
+namespace QueryKindProfileRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+-- Alternative tags/coordinates/choices use the SAME actual state, rule and original affine exponent.
+example (R : List Bool → ℕ) (key : List Bool)
+    (K1 K2 : IntegralMixedRelativeCuts.Kind ((actualFamily hn ht ha R).spatial key) ((actualFamily hn ht ha R).rule key))
+    (tau : ℕ) (i j : Fin (FixedWidthPolynomial.count ((actualFamily hn ht ha R).birth key)
+      ((actualFamily hn ht ha R).width key))) :
+    (IntegralMixedCutMatrix.coefficientMatrix ((actualFamily hn ht ha R).state key)
+      ((actualFamily hn ht ha R).birth_bound key) ((actualFamily hn ht ha R).rule key) K1 tau i j).natAbs ≤
+        2 ^ (rawSlope hn ht ha (pairFst key) * R (pairFst key) + rawOffset hn ht ha (pairFst key)) ∧
+    (IntegralMixedCutMatrix.coefficientMatrix ((actualFamily hn ht ha R).state key)
+      ((actualFamily hn ht ha R).birth_bound key) ((actualFamily hn ht ha R).rule key) K2 tau i j).natAbs ≤
+        2 ^ (rawSlope hn ht ha (pairFst key) * R (pairFst key) + rawOffset hn ht ha (pairFst key)) :=
+  ⟨CoefficientMarkedRecordQueryKindProfile.coefficient_bound hn ht ha R key K1 tau i j,
+    CoefficientMarkedRecordQueryKindProfile.coefficient_bound hn ht ha R key K2 tau i j⟩
+
+-- Literal natural matrix queries retain total out-of-range zero extension.
+example (R : List Bool → ℕ) (key : List Bool)
+    (K : IntegralMixedRelativeCuts.Kind ((actualFamily hn ht ha R).spatial key) ((actualFamily hn ht ha R).rule key))
+    (tau i j : ℕ) :
+    (IntegralCriticalTotalSnapshotBits.integerEntry
+      (IntegralMixedCutMatrix.coefficientMatrix ((actualFamily hn ht ha R).state key)
+        ((actualFamily hn ht ha R).birth_bound key) ((actualFamily hn ht ha R).rule key) K tau) i j).natAbs ≤
+        2 ^ (rawSlope hn ht ha (pairFst key) * R (pairFst key) + rawOffset hn ht ha (pairFst key)) := by
+  unfold IntegralCriticalTotalSnapshotBits.integerEntry
+  split_ifs with hi hj
+  · exact CoefficientMarkedRecordQueryKindProfile.coefficient_bound hn ht ha R key K tau ⟨i, hi⟩ ⟨j, hj⟩
+  all_goals exact Nat.zero_le _
+
+#print axioms IntegralMixedRawKindHeight.height_eq
+#print axioms IntegralMixedRawKindHeight.coefficient_height
+#print axioms IntegralMixedRawKindHeight.coefficient_height_at
+#print axioms CoefficientMarkedRecordQueryKindProfile.coefficient_bound
+end QueryKindProfileRegression
+end RoadmapInternalG86ActualAlternativeCutKinds
+
+section RoadmapInternalG86ActualPhysicalFieldQuery
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open IntegralMixedPhysicalFieldEquality (contextProbe catalogDegree catalogPower)
+open CoefficientMarkedRecordFieldQuery
+namespace MarkedFieldQueryRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+attribute [local irreducible] IntegralMixedSourceIntegerRecordAppend.plan IntegralMixedSourceIntegerRecordAppend.data
+  IntegralMixedAuxiliaryMarkedIntegerPlan.seed IntegralMixedFramedHistoryFamilyBits.family
+
+-- The common radius is computed from both independent roots, without a caller cutoff.
+theorem scalar_at_cutoff (right : Bool) (z : List Bool) (k : ℕ) :
+    (polynomial hn ht ha right z k).map (evalRingHom ((2 : ℤ)^cutoff hn ht ha right z)) =
+      (IntegralMixedPhysicalFieldEquality.querySource hn ht ha (BinaryFn.const (cutoff hn ht ha right z))).polynomial
+        (contextProbe n right z k) :=
+  specializes hn ht ha _ right z k (le_max_left _ _) (le_max_right _ _)
+
+noncomputable def nativeTest (r : ℕ) := SquareSampleCompleteUnivariateTest.test
+  (IntegralFramedPhysicalSquare.input
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).parameters
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).plan
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).data
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).nodes
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).factor
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).seed
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).bounds
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).key
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).positive)
+  (IntegralMixedPhysicalFieldEquality.querySource hn ht ha (BinaryFn.const r))
+  (IntegralFramedPhysicalUnivariateTest.column
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).parameters
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).plan
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).data
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha (BinaryFn.const r) false).key
+    (IntegralMixedPhysicalFieldEquality.coordinate hn ht ha (BinaryFn.const r)))
+
+noncomputable def nativePhysical (r : ℕ) (right : Bool) (z : List Bool) (k : ℕ) : MvPolynomial ℕ ℤ :=
+  MvPolynomial.rename Fin.val ((nativeTest hn ht ha r).polynomial (IntegralMixedPhysicalFieldEquality.context right z)
+    (pair (IntegralMixedPhysicalFieldEquality.catalogOldArgument n z)
+      (pair (BinaryNatCode.encode (IntegralMixedPhysicalFieldEquality.catalogSelected n right z)) (BinaryNatCode.encode k))))
+
+-- The literal finite native column is retained, then only its index is embedded in Nat.
+theorem physical_at_cutoff (right : Bool) (z : List Bool) (k : ℕ) :
+    MvPolynomial.map (evalRingHom ((2 : ℤ)^cutoff hn ht ha right z)) (physical hn ht ha right z k) =
+      nativePhysical hn ht ha (cutoff hn ht ha right z) right z k :=
+  physical_specializes hn ht ha _ right z k (le_max_left _ _) (le_max_right _ _)
+
+-- All derivatives, including identically zero higher requests, have actual derived bounds.
+theorem all_coefficients (right : Bool) (z : List Bool) (k j : ℕ) :
+    ((polynomial hn ht ha right z k).coeff j).natDegree ≤ slope hn ht ha right z ∧
+      coefficientMass ((polynomial hn ht ha right z k).coeff j) ≤ 2^coefficientBudget hn ht ha right z :=
+  coefficient_degree_mass hn ht ha right z k j
+
+theorem derivative_zero_family (right : Bool) (z : List Bool) :
+    polynomial hn ht ha right z (catalogDegree hn ht ha (CoefficientMarkedRecordFieldSource.root z)+1) = 0 := by
+  have HD := Polynomial.iterate_derivative_eq_zero
+    ((CoefficientMarkedRecordFieldSource.target_degree hn ht ha z).trans_lt (Nat.lt_succ_self _))
+  rw [CoefficientMarkedRecordFieldQuery.polynomial, HD]
+  simp only [CoefficientBankUnivariateQuery.polynomial, UnivariateRational.clear, Polynomial.coeff_zero,
+    zero_mul, Finset.sum_const_zero, map_zero]
+
+-- Every numeric bound is original-only, without a radius reader or complete word.
+theorem original_budgets (right : Bool) : BinaryFn (cutoff hn ht ha right) ∧
+    BinaryFn (coefficientBudget hn ht ha right) ∧
+    BinaryFn (fun z => 2*catalogDegree hn ht ha (CoefficientMarkedRecordFieldSource.root z)*catalogPower hn ht ha right z) :=
+  ⟨cutoff_binary hn ht ha right, coefficientBudget_binary hn ht ha right, target_degree_binary hn ht ha right⟩
+end MarkedFieldQueryRegression
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.column_specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.physical_specializes
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.rightRoot_FP
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.cutoff_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.slope_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.offset_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.coefficientBudget_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.coefficient_degree_mass
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.creating_power_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.target_degree_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.target_degree
+#print axioms MarkedFieldQueryRegression.scalar_at_cutoff
+#print axioms MarkedFieldQueryRegression.physical_at_cutoff
+#print axioms MarkedFieldQueryRegression.all_coefficients
+#print axioms MarkedFieldQueryRegression.derivative_zero_family
+#print axioms MarkedFieldQueryRegression.original_budgets
+end RoadmapInternalG86ActualPhysicalFieldQuery
+
+section RoadmapInternalG86ActualFieldRadiusFunction
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open CoefficientMarkedRecordFieldQuery
+open IntegralMixedPhysicalFieldEquality (contextProbe)
+namespace MarkedFieldRadiusRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R : List Bool → ℕ} (hRad : BinaryFn R)
+attribute [local irreducible] IntegralMixedSourceIntegerRecordAppend.plan IntegralMixedSourceIntegerRecordAppend.data
+  IntegralMixedAuxiliaryMarkedIntegerPlan.seed IntegralMixedFramedHistoryFamilyBits.family
+
+-- For the left probe the two radius values coincide literally, with arbitrary R.
+theorem left_own_reader (z : List Bool) (k : ℕ)
+    (hC : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha
+      (CoefficientMarkedRecordFieldSource.root z) ≤ R (CoefficientMarkedRecordFieldSource.root z)) :
+    (polynomial hn ht ha false z k).map (evalRingHom ((2 : ℤ)^R (CoefficientMarkedRecordFieldSource.root z))) =
+      (IntegralMixedPhysicalFieldEquality.querySource hn ht ha hRad).polynomial (contextProbe n false z k) :=
+  specializes_radius hn ht ha hRad false z k rfl hC hC
+
+-- A native arbitrary reader is used directly; no equality to a constant reader.
+theorem right_own_reader (z : List Bool) (k : ℕ)
+    (hEq : R (CoefficientMarkedRecordFieldSource.root z) = R (rightRoot true z))
+    (hL : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha
+      (CoefficientMarkedRecordFieldSource.root z) ≤ R (CoefficientMarkedRecordFieldSource.root z))
+    (hR : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha (rightRoot true z) ≤ R (rightRoot true z)) :
+    (polynomial hn ht ha true z k).map (evalRingHom ((2 : ℤ)^R (CoefficientMarkedRecordFieldSource.root z))) =
+      (IntegralMixedPhysicalFieldEquality.querySource hn ht ha hRad).polynomial (contextProbe n true z k) :=
+  specializes_radius hn ht ha hRad true z k hEq hL hR
+
+noncomputable def nativeTest := SquareSampleCompleteUnivariateTest.test
+  (IntegralFramedPhysicalSquare.input
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).parameters
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).plan
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).data
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).nodes
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).factor
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).seed
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).bounds
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).key
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).positive)
+  (IntegralMixedPhysicalFieldEquality.querySource hn ht ha hRad)
+  (IntegralFramedPhysicalUnivariateTest.column
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).parameters
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).plan
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).data
+    (IntegralMixedPhysicalMarkedPlan.bank hn ht ha hRad false).key
+    (IntegralMixedPhysicalFieldEquality.coordinate hn ht ha hRad))
+
+theorem actual_own_physical (right : Bool) (z : List Bool) (k : ℕ)
+    (hEq : R (CoefficientMarkedRecordFieldSource.root z) = R (rightRoot right z))
+    (hL : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha
+      (CoefficientMarkedRecordFieldSource.root z) ≤ R (CoefficientMarkedRecordFieldSource.root z))
+    (hR : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha (rightRoot right z) ≤ R (rightRoot right z)) :
+    MvPolynomial.map (evalRingHom ((2 : ℤ)^R (CoefficientMarkedRecordFieldSource.root z))) (physical hn ht ha right z k) =
+      MvPolynomial.rename Fin.val ((nativeTest hn ht ha hRad).polynomial (IntegralMixedPhysicalFieldEquality.context right z)
+        (pair (IntegralMixedPhysicalFieldEquality.catalogOldArgument n z)
+          (pair (BinaryNatCode.encode (IntegralMixedPhysicalFieldEquality.catalogSelected n right z)) (BinaryNatCode.encode k)))) :=
+  physical_specializes_radius hn ht ha hRad right z k hEq hL hR
+
+-- The graph's radius reader needs only equality of original-input projections.
+theorem original_projection {R0 : List Bool → ℕ} (hR0 : BinaryFn R0) (right : Bool) (z : List Bool) (k : ℕ)
+    (hOrig : IntegralMixedAuxiliaryMarkedIntegerSource.original (CoefficientMarkedRecordFieldSource.root z) =
+      IntegralMixedAuxiliaryMarkedIntegerSource.original (rightRoot right z))
+    (hL : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha
+      (CoefficientMarkedRecordFieldSource.root z) ≤ R0 (IntegralMixedAuxiliaryMarkedIntegerSource.original (CoefficientMarkedRecordFieldSource.root z)))
+    (hR : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha (rightRoot right z) ≤
+      R0 (IntegralMixedAuxiliaryMarkedIntegerSource.original (rightRoot right z))) :
+    (polynomial hn ht ha right z k).map
+      (evalRingHom ((2 : ℤ)^R0 (IntegralMixedAuxiliaryMarkedIntegerSource.original (CoefficientMarkedRecordFieldSource.root z)))) =
+      (IntegralMixedPhysicalFieldEquality.querySource hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0)).polynomial
+        (contextProbe n right z k) :=
+  specializes_radius hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) right z k
+    (congrArg R0 hOrig) hL hR
+end MarkedFieldRadiusRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.specializes_radius
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordFieldQuery.physical_specializes_radius
+#print axioms MarkedFieldRadiusRegression.left_own_reader
+#print axioms MarkedFieldRadiusRegression.right_own_reader
+#print axioms MarkedFieldRadiusRegression.original_projection
+
+#print axioms MarkedFieldRadiusRegression.actual_own_physical
+end RoadmapInternalG86ActualFieldRadiusFunction
+
+section RoadmapInternalG86ActualCenterPrincipalSource
+namespace RadialCenterPrincipalRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial PrincipalSubresultant
+open scoped Classical
+
+noncomputable def repeated : Polynomial ℤ := X ^ 2 + C 2 * X + 1
+
+-- The first PSC vanishes at a repeated root, but the next survives.
+example : psc repeated repeated.derivative 2 1 0 = 0 := by
+  have H : LeanCanny.Algebra.PrincipalSubresultant.subresultantMatrix repeated repeated.derivative 2 1 0 =
+      !![2, 0, 1; 2, 2, 2; 0, 2, 1] := by
+    ext i j
+    induction j using Fin.addCases <;>
+      simp only [subresultantMatrix_castAdd, subresultantMatrix_natAdd]
+    · rename_i j
+      fin_cases i <;> fin_cases j <;>
+        norm_num [repeated, Polynomial.coeff_add, Polynomial.coeff_C_mul, Polynomial.coeff_one,
+          Polynomial.coeff_X, Fin.castAdd, Fin.natAdd, Fin.castLE]
+    · rename_i j
+      fin_cases i <;> fin_cases j <;>
+        norm_num [repeated, Polynomial.coeff_add, Polynomial.coeff_C_mul, Polynomial.coeff_one,
+          Polynomial.coeff_X, Fin.castAdd, Fin.natAdd, Fin.castLE]
+  rw [psc_def, H, Matrix.det_fin_three]
+  norm_num
+
+example : psc repeated repeated.derivative 2 1 1 = 2 := by
+  rw [psc_right_bound]
+  norm_num [repeated, Polynomial.coeff_add, Polynomial.coeff_C_mul]
+
+-- Degree-zero inputs use the separate constant case, never a bogus derivative index.
+example : signedPsc (C 7 : Polynomial ℤ) 0 0 0 0 = 1 := by
+  rw [signedPsc_of_le _ _ (by decide), psc_left_bound]
+  norm_num
+
+example (c : List Bool) (j r : ℕ)
+    (hr : FormulaSignSlotRadialCenterPrincipalFamily.degreeBound c < r) :
+    FormulaSignSlotRadialCenterPrincipalCoefficient.polynomial c j r = 0 :=
+  FormulaSignSlotRadialCenterPrincipalCoefficient.zero_of_large_radius c j r hr
+
+example : SpaceFunction FormulaSignSlotRadialCenterPrincipalSource.coefficient :=
+  FormulaSignSlotRadialCenterPrincipalSource.evaluator
+
+example (z bits modulus : List Bool) :
+    FormulaSignSlotRadialCenterPrincipalSource.coefficient (pair (pair z bits) modulus) =
+      MatrixPower.residueBits ((((FormulaSignSlotRadialCenterPrincipalSource.polynomial z).coeff
+        (FixedWidthPolynomial.nativeExponent (Equiv.refl _) (FormulaSignSlotRadialCenterPrincipalSource.width z)
+          (Nat.fromBitsLE bits))) : ℤ) : ZMod (Nat.fromBitsLE modulus + 1)) :=
+  FormulaSignSlotRadialCenterPrincipalSource.packet z bits modulus
+
+example (c : List Bool) (a : Fin (Connectivity.FormulaSignSlotCenteredRadialGraph.d
+    (pairFst (FormulaSignSlotRadialCenterPrincipalFamily.original c))) → ℝ) (k : ℕ) :
+    FormulaSignSlotRadialCenterPrincipalGuards.Guards c a k ↔
+      FormulaSignSlotRadialCenterSquarefreeSelection.Guards
+        (FormulaSignSlotRadialCenterPrincipalFamily.original c) a
+        (FormulaSignSlotRadialCenterPrincipalFamily.tau c) (FormulaSignSlotRadialCenterPrincipalFamily.degree c) k :=
+  FormulaSignSlotRadialCenterPrincipalGuards.guards_iff c a k
+
+#check FormulaSignSlotRadialCenterSquarefreeSelection.squarefree_map
+#check FormulaSignSlotRadialCenterSquarefreeSelection.exceptional_map
+#check FormulaSignSlotRadialCenterPrincipalGuards.index_iff
+#check FormulaSignSlotRadialCenterPrincipalSource.packet
+#print axioms FormulaSignSlotRadialCenterSquarefreeSelection.guards_iff
+#print axioms FormulaSignSlotRadialCenterSquarefreeSelection.exists_guards
+#print axioms FormulaSignSlotRadialCenterSquarefreeSelection.squarefree_map
+#print axioms FormulaSignSlotRadialCenterSquarefreeSelection.exceptional_map
+#print axioms FormulaSignSlotRadialCenterPrincipalFamily.principal_degree
+#print axioms FormulaSignSlotRadialCenterPrincipalMass.mass
+#print axioms FormulaSignSlotRadialCenterPrincipalCoefficient.specialization
+#print axioms FormulaSignSlotRadialCenterPrincipalGuards.guards_iff
+#print axioms FormulaSignSlotRadialCenterPrincipalGuards.exists_guards
+#print axioms FormulaSignSlotRadialCenterPrincipalReader.principal_evaluator
+#print axioms FormulaSignSlotRadialCenterPrincipalReader.principal_box_packet
+#print axioms FormulaSignSlotRadialCenterPrincipalCoefficientNative.evaluator
+#print axioms FormulaSignSlotRadialCenterPrincipalCoefficientNative.correct
+#print axioms FormulaSignSlotRadialCenterPrincipalSource.evaluator
+#print axioms FormulaSignSlotRadialCenterPrincipalSource.polynomial_mass
+end RadialCenterPrincipalRegression
+end RoadmapInternalG86ActualCenterPrincipalSource

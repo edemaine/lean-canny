@@ -2316,6 +2316,13 @@ NoCritical source and sparse query heights are bounded as well. Computed
 common-denominator and total-cofactor products specialize at every canonical
 prefix and explicit key. Physical cut/principal query bindings and the
 remaining graph roles are still separate.
+Constructed field queries now specialize to the literal native physical
+test, with original coefficient budgets. The binding permits arbitrary actual
+radius functions when their two queried roots have equal radius values; it
+does not identify resource seeds with a constant-radius reader. Alternative
+typed raw-cut kinds at the same saved rule share the original affine height
+bound. The radial same-center squarefree/PSC integer families and their
+closed coefficient frontends are also constructed.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership
