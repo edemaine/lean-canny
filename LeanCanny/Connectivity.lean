@@ -1,3 +1,9 @@
+import LeanCanny.Algebra.CoefficientMixedFactorChoice
+import LeanCanny.Encoding.CoefficientMarkedRecordChoiceFactor
+import LeanCanny.Encoding.CoefficientMarkedRecordChoicePhysical
+import LeanCanny.Encoding.CoefficientMarkedRecordChoicePhysicalBounds
+import LeanCanny.Encoding.CoefficientMarkedRecordChoicePhysicalSpatial
+import LeanCanny.Encoding.CoefficientMarkedRecordCutSelection
 import LeanCanny.Encoding.CoefficientMarkedRecordCriticalBranchSign
 import LeanCanny.Encoding.CoefficientMarkedRecordCriticalDegree
 import LeanCanny.Encoding.CoefficientMarkedRecordCriticalFullQuery
@@ -5152,6 +5158,11 @@ and rank principal queries have exact own-column maps and complete original
 finite-variable, spatial and parameter coefficient boxes. Whole native
 Atomic/Local/NoCritical/Edge tuple incidence and joint descriptor feasibility
 remain to be proved.
+Literal saved historical cut rules, kinds and declared degrees now match
+the canonical instruction. Full clipped lower-choice coefficient probes
+specialize on their OWN physical parent columns and have original finite
+variable, spatial and parameter coefficient boxes. Whole historical trace
+guard acceptance and its shared full-tuple incidence remain separate.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 Common bounds for every guarded graph query and physical-edge transport,

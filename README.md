@@ -2361,6 +2361,11 @@ and rank principal queries have exact own-column maps and complete original
 finite-variable, spatial and parameter coefficient boxes. Whole native
 Atomic/Local/NoCritical/Edge tuple incidence and joint descriptor feasibility
 remain to be proved.
+Literal saved historical cut rules, kinds and declared degrees now match
+the canonical instruction. Full clipped lower-choice coefficient probes
+specialize on their OWN physical parent columns and have original finite
+variable, spatial and parameter coefficient boxes. Whole historical trace
+guard acceptance and its shared full-tuple incidence remain separate.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership

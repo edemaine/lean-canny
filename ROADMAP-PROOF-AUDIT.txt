@@ -2659,3 +2659,42 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Whole native Atomic/Local/NoCritical/Edge shared tuple incidence, NoBad comparison principals, uniform all-role stabilization, joint descriptor/component association and both original unconditional PSPACE endpoints remain open.
+
+53. G95: actual clipped physical cut coefficients and saved instructions
+2026-11-05.
+
+The actual parsed saved-family rule, kind AND declared degree are derived
+from the same canonical instruction at every raw-record cut, for every
+radius reader and AUX. No kind/degree compatibility premise is supplied.
+The native lower-choice probe uses min(requested, creatingChoice) before
+finite parsing. Its formal factor is UNTRUNCATED, with the true full target
+degree bounded by the original width independently of stored birth degree.
+Every coefficient specializes to the actual saved-family factor.
+
+The physical query restores the actual creating powers and embeds into
+its OWN complete parent scalar columns. Original affine native coefficient
+growth proves all formal parameter degrees and coefficient masses. Original
+Binary spatial bounds and Unary complete-row counts control every alternative
+choice/target coefficient; finite variable support is proved separately.
+Regression consumers check the complete grid box, zero extension after the
+true full target degree, and the literal first clipped choice.
+
+Whole historical TraceBeforeProbe acceptance (including prelude cuts),
+Atomic/Local/NoCritical/Edge shared-tuple transport, uniform all-role cutoff,
+joint descriptor/component association and the two original PSPACE endpoints
+remain open.
+
+All6 sources (715 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration plus actual full-cut-head affine-profile producer PASS20904 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:16630 lines,255 groups.
+Audited 95259 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 201890 transitive constants: no legacy space foundation.
+All10 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Whole historical trace acceptance and Atomic/Local/NoCritical/Edge shared-tuple transport, uniform all-role stabilization, joint descriptor/component association and both original unconditional PSPACE endpoints remain open.

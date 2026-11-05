@@ -1,3 +1,4 @@
+import LeanCanny.Encoding.CoefficientMarkedRecordChoicePhysicalSpatial
 import LeanCanny.Encoding.CoefficientMarkedRecordCriticalScanTransport
 import LeanCanny.Encoding.CoefficientMarkedRecordProperPrincipalBounds
 import LeanCanny.Encoding.CoefficientMarkedRecordProperPrincipalMap
@@ -16563,3 +16564,67 @@ end ProperVariablesRegression
 #print axioms ProperVariablesRegression.near_pack
 #print axioms ProperVariablesRegression.rank_pack
 end RoadmapInternalG94ProperPrincipalVariables
+
+section RoadmapInternalG95ActualClippedPhysicalCutProbes
+open LeanCanny
+open LeanCanny.Algebra LeanCanny.Computation LeanCanny.Encoding Polynomial
+open scoped Classical
+namespace ActualChoicePhysicalRegression
+set_option backward.isDefEq.respectTransparency false
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+-- One original box controls every literal full-factor probe on its OWN tuple.
+theorem complete_box (ctx : List Bool) (k : ℕ)
+    (hk : k < IntegralMixedCausalRecordPlanBits.count ctx)
+    (hc : IntegralMixedUnitRecordCode.critical (IntegralMixedCausalRecordPlanBits.code ctx k) = false)
+    (requested tau : ℕ) (v : ℕ →₀ ℕ) :
+    let p := CoefficientMarkedRecordChoicePhysical.polynomial hn ht ha ctx k hk.le requested tau
+    p.vars ⊆ Finset.range (CoefficientMarkedRecordRows.symbolic hn ht ha ctx k hk.le).count ∧
+    p.totalDegree ≤ CoefficientMarkedRecordChoicePhysical.spatialDegree hn ht ha ctx ∧
+    (p.coeff v).natDegree ≤ IntegralMixedAuxiliaryMarkedRecordRadiusHeight.rawSlope hn ht ha ctx ∧
+    coefficientMass (p.coeff v) ≤ 2^CoefficientMarkedRecordCutCoefficientBounds.coefficientBudget hn ht ha ctx :=
+  ⟨CoefficientMarkedRecordChoicePhysical.variable_box hn ht ha ctx k hk.le requested tau,
+    CoefficientMarkedRecordChoicePhysical.spatial_degree hn ht ha ctx k hk.le requested tau,
+    CoefficientMarkedRecordChoicePhysical.coefficient_degree_mass hn ht ha ctx k hk hc requested tau v⟩
+
+-- Coefficients after the true full target degree vanish, even when serialized
+-- stored birth degrees differ from that true target degree.
+theorem outside_target (ctx : List Bool) (k : ℕ)
+    (hk : k ≤ IntegralMixedCausalRecordPlanBits.count ctx) (requested tau : ℕ)
+    (htau : 2^CoefficientMarkedIntegerBirth.width hn ht ha ctx < tau) :
+    CoefficientMarkedRecordChoicePhysical.polynomial hn ht ha ctx k hk requested tau = 0 := by
+  have HE := Polynomial.coeff_eq_zero_of_natDegree_lt
+    ((CoefficientMarkedRecordChoiceFactor.target_degree hn ht ha ctx k hk requested).trans_lt htau)
+  unfold CoefficientMarkedRecordChoicePhysical.polynomial CoefficientMarkedRecordChoicePhysical.query
+  rw [HE, map_zero, map_zero]
+
+-- A zero request clips to the literal first choice; it does not parse a
+-- fresh independently chosen source or kind.
+theorem first_choice (ctx : List Bool) (k : ℕ) :
+    CoefficientMarkedRecordChoiceFactor.polynomial hn ht ha ctx k 0 =
+      CoefficientMarkedRecordFactorQuery.polynomial hn ht ha ctx k 0 := by
+  simpa only [Nat.zero_min] using CoefficientMarkedRecordChoiceFactor.polynomial_eq hn ht ha ctx k 0
+
+#print axioms complete_box
+#print axioms outside_target
+#print axioms first_choice
+#print axioms CoefficientMixedFactorSpecialization.queried_kind_atChoice
+#print axioms CoefficientMixedFactorSpecialization.native_retarget_atChoice
+#print axioms CoefficientMarkedRecordCutSelection.selection_heq
+#print axioms CoefficientMarkedRecordCutSelection.native_degree_eq
+#print axioms CoefficientMarkedRecordCutSelection.degree_eq
+#print axioms CoefficientMarkedRecordChoiceFactor.specializes
+#print axioms CoefficientMarkedRecordChoiceFactor.specializes_family
+#print axioms CoefficientMarkedRecordChoiceFactor.coefficient_degree_mass
+#print axioms CoefficientMarkedRecordChoiceFactor.scalar_degree
+#print axioms CoefficientMarkedRecordChoiceFactor.target_degree
+#print axioms CoefficientMarkedRecordChoicePhysical.specializes_native
+#print axioms CoefficientMarkedRecordChoicePhysical.specializes_family
+#print axioms CoefficientMarkedRecordChoicePhysical.coefficient_degree_mass
+#print axioms CoefficientMarkedRecordChoicePhysical.spatialDegree_binary
+#print axioms CoefficientMarkedRecordChoicePhysical.spatial_degree
+#print axioms CoefficientMarkedRecordChoicePhysical.variable_box
+#print axioms CoefficientMarkedRecordChoicePhysical.count_unary
+end ActualChoicePhysicalRegression
+end RoadmapInternalG95ActualClippedPhysicalCutProbes
