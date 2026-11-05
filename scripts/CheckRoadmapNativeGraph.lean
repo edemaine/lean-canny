@@ -1,3 +1,19 @@
+import LeanCanny.Algebra.CoefficientCoordinateBasis
+import LeanCanny.Algebra.CoefficientCoordinateBasisMatrix
+import LeanCanny.Algebra.CoefficientCoordinateBasisSpecialization
+import LeanCanny.Algebra.CoefficientHeightBankBounds
+import LeanCanny.Algebra.CoefficientHeightBankScalarStep
+import LeanCanny.Algebra.CoefficientHistoryHeights
+import LeanCanny.Algebra.CoefficientMixedCoordinateSquarefree
+import LeanCanny.Algebra.CoefficientMixedCriticalPolynomial
+import LeanCanny.Algebra.CoefficientMixedCriticalSweep
+import LeanCanny.Algebra.CoefficientMixedLimitCoordinate
+import LeanCanny.Algebra.CoefficientMixedValueTrailing
+import LeanCanny.Algebra.CoefficientRelativeLeadingNormalizationAtInfinity
+import LeanCanny.Algebra.CoefficientRelativeLeadingNormalizationBounds
+import LeanCanny.Algebra.CoefficientUniformIntegralPrefixRows
+import LeanCanny.Algebra.ParameterMatrixMassBounds
+import LeanCanny.Geometry.ParameterizedOrderedRootBranches
 import LeanCanny.Connectivity.CanonicalAuxiliaryBitPieceLabelLock
 import LeanCanny.Connectivity.CanonicalAuxiliaryCandidateLabelLock
 import LeanCanny.Connectivity.CanonicalAuxiliaryRadialClosure
@@ -9756,3 +9772,1142 @@ example (desc :Description) (hd :desc.WellFormed) (i j :CanonicalAuxiliaryCandid
 #print axioms bit_piece_closure_iff
 end LeanCanny.Connectivity.CanonicalAuxiliaryRadialClosure
 end RoadmapInternalG73RadialClosureDescriptor
+
+section RoadmapInternalG74CoordinateBasis
+namespace CoefficientCoordinateBasisRegression
+open LeanCanny.Algebra
+open CoefficientCoordinateBasis
+
+example {R A :Type*} [CommRing R] [CommRing A] [Algebra R A] {m N :ℕ}
+    (b :CoefficientCoordinateBasis R A m N) (a :A) :
+    (b.representative a).aeval b.generator=a ∧ (b.representative a).totalDegree≤m*(N-1):=
+  ⟨b.representative_eval a,b.representative_degree a⟩
+
+example {R A :Type*} [CommRing R] [CommRing A] [Algebra R A] {m N :ℕ}
+    (b :CoefficientCoordinateBasis R A m N) (a :A) (v :Fin m→₀ℕ)
+    (hv :v∈(b.representative a).support) (i :Fin m) :v i<N:=b.representative_support a v hv i
+
+example (N :ℕ) (p :Polynomial (Polynomial ℤ)) :
+    ((base (Polynomial ℤ) N).polynomial p).map
+      (MvPolynomial.aeval (base (Polynomial ℤ) N).generator).toRingHom=p:=
+  polynomial_map _ _
+
+example (p :Polynomial (Polynomial ℤ)) (d :ℕ) :
+    Nonempty (CoefficientCoordinateBasis (Polynomial ℤ)
+      (PaddedIntegralParameterExtension.Extension p d 2) 1 2):=
+  ⟨(base (Polynomial ℤ) 2).paddedStep p d⟩
+
+example {R A :Type*} [CommRing R] [CommRing A] [Algebra R A] [Nontrivial A] {m N :ℕ}
+    (b :CoefficientCoordinateBasis R A m N) (p :Polynomial A) (d :ℕ) :
+    (b.paddedStep p d).generator 0=AdjoinRoot.root _:=rfl
+
+example {R A :Type*} [CommRing R] [CommRing A] [Algebra R A] [Nontrivial A] {m N :ℕ}
+    (b :CoefficientCoordinateBasis R A m N) (p :Polynomial A) (d :ℕ) (i :Fin m) :
+    (b.paddedStep p d).generator i.succ=AdjoinRoot.of _ (b.generator i):=rfl
+
+example {A :Type*} [CommRing A] [Nontrivial A] {m N :ℕ}
+    (b :IntegralCoordinateBasis A m N) (p :Polynomial A) (d :ℕ) :
+    ofIntegral (PaddedIntegralParameterExtension.coordinateBasis b p d)=(ofIntegral b).paddedStep p d:=
+  ofIntegral_paddedStep _ _ _
+
+example {A :Type*} [CommRing A] {m N :ℕ} (b :IntegralCoordinateBasis A m N) (p :Polynomial A) :
+    (ofIntegral b).polynomial p=b.polynomial p:=ofIntegral_polynomial _ _
+
+example (N :ℕ) :ofIntegral (IntegralCoordinateBasis.base N)=base ℤ N:=ofIntegral_base N
+
+#print axioms representative_eval
+#print axioms representative_support
+#print axioms representative_degree
+#print axioms polynomial_monic
+#print axioms ofIntegral_paddedStep
+#print axioms paddedStep
+end CoefficientCoordinateBasisRegression
+end RoadmapInternalG74CoordinateBasis
+
+section RoadmapInternalG74BasisSpecialization
+namespace CoefficientCoordinateBasisSpecializationRegression
+open LeanCanny.Algebra Polynomial
+open CoefficientCoordinateBasis
+
+example {R S A B :Type*} [CommRing R] [CommRing S] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra S B] {m N :ℕ} (φ :R→+*S) (ψ :A→+*B)
+    (b :CoefficientCoordinateBasis R A m N) (c :CoefficientCoordinateBasis S B m N)
+    (H :Specializes φ ψ b c) (a :A) (e :Fin m→Fin N) :
+    c.basis.repr (ψ a) e=φ (b.basis.repr a e):=H.coordinates a e
+
+example {R S A B :Type*} [CommRing R] [CommRing S] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra S B] {m N :ℕ} (φ :R→+*S) (ψ :A→+*B)
+    (b :CoefficientCoordinateBasis R A m N) (c :CoefficientCoordinateBasis S B m N)
+    (H :Specializes φ ψ b c) (a :A) :
+    MvPolynomial.map φ (b.representative a)=c.representative (ψ a):=H.representative_map a
+
+example {R S A B :Type*} [CommRing R] [CommRing S] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra S B] {m N :ℕ} (φ :R→+*S) (ψ :A→+*B)
+    (b :CoefficientCoordinateBasis R A m N) (c :CoefficientCoordinateBasis S B m N)
+    (H :Specializes φ ψ b c) (p :Polynomial A) :
+    (b.polynomial p).map (MvPolynomial.map φ)=c.polynomial (p.map ψ):=H.polynomial_map p
+
+example (p :(ℤ[X])[X]) (d :ℕ) :
+    Specializes (evalRingHom (0:ℤ))
+      (PaddedIntegralParameterExtension.specialize (evalRingHom (0:ℤ)) p d 2)
+      ((base (ℤ[X]) 2).paddedStep p d)
+      ((base ℤ 2).paddedStep (p.map (evalRingHom (0:ℤ))) d):=
+  (base_specializes (evalRingHom (0:ℤ)) 2).paddedStep p d
+
+noncomputable def singularPolynomial :(ℤ[X])[X]:=X^2-C (X:ℤ[X])
+theorem singular_map :singularPolynomial.map (evalRingHom (0:ℤ))=X^2:=by
+  simp [singularPolynomial]
+attribute [local irreducible] singularPolynomial
+
+example (a :PaddedIntegralParameterExtension.Extension singularPolynomial 2 2) (e :Fin 1→Fin 2) :
+    ((base ℤ 2).paddedStep (singularPolynomial.map (evalRingHom (0:ℤ))) 2).basis.repr
+      (PaddedIntegralParameterExtension.specialize (evalRingHom (0:ℤ)) singularPolynomial 2 2 a) e=
+      (evalRingHom (0:ℤ)) (((base (ℤ[X]) 2).paddedStep singularPolynomial 2).basis.repr a e):=
+  ((base_specializes (evalRingHom (0:ℤ)) 2).paddedStep singularPolynomial 2).coordinates a e
+
+theorem actual_two_steps (p :(ℤ[X])[X]) (d :ℕ)
+    (q :Polynomial (PaddedIntegralParameterExtension.Extension p d 2)) (e :ℕ) :
+    let φ:=evalRingHom (0:ℤ)
+    let ψ:=PaddedIntegralParameterExtension.specialize φ p d 2
+    letI:=PaddedIntegralParameterExtension.nontrivial p d 2 (by decide)
+    letI:=PaddedIntegralParameterExtension.nontrivial (p.map φ) d 2 (by decide)
+    Specializes φ (PaddedIntegralParameterExtension.specialize ψ q e 2)
+      (((base (ℤ[X]) 2).paddedStep p d).paddedStep q e)
+      (((base ℤ 2).paddedStep (p.map φ) d).paddedStep (q.map ψ) e):=by
+  dsimp only
+  let :=PaddedIntegralParameterExtension.nontrivial p d 2 (by decide)
+  let :=PaddedIntegralParameterExtension.nontrivial (p.map (evalRingHom (0:ℤ))) d 2 (by decide)
+  exact ((base_specializes (evalRingHom (0:ℤ)) 2).paddedStep p d).paddedStep q e
+
+example {R A B :Type*} [CommRing R] [CommRing A] [CommRing B] [Algebra R A]
+    [Nontrivial A] [Nontrivial B] {m N :ℕ} (φ :R→+*ℤ) (ψ :A→+*B)
+    (b :CoefficientCoordinateBasis R A m N) (c :IntegralCoordinateBasis B m N)
+    (H :Specializes φ ψ b (ofIntegral c)) (p :Polynomial A) (d :ℕ) :
+    Specializes φ (PaddedIntegralParameterExtension.specialize ψ p d N)
+      (b.paddedStep p d) (ofIntegral (PaddedIntegralParameterExtension.coordinateBasis c (p.map ψ) d)):=by
+  rw [ofIntegral_paddedStep]
+  exact H.paddedStep p d
+
+#print axioms base_specializes
+#print axioms Specializes.coordinates
+#print axioms Specializes.representative_map
+#print axioms Specializes.polynomial_map
+#print axioms Specializes.paddedStep
+#print axioms actual_two_steps
+end CoefficientCoordinateBasisSpecializationRegression
+end RoadmapInternalG74BasisSpecialization
+
+section RoadmapInternalG74UniformPrefixRows
+namespace CoefficientUniformIntegralPrefixRowsRegression
+open LeanCanny.Algebra Polynomial
+open CoefficientUniformIntegralPrefixRows
+
+example {R T A B :Type*} [CommRing R] [CommRing T] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra T B] {m N :ℕ} (φ :R→+*T) (ψ :A→+*B)
+    (b :CoefficientCoordinateBasis R A m N) (c :CoefficientCoordinateBasis T B m N)
+    (H :CoefficientCoordinateBasis.Specializes φ ψ b c) (p :Polynomial A) (d :ℕ) :
+    (equation b p d).map (MvPolynomial.map φ)=equation c (p.map ψ) d:=equation_map H p d
+
+example {R T A B :Type*} [CommRing R] [CommRing T] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra T B] {m N :ℕ} (φ :R→+*T) (ψ :A→+*B)
+    (b :CoefficientCoordinateBasis R A m N) (c :CoefficientCoordinateBasis T B m N)
+    (H :CoefficientCoordinateBasis.Specializes φ ψ b c) (S :ℕ)
+    (q :Fin m→MvPolynomial (Fin m) R) (q' :Fin m→MvPolynomial (Fin m) T)
+    (HQ :∀i,MvPolynomial.map φ (q i)=q' i) (p :Polynomial A) (d :ℕ) :
+    (fun i=>MvPolynomial.map φ (rows S q b p d i))=rows S q' c (p.map ψ) d:=rows_map H S q q' HQ p d
+
+theorem one_step_rows (S :ℕ) (p :(ℤ[X])[X]) (d :ℕ) :
+    (fun i=>MvPolynomial.map (evalRingHom (0:ℤ))
+      (rows S (base (ℤ[X])) (CoefficientCoordinateBasis.base (ℤ[X]) 2) p d i))=
+      rows S (base ℤ) (CoefficientCoordinateBasis.base ℤ 2) (p.map (evalRingHom (0:ℤ))) d:=
+  rows_map (CoefficientCoordinateBasis.base_specializes (evalRingHom (0:ℤ)) 2) S _ _
+    (base_map _) p d
+
+theorem actual_two_step_rows (p :(ℤ[X])[X]) (d :ℕ)
+    (q :Polynomial (PaddedIntegralParameterExtension.Extension p d 2)) (e :ℕ) :
+    let φ:=evalRingHom (0:ℤ)
+    let ψ:=PaddedIntegralParameterExtension.specialize φ p d 2
+    (fun i=>MvPolynomial.map φ (rows 2
+      (rows 2 (base (ℤ[X])) (CoefficientCoordinateBasis.base (ℤ[X]) 2) p d)
+      ((CoefficientCoordinateBasis.base (ℤ[X]) 2).paddedStep p d) q e i))=
+      rows 2 (rows 2 (base ℤ) (CoefficientCoordinateBasis.base ℤ 2) (p.map φ) d)
+      ((CoefficientCoordinateBasis.base ℤ 2).paddedStep (p.map φ) d) (q.map ψ) e:=by
+  dsimp only
+  apply rows_map ((CoefficientCoordinateBasis.base_specializes (evalRingHom (0:ℤ)) 2).paddedStep p d)
+  intro i
+  exact congrFun (one_step_rows 2 p d) i
+
+example (p :(ℤ[X])[X]) (d :ℕ) (i :Fin 1) :
+    (rows 1 (base (ℤ[X])) (CoefficientCoordinateBasis.base (ℤ[X]) 2) p d i).totalDegree≤
+      degrees 1 2 (Fin.elim0 :Fin 0→ℕ) i:=
+  row_degree 1 (by decide) (by decide) _ _ (fun i=>Fin.elim0 i) _ _ _ _
+
+example {A :Type*} [CommRing A] {m N :ℕ} (S :ℕ) (q :Fin m→MvPolynomial (Fin m) ℤ)
+    (b :IntegralCoordinateBasis A m N) (p :Polynomial A) (d :ℕ) :
+    rows S q (CoefficientCoordinateBasis.ofIntegral b) p d=UniformIntegralPrefixRows.rows S q b p d:=
+  rows_ofIntegral S q b p d
+
+example (m :ℕ) :layout m (Sum.inr ())=0:=rfl
+example (m :ℕ) (i :Fin m) :layout m (Sum.inl i)=i.succ:=rfl
+example {m :ℕ} (S N :ℕ) (e :Fin m→ℕ) :degrees S N e 0=N*UniformIntegralPowerSchedule.birth S N m:=rfl
+
+#print axioms equation_map
+#print axioms rows_map
+#print axioms row_degree
+#print axioms rows_ofIntegral
+#print axioms actual_two_step_rows
+end CoefficientUniformIntegralPrefixRowsRegression
+end RoadmapInternalG74UniformPrefixRows
+
+section RoadmapInternalG74HeightBank
+open LeanCanny.Algebra Polynomial
+open scoped Classical BigOperators
+
+namespace CoefficientHeightBankRegression
+
+noncomputable def signed : CoefficientHeightBank ℤ ℤ 2 where
+  numerator := ![5, 7]
+  denominator := ![-2, 3]
+
+example : signed.commonDenominator = -6 := by
+  norm_num [signed, CoefficientHeightBank.commonDenominator, Fin.prod_univ_two]
+
+example : signed.cleared 0 = 15 := by
+  norm_num [signed, CoefficientHeightBank.cleared, CoefficientHeightBank.cofactor,
+    show (Finset.univ : Finset (Fin 2)).erase 0 = {1} from by decide,
+    show (Finset.univ : Finset (Fin 2)).erase 1 = {0} from by decide]
+
+example : signed.expression (.reference 1) = -14 := by
+  norm_num [signed, CoefficientHeightBank.expression, CoefficientHeightBank.cleared,
+    CoefficientHeightBank.cofactor, show (Finset.univ : Finset (Fin 2)).erase 0 = {1} from by decide,
+    show (Finset.univ : Finset (Fin 2)).erase 1 = {0} from by decide]
+
+example : signed.expression (.constant 4) = -24 := by
+  norm_num [CoefficientHeightBank.expression, signed,
+    CoefficientHeightBank.commonDenominator, Fin.prod_univ_two]
+
+example : signed.expression (.reference 9) = 0 := by
+  simp [CoefficientHeightBank.expression]
+
+example : signed.expression (.scale (-2) (.add (.reference 0) (.reference 9))) = -30 := by
+  norm_num [signed, CoefficientHeightBank.expression, CoefficientHeightBank.cleared,
+    CoefficientHeightBank.cofactor, show (Finset.univ : Finset (Fin 2)).erase 0 = {1} from by decide,
+    show (Finset.univ : Finset (Fin 2)).erase 1 = {0} from by decide]
+
+noncomputable def empty : CoefficientHeightBank ℤ ℤ 0 where
+  numerator := Fin.elim0
+  denominator := Fin.elim0
+
+example : empty.commonDenominator = 1 := by simp [CoefficientHeightBank.commonDenominator]
+example : empty.expression (.reference 0) = 0 := by simp [CoefficientHeightBank.expression]
+
+noncomputable def parameter : CoefficientHeightBank ℤ[X] ℤ[X] 2 where
+  numerator := ![X + C 3, C 5]
+  denominator := ![X, C (-2)]
+
+noncomputable def evaluated : CoefficientHeightBank ℤ ℤ 2 where
+  numerator := ![3, 5]
+  denominator := ![0, -2]
+
+noncomputable def zeroEval : ℤ[X] →+* ℤ := Polynomial.evalRingHom 0
+
+theorem kills_denominator : CoefficientHeightBank.Specializes zeroEval zeroEval parameter evaluated where
+  coefficients r := by simp
+  numerator i := by fin_cases i <;> simp [zeroEval, parameter, evaluated]
+  denominator i := by fin_cases i <;> simp [zeroEval, parameter, evaluated]
+
+example : zeroEval parameter.commonDenominator = evaluated.commonDenominator :=
+  kills_denominator.commonDenominator
+
+example (a : IntegralMixedHistory.AffineExpr) :
+    zeroEval (parameter.expression a) = evaluated.expression a := kills_denominator.expression a
+
+example : evaluated.expression (.reference 0) = -6 := by
+  norm_num [evaluated, CoefficientHeightBank.expression, CoefficientHeightBank.cleared,
+    CoefficientHeightBank.cofactor, show (Finset.univ : Finset (Fin 2)).erase 0 = {1} from by decide,
+    show (Finset.univ : Finset (Fin 2)).erase 1 = {0} from by decide]
+
+example : evaluated.expression (.reference 1) = 0 := by
+  norm_num [evaluated, CoefficientHeightBank.expression, CoefficientHeightBank.cleared,
+    CoefficientHeightBank.cofactor, show (Finset.univ : Finset (Fin 2)).erase 0 = {1} from by decide,
+    show (Finset.univ : Finset (Fin 2)).erase 1 = {0} from by decide]
+
+example {n cap width m : ℕ} {P : IntegralMixedHistory.SpatialSource n} {ι : Type}
+    (x : IntegralMixedHistory.State P cap width m ι) (a : IntegralMixedHistory.AffineExpr) :
+    (CoefficientHeightBank.ofState x).expression a = IntegralMixedHistory.expression x a :=
+  CoefficientHeightBank.expression_ofState x a
+
+#print axioms CoefficientHeightBank.Specializes.commonDenominator
+#print axioms CoefficientHeightBank.Specializes.cofactor
+#print axioms CoefficientHeightBank.Specializes.cleared
+#print axioms CoefficientHeightBank.Specializes.expression
+#print axioms CoefficientHeightBank.expression_ofState
+#print axioms CoefficientHeightBank.commonDenominator_mass
+#print axioms CoefficientHeightBank.cofactor_degree
+#print axioms kills_denominator
+
+end CoefficientHeightBankRegression
+end RoadmapInternalG74HeightBank
+
+section RoadmapInternalG74LeadingNormalization
+namespace NormalizationRegression
+open LeanCanny.Algebra Polynomial
+open scoped Classical
+
+-- Exact native recovery does not assume a real root or a nonzero leading image.
+example {A I :Type*} [CommRing A] [Fintype I] [DecidableEq I]
+    (b :Module.Basis I ℤ A) (p :A[X]) (d :ℕ):
+    CoefficientRelativeLeadingNormalization.normalizeAt b p d
+      (Algebra.leftMulMatrix b (p.coeff d)).charpoly.natTrailingDegree=
+        IntegralRelativeLeadingNormalization.normalize b p d:=
+  CoefficientRelativeLeadingNormalization.normalizeAt_native b p d
+
+-- The actual fixed-width native basis is covered by the guarded map theorem.
+example {R A B :Type*} [CommRing R] [CommRing A] [CommRing B] [Algebra R A]
+    {m w :ℕ} (b :CoefficientCoordinateBasis R A m (2^w))
+    (c :IntegralCoordinateBasis B m (2^w)) (φ :R→+*ℤ) (ψ :A→+*B)
+    (H :CoefficientCoordinateBasis.Specializes φ ψ b (CoefficientCoordinateBasis.ofIntegral c))
+    (p :A[X]) (d τ :ℕ)
+    (HB:∀k<τ,φ ((Algebra.leftMulMatrix b.basis (p.coeff d)).charpoly.coeff k)=0)
+    (HT:φ ((Algebra.leftMulMatrix b.basis (p.coeff d)).charpoly.coeff τ)≠0):
+    (CoefficientRelativeLeadingNormalization.normalizeAt b.basis p d τ).map ψ=
+      IntegralRelativeLeadingNormalization.normalize c.finBasis (p.map ψ) d:=
+  CoefficientRelativeLeadingNormalization.normalizeAt_map_native_finBasis c H p d τ HB HT
+
+private theorem self_charpoly (R :Type*) [CommRing R] (a :R):
+    (Algebra.leftMulMatrix (CoefficientCoordinateBasis.base R 1).basis a).charpoly=
+      X-C a:=by
+  simp [Matrix.charpoly,Matrix.det_unique,Matrix.charmatrix_apply_eq,
+    Algebra.leftMulMatrix_eq_repr_mul,CoefficientCoordinateBasis.base]
+
+noncomputable def killParameter :ℤ[X]→+*ℤ:=Polynomial.evalRingHom 0
+
+-- Specializing the leading parameter to zero changes the characteristic
+-- trailing index from zero to one. The mapped guards select the latter.
+example :
+    (CoefficientRelativeLeadingNormalization.normalizeAt
+      (CoefficientCoordinateBasis.base ℤ[X] 1).basis
+      (C (X:ℤ[X])*X+C 3) 1 1).map killParameter=
+        IntegralRelativeLeadingNormalization.normalize
+          (CoefficientCoordinateBasis.base ℤ 1).basis
+          ((C (X:ℤ[X])*X+C 3).map killParameter) 1:=by
+  apply CoefficientRelativeLeadingNormalization.normalizeAt_map_native
+    (CoefficientCoordinateBasis.base_specializes killParameter 1)
+  · intro k hk
+    have HK:k=0:=by omega
+    subst k
+    simp [self_charpoly,killParameter]
+  · simp [self_charpoly]
+
+example :
+    (CoefficientRelativeLeadingNormalization.normalizeAt
+      (CoefficientCoordinateBasis.base ℤ[X] 1).basis
+      (C (X:ℤ[X])*X+C 3) 1 1).coeff 1=1:=by
+  rw [CoefficientRelativeLeadingNormalization.coefficient]
+  simp [CoefficientRelativeLeadingNormalization.denominatorAt,self_charpoly]
+
+-- The source and specialized characteristic polynomials really have different indices.
+example :
+    (Algebra.leftMulMatrix (CoefficientCoordinateBasis.base ℤ[X] 1).basis (X:ℤ[X])).charpoly.natTrailingDegree=0 ∧
+    ((Algebra.leftMulMatrix (CoefficientCoordinateBasis.base ℤ[X] 1).basis (X:ℤ[X])).charpoly.map
+      killParameter).natTrailingDegree=1:=by
+  rw [self_charpoly]
+  constructor
+  · apply Polynomial.natTrailingDegree_eq_zero.mpr
+    right
+    simp
+  · simp [killParameter,Polynomial.natTrailingDegree_X]
+
+-- Common mass supplies specialization guards, rather than receiving survivor assumptions.
+example {A B :Type*} [CommRing A] [CommRing B] [Algebra ℤ[X] A] {m N :ℕ}
+    (b :CoefficientCoordinateBasis ℤ[X] A m N) (c :CoefficientCoordinateBasis ℤ B m N)
+    (t :ℤ) (ψ:A→+*B)
+    (H:CoefficientCoordinateBasis.Specializes (Polynomial.evalRingHom t) ψ b c)
+    (p:A[X]) (d bits:ℕ)
+    (HM:∀k,coefficientMass ((Algebra.leftMulMatrix b.basis (p.coeff d)).charpoly.coeff k)≤2^bits)
+    (HT:(2:ℝ)^(bits+1)≤(t:ℝ)):
+    (CoefficientRelativeLeadingNormalization.normalizeAt b.basis p d
+      (Algebra.leftMulMatrix b.basis (p.coeff d)).charpoly.natTrailingDegree).map ψ=
+      IntegralRelativeLeadingNormalization.normalize c.basis (p.map ψ) d:=
+  CoefficientRelativeLeadingNormalization.normalizeAt_map_native_after_mass b c t ψ H p d bits HM HT
+
+#print axioms CoefficientRelativeLeadingNormalization.coefficient
+#print axioms CoefficientRelativeLeadingNormalization.natDegree_le
+#print axioms CoefficientRelativeLeadingNormalization.normalizeAt_native
+#print axioms CoefficientRelativeLeadingNormalization.denominatorAt_map
+#print axioms CoefficientRelativeLeadingNormalization.inverseValueAt_map
+#print axioms CoefficientRelativeLeadingNormalization.normalizeAt_map
+#print axioms CoefficientRelativeLeadingNormalization.normalizeAt_map_native
+#print axioms CoefficientRelativeLeadingNormalization.normalizeAt_map_native_finBasis
+#print axioms CoefficientRelativeLeadingNormalization.normalizeAt_map_native_after_mass
+#print axioms CoefficientRelativeLeadingNormalization.normalizeAt_map_native_finBasis_after_mass
+end NormalizationRegression
+end RoadmapInternalG74LeadingNormalization
+
+section RoadmapInternalG74CriticalPolynomial
+namespace MixedCriticalRegression
+open LeanCanny.Algebra LeanCanny.Algebra.IntegralMixedHistory Polynomial
+open scoped Classical
+
+-- Literal critical branch and leading value of the existing interpreter.
+example {n cap width m :ℕ} {P :SpatialSource n} {ι :Type}
+    (x :State P cap width m ι) (hm:m≤cap) (r:CriticalRule n):
+    CoefficientMixedCriticalPolynomial.polynomial (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r=criticalPolynomial x hm r:=
+  CoefficientMixedCriticalPolynomial.polynomial_ofState x hm r
+
+example {n cap width m :ℕ} {P :SpatialSource n} {ι :Type}
+    (x :State P cap width m ι) (hm:m≤cap) (r:CriticalRule n):
+    CoefficientMixedCriticalPolynomial.leadingValue (CoefficientHeightBank.ofState x)
+      P.leading P.degree r=criticalLeading x hm r:=
+  CoefficientMixedCriticalPolynomial.leadingValue_ofState x hm r
+
+example {R S A B :Type*} [CommRing R] [CommRing S] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra S B] {n m:ℕ} (φ:R→+*S) (ψ:A→+*B)
+    (x:CoefficientHeightBank R A m) (y:CoefficientHeightBank S B m)
+    (H:CoefficientHeightBank.Specializes φ ψ x y)
+    (low:MvPolynomial (Fin (n+1)) R) (a:R) (D:ℕ) (r:CriticalRule n):
+    (CoefficientMixedCriticalPolynomial.polynomial x low a D r).map ψ=
+      CoefficientMixedCriticalPolynomial.polynomial y (low.map φ) (φ a) D r:=
+  CoefficientMixedCriticalPolynomial.polynomial_map H low a D r
+
+noncomputable def killParameter:ℤ[X]→+*ℤ:=Polynomial.evalRingHom 0
+noncomputable def parameterBank:CoefficientHeightBank ℤ[X] ℤ[X] 1 where
+  numerator _:=6
+  denominator _:=X
+noncomputable def zeroDenominatorBank:CoefficientHeightBank ℤ ℤ 1 where
+  numerator _:=6
+  denominator _:=0
+noncomputable def rule:CriticalRule 0 where
+  offset:=0
+  objective:=0
+  coordinate:=0
+  scales _:=1
+  scales_ne_zero _:=by norm_num
+  heights _:=.reference 0
+
+private theorem bank_map:CoefficientHeightBank.Specializes killParameter killParameter
+    parameterBank zeroDenominatorBank:=by
+  constructor
+  · intro r
+    rfl
+  · intro i
+    simp [parameterBank,zeroDenominatorBank,killParameter]
+  · intro i
+    simp [parameterBank,zeroDenominatorBank,killParameter]
+
+attribute [local irreducible] CoefficientMixedCriticalPolynomial.polynomial
+  CoefficientMixedCriticalPolynomial.leadingValue
+
+-- A noninjective map kills an actual bank denominator. The construction still
+-- commutes exactly; no nonzero/survival/degree premise was smuggled into it.
+example :
+    (CoefficientMixedCriticalPolynomial.polynomial parameterBank
+      (MvPolynomial.C (3:ℤ[X])) 1 2 rule).map killParameter=
+    CoefficientMixedCriticalPolynomial.polynomial zeroDenominatorBank
+      (MvPolynomial.C (3:ℤ)) 1 2 rule:=by
+  simpa only [MvPolynomial.map_C,map_ofNat,map_one] using
+    CoefficientMixedCriticalPolynomial.polynomial_map bank_map
+      (MvPolynomial.C (3:ℤ[X])) 1 2 rule
+
+example :
+    killParameter (CoefficientMixedCriticalPolynomial.leadingValue parameterBank 1 2 rule)=
+      CoefficientMixedCriticalPolynomial.leadingValue zeroDenominatorBank 1 2 rule:=by
+  simpa only [map_one] using
+    CoefficientMixedCriticalPolynomial.leadingValue_map bank_map 1 2 rule
+
+#print axioms CoefficientMixedCriticalPolynomial.scales_map
+#print axioms CoefficientMixedCriticalPolynomial.denominator_map
+#print axioms CoefficientMixedCriticalPolynomial.numerators_map
+#print axioms CoefficientMixedCriticalPolynomial.polynomial_map
+#print axioms CoefficientMixedCriticalPolynomial.leadingValue_map
+#print axioms CoefficientMixedCriticalPolynomial.numerators_ofState
+#print axioms CoefficientMixedCriticalPolynomial.polynomial_ofState
+#print axioms CoefficientMixedCriticalPolynomial.leadingValue_ofState
+end MixedCriticalRegression
+end RoadmapInternalG74CriticalPolynomial
+
+section RoadmapInternalG74QuantitativeConstructors
+namespace CoefficientConstructorsRegression
+open LeanCanny.Algebra Polynomial
+
+-- The next matrix map is constructed from the parent generators and coefficients.
+example {R S A B :Type*} [CommRing R] [CommRing S] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra S B] [Nontrivial A] [Nontrivial B] {m N :ℕ}
+    {φ :R→+*S} {ψ :A→+*B} {b :CoefficientCoordinateBasis R A m N}
+    {c :CoefficientCoordinateBasis S B m N} (H :CoefficientCoordinateBasis.Specializes φ ψ b c)
+    (p :A[X]) (d :ℕ):
+    (Algebra.leftMulMatrix (b.paddedStep p d).basis (AdjoinRoot.root _)).charpoly.map φ=
+      (Algebra.leftMulMatrix (c.paddedStep (p.map ψ) d).basis (AdjoinRoot.root _)).charpoly:=by
+  have HC:=(H.paddedStep p d).charpoly_map (AdjoinRoot.root _)
+  simpa only [PaddedIntegralParameterExtension.specialize_root] using HC.symm
+
+-- Actual new-root annihilator coefficients get both bounds from old coefficients.
+example {A :Type*} [CommRing A] [Nontrivial A] [Algebra ℤ[X] A] {m N :ℕ}
+    (b :CoefficientCoordinateBasis ℤ[X] A m N) (p :A[X]) (d H E :ℕ)
+    (hMass :∀k r s,coefficientMass (Algebra.leftMulMatrix b.basis (p.coeff k) r s)≤2^H)
+    (hDegree :∀k,RelativeMatrixDegree.Bound (Algebra.leftMulMatrix b.basis (p.coeff k)) E) (k :ℕ):
+    coefficientMass ((Algebra.leftMulMatrix (b.paddedStep p d).basis (AdjoinRoot.root _)).charpoly.coeff k)≤
+      2^ParameterMatrixMassBounds.characteristicBudget (N^(m+1)) (ParameterMatrixMassBounds.stepBudget N m H) ∧
+    ((Algebra.leftMulMatrix (b.paddedStep p d).basis (AdjoinRoot.root _)).charpoly.coeff k).natDegree≤
+      N^(m+1)*(N*E):=
+  ⟨ParameterMatrixMassBounds.padded_root_charpoly_mass b p d H hMass k,
+    ParameterMatrixMassBounds.padded_root_charpoly_degree b p d E hDegree k⟩
+
+-- The actual native finBasis normalizer needs no characteristic survival oracle.
+example {A B :Type*} [CommRing A] [CommRing B] [Algebra ℤ[X] A] {m w :ℕ}
+    (b :CoefficientCoordinateBasis ℤ[X] A m (2^w)) (c :IntegralCoordinateBasis B m (2^w))
+    (R :ℕ) (ψ :A→+*B)
+    (H :CoefficientCoordinateBasis.Specializes (evalRingHom ((2:ℤ)^R)) ψ b
+      (CoefficientCoordinateBasis.ofIntegral c)) (p :A[X]) (d entryBits :ℕ)
+    (hEntry :∀r s,coefficientMass (Algebra.leftMulMatrix b.basis (p.coeff d) r s)≤2^entryBits)
+    (hR :ParameterMatrixMassBounds.characteristicBudget ((2^w)^m) entryBits+1≤R):
+    (CoefficientRelativeLeadingNormalization.normalizeAt b.basis p d
+      (Algebra.leftMulMatrix b.basis (p.coeff d)).charpoly.natTrailingDegree).map ψ=
+      IntegralRelativeLeadingNormalization.normalize c.finBasis (p.map ψ) d:=
+  CoefficientRelativeLeadingNormalization.normalizeAt_map_native_finBasis_after_radius
+    b c R ψ H p d entryBits hEntry hR
+
+end CoefficientConstructorsRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Algebra.CoefficientCoordinateBasis.padded_root_matrix,
+      `LeanCanny.Algebra.CoefficientCoordinateBasis.Specializes.matrix_map,
+      `LeanCanny.Algebra.CoefficientCoordinateBasis.Specializes.charpoly_map,
+      `LeanCanny.Algebra.ParameterMatrixMassBounds.padded_root_mass,
+      `LeanCanny.Algebra.ParameterMatrixMassBounds.padded_root_degree,
+      `LeanCanny.Algebra.ParameterMatrixMassBounds.padded_of_mass,
+      `LeanCanny.Algebra.ParameterMatrixMassBounds.padded_of_degree,
+      `LeanCanny.Algebra.ParameterMatrixMassBounds.charpoly_coefficient_mass,
+      `LeanCanny.Algebra.ParameterMatrixMassBounds.padded_root_charpoly_mass,
+      `LeanCanny.Algebra.ParameterMatrixMassBounds.padded_root_charpoly_degree,
+      `LeanCanny.Algebra.ParameterMatrixMassBounds.characteristicBudget_binary,
+      `LeanCanny.Algebra.ParameterMatrixMassBounds.stepBudget_binary,
+      `LeanCanny.Algebra.CoefficientRelativeLeadingNormalization.normalizeAt_map_native_finBasis_after_radius] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Coefficient constructors: three composed consumers and thirteen standard-axiom audits."
+end RoadmapInternalG74QuantitativeConstructors
+
+section RoadmapInternalG74PhysicalRows
+open LeanCanny.Algebra Polynomial
+open scoped Classical
+
+namespace CoefficientPhysicalRowsRegression
+
+example {R : Type*} [CommRing R] (m : ℕ) (f : Fin m → Fin (m + 3)) (i : Fin m) :
+    CoefficientCanonicalScalarAppend.layout f (Sum.inl i) = Sum.inl (f i) := rfl
+
+example (f : Fin 1 → Fin 3) :
+    CoefficientCanonicalScalarAppend.layout f (Sum.inr ()) = Sum.inr () := rfl
+
+example : CoefficientCanonicalScalarAppend.layout (fun _ : Fin 1 => (2 : Fin 3)) (Sum.inl 0) =
+    Sum.inl 2 := rfl
+
+example {R A : Type*} [CommRing R] [CommRing A] [Algebra R A]
+    (b : CoefficientCoordinateBasis R A 1 2) (p : Polynomial A) (d : ℕ) (i : Fin 3) :
+    CoefficientCanonicalScalarAppend.rows 2 (fun j : Fin 3 => MvPolynomial.X j)
+      (fun _ => 2) b p d (Sum.inl i) = MvPolynomial.rename Sum.inl (MvPolynomial.X i) := rfl
+
+noncomputable def singularPolynomial : (ℤ[X])[X] := X ^ 2 - C (X : ℤ[X])
+theorem singular_map : singularPolynomial.map (evalRingHom (0 : ℤ)) = X ^ 2 := by
+  simp [singularPolynomial]
+attribute [local irreducible] singularPolynomial
+
+theorem scalar_after_singular (q : Polynomial (PaddedIntegralParameterExtension.Extension singularPolynomial 2 2))
+    (d : ℕ) :
+    let φ := evalRingHom (0 : ℤ)
+    let ψ := PaddedIntegralParameterExtension.specialize φ singularPolynomial 2 2
+    (fun i => MvPolynomial.map φ
+      (CoefficientCanonicalScalarAppend.rows 2 (fun j : Fin 3 => MvPolynomial.X j)
+        (fun _ : Fin 1 => 2) ((CoefficientCoordinateBasis.base (ℤ[X]) 2).paddedStep singularPolynomial 2) q d i)) =
+      CoefficientCanonicalScalarAppend.rows 2 (fun j : Fin 3 => MvPolynomial.X j)
+        (fun _ : Fin 1 => 2)
+        ((CoefficientCoordinateBasis.base ℤ 2).paddedStep (singularPolynomial.map φ) 2) (q.map ψ) d := by
+  dsimp only
+  apply CoefficientCanonicalScalarAppend.newrows_map
+    ((CoefficientCoordinateBasis.base_specializes (evalRingHom (0 : ℤ)) 2).paddedStep singularPolynomial 2)
+  intro i
+  exact MvPolynomial.map_X _ _
+
+theorem critical_after_singular
+    (H : Fin 2 → PaddedIntegralParameterExtension.Extension singularPolynomial 2 2) :
+    let φ := evalRingHom (0 : ℤ)
+    let ψ := PaddedIntegralParameterExtension.specialize φ singularPolynomial 2 2
+    let b := (CoefficientCoordinateBasis.base (ℤ[X]) 2).paddedStep singularPolynomial 2
+    let c := (CoefficientCoordinateBasis.base ℤ 2).paddedStep (singularPolynomial.map φ) 2
+    (fun j => MvPolynomial.map φ (PhysicalPowerCriticalAppend.rows (fun i : Fin 3 => MvPolynomial.X i)
+      (MvPolynomial.X 0 + MvPolynomial.C (X : ℤ[X])) 1 2 ![1, -2] {0} 1
+      (CoefficientHistoryHeights.historyHeights 2 (fun _ : Fin 1 => 2) b H) (fun _ => 1) 2
+      (UniformIntegralPowerSchedule.physical 2 2 1) j)) =
+      PhysicalPowerCriticalAppend.rows (fun i : Fin 3 => MvPolynomial.X i)
+        (MvPolynomial.map φ (MvPolynomial.X 0 + MvPolynomial.C (X : ℤ[X])))
+        (φ 1) (φ 2) (fun i => φ (![1, -2] i)) {0} 1
+        (CoefficientHistoryHeights.historyHeights 2 (fun _ : Fin 1 => 2) c (fun i => ψ (H i)))
+        (fun _ => 1) 2 (UniformIntegralPowerSchedule.physical 2 2 1) := by
+  dsimp only
+  apply CoefficientHistoryHeights.critical_rows_map
+    ((CoefficientCoordinateBasis.base_specializes (evalRingHom (0 : ℤ)) 2).paddedStep singularPolynomial 2)
+  intro i
+  exact MvPolynomial.map_X _ _
+
+example {A : Type*} [CommRing A] {m N : ℕ} (S : ℕ)
+    (q : Fin 3 → MvPolynomial (Fin 3) ℤ) (f : Fin m → Fin 3)
+    (b : IntegralCoordinateBasis A m N) (p : Polynomial A) (d : ℕ) :
+    CoefficientCanonicalScalarAppend.rows S q f (CoefficientCoordinateBasis.ofIntegral b) p d =
+      CanonicalIntegralScalarAppend.rows S q f b p d :=
+  CoefficientCanonicalScalarAppend.rows_ofIntegral S q f b p d
+
+example {S N m n : ℕ} (F : IntegralHistorySampler.Sampler S N m (Fin 3))
+    (H : Fin (n + 1) → F.scalarPrefix.carrier) :
+    CoefficientHistoryHeights.historyHeights S F.scalar (CoefficientCoordinateBasis.ofIntegral F.scalarPrefix.basis) H =
+      IntegralHistorySampler.historyHeights F H := CoefficientHistoryHeights.historyHeights_native F H
+
+#print axioms CoefficientCanonicalScalarAppend.newrows_map
+#print axioms CoefficientCanonicalScalarAppend.row_degree
+#print axioms CoefficientCanonicalScalarAppend.rows_ofIntegral
+#print axioms CoefficientHistoryHeights.historyHeights_map
+#print axioms CoefficientHistoryHeights.historyHeights_degree
+#print axioms CoefficientHistoryHeights.critical_rows_map
+#print axioms CoefficientHistoryHeights.critical_rows_native
+#print axioms scalar_after_singular
+#print axioms critical_after_singular
+
+end CoefficientPhysicalRowsRegression
+end RoadmapInternalG74PhysicalRows
+
+section RoadmapInternalG74CriticalSweep
+namespace MixedCriticalSweepRegression
+open LeanCanny.Algebra LeanCanny.Algebra.IntegralMixedHistory Polynomial
+open scoped Classical
+
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (j:Fin (n-r.critical.offset.val+1)):
+    CoefficientMixedCriticalSweep.coordinate (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r j=IntegralMixedCriticalSweep.coordinate x hm r j:=
+  CoefficientMixedCriticalSweep.coordinate_ofState x hm r j
+
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (j:Fin (n-r.critical.offset.val+1)) (i:Fin (IntegralMixedCoordinateTrailing.ChoiceBound P r)):
+    CoefficientMixedCriticalSweep.factor (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r j i.val=IntegralMixedCoordinateTrailing.factor x hm r j i:=
+  CoefficientMixedCriticalSweep.factor_ofState x hm r j i
+
+example {R S A B:Type*} [CommRing R] [CommRing S] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra S B] {n m:ℕ} (φ:R→+*S) (ψ:A→+*B)
+    (x:CoefficientHeightBank R A m) (y:CoefficientHeightBank S B m)
+    (H:CoefficientHeightBank.Specializes φ ψ x y)
+    (low:MvPolynomial (Fin (n+1)) R) (a slope:R) (D:ℕ)
+    (r:IntegralMixedCriticalSweep.Rule n) (j:Fin (n-r.critical.offset.val+1)):
+    (CoefficientMixedCriticalSweep.coordinateWithSlope x low a D r slope j).map
+      (Polynomial.mapRingHom ψ)=
+        CoefficientMixedCriticalSweep.coordinateWithSlope y (low.map φ) (φ a) D r (φ slope) j:=
+  CoefficientMixedCriticalSweep.coordinateWithSlope_map H low a D r slope j
+
+example {R S A B:Type*} [CommRing R] [CommRing S] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra S B] {n m:ℕ} (φ:R→+*S) (ψ:A→+*B)
+    (x:CoefficientHeightBank R A m) (y:CoefficientHeightBank S B m)
+    (H:CoefficientHeightBank.Specializes φ ψ x y)
+    (low:MvPolynomial (Fin (n+1)) R) (a slope:R) (D:ℕ)
+    (r:IntegralMixedCriticalSweep.Rule n) (j:Fin (n-r.critical.offset.val+1)) (k:ℕ):
+    (CoefficientMixedCriticalSweep.factorWithSlope x low a D r slope j k).map ψ=
+      CoefficientMixedCriticalSweep.factorWithSlope y (low.map φ) (φ a) D r (φ slope) j k:=
+  CoefficientMixedCriticalSweep.factorWithSlope_map H low a D r slope j k
+
+-- Current Q is computed internally, not a fixed integer field across specializations.
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (j:Fin (n-r.critical.offset.val+1)):
+    CoefficientMixedCriticalSweep.coordinateWithSlope (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r (CoefficientHeightBank.ofState x).commonDenominator j=
+        IntegralMixedCriticalSweep.coordinate x hm (CoefficientMixedCriticalSweep.currentRule x r) j:=
+  CoefficientMixedCriticalSweep.coordinate_currentQ_ofState x hm r j
+
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (j:Fin (n-r.critical.offset.val+1)) (i:Fin (IntegralMixedCoordinateTrailing.ChoiceBound P r)):
+    CoefficientMixedCriticalSweep.factorWithSlope (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r (CoefficientHeightBank.ofState x).commonDenominator j i.val=
+        IntegralMixedCoordinateTrailing.factor x hm (CoefficientMixedCriticalSweep.currentRule x r) j i:=
+  CoefficientMixedCriticalSweep.factor_currentQ_ofState x hm r j i
+
+noncomputable def killParameter:ℤ[X]→+*ℤ:=Polynomial.evalRingHom 0
+noncomputable def parameterBank:CoefficientHeightBank ℤ[X] ℤ[X] 1 where
+  numerator _:=6
+  denominator _:=X
+noncomputable def zeroBank:CoefficientHeightBank ℤ ℤ 1 where
+  numerator _:=6
+  denominator _:=0
+noncomputable def rule:IntegralMixedCriticalSweep.Rule 1 where
+  critical:={
+    offset:=1
+    objective:=0
+    coordinate:=0
+    scales:=fun _=>1
+    scales_ne_zero:=fun _=>by norm_num
+    heights:=fun _=>.reference 0}
+  height:=0
+  height_frozen:=by decide
+  slope:= -2
+  slope_ne_zero:=by decide
+
+private theorem bank_map:CoefficientHeightBank.Specializes killParameter killParameter parameterBank zeroBank:=by
+  constructor
+  · intro r
+    rfl
+  · intro i
+    simp [parameterBank,zeroBank,killParameter]
+  · intro i
+    simp [parameterBank,zeroBank,killParameter]
+
+-- Explicit slope T specializes to zero despite the stored rule slope being -2.
+example :(CoefficientMixedCriticalSweep.heightsWithSlope parameterBank rule X 0).map killParameter=C 6:=by
+  rw [CoefficientMixedCriticalSweep.heightsWithSlope_map bank_map]
+  simp [CoefficientMixedCriticalSweep.heightsWithSlope,killParameter,rule,zeroBank,
+    CoefficientHeightBank.expression,CoefficientHeightBank.cleared,CoefficientHeightBank.cofactor]
+
+attribute [local irreducible] CoefficientMixedCriticalSweep.coordinateWithSlope
+
+example :
+    (CoefficientMixedCriticalSweep.coordinateWithSlope parameterBank (MvPolynomial.C (3:ℤ[X]))
+      1 2 rule parameterBank.commonDenominator 0).map (Polynomial.mapRingHom killParameter)=
+    CoefficientMixedCriticalSweep.coordinateWithSlope zeroBank (MvPolynomial.C (3:ℤ))
+      1 2 rule zeroBank.commonDenominator 0:=by
+  simpa only [MvPolynomial.map_C,map_ofNat,map_one] using
+    CoefficientMixedCriticalSweep.coordinate_currentQ_map bank_map (MvPolynomial.C (3:ℤ[X])) 1 2 rule 0
+
+#print axioms CoefficientMixedCriticalSweep.heightsWithSlope_map
+#print axioms CoefficientMixedCriticalSweep.numeratorsWithSlope_map
+#print axioms CoefficientMixedCriticalSweep.coordinateWithSlope_map
+#print axioms CoefficientMixedCriticalSweep.factorWithSlope_map
+#print axioms CoefficientMixedCriticalSweep.coordinate_currentQ_map
+#print axioms CoefficientMixedCriticalSweep.coordinateWithSlope_ofState
+#print axioms CoefficientMixedCriticalSweep.factorWithSlope_ofState
+#print axioms CoefficientMixedCriticalSweep.coordinate_currentQ_ofState
+#print axioms CoefficientMixedCriticalSweep.factor_currentQ_ofState
+#print axioms CoefficientMixedCriticalSweep.coordinate_ofState
+end MixedCriticalSweepRegression
+end RoadmapInternalG74CriticalSweep
+
+section RoadmapInternalG74BankScalarStep
+open LeanCanny.Algebra Polynomial
+open scoped Classical
+
+namespace CoefficientHeightBankScalarStepRegression
+
+noncomputable def oldBank : CoefficientHeightBank ℤ ℤ 1 where
+  numerator := fun _ => 7
+  denominator := fun _ => 3
+
+example (p : Polynomial ℤ) : (oldBank.rootStep p 2 2 (-2)).denominator 0 = -2 := rfl
+example (p : Polynomial ℤ) : (oldBank.rootStep p 2 2 (-2)).denominator 1 = 3 := rfl
+example (p : Polynomial ℤ) : (oldBank.rootStep p 2 2 (-2)).numerator 0 = AdjoinRoot.root _ := rfl
+example (p : Polynomial ℤ) : (oldBank.rootStep p 2 2 (-2)).numerator 1 = AdjoinRoot.of _ 7 := rfl
+
+noncomputable def emptySource : CoefficientHeightBank ℤ[X] ℤ[X] 0 where
+  numerator := Fin.elim0
+  denominator := Fin.elim0
+
+noncomputable def emptyTarget : CoefficientHeightBank ℤ ℤ 0 where
+  numerator := Fin.elim0
+  denominator := Fin.elim0
+
+theorem empty_specializes : CoefficientHeightBank.Specializes (evalRingHom (0 : ℤ)) (evalRingHom (0 : ℤ))
+    emptySource emptyTarget where
+  coefficients r := by simp
+  numerator i := Fin.elim0 i
+  denominator i := Fin.elim0 i
+
+noncomputable def singularPolynomial : (ℤ[X])[X] := X ^ 2 - C (X : ℤ[X])
+theorem singular_map : singularPolynomial.map (evalRingHom (0 : ℤ)) = X ^ 2 := by
+  simp [singularPolynomial]
+attribute [local irreducible] singularPolynomial
+
+theorem actual_singular_birth :
+    let φ := evalRingHom (0 : ℤ)
+    CoefficientHeightBank.Specializes φ (PaddedIntegralParameterExtension.specialize φ singularPolynomial 2 2)
+      (emptySource.rootStep singularPolynomial 2 2 1)
+      (emptyTarget.rootStep (singularPolynomial.map φ) 2 2 (φ 1)) :=
+  empty_specializes.rootStep singularPolynomial 2 2 1
+
+noncomputable def collapsingPolynomial : (ℤ[X])[X] := C (X : ℤ[X]) * X ^ 2 + 1
+
+example : collapsingPolynomial.coeff 2 = (X : ℤ[X]) := by simp [collapsingPolynomial, Polynomial.coeff_one]
+
+example : collapsingPolynomial.map (evalRingHom (0 : ℤ)) = 1 := by simp [collapsingPolynomial]
+
+example : PaddedIntegralNormalization.polynomial (collapsingPolynomial.map (evalRingHom (0 : ℤ))) 2 2 = X ^ 2 := by
+  norm_num [collapsingPolynomial, PaddedIntegralNormalization.polynomial,
+    FixedDegreeIntegralNormalization.polynomial, Finset.sum_range_succ, Polynomial.coeff_one]
+
+theorem actual_collapsing_birth :
+    CoefficientHeightBank.Specializes (evalRingHom (0 : ℤ))
+      (PaddedIntegralParameterExtension.specialize (evalRingHom (0 : ℤ)) collapsingPolynomial 2 2)
+      (emptySource.rootStep collapsingPolynomial 2 2 (X : ℤ[X]))
+      (emptyTarget.rootStep (collapsingPolynomial.map (evalRingHom (0 : ℤ))) 2 2
+        ((evalRingHom (0 : ℤ)) X)) := empty_specializes.rootStep collapsingPolynomial 2 2 X
+
+example : ((emptySource.rootStep collapsingPolynomial 2 2 (X : ℤ[X])).denominator 0).eval 0 = 0 := by
+  simp [CoefficientHeightBank.rootStep]
+
+theorem actual_composed_birth :
+    let φ := evalRingHom (0 : ℤ)
+    let ψ := PaddedIntegralParameterExtension.specialize φ singularPolynomial 2 2
+    CoefficientCoordinateBasis.Specializes φ ψ
+      ((CoefficientCoordinateBasis.base (ℤ[X]) 2).paddedStep singularPolynomial 2)
+      ((CoefficientCoordinateBasis.base ℤ 2).paddedStep (singularPolynomial.map φ) 2) ∧
+    CoefficientHeightBank.Specializes φ ψ (emptySource.rootStep singularPolynomial 2 2 1)
+      (emptyTarget.rootStep (singularPolynomial.map φ) 2 2 (φ 1)) ∧
+    (fun i => MvPolynomial.map φ (CoefficientCanonicalScalarAppend.rows 1 (Fin.elim0 : Fin 0 → _)
+      Fin.elim0 (CoefficientCoordinateBasis.base (ℤ[X]) 2) singularPolynomial 2 i)) =
+      CoefficientCanonicalScalarAppend.rows 1 (Fin.elim0 : Fin 0 → _) Fin.elim0
+        (CoefficientCoordinateBasis.base ℤ 2) (singularPolynomial.map φ) 2 := by
+  dsimp only
+  exact CoefficientHeightBank.scalar_birth_specializes
+    (CoefficientCoordinateBasis.base_specializes (evalRingHom (0 : ℤ)) 2) empty_specializes
+    1 _ _ (fun i => Fin.elim0 i) Fin.elim0 singularPolynomial 2 1
+
+example {n S B m : ℕ} {P : IntegralMixedHistory.SpatialSource n} {ι : Type} [Fintype ι]
+    (x : IntegralMixedHistory.State P S B m ι) (hm : m ≤ S)
+    (p : Polynomial ℤ) (hp : p ≠ 0) (hcap : p.natDegree ≤ 2 ^ B) :
+    (CoefficientHeightBank.ofState x).rootStep (p.map (Int.castRingHom x.sampler.scalarPrefix.carrier))
+      p.natDegree (2 ^ B) p.leadingCoeff =
+      CoefficientHeightBank.ofState (IntegralMixedHistory.integerStep x hm p hp hcap) :=
+  CoefficientHeightBank.rootStep_ofState_integer x hm p hp hcap
+
+example {n S B m : ℕ} {P : IntegralMixedHistory.SpatialSource n} {ι : Type} [Fintype ι]
+    (x : IntegralMixedHistory.State P S B m ι) (hm : m ≤ S) (r : IntegralMixedHistory.CriticalRule n) :
+    (CoefficientHeightBank.ofState x).rootStep (IntegralMixedHistory.criticalPolynomial x hm r)
+      (IntegralMixedHistory.criticalDegree x hm r) (2 ^ B) (IntegralMixedHistory.criticalLeading x hm r) =
+      CoefficientHeightBank.ofState (IntegralMixedHistory.criticalStep x hm r) :=
+  CoefficientHeightBank.rootStep_ofState_critical x hm r
+
+#print axioms CoefficientHeightBank.Specializes.rootStep
+#print axioms CoefficientHeightBank.rootStep_ofState_integer
+#print axioms CoefficientHeightBank.rootStep_ofState_critical
+#print axioms CoefficientHeightBank.rootStep_ofState_normalizedScalar
+#print axioms CoefficientHeightBank.integer_birth_fields
+#print axioms CoefficientHeightBank.scalar_birth_specializes
+#print axioms actual_singular_birth
+#print axioms actual_collapsing_birth
+#print axioms actual_composed_birth
+
+end CoefficientHeightBankScalarStepRegression
+end RoadmapInternalG74BankScalarStep
+
+section RoadmapInternalG74CoordinateSquarefree
+namespace CoordinateSquarefreeRegression
+open LeanCanny.Algebra LeanCanny.Algebra.IntegralMixedHistory Polynomial
+open scoped Classical
+
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (j:Fin (n-r.critical.offset.val+1)) (k:ℕ):
+    CoefficientMixedCoordinateSquarefree.principal (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r r.slope j k=IntegralMixedCoordinateSquarefree.principal x hm r j k:=
+  CoefficientMixedCoordinateSquarefree.principal_ofState x hm r j k
+
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (j:Fin (n-r.critical.offset.val+1)) (i:Fin (IntegralMixedCoordinateSquarefree.coordinateDegree P r)):
+    CoefficientMixedCoordinateSquarefree.exceptional (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r r.slope j i.val=IntegralMixedCoordinateSquarefree.exceptional x hm r j i:=
+  CoefficientMixedCoordinateSquarefree.exceptional_ofState x hm r j i
+
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (j:Fin (n-r.critical.offset.val+1)) (i:Fin (IntegralMixedCoordinateSquarefree.coordinateDegree P r)):
+    CoefficientMixedCoordinateSquarefree.exceptional (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r (CoefficientHeightBank.ofState x).commonDenominator j i.val=
+        IntegralMixedCoordinateSquarefree.exceptional x hm (CoefficientMixedCriticalSweep.currentRule x r) j i:=
+  CoefficientMixedCoordinateSquarefree.exceptional_currentQ_ofState x hm r j i
+
+example {R S A B:Type*} [CommRing R] [CommRing S] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra S B] {n m:ℕ} (φ:R→+*S) (ψ:A→+*B)
+    (x:CoefficientHeightBank R A m) (y:CoefficientHeightBank S B m)
+    (H:CoefficientHeightBank.Specializes φ ψ x y)
+    (low:MvPolynomial (Fin (n+1)) R) (a slope:R) (D:ℕ)
+    (r:IntegralMixedCriticalSweep.Rule n) (j:Fin (n-r.critical.offset.val+1)) (k:ℕ):
+    (CoefficientMixedCoordinateSquarefree.exceptional x low a D r slope j k).map ψ=
+      CoefficientMixedCoordinateSquarefree.exceptional y (low.map φ) (φ a) D r (φ slope) j k:=
+  CoefficientMixedCoordinateSquarefree.exceptional_map H low a D r slope j k
+
+example {R S A B:Type*} [CommRing R] [CommRing S] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra S B] {n m:ℕ} (φ:R→+*S) (ψ:A→+*B)
+    (x:CoefficientHeightBank R A m) (y:CoefficientHeightBank S B m)
+    (H:CoefficientHeightBank.Specializes φ ψ x y)
+    (low:MvPolynomial (Fin (n+1)) R) (a:R) (D:ℕ)
+    (r:IntegralMixedCriticalSweep.Rule n) (j:Fin (n-r.critical.offset.val+1)) (k:ℕ):
+    (CoefficientMixedCoordinateSquarefree.exceptional x low a D r x.commonDenominator j k).map ψ=
+      CoefficientMixedCoordinateSquarefree.exceptional y (low.map φ) (φ a) D r y.commonDenominator j k:=
+  CoefficientMixedCoordinateSquarefree.exceptional_currentQ_map H low a D r j k
+
+noncomputable def killParameter:ℤ[X]→+*ℤ:=Polynomial.evalRingHom 0
+noncomputable def parameterBank:CoefficientHeightBank ℤ[X] ℤ[X] 1 where
+  numerator _:=6
+  denominator _:=X
+noncomputable def zeroBank:CoefficientHeightBank ℤ ℤ 1 where
+  numerator _:=6
+  denominator _:=0
+noncomputable def rule:IntegralMixedCriticalSweep.Rule 1 where
+  critical:={
+    offset:=1
+    objective:=0
+    coordinate:=0
+    scales:=fun _=>1
+    scales_ne_zero:=fun _=>by norm_num
+    heights:=fun _=>.reference 0}
+  height:=0
+  height_frozen:=by decide
+  slope:= -2
+  slope_ne_zero:=by decide
+private theorem bank_map:CoefficientHeightBank.Specializes killParameter killParameter parameterBank zeroBank:=by
+  constructor
+  · intro r
+    rfl
+  · intro i
+    simp [parameterBank,zeroBank,killParameter]
+  · intro i
+    simp [parameterBank,zeroBank,killParameter]
+private theorem kill_X:killParameter (X:ℤ[X])=0:=by simp [killParameter]
+attribute [local irreducible] CoefficientMixedCoordinateSquarefree.exceptional
+
+-- A coefficient map can kill the bank denominator and the moving slope.
+-- The SAME declared degree and stored index are still used on both sides.
+example :
+    (CoefficientMixedCoordinateSquarefree.exceptional parameterBank (MvPolynomial.C (3:ℤ[X]))
+      1 2 rule X 0 0).map killParameter=
+    CoefficientMixedCoordinateSquarefree.exceptional zeroBank (MvPolynomial.C (3:ℤ))
+      1 2 rule 0 0 0:=by
+  simpa only [MvPolynomial.map_C,map_ofNat,map_one,kill_X] using
+    CoefficientMixedCoordinateSquarefree.exceptional_map bank_map (MvPolynomial.C (3:ℤ[X])) 1 2 rule X 0 0
+
+#print axioms CoefficientMixedCoordinateSquarefree.principal_map
+#print axioms CoefficientMixedCoordinateSquarefree.exceptional_map
+#print axioms CoefficientMixedCoordinateSquarefree.exceptional_currentQ_map
+#print axioms CoefficientMixedCoordinateSquarefree.principal_ofState
+#print axioms CoefficientMixedCoordinateSquarefree.exceptional_ofState
+#print axioms CoefficientMixedCoordinateSquarefree.exceptional_currentQ_ofState
+end CoordinateSquarefreeRegression
+end RoadmapInternalG74CoordinateSquarefree
+
+section RoadmapInternalG74ValueLimit
+namespace ValueLimitRegression
+open LeanCanny.Algebra LeanCanny.Algebra.IntegralMixedHistory Polynomial
+open scoped Classical
+
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (i:Fin (n-r.critical.offset.val+1)):
+    CoefficientMixedValueTrailing.polynomial (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r r.slope i=IntegralMixedGridValue.polynomial x hm r i:=
+  CoefficientMixedValueTrailing.polynomial_ofState x hm r i
+
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (i:Fin (n-r.critical.offset.val+1)) (k:Fin (IntegralMixedValueTrailing.ChoiceBound P r)):
+    CoefficientMixedValueTrailing.factor (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r r.slope i k.val=IntegralMixedValueTrailing.factor x hm r i k:=
+  CoefficientMixedValueTrailing.factor_ofState x hm r i k
+
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (i:Fin (n-r.critical.offset.val+1)) (k:Fin (IntegralMixedValueTrailing.ChoiceBound P r)):
+    CoefficientMixedValueTrailing.factor (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r (CoefficientHeightBank.ofState x).commonDenominator i k.val=
+        IntegralMixedValueTrailing.factor x hm (CoefficientMixedCriticalSweep.currentRule x r) i k:=
+  CoefficientMixedValueTrailing.factor_currentQ_ofState x hm r i k
+
+example {R S A B:Type*} [CommRing R] [CommRing S] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra S B] {n m:ℕ} (φ:R→+*S) (ψ:A→+*B)
+    (x:CoefficientHeightBank R A m) (y:CoefficientHeightBank S B m)
+    (H:CoefficientHeightBank.Specializes φ ψ x y)
+    (low:MvPolynomial (Fin (n+1)) R) (a slope:R) (D:ℕ)
+    (r:IntegralMixedCriticalSweep.Rule n) (i:Fin (n-r.critical.offset.val+1)) (k:ℕ):
+    (CoefficientMixedValueTrailing.factor x low a D r slope i k).map ψ=
+      CoefficientMixedValueTrailing.factor y (low.map φ) (φ a) D r (φ slope) i k:=
+  CoefficientMixedValueTrailing.factor_map H low a D r slope i k
+
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (j:Fin (n-r.critical.offset.val+1)) (k:Fin (IntegralMixedLimitCoordinate.ChoiceBound P r)):
+    CoefficientMixedLimitCoordinate.factor (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r r.slope j k.val=IntegralMixedLimitCoordinate.factor x hm r j k:=
+  CoefficientMixedLimitCoordinate.factor_ofState x hm r j k
+
+example {n cap width m:ℕ} {P:SpatialSource n} {ι:Type}
+    (x:State P cap width m ι) (hm:m≤cap) (r:IntegralMixedCriticalSweep.Rule n)
+    (j:Fin (n-r.critical.offset.val+1)) (k:Fin (IntegralMixedLimitCoordinate.ChoiceBound P r)):
+    CoefficientMixedLimitCoordinate.factor (CoefficientHeightBank.ofState x)
+      P.low P.leading P.degree r (CoefficientHeightBank.ofState x).commonDenominator j k.val=
+        IntegralMixedLimitCoordinate.factor x hm (CoefficientMixedCriticalSweep.currentRule x r) j k:=
+  CoefficientMixedLimitCoordinate.factor_currentQ_ofState x hm r j k
+
+example {R S A B:Type*} [CommRing R] [CommRing S] [CommRing A] [CommRing B]
+    [Algebra R A] [Algebra S B] {n m:ℕ} (φ:R→+*S) (ψ:A→+*B)
+    (x:CoefficientHeightBank R A m) (y:CoefficientHeightBank S B m)
+    (H:CoefficientHeightBank.Specializes φ ψ x y)
+    (low:MvPolynomial (Fin (n+1)) R) (a slope:R) (D:ℕ)
+    (r:IntegralMixedCriticalSweep.Rule n) (j:Fin (n-r.critical.offset.val+1)) (k:ℕ):
+    (CoefficientMixedLimitCoordinate.factor x low a D r slope j k).map ψ=
+      CoefficientMixedLimitCoordinate.factor y (low.map φ) (φ a) D r (φ slope) j k:=
+  CoefficientMixedLimitCoordinate.factor_map H low a D r slope j k
+
+noncomputable def killParameter:ℤ[X]→+*ℤ:=Polynomial.evalRingHom 0
+noncomputable def parameterBank:CoefficientHeightBank ℤ[X] ℤ[X] 1 where
+  numerator _:=6
+  denominator _:=X
+noncomputable def zeroBank:CoefficientHeightBank ℤ ℤ 1 where
+  numerator _:=6
+  denominator _:=0
+noncomputable def rule:IntegralMixedCriticalSweep.Rule 1 where
+  critical:={
+    offset:=1
+    objective:=0
+    coordinate:=0
+    scales:=fun _=>1
+    scales_ne_zero:=fun _=>by norm_num
+    heights:=fun _=>.reference 0}
+  height:=0
+  height_frozen:=by decide
+  slope:= -2
+  slope_ne_zero:=by decide
+private theorem bank_map:CoefficientHeightBank.Specializes killParameter killParameter parameterBank zeroBank:=by
+  constructor
+  · intro r
+    rfl
+  · intro i
+    simp [parameterBank,zeroBank,killParameter]
+  · intro i
+    simp [parameterBank,zeroBank,killParameter]
+private theorem kill_X:killParameter (X:ℤ[X])=0:=by simp [killParameter]
+attribute [local irreducible] CoefficientMixedValueTrailing.factor CoefficientMixedLimitCoordinate.factor
+
+-- Noninjective maps kill the bank denominator and moving slope; stored indices
+-- and original degree allowances stay fixed, with no root-survival assertion.
+example :
+    (CoefficientMixedValueTrailing.factor parameterBank (MvPolynomial.C (3:ℤ[X]))
+      1 2 rule X 0 0).map killParameter=
+    CoefficientMixedValueTrailing.factor zeroBank (MvPolynomial.C (3:ℤ)) 1 2 rule 0 0 0:=by
+  simpa only [MvPolynomial.map_C,map_ofNat,map_one,kill_X] using
+    CoefficientMixedValueTrailing.factor_map bank_map (MvPolynomial.C (3:ℤ[X])) 1 2 rule X 0 0
+
+example :
+    (CoefficientMixedLimitCoordinate.factor parameterBank (MvPolynomial.C (3:ℤ[X]))
+      1 2 rule X 0 0).map killParameter=
+    CoefficientMixedLimitCoordinate.factor zeroBank (MvPolynomial.C (3:ℤ)) 1 2 rule 0 0 0:=by
+  simpa only [MvPolynomial.map_C,map_ofNat,map_one,kill_X] using
+    CoefficientMixedLimitCoordinate.factor_map bank_map (MvPolynomial.C (3:ℤ[X])) 1 2 rule X 0 0
+
+#print axioms CoefficientMixedValueTrailing.sourceRow_map
+#print axioms CoefficientMixedValueTrailing.row_map
+#print axioms CoefficientMixedValueTrailing.polynomial_map
+#print axioms CoefficientMixedValueTrailing.factor_map
+#print axioms CoefficientMixedValueTrailing.factor_currentQ_map
+#print axioms CoefficientMixedValueTrailing.row_ofState
+#print axioms CoefficientMixedValueTrailing.polynomial_ofState
+#print axioms CoefficientMixedValueTrailing.factor_ofState
+#print axioms CoefficientMixedValueTrailing.factor_currentQ_ofState
+#print axioms CoefficientMixedLimitCoordinate.coefficient
+#print axioms CoefficientMixedLimitCoordinate.factor_map
+#print axioms CoefficientMixedLimitCoordinate.factor_currentQ_map
+#print axioms CoefficientMixedLimitCoordinate.factor_ofState
+#print axioms CoefficientMixedLimitCoordinate.factor_currentQ_ofState
+end ValueLimitRegression
+end RoadmapInternalG74ValueLimit
+
+section RoadmapInternalG74RootSignTransport
+open Set Polynomial LeanCanny.Algebra LeanCanny.Geometry
+open ParameterizedRootQuerySign ParameterizedOrderedRootBranches
+open SymbolicScaledSquarefree (Coefficient scalarEvaluation)
+open scoped Classical
+
+namespace ParameterizedRootSignTransportRegression
+
+noncomputable def repeatedHead : Polynomial Coefficient := (X - C (X : ℤ[X])) ^ 2
+noncomputable def queries : Fin 4 → Polynomial Coefficient := ![0, X - C (X : ℤ[X]), X, -1]
+
+theorem repeated_ne_zero : repeatedHead ≠ 0 := pow_ne_zero 2 (Polynomial.X_sub_C_ne_zero _)
+
+example : cuts repeatedHead queries (some (0, false)) = 1 := by simp [cuts, queries]
+example : cuts repeatedHead queries (some (0, true)) = 1 := by simp [cuts, queries]
+
+noncomputable def left : ℝ := (cutMass repeatedHead queries : ℝ) + 1
+noncomputable def right : ℝ := left + 3
+noncomputable def sample : Ioo left right := ⟨left + 1, by dsimp [right]; constructor <;> linarith⟩
+
+theorem actual_avoids : Avoids repeatedHead queries left right :=
+  avoids_after_cutMass repeatedHead repeated_ne_zero queries left right le_rfl
+
+example : Finite (Index repeatedHead left right sample) := finite_index repeatedHead queries actual_avoids sample
+example : ¬ Avoids 0 queries left right := zero_head_no_avoids queries sample
+
+noncomputable def actualPath : C(Ioo left right, ℝ) := ⟨Subtype.val, continuous_subtype_val⟩
+
+theorem actual_root (t : Ioo left right) : repeatedHead.eval₂ (scalarEvaluation t.val) (actualPath t) = 0 := by
+  simp [repeatedHead, actualPath, SymbolicScaledSquarefree.scalarEvaluation, Polynomial.eval₂_pow]
+
+example (t : Ioo left right) : (queries 1).eval₂ (scalarEvaluation t.val) (actualPath t) = 0 := by
+  simp [queries, actualPath, SymbolicScaledSquarefree.scalarEvaluation]
+
+example (s t : Ioo left right) :
+    SignType.sign ((queries 0).eval₂ (scalarEvaluation s.val) (actualPath s)) =
+      SignType.sign ((queries 0).eval₂ (scalarEvaluation t.val) (actualPath t)) :=
+  root_path_sign repeatedHead queries actual_avoids actualPath actual_root 0 s t
+
+example (s t : Ioo left right) :
+    SignType.sign ((queries 1).eval₂ (scalarEvaluation s.val) (actualPath s)) =
+      SignType.sign ((queries 1).eval₂ (scalarEvaluation t.val) (actualPath t)) :=
+  root_path_sign repeatedHead queries actual_avoids actualPath actual_root 1 s t
+
+example (s t : Ioo left right) : SignType.sign s.val = SignType.sign t.val := by
+  simpa [queries, actualPath] using root_path_sign repeatedHead queries actual_avoids actualPath actual_root 2 s t
+
+theorem actual_complete_ordered_family :
+    ∃ curve : Index repeatedHead left right sample → C(Ioo left right, Fin 1 → ℝ),
+      (∀ i, curve i sample = i.val.val.val.2) ∧
+      (∀ i t, repeatedHead.eval₂ (scalarEvaluation t.val) (curve i t 0) = 0) ∧
+      (∀ t : Ioo left right, ∀ x : Fin 1 → ℝ,
+        repeatedHead.eval₂ (scalarEvaluation t.val) (x 0) = 0 ↔ ∃! i, curve i t = x) ∧
+      (∀ i j u v, curve i u 0 < curve j u 0 ↔ curve i v 0 < curve j v 0) ∧
+      (∀ i j u v, SignType.sign ((queries j).eval₂ (scalarEvaluation u.val) (curve i u 0)) =
+        SignType.sign ((queries j).eval₂ (scalarEvaluation v.val) (curve i v 0))) :=
+  exists_ordered_branches repeatedHead queries actual_avoids sample
+
+noncomputable def crossingHead : Polynomial Coefficient := X - C (X : ℤ[X])
+
+example : (crossingHead.map (scalarEvaluation (-1))).roots.toFinset.card =
+    (crossingHead.map (scalarEvaluation 1)).roots.toFinset.card := by
+  simp only [crossingHead, Polynomial.map_sub, Polynomial.map_X, Polynomial.map_C,
+    SymbolicScaledSquarefree.scalarEvaluation, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_X,
+    Polynomial.roots_X_sub_C]
+  simp
+
+example : crossingHead.eval₂ (scalarEvaluation (-1)) (-1) = 0 := by
+  simp [crossingHead, SymbolicScaledSquarefree.scalarEvaluation]
+
+example : crossingHead.eval₂ (scalarEvaluation 1) 1 = 0 := by
+  simp [crossingHead, SymbolicScaledSquarefree.scalarEvaluation]
+
+example : SignType.sign (-1 : ℝ) ≠ SignType.sign (1 : ℝ) := by
+  rw [sign_eq_neg_one_iff.mpr (by norm_num : (-1 : ℝ) < 0),
+    sign_eq_one_iff.mpr (by norm_num : (0 : ℝ) < 1)]
+  decide
+
+#print axioms cuts_ne_zero
+#print axioms root_path_zero_iff
+#print axioms root_path_sign
+#print axioms root_path_sign_value
+#print axioms avoids_after_binary_mass
+#print axioms finite_index
+#print axioms exists_ordered_branches
+#print axioms avoids_after_cutMass
+#print axioms actual_complete_ordered_family
+
+end ParameterizedRootSignTransportRegression
+end RoadmapInternalG74RootSignTransport

@@ -1818,3 +1818,56 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Descriptors remain finite REAL data. Original-only eliminant/descriptor bounds, bounded algebraic-word sampling and native readers/guards/edge cost are unproved. Full effective uniform radius stabilization and both original unconditional PSPACE targets remain open.
+
+32. G74: actual parameter constructors and ordered root-sign transport
+2026-11-04.
+
+The coefficient-base tower constructs the actual monic/padded coordinate
+basis, integral-prefix and physical scalar-append rows, and height bank.
+Their arbitrary semilinear specializations follow from coefficient and
+generator images. Native bridges identify the existing integer constructors
+exactly, including root-step numerators and leading-coefficient denominators.
+No finite integer basis of the parameter ring is assumed.
+
+Actual critical, moving-slope critical sweep, coordinate squarefree,
+value-trailing, and limit-coordinate factories now specialize exactly.
+The moving slope is computed from the current bank denominator. Limit
+coefficients use fixed original degree allowances; specialization never
+commutes a potentially changing natDegree or selected trailing index.
+The value construction uses the original Fermat objective and gradients.
+
+Actual companion matrices and characteristic polynomials specialize through
+the constructed basis. Their coefficient mass and parameter degree have
+explicit local bounds. A mass-derived outer cutoff identifies the actual
+native relative leading normalization without a survival oracle. This is a
+local bound, not a bound for the entire recursively generated family.
+
+For actual integer bivariate head and query polynomials, the leading/PSC
+exceptional families for p, each nonzero query Q, and p*Q construct ordered
+continuous branches preserving every query sign on a cut-free interval.
+The product covering proves preservation at query zeros, including shared
+factors and permanent repeated roots; identically zero queries are handled
+separately. A finite actual cut-mass supremum supplies a mathematical outer
+cutoff without an assumed branch bijection or common mass bound.
+
+The actual all-four dispatcher and full symbolic framed interpreter,
+original-only common bounds for all recursive families, multivariate query
+annihilator binding, and native graph truth transport remain unproved.
+The finite-family cutoff is not an original-polynomial complexity estimate.
+Full effective radius stabilization, Boolean frontier incidence and both
+original unconditional PSPACE targets remain open.
+
+All21 sources (2462 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration plus seven follow-on native eliminant producer targets PASS20430 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:10913 lines,167 groups.
+Audited 91880 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 197649 transitive constants: no legacy space foundation.
+All25 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Full recursive symbolic presentation, original-only common recursive-family bounds, native graph transport, effective radius stabilization and Boolean frontier incidence remain unproved. Both original unconditional PSPACE targets remain open.

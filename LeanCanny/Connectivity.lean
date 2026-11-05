@@ -1,3 +1,24 @@
+import LeanCanny.Algebra.CoefficientCanonicalScalarAppend
+import LeanCanny.Algebra.CoefficientCoordinateBasis
+import LeanCanny.Algebra.CoefficientCoordinateBasisMatrix
+import LeanCanny.Algebra.CoefficientCoordinateBasisSpecialization
+import LeanCanny.Algebra.CoefficientHeightBank
+import LeanCanny.Algebra.CoefficientHeightBankBounds
+import LeanCanny.Algebra.CoefficientHeightBankScalarStep
+import LeanCanny.Algebra.CoefficientHistoryHeights
+import LeanCanny.Algebra.CoefficientMixedCoordinateSquarefree
+import LeanCanny.Algebra.CoefficientMixedCriticalPolynomial
+import LeanCanny.Algebra.CoefficientMixedCriticalSweep
+import LeanCanny.Algebra.CoefficientMixedLimitCoordinate
+import LeanCanny.Algebra.CoefficientMixedValueTrailing
+import LeanCanny.Algebra.CoefficientRelativeLeadingNormalization
+import LeanCanny.Algebra.CoefficientRelativeLeadingNormalizationAtInfinity
+import LeanCanny.Algebra.CoefficientRelativeLeadingNormalizationBounds
+import LeanCanny.Algebra.CoefficientRelativeLeadingNormalizationSpecialization
+import LeanCanny.Algebra.CoefficientUniformIntegralPrefixRows
+import LeanCanny.Algebra.ParameterMatrixMassBounds
+import LeanCanny.Geometry.ParameterizedOrderedRootBranches
+import LeanCanny.Geometry.ParameterizedRootQuerySign
 import LeanCanny.Connectivity.CanonicalAuxiliaryBitPieceLabelLock
 import LeanCanny.Connectivity.CanonicalAuxiliaryCandidateLabelLock
 import LeanCanny.Connectivity.CanonicalAuxiliaryPieceLabelLock
@@ -4785,6 +4806,13 @@ to common membership or a same-label finite-real descriptor retaining a
 grid anchor and cut-free interval. The curve is constructed internally.
 These descriptors still need bounded algebraic words and native guard costs;
 the input bounds do not supply eliminant or descriptor bounds.
+Generic coefficient-base constructions now specialize to the actual native
+basis, rows, banks, and all four mixed cut recipes, including their computed
+moving slope. Matrix coefficient bounds give a local normalization cutoff.
+For an actual finite polynomial family, ordered root branches preserve
+query signs beyond an explicitly constructed cut mass, including shared
+factors and repeated roots. The full recursive symbolic presentation and
+original-only common bounds for its entire guarded graph remain open.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 The recursive framed polynomial presentation and its original-only uniform
