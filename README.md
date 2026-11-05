@@ -2372,15 +2372,16 @@ correlation and both endpoint signs. Joint descriptor roots now yield
 same-component core candidates and fresh own Replay words, with actual
 center/value guard binding. Full grid/cut-stratum sampling and native
 cross-source component checking remain open, as does whole graph transport.
-The whole native NoCritical predicate now transports to a fresh own word
-on a shared full-row branch. One fresh own word also preserves all original
-leaves and both entire historical scans. The actual cut-coefficient interval
-predicate transports with all native clauses. Concrete joint coefficient
-strata preserve the actual perturbation and degree-selection guards.
-Whole Atomic/Local/Edge transport, full descriptor stratum sampling and
-native cross-source component checking remain open. Effective uniform
-radius stabilization and the original Boolean frontier-incidence
-algorithm remain to be discharged.
+The complete native marked test and both historical scans now transport
+together to one fresh own word. The whole bounded NoBad search transports
+on the same base curve with one original cutoff. Native Near/Rank statistics
+and guards transport on their actual own-word curves. Checked Atomic grammar
+survives fresh-word replacement; companion correlations follow from the
+complete critical scan. Concrete joint coefficient and principal features
+preserve actual squarefree-selection guards. Companion coordinates, complete
+Near/Rank witnesses, Local/Edge transport, uniform all-role stabilization,
+descriptor stratum sampling and native cross-source component association
+remain open. Both original unconditional PSPACE endpoints remain unproved.
 These graph algorithms do not yet establish unconditional PSPACE membership
 for the original connectivity languages.
 

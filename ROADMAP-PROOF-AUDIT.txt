@@ -2927,3 +2927,65 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Whole Atomic regular/mark and companion tests, NoBad bounded search, Near/Rank/Local/Edge transport, uniform all-role stabilization, complete descriptor stratum sampling/native cross-source association and both original unconditional PSPACE endpoints remain open.
+
+58. G100: whole marked tests and bounded NoBad; native proper guards and Atomic metadata
+2026-11-05.
+
+The WHOLE native marked original-test predicate transports on any SAME
+actual full-row curve, retaining both OWN complete words and full-tuple
+readbacks. Actual regular and mark terms use their untruncated full-prefix
+physical polynomials, with original coefficient/mass/spatial bounds and
+Binary cutoff. ONE internally constructed fresh exact-width target word
+preserves ALL original leaves, regularity and the mark AND BOTH entire
+historical scans. No independently chosen target word is combined with it.
+
+The WHOLE native bounded NoBad search now transports with ONE constructed
+original Binary cutoff. The envelope bounds an independently proved actual
+numeric sign cutoff over ALL actual bounded hints. The old sampled word is
+erased before bounding; prepared roots retain the original radius. Complete
+prepared row families, source-word coverage and fresh OWN target words are
+constructed internally, including all field/coefficient/PMV/order guards.
+There is no per-hint threshold, supplied prepared word or family premise.
+
+Actual Near/Rank ordinary and mean OWN words decode the full native scalar
+tuple. Every installed principal agrees with the exact formal series, and
+the native PMV value uses its exact declared range. All native comparison
+statistics and the complete Near/Rank guard languages transport on the SAME
+root curves. Native metadata is derived without target Atomic.Valid.
+The complete coordinate-witness FieldList/existence composition remains open.
+
+The checked Atomic table survives radius and own-word replacement. Every
+fresh OWN valid word on that checked table satisfies its own original unary
+vertex budget: the checked ledger is converted to its actual bounded typed
+record chain, with no target Atomic.Valid premise. Canonical candidate,
+dimensions, widths, source cap and checked payload give target Grammar.
+The whole native critical scan already supplies every companion correlation
+on that same word; the companion holds predicate reduces to all coordinate
+Accepted tests. Transport of those coordinate tests is still outstanding.
+
+A closed joint principal catalogue has original degree/mass bounds, complete
+mixed-radix ordinals and literal same-center coefficient meanings. Actual
+coefficient AND principal feature signs preserve actual squarefree-selection
+guards on the joint tuple. A future ONE union stratum must supply BOTH sign
+families. Separate zero-count strata are not silently identified. No real
+specialization is assigned an integer coefficient height.
+
+Whole Atomic companion coordinates, complete Near/Rank witnesses, Local/Edge
+transport, uniform all-role stabilization, descriptor stratum sampling,
+native cross-source association/frontier incidence and BOTH original
+unconditional PSPACE endpoints remain open.
+
+All29 sources (2992 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS21604 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:18900 lines,301 groups.
+Audited 96947 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 204214 transitive constants: no legacy space foundation.
+All33 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Companion coordinate tests and whole Atomic, complete Near/Rank witnesses, Local/Edge transport, uniform all-role stabilization, complete descriptor stratum sampling/native cross-source association and both original unconditional PSPACE endpoints remain open.

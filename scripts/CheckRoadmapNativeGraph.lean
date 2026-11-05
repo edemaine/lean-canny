@@ -1,3 +1,13 @@
+import LeanCanny.Encoding.CoefficientMarkedRecordCompanionScan
+import LeanCanny.Encoding.CoefficientMarkedRecordMarkedWordTransport
+import LeanCanny.Encoding.CoefficientMarkedRecordProperComparison
+import LeanCanny.Encoding.CoefficientMarkedRecordProperGuardPackets
+import LeanCanny.Encoding.CoefficientMarkedRecordProperWordValue
+import LeanCanny.Encoding.CoefficientMarkedRoadmapAtomicMetadata
+import LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeExistence
+import LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport
+import LeanCanny.Encoding.CoefficientMarkedRoadmapNoBadProbeTransport
+import LeanCanny.Encoding.FormulaSignSlotRadialJointPrincipalStratum
 import LeanCanny.Encoding.CoefficientMarkedCriticalInnerBranchTransport
 import LeanCanny.Encoding.CoefficientMarkedProperCriticalBranchTransport
 import LeanCanny.Encoding.CoefficientMarkedProperCriticalRadiusTransport
@@ -18422,3 +18432,469 @@ example (c : List Bool) (j : ℕ) (hj : j<FormulaSignSlotRadialJointLayout.spati
 #print axioms trailing_guards_iff_of_signs
 #print axioms trailing_guards_iff_on_equation_stratum
 end RoadmapInternalG99ActualJointTrailingStratum
+
+section RoadmapInternalG100WholeMarkedOriginalTransport
+namespace OriginalMarkedNativeRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation
+open CoefficientMarkedRecordMarkedWordTransport
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+example (ctx : List Bool) {R S : List Bool → ℕ} (hR : BinaryFn R) (hS : BinaryFn S)
+    (hRlarge : cutoff hn ht ha ctx + 1 ≤ R ctx)
+    (hSlarge : cutoff hn ht ha ctx + 1 ≤ S ctx)
+    (w : List Bool) (hw : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false)
+      (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w) :
+    ∃ w', ∃ _hw' : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false)
+      (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w',
+      w'.length = SquareSampleCompleteVertices.width (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false)
+        (IntegralMixedPhysicalMarkedTest.sampleContext ctx) ∧
+      (pair ctx w ∈ IntegralMixedPhysicalTraceBeforeProbe.language hn ht ha hR false ↔
+        pair ctx w' ∈ IntegralMixedPhysicalTraceBeforeProbe.language hn ht ha hS false) ∧
+      (pair ctx w ∈ IntegralMixedPhysicalMarkedTest.language hn ht ha hR false ↔
+        pair ctx w' ∈ IntegralMixedPhysicalMarkedTest.language hn ht ha hS false) ∧
+      (pair ctx w ∈ IntegralMixedPhysicalGuardScan.language hn ht ha hR false ↔
+        pair ctx w' ∈ IntegralMixedPhysicalGuardScan.language hn ht ha hS false) := by
+  exact CoefficientMarkedRecordMarkedWordTransport.transport_word hn ht ha ctx hR hS hRlarge hSlarge w hw
+end OriginalMarkedNativeRegression
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTermRecipe.value
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTermSign.sign_on_root_curve
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTermNative.specializes
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTermValue.value_eq
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordTermTransport.value_on_curve
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordMarkedTransport.language_on_curve
+
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordMarkedWordTransport.transport_word
+end RoadmapInternalG100WholeMarkedOriginalTransport
+
+section RoadmapInternalG100NativeAtomicMetadata
+namespace AtomicNativeMetadataRegression
+open LeanCanny LeanCanny.Encoding LeanCanny.Algebra LeanCanny.Computation LeanCanny.ETR
+open IntegralMixedRoadmapAtomic
+open IntegralMixedOriginalRegularSource (radius_binary)
+open scoped Classical
+set_option backward.isDefEq.respectTransparency false
+variable {n : List Bool → ℕ} {t : List Bool → Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+example {R S : List Bool → ℕ} (hR : BinaryFn R) (hS : BinaryFn S)
+    (q w : List Bool) (hg : Grammar hn ht ha hR q)
+    (hlabel : (pairSnd (candidate q)).length ≤ IntegralMixedAuxiliaryCandidate.labelWidth hn ht ha (original q))
+    (hw : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha (radius_binary hS) false)
+      (context q) w) :
+    Grammar hn ht ha hS (packet (candidate q) (payload q) w) :=
+  CoefficientMarkedRoadmapAtomicMetadata.grammar_reword hn ht ha hR hS q w hg hlabel hw
+end AtomicNativeMetadataRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRecordCompanionScan.holds_iff_coordinates
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapAtomicWordBudget.word_bound
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapAtomicMetadata.grammar_reword
+end RoadmapInternalG100NativeAtomicMetadata
+
+section RoadmapInternalG100ActualProperWordReaders
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open LeanCanny.Encoding.IntegralMixedRoadmapProperRow
+open Polynomial PrincipalSubresultant
+open scoped Classical
+section
+variable {n : List Bool → ℕ} {t : List Bool → ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+  {R0 : List Bool → ℕ} (hR0 : BinaryFn R0)
+open CoefficientMarkedRecordProperWordValue
+example (right : Bool) (power : Fin 3) (eta eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    (hlarge : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha (catalogRoot n false z) ≤
+      IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n false z)) (w : List Bool)
+    (hv : SquareSampleCompleteVertices.Valid (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR0 false) z w)
+    (raw : Fin (properPhysicalData hn ht ha false z).count → ℝ)
+    (hj : HEq (SquareSampleCompleteVertices.candidate (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR0 false) z w hv).val raw) :
+    nearStatistic hn ht ha hR0 right power eta eps z w =
+      permanencesMinusVariations ((List.range (max 1 (catalogDegree hn ht ha false z) + 1)).reverse.map
+        (fun j => RealIteratedTarski.lex (CoefficientMarkedRecordProperPrincipalSeries.near hn ht ha right power eta eps z hc j
+          ((2 : ℝ)^IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n false z)) raw))) := by
+  exact near_value_eq hn ht ha hR0 right power eta eps z hc hg hlarge w hv raw hj
+
+example (power : Fin 3) (eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    (hlarge : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha (catalogRoot n true z) ≤
+      IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n true z)) (w : List Bool)
+    (hv : SquareSampleCompleteVertices.Valid (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR0 true) z w)
+    (raw : Fin (properPhysicalData hn ht ha true z).count → ℝ)
+    (hj : HEq (SquareSampleCompleteVertices.candidate (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR0 true) z w hv).val raw) :
+    rankStatistic hn ht ha hR0 power eps z w =
+      permanencesMinusVariations ((List.range (max 1 (catalogDegree hn ht ha true z) + 1)).reverse.map
+        (fun j => RealIteratedTarski.lex (CoefficientMarkedRecordProperPrincipalSeries.rank hn ht ha power eps z hc j
+          ((2 : ℝ)^IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n true z)) raw))) := by
+  exact rank_value_eq hn ht ha hR0 power eps z hc hg hlarge w hv raw hj
+
+end
+
+#print axioms CoefficientMarkedRecordProperPrincipalSeries.near_coefficient
+#print axioms CoefficientMarkedRecordProperPrincipalSeries.rank_coefficient
+#print axioms CoefficientMarkedRecordProperWordTuple.data_map
+#print axioms CoefficientMarkedRecordProperWordTuple.scalar_tuple
+#print axioms CoefficientMarkedRecordProperWordTuple.near_principal_eq
+#print axioms CoefficientMarkedRecordProperWordTuple.rank_principal_eq
+#print axioms CoefficientMarkedRecordProperWordValue.near_principals
+#print axioms CoefficientMarkedRecordProperWordValue.rank_principals
+#print axioms CoefficientMarkedRecordProperWordValue.near_value_eq
+#print axioms CoefficientMarkedRecordProperWordValue.rank_value_eq
+end RoadmapInternalG100ActualProperWordReaders
+
+section RoadmapInternalG100ActualProperPrincipalCurves
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedRoadmapProperRow CoefficientMarkedRecordProperComparison
+open Polynomial Set
+open scoped Classical
+section
+variable {n : List Bool → ℕ} {t : List Bool → ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+example (mean right : Bool) : BinaryFn (CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha mean right) :=
+  CoefficientMarkedRecordProperPrincipalSign.cutoff_binary hn ht ha mean right
+example (mean right : Bool) (z : List Bool) (q : CoefficientMarkedRecordProperPrincipalSign.Label (n := n) z) :
+    (CoefficientMarkedRecordProperPrincipalSign.polynomial hn ht ha mean right z q).totalDegree ≤
+      CoefficientMarkedRecordProperPrincipalSign.spatialDegree hn ht ha mean right z :=
+  CoefficientMarkedRecordProperPrincipalSign.degree hn ht ha mean right z q
+example (right : Bool) (power : Fin 3) (eta eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    {R S : List Bool → ℕ} (hR : BinaryFn R) (hS : BinaryFn S)
+    (hRlarge : CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha false right z ≤
+      IntegralMixedOriginalRegularSource.radius R (catalogRoot n false z))
+    (hSlarge : CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha false right z ≤
+      IntegralMixedOriginalRegularSource.radius S (catalogRoot n false z))
+    {a b : ℝ} (ha0 : (2 : ℝ)^CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha false right z ≤ a)
+    (x : C(Ioo a b, Fin (properPhysicalData hn ht ha false z).count → ℝ))
+    (hx : ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha (catalogRoot n false z)
+      (IntegralMixedCausalRecordPlanBits.count (catalogRoot n false z)) le_rfl u.val (x u))
+    (u v : Ioo a b)
+    (hu : u.val = (2 : ℝ)^IntegralMixedOriginalRegularSource.radius R (catalogRoot n false z))
+    (hv : v.val = (2 : ℝ)^IntegralMixedOriginalRegularSource.radius S (catalogRoot n false z))
+    (wR wS : List Bool)
+    (hwR : SquareSampleCompleteVertices.Valid (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR false) z wR)
+    (hwS : SquareSampleCompleteVertices.Valid (CoefficientMarkedRecordProperWordTuple.input hn ht ha hS false) z wS)
+    (hjR : HEq (SquareSampleCompleteVertices.candidate (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR false) z wR hwR).val (x u))
+    (hjS : HEq (SquareSampleCompleteVertices.candidate (CoefficientMarkedRecordProperWordTuple.input hn ht ha hS false) z wS hwS).val (x v)) :
+    CoefficientMarkedRecordProperWordValue.nearStatistic hn ht ha hR right power eta eps z wR =
+      CoefficientMarkedRecordProperWordValue.nearStatistic hn ht ha hS right power eta eps z wS := by
+  exact near_statistic_on_curve hn ht ha right power eta eps z hc hg hR hS hRlarge hSlarge ha0 x hx u v hu hv wR wS hwR hwS hjR hjS
+
+example (power : Fin 3) (eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    {R S : List Bool → ℕ} (hR : BinaryFn R) (hS : BinaryFn S)
+    (hRlarge : CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha true false z ≤
+      IntegralMixedOriginalRegularSource.radius R (catalogRoot n true z))
+    (hSlarge : CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha true false z ≤
+      IntegralMixedOriginalRegularSource.radius S (catalogRoot n true z))
+    {a b : ℝ} (ha0 : (2 : ℝ)^CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha true false z ≤ a)
+    (x : C(Ioo a b, Fin (properPhysicalData hn ht ha true z).count → ℝ))
+    (hx : ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha (catalogRoot n true z)
+      (IntegralMixedCausalRecordPlanBits.count (catalogRoot n true z)) le_rfl u.val (x u))
+    (u v : Ioo a b)
+    (hu : u.val = (2 : ℝ)^IntegralMixedOriginalRegularSource.radius R (catalogRoot n true z))
+    (hv : v.val = (2 : ℝ)^IntegralMixedOriginalRegularSource.radius S (catalogRoot n true z))
+    (wR wS : List Bool)
+    (hwR : SquareSampleCompleteVertices.Valid (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR true) z wR)
+    (hwS : SquareSampleCompleteVertices.Valid (CoefficientMarkedRecordProperWordTuple.input hn ht ha hS true) z wS)
+    (hjR : HEq (SquareSampleCompleteVertices.candidate (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR true) z wR hwR).val (x u))
+    (hjS : HEq (SquareSampleCompleteVertices.candidate (CoefficientMarkedRecordProperWordTuple.input hn ht ha hS true) z wS hwS).val (x v)) :
+    CoefficientMarkedRecordProperWordValue.rankStatistic hn ht ha hR power eps z wR =
+      CoefficientMarkedRecordProperWordValue.rankStatistic hn ht ha hS power eps z wS := by
+  exact rank_statistic_on_curve hn ht ha power eps z hc hg hR hS hRlarge hSlarge ha0 x hx u v hu hv wR wS hwR hwS hjR hjS
+
+end
+
+#print axioms CoefficientMarkedRecordProperPrincipalSign.variable_bound
+#print axioms CoefficientMarkedRecordProperPrincipalSign.cutoff_binary
+#print axioms CoefficientMarkedRecordProperPrincipalSign.effective_le
+#print axioms CoefficientMarkedRecordProperPrincipalSign.degree
+#print axioms CoefficientMarkedRecordProperPrincipalSign.coefficient_mass
+#print axioms CoefficientMarkedRecordProperPrincipalSign.sign_on_root_curve
+#print axioms CoefficientMarkedRecordProperPrincipalLex.near_lex_on_root_curve
+#print axioms CoefficientMarkedRecordProperPrincipalLex.rank_lex_on_root_curve
+#print axioms CoefficientMarkedRecordProperComparison.near_statistic_on_curve
+#print axioms CoefficientMarkedRecordProperComparison.rank_statistic_on_curve
+end RoadmapInternalG100ActualProperPrincipalCurves
+
+section RoadmapInternalG100WholeProperNativeGuards
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation
+open IntegralMixedRoadmapProperRow CoefficientMarkedRecordProperGuardPackets Set
+open scoped Classical
+section
+variable {n : List Bool → ℕ} {t : List Bool → ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+example (right : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    {R S : List Bool → ℕ} (hR : BinaryFn R) (hS : BinaryFn S)
+    (hRlarge : CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha false right z ≤
+      IntegralMixedOriginalRegularSource.radius R (catalogRoot n false z))
+    (hSlarge : CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha false right z ≤
+      IntegralMixedOriginalRegularSource.radius S (catalogRoot n false z))
+    {a b : ℝ} (ha0 : (2 : ℝ)^CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha false right z ≤ a)
+    (x : C(Ioo a b, Fin (properPhysicalData hn ht ha false z).count → ℝ))
+    (hx : ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha (catalogRoot n false z)
+      (IntegralMixedCausalRecordPlanBits.count (catalogRoot n false z)) le_rfl u.val (x u))
+    (u v : Ioo a b)
+    (hu : u.val = (2 : ℝ)^IntegralMixedOriginalRegularSource.radius R (catalogRoot n false z))
+    (hv : v.val = (2 : ℝ)^IntegralMixedOriginalRegularSource.radius S (catalogRoot n false z))
+    (wR wS code : List Bool)
+    (hwR : SquareSampleCompleteVertices.Valid (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR false) z wR)
+    (hwS : SquareSampleCompleteVertices.Valid (CoefficientMarkedRecordProperWordTuple.input hn ht ha hS false) z wS)
+    (hjR : HEq (SquareSampleCompleteVertices.candidate (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR false) z wR hwR).val (x u))
+    (hjS : HEq (SquareSampleCompleteVertices.candidate (CoefficientMarkedRecordProperWordTuple.input hn ht ha hS false) z wS hwS).val (x v)) :
+    pair (pair z wR) code ∈ nearLanguage hn ht ha hR right ↔
+      pair (pair z wS) code ∈ nearLanguage hn ht ha hS right := by
+  exact near_guard_on_curve hn ht ha right z hc hg hR hS hRlarge hSlarge ha0 x hx u v hu hv wR wS code hwR hwS hjR hjS
+
+example (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    {R S : List Bool → ℕ} (hR : BinaryFn R) (hS : BinaryFn S)
+    (hRlarge : CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha true false z ≤
+      IntegralMixedOriginalRegularSource.radius R (catalogRoot n true z))
+    (hSlarge : CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha true false z ≤
+      IntegralMixedOriginalRegularSource.radius S (catalogRoot n true z))
+    {a b : ℝ} (ha0 : (2 : ℝ)^CoefficientMarkedRecordProperPrincipalSign.cutoff hn ht ha true false z ≤ a)
+    (x : C(Ioo a b, Fin (properPhysicalData hn ht ha true z).count → ℝ))
+    (hx : ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha (catalogRoot n true z)
+      (IntegralMixedCausalRecordPlanBits.count (catalogRoot n true z)) le_rfl u.val (x u))
+    (u v : Ioo a b)
+    (hu : u.val = (2 : ℝ)^IntegralMixedOriginalRegularSource.radius R (catalogRoot n true z))
+    (hv : v.val = (2 : ℝ)^IntegralMixedOriginalRegularSource.radius S (catalogRoot n true z))
+    (wR wS code : List Bool)
+    (hwR : SquareSampleCompleteVertices.Valid (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR true) z wR)
+    (hwS : SquareSampleCompleteVertices.Valid (CoefficientMarkedRecordProperWordTuple.input hn ht ha hS true) z wS)
+    (hjR : HEq (SquareSampleCompleteVertices.candidate (CoefficientMarkedRecordProperWordTuple.input hn ht ha hR true) z wR hwR).val (x u))
+    (hjS : HEq (SquareSampleCompleteVertices.candidate (CoefficientMarkedRecordProperWordTuple.input hn ht ha hS true) z wS hwS).val (x v)) :
+    pair (pair z wR) code ∈ rankLanguage hn ht ha hR ↔
+      pair (pair z wS) code ∈ rankLanguage hn ht ha hS := by
+  exact rank_guard_on_curve hn ht ha z hc hg hR hS hRlarge hSlarge ha0 x hx u v hu hv wR wS code hwR hwS hjR hjS
+
+variable {R : List Bool → ℕ} (hR : BinaryFn R)
+local notation "B" => IntegralMixedPhysicalMarkedPlan.bank hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR) false
+example (right : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z) :
+    IntegralFramedPhysicalNear.Metadata (B).parameters (B).plan (B).data
+      (parent hn ht ha hR false) (terminal hn ht ha hR false)
+      (centerIndex hn ht ha hR right) (pointIndex hn ht ha hR false false) z :=
+  CoefficientMarkedRecordProperGuardMetadata.near_metadata hn ht ha hR right z hc hg
+example (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z) :
+    IntegralFramedPhysicalNear.Metadata (B).parameters (B).plan (B).data
+      (parent hn ht ha hR true) (terminal hn ht ha hR true)
+      (pointIndex hn ht ha hR true true) (pointIndex hn ht ha hR true true) z :=
+  CoefficientMarkedRecordProperGuardMetadata.rank_metadata hn ht ha hR z hc hg
+end
+
+#print axioms CoefficientMarkedRecordProperGuardMetadata.terminal_count
+#print axioms CoefficientMarkedRecordProperGuardMetadata.near_metadata
+#print axioms CoefficientMarkedRecordProperGuardMetadata.rank_metadata
+#print axioms CoefficientMarkedRecordProperGuardPackets.near_guard_iff
+#print axioms CoefficientMarkedRecordProperGuardPackets.rank_guard_iff
+#print axioms CoefficientMarkedRecordProperGuardPackets.near_guard_on_curve
+#print axioms CoefficientMarkedRecordProperGuardPackets.rank_guard_on_curve
+end RoadmapInternalG100WholeProperNativeGuards
+
+section RoadmapInternalG100WholeBadProbeWitness
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial Set
+namespace NoBadWitnessRegression
+variable {n : List Bool → ℕ} {t : List Bool → ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R S : List Bool → ℕ} (hR : BinaryFn R) (hS : BinaryFn S)
+
+attribute [local irreducible] IntegralMixedPhysicalMarkedPlan.bank IntegralMixedFramedHistoryFamilyBits.family
+  IntegralMixedRoadmapBadProbeTest.dimension IntegralMixedRoadmapBadProbeTest.initial IntegralMixedRoadmapBadProbeTest.width
+
+theorem own_word_count (q word : List Bool) :
+    IntegralMixedRoadmapBadProbePacket.count (pairFst (CoefficientMarkedRoadmapBadProbeTransport.request q word)) =
+      IntegralMixedRoadmapBadProbePacket.count (pairFst (CoefficientMarkedRoadmapBadProbeTransport.anchor q)) :=
+  CoefficientMarkedRoadmapBadProbeTransport.count_request q word
+
+example : BinaryFn (CoefficientMarkedRoadmapBadProbeTransport.cutoff hn ht ha) :=
+  CoefficientMarkedRoadmapBadProbeTransport.cutoff_binary hn ht ha
+
+theorem actual_four_word_witness (q : List Bool)
+    (hReq : R (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q) = R (CoefficientMarkedRoadmapBadProbeTransport.rightRoot n q)) (hSeq : S (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q) = S (CoefficientMarkedRoadmapBadProbeTransport.rightRoot n q))
+    (hRc : CoefficientMarkedRoadmapBadProbeTransport.cutoff hn ht ha q ≤ R (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q)) (hSc : CoefficientMarkedRoadmapBadProbeTransport.cutoff hn ht ha q ≤ S (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q))
+    {a b : ℝ} (ha0 : (2 : ℝ)^CoefficientMarkedRoadmapBadProbeTransport.cutoff hn ht ha q ≤ a)
+    (xL : C(Ioo a b, CoefficientMarkedRecordFieldListIncidence.Point hn ht ha (CoefficientMarkedRoadmapBadProbeTransport.leftContext q)))
+    (xR : C(Ioo a b, CoefficientMarkedRecordFieldListIncidence.Point hn ht ha (CoefficientMarkedRoadmapBadProbeTransport.rightContext n q)))
+    (hxL : ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q)
+      (IntegralMixedCausalRecordPlanBits.count (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q)) le_rfl u.val (xL u))
+    (hxR : ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha (CoefficientMarkedRoadmapBadProbeTransport.rightRoot n q)
+      (IntegralMixedCausalRecordPlanBits.count (CoefficientMarkedRoadmapBadProbeTransport.rightRoot n q)) le_rfl u.val (xR u))
+    (u v : Ioo a b) (hu : u.val = (2 : ℝ)^R (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q)) (hv : v.val = (2 : ℝ)^S (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q))
+    (wRL wRR wSL wSR : List Bool)
+    (hwRL : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wRL)
+    (hwRR : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) (CoefficientMarkedRoadmapBadProbeTransport.rightContext n q) wRR)
+    (hwSL : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wSL)
+    (hwSR : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false) (CoefficientMarkedRoadmapBadProbeTransport.rightContext n q) wSR)
+    (heRL : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wRL hwRL).val (xL u))
+    (heRR : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) (CoefficientMarkedRoadmapBadProbeTransport.rightContext n q) wRR hwRR).val (xR u))
+    (heSL : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wSL hwSL).val (xL v))
+    (heSR : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false) (CoefficientMarkedRoadmapBadProbeTransport.rightContext n q) wSR hwSR).val (xR v)) :
+    IntegralMixedRoadmapBadProbeTest.Witness hn ht ha hR (pair (CoefficientMarkedRoadmapBadProbeTransport.request q wRL) wRR) ↔
+      IntegralMixedRoadmapBadProbeTest.Witness hn ht ha hS (pair (CoefficientMarkedRoadmapBadProbeTransport.request q wSL) wSR) :=
+  CoefficientMarkedRoadmapBadProbeTransport.witness_on_curves hn ht ha hR hS q hReq hSeq hRc hSc
+    ha0 xL xR hxL hxR u v hu hv wRL wRR wSL wSR hwRL hwRR hwSL hwSR heRL heRR heSL heSR
+end NoBadWitnessRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.cutoff_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.field_packet
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.interval_context
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.stage_lt
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.witness_iff
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.valid_interval
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.candidate_interval
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.hint_iff
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.witness_on_curves
+#print axioms NoBadWitnessRegression.own_word_count
+#print axioms NoBadWitnessRegression.actual_four_word_witness
+end RoadmapInternalG100WholeBadProbeWitness
+
+section RoadmapInternalG100WholeBadProbeExistence
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial Set
+namespace NoBadPreparedRegression
+variable {n : List Bool → ℕ} {t : List Bool → ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R S : List Bool → ℕ} (hR : BinaryFn R) (hS : BinaryFn S)
+theorem actual_bounded_search (q : List Bool)
+    (hReq : R (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q) = R (CoefficientMarkedRoadmapBadProbeTransport.rightRoot n q)) (hSeq : S (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q) = S (CoefficientMarkedRoadmapBadProbeTransport.rightRoot n q))
+    (hRc : CoefficientMarkedRoadmapBadProbeTransport.cutoff hn ht ha q ≤ R (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q)) (hSc : CoefficientMarkedRoadmapBadProbeTransport.cutoff hn ht ha q ≤ S (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q))
+    {a b : ℝ} (ha0 : (2 : ℝ)^CoefficientMarkedRoadmapBadProbeTransport.cutoff hn ht ha q ≤ a) (s : Ioo a b)
+    (x : C(Ioo a b, CoefficientMarkedRecordFieldListIncidence.Point hn ht ha (CoefficientMarkedRoadmapBadProbeTransport.leftContext q)))
+    (hx : ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q)
+      (IntegralMixedCausalRecordPlanBits.count (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q)) le_rfl u.val (x u))
+    (u v : Ioo a b) (hu : u.val = (2 : ℝ)^R (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q)) (hv : v.val = (2 : ℝ)^S (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q))
+    (wR wS : List Bool)
+    (hwR : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wR)
+    (hwS : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wS)
+    (hjR : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wR hwR).val (x u))
+    (hjS : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wS hwS).val (x v)) :
+    IntegralMixedRoadmapBadProbeTest.HasWitness hn ht ha hR (CoefficientMarkedRoadmapBadProbeTransport.request q wR) ↔
+      IntegralMixedRoadmapBadProbeTest.HasWitness hn ht ha hS (CoefficientMarkedRoadmapBadProbeTransport.request q wS) :=
+  CoefficientMarkedRoadmapBadProbeTransport.hasWitness_on_curve hn ht ha hR hS q hReq hSeq hRc hSc
+    ha0 s x hx u v hu hv wR wS hwR hwS hjR hjS
+end NoBadPreparedRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.prepared_row_cutoff_le
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.prepared_effective_le
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.transfer_witness
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.hasWitness_on_curve
+#print axioms NoBadPreparedRegression.actual_bounded_search
+end RoadmapInternalG100WholeBadProbeExistence
+
+section RoadmapInternalG100WholeNativeNoBadSearch
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial Set
+namespace EntireNoBadRegression
+variable {n : List Bool → ℕ} {t : List Bool → ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R : List Bool → ℕ} (hR : BinaryFn R)
+
+theorem actual_hint_width (q word : List Bool) :
+    IntegralMixedRoadmapBadProbeSearch.hintWidth hn ht ha hR (CoefficientMarkedRoadmapBadProbeTransport.base q word) =
+      IntegralMixedRoadmapBadProbeSearch.hintWidth hn ht ha (BinaryFn.const 0) (CoefficientMarkedRoadmapBadProbeTransport.canonical q) :=
+  CoefficientMarkedRoadmapBadProbeTransport.hintWidth_base hn ht ha hR q word
+
+theorem all_hint_cutoffs (q bits : List Bool)
+    (hl : bits.length = IntegralMixedRoadmapBadProbeSearch.hintWidth hn ht ha (BinaryFn.const 0) (CoefficientMarkedRoadmapBadProbeTransport.canonical q)) :
+    CoefficientMarkedRoadmapBadProbeTransport.cutoff hn ht ha (CoefficientMarkedRoadmapBadProbeTransport.hint hn ht ha q bits) ≤
+      CoefficientMarkedRoadmapBadProbeTransport.searchCutoff hn ht ha q :=
+  CoefficientMarkedRoadmapBadProbeTransport.hint_cutoff_le hn ht ha q bits hl
+
+example : BinaryFn (CoefficientMarkedRoadmapBadProbeTransport.searchCutoff hn ht ha) :=
+  CoefficientMarkedRoadmapBadProbeTransport.searchCutoff_binary hn ht ha
+variable {R0 S0 : List Bool → ℕ} (hR0 : BinaryFn R0) (hS0 : BinaryFn S0)
+theorem actual_entire_NoBad (q : List Bool)
+    (hRc : CoefficientMarkedRoadmapBadProbeTransport.searchCutoff hn ht ha q ≤ IntegralMixedOriginalRegularSource.radius R0 (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q))
+    (hSc : CoefficientMarkedRoadmapBadProbeTransport.searchCutoff hn ht ha q ≤ IntegralMixedOriginalRegularSource.radius S0 (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q))
+    {a b : ℝ} (ha0 : (2 : ℝ)^CoefficientMarkedRoadmapBadProbeTransport.searchCutoff hn ht ha q ≤ a) (s : Ioo a b)
+    (x : C(Ioo a b, CoefficientMarkedRecordFieldListIncidence.Point hn ht ha (CoefficientMarkedRoadmapBadProbeTransport.leftContext q)))
+    (hx : ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q)
+      (IntegralMixedCausalRecordPlanBits.count (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q)) le_rfl u.val (x u))
+    (u v : Ioo a b)
+    (hu : u.val = (2 : ℝ)^IntegralMixedOriginalRegularSource.radius R0 (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q))
+    (hv : v.val = (2 : ℝ)^IntegralMixedOriginalRegularSource.radius S0 (CoefficientMarkedRoadmapBadProbeTransport.leftRoot q))
+    (wR wS : List Bool)
+    (hwR : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wR)
+    (hwS : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hS0) false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wS)
+    (hjR : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wR hwR).val (x u))
+    (hjS : HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hS0) false) (CoefficientMarkedRoadmapBadProbeTransport.leftContext q) wS hwS).val (x v)) :
+    IntegralMixedRoadmapBadProbeSearch.NoBadProbe hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hR0) (CoefficientMarkedRoadmapBadProbeTransport.base q wR) ↔
+      IntegralMixedRoadmapBadProbeSearch.NoBadProbe hn ht ha (IntegralMixedOriginalRegularSource.radius_binary hS0) (CoefficientMarkedRoadmapBadProbeTransport.base q wS) :=
+  CoefficientMarkedRoadmapBadProbeTransport.noBadProbe_on_curve hn ht ha hR0 hS0 q hRc hSc ha0 s x hx
+    u v hu hv wR wS hwR hwS hjR hjS
+end EntireNoBadRegression
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.envelope_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.searchCutoff_binary
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.hint_cutoff_le
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.blockWidth_base
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.hintWidth_base
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.hintPacket_base
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.leftContext_hint
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.roots_original
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.radius_common
+#print axioms LeanCanny.Encoding.CoefficientMarkedRoadmapBadProbeTransport.noBadProbe_on_curve
+#print axioms EntireNoBadRegression.actual_hint_width
+#print axioms EntireNoBadRegression.all_hint_cutoffs
+#print axioms EntireNoBadRegression.actual_entire_NoBad
+end RoadmapInternalG100WholeNativeNoBadSearch
+
+section RoadmapInternalG100ActualJointPrincipalStratum
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Connectivity LeanCanny.Computation
+open FormulaSignSlotRadialJointPrincipalCatalogue
+open FormulaSignSlotRadialJointCoefficientCatalogue (degree limit)
+open scoped Classical
+noncomputable section
+
+-- The actual binary catalogue feeds the implicit product source without a reader premise.
+example : IntegralFramedBankPolynomialModel.Access (SquareFeatureProductSource.source family) :=
+  SquareFeatureProductSource.access family access
+-- The radius digit has a different radix; every upper-bound digit is present.
+example (c : List Bool) (j : ℕ) (hj : j<FormulaSignSlotRadialJointLayout.spatialCount c) :
+    encode c j (degree c) (degree c) (degree c) (FormulaSignSlotRadialJointPrincipalBounds.degreeBound c)<count c :=
+  encode_lt c j _ _ _ _ hj (by unfold limit; omega) (by unfold limit; omega)
+    (by unfold limit; omega) (by unfold radiusLimit; omega)
+example (c : List Bool) : encode c (FormulaSignSlotRadialJointLayout.spatialCount c) 0 0 0 0=count c := by
+  unfold encode count
+  ring
+example (c : List Bool) (j : ℕ) : radiusIndex c (encode c j 0 0 0 0)=0 ∧
+    orderIndex c (encode c j 0 0 0 0)=0 ∧ declaredIndex c (encode c j 0 0 0 0)=0 ∧
+    tauIndex c (encode c j 0 0 0 0)=0 ∧ coordinate c (encode c j 0 0 0 0)=j :=
+  decode c j 0 0 0 0 (by unfold limit; omega) (by unfold limit; omega)
+    (by unfold limit; omega) (by unfold radiusLimit; omega)
+example (c : List Bool) (h : degree c=0) : radiusLimit c=1 := by
+  simp only [radiusLimit,FormulaSignSlotRadialJointPrincipalBounds.degreeBound,h,Nat.mul_zero,Nat.zero_add]
+-- Literal coefficient readback is at the same joint center, for all five digits.
+example (c : List Bool) (j : ℕ) (v : ℕ → ℝ) :
+    (family.feature c (encode c j 0 0 0 0)).eval₂ (Int.castRingHom ℝ) (fun i=>v i.val)=
+      principalValue c j 0 0 0 0 v :=
+  feature_principal c j 0 0 0 0 (by unfold limit; omega) (by unfold limit; omega)
+    (by unfold limit; omega) (by unfold radiusLimit; omega) v
+-- Degree zero chooses index zero, without a fictitious nonzero principal test.
+example (c : List Bool) (a : Fin (FormulaSignSlotCenteredRadialGraph.d (pairFst c)) → ℝ) (tau k : ℕ) :
+    FormulaSignSlotRadialCenterSquarefreeSelection.Guards c a tau 0 k ↔
+      FormulaSignSlotRadialCenterSelection.Guards c a tau 0 ∧ k=0 := by
+  simp only [FormulaSignSlotRadialCenterSquarefreeSelection.Guards,ite_true]
+-- A nonzero index at degree zero is rejected, even if the base guard holds.
+example (c : List Bool) (a : Fin (FormulaSignSlotCenteredRadialGraph.d (pairFst c)) → ℝ) (tau k : ℕ) (hk : k≠0) :
+    ¬FormulaSignSlotRadialCenterSquarefreeSelection.Guards c a tau 0 k := by
+  intro H
+  exact hk (by simpa only [FormulaSignSlotRadialCenterSquarefreeSelection.Guards,ite_true] using H.2)
+
+#check FormulaSignSlotRadialJointPrincipalSource.access
+#check FormulaSignSlotRadialJointPrincipalStratum.squarefree_guards_iff_of_signs
+#check FormulaSignSlotRadialJointPrincipalBounds.mass_le
+#print axioms FormulaSignSlotRadialJointPrincipalSource.access
+#print axioms FormulaSignSlotRadialJointPrincipalSource.evaluation
+#print axioms FormulaSignSlotRadialJointPrincipalBounds.mass_le
+#print axioms FormulaSignSlotRadialJointPrincipalCatalogue.access
+#print axioms FormulaSignSlotRadialJointPrincipalCatalogue.decode
+#print axioms FormulaSignSlotRadialJointPrincipalCatalogue.encode_lt
+#print axioms FormulaSignSlotRadialJointPrincipalCatalogue.feature_principal
+#print axioms FormulaSignSlotRadialJointPrincipalStratum.coefficient_zero_iff
+#print axioms FormulaSignSlotRadialJointPrincipalStratum.guards_iff_of_signs
+#print axioms FormulaSignSlotRadialJointPrincipalStratum.squarefree_guards_iff_of_signs
+end
+end RoadmapInternalG100ActualJointPrincipalStratum
