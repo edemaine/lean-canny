@@ -1,3 +1,18 @@
+import LeanCanny.Algebra.CoefficientMixedCutAtInfinity
+import LeanCanny.Algebra.CoefficientMixedCutDispatcher
+import LeanCanny.Algebra.CoefficientMixedCutSpecialization
+import LeanCanny.Algebra.CoefficientRelativeNormalizationMatrixBounds
+import LeanCanny.Algebra.IntegerPolynomialDyadicGrowth
+import LeanCanny.Algebra.IntegerPolynomialDyadicInterpolation
+import LeanCanny.Algebra.IntegralMixedFramedSlackRadiusModel
+import LeanCanny.Algebra.ParameterMatrixPolynomialBounds
+import LeanCanny.Algebra.SymbolicSquarefreeExceptionalMass
+import LeanCanny.Encoding.BoundedRegularRadiusLowBounds
+import LeanCanny.Encoding.BoundedRegularRadiusLowGrowth
+import LeanCanny.Encoding.BoundedRegularRadiusLowModel
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusDegree
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel
+import LeanCanny.Geometry.ParameterizedRootQueryCutMass
 import LeanCanny.Algebra.NestedPolynomialCoefficient
 import LeanCanny.Algebra.ParametricTiltedCoerciveCoefficient
 import LeanCanny.Encoding.FormulaSignSlotRadialEliminantCoefficientGuards
@@ -4829,7 +4844,11 @@ basis, rows, banks, and all four mixed cut recipes, including their computed
 moving slope. Matrix coefficient bounds give a local normalization cutoff.
 For an actual finite polynomial family, ordered root branches preserve
 query signs beyond an explicitly constructed cut mass, including shared
-factors and repeated roots. The full recursive symbolic presentation and
+factors and repeated roots. The marked integer prelude now has a literal radius-polynomial family,
+with exact native degree/leading preservation. Interpolation converts
+proved native dyadic growth to parameter mass bounds; actual cut births
+specialize to the native next quotient beyond a proved local cutoff.
+The full recursive symbolic presentation and
 original-only common bounds for its entire guarded graph remain open.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.

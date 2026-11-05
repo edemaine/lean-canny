@@ -2262,7 +2262,11 @@ basis, rows, banks, and all four mixed cut recipes, including their computed
 moving slope. Matrix coefficient bounds give a local normalization cutoff.
 For an actual finite polynomial family, ordered root branches preserve
 query signs beyond an explicitly constructed cut mass, including shared
-factors and repeated roots. The full recursive symbolic presentation and
+factors and repeated roots. The marked integer prelude now has a literal radius-polynomial family,
+with exact native degree/leading preservation. Interpolation converts
+proved native dyadic growth to parameter mass bounds; actual cut births
+specialize to the native next quotient beyond a proved local cutoff.
+The full recursive symbolic presentation and
 original-only common bounds for its entire guarded graph remain open.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.

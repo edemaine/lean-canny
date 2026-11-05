@@ -1918,3 +1918,57 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 The normalized universal eliminant quotient reader, original-only descriptor bounds, bounded algebraic descriptor selection and native frontier incidence remain open. Effective radius stabilization and both original unconditional PSPACE targets remain unproved.
+
+34. G76: actual radius leaves, derived coefficient bounds and cut quotient maps
+2026-11-04.
+
+The original bounded regular LOW/leading source is now constructed over
+Z[T], with T=2^R, and maps exactly to the native source writer. Native
+all-dyadic coefficient growth has an original-only affine slope/offset.
+A scalar interpolation theorem derives degree and coefficient-mass bounds
+from such genuine growth beyond an incoming cutoff. Its explicit mass
+exponent is BinaryFn; no arbitrary FP reader is presumed polynomial.
+This gives an original-only common mass bound for actual spatial source
+coefficients before parameter evaluation.
+
+The old candidate algebra stays fixed while sphere/regular slack matrices
+vary polynomially in T. Their scaled characteristic and expanded polynomial
+leaves specialize literally. The complete actual marked integer prelude
+has one formal polynomial family for every tag, all four dyadic leaves and
+the default. Native degree and leading coefficients specialize exactly,
+proved from surviving actual scalar scales, without evaluation injectivity.
+
+The all-four cut dispatcher and truncation are actual computations over
+the coefficient bank. Normalization constructs a map into the LITERAL native
+next quotient, deriving next basis and bank invariants. A local matrix-mass
+cutoff fixes ONE formal characteristic trailing index for every sufficiently
+large radius and derives its lower-zero/nonzero guards internally.
+Actual normalized coefficient and next-generator multiplication matrices
+have explicit mass/degree bounds affine in incoming height/degree.
+
+Actual selected squarefree exceptional cuts and root-query continuation
+cuts now have coefficient-mass estimates derived from head/query input
+bounds. Their exponents are affine in input height; actual finite cutMass
+and outer avoidance follow without a supplied completed-cut-family bound.
+
+These close local constructor/source obligations. Actual recursive framed
+interpretation, common original-only bounds for the entire guarded family,
+independent-grid query-annihilator binding and native graph truth transport
+remain unproved. No local cutoff alone supplies effective radius stability.
+Original Boolean frontier incidence and both unconditional PSPACE targets
+remain open.
+
+All15 sources (1682 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration plus two follow-on normalized-eliminant producer targets PASS20478 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:11686 lines,176 groups.
+Audited 92197 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 198078 transitive constants: no legacy space foundation.
+All19 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Recursive framed interpretation, whole-family original-only bounds, independent-grid query binding and native graph truth transport remain open. Effective uniform radius stabilization, Boolean frontier incidence and both original unconditional PSPACE targets are unproved.

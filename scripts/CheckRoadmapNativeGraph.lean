@@ -1,3 +1,13 @@
+import LeanCanny.Algebra.CoefficientMixedCutAtInfinity
+import LeanCanny.Algebra.CoefficientMixedCutSpecialization
+import LeanCanny.Algebra.CoefficientRelativeNormalizationMatrixBounds
+import LeanCanny.Algebra.IntegerPolynomialDyadicInterpolation
+import LeanCanny.Encoding.BoundedRegularRadiusLowBounds
+import LeanCanny.Encoding.BoundedRegularRadiusLowGrowth
+import LeanCanny.Encoding.BoundedRegularRadiusLowModel
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusDegree
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel
+import LeanCanny.Geometry.ParameterizedRootQueryCutMass
 import LeanCanny.Encoding.FormulaSignSlotRadialEliminantInput
 import LeanCanny.Encoding.FormulaSignSlotRadialFormalInput
 import LeanCanny.Algebra.CoefficientCoordinateBasis
@@ -11121,3 +11131,556 @@ example (q : List Bool) (hm : FormulaSignSlotRadialEliminantInput.field 7 q = []
 
 end LeanCanny.RadialEliminantFrontendRegression
 end RoadmapInternalG75RadialEliminantFrontend
+
+section RoadmapInternalG76NormalizationMatrices
+namespace NormalizationMatrixBoundsRegression
+open LeanCanny.Algebra Polynomial CoefficientRelativeLeadingNormalization
+  CoefficientRelativeNormalizationMatrixBounds
+
+-- Singular and nonreduced coefficient algebras are permitted; the selected
+-- characteristic index is arbitrary, rather than assumed to be a survivor.
+example {A : Type*} [CommRing A] [Algebra ℤ[X] A] {ι : Type*}
+    [Fintype ι] [DecidableEq ι] (b : Module.Basis ι ℤ[X] A) (p : A[X]) (d τ H E : ℕ)
+    (hM : ∀ k i j, coefficientMass (Algebra.leftMulMatrix b (p.coeff k) i j) ≤ 2 ^ H)
+    (hD : ∀ k, RelativeMatrixDegree.Bound (Algebra.leftMulMatrix b (p.coeff k)) E)
+    (k : ℕ) (i j : ι) :
+    coefficientMass (Algebra.leftMulMatrix b ((normalizeAt b p d τ).coeff k) i j) ≤
+        2 ^ normalizationBudget (Fintype.card ι) H ∧
+      (Algebra.leftMulMatrix b ((normalizeAt b p d τ).coeff k) i j).natDegree ≤
+        (2 * Fintype.card ι + 1) * E :=
+  ⟨normalized_coefficient_mass b p d τ H hM k i j,
+    normalized_coefficient_degree b p d τ E hD k i j⟩
+
+-- The next actual quotient generator inherits both bounds after normalization.
+example {A : Type*} [CommRing A] [Nontrivial A] [Algebra ℤ[X] A] {m N : ℕ}
+    (b : CoefficientCoordinateBasis ℤ[X] A m N) (p : A[X]) (d τ H E : ℕ)
+    (hM : ∀ k i j, coefficientMass (Algebra.leftMulMatrix b.basis (p.coeff k) i j) ≤ 2 ^ H)
+    (hD : ∀ k, RelativeMatrixDegree.Bound (Algebra.leftMulMatrix b.basis (p.coeff k)) E)
+    (i j : Fin (m + 1) → Fin N) :
+    let M := Algebra.leftMulMatrix (b.paddedStep (normalizeAt b.basis p d τ) d).basis
+      (AdjoinRoot.root _)
+    coefficientMass (M i j) ≤ 2 ^ birthBudget N m H ∧
+      (M i j).natDegree ≤ N * ((2 * N ^ m + 1) * E) :=
+  normalized_step_root_bounds b p d τ H E hM hD i j
+
+example : normalizationBudget 2 3 = 29 := by decide
+example : birthBudget 2 1 3 = 62 := by decide
+
+-- This is the actual native normalizer after the local cutoff, not a new model.
+example {A B : Type*} [CommRing A] [CommRing B] [Algebra ℤ[X] A] {m w : ℕ}
+    (b : CoefficientCoordinateBasis ℤ[X] A m (2 ^ w)) (c : IntegralCoordinateBasis B m (2 ^ w))
+    (R : ℕ) (ψ : A →+* B)
+    (H : CoefficientCoordinateBasis.Specializes (evalRingHom ((2 : ℤ) ^ R)) ψ b
+      (CoefficientCoordinateBasis.ofIntegral c)) (p : A[X]) (d G : ℕ)
+    (hM : ∀ i j, coefficientMass (Algebra.leftMulMatrix b.basis (p.coeff d) i j) ≤ 2 ^ G)
+    (hR : ParameterMatrixMassBounds.characteristicBudget ((2 ^ w) ^ m) G + 1 ≤ R) :
+    (normalizeAt b.basis p d (Algebra.leftMulMatrix b.basis (p.coeff d)).charpoly.natTrailingDegree).map ψ =
+      IntegralRelativeLeadingNormalization.normalize c.finBasis (p.map ψ) d :=
+  normalizeAt_map_native_finBasis_after_radius b c R ψ H p d G hM hR
+
+end NormalizationMatrixBoundsRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Algebra.ParameterMatrixPolynomialBounds.aeval_mass,
+      `LeanCanny.Algebra.ParameterMatrixPolynomialBounds.aeval_degree,
+      `LeanCanny.Algebra.CoefficientRelativeNormalizationMatrixBounds.matrix_eq,
+      `LeanCanny.Algebra.CoefficientRelativeNormalizationMatrixBounds.normalized_coefficient_mass,
+      `LeanCanny.Algebra.CoefficientRelativeNormalizationMatrixBounds.normalized_coefficient_degree,
+      `LeanCanny.Algebra.CoefficientRelativeNormalizationMatrixBounds.normalizationBudget_affine,
+      `LeanCanny.Algebra.CoefficientRelativeNormalizationMatrixBounds.birthBudget_affine,
+      `LeanCanny.Algebra.CoefficientRelativeNormalizationMatrixBounds.birthBudget_binary,
+      `LeanCanny.Algebra.CoefficientRelativeNormalizationMatrixBounds.normalized_step_root_bounds] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Normalization matrices: actual normalized coefficients and quotient birth; nine standard-axiom audits."
+end RoadmapInternalG76NormalizationMatrices
+
+section RoadmapInternalG76OriginalRadiusSource
+namespace RegularRadiusLowModelRegression
+open LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Geometry Polynomial
+open BoundedRegularRadiusLowModel
+open scoped Classical
+
+-- A zero coefficient may be created by evaluation: no degree equality is asserted.
+example {ι : Type*} (a : MvPolynomial ι ℤ) :
+    (coefficientForm (Polynomial.X * Polynomial.C a)).map (Polynomial.evalRingHom 0) = 0 := by
+  rw [coefficientForm_map_eval]
+  simp
+
+-- Coefficient extraction commutes before any chosen radius is evaluated.
+example {ι : Type*} (p : Polynomial (MvPolynomial ι ℤ)) (e : ι →₀ ℕ) (k : ℕ) :
+    ((coefficientForm p).coeff e).coeff k = (p.coeff k).coeff e := coefficientForm_coeff p e k
+
+example (n : ℕ) (t : LeanCanny.ETR.Term) (e : Fin (n + 4) →₀ ℕ) :
+    ((low (t.finitePolynomial n) t.toData.size t.toData.size).coeff e).natDegree ≤
+      BoundedRegularRadius.parameterDegree n t.toData.size :=
+  low_coefficient_degree _ _ _ _
+
+-- A single original-only slope/offset controls every coefficient at every radius.
+example (n : ℕ) (t : LeanCanny.ETR.Term) :
+    ∀ R (e : Fin (n + 4) →₀ ℕ),
+      (((low (t.finitePolynomial n) t.toData.size t.toData.size).coeff e).eval ((2 : ℤ) ^ R)).natAbs ≤
+        2 ^ (heightSlope n t.toData.size * R + heightOffset n t.toData.size t.toData.size) :=
+  source_coefficient_growth n t
+
+-- Supply the dispatcher's native source fields from the actual original writer.
+section NativeDispatcher
+variable {n cap width m : ℕ} (t : LeanCanny.ETR.Term) (R : ℕ)
+local notation "P" => BoundedRegularLowModularTerm.source
+  (BoundedRegularLowCoefficient.readers (fun _ => n) (fun _ => t) (fun _ => R)) []
+variable {A : Type*} {ι : Type} [CommRing A] [Algebra ℤ[X] A]
+  (bank : CoefficientHeightBank ℤ[X] A m) (x : IntegralMixedHistory.State P cap width m ι)
+  (hm : m ≤ cap) (r : IntegralMixedCriticalSweep.Rule (n + 3)) (current : Bool)
+  (kind : IntegralMixedRelativeCuts.Kind P r) (d : ℕ)
+  (ψ : A →+* x.sampler.scalarPrefix.carrier)
+  (HB : CoefficientHeightBank.Specializes (Polynomial.evalRingHom ((2 : ℤ) ^ R)) ψ bank
+    (CoefficientHeightBank.ofState x))
+
+include HB
+
+example :
+    (CoefficientMixedCutSpecialization.raw bank (low (t.finitePolynomial n) t.toData.size t.toData.size)
+      (leading n t.toData.size t.toData.size) r current kind d).map ψ =
+      CoefficientMixedCutSpecialization.nativeRaw x hm r current kind d :=
+  let H := source_fields (fun _ => n) (fun _ => t) (fun _ => R) []
+  CoefficientMixedCutSpecialization.raw_map_native bank _ _ x hm r current kind d
+    (Polynomial.evalRingHom ((2 : ℤ) ^ R)) ψ HB H.1 H.2
+
+end NativeDispatcher
+end RegularRadiusLowModelRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.coefficientForm_map_eval,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.coefficientForm_coeff,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.coefficientForm_degree,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.low_coefficient_degree,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.leading_eval,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.low_map_eval,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.source_fields,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.native_height_affine,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.source_coefficient_growth,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.heightSlope_binary,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.heightOffset_binary] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Original radius source: native LOW/leading feed the actual mixed dispatcher and affine evaluation growth; eleven standard-axiom audits."
+end RoadmapInternalG76OriginalRadiusSource
+
+section RoadmapInternalG76ActualRadiusLeaves
+namespace ActualRadiusLeavesRegression
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Encoding LeanCanny.Computation
+  LeanCanny.ETR LeanCanny.ETR.ComplexCircuit Polynomial
+
+-- The common mass estimate is proved for the literal original source.
+example (n : ℕ) (t : Term) :
+    (∀ e : Fin (n + 4) →₀ ℕ,
+      coefficientMass ((BoundedRegularRadiusLowModel.low (t.finitePolynomial n) t.toData.size t.toData.size).coeff e) ≤
+        2 ^ BoundedRegularRadiusLowModel.sourceMassBudget n t.toData.size ∧
+      ((BoundedRegularRadiusLowModel.low (t.finitePolynomial n) t.toData.size t.toData.size).coeff e).natDegree ≤
+        BoundedRegularRadius.parameterDegree n t.toData.size) ∧
+    coefficientMass (BoundedRegularRadiusLowModel.leading n t.toData.size t.toData.size) ≤
+      2 ^ BoundedRegularRadiusLowModel.sourceMassBudget n t.toData.size :=
+  BoundedRegularRadiusLowModel.source_parameter_bounds n t
+
+example {n : List Bool → ℕ} {t : List Bool → Term} (hn : UnaryFn n)
+    (ht : (fun q => (t q).toData.toBits) ∈ FP) :
+    BinaryFn (fun q => BoundedRegularRadiusLowModel.sourceMassBudget (n q) (t q).toData.size) := by
+  have hs : UnaryFn (fun q => (t q).toData.size) := by
+    simpa only [TermView.term_toBits] using FrozenSource.source_start_unary ht
+  exact BoundedRegularRadiusLowModel.sourceMassBudget_binary hn (BinaryFn.ofUnary hs)
+
+-- Every actual prelude tag, including the fallback, uses the same formal family.
+example {n : List Bool → ℕ} {t : List Bool → Term} (hn : UnaryFn n)
+    (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+    (R : List Bool → ℕ) (q : List Bool) (k : ℕ) :
+    ((IntegralMixedAuxiliaryMarkedIntegerSource.source hn ht ha R).polynomial q).coeff k =
+      ((IntegralMixedAuxiliaryMarkedRadiusModel.polynomial hn ht ha q).coeff k).eval
+        ((2 : ℤ) ^ R (pairFst q)) := by
+  have h := congrArg (fun p : ℤ[X] => p.coeff k)
+    (IntegralMixedAuxiliaryMarkedRadiusModel.polynomial_map_eval hn ht ha R q)
+  simpa only [Polynomial.coeff_map, Polynomial.coe_evalRingHom] using h.symm
+
+-- The degree-one radius leaf survives at each dyadic input, even exponent zero.
+example (R : ℕ) :
+    (IntegralMixedAuxiliaryMarkedRadiusModel.powerLeaf 0 1).map (Polynomial.evalRingHom ((2 : ℤ) ^ R)) =
+      PowerIntegerPolynomial.polynomial False R := by
+  simpa only [Nat.zero_add, Nat.one_mul] using
+    IntegralMixedAuxiliaryMarkedRadiusModel.powerLeaf_map_eval 0 1 R
+
+end ActualRadiusLeavesRegression
+
+open Lean in
+run_cmd do
+  for name in #[
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.low_coefficient_mass,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.sourceMassBudget_binary,
+      `LeanCanny.Encoding.BoundedRegularRadiusLowModel.source_parameter_bounds,
+      `LeanCanny.Algebra.IntegralMixedFramedSlackRadiusModel.sphere_map_eval,
+      `LeanCanny.Algebra.IntegralMixedFramedSlackRadiusModel.regular_map_eval,
+      `LeanCanny.Algebra.IntegralMixedFramedSlackRadiusModel.spherePolynomial_map_eval,
+      `LeanCanny.Algebra.IntegralMixedFramedSlackRadiusModel.regularPolynomial_map_eval,
+      `LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.polynomial_map_eval] do
+    for ax in ← collectAxioms name do
+      unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
+        throwError "{name} depends on unexpected axiom {ax}"
+  logInfo "Actual radius leaves: source mass from native growth, original binary budget, full prelude coefficient readback; eight standard-axiom audits."
+end RoadmapInternalG76ActualRadiusLeaves
+
+section RoadmapInternalG76RootQueryCutMass
+open Set Polynomial LeanCanny.Algebra LeanCanny.Geometry
+open SymbolicScaledSquarefree ParameterizedRootQuerySign
+open scoped Classical
+
+namespace ParameterizedRootQueryCutMassRegression
+
+example : exceptionalMassBound 0 0 = 0 := rfl
+example : exceptionalMassBound 2 0 = 20 := by decide
+example : cutMassBound 2 0 = 92 := by decide
+example : cutMassBound 2 3 = 146 := by decide
+example (D H : ℕ) : cutMassBound D H = (8 * D + 2) * H + cutMassBound D 0 := cutMassBound_linear D H
+
+private theorem mass_one : coefficientMass (1 : ℤ[X]) = 1 := by
+  simpa only [Polynomial.C_1, Int.natAbs_one] using coefficientMass_C (1 : ℤ)
+
+private theorem mass_X : coefficientMass (X : ℤ[X]) = 1 := by
+  simpa only [Polynomial.monomial_one_one_eq_X, Int.natAbs_one] using coefficientMass_monomial 1 (1 : ℤ)
+
+noncomputable def head : Polynomial Coefficient := X ^ 2 - C (X : ℤ[X])
+noncomputable def queries : Fin 3 → Polynomial Coefficient := ![0, head, X]
+
+theorem head_degree : head.natDegree ≤ 2 := (Polynomial.natDegree_X_pow_sub_C).le
+
+theorem head_nonzero : head ≠ 0 := Polynomial.X_pow_sub_C_ne_zero (by decide) _
+
+theorem head_coeff (k : ℕ) : coefficientMass (head.coeff k) ≤ 2 ^ 0 := by
+  by_cases h0 : k = 0
+  · subst k
+    simp [head, mass_X]
+  · by_cases h2 : k = 2
+    · subst k
+      simp [head, mass_one]
+    · simp [head, Polynomial.coeff_X_pow, Polynomial.coeff_C, h0, h2]
+
+private theorem X_coeff (k : ℕ) : coefficientMass ((X : Polynomial Coefficient).coeff k) ≤ 2 ^ 0 := by
+  by_cases h1 : k = 1
+  · subst k
+    simp [mass_one]
+  · simp [Polynomial.coeff_X, Ne.symm h1]
+
+theorem query_degree (j : Fin 3) : (queries j).natDegree ≤ 2 := by
+  fin_cases j
+  · simp [queries]
+  · exact head_degree
+  · simp [queries]
+
+theorem query_coeff (j : Fin 3) (k : ℕ) : coefficientMass ((queries j).coeff k) ≤ 2 ^ 0 := by
+  fin_cases j
+  · simp [queries]
+  · exact head_coeff k
+  · exact X_coeff k
+
+example (k : ℕ) : coefficientMass ((head * head).coeff k) ≤ 2 ^ (2 * (0 + (2 + 1).size)) :=
+  product_coefficient_mass head head 2 0 head_degree head_degree head_coeff head_coeff k
+
+example : coefficientMass (exceptional head) ≤ 2 ^ exceptionalMassBound 2 0 :=
+  exceptional_mass_le head 2 0 head_degree head_coeff
+
+example (i : Option (Fin 3 × Bool)) : coefficientMass (cuts head queries i) ≤ 2 ^ cutMassBound 2 0 :=
+  cuts_mass_le head queries 2 0 head_degree query_degree head_coeff query_coeff i
+
+example : ParameterizedOrderedRootBranches.cutMass head queries ≤ 2 ^ cutMassBound 2 0 :=
+  actual_cutMass_le head queries 2 0 head_degree query_degree head_coeff query_coeff
+
+noncomputable def start : ℝ := (2 : ℝ) ^ (cutMassBound 2 0 + 1)
+
+theorem actual_avoidance : Avoids head queries start (start + 3) :=
+  avoids_after_input_bounds head head_nonzero queries 2 0 head_degree query_degree head_coeff query_coeff
+    start (start + 3) le_rfl
+
+example : cuts head queries (some (0, true)) = 1 := by simp [cuts, queries]
+
+#print axioms exceptional_mass
+#print axioms exceptional_mass_le
+#print axioms exceptionalMassBound_linear
+#print axioms exceptionalMassBound_binary
+#print axioms product_coefficient_mass
+#print axioms cuts_mass_le
+#print axioms cutMassBound_linear
+#print axioms cutMassBound_binary
+#print axioms actual_cutMass_le
+#print axioms actual_avoidance
+
+end ParameterizedRootQueryCutMassRegression
+end RoadmapInternalG76RootQueryCutMass
+
+section RoadmapInternalG76DyadicInterpolation
+open Polynomial LeanCanny.Algebra
+open scoped Classical
+
+namespace IntegerPolynomialDyadicRegression
+open IntegerPolynomialDyadic
+
+example : massBudget 5 0 2 = 4 := by decide
+example : massBudget 3 1 0 = 13 := by decide
+
+example : (0 : Polynomial ℤ).natDegree ≤ 0 ∧
+    coefficientMass (0 : Polynomial ℤ) ≤ 2 ^ massBudget 0 0 0 := by
+  apply degree_mass_of_growth
+  intro r _
+  simp
+
+example : (Polynomial.C (-3 : ℤ)).natDegree ≤ 0 ∧
+    coefficientMass (Polynomial.C (-3 : ℤ)) ≤ 2 ^ massBudget 5 0 2 := by
+  apply degree_mass_of_growth
+  intro r _
+  norm_num
+
+theorem power_growth (C K r : ℕ) (_hr : C ≤ r) :
+    ((Polynomial.X ^ K : Polynomial ℤ).eval ((2 : ℤ) ^ r)).natAbs ≤ 2 ^ (K * r + 0) := by
+  simp [Polynomial.eval_pow, Int.natAbs_pow, ← pow_mul, Nat.mul_comm]
+
+example (C K : ℕ) : (Polynomial.X ^ K : Polynomial ℤ).natDegree ≤ K ∧
+    coefficientMass (Polynomial.X ^ K : Polynomial ℤ) ≤ 2 ^ massBudget C K 0 :=
+  degree_mass_of_growth _ C K 0 (power_growth C K)
+
+example (C K : ℕ) : (-(Polynomial.X ^ K) : Polynomial ℤ).natDegree ≤ K ∧
+    coefficientMass (-(Polynomial.X ^ K) : Polynomial ℤ) ≤ 2 ^ massBudget C K 0 := by
+  apply degree_mass_of_growth
+  intro r hr
+  simpa only [Polynomial.eval_neg, Int.natAbs_neg] using power_growth C K r hr
+
+noncomputable def shifted (C : ℕ) : Polynomial ℤ := Polynomial.X - Polynomial.C ((2 : ℤ) ^ C)
+
+theorem shifted_growth (C r : ℕ) (hr : C ≤ r) :
+    ((shifted C).eval ((2 : ℤ) ^ r)).natAbs ≤ 2 ^ (1 * r + 0) := by
+  have HP : 2 ^ C ≤ 2 ^ r := Nat.pow_le_pow_right (by decide) hr
+  have HE : (shifted C).eval ((2 : ℤ) ^ r) = ((2 ^ r : ℕ) : ℤ) - ((2 ^ C : ℕ) : ℤ) := by
+    simp only [shifted, Polynomial.eval_sub, Polynomial.eval_X, Polynomial.eval_C, Nat.cast_pow, Nat.cast_ofNat]
+  rw [HE, ← Nat.cast_sub HP, Int.natAbs_natCast]
+  simpa only [Nat.one_mul, Nat.add_zero] using Nat.sub_le (2 ^ r) (2 ^ C)
+
+theorem shifted_mass (C : ℕ) : coefficientMass (shifted C) ≤ 2 ^ massBudget C 1 0 :=
+  IntegerPolynomialDyadic.coefficientMass_le _ C 1 0 (shifted_growth C)
+
+example (C K H : ℕ) : ¬ (∀ r, C ≤ r →
+    ((Polynomial.X ^ (K + 1) : Polynomial ℤ).eval ((2 : ℤ) ^ r)).natAbs ≤ 2 ^ (K * r + H)) := by
+  intro h
+  have HD := IntegerPolynomialDyadic.natDegree_le _ C K H h
+  rw [Polynomial.natDegree_X_pow] at HD
+  omega
+
+example (A : ℤ) : ((Polynomial.C A * (Polynomial.X - 1) * (Polynomial.X - 2) : Polynomial ℤ).eval 1) = 0 := by simp
+example (A : ℤ) : ((Polynomial.C A * (Polynomial.X - 1) * (Polynomial.X - 2) : Polynomial ℤ).eval 2) = 0 := by simp
+
+example : denominator 2 1 0 = -4 := by
+  norm_num [denominator, node, show (Finset.univ : Finset (Fin 2)).erase 0 = {1} from by decide]
+
+#print axioms IntegerPolynomialDyadic.natDegree_le
+#print axioms basis_eq
+#print axioms numerator_mass
+#print axioms coeff_le_of_samples
+#print axioms massBudget_binary
+#print axioms IntegerPolynomialDyadic.coefficientMass_le
+#print axioms degree_mass_of_growth
+#print axioms shifted_growth
+#print axioms shifted_mass
+
+end IntegerPolynomialDyadicRegression
+end RoadmapInternalG76DyadicInterpolation
+
+section RoadmapInternalG76ActualCutStage
+namespace CutStageRegression
+open LeanCanny.Algebra LeanCanny.Algebra.IntegralMixedHistory LeanCanny.Algebra.IntegralMixedRelativeCuts Polynomial
+open scoped Classical
+section Guarded
+variable {R A:Type*} [CommRing R] [CommRing A] [Algebra R A] [Nontrivial A]
+  {n cap width m:ℕ} {P:SpatialSource n} {ι:Type} [Fintype ι]
+  (bank:CoefficientHeightBank R A m) (b:CoefficientCoordinateBasis R A m (2^width))
+  (low:MvPolynomial (Fin (n+1)) R) (a:R) (x:State P cap width m ι) (hm:m≤cap)
+  (r:IntegralMixedCriticalSweep.Rule n) (current:Bool) (c:Kind P r) (d τ:ℕ)
+  (φ:R→+*ℤ) (ψ:A→+*x.sampler.scalarPrefix.carrier)
+  (HB:CoefficientHeightBank.Specializes φ ψ bank (CoefficientHeightBank.ofState x))
+  (Hb:CoefficientCoordinateBasis.Specializes φ ψ b (CoefficientCoordinateBasis.ofIntegral x.sampler.scalarPrefix.basis))
+  (HL:low.map φ=P.low) (HA:φ a=P.leading)
+  (Hbelow:∀k<τ,φ ((Algebra.leftMulMatrix b.basis
+    ((CoefficientMixedCutSpecialization.raw bank low a r current c d).coeff d)).charpoly.coeff k)=0)
+  (HT:φ ((Algebra.leftMulMatrix b.basis
+    ((CoefficientMixedCutSpecialization.raw bank low a r current c d).coeff d)).charpoly.coeff τ)≠0)
+include HB Hb HL HA Hbelow HT
+local notation "pSource"=>CoefficientMixedCutSpecialization.polynomial b bank low a r current c d τ
+local notation "cutMap"=>CoefficientMixedCutSpecialization.specialize bank b low a x hm r current c d τ φ ψ HB Hb HL HA Hbelow HT
+
+-- The consumer is the actual native FullHistoryScript cut command, not a model.
+example (hSource:d≤IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree) (hWidth:d≤2^width):
+    (pSource).map ψ=IntegralMixedFullHistoryScript.polynomial x hm
+      (.cut (CoefficientMixedCutSpecialization.nativeRule x r current)
+        (CoefficientMixedCutSpecialization.nativeKind x r current c) d hSource hWidth):=
+  CoefficientMixedCutSpecialization.polynomial_map_native bank b low a x hm r current c d τ φ ψ HB Hb HL HA Hbelow HT
+
+example (hSource:d≤IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree) (hWidth:d≤2^width):
+    φ (CoefficientMixedCutSpecialization.leading b bank low a r current c d τ)=
+      IntegralMixedFullHistoryScript.leading x hm
+        (.cut (CoefficientMixedCutSpecialization.nativeRule x r current)
+          (CoefficientMixedCutSpecialization.nativeKind x r current c) d hSource hWidth):=
+  CoefficientMixedCutSpecialization.leading_map_native bank b low a x hm r current c d τ φ ψ HB Hb HL HA Hbelow HT
+
+example (hSource:d≤IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree) (hWidth:d≤2^width):
+    CoefficientCoordinateBasis.Specializes φ cutMap (b.paddedStep pSource d)
+      (CoefficientCoordinateBasis.ofIntegral (IntegralMixedFullHistoryScript.step x hm
+        (.cut (CoefficientMixedCutSpecialization.nativeRule x r current)
+          (CoefficientMixedCutSpecialization.nativeKind x r current c) d hSource hWidth)).sampler.scalarPrefix.basis):=
+  CoefficientMixedCutSpecialization.basis_specializes bank b low a x hm r current c d τ φ ψ HB Hb HL HA Hbelow HT
+
+example (hSource:d≤IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree) (hWidth:d≤2^width):
+    CoefficientHeightBank.Specializes φ cutMap
+      (bank.rootStep pSource d (2^width) (CoefficientMixedCutSpecialization.leading b bank low a r current c d τ))
+      (CoefficientHeightBank.ofState (IntegralMixedFullHistoryScript.step x hm
+        (.cut (CoefficientMixedCutSpecialization.nativeRule x r current)
+          (CoefficientMixedCutSpecialization.nativeKind x r current c) d hSource hWidth))):=
+  CoefficientMixedCutSpecialization.bank_specializes bank b low a x hm r current c d τ φ ψ HB Hb HL HA Hbelow HT
+
+example (v:A):cutMap (AdjoinRoot.of _ v)=AdjoinRoot.of _ (ψ v):=
+  CoefficientMixedCutSpecialization.specialize_of bank b low a x hm r current c d τ φ ψ HB Hb HL HA Hbelow HT v
+
+example :cutMap (AdjoinRoot.root _)=AdjoinRoot.root _:=
+  CoefficientMixedCutSpecialization.specialize_root bank b low a x hm r current c d τ φ ψ HB Hb HL HA Hbelow HT
+end Guarded
+
+section Radius
+variable {A:Type*} [CommRing A] [Algebra ℤ[X] A] [Nontrivial A]
+  {n cap width m:ℕ} {P:SpatialSource n} {ι:Type} [Fintype ι]
+  (bank:CoefficientHeightBank ℤ[X] A m) (b:CoefficientCoordinateBasis ℤ[X] A m (2^width))
+  (low:MvPolynomial (Fin (n+1)) ℤ[X]) (a:ℤ[X]) (x:State P cap width m ι) (hm:m≤cap)
+  (r:IntegralMixedCriticalSweep.Rule n) (current:Bool) (c:Kind P r) (d radius bits:ℕ)
+  (ψ:A→+*x.sampler.scalarPrefix.carrier)
+  (HB:CoefficientHeightBank.Specializes (Polynomial.evalRingHom ((2:ℤ)^radius)) ψ bank (CoefficientHeightBank.ofState x))
+  (Hb:CoefficientCoordinateBasis.Specializes (Polynomial.evalRingHom ((2:ℤ)^radius)) ψ b
+    (CoefficientCoordinateBasis.ofIntegral x.sampler.scalarPrefix.basis))
+  (HL:low.map (Polynomial.evalRingHom ((2:ℤ)^radius))=P.low)
+  (HA:(Polynomial.evalRingHom ((2:ℤ)^radius)) a=P.leading)
+  (HE:∀i j,coefficientMass (Algebra.leftMulMatrix b.basis
+    ((CoefficientMixedCutSpecialization.raw bank low a r current c d).coeff d) i j)≤2^bits)
+  (HR:ParameterMatrixMassBounds.characteristicBudget ((2^width)^m) bits+1≤radius)
+include HB Hb HL HA HE HR
+local notation "fixedIndex"=>CoefficientMixedCutAtInfinity.formalIndex b bank low a r current c d
+local notation "fixedSource"=>CoefficientMixedCutSpecialization.polynomial b bank low a r current c d fixedIndex
+local notation "radiusMap"=>CoefficientMixedCutAtInfinity.specialize bank b low a x hm r current c d radius bits ψ HB Hb HL HA HE HR
+
+-- No trailing-index/survival guard is supplied at the radius-specific interface.
+example :CoefficientCoordinateBasis.Specializes (Polynomial.evalRingHom ((2:ℤ)^radius)) radiusMap
+    (b.paddedStep fixedSource d)
+    (CoefficientCoordinateBasis.ofIntegral (CoefficientMixedCutSpecialization.nativeStep x hm r current c d).sampler.scalarPrefix.basis):=
+  CoefficientMixedCutAtInfinity.basis_specializes bank b low a x hm r current c d radius bits ψ HB Hb HL HA HE HR
+
+example :CoefficientHeightBank.Specializes (Polynomial.evalRingHom ((2:ℤ)^radius)) radiusMap
+    (bank.rootStep fixedSource d (2^width)
+      (CoefficientMixedCutSpecialization.leading b bank low a r current c d fixedIndex))
+    (CoefficientHeightBank.ofState (CoefficientMixedCutSpecialization.nativeStep x hm r current c d)):=
+  CoefficientMixedCutAtInfinity.bank_specializes bank b low a x hm r current c d radius bits ψ HB Hb HL HA HE HR
+end Radius
+
+#print axioms CoefficientMixedCutDispatcher.factor_map
+#print axioms CoefficientMixedCutDispatcher.raw_map
+#print axioms CoefficientMixedCutDispatcher.factor_ofState
+#print axioms CoefficientMixedCutDispatcher.raw_ofState
+#print axioms CoefficientMixedCutDispatcher.raw_currentQ_ofState
+#print axioms CoefficientMixedCutSpecialization.raw_map_native
+#print axioms CoefficientMixedCutSpecialization.polynomial_map_native
+#print axioms CoefficientMixedCutSpecialization.leading_map_native
+#print axioms CoefficientMixedCutSpecialization.specialize
+#print axioms CoefficientMixedCutSpecialization.specialize_of
+#print axioms CoefficientMixedCutSpecialization.specialize_root
+#print axioms CoefficientMixedCutSpecialization.basis_specializes
+#print axioms CoefficientMixedCutSpecialization.bank_specializes
+#print axioms CoefficientMixedCutAtInfinity.guards_after_radius
+#print axioms CoefficientMixedCutAtInfinity.specialize
+#print axioms CoefficientMixedCutAtInfinity.basis_specializes
+#print axioms CoefficientMixedCutAtInfinity.bank_specializes
+end CutStageRegression
+end RoadmapInternalG76ActualCutStage
+
+section RoadmapInternalG76NativeIntegerDegree
+open LeanCanny LeanCanny.Algebra LeanCanny.Geometry LeanCanny.Computation LeanCanny.Encoding Polynomial
+open IntegralMixedAuxiliaryMarkedRadiusModel
+
+namespace AuxiliaryMarkedRadiusDegreeRegression
+
+example : ¬ Function.Injective (Polynomial.evalRingHom (0 : ℤ)) := by
+  intro h
+  have HE : (Polynomial.X : ℤ[X]) = Polynomial.C 0 := h (by simp)
+  have HD := congrArg Polynomial.natDegree HE
+  norm_num at HD
+
+example : (Polynomial.evalRingHom (0 : ℤ)) (Polynomial.X : ℤ[X]) = 0 := by simp
+
+example : (constant (0 : ℤ[X])).natDegree = 0 := by simp [constant]
+
+example : ((constant (0 : ℤ[X])).map (Polynomial.evalRingHom (-3 : ℤ))).natDegree = 0 := by
+  rw [constant_map_eval]
+  simp
+
+example : (constant ((Polynomial.X : ℤ[X]) ^ 7)).natDegree = 7 := by
+  rw [constant, Polynomial.natDegree_map_eq_of_injective Polynomial.C_injective]
+  simp
+
+example : ((constant ((Polynomial.X : ℤ[X]) ^ 7)).map (Polynomial.evalRingHom 0)).natDegree = 7 := by
+  rw [constant_map_eval]
+  simp
+
+example (offset slope : ℕ) : (powerLeaf offset slope).natDegree = 1 := by
+  exact Polynomial.natDegree_X_sub_C _
+
+example (offset slope : ℕ) (r : ℤ) :
+    ((powerLeaf offset slope).map (Polynomial.evalRingHom r)).natDegree = 1 := by
+  simp only [powerLeaf, Polynomial.map_sub, Polynomial.map_X, Polynomial.map_C,
+    Polynomial.natDegree_X_sub_C]
+
+example (offset slope : ℕ) :
+    (IntegralMixedFramedSlackRadiusModel.power offset slope).eval (2 ^ 0) ≠ 0 := by
+  rw [IntegralMixedFramedSlackRadiusModel.power_eval]
+  exact pow_ne_zero _ (by decide)
+
+example : (Polynomial.C (Polynomial.X : ℤ[X]) * Polynomial.X : (ℤ[X])[X]).natDegree = 1 := by
+  exact Polynomial.natDegree_C_mul_X _ Polynomial.X_ne_zero
+
+example : ((Polynomial.C (Polynomial.X : ℤ[X]) * Polynomial.X : (ℤ[X])[X]).map
+    (Polynomial.evalRingHom 0)).natDegree = 0 := by simp
+
+example : ((Polynomial.X : (ℤ[X])[X]).map (Polynomial.evalRingHom 0)).natDegree = 1 := by simp
+
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+
+-- No evaluator, radius cost, leading-survival or degree premise is supplied.
+theorem actual_degree (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) (q : List Bool) :
+    ((IntegralMixedAuxiliaryMarkedIntegerSource.source hn ht ha R).polynomial q).natDegree =
+      (polynomial hn ht ha q).natDegree := native_natDegree hn ht ha R q
+
+theorem actual_leading (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (R : List Bool → ℕ) (q : List Bool) :
+    ((IntegralMixedAuxiliaryMarkedIntegerSource.source hn ht ha R).polynomial q).leadingCoeff =
+      ((polynomial hn ht ha q).leadingCoeff).eval (2 ^ R (pairFst q)) :=
+  native_leadingCoeff hn ht ha R q
+
+theorem zero_radius_sphere (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP)
+    (ha : ∀ q, (t q).arity ≤ n q) (key : List Bool) :
+    ((sphere hn ht ha key).map (Polynomial.evalRingHom (2 ^ 0))).natDegree =
+      (sphere hn ht ha key).natDegree := sphere_map_natDegree hn ht ha 0 key
+
+end AuxiliaryMarkedRadiusDegreeRegression
+
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.sphere_map_natDegree
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.regular_map_natDegree
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.polynomial_map_natDegree
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.native_natDegree
+#print axioms LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRadiusModel.native_leadingCoeff
+#print axioms AuxiliaryMarkedRadiusDegreeRegression.actual_degree
+#print axioms AuxiliaryMarkedRadiusDegreeRegression.actual_leading
+#print axioms AuxiliaryMarkedRadiusDegreeRegression.zero_radius_sphere
+end RoadmapInternalG76NativeIntegerDegree
