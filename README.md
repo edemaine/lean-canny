@@ -2339,6 +2339,11 @@ The actual saved-rule coordinate head now has a constructed parameter
 family. Original metadata catalogs and exact eta/zero-window principal
 operators preserve literal native padding and shifts. A tuple-level native
 critical-scan equivalence constructs fresh own words internally.
+Constructed parameter heads now map to the native complete sampler
+annihilators for EVERY raw column, with original declared row degrees.
+NoCritical interval and consecutive-prefix comparison queries specialize
+to their own native physical columns, with original coefficient budgets
+and one finite target bound for both probes and all derivative orders.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership

@@ -1,3 +1,6 @@
+import LeanCanny.Algebra.AffineRingCoordinateMap
+import LeanCanny.Encoding.CoefficientMarkedCriticalBankPhysical
+import LeanCanny.Encoding.CoefficientMarkedRecordFullHeads
 import LeanCanny.Algebra.CoefficientSelectedMultivariateLift
 import LeanCanny.Algebra.CoefficientTarskiParameterQueries
 import LeanCanny.Algebra.CoefficientTarskiZeroParameterQueries
@@ -15722,3 +15725,120 @@ end
 #print axioms IntegralMixedPhysicalCriticalIncidence.packet_iff
 #print axioms IntegralMixedPhysicalCriticalIncidence.exists_word_iff
 end RoadmapInternalG90NativeCriticalTupleIncidence
+
+section RoadmapInternalG91ActualPreparedNoCriticalQueries
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open scoped Classical
+namespace NoCriticalQueryRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+-- Arbitrary actual readers are retained; all derivatives of the SAME saved
+-- parent characteristic bind to the native source, including derivative0.
+theorem every_parent_derivative {R : List Bool → ℕ} (hR : BinaryFn R) (q : List Bool)
+    (hc : 0 < IntegralMixedCausalRecordPlanBits.count (IntegralMixedPhysicalCriticalQuery.root q))
+    (hC : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha
+      (IntegralMixedPhysicalCriticalQuery.root q) ≤ R (IntegralMixedPhysicalCriticalQuery.root q))
+    (i : Fin (CoefficientMarkedCriticalBankSource.birth n q)) :
+    ∀ k, (Polynomial.derivative^[k] (CoefficientMarkedCriticalBankSource.polynomial hn ht ha q i)).map
+      (evalRingHom ((2 : ℤ) ^ R (IntegralMixedPhysicalCriticalQuery.root q))) =
+      (IntegralMixedPhysicalCriticalBankEquality.derivatives hn ht ha hR false).polynomial
+        (pair q (pair (BinaryNatCode.encode i.val) (BinaryNatCode.encode k))) :=
+  CoefficientMarkedCriticalBankSource.derivative_specializes hn ht ha hR q hc hC i
+
+-- Parent and child keep their OWN physical columns and powers. One original
+-- target box and parameter budget covers BOTH probes and every derivative.
+theorem both_probes {R : List Bool → ℕ} (hR : BinaryFn R) (q : List Bool)
+    (hc : 0 < IntegralMixedCausalRecordPlanBits.count (IntegralMixedPhysicalCriticalQuery.root q))
+    (hC : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha
+      (IntegralMixedPhysicalCriticalQuery.root q) ≤ R (IntegralMixedPhysicalCriticalQuery.root q))
+    (i : Fin (CoefficientMarkedCriticalBankSource.birth n q)) :
+    ∀ child k,
+      MvPolynomial.map (evalRingHom ((2 : ℤ) ^ R (IntegralMixedPhysicalCriticalQuery.root q)))
+        (CoefficientMarkedCriticalBankQuery.physical hn ht ha child q i k) =
+        CoefficientMarkedCriticalBankQuery.nativePhysical hn ht ha hR child q i.val k ∧
+      (CoefficientMarkedCriticalBankQuery.polynomial hn ht ha child q i k).natDegree ≤
+        CoefficientMarkedCriticalBankQuery.targetDegree hn ht ha q ∧
+      ∀ v, ((CoefficientMarkedCriticalBankQuery.physical hn ht ha child q i k).coeff v).natDegree ≤
+        IntegralMixedPhysicalCriticalBankEquality.querySlope hn ht ha q ∧
+        coefficientMass ((CoefficientMarkedCriticalBankQuery.physical hn ht ha child q i k).coeff v) ≤
+          2 ^ CoefficientMarkedCriticalBankQuery.coefficientBudget hn ht ha q := by
+  intro child k
+  exact ⟨CoefficientMarkedCriticalBankQuery.physical_specializes hn ht ha hR child q hc hC i k,
+    CoefficientMarkedCriticalBankQuery.target_degree_uniform hn ht ha child q i k,
+    CoefficientMarkedCriticalBankQuery.physical_coefficient_degree_mass hn ht ha child q hc i k⟩
+
+theorem original_budgets : BinaryFn (CoefficientMarkedCriticalBankQuery.targetDegree hn ht ha) ∧
+    BinaryFn (CoefficientMarkedCriticalBankQuery.coefficientBudget hn ht ha) ∧
+    BinaryFn (CoefficientMarkedCriticalBankSource.derivativeBudget hn ht ha) :=
+  ⟨CoefficientMarkedCriticalBankQuery.targetDegree_binary hn ht ha,
+    CoefficientMarkedCriticalBankQuery.coefficientBudget_binary hn ht ha,
+    CoefficientMarkedCriticalBankSource.derivativeBudget_binary hn ht ha⟩
+end NoCriticalQueryRegression
+#check CoefficientMarkedCriticalIntervalQuery.specializes
+#print axioms CoefficientMarkedCriticalIntervalQuery.specializes
+#print axioms CoefficientMarkedCriticalIntervalQuery.coefficient_degree_mass
+#print axioms CoefficientMarkedCriticalIntervalQuery.budget_binary
+#print axioms CoefficientMarkedRecordPrefixBankSource.specializes
+#print axioms CoefficientMarkedCriticalBankSource.parent_key
+#print axioms CoefficientMarkedCriticalBankSource.specializes
+#print axioms CoefficientMarkedCriticalBankSource.derivative_specializes
+#print axioms CoefficientMarkedCriticalBankSource.coefficient_degree_mass
+#print axioms CoefficientMarkedCriticalBankSource.derivative_coefficient_degree_mass
+#print axioms CoefficientMarkedCriticalBankQuery.power_catalog
+#print axioms CoefficientMarkedCriticalBankQuery.specializes
+#print axioms CoefficientMarkedCriticalBankQuery.coefficient_degree_mass
+#print axioms CoefficientMarkedCriticalBankQuery.target_degree_uniform
+#print axioms CoefficientMarkedCriticalBankQuery.physical_specializes
+#print axioms CoefficientMarkedCriticalBankQuery.physical_coefficient_degree_mass
+#print axioms NoCriticalQueryRegression.every_parent_derivative
+#print axioms NoCriticalQueryRegression.both_probes
+#print axioms NoCriticalQueryRegression.original_budgets
+end RoadmapInternalG91ActualPreparedNoCriticalQueries
+
+section RoadmapInternalG91AllFullRawSamplerHeads
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open scoped Classical
+
+example {a : ℕ} {R A : Type*} [CommRing R] [CommRing A] (φ : R →+* A)
+    (p : Fin a → MvPolynomial (Fin a) R) (d : Fin a → ℕ) (i : Fin a) :
+    (AffineRingCoordinates.annihilator p d i).map φ =
+      AffineRingCoordinates.annihilator (fun j => (p j).map φ) d i :=
+  AffineRingCoordinateMap.annihilator φ p d i
+
+example {R : Type*} [CommRing R] (p : Fin 0 → MvPolynomial (Fin 0) R)
+    (d : Fin 0 → ℕ) :
+    ∀ i, (AffineRingCoordinates.annihilator p d i).map (RingHom.id R) =
+      AffineRingCoordinates.annihilator (fun j => (p j).map (RingHom.id R)) d i :=
+  AffineRingCoordinateMap.annihilator (RingHom.id R) p d
+
+section
+variable {n : List Bool → ℕ} {t : List Bool → ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+  {R : List Bool → ℕ} (hR : BinaryFn R)
+
+example (ctx : List Bool) (k : ℕ) (hk : k ≤ IntegralMixedCausalRecordPlanBits.count ctx)
+    (aux : List Bool) (hlarge : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx) :
+    HEq (fun i => (CoefficientMarkedRecordFullHeads.polynomial hn ht ha ctx k hk aux i).map
+      (evalRingHom ((2 : ℤ)^R ctx)))
+      (CoefficientMarkedRecordFullHeads.native hn ht ha ctx hR k aux) :=
+  CoefficientMarkedRecordFullHeads.specializes hn ht ha ctx hR k hk aux hlarge
+
+example (ctx : List Bool) (k : ℕ) (aux : List Bool) :
+    HEq (CoefficientMarkedRecordFullHeads.native hn ht ha ctx hR k aux)
+      (CoefficientMarkedRecordFullHeads.samplerAnnihilators
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedParameters hn ht ha hR)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedPlan hn ht ha hR)
+        (IntegralMixedAuxiliaryMarkedRecordPlan.certifiedData hn ht ha hR)
+        (CoefficientMarkedRecordRowLayout.key (n := n) ctx k aux)) :=
+  CoefficientMarkedRecordFullHeads.native_eq hn ht ha ctx hR k aux
+end
+
+#print axioms AffineRingCoordinateMap.system
+#print axioms AffineRingCoordinateMap.polynomial
+#print axioms AffineRingCoordinateMap.reciprocal
+#print axioms AffineRingCoordinateMap.annihilator
+#print axioms CoefficientMarkedRecordFullHeads.degrees_eq
+#print axioms CoefficientMarkedRecordFullHeads.specializes
+#print axioms CoefficientMarkedRecordFullHeads.native_eq
+end RoadmapInternalG91AllFullRawSamplerHeads

@@ -1,3 +1,10 @@
+import LeanCanny.Algebra.AffineRingCoordinateMap
+import LeanCanny.Encoding.CoefficientMarkedCriticalBankPhysical
+import LeanCanny.Encoding.CoefficientMarkedCriticalBankQuery
+import LeanCanny.Encoding.CoefficientMarkedCriticalBankSource
+import LeanCanny.Encoding.CoefficientMarkedCriticalIntervalQuery
+import LeanCanny.Encoding.CoefficientMarkedRecordFullHeads
+import LeanCanny.Encoding.CoefficientMarkedRecordPrefixBankSource
 import LeanCanny.Algebra.CoefficientSelectedMultivariateLift
 import LeanCanny.Algebra.CoefficientTarskiParameterQueries
 import LeanCanny.Algebra.CoefficientTarskiZeroParameterQueries
@@ -5080,6 +5087,11 @@ The actual saved-rule coordinate head now has a constructed parameter
 family. Original metadata catalogs and exact eta/zero-window principal
 operators preserve literal native padding and shifts. A tuple-level native
 critical-scan equivalence constructs fresh own words internally.
+Constructed parameter heads now map to the native complete sampler
+annihilators for EVERY raw column, with original declared row degrees.
+NoCritical interval and consecutive-prefix comparison queries specialize
+to their own native physical columns, with original coefficient budgets
+and one finite target bound for both probes and all derivative orders.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 Common bounds for every guarded graph query and physical-edge transport,
