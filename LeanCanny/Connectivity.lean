@@ -1,3 +1,28 @@
+import LeanCanny.Algebra.CoefficientFinitePhysicalQuery
+import LeanCanny.Algebra.CoefficientFullCutHeadQueries
+import LeanCanny.Encoding.CoefficientMarkedCriticalBankIncidence
+import LeanCanny.Encoding.CoefficientMarkedCriticalCorrelationIncidence
+import LeanCanny.Encoding.CoefficientMarkedCriticalIntervalIncidence
+import LeanCanny.Encoding.CoefficientMarkedCriticalIntervalPredicate
+import LeanCanny.Encoding.CoefficientMarkedCriticalParentWord
+import LeanCanny.Encoding.CoefficientMarkedCriticalPrefixIncidence
+import LeanCanny.Encoding.CoefficientMarkedCriticalRootContext
+import LeanCanny.Encoding.CoefficientMarkedRecordFullCutHead
+import LeanCanny.Encoding.CoefficientMarkedRecordTraceStages
+import LeanCanny.Encoding.FormulaSignSlotRadialJointCenter
+import LeanCanny.Encoding.FormulaSignSlotRadialJointComponentTransport
+import LeanCanny.Encoding.FormulaSignSlotRadialJointCore
+import LeanCanny.Encoding.FormulaSignSlotRadialJointCoreReadback
+import LeanCanny.Encoding.FormulaSignSlotRadialJointGeometry
+import LeanCanny.Encoding.FormulaSignSlotRadialJointLayout
+import LeanCanny.Encoding.FormulaSignSlotRadialJointPacking
+import LeanCanny.Encoding.FormulaSignSlotRadialJointRealization
+import LeanCanny.Encoding.FormulaSignSlotRadialJointSample
+import LeanCanny.Encoding.FormulaSignSlotRadialJointSampling
+import LeanCanny.Encoding.FormulaSignSlotRadialJointTermCopy
+import LeanCanny.Encoding.FormulaSignSlotRadialJointValueGuard
+import LeanCanny.Encoding.FormulaSignSlotRadialMarkedCenterField
+import LeanCanny.Encoding.IntegralMixedAuxiliaryMarkedRecordRadiusFullCutHead
 import LeanCanny.Algebra.CoefficientMixedFactorChoice
 import LeanCanny.Encoding.CoefficientMarkedRecordChoiceFactor
 import LeanCanny.Encoding.CoefficientMarkedRecordChoicePhysical
@@ -5163,6 +5188,12 @@ the canonical instruction. Full clipped lower-choice coefficient probes
 specialize on their OWN physical parent columns and have original finite
 variable, spatial and parameter coefficient boxes. Whole historical trace
 guard acceptance and its shared full-tuple incidence remain separate.
+The inner native critical-child search now equals one explicit formula
+over a shared parent/child raw-tuple pair, with actual bank agreement,
+correlation and both endpoint signs. Joint descriptor roots now yield
+same-component core candidates and fresh own Replay words, with actual
+center/value guard binding. Full grid/cut-stratum sampling and native
+cross-source component checking remain open, as does whole graph transport.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 Common bounds for every guarded graph query and physical-edge transport,

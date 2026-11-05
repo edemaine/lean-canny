@@ -2366,6 +2366,12 @@ the canonical instruction. Full clipped lower-choice coefficient probes
 specialize on their OWN physical parent columns and have original finite
 variable, spatial and parameter coefficient boxes. Whole historical trace
 guard acceptance and its shared full-tuple incidence remain separate.
+The inner native critical-child search now equals one explicit formula
+over a shared parent/child raw-tuple pair, with actual bank agreement,
+correlation and both endpoint signs. Joint descriptor roots now yield
+same-component core candidates and fresh own Replay words, with actual
+center/value guard binding. Full grid/cut-stratum sampling and native
+cross-source component checking remain open, as does whole graph transport.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership

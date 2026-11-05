@@ -2698,3 +2698,52 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Whole historical trace acceptance and Atomic/Local/NoCritical/Edge shared-tuple transport, uniform all-role stabilization, joint descriptor/component association and both original unconditional PSPACE endpoints remain open.
+
+54. G96: actual inner critical search and joint descriptor core
+2026-11-05.
+
+The literal native inner critical-child search is equivalent to ONE formula
+on a shared parent and existential child raw tuple. The child satisfies
+actual full rows, ALL derivative-bank sign agreement, last correlation zero,
+and both endpoint signs simultaneously. Complete prefix sampling constructs
+and extracts the actual words. A parent word can be chosen before embedding
+it into its own query context, with the entire tuple preserved. Query families
+are invariant under root-fixed AUX, so embedded parent words do not become
+an assumed radius-dependent cutoff. Exact finite physical query packing
+preserves evaluation, degree and parameter coefficient bounds.
+
+The two endpoint tests are bound to that SAME complete child tuple without
+interval/order/Active premises. Literal creating-command context and cut
+classification are radius-independent at EVERY key, including padded keys.
+The stored selected factor is constructed by saturating the actual clipped
+choice; the generic full-cut kernel retains truncation, creating powers and
+terminal suffix, with actual native affine coefficient bounds.
+
+The joint core is one concrete original FP integer source containing BOTH
+closed circular sources, the second formal radial source, same-center and
+anchor links and strict parameter witnesses. A genuine descriptor constructs
+a core root retaining its grid/all-four cut-free receipts. Core sampling yields
+a genuine candidate in the SAME joint component and a fresh own Replay word
+with an original polynomial word bound. Static own-word refs give the actual
+center and literal native value certificate guards. Continuous projections
+preserve qualitative candidate-component association along joint-core paths.
+
+CORE sampling alone does NOT preserve grid/cut-free strata. Full descriptor
+sampling, native cross-source component checking, other joint cut guards,
+whole Proper.NoCritical/Atomic/Local/Edge transport, uniform all-role cutoff,
+and both original unconditional PSPACE endpoints remain open.
+
+All25 sources (2658 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS20952 jobs, including the EOF-only correlation refresh.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:16929 lines,261 groups.
+Audited 95528 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 202285 transitive constants: no legacy space foundation.
+All29 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Complete grid/cut-stratum descriptor sampling and native cross-source association, outer NoCritical/Atomic/Local/Edge shared incidence and radius transport, uniform all-role stabilization and both original unconditional PSPACE endpoints remain open.
