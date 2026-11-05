@@ -2355,6 +2355,12 @@ radii. The literal radial value-certificate reader, coefficient source and
 same-center native selection/trailing guards are also closed. Joint
 descriptor feasibility/component association and full graph guard/edge
 transport remain separate.
+The whole installed critical-zero scan now preserves acceptance and rejection
+on fresh own sampler words beyond an original Binary cutoff. Literal near
+and rank principal queries have exact own-column maps and complete original
+finite-variable, spatial and parameter coefficient boxes. Whole native
+Atomic/Local/NoCritical/Edge tuple incidence and joint descriptor feasibility
+remain to be proved.
 Effective uniform radius stabilization and the original Boolean frontier-
 incidence algorithm remain to be discharged.
 These graph algorithms do not yet establish unconditional PSPACE membership

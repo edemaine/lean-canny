@@ -2466,45 +2466,12 @@ Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Remaining graph roles, untruncated/physical/principal query families/common bounds, physical-edge transport/global stabilization, joint bounded radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
 
-44. G87: actual physical field queries and selected radial principal sources
+45. G87: Bound actual term, mandatory leaf and proper rank queries
 2026-11-05.
 
-The constructed field query specializes to the literal installed native
-scalar query and actual certified full physical column. Power expansion,
-common-denominator clearing and renameFin.val commute with specialization.
-Original BinaryFn cutoff, creating power and finite target degree are
-derived; actual native affine mass gives every constructed parameter
-coefficient degree/mass. A new binding uses ARBITRARY actual BinaryFn R
-with explicit equal radius VALUES at the two queried roots, including the
-graph R0(original) reader. Source and both own banks use that R directly;
-no equality with constant-function metadata or resource seeds is assumed.
+Constructed actual term, mandatory leaf and single-bank denominator parameter queries with original degree/mass budgets; literal native proper rank/near affine bounds and certified independent-radius eta shift ceiling.
 
-Changing the typed cut tag/coordinate/choice while keeping the same actual
-bank, spatial source and critical rule preserves the original input bounds.
-Every resulting untruncated factor coefficient matrix has the SAME original
-affine radius height, including alternative lower choices. This evaluated
-query-kind bound does not assert parser constancy or construct a formal
-untruncated alternative-factor family by itself.
-
-The actual radial coordinate is truncated at the degree validated AFTER
-center specialization. Its selected squarefree index and exceptional factor
-are identified exactly, including degree0. Concrete radius-first/center MV
-principal families have original degree/mass and closed coefficient programs
-at arbitrary caller modulus. The concrete center-only radius coefficients
-have finite zero guards, and a native Source/Access frontend uses no supplied
-reader. Tests include a repeated root and degree0. SAME-bank PSC acceptance
-and joint bounded descriptor/center existence remain separate.
-
-Reference-lookup clarification for earlier retained-center handoffs: missing
-WordList.get entries return [] and decode to producer label0, which MAY be
-valid. Only decoded labels OUTSIDE the bank count have native zero extension.
-The frozen source theorems and tests use this exact behavior; they do not
-assert that a missing table entry has value zero.
-
-Remaining graph roles, untruncated factor/physical/principal families and
-common bounds, physical-edge transport/global stabilization, joint bounded
-radial descriptor/native Boolean frontier incidence and both original
-unconditional PSPACE targets remain open.
+Scope: Full alternative-factor guard families, remaining physical/principal roles/common bounds, physical-edge/global radius transport, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
 
 All14 sources (1891 LF lines) match their
 frozen hash ledgers without revisions. Strict three-library integration plus the full alternative-factor bound producer target PASS20726 jobs.
@@ -2521,45 +2488,12 @@ Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Full alternative-factor guard families, remaining physical/principal roles/common bounds, physical-edge/global radius transport, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
 
-44. G88: actual physical field queries and selected radial principal sources
+46. G88: Construct same-center native principal and branch-cut guards
 2026-11-05.
 
-The constructed field query specializes to the literal installed native
-scalar query and actual certified full physical column. Power expansion,
-common-denominator clearing and renameFin.val commute with specialization.
-Original BinaryFn cutoff, creating power and finite target degree are
-derived; actual native affine mass gives every constructed parameter
-coefficient degree/mass. A new binding uses ARBITRARY actual BinaryFn R
-with explicit equal radius VALUES at the two queried roots, including the
-graph R0(original) reader. Source and both own banks use that R directly;
-no equality with constant-function metadata or resource seeds is assumed.
+Constructed original-only same-bank PSC and trailing-index guards, exact literal branch cut and arbitrary-modulus coefficient readers at one retained center, with finite original degree/mass and nonwrapping boxes.
 
-Changing the typed cut tag/coordinate/choice while keeping the same actual
-bank, spatial source and critical rule preserves the original input bounds.
-Every resulting untruncated factor coefficient matrix has the SAME original
-affine radius height, including alternative lower choices. This evaluated
-query-kind bound does not assert parser constancy or construct a formal
-untruncated alternative-factor family by itself.
-
-The actual radial coordinate is truncated at the degree validated AFTER
-center specialization. Its selected squarefree index and exceptional factor
-are identified exactly, including degree0. Concrete radius-first/center MV
-principal families have original degree/mass and closed coefficient programs
-at arbitrary caller modulus. The concrete center-only radius coefficients
-have finite zero guards, and a native Source/Access frontend uses no supplied
-reader. Tests include a repeated root and degree0. SAME-bank PSC acceptance
-and joint bounded descriptor/center existence remain separate.
-
-Reference-lookup clarification for earlier retained-center handoffs: missing
-WordList.get entries return [] and decode to producer label0, which MAY be
-valid. Only decoded labels OUTSIDE the bank count have native zero extension.
-The frozen source theorems and tests use this exact behavior; they do not
-assert that a missing table entry has value zero.
-
-Remaining graph roles, untruncated factor/physical/principal families and
-common bounds, physical-edge transport/global stabilization, joint bounded
-radial descriptor/native Boolean frontier incidence and both original
-unconditional PSPACE targets remain open.
+Scope: Value-certificate coefficient/cost binding, joint radial descriptor/native Boolean frontier incidence, common graph bounds/global radius transport and both original unconditional PSPACE targets remain open.
 
 All21 sources (2088 LF lines) match their
 frozen hash ledgers without revisions. Strict three-library integration PASS20760 jobs.
@@ -2576,45 +2510,12 @@ Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Value-certificate coefficient/cost binding, joint radial descriptor/native Boolean frontier incidence, common graph bounds/global radius transport and both original unconditional PSPACE targets remain open.
 
-44. G89: actual physical field queries and selected radial principal sources
+47. G89: Construct full-factor and critical guard parameter families
 2026-11-05.
 
-The constructed field query specializes to the literal installed native
-scalar query and actual certified full physical column. Power expansion,
-common-denominator clearing and renameFin.val commute with specialization.
-Original BinaryFn cutoff, creating power and finite target degree are
-derived; actual native affine mass gives every constructed parameter
-coefficient degree/mass. A new binding uses ARBITRARY actual BinaryFn R
-with explicit equal radius VALUES at the two queried roots, including the
-graph R0(original) reader. Source and both own banks use that R directly;
-no equality with constant-function metadata or resource seeds is assumed.
+Constructed full untruncated alternative-factor guards and actual critical-correlation queries with original coefficient boxes; literal affine value certificate joint radius/center coefficient degree bound.
 
-Changing the typed cut tag/coordinate/choice while keeping the same actual
-bank, spatial source and critical rule preserves the original input bounds.
-Every resulting untruncated factor coefficient matrix has the SAME original
-affine radius height, including alternative lower choices. This evaluated
-query-kind bound does not assert parser constancy or construct a formal
-untruncated alternative-factor family by itself.
-
-The actual radial coordinate is truncated at the degree validated AFTER
-center specialization. Its selected squarefree index and exceptional factor
-are identified exactly, including degree0. Concrete radius-first/center MV
-principal families have original degree/mass and closed coefficient programs
-at arbitrary caller modulus. The concrete center-only radius coefficients
-have finite zero guards, and a native Source/Access frontend uses no supplied
-reader. Tests include a repeated root and degree0. SAME-bank PSC acceptance
-and joint bounded descriptor/center existence remain separate.
-
-Reference-lookup clarification for earlier retained-center handoffs: missing
-WordList.get entries return [] and decode to producer label0, which MAY be
-valid. Only decoded labels OUTSIDE the bank count have native zero extension.
-The frozen source theorems and tests use this exact behavior; they do not
-assert that a missing table entry has value zero.
-
-Remaining graph roles, untruncated factor/physical/principal families and
-common bounds, physical-edge transport/global stabilization, joint bounded
-radial descriptor/native Boolean frontier incidence and both original
-unconditional PSPACE targets remain open.
+Scope: Full actual physical/principal and NoCritical query assembly/common graph bounds, tuple-level semantic transport/global stabilization, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
 
 All8 sources (1035 LF lines) match their
 frozen hash ledgers without revisions. Strict three-library integration PASS20776 jobs.
@@ -2631,45 +2532,12 @@ Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Full actual physical/principal and NoCritical query assembly/common graph bounds, tuple-level semantic transport/global stabilization, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
 
-44. G90: actual physical field queries and selected radial principal sources
+48. G90: Bind saved coordinate heads and native tuple critical scans
 2026-11-05.
 
-The constructed field query specializes to the literal installed native
-scalar query and actual certified full physical column. Power expansion,
-common-denominator clearing and renameFin.val commute with specialization.
-Original BinaryFn cutoff, creating power and finite target degree are
-derived; actual native affine mass gives every constructed parameter
-coefficient degree/mass. A new binding uses ARBITRARY actual BinaryFn R
-with explicit equal radius VALUES at the two queried roots, including the
-graph R0(original) reader. Source and both own banks use that R directly;
-no equality with constant-function metadata or resource seeds is assumed.
+Constructed literal saved-rule coordinate heads and coefficient lifts; exact native eta/zero-window/principal operators and original metadata catalogs; actual full critical-scan tuple incidence with internally constructed fresh OWN words.
 
-Changing the typed cut tag/coordinate/choice while keeping the same actual
-bank, spatial source and critical rule preserves the original input bounds.
-Every resulting untruncated factor coefficient matrix has the SAME original
-affine radius height, including alternative lower choices. This evaluated
-query-kind bound does not assert parser constancy or construct a formal
-untruncated alternative-factor family by itself.
-
-The actual radial coordinate is truncated at the degree validated AFTER
-center specialization. Its selected squarefree index and exceptional factor
-are identified exactly, including degree0. Concrete radius-first/center MV
-principal families have original degree/mass and closed coefficient programs
-at arbitrary caller modulus. The concrete center-only radius coefficients
-have finite zero guards, and a native Source/Access frontend uses no supplied
-reader. Tests include a repeated root and degree0. SAME-bank PSC acceptance
-and joint bounded descriptor/center existence remain separate.
-
-Reference-lookup clarification for earlier retained-center handoffs: missing
-WordList.get entries return [] and decode to producer label0, which MAY be
-valid. Only decoded labels OUTSIDE the bank count have native zero extension.
-The frozen source theorems and tests use this exact behavior; they do not
-assert that a missing table entry has value zero.
-
-Remaining graph roles, untruncated factor/physical/principal families and
-common bounds, physical-edge transport/global stabilization, joint bounded
-radial descriptor/native Boolean frontier incidence and both original
-unconditional PSPACE targets remain open.
+Scope: All-full-raw-column parameter heads, complete NoCritical/principal query assembly and common bounds, full tuple incidence/global stabilization, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
 
 All7 sources (819 LF lines) match their
 frozen hash ledgers without revisions. Strict three-library integration PASS20790 jobs.
@@ -2686,45 +2554,12 @@ Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 All-full-raw-column parameter heads, complete NoCritical/principal query assembly and common bounds, full tuple incidence/global stabilization, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
 
-44. G91: actual physical field queries and selected radial principal sources
+49. G91: Construct all sampler heads and prepared critical queries
 2026-11-05.
 
-The constructed field query specializes to the literal installed native
-scalar query and actual certified full physical column. Power expansion,
-common-denominator clearing and renameFin.val commute with specialization.
-Original BinaryFn cutoff, creating power and finite target degree are
-derived; actual native affine mass gives every constructed parameter
-coefficient degree/mass. A new binding uses ARBITRARY actual BinaryFn R
-with explicit equal radius VALUES at the two queried roots, including the
-graph R0(original) reader. Source and both own banks use that R directly;
-no equality with constant-function metadata or resource seeds is assumed.
+Constructed all full raw sampler head maps with actual advertised degrees; actual prepared NoCritical interval/parent characteristic/derivative/comparison queries at both own complete physical samplers, with original parameter and uniform target boxes.
 
-Changing the typed cut tag/coordinate/choice while keeping the same actual
-bank, spatial source and critical rule preserves the original input bounds.
-Every resulting untruncated factor coefficient matrix has the SAME original
-affine radius height, including alternative lower choices. This evaluated
-query-kind bound does not assert parser constancy or construct a formal
-untruncated alternative-factor family by itself.
-
-The actual radial coordinate is truncated at the degree validated AFTER
-center specialization. Its selected squarefree index and exceptional factor
-are identified exactly, including degree0. Concrete radius-first/center MV
-principal families have original degree/mass and closed coefficient programs
-at arbitrary caller modulus. The concrete center-only radius coefficients
-have finite zero guards, and a native Source/Access frontend uses no supplied
-reader. Tests include a repeated root and degree0. SAME-bank PSC acceptance
-and joint bounded descriptor/center existence remain separate.
-
-Reference-lookup clarification for earlier retained-center handoffs: missing
-WordList.get entries return [] and decode to producer label0, which MAY be
-valid. Only decoded labels OUTSIDE the bank count have native zero extension.
-The frozen source theorems and tests use this exact behavior; they do not
-assert that a missing table entry has value zero.
-
-Remaining graph roles, untruncated factor/physical/principal families and
-common bounds, physical-edge transport/global stabilization, joint bounded
-radial descriptor/native Boolean frontier incidence and both original
-unconditional PSPACE targets remain open.
+Scope: Whole NoCritical tuple incidence, complete actual principal query maps/common all-role bounds, full graph/global radius transport, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open. General term spatial-degree API remains separate.
 
 All7 sources (873 LF lines) match their
 frozen hash ledgers without revisions. Strict three-library integration plus all-full-column head-bounds producer target PASS20806 jobs.
@@ -2741,45 +2576,12 @@ Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Whole NoCritical tuple incidence, complete actual principal query maps/common all-role bounds, full graph/global radius transport, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open. General term spatial-degree API remains separate.
 
-44. G92: actual physical field queries and selected radial principal sources
+50. G92: Bound all full sampler heads and actual proper query windows
 2026-11-05.
 
-The constructed field query specializes to the literal installed native
-scalar query and actual certified full physical column. Power expansion,
-common-denominator clearing and renameFin.val commute with specialization.
-Original BinaryFn cutoff, creating power and finite target degree are
-derived; actual native affine mass gives every constructed parameter
-coefficient degree/mass. A new binding uses ARBITRARY actual BinaryFn R
-with explicit equal radius VALUES at the two queried roots, including the
-graph R0(original) reader. Source and both own banks use that R directly;
-no equality with constant-function metadata or resource seeds is assumed.
+Original Binary uniform complete-head degree/positivity/coefficient budgets for every prefix/AUX; general term spatial support boxes; literal actual proper parent/terminal/window parameter maps with internally derived native metadata/products.
 
-Changing the typed cut tag/coordinate/choice while keeping the same actual
-bank, spatial source and critical rule preserves the original input bounds.
-Every resulting untruncated factor coefficient matrix has the SAME original
-affine radius height, including alternative lower choices. This evaluated
-query-kind bound does not assert parser constancy or construct a formal
-untruncated alternative-factor family by itself.
-
-The actual radial coordinate is truncated at the degree validated AFTER
-center specialization. Its selected squarefree index and exceptional factor
-are identified exactly, including degree0. Concrete radius-first/center MV
-principal families have original degree/mass and closed coefficient programs
-at arbitrary caller modulus. The concrete center-only radius coefficients
-have finite zero guards, and a native Source/Access frontend uses no supplied
-reader. Tests include a repeated root and degree0. SAME-bank PSC acceptance
-and joint bounded descriptor/center existence remain separate.
-
-Reference-lookup clarification for earlier retained-center handoffs: missing
-WordList.get entries return [] and decode to producer label0, which MAY be
-valid. Only decoded labels OUTSIDE the bank count have native zero extension.
-The frozen source theorems and tests use this exact behavior; they do not
-assert that a missing table entry has value zero.
-
-Remaining graph roles, untruncated factor/physical/principal families and
-common bounds, physical-edge transport/global stabilization, joint bounded
-radial descriptor/native Boolean frontier incidence and both original
-unconditional PSPACE targets remain open.
+Scope: Actual Cartesian row-root/native-word transport, final principal graph query composition, full guard/search/edge incidence/common all-role cutoff/global stabilization, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
 
 All7 sources (1077 LF lines) match their
 frozen hash ledgers without revisions. Strict three-library integration PASS20818 jobs.
@@ -2796,45 +2598,12 @@ Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Actual Cartesian row-root/native-word transport, final principal graph query composition, full guard/search/edge incidence/common all-role cutoff/global stabilization, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
 
-44. G93: actual physical field queries and selected radial principal sources
+51. G93: Construct coherent native root branches and literal value cuts
 2026-11-05.
 
-The constructed field query specializes to the literal installed native
-scalar query and actual certified full physical column. Power expansion,
-common-denominator clearing and renameFin.val commute with specialization.
-Original BinaryFn cutoff, creating power and finite target degree are
-derived; actual native affine mass gives every constructed parameter
-coefficient degree/mass. A new binding uses ARBITRARY actual BinaryFn R
-with explicit equal radius VALUES at the two queried roots, including the
-graph R0(original) reader. Source and both own banks use that R directly;
-no equality with constant-function metadata or resource seeds is assumed.
+Coherent finite complete full sampler row-root branches and fresh own-word realizations; actual all-center radius-polynomial value source and coefficient access with literal retained-coordinate and value-trailing guards.
 
-Changing the typed cut tag/coordinate/choice while keeping the same actual
-bank, spatial source and critical rule preserves the original input bounds.
-Every resulting untruncated factor coefficient matrix has the SAME original
-affine radius height, including alternative lower choices. This evaluated
-query-kind bound does not assert parser constancy or construct a formal
-untruncated alternative-factor family by itself.
-
-The actual radial coordinate is truncated at the degree validated AFTER
-center specialization. Its selected squarefree index and exceptional factor
-are identified exactly, including degree0. Concrete radius-first/center MV
-principal families have original degree/mass and closed coefficient programs
-at arbitrary caller modulus. The concrete center-only radius coefficients
-have finite zero guards, and a native Source/Access frontend uses no supplied
-reader. Tests include a repeated root and degree0. SAME-bank PSC acceptance
-and joint bounded descriptor/center existence remain separate.
-
-Reference-lookup clarification for earlier retained-center handoffs: missing
-WordList.get entries return [] and decode to producer label0, which MAY be
-valid. Only decoded labels OUTSIDE the bank count have native zero extension.
-The frozen source theorems and tests use this exact behavior; they do not
-assert that a missing table entry has value zero.
-
-Remaining graph roles, untruncated factor/physical/principal families and
-common bounds, physical-edge transport/global stabilization, joint bounded
-radial descriptor/native Boolean frontier incidence and both original
-unconditional PSPACE targets remain open.
+Scope: Whole native guard/search/edge tuple incidence, uniform all-role cutoff/global stabilization, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
 
 All25 sources (3013 LF lines) match their
 frozen hash ledgers without revisions. Strict three-library integration plus clipped-choice-factor retargeting producer PASS20870 jobs.
@@ -2850,3 +2619,43 @@ and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
 Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
 and later WIP excluded. No external write or push. GoalACTIVE.
 Whole native guard/search/edge tuple incidence, uniform all-role cutoff/global stabilization, joint radial descriptor/native Boolean frontier incidence and both original unconditional PSPACE targets remain open.
+
+52. G94: whole critical scan transport and bounded proper principal queries
+2026-11-05.
+
+The critical query has the exact full physical sampler count, original
+parameter coefficient bounds and spatial degree. Every native valid full
+word supplies its actual formal row tuple. The entire installed critical
+scan is equivalent to all formal correlation zeros on that tuple, including
+inactive and clipped stages. One complete coherent row-root family preserves
+all critical query signs. Every source valid word therefore has a fresh
+target OWN word with both directions of whole critical-scan truth beyond
+a computed original Binary cutoff. No source-word ordinal is copied.
+
+Actual proper near/rank principal formulas specialize under arbitrary native
+radius readers to the literal installed queries. Their delta/epsilon slices
+use their OWN terminal physical scalar columns. Original Binary spatial,
+parameter degree and coefficient-mass bounds and an original Unary finite
+variable count cover all powers/signs/indices. Variable support lies inside
+the literal own sampler count; this is proved separately from total degree.
+
+These results do not yet prove whole Atomic/Local/NoCritical/Edge transport.
+Shared tuple incidence, joint radial descriptor feasibility/component
+association and both original unconditional PSPACE endpoints remain open.
+Earlier G87-93 entries had duplicated prose; they now state each checkpoint's
+actual scope while preserving its original verification receipts.
+
+All11 sources (1722 LF lines) match their
+frozen hash ledgers without revisions. Strict three-library integration PASS20890 jobs.
+All25 scripts passed at committedG70; the affected native-graph, axiom and
+space-foundation scripts pass again at this additive integration.
+Native graph fixture:16565 lines,254 groups.
+Audited 95206 declarations: only propext, Classical.choice, and Quot.sound allowed.
+"Native PSPACE endpoints and arbitrary native child certificates checked."
+Audited 12087 transitive constants: native P, reductions, and class closure.
+Audited 201813 transitive constants: no legacy space foundation.
+All15 exact staged paths, source hashes, actual/index100644 modes
+and blob bytes verified. AllUTF8/LF/singleEOF/no trailing whitespace/chmod-x.
+Onlymain worktree; no obsolete worktree/cache. User baseline CandidateBank
+and later WIP excluded. No external write or push. GoalACTIVE.
+Whole native Atomic/Local/NoCritical/Edge shared tuple incidence, NoBad comparison principals, uniform all-role stabilization, joint descriptor/component association and both original unconditional PSPACE endpoints remain open.

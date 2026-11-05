@@ -1,3 +1,9 @@
+import LeanCanny.Encoding.CoefficientMarkedRecordCriticalScanTransport
+import LeanCanny.Encoding.CoefficientMarkedRecordProperPrincipalBounds
+import LeanCanny.Encoding.CoefficientMarkedRecordProperPrincipalMap
+import LeanCanny.Encoding.CoefficientMarkedRecordProperPrincipalPhysical
+import LeanCanny.Encoding.CoefficientMarkedRecordProperPrincipalSpatial
+import LeanCanny.Encoding.CoefficientMarkedRecordProperPrincipalVariables
 import LeanCanny.Encoding.CoefficientMarkedRecordRootBranches
 import LeanCanny.Encoding.FormulaSignSlotRadialRetainedCoordinateTest
 import LeanCanny.Encoding.FormulaSignSlotRadialRetainedValueGuards
@@ -16291,3 +16297,269 @@ example (c w : List Bool)
 #print axioms FormulaSignSlotRadialRetainedValueGuards.exists_guards
 end RadialRetainedValueGuardsRegression
 end RoadmapInternalG93NativeSameCenterValueGuards
+
+section RoadmapInternalG94WholeNativeCriticalScan
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial Set
+open scoped Classical
+
+-- Inactive and clipped records contribute zero, including empty raw systems.
+example (d : ℤ[X]) : CoefficientCriticalCorrelationQuery.polynomial
+    ⟨3, 0, 0, 2, 5, 7, false⟩ d = 0 := rfl
+example (d : ℤ[X]) : CoefficientCriticalCorrelationQuery.polynomial
+    ⟨0, 0, 0, 0, 5, 7, true⟩ d = 0 := by
+  simp [CoefficientCriticalCorrelationQuery.polynomial, CoefficientCriticalCorrelationQuery.monomial]
+example : CoefficientCriticalCorrelationQuery.polynomial
+    ⟨2, 0, 1, 1, 5, 5, true⟩ (1 : ℤ[X]) = 0 := by
+  simp [CoefficientCriticalCorrelationQuery.polynomial]
+example (d : ℤ[X]) : CoefficientCriticalCorrelationQuery.polynomial
+    ⟨2, 0, 2, 7, 5, 7, true⟩ d = 0 := by
+  simp [CoefficientCriticalCorrelationQuery.polynomial, CoefficientCriticalCorrelationQuery.monomial]
+
+section
+variable {n : List Bool → ℕ} {t : List Bool → ETR.Term}
+  (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+example : BinaryFn (CoefficientMarkedRecordCriticalBranchSign.cutoff hn ht ha) :=
+  CoefficientMarkedRecordCriticalBranchSign.cutoff_binary hn ht ha
+
+example (ctx : List Bool) (stage : ℕ) :
+    (CoefficientMarkedRecordCriticalFullQuery.polynomial hn ht ha ctx
+      (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl [] stage).totalDegree ≤
+      CoefficientMarkedRecordRowDegree.spatialDegree hn ht ha ctx :=
+  CoefficientMarkedRecordCriticalFullQuery.polynomial_degree hn ht ha ctx
+    (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl [] stage
+
+example (ctx : List Bool) {R : List Bool → ℕ} (hR : BinaryFn R)
+    (hlarge : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha ctx ≤ R ctx)
+    (w : List Bool) (hw : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false)
+      (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w) :
+    ∃ z : Fin (CoefficientMarkedRecordRows.symbolic hn ht ha ctx (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl).count → ℝ,
+      CoefficientMarkedRecordRootBranches.RowsAt hn ht ha ctx (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl ((2 : ℝ)^R ctx) z ∧
+      HEq (SquareSampleCompleteVertices.candidate (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false)
+        (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w hw).val z :=
+  CoefficientMarkedRecordCriticalFullSemantics.rows_of_word hn ht ha hR ctx hlarge w hw
+
+-- A fresh target word is obtained for ANY valid source word, including a failing scan.
+example (ctx : List Bool) {R S : List Bool → ℕ} (hR : BinaryFn R) (hS : BinaryFn S)
+    (hRlarge : CoefficientMarkedRecordCriticalBranchSign.cutoff hn ht ha ctx + 1 ≤ R ctx)
+    (hSlarge : CoefficientMarkedRecordCriticalBranchSign.cutoff hn ht ha ctx + 1 ≤ S ctx)
+    (w : List Bool) (hw : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hR false)
+      (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w) :
+    ∃ w', ∃ _hw' : SquareSampleCompleteVertices.Valid (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false)
+      (IntegralMixedPhysicalMarkedTest.sampleContext ctx) w',
+      w'.length = SquareSampleCompleteVertices.width (IntegralMixedPhysicalMarkedTest.input hn ht ha hS false)
+        (IntegralMixedPhysicalMarkedTest.sampleContext ctx) ∧
+      (pair ctx w ∈ IntegralMixedPhysicalGuardScan.language hn ht ha hR false ↔
+        pair ctx w' ∈ IntegralMixedPhysicalGuardScan.language hn ht ha hS false) :=
+  CoefficientMarkedRecordCriticalScanTransport.transport_word hn ht ha ctx hR hS hRlarge hSlarge w hw
+
+-- The scan equivalence arises on a single actual continuous full-root curve.
+example (ctx : List Bool) {a b : ℝ}
+    (hstart : (2 : ℝ)^CoefficientMarkedRecordCriticalBranchSign.cutoff hn ht ha ctx ≤ a)
+    (x : C(Ioo a b, Fin (CoefficientMarkedRecordCriticalBranchSign.count hn ht ha ctx) → ℝ))
+    (hx : ∀ u : Ioo a b, CoefficientMarkedRecordRootBranches.RowsAt hn ht ha ctx
+      (IntegralMixedCausalRecordPlanBits.count ctx) le_rfl u.val (x u)) (u v : Ioo a b) :
+    CoefficientMarkedRecordCriticalFullSemantics.Zeros hn ht ha ctx u.val (x u) ↔
+      CoefficientMarkedRecordCriticalFullSemantics.Zeros hn ht ha ctx v.val (x v) :=
+  CoefficientMarkedRecordCriticalScanTransport.zeros_on_curve hn ht ha ctx hstart x hx u v
+end
+
+#print axioms CoefficientCriticalCorrelationQuery.native_count_degree
+#print axioms CoefficientMarkedRecordCriticalDegree.polynomial_degree
+#print axioms CoefficientMarkedRecordCriticalFullQuery.count_eq
+#print axioms CoefficientMarkedRecordCriticalFullQuery.specializes
+#print axioms CoefficientMarkedRecordCriticalFullQuery.coefficient_degree_mass
+#print axioms CoefficientMarkedRecordCriticalFullSemantics.value_eq
+#print axioms CoefficientMarkedRecordCriticalFullSemantics.packet_iff
+#print axioms CoefficientMarkedRecordCriticalFullSemantics.rows_of_word
+#print axioms CoefficientMarkedRecordCriticalFullSemantics.exists_scan_word
+#print axioms CoefficientMarkedRecordCriticalBranchSign.cutoff_binary
+#print axioms CoefficientMarkedRecordCriticalBranchSign.sign_on_root_curve
+#print axioms CoefficientMarkedRecordCriticalBranchSign.exists_branches
+#print axioms CoefficientMarkedRecordCriticalScanTransport.zeros_on_curve
+#print axioms CoefficientMarkedRecordCriticalScanTransport.transport_on_interval
+#print axioms CoefficientMarkedRecordCriticalScanTransport.transport_word
+end RoadmapInternalG94WholeNativeCriticalScan
+
+section RoadmapInternalG94ActualProperPrincipals
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open IntegralMixedRoadmapProperRow
+namespace ProperPrincipalRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R0 : List Bool → ℕ} (hR0 : BinaryFn R0)
+
+-- Every actual endpoint, power, epsilon/eta sign and principal index is covered.
+theorem installed_near (right : Bool) (power : Fin 3) (eta eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    (hR : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha (catalogRoot n false z) ≤
+      IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n false z)) (j : ℕ) :
+    HEq (MvPolynomial.map
+      (evalRingHom ((2 : ℤ)^IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n false z)))
+      (properNearPrincipal hn ht ha right power eta eps z hc j))
+      (FixedWidthTarskiPrincipalBits.polynomial (nearFamily hn ht ha hR0 right power eta eps) z j) :=
+  proper_near_principal_map hn ht ha hR0 right power eta eps z hc hg hR j
+
+-- Rank kills only eta; its actual epsilon query and all three powers remain.
+theorem installed_rank (power : Fin 3) (eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    (hR : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha (catalogRoot n true z) ≤
+      IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n true z)) (j : ℕ) :
+    HEq (MvPolynomial.map
+      (evalRingHom ((2 : ℤ)^IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n true z)))
+      (properRankPrincipal hn ht ha power eps z hc j))
+      (FixedWidthTarskiPrincipalBits.polynomial (rankFamily hn ht ha hR0 power eps) z j) :=
+  proper_rank_principal_map hn ht ha hR0 power eps z hc hg hR j
+end ProperPrincipalRegression
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.castHead_heq
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.castHead_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.shiftedHead_heq
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.pair_heq
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.zeroHead_heq
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.epsilonHead_heq
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.polynomial_pow_heq
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.principal_heq
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.shift_native
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_terminal_cast_arity
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_terminal_cast_specializes
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_shifted_operator_specializes
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_shifted_head_specializes
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_point_window_specializes
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_near_head_map
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_near_query_map
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_rank_head_map
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_rank_query_map
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_near_principal_map
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_rank_principal_map
+#print axioms ProperPrincipalRegression.installed_near
+#print axioms ProperPrincipalRegression.installed_rank
+end RoadmapInternalG94ActualProperPrincipals
+
+section RoadmapInternalG94ProperPrincipalPhysical
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open IntegralMixedRoadmapProperRow
+namespace ProperPhysicalRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+variable {R0 : List Bool → ℕ} (hR0 : BinaryFn R0)
+theorem installed_proper_near_physical_map (right : Bool) (power : Fin 3) (eta eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    (hR : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha (catalogRoot n false z) ≤
+      IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n false z)) (j delta epsilon : ℕ) :
+    MvPolynomial.map
+      (evalRingHom ((2 : ℤ)^IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n false z)))
+      (properNearPhysical hn ht ha right power eta eps z hc j delta epsilon) =
+      MvPolynomial.rename Fin.val (nearPhysicalPrincipal hn ht ha hR0 right power eta eps z j delta epsilon)  :=
+  proper_near_physical_map hn ht ha hR0 right power eta eps z hc hg hR j delta epsilon
+
+theorem installed_proper_rank_physical_map (power : Fin 3) (eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    (hR : CoefficientMarkedRecordEffectiveCutoff.effectiveCutoff hn ht ha (catalogRoot n true z) ≤
+      IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n true z)) (j delta epsilon : ℕ) :
+    MvPolynomial.map
+      (evalRingHom ((2 : ℤ)^IntegralMixedOriginalRegularSource.radius R0 (catalogRoot n true z)))
+      (properRankPhysical hn ht ha power eps z hc j delta epsilon) =
+      MvPolynomial.rename Fin.val (rankPhysicalPrincipal hn ht ha hR0 power eps z j delta epsilon)  :=
+  proper_rank_physical_map hn ht ha hR0 power eps z hc hg hR j delta epsilon
+
+end ProperPhysicalRegression
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.slice_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.castVariables_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.castVariables_heq
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.scalarApply_map
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.scalarApply_heq
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.slice_heq
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.physicalData_planned
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.scalarApply_native
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_terminal_physical_data
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_near_physical_map
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_rank_physical_map
+#print axioms ProperPhysicalRegression.installed_proper_near_physical_map
+#print axioms ProperPhysicalRegression.installed_proper_rank_physical_map
+end RoadmapInternalG94ProperPrincipalPhysical
+
+section RoadmapInternalG94ProperPrincipalBoxes
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open IntegralMixedRoadmapProperRow
+namespace ProperPrincipalBoxesRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+theorem near_box (right : Bool) (power : Fin 3) (eta eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    (j delta epsilon : ℕ) :
+    (properNearPhysical hn ht ha right power eta eps z hc j delta epsilon).totalDegree ≤
+      properNearSpatialDegree hn ht ha right z ∧
+    ∀ v : ℕ →₀ ℕ,
+      ((properNearPhysical hn ht ha right power eta eps z hc j delta epsilon).coeff v).natDegree ≤
+        nearMassSlope hn ht ha z ∧
+      coefficientMass ((properNearPhysical hn ht ha right power eta eps z hc j delta epsilon).coeff v) ≤
+        2^properNearCoefficientBudget hn ht ha z :=
+  ⟨proper_near_spatial_degree hn ht ha right power eta eps z hc hg j delta epsilon,
+    fun v => proper_near_coefficient_degree_mass hn ht ha right power eta eps z hc hg j delta epsilon v⟩
+
+theorem rank_box (power : Fin 3) (eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (hg : rankRowSyntax n z)
+    (j delta epsilon : ℕ) :
+    (properRankPhysical hn ht ha power eps z hc j delta epsilon).totalDegree ≤
+      properRankSpatialDegree hn ht ha z ∧
+    ∀ v : ℕ →₀ ℕ,
+      ((properRankPhysical hn ht ha power eps z hc j delta epsilon).coeff v).natDegree ≤
+        rankMassSlope hn ht ha z ∧
+      coefficientMass ((properRankPhysical hn ht ha power eps z hc j delta epsilon).coeff v) ≤
+        2^properRankCoefficientBudget hn ht ha z :=
+  ⟨proper_rank_spatial_degree hn ht ha power eps z hc hg j delta epsilon,
+    fun v => proper_rank_coefficient_degree_mass hn ht ha power eps z hc hg j delta epsilon v⟩
+end ProperPrincipalBoxesRegression
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.near_width_unary
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.near_principal_lt_width
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.rank_principal_lt_width
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.physical_slice_degree
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.physical_slice_degree'
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.properPrincipalCutoff_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.properNearCoefficientBudget_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.properRankCoefficientBudget_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_near_coefficient_degree_mass
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_rank_coefficient_degree_mass
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.properNearSpatialDegree_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.properRankSpatialDegree_binary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_near_native_spatial_degree
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_rank_native_spatial_degree
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_near_spatial_degree
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_rank_spatial_degree
+#print axioms ProperPrincipalBoxesRegression.near_box
+#print axioms ProperPrincipalBoxesRegression.rank_box
+end RoadmapInternalG94ProperPrincipalBoxes
+
+section RoadmapInternalG94ProperPrincipalVariables
+open LeanCanny LeanCanny.Algebra LeanCanny.Encoding LeanCanny.Computation Polynomial
+open IntegralMixedRoadmapProperRow
+namespace ProperVariablesRegression
+variable {n : List Bool → ℕ} {t : List Bool → LeanCanny.ETR.Term}
+variable (hn : UnaryFn n) (ht : (fun q => (t q).toData.toBits) ∈ FP) (ha : ∀ q, (t q).arity ≤ n q)
+
+theorem near_pack (right : Bool) (power : Fin 3) (eta eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (j delta epsilon : ℕ) :
+    ∃ p : MvPolynomial (Fin (properPhysicalData hn ht ha false z).count) ℤ[X],
+      MvPolynomial.rename Fin.val p = properNearPhysical hn ht ha right power eta eps z hc j delta epsilon := by
+  apply MvPolynomial.exists_rename_eq_of_vars_subset_range _ Fin.val Fin.val_injective
+  intro i hi
+  exact ⟨⟨i, Finset.mem_range.mp (proper_near_variable_box hn ht ha right power eta eps z hc j delta epsilon hi)⟩, rfl⟩
+
+theorem rank_pack (power : Fin 3) (eps : Bool) (z : List Bool)
+    (hc : 0 < IntegralMixedRoadmapBadProbePacket.count (oldPacket z)) (j delta epsilon : ℕ) :
+    ∃ p : MvPolynomial (Fin (properPhysicalData hn ht ha true z).count) ℤ[X],
+      MvPolynomial.rename Fin.val p = properRankPhysical hn ht ha power eps z hc j delta epsilon := by
+  apply MvPolynomial.exists_rename_eq_of_vars_subset_range _ Fin.val Fin.val_injective
+  intro i hi
+  exact ⟨⟨i, Finset.mem_range.mp (proper_rank_variable_box hn ht ha power eps z hc j delta epsilon hi)⟩, rfl⟩
+end ProperVariablesRegression
+#print axioms LeanCanny.Algebra.CoefficientTarskiParameterQueries.scalarApply_vars
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_physical_count_pos
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_physical_count_metadata
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_physical_count_unary
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_near_variable_box
+#print axioms LeanCanny.Encoding.IntegralMixedRoadmapProperRow.proper_rank_variable_box
+#print axioms ProperVariablesRegression.near_pack
+#print axioms ProperVariablesRegression.rank_pack
+end RoadmapInternalG94ProperPrincipalVariables
