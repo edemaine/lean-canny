@@ -36,7 +36,7 @@ collinear solutions can produce a cubic GCD where the construction requires a
 linear one, regardless of the projection coefficients. The completed PSPACE
 proof avoids this failed step.
 
-For an independently readable, checked statement, see
+For independently readable, checked statements of all three PSPACE bounds, see
 [`Abstract.lean`](LeanCanny/Abstract.lean). A reader can inspect its definitions
 and theorem statements to assess the claimed result; Lean verifies the proofs
 through [`AbstractBridge.lean`](LeanCanny/AbstractBridge.lean) and the development.
@@ -88,8 +88,9 @@ is assumed.
 ## Alternative constructions
 
 The default `LeanCanny` library and `import LeanCanny` contain the completed
-coercive ETR proof and formal abstract. The optional `LeanCannyAlternatives`
-library is available through `import LeanCanny.Alternatives`; it also imports
+ETR and connectivity proofs through the formal abstract. The optional
+`LeanCannyAlternatives` library is available through
+`import LeanCanny.Alternatives`; it also imports
 the completed result. All source modules retain their existing paths.
 
 The repository also develops Canny's compact tube and generic projection
@@ -162,9 +163,9 @@ lake build
 
 [`lean-toolchain`](lean-toolchain) and [`lake-manifest.json`](lake-manifest.json)
 record the versions used. The default entry point is [`LeanCanny.lean`](LeanCanny.lean).
-`lake build` checks the completed coercive proof. To also build the retained
-alternative constructions, run `lake build LeanCannyAlternatives`; their entry
-point is [`Alternatives.lean`](LeanCanny/Alternatives.lean).
+`lake build` checks the formal abstract and its completed proofs. To build the
+retained alternative constructions, run `lake build LeanCannyAlternatives`;
+their entry point is [`Alternatives.lean`](LeanCanny/Alternatives.lean).
 Build the connectivity extension with `lake build LeanCannyConnectivity`.
 
 Import the formal abstract with `import LeanCanny.Abstract`, or build it with
@@ -214,7 +215,8 @@ lake env lean scripts/CheckRoadmapOccurrences.lean
 lake env lean scripts/CheckRoadmapOrigins.lean
 ```
 
-The core import check enforces the separation from the optional tube route.
+The core import check keeps the ETR endpoint independent of the optional tube
+route. The formal abstract also imports connectivity and its shared algebra.
 The axiom and space audits include all three library targets. The axiom audit checks
 declarations in the `LeanCanny` namespace, local Nat
 codec extensions, and their transitive dependencies, allowing only Lean's

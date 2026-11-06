@@ -42,3 +42,5 @@ run_cmd do
 
 #print axioms LeanCanny.Abstract.etr_mem_PSPACE
 #print axioms LeanCanny.Abstract.existsReal_subset_PSPACE
+#print axioms LeanCanny.Abstract.connectedLanguage_mem_PSPACE
+#print axioms LeanCanny.Abstract.pointLanguage_mem_PSPACE

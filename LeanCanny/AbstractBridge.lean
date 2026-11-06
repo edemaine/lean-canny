@@ -5,11 +5,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.ETR.CoercivePSPACE
+public import LeanCanny.Connectivity.NativeConnectivityPSPACE
 
 /-! # Transfer to an independent presentation of real arithmetic
 
 The abstract supplies its syntax, semantics, and literal serialization. Structural
-induction identifies its binary language with the established ETR language.
+induction identifies its binary languages with the established ETR and
+connectivity languages, including dimension and singleton-endpoint checks.
 Thus the decision algorithm receives identical input bits; transferring the
 space bound requires no additional serialization or parsing computation.
 -/
@@ -54,6 +56,8 @@ structure Presentation where
   holds : (ℕ → ℝ) → Formula → Prop
   termCode : Term → List Bool
   formulaCode : Formula → List Bool
+  termArity : Term → ℕ
+  formulaArity : Formula → ℕ
 
 structure Laws (S : Presentation) : Prop where
   eval_const : ∀ x z, S.eval x (S.const z) = z
@@ -78,6 +82,18 @@ structure Laws (S : Presentation) : Prop where
     S.formulaCode (S.and p q) = node [unary 4, S.formulaCode p, S.formulaCode q]
   code_or : ∀ p q,
     S.formulaCode (S.or p q) = node [unary 5, S.formulaCode p, S.formulaCode q]
+  arity_const : ∀ z, S.termArity (S.const z) = 0
+  arity_var : ∀ i, S.termArity (S.var i) = i + 1
+  arity_add : ∀ a b, S.termArity (S.add a b) = max (S.termArity a) (S.termArity b)
+  arity_mul : ∀ a b, S.termArity (S.mul a b) = max (S.termArity a) (S.termArity b)
+  arity_falsum : S.formulaArity S.falsum = 0
+  arity_eqZero : ∀ t, S.formulaArity (S.eqZero t) = S.termArity t
+  arity_ltZero : ∀ t, S.formulaArity (S.ltZero t) = S.termArity t
+  arity_not : ∀ p, S.formulaArity (S.not p) = S.formulaArity p
+  arity_and : ∀ p q,
+    S.formulaArity (S.and p q) = max (S.formulaArity p) (S.formulaArity q)
+  arity_or : ∀ p q,
+    S.formulaArity (S.or p q) = max (S.formulaArity p) (S.formulaArity q)
 
 def translateTerm (S : Presentation) : ETR.Term → S.Term
   | .const z => S.const z
@@ -170,5 +186,106 @@ theorem reduction_closure {L : Set (List Bool)}
         Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
   intro K hK
   exact Computation.mem_PSPACE_of_reduction hK h
+
+theorem termArity_translate (S : Presentation) (h : Laws S) (t : ETR.Term) :
+    S.termArity (translateTerm S t) = t.arity := by
+  induction t <;> simp_all [translateTerm, ETR.Term.arity,
+    h.arity_const, h.arity_var, h.arity_add, h.arity_mul]
+
+theorem formulaArity_translate (S : Presentation) (h : Laws S) (p : ETR.Formula) :
+    S.formulaArity (translateFormula S p) = p.arity := by
+  induction p <;> simp_all [translateFormula, ETR.Formula.arity,
+    h.arity_falsum, h.arity_eqZero, h.arity_ltZero, h.arity_not,
+    h.arity_and, h.arity_or, termArity_translate S h]
+
+def realization (S : Presentation) (n : ℕ) (p : S.Formula) : Set (Fin n → ℝ) :=
+  {x | S.holds (fun i => if h : i < n then x ⟨i, h⟩ else 0) p}
+
+def denotes (S : Presentation) (n : ℕ) (p : S.Formula) (x : Fin n → ℝ) : Prop :=
+  S.formulaArity p ≤ n ∧ realization S n p = {x}
+
+def connectedLanguage (S : Presentation) : Set (List Bool) :=
+  {bits | ∃ n p, bits = node [unary 1, unary n, S.formulaCode p] ∧
+    S.formulaArity p ≤ n ∧ IsPreconnected (realization S n p)}
+
+def pointLanguage (S : Presentation) : Set (List Bool) :=
+  {bits | ∃ n p a b,
+    bits = node [unary 0, unary n, S.formulaCode p, S.formulaCode a, S.formulaCode b] ∧
+    S.formulaArity p ≤ n ∧ ∃ x y, denotes S n a x ∧ denotes S n b y ∧
+      JoinedIn (realization S n p) x y}
+
+theorem realization_translate (S : Presentation) (h : Laws S) (n : ℕ) (p : ETR.Formula) :
+    realization S n (translateFormula S p) =
+      (Connectivity.Description.mk n p).realization := by
+  ext x
+  exact holds_translate S h (ETR.Formula.extend x) p
+
+theorem denotes_translate (S : Presentation) (h : Laws S) (n : ℕ)
+    (p : ETR.Formula) (x : Fin n → ℝ) :
+    denotes S n (translateFormula S p) x ↔ Connectivity.Denotes n p x := by
+  simp only [denotes, formulaArity_translate S h, realization_translate S h,
+    Connectivity.Denotes, Connectivity.Description.realization,
+    Set.ext_iff, Set.mem_ofPred_eq, Set.mem_singleton_iff]
+
+private theorem wholeCode_translate (S : Presentation) (h : Laws S)
+    (n : ℕ) (p : ETR.Formula) :
+    node [unary 1, unary n, S.formulaCode (translateFormula S p)] =
+      (Connectivity.Input.whole ⟨n, p⟩).encode := by
+  simp only [formulaCode_translate S h, Connectivity.Input.encode,
+    Connectivity.Input.toData, ETR.Formula.encode, Data.toBits_l,
+    List.map_cons, List.map_nil, unary_eq, node]
+
+private theorem pointCode_translate (S : Presentation) (h : Laws S)
+    (n : ℕ) (p a b : ETR.Formula) :
+    node [unary 0, unary n, S.formulaCode (translateFormula S p),
+      S.formulaCode (translateFormula S a), S.formulaCode (translateFormula S b)] =
+      (Connectivity.Input.point ⟨⟨n, p⟩, a, b⟩).encode := by
+  simp only [formulaCode_translate S h, Connectivity.Input.encode,
+    Connectivity.Input.toData, ETR.Formula.encode, Data.toBits_l,
+    List.map_cons, List.map_nil, unary_eq, node]
+
+/-- Literal input bits agree, so no extra computational reduction is needed. -/
+theorem connectedLanguage_eq (S : Presentation) (h : Laws S) :
+    connectedLanguage S = Connectivity.connectedLanguage := by
+  ext bits
+  constructor
+  · rintro ⟨n, p, hb, hp, hc⟩
+    obtain ⟨p, rfl⟩ := translateFormula_surjective S p
+    exact ⟨⟨n, p⟩, hb.trans (wholeCode_translate S h n p),
+      (by simpa only [Connectivity.Description.WellFormed, formulaArity_translate S h] using hp),
+      (realization_translate S h n p) ▸ hc⟩
+  · rintro ⟨⟨n, p⟩, hb, hp, hc⟩
+    exact ⟨n, translateFormula S p, hb.trans (wholeCode_translate S h n p).symm,
+      (formulaArity_translate S h p).symm ▸ hp,
+      (realization_translate S h n p).symm ▸ hc⟩
+
+theorem pointLanguage_eq (S : Presentation) (h : Laws S) :
+    pointLanguage S = Connectivity.pointLanguage := by
+  ext bits
+  constructor
+  · rintro ⟨n, p, a, b, hb, hp, x, y, ha, hby, hxy⟩
+    obtain ⟨p, rfl⟩ := translateFormula_surjective S p
+    obtain ⟨a, rfl⟩ := translateFormula_surjective S a
+    obtain ⟨b, rfl⟩ := translateFormula_surjective S b
+    exact ⟨⟨⟨n, p⟩, a, b⟩, hb.trans (pointCode_translate S h n p a b),
+      (by simpa only [Connectivity.Description.WellFormed, formulaArity_translate S h] using hp), x, y,
+      (denotes_translate S h n a x).mp ha, (denotes_translate S h n b y).mp hby,
+      (realization_translate S h n p) ▸ hxy⟩
+  · rintro ⟨⟨⟨n, p⟩, a, b⟩, hb, hp, x, y, ha, hby, hxy⟩
+    exact ⟨n, translateFormula S p, translateFormula S a, translateFormula S b,
+      hb.trans (pointCode_translate S h n p a b).symm,
+      (formulaArity_translate S h p).symm ▸ hp, x, y,
+      (denotes_translate S h n a x).mpr ha, (denotes_translate S h n b y).mpr hby,
+      (realization_translate S h n p).symm ▸ hxy⟩
+
+theorem connected_upper_bound (S : Presentation) (h : Laws S) :
+    connectedLanguage S ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
+  rw [connectedLanguage_eq S h]
+  exact Connectivity.connectedLanguage_mem_PSPACE
+
+theorem point_upper_bound (S : Presentation) (h : Laws S) :
+    pointLanguage S ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
+  rw [pointLanguage_eq S h]
+  exact Connectivity.pointLanguage_mem_PSPACE
 
 end LeanCanny.AbstractBridge
