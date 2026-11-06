@@ -289,3 +289,22 @@ theorem point_upper_bound (S : Presentation) (h : Laws S) :
   exact Connectivity.pointLanguage_mem_PSPACE
 
 end LeanCanny.AbstractBridge
+
+/-- Instantiate the independent abstract syntax when its proof is elaborated.
+Keeping this setup in the bridge avoids an import cycle and leaves the public
+theorems as single bridge invocations. -/
+macro "canny_abstract " result:ident : tactic => do
+  let decl := fun name : Lean.Name => Lean.mkIdent (`LeanCanny.Abstract ++ name)
+  `(tactic| exact $result
+    { Term := $(decl `Term), Formula := $(decl `Formula)
+      const := $(decl `Term.const), var := $(decl `Term.var)
+      add := $(decl `Term.add), mul := $(decl `Term.mul)
+      falsum := $(decl `Formula.falsum), eqZero := $(decl `Formula.eqZero)
+      ltZero := $(decl `Formula.ltZero), not := $(decl `Formula.not)
+      and := $(decl `Formula.and), or := $(decl `Formula.or)
+      term_induction := @$(decl `Term.rec)
+      formula_induction := @$(decl `Formula.rec)
+      eval := $(decl `Term.eval), holds := $(decl `Formula.Holds)
+      termCode := $(decl `Term.encode), formulaCode := $(decl `Formula.encode)
+      termArity := $(decl `Term.arity), formulaArity := $(decl `Formula.arity) }
+    (by constructor <;> intros <;> rfl))
