@@ -64,17 +64,18 @@ private theorem eval_cast {a b : ℕ} (h : a=b) (p : MvPolynomial (Fin a) ℤ) (
       p.eval₂ (Int.castRingHom ℝ) (fun i => v i.val) := by
   subst b
   simp only [Fin.cast_refl,MvPolynomial.rename_id,AlgHom.id_apply]
-private theorem feature_value (c : List Bool) (i : ℕ) (v : ℕ → ℝ) :
+private theorem feature_value (c : List Bool) (i : ℕ) (hi : i < count c) (v : ℕ → ℝ) :
     (family.feature c i).eval₂ (Int.castRingHom ℝ) (fun j => v j.val)=
       jointValue (row (pair c (BinaryNatCode.encode i))) v := by
+  rw [raw_feature c i hi]
   unfold jointValue
   exact eval_cast (arity_eq c i) (FormulaSignSlotRadialJointCoefficientSource.source.polynomial _) v
 attribute [local irreducible] jointValue
 
-theorem feature_coefficient (c : List Bool) (j s t r : ℕ) (hs : s<limit c) (ht : t<limit c) (hr : r<limit c)
+theorem feature_coefficient (c : List Bool) (j s t r : ℕ) (hj : j < FormulaSignSlotRadialJointLayout.spatialCount c) (hs : s<limit c) (ht : t<limit c) (hr : r<limit c)
     (v : ℕ → ℝ) : (family.feature c (encode c j s t r)).eval₂ (Int.castRingHom ℝ) (fun i => v i.val)=
       coefficientValue c j s t r v := by
-  rw [feature_value,row_encode c j s t r hs ht hr]
+  rw [feature_value c _ (encode_lt c j s t r hj hs ht hr),row_encode c j s t r hs ht hr]
   exact packet_value c j s t r v
 
 end LeanCanny.Encoding.FormulaSignSlotRadialJointCoefficientCatalogue

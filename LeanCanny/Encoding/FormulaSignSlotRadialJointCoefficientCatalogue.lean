@@ -6,6 +6,7 @@ module
 public import LeanCanny.Encoding.FormulaSignSlotRadialJointCoefficientSource
 public import LeanCanny.Encoding.FormulaSignSlotRadialEliminantRootProfiles
 public import LeanCanny.Encoding.ChargedPolynomialCatalogue
+public import LeanCanny.Encoding.FormulaSignSlotRadialJointGuardFeatures
 /-! # Every bounded actual radial coefficient is a joint-center feature
 
 The count is binary; coordinates, perturbation, target, and radius indices
@@ -60,7 +61,61 @@ noncomputable def input : ChargedPolynomialCatalogue.Input where
   dimension := arity_eq
   degree_bound c i := (degree_eq c i).le
   mass_bound c i := (mass_eq c i).le
-noncomputable def family := ChargedPolynomialCatalogue.family input
+noncomputable def rawFamily := ChargedPolynomialCatalogue.family input
+noncomputable def family := SquareFeatureProductAppend.family rawFamily
+  FormulaSignSlotRadialJointGuardFeatures.family (fun _ => rfl)
+
+theorem raw_feature (c : List Bool) (i : ℕ) (hi : i < count c) :
+    family.feature c i = rawFamily.feature c i :=
+  SquareFeatureProductAppend.feature_left rawFamily FormulaSignSlotRadialJointGuardFeatures.family
+    (fun _ => rfl) c i hi
+
+theorem raw_count_le (c : List Bool) : count c ≤ family.count c := Nat.le_add_right _ _
+
+private theorem evaluate_cast {n m : ℕ} (h : n = m) (p : MvPolynomial (Fin n) ℤ)
+    (v : ℕ → ℝ) :
+    (MvPolynomial.rename (Fin.cast h) p).eval₂ (Int.castRingHom ℝ) (fun i => v i.val) =
+      p.eval₂ (Int.castRingHom ℝ) (fun i => v i.val) := by
+  subst m
+  simp only [Fin.cast_refl, MvPolynomial.rename_id, AlgHom.id_apply]
+
+theorem guard_feature_eval (c : List Bool) (i : ℕ)
+    (hi : i < FormulaSignSlotRadialJointGuardFeatures.family.count c) (v : ℕ → ℝ) :
+    (family.feature c (count c + i)).eval₂ (Int.castRingHom ℝ) (fun j => v j.val) =
+      (FormulaSignSlotRadialJointGuardFeatures.family.feature c i).eval₂ (Int.castRingHom ℝ) (fun j => v j.val) := by
+  have H := SquareFeatureProductAppend.feature_right rawFamily FormulaSignSlotRadialJointGuardFeatures.family
+    (fun _ => rfl) c i hi
+  exact (congrArg (fun p => p.eval₂ (Int.castRingHom ℝ) (fun j => v j.val)) H).trans
+    (evaluate_cast rfl _ v)
+
+theorem grid_feature_eval (c : List Bool) (i : ℕ)
+    (hi : i < FormulaSignSlotRadialJointGridCompleteCatalogue.family.count c) (v : ℕ → ℝ) :
+    (family.feature c (count c + i)).eval₂ (Int.castRingHom ℝ) (fun j => v j.val) =
+      (FormulaSignSlotRadialJointGridCompleteCatalogue.family.feature c i).eval₂ (Int.castRingHom ℝ) (fun j => v j.val) := by
+  have H : i < FormulaSignSlotRadialJointGuardFeatures.family.count c :=
+    hi.trans_le (FormulaSignSlotRadialJointGuardFeatures.grid_count_le c)
+  exact (guard_feature_eval c i H v).trans
+    (congrArg (fun p => p.eval₂ (Int.castRingHom ℝ) (fun j => v j.val))
+      (FormulaSignSlotRadialJointGuardFeatures.grid_feature c i hi))
+
+noncomputable def principalIndex (c : List Bool) (i : ℕ) :=
+  count c + FormulaSignSlotRadialJointGuardFeatures.principalIndex c i
+noncomputable def valueIndex (c : List Bool) (i : ℕ) :=
+  count c + FormulaSignSlotRadialJointGuardFeatures.valueIndex c i
+
+theorem principal_feature_eval (c : List Bool) (i : ℕ)
+    (hi : i < FormulaSignSlotRadialJointPrincipalWindowCatalogue.family.count c) (v : ℕ → ℝ) :
+    (family.feature c (principalIndex c i)).eval₂ (Int.castRingHom ℝ) (fun j => v j.val) =
+      (FormulaSignSlotRadialJointPrincipalWindowCatalogue.family.feature c i).eval₂ (Int.castRingHom ℝ) (fun j => v j.val) :=
+  (guard_feature_eval c _ (FormulaSignSlotRadialJointGuardFeatures.principal_index_lt c i hi) v).trans
+    (FormulaSignSlotRadialJointGuardFeatures.principal_feature_eval c i hi v)
+
+theorem value_feature_eval (c : List Bool) (i : ℕ)
+    (hi : i < FormulaSignSlotRadialJointValueWindowCatalogue.family.count c) (v : ℕ → ℝ) :
+    (family.feature c (valueIndex c i)).eval₂ (Int.castRingHom ℝ) (fun j => v j.val) =
+      (FormulaSignSlotRadialJointValueWindowCatalogue.family.feature c i).eval₂ (Int.castRingHom ℝ) (fun j => v j.val) :=
+  (guard_feature_eval c _ (FormulaSignSlotRadialJointGuardFeatures.value_index_lt c i hi) v).trans
+    (FormulaSignSlotRadialJointGuardFeatures.value_feature_eval c i hi v)
 
 theorem base_FP : base ∈ FP := mem_FP_pair (FormulaSignSlotRadialJointLayout.source_FP true) (constFn_mem_FP [])
 theorem degree_binary : BinaryFn degree := FormulaSignSlotRadialEliminantFormalMass.degree_binary.comp base_FP
@@ -91,6 +146,10 @@ noncomputable def input_access : ChargedPolynomialCatalogue.Access input where
   degree := degree_binary
   mass := mass_binary
   fit := source_fit
-noncomputable def access : SquareFeatureProductFamily.Access family := ChargedPolynomialCatalogue.access input input_access
+noncomputable def raw_access : SquareFeatureProductFamily.Access rawFamily :=
+  ChargedPolynomialCatalogue.access input input_access
+noncomputable def access : SquareFeatureProductFamily.Access family :=
+  SquareFeatureProductAppend.access rawFamily FormulaSignSlotRadialJointGuardFeatures.family
+    (fun _ => rfl) raw_access FormulaSignSlotRadialJointGuardFeatures.access
 
 end LeanCanny.Encoding.FormulaSignSlotRadialJointCoefficientCatalogue

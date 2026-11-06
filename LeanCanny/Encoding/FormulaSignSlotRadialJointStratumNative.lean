@@ -81,6 +81,33 @@ theorem castSucc_row (A W : List Bool → ℕ) (p : (c : List Bool) → MvPolyno
     (fun c i => pairSnd_pair c (BinaryNatCode.encode i.val)) modulus
     hA (hA.add (UnaryFn.const 1)) hW ht pairSnd_mem_FP E
 
+private theorem family_coefficient_row (FF:SquareFeatureProductFamily.Family)
+    (AA:SquareFeatureProductFamily.Access FF) (read target modulus:List Bool→List Bool)
+    (V:List Bool→ℕ) (hr:read∈FP) (ht:target∈FP) (hm:modulus∈FP) (hV:UnaryFn V)
+    (K:List Bool→ℕ) (hK:BinaryFn K):
+    SpaceFunction (FixedWidthRowBits.value (fun c=>FF.arity (read c)+1) V
+      (fun c=>rename Fin.castSucc (SquareFeatureCoefficientReader.coefficient FF (read c) (K c))) target modulus):=by
+  let A:=FF.arity∘read
+  let N:=fun c=>A c+1
+  let U:=SquareFeatureProductFamily.width FF∘read
+  let keep:=FixedWidthEmbeddingBits.word A N V target pairSnd
+  let repack:=FixedWidthQuery.repack A V A U keep
+  have HA:UnaryFn A:=AA.arity.comp hr
+  have HN:UnaryFn N:=HA.add (UnaryFn.const 1)
+  have HU:UnaryFn U:=(SquareFeatureProductFamily.width_unary FF AA).comp hr
+  have HK:keep∈FP:=FixedWidthEmbeddingBits.word_FP A N V target pairSnd HA HN hV ht pairSnd_mem_FP
+  have HR:repack∈FP:=FixedWidthQuery.repack_mem_FP HA hV HA HU HK
+  have E:=FixedWidthBivariateRowBits.evaluator FF.arity (SquareFeatureProductFamily.width FF)
+    (SquareFeatureCoefficientReader.separate FF) (SquareFeatureCoefficientReader.reader FF AA)
+    AA.arity (SquareFeatureProductFamily.width_unary FF AA)
+    (fun c k=>SquareFeatureCoefficientReader.coefficient_fit FF c k)
+    read hr K hK repack modulus HR hm
+  have EB:=FixedWidthRowReboxBits.evaluator A U V keep
+    (fun c=>SquareFeatureCoefficientReader.coefficient FF (read c) (K c)) modulus
+    HA HU hV HK (fun _=>SquareFeatureCoefficientReader.coefficient_fit FF _ _) E
+  exact castSucc_row A V (fun c=>SquareFeatureCoefficientReader.coefficient FF (read c) (K c))
+    target modulus HA hV ht EB
+
 theorem core_row (read target modulus : List Bool → List Bool)
     (hr : read ∈ FP) (ht : target ∈ FP) (hm : modulus ∈ FP) :
     SpaceFunction (FixedWidthRowBits.value (arity ∘ read) (width ∘ read)
@@ -112,30 +139,10 @@ theorem coefficient_row (read target modulus : List Bool → List Bool)
     (K : List Bool → ℕ) (hK : BinaryFn K) :
     SpaceFunction (FixedWidthRowBits.value (arity ∘ read) (width ∘ read)
       (fun c => coefficient (read c) (K c)) target modulus) := by
-  let A := oldArity ∘ read
-  let N := arity ∘ read
-  let U := SquareFeatureProductFamily.width F ∘ header ∘ read
-  let V := width ∘ read
-  let keep := FixedWidthEmbeddingBits.word A N V target pairSnd
-  let repack := FixedWidthQuery.repack A V A U keep
-  have HA : UnaryFn A := oldArity_unary.comp hr
-  have HN : UnaryFn N := arity_unary.comp hr
-  have HU : UnaryFn U := (SquareFeatureProductFamily.width_unary F FA).comp (mem_FP_comp hr header_FP)
-  have HV : UnaryFn V := width_unary.comp hr
-  have HK : keep ∈ FP := FixedWidthEmbeddingBits.word_FP A N V target pairSnd HA HN HV ht pairSnd_mem_FP
-  have HR : repack ∈ FP := FixedWidthQuery.repack_mem_FP HA HV HA HU HK
-  have E := FixedWidthBivariateRowBits.evaluator (F).arity (SquareFeatureProductFamily.width F)
-    (SquareFeatureCoefficientReader.separate F) (SquareFeatureCoefficientReader.reader F FA)
-    (FA).arity (SquareFeatureProductFamily.width_unary F FA)
-    (fun c k => SquareFeatureCoefficientReader.coefficient_fit F c k)
-    (header ∘ read) (mem_FP_comp hr header_FP) K hK repack modulus HR hm
-  have EB := FixedWidthRowReboxBits.evaluator A U V keep
-    (fun c => SquareFeatureCoefficientReader.coefficient F (header (read c)) (K c)) modulus
-    HA HU HV HK (fun _ => SquareFeatureCoefficientReader.coefficient_fit F _ _) E
-  have EE := castSucc_row A V
-    (fun c => SquareFeatureCoefficientReader.coefficient F (header (read c)) (K c)) target modulus HA HV ht EB
+  have E:=family_coefficient_row F FA (header∘read) target modulus (width∘read)
+    (mem_FP_comp hr header_FP) ht hm (width_unary.comp hr) K hK
   unfold coefficient
-  exact EE
+  exact E
 
 noncomputable def packed (p : (c : List Bool) → MvPolynomial (Fin (arity c)) ℤ)
     (c : List Bool) : Polynomial ℤ := FixedWidthKronecker.encode (arity c) (width c) (p c)

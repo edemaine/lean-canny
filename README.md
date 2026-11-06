@@ -2433,9 +2433,18 @@ geometric connectivity between accepted depth-zero representatives of one
 provider. A genuine path to a seed's own marked prelude constructs a reachable
 terminal marked anchor. Native OLD/EXTERNAL association, both marked-anchor
 searches and a shared two-label witness have PSPACE checkers, with original
-joint-header vertex budgets. The original stratum-label bridge, complete
-radial grid/interval guards and Boolean frontier integration remain open;
-both original connectivity PSPACE endpoints remain unproved.
+joint-header vertex budgets. The original stratum labels are now equivalent
+to the native shared-sample witness. The actual sampler preserves the anchor
+grid, using an enlarged catalogue that retains every old coefficient index.
+A genuine radial descriptor lifts to that stratum with both labels and its
+entire radial tuple retained. Principal and value interval truth is preserved
+on actual stratum components. Native grid checking now verifies all selection
+receipts internally on the same sampler word. The original Boolean frontier
+edge is exactly projected sample equality or oriented guarded joint feasibility.
+Exposing endpoint formulas through tautologies preserves the space and reduces
+point reachability to existing auxiliary samples. Native interval checking and
+final Boolean graph decision integration remain open; both original connectivity
+PSPACE endpoints remain unproved.
 
 ## Build and verification
 

@@ -35,8 +35,8 @@ theorem coefficient_zero_iff (c : List Bool) (x y : Point c) (HS : Signs c x y)
   let k := encode c j s t r
   have HK : k<count c := encode_lt c j s t r hj hs ht hr
   have HE (z : Point c) : (fun i : Fin (family.arity c) => extend z i.val)=z := funext (extend_val z)
-  have HX := feature_coefficient c j s t r hs ht hr (extend x)
-  have HY := feature_coefficient c j s t r hs ht hr (extend y)
+  have HX := feature_coefficient c j s t r hj hs ht hr (extend x)
+  have HY := feature_coefficient c j s t r hj hs ht hr (extend y)
   rw [HE x] at HX
   rw [HE y] at HY
   have HSign := HS ⟨k,HK⟩

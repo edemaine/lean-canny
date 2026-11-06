@@ -1,5 +1,5 @@
 Component-labelled implicit-stratum prototype
-Construction and dependency ledger, 2026-11-05
+Construction and dependency ledger, 2026-11-06
 Base checkpoint: 0983bb6. Milestone A and the geometric cutoff required by C
 are proved. The native provider backend for B is implemented; bounded
 association correctness and final two-label integration remain in progress.
@@ -211,13 +211,44 @@ marked preludes are joined via their equal original projections; auxiliary
 phases need not agree. Original joint-header bounds now cover both provider
 graphs, with the sampler choosing its bounded metadata internally.
 One bounded two-label checker uses the SAME kind/Gamma/OWN sample on both
-sides. Its native witness iff is proved; the original stratum-label bridge,
-complete radial grid/interval guards and Boolean frontier integration remain
-open. Native identity and cross-point
+sides. Its native witness iff and exact original stratum-label equivalence
+are proved. The extended feature catalogue preserves actual anchor-grid
+membership during component sampling. A genuine descriptor lifts to the
+actual stratum, retaining both labels and the entire radial tuple. Complete
+principal/value interval guards and Boolean frontier integration remain open.
+Native identity and cross-point
 comparisons read the entire current point; recursive edges retain one literal
 provider, while cross-point comparison requires the same original and radius.
 Native NoBad/NoCritical/Near cost theorems alone do not supply geometric iff.
 Vertex PSPACE and Replay alone imply none of those component statements.
-The two-label feasibility equivalence and both original unconditional
+The guarded two-label feasibility equivalence and both original unconditional
 connectivity PSPACE endpoints remain open. This checkpoint introduces no
 component, path, model, native evaluator or solvability oracle.
+
+Native guard and frontier integration checkpoint, 2026-11-06
+
+The original cover's actual relative-frontier edge is now equivalent to:
+projected auxiliary-sample equality, or guarded joint feasibility in either
+orientation. Guarded feasibility includes both original labels, the actual
+anchor grid and every cut on the radius interval. A raw radial descriptor
+and this literal original-header feasibility predicate imply each other.
+This is a semantic edge characterization, not yet a native feasibility decider.
+
+The enlarged joint feature family includes actual grid, coordinate-head,
+principal and value interval controls while preserving every old coefficient
+index. Principal and value interval truth is invariant along actual stratum
+JoinedIn. Native grid testing now selects and verifies perturbation/degree
+receipts internally, evaluates every grid equation on the SAME own sample,
+and is in PSPACE without a supplied Selections premise.
+
+There is also a checked endpoint route through existing samples. Conjoining
+tautologies containing both endpoint formulas leaves the space unchanged.
+Original subformula truth is constant on each sign piece. Thus, if an endpoint
+formula denotes a singleton, every piece containing it has that endpoint as
+its existing sample. Original point connectivity consequently reduces to walks
+between these samples with the singleton tests retained. No reserved endpoint
+frontier edges are needed for this route.
+
+Still required: complete native interval checking, its same-word conjunction
+with the two-label witness, and the original bit-graph PSPACE wrappers. Neither
+original connectivity language has an unconditional PSPACE theorem yet.

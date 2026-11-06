@@ -68,6 +68,11 @@ theorem associationQuery_FP (side : Bool) : associationQuery side∈FP :=
 noncomputable def rawLanguage : Language := {q |Witness (header q) (kind q) (gamma q) (ownWord q)
   (oldSeed false q) (externalSeed false q) (oldSeed true q) (externalSeed true q)}
 
+section
+attribute [local irreducible] ImplicitSourceGramGrid.input FormulaSignSlotRadialJointStratum.source
+  ImplicitSourceComponentSampler.language
+  FormulaSignSlotRadialProviderAnchoredAssociation.language FormulaSignSlotRadialProviderAtomic.provider
+
 theorem raw_decider : SpaceDecider rawLanguage := by
   have EB:=SpaceFunction.ofFP _ sizesInput_FP.flag_mem_FP
   have ET:=SpaceFunction.ofFP _ actualTableFit_FP.flag_mem_FP
@@ -84,7 +89,13 @@ theorem raw_decider : SpaceDecider rawLanguage := by
   simp only [rawLanguage,Witness,Sizes,sizesInput,actualTableFit,SeedPair,providersMatch,oldProvider,
     externalProvider,sampleQuery,stratum,associationQuery,Set.mem_ofPred_eq,Set.mem_preimage,
     List.cons.injEq,and_true,decide_eq_true_eq]
-  tauto
+  constructor
+  · rintro ⟨HS,HT,HQ,⟨HLa,HLe,HL⟩,⟨HRa,HRe,HR⟩⟩
+    exact ⟨HS,HT,HQ,⟨HLa,HLe⟩,HL,⟨HRa,HRe⟩,HR⟩
+  · rintro ⟨HS,HT,HQ,⟨HLa,HLe⟩,HL,⟨HRa,HRe⟩,HR⟩
+    exact ⟨HS,HT,HQ,⟨HLa,HLe,HL⟩,⟨HRa,HRe,HR⟩⟩
+
+end
 
 def probe (q : List Bool) :=pair (pairFst q) (IntegralMixedRoadmapWordLabel.decode (pairSnd q))
 theorem probe_FP : probe∈FP := mem_FP_pair pairFst_mem_FP

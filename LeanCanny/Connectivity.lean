@@ -1,3 +1,22 @@
+import LeanCanny.Encoding.FormulaSignSlotRadialJointCutRetention
+import LeanCanny.Connectivity.FormulaSignSlotRadialProviderJointSampleWitness
+import LeanCanny.Connectivity.FormulaSignSlotRadialImplicitSampleReadback
+import LeanCanny.Encoding.FormulaSignSlotRadialImplicitWindowAtom
+import LeanCanny.Encoding.FormulaSignSlotRadialImplicitValueSelection
+import LeanCanny.Connectivity.FormulaSignSlotRadialProviderJointWitnessGeometry
+import LeanCanny.Encoding.FormulaSignSlotRadialProviderGuardedJointWitness
+import LeanCanny.Encoding.IntegralPolynomialWindowTarskiDecisionReadback
+import LeanCanny.Encoding.FormulaSignSlotRadialBoundCenterSource
+import LeanCanny.Encoding.FormulaSignSlotRadialJointHeadIntervalRetention
+import LeanCanny.Encoding.FormulaSignSlotRadialJointBranchCutRetention
+import LeanCanny.Connectivity.CanonicalAuxiliaryFrontierJointCodec
+import LeanCanny.Encoding.FormulaSignSlotRadialJointPrincipalWindowRetention
+import LeanCanny.Encoding.FormulaSignSlotRadialJointValueIntervalRetention
+import LeanCanny.Encoding.FormulaSignSlotRadialRadiusWindowInterval
+import LeanCanny.Encoding.FormulaSignSlotRadialImplicitGridSelection
+import LeanCanny.Connectivity.CanonicalAuxiliarySampleEndpoints
+import LeanCanny.Encoding.FormulaSignSlotSubformulaTest
+import LeanCanny.Connectivity.CanonicalEndpointSampleBits
 import LeanCanny.Connectivity.FormulaSignSlotRadialProviderGraphDepthCompleteness
 import LeanCanny.Connectivity.FormulaSignSlotRadialProviderAssociationGeometry
 import LeanCanny.Connectivity.FormulaSignSlotRadialProviderAnchoredGeometry
@@ -5389,8 +5408,11 @@ native reachability is equivalent to provider-source joinedness. A genuine
 path to a seed's own marked prelude constructs a reachable terminal marked
 anchor; validity alone does not imply this path. Native anchored association
 and shared two-label witness searches have PSPACE checkers with original
-joint-header budgets. Original stratum-label semantics, complete radial
-interval/grid guards and Boolean frontier integration remain open.
+joint-header budgets. Original stratum-label semantics and the exact radial frontier codec are proved.
+Native grid checking derives its own finite selection receipts on the same word.
+Endpoint formulas can select existing cover samples after a tautological
+extension that preserves the original space. Native interval checking, its
+same-word conjunction, and the Boolean graph decision integration remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

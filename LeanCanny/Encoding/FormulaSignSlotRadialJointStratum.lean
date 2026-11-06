@@ -152,10 +152,23 @@ theorem eval_castSucc {n : ℕ} (p : MvPolynomial (Fin n) ℤ) (y : Fin (n+1) �
   rw [MvPolynomial.eval₂_rename]
   rfl
 
+attribute [local irreducible] FormulaSignSlotRadialJointLayout.dimension
+
+private theorem feature_coefficient_eval (FF : SquareFeatureProductFamily.Family)
+    (ctx : List Bool) (K : ℕ) (y : Fin (FF.arity ctx + 1) → ℝ) :
+    (MvPolynomial.rename Fin.castSucc (SquareFeatureCoefficientReader.coefficient FF ctx K)).eval₂
+      (Int.castRingHom ℝ) y =
+      (SquareFeatureProduct.polynomial (SquareFeatureProductEvaluation.values FF ctx
+        (fun i => y i.castSucc))).coeff K := by
+  rw [MvPolynomial.eval₂_rename]
+  exact SquareFeatureProductEvaluation.coefficient FF ctx (fun i => y i.castSucc) K
+
+attribute [local irreducible] SquareFeatureProductEvaluation.values SquareFeatureProduct.polynomial
+  SquareFeatureCoefficientReader.coefficient
+
 theorem coefficient_eval (c : List Bool) (K : ℕ) (y : Fin (arity c) → ℝ) :
     (coefficient c K).eval₂ (Int.castRingHom ℝ) y=(SquareFeatureProduct.polynomial (values c y)).coeff K :=
-  (eval_castSucc (SquareFeatureCoefficientReader.coefficient F (header c) K) y).trans
-    (SquareFeatureProductEvaluation.coefficient F (header c) (oldPoint c y) K)
+  feature_coefficient_eval F (header c) K y
 
 theorem core_eval (c : List Bool) (y : Fin (arity c) → ℝ) :
     (core c).eval₂ (Int.castRingHom ℝ) y=
