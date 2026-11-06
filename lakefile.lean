@@ -27,6 +27,6 @@ lean_lib LeanCanny
 lean_lib LeanCannyAlternatives where
   roots := #[`LeanCanny.Alternatives]
 
--- Connectivity is an ongoing extension, separate from the completed ETR proof.
+-- Native PSPACE bounds for the original point and whole-space connectivity languages.
 lean_lib LeanCannyConnectivity where
   roots := #[`LeanCanny.Connectivity]

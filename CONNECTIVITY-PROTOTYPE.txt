@@ -1,11 +1,17 @@
-Component-labelled implicit-stratum prototype
+Completed component-labelled implicit-stratum construction
 Construction and dependency ledger, 2026-11-06
-Base checkpoint: 0983bb6. Milestone A and the geometric cutoff required by C
-are proved. The native provider backend for B is implemented; bounded
-association correctness and final two-label integration remain in progress.
-This is not an unconditional connectivity PSPACE proof.
 
-Acceptance target
+Both original connectivity languages now have unconditional native PSPACE
+membership theorems in LeanCanny/Connectivity/NativeConnectivityPSPACE.lean:
+pointLanguage_mem_PSPACE and connectedLanguage_mem_PSPACE. The full guard
+checker, original frontier-edge test, and point/whole graph wrappers are
+constructed internally. No component, evaluator, radius or selection oracle
+is a theorem premise. Empty whole spaces are accepted; malformed inputs and
+ill-scoped, inconsistent or nonunique endpoint descriptions are rejected.
+
+The ledger below preserves the construction plan and historical milestones.
+
+Acceptance target (met)
 
 For original joint packet u, bounded zero-count index K, and two prescribed
 old candidate labels a,b, construct a polynomial-space bounded checker such
@@ -232,7 +238,7 @@ projected auxiliary-sample equality, or guarded joint feasibility in either
 orientation. Guarded feasibility includes both original labels, the actual
 anchor grid and every cut on the radius interval. A raw radial descriptor
 and this literal original-header feasibility predicate imply each other.
-This is a semantic edge characterization, not yet a native feasibility decider.
+The native guarded-feasibility decider now implements this characterization.
 
 The enlarged joint feature family includes actual grid, coordinate-head,
 principal and value interval controls while preserving every old coefficient
@@ -249,6 +255,25 @@ its existing sample. Original point connectivity consequently reduces to walks
 between these samples with the singleton tests retained. No reserved endpoint
 frontier edges are needed for this route.
 
-Still required: complete native interval checking, its same-word conjunction
-with the two-label witness, and the original bit-graph PSPACE wrappers. Neither
-original connectivity language has an unconditional PSPACE theorem yet.
+Completed: native interval checking, its same-word conjunction with the
+two-label witness, and the original bit-graph PSPACE wrappers. The endpoint
+formula tautologies retain the original space and make both endpoints actual
+existing samples. Native singleton validation and bounded word searches reject
+all malformed or invalid queries.
+
+Final checked route
+
+1. FormulaSignSlotRadialGuardedFeasibilityNative.word_decider checks the actual
+   sampler filter, grid, coordinate leading cuts, squarefree branch cuts,
+   VALUE cuts and margin cuts on the SAME complete OWN word.
+2. FormulaSignSlotRadialGuardedFeasibility.language_iff_feasible identifies
+   bounded two-label acceptance with literal geometric joint feasibility.
+3. CanonicalAuxiliaryNativeFrontier.edge_eq identifies the constructed native
+   edge with the original Boolean cover's frontier relation.
+4. CanonicalAuxiliaryNativeDecision and CanonicalAuxiliaryNativePointSearch
+   supply the two original total graph decision procedures.
+5. NativeConnectivityPSPACE instantiates both with the concrete guard decider.
+
+The final statements refer to the original pointLanguage and connectedLanguage,
+without a computational premise. Explicit roadmap output is outside these
+language-membership statements.

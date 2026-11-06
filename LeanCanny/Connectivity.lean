@@ -1,3 +1,4 @@
+import LeanCanny.Connectivity.NativeConnectivityPSPACE
 import LeanCanny.Encoding.FormulaSignSlotRadialJointCutRetention
 import LeanCanny.Connectivity.FormulaSignSlotRadialProviderJointSampleWitness
 import LeanCanny.Connectivity.FormulaSignSlotRadialImplicitSampleReadback
@@ -5389,7 +5390,8 @@ complete critical scan. Concrete joint coefficient and principal features
 preserve actual squarefree-selection guards. Companion coordinates, complete
 Near/Rank witnesses, Local/Edge transport, uniform all-role stabilization,
 descriptor stratum sampling and native cross-source component association
-remain open. Both original unconditional PSPACE endpoints remain unproved.
+remained open at that earlier checkpoint. NativeConnectivityPSPACE now
+proves both original unconditional language-membership results.
 Common bounds for every guarded graph query and physical-edge transport,
 hence effective global stabilization, remain unproved.
 The construction-first checkpoint now supplies the actual implicit joint
@@ -5412,9 +5414,13 @@ joint-header budgets. Original stratum-label semantics and the exact radial fron
 Native grid checking derives its own finite selection receipts on the same word.
 Endpoint formulas can select existing cover samples after a tautological
 extension that preserves the original space. Native interval checking, its
-same-word conjunction, and the Boolean graph decision integration remain open.
-The effective semialgebraic roadmap construction is not yet
-supplied. In particular, neither
-`Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE
-membership theorem here.
+same-word conjunction, and the Boolean graph decision integration are complete.
+The original point and whole-space languages now have unconditional native
+PSPACE membership theorems in NativeConnectivityPSPACE. The native grid,
+interval and two-label tests read one and the same complete sampler tuple.
+The final original Boolean graph uses these actual frontier edges. Endpoint
+formulas select existing cover samples through a tautological extension,
+with singleton validation and malformed-input rejection retained.
+The report's explicit roadmap output and motion-planning interfaces are
+separate from these language-membership theorems.
 -/

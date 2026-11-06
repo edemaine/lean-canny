@@ -2,7 +2,8 @@
 
 A Lean formalization of the theorem that the
 Existential Theory of the Reals (ETR) is in PSPACE,
-or stated in terms of complexity-theory classes: ∃ℝ ⊆ PSPACE.
+or stated in terms of complexity-theory classes: ∃ℝ ⊆ PSPACE,
+and native PSPACE bounds for semialgebraic point and whole-space connectivity.
 This theorem is from John Canny's 1988 technical report
 [*Some Algebraic and Geometric Computations in PSPACE*](https://www2.eecs.berkeley.edu/Pubs/TechRpts/1988/6041.html)
 (stored in this repo as [`canny-tr.pdf`](canny-tr.pdf)), published as a
@@ -21,8 +22,9 @@ metadata preparation, recursive evaluation, and final sign decisions are
 constructed internally. The development uses Lean 4.36.0-rc1 with pinned
 Mathlib, CSLib, and Complexitylib dependencies.
 
-This establishes the report's ETR PSPACE upper bound. The report's roadmap,
-connectivity, and motion-planning algorithms remain outside the completed result.
+This establishes the report's ETR and connectivity PSPACE upper bounds for the
+encoded problems below. Explicit roadmap output and motion-planning interfaces
+are separate from these language-membership results.
 The proof uses a coercive one-parameter sampling construction; it does not
 formalize every intermediate construction in the report verbatim.
 
@@ -105,16 +107,33 @@ proof details, and the unused tube route's precise gaps.
 ## Connectivity development
 
 The separate `LeanCannyConnectivity` target (`import LeanCanny.Connectivity`)
-develops point-to-point path reachability and whole-space connectivity for
-semialgebraic sets. **Neither geometric language has a PSPACE theorem yet.**
+proves both original connectivity languages are in native PSPACE:
 
-The current focused checkpoint is an actual implicit joint-stratum sampler:
-[`FormulaSignSlotRadialJointStratumSampler.lean`](LeanCanny/Encoding/FormulaSignSlotRadialJointStratumSampler.lean)
-provides a native PSPACE checker and polynomial-length accepted certificates
-meeting every stratum component. The equation test uses the sampler's own
-decoded point and retains the binary feature product. External-point
-component association and uniform radius stabilization remain open; see
-[`CONNECTIVITY-PROTOTYPE.txt`](CONNECTIVITY-PROTOTYPE.txt) for that boundary.
+```lean
+LeanCanny.Connectivity.pointLanguage_mem_PSPACE :
+  LeanCanny.Connectivity.pointLanguage ∈ LeanCanny.PSPACE
+LeanCanny.Connectivity.connectedLanguage_mem_PSPACE :
+  LeanCanny.Connectivity.connectedLanguage ∈ LeanCanny.PSPACE
+```
+
+The closed statements are in
+[`NativeConnectivityPSPACE.lean`](LeanCanny/Connectivity/NativeConnectivityPSPACE.lean).
+Inputs contain a unary dimension and arbitrary Boolean combinations of integer
+polynomial sign conditions. Point inputs describe singleton endpoints by formulas,
+allowing irrational algebraic points. Whole-space connectivity means
+`IsPreconnected`, accepting the empty set. Malformed, ill-scoped, inconsistent
+and nonunique endpoint inputs are rejected. Neither theorem takes a geometric
+model, component oracle, edge evaluator or radius bound as a premise.
+
+The construction checks both original component labels, the actual radial grid
+and every interval cut on one complete sampler tuple. The original frontier
+edge is exactly projected-sample equality or oriented guarded joint feasibility.
+Endpoint formulas select existing samples after adding tautologies that preserve
+the space. Native finite graph scans finish both decision procedures.
+[`CONNECTIVITY-PROTOTYPE.txt`](CONNECTIVITY-PROTOTYPE.txt) records the construction.
+
+The following historical ledger records intermediate checkpoints and alternative
+routes; its earlier gap notes describe those checkpoints.
 
 The checked ingredients are:
 
@@ -2389,9 +2408,8 @@ complete critical scan. Concrete joint coefficient and principal features
 preserve actual squarefree-selection guards. Companion coordinates, complete
 Near/Rank witnesses, Local/Edge transport, uniform all-role stabilization,
 descriptor stratum sampling and native cross-source component association
-remain open. Both original unconditional PSPACE endpoints remain unproved.
-These graph algorithms do not yet establish unconditional PSPACE membership
-for the original connectivity languages.
+remained open at that checkpoint. The completed native joint-witness route
+now proves both original language-membership theorems listed above.
 
 ## Attribution and report integrity
 
@@ -2442,9 +2460,9 @@ on actual stratum components. Native grid checking now verifies all selection
 receipts internally on the same sampler word. The original Boolean frontier
 edge is exactly projected sample equality or oriented guarded joint feasibility.
 Exposing endpoint formulas through tautologies preserves the space and reduces
-point reachability to existing auxiliary samples. Native interval checking and
-final Boolean graph decision integration remain open; both original connectivity
-PSPACE endpoints remain unproved.
+point reachability to existing auxiliary samples. Native interval checking,
+the same-word guarded witness, and both original Boolean graph decisions are
+complete. The final theorems have no remaining computational premise.
 
 ## Build and verification
 
@@ -2483,6 +2501,8 @@ lake env lean scripts/CheckGrammar.lean
 lake env lean scripts/CheckSpaceFoundation.lean
 lake env lean scripts/CheckPolyTimeFoundation.lean
 lake env lean scripts/CheckConnectivity.lean
+lake env lean scripts/CheckJointFrontier.lean
+lake env lean scripts/CheckConnectivityPSPACE.lean
 lake env lean scripts/CheckImplicitStratumSampler.lean
 lake env lean scripts/CheckEffectiveBallConnections.lean
 lake env lean scripts/CheckProviderAtomic.lean
