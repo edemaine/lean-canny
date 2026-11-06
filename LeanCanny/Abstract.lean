@@ -14,6 +14,7 @@ ETR ∈ PSPACE, ∃ℝ ⊆ PSPACE, and PSPACE bounds for point and whole-space
 connectivity. To check that these are the intended results, a reader only needs
 to inspect the definitions and theorem statements here. Lean checks the proofs
 through `AbstractBridge` and the rest of the development.
+Bit-level serialization is isolated in the `AbstractEncoding` helper.
 
 The background complexity library is Complexitylib. Its PSPACE class means
 that one deterministic Turing machine halts on every input and decides membership
@@ -21,6 +22,7 @@ using polynomially many work-tape cells in the input's bit length.
 -/
 
 @[expose] public section
+noncomputable section
 namespace LeanCanny.Abstract
 
 /-- Integer polynomial expressions use constants, variables, addition, and
@@ -50,21 +52,15 @@ def Term.eval {n : ℕ} (x : Fin n → ℝ) : Term n → ℝ
   | .add a b => a.eval x + b.eval x
   | .mul a b => a.eval x * b.eval x
 
-/-- Truth of a formula at a real assignment has the usual Boolean semantics. -/
-def Formula.Holds {n : ℕ} (x : Fin n → ℝ) : Formula n → Prop
-  | .falsum => False
-  | .eqZero t => t.eval x = 0
-  | .ltZero t => t.eval x < 0
-  | .not p => ¬ p.Holds x
-  | .and p q => p.Holds x ∧ q.Holds x
-  | .or p q => p.Holds x ∨ q.Holds x
-
-/-! ## Semialgebraic connectivity -/
-
-/-- The solution set consists of the points in `ℝⁿ` satisfying the formula.
-Here `Fin n → ℝ` represents `ℝⁿ`. -/
-def Formula.solutionSet {n : ℕ} (p : Formula n) : Set (Fin n → ℝ) :=
-  {x | p.Holds x}
+/-- A formula describes a solution set in `ℝⁿ`, represented by `Fin n → ℝ`.
+Negation, conjunction, and disjunction give complement, intersection, and union. -/
+def Formula.solutionSet {n : ℕ} : Formula n → Set (Fin n → ℝ)
+  | .falsum => ∅
+  | .eqZero t => {x | t.eval x = 0}
+  | .ltZero t => {x | t.eval x < 0}
+  | .not p => p.solutionSetᶜ
+  | .and p q => p.solutionSet ∩ q.solutionSet
+  | .or p q => p.solutionSet ∪ q.solutionSet
 
 /-- Connected formulas describe connected solution sets in `ℝⁿ`, allowing the
 empty set (`IsPreconnected`). -/
@@ -78,49 +74,16 @@ def ReachableEndpoints {n : ℕ} (p : Formula n) : Set (Formula n × Formula n) 
   {ab | ∃ x y, ab.1.solutionSet = {x} ∧ ab.2.solutionSet = {y} ∧
     JoinedIn p.solutionSet x y}
 
-/-! ## Binary input convention
+/-! ## Input convention
 
-The size of an input is its literal bit length. A node is encoded by an opening
-`false`, its children in order, and a closing `true`. Constructor tags and variable
-indices are unary; integer magnitudes are canonical little-endian binary.
-Lists record the ordered children of a syntax node.
+Inputs are explicit expression trees with binary integer coefficients and unary
+variable indices and dimensions. `AbstractEncoding` implements the precise
+serialization; the encoder applies it to the syntax above.
 -/
 
-def node (children : List (List Bool)) : List Bool := false :: (children.flatten ++ [true])
-def unary (n : ℕ) : List Bool := node (List.replicate n (node []))
-def bit (b : Bool) : List Bool := if b then node [node []] else node []
-
-/-- Nonnegative integers carry sign tag zero. Negative integers `-(n+1)` carry
-sign tag one and magnitude field `n`, giving a unique representation of zero. -/
-def integer : ℤ → List Bool
-  | .ofNat n => node [unary 0, node (n.bits.map bit)]
-  | .negSucc n => node [unary 1, node (n.bits.map bit)]
-
-/-- Expression tags, in order, are constant, variable, addition, multiplication. -/
-def Term.encode {n : ℕ} : Term n → List Bool
-  | .const z => node [unary 0, integer z]
-  | .var i => node [unary 1, unary i.val]
-  | .add a b => node [unary 2, a.encode, b.encode]
-  | .mul a b => node [unary 3, a.encode, b.encode]
-
-/-- Formula tags, in order, are false, equality, strict inequality, negation,
-conjunction, disjunction. The encoding includes the entire formula. -/
-def Formula.encode {n : ℕ} : Formula n → List Bool
-  | .falsum => node [unary 0]
-  | .eqZero t => node [unary 1, t.encode]
-  | .ltZero t => node [unary 2, t.encode]
-  | .not p => node [unary 3, p.encode]
-  | .and p q => node [unary 4, p.encode, q.encode]
-  | .or p q => node [unary 5, p.encode, q.encode]
-
-/-- Encode a whole-space query by its tag, unary dimension, and formula. -/
-def encodeSpace (n : ℕ) (p : Formula n) : List Bool :=
-  node [unary 1, unary n, p.encode]
-
-/-- Encode a point query by its tag, unary dimension, space formula, and the two
-endpoint formulas. -/
-def encodePoint (n : ℕ) (p : Formula n) (ab : Formula n × Formula n) : List Bool :=
-  node [unary 0, unary n, p.encode, ab.1.encode, ab.2.encode]
+/-- Serialize a formula using the stated input-size convention. -/
+def Formula.encode {n : ℕ} : Formula n → List Bool :=
+  AbstractEncoding.formula (@Term.rec n) (@Formula.rec n)
 
 /-! ## Encoded decision problems
 
@@ -134,11 +97,11 @@ def ETR : Set (List Bool) := ⋃ n, (@Formula.encode n) '' {p | p.solutionSet.No
 
 /-- Whole-space connectivity applies the input encoding to connected formulas. -/
 def ConnectedLanguage : Set (List Bool) :=
-  ⋃ n, encodeSpace n '' ConnectedFormulas n
+  ⋃ n, AbstractEncoding.space Formula.encode n '' ConnectedFormulas n
 
 /-- Point connectivity applies the input encoding to reachable endpoint pairs. -/
 def PointLanguage : Set (List Bool) :=
-  ⋃ n, ⋃ p, encodePoint n p '' ReachableEndpoints p
+  ⋃ n, ⋃ p : Formula n, AbstractEncoding.point Formula.encode n p '' ReachableEndpoints p
 
 /-- The class ∃ℝ consists of binary languages reducible to ETR in polynomial time.
 A reduction is a total algorithm on all input strings that preserves yes/no

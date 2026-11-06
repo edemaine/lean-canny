@@ -40,6 +40,8 @@ For independently readable, checked statements of all three PSPACE bounds, see
 [`Abstract.lean`](LeanCanny/Abstract.lean). A reader can inspect its definitions
 and theorem statements to assess the claimed result; Lean verifies the proofs
 through [`AbstractBridge.lean`](LeanCanny/AbstractBridge.lean) and the development.
+The input-size convention is stated in the abstract; bit-level serialization
+is isolated in [`AbstractEncoding.lean`](LeanCanny/AbstractEncoding.lean).
 
 ## ETR proof outline
 

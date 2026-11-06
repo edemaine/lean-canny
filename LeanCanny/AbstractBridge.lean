@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import LeanCanny.AbstractEncoding
 public import LeanCanny.ETR.CoercivePSPACE
 public import LeanCanny.Connectivity.NativeConnectivityPSPACE
 
@@ -19,16 +20,7 @@ space bound requires no additional serialization or parsing computation.
 @[expose] public section
 namespace LeanCanny.AbstractBridge
 
-def node (children : List (List Bool)) : List Bool :=
-  false :: (children.flatten ++ [true])
-
-def unary (n : ℕ) : List Bool := node (List.replicate n (node []))
-
-def bit (b : Bool) : List Bool := if b then node [node []] else node []
-
-def integer : ℤ → List Bool
-  | .ofNat n => node [unary 0, node (n.bits.map bit)]
-  | .negSucc n => node [unary 1, node (n.bits.map bit)]
+open AbstractEncoding
 
 private theorem unary_eq (n : ℕ) : (ETR.Codec.unary n).toBits = unary n := by
   simp [ETR.Codec.unary, unary, node, Data.toBits_l]
@@ -60,8 +52,10 @@ variable {T F : ℕ → Type}
   {falsum : ∀ {n}, F n} {eqZero ltZero : ∀ {n}, T n → F n}
   {neg : ∀ {n}, F n → F n} {conj disj : ∀ {n}, F n → F n → F n}
   {eval : ∀ {n}, (Fin n → ℝ) → T n → ℝ}
-  {holds : ∀ {n}, (Fin n → ℝ) → F n → Prop}
+  {solutions : ∀ {n}, F n → Set (Fin n → ℝ)}
   {termCode : ∀ {n}, T n → List Bool} {formulaCode : ∀ {n}, F n → List Bool}
+
+local notation "holds" => (fun {n : ℕ} (x : Fin n → ℝ) (p : F n) => x ∈ solutions p)
 
 structure FiniteLaws : Prop where
   holds_eqZero : ∀ n (x : Fin n → ℝ) t, holds x (eqZero t) ↔ eval x t = 0
@@ -96,7 +90,7 @@ variable
   (h : FiniteLaws (const := const) (var := var) (add := add) (mul := mul)
     (falsum := falsum) (eqZero := eqZero) (ltZero := ltZero)
     (neg := neg) (conj := conj) (disj := disj)
-    (eval := eval) (holds := holds) (termCode := termCode) (formulaCode := formulaCode))
+    (eval := eval) (solutions := solutions) (termCode := termCode) (formulaCode := formulaCode))
 
 private def TermRep {n} (t : T n) (a : ETR.Term) : Prop :=
   a.arity ≤ n ∧ termCode t = a.toData.toBits ∧
@@ -164,8 +158,8 @@ private theorem term_from_raw {n} (a : ETR.Term) (ha : a.arity ≤ n) :
 
 include ti fi h in
 private theorem formula_to_raw {n} (p : F n) :
-    ∃ a, FormulaRep (holds := holds) (formulaCode := formulaCode) p a := by
-  apply fi (P := fun p => ∃ a, FormulaRep (holds := holds) (formulaCode := formulaCode) p a)
+    ∃ a, FormulaRep (solutions := solutions) (formulaCode := formulaCode) p a := by
+  apply fi (P := fun p => ∃ a, FormulaRep (solutions := solutions) (formulaCode := formulaCode) p a)
   · refine ⟨.falsum, Nat.zero_le _, ?_, ?_⟩
     · simp [h.code_falsum, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
     · intro x; exact h.holds_falsum n x
@@ -192,7 +186,7 @@ private theorem formula_to_raw {n} (p : F n) :
 
 include h in
 private theorem formula_from_raw {n} (a : ETR.Formula) (ha : a.arity ≤ n) :
-    ∃ p : F n, FormulaRep (holds := holds) (formulaCode := formulaCode) p a := by
+    ∃ p : F n, FormulaRep (solutions := solutions) (formulaCode := formulaCode) p a := by
   induction a with
   | falsum =>
     refine ⟨falsum, ha, ?_, ?_⟩
@@ -227,29 +221,29 @@ private theorem formula_from_raw {n} (a : ETR.Formula) (ha : a.arity ≤ n) :
     · intro x; simp [h.holds_or, ht.2.2 x, hu.2.2 x, ETR.Formula.Holds]
 
 private theorem solution_eq {n} {p : F n} {a : ETR.Formula}
-    (hp : FormulaRep (holds := holds) (formulaCode := formulaCode) p a) :
+    (hp : FormulaRep (solutions := solutions) (formulaCode := formulaCode) p a) :
     {x | holds x p} = (Connectivity.Description.mk n a).realization := by
   ext x
   exact hp.2.2 x
 
 private theorem whole_code {n} {p : F n} {a : ETR.Formula}
-    (hp : FormulaRep (holds := holds) (formulaCode := formulaCode) p a) :
+    (hp : FormulaRep (solutions := solutions) (formulaCode := formulaCode) p a) :
     node [unary 1, unary n, formulaCode p] =
       (Connectivity.Input.whole ⟨n, a⟩).encode := by
   simp [hp.2.1, Connectivity.Input.encode, Connectivity.Input.toData,
     ETR.Formula.encode, Data.toBits_l, unary_eq, node]
 
 private theorem point_code {n} {p l r : F n} {a b c : ETR.Formula}
-    (hp : FormulaRep (holds := holds) (formulaCode := formulaCode) p a)
-    (hl : FormulaRep (holds := holds) (formulaCode := formulaCode) l b)
-    (hr : FormulaRep (holds := holds) (formulaCode := formulaCode) r c) :
+    (hp : FormulaRep (solutions := solutions) (formulaCode := formulaCode) p a)
+    (hl : FormulaRep (solutions := solutions) (formulaCode := formulaCode) l b)
+    (hr : FormulaRep (solutions := solutions) (formulaCode := formulaCode) r c) :
     node [unary 0, unary n, formulaCode p, formulaCode l, formulaCode r] =
       (Connectivity.Input.point ⟨⟨n, a⟩, b, c⟩).encode := by
   simp [hp.2.1, hl.2.1, hr.2.1, Connectivity.Input.encode, Connectivity.Input.toData,
     ETR.Formula.encode, Data.toBits_l, unary_eq, node]
 
 private theorem singleton_iff {n} {p : F n} {a : ETR.Formula}
-    (hp : FormulaRep (holds := holds) (formulaCode := formulaCode) p a) (x : Fin n → ℝ) :
+    (hp : FormulaRep (solutions := solutions) (formulaCode := formulaCode) p a) (x : Fin n → ℝ) :
     {y | holds y p} = {x} ↔ Connectivity.Denotes n a x := by
   simp only [Set.ext_iff, Set.mem_ofPred_eq, Set.mem_singleton_iff,
     Connectivity.Denotes, hp.1, true_and]
@@ -280,10 +274,10 @@ theorem finite_etr_upper_bound :
 
 include ti fi h in
 theorem finite_connected_upper_bound :
-    (⋃ n, (fun p : F n => node [unary 1, unary n, formulaCode p]) ''
+    (⋃ n, AbstractEncoding.space (@formulaCode n) n ''
       {p | IsPreconnected {x | holds x p}}) ∈
         Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
-  have HE : (⋃ n, (fun p : F n => node [unary 1, unary n, formulaCode p]) ''
+  have HE : (⋃ n, AbstractEncoding.space (@formulaCode n) n ''
       {p | IsPreconnected {x | holds x p}}) = Connectivity.connectedLanguage := by
     ext bits
     simp only [Set.mem_iUnion, Set.mem_image, Set.mem_ofPred_eq, Connectivity.connectedLanguage]
@@ -299,13 +293,11 @@ theorem finite_connected_upper_bound :
 
 include ti fi h in
 theorem finite_point_upper_bound :
-    (⋃ n, ⋃ p : F n, (fun ab : F n × F n =>
-      node [unary 0, unary n, formulaCode p, formulaCode ab.1, formulaCode ab.2]) ''
+    (⋃ n, ⋃ p : F n, AbstractEncoding.point (@formulaCode n) n p ''
       {ab | ∃ x y, {v | holds v ab.1} = {x} ∧ {v | holds v ab.2} = {y} ∧
         JoinedIn {v | holds v p} x y}) ∈
           Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
-  have HE : (⋃ n, ⋃ p : F n, (fun ab : F n × F n =>
-      node [unary 0, unary n, formulaCode p, formulaCode ab.1, formulaCode ab.2]) ''
+  have HE : (⋃ n, ⋃ p : F n, AbstractEncoding.point (@formulaCode n) n p ''
       {ab | ∃ x y, {v | holds v ab.1} = {x} ∧ {v | holds v ab.2} = {y} ∧
         JoinedIn {v | holds v p} x y}) = Connectivity.pointLanguage := by
     ext bits

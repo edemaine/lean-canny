@@ -130,26 +130,26 @@ theorem rawTerm_eval {n : ℕ} (t : Term n) (x : Fin n → ℝ) :
     simp_all [rawTerm, ETR.Term.eval, Term.eval, ETR.Formula.extend]
 
 theorem rawFormula_holds {n : ℕ} (p : Formula n) (x : Fin n → ℝ) :
-    (rawFormula p).Holds (ETR.Formula.extend x) ↔ p.Holds x := by
-  induction p <;> simp_all [rawFormula, ETR.Formula.Holds, Formula.Holds, rawTerm_eval]
+    (rawFormula p).Holds (ETR.Formula.extend x) ↔ x ∈ p.solutionSet := by
+  induction p <;> simp_all [rawFormula, ETR.Formula.Holds, Formula.solutionSet, rawTerm_eval]
 
-private theorem unary_code (n : ℕ) : (ETR.Codec.unary n).toBits = Abstract.unary n := by
-  simp [ETR.Codec.unary, Abstract.unary, Abstract.node, Data.toBits_l]
+private theorem unary_code (n : ℕ) : (ETR.Codec.unary n).toBits = AbstractEncoding.unary n := by
+  simp [ETR.Codec.unary, AbstractEncoding.unary, AbstractEncoding.node, Data.toBits_l]
 
-private theorem bit_code (b : Bool) : (ETR.Codec.bit b).toBits = Abstract.bit b := by
-  cases b <;> simp [ETR.Codec.bit, Abstract.bit, Abstract.node, Data.toBits_l]
+private theorem bit_code (b : Bool) : (ETR.Codec.bit b).toBits = AbstractEncoding.bit b := by
+  cases b <;> simp [ETR.Codec.bit, AbstractEncoding.bit, AbstractEncoding.node, Data.toBits_l]
 
-private theorem integer_code (z : ℤ) : (ETR.Codec.integer z).toBits = Abstract.integer z := by
-  cases z <;> simp [ETR.Codec.integer, ETR.Codec.natural, Abstract.integer,
-    Abstract.node, Data.toBits_l, unary_code, List.map_map, Function.comp_def, bit_code]
+private theorem integer_code (z : ℤ) : (ETR.Codec.integer z).toBits = AbstractEncoding.integer z := by
+  cases z <;> simp [ETR.Codec.integer, ETR.Codec.natural, AbstractEncoding.integer,
+    AbstractEncoding.node, Data.toBits_l, unary_code, List.map_map, Function.comp_def, bit_code]
 
-theorem rawTerm_code {n : ℕ} (t : Term n) : (rawTerm t).toData.toBits = t.encode := by
-  induction t <;> simp_all [rawTerm, Term.encode, ETR.Term.toData,
-    Data.toBits_l, unary_code, integer_code, Abstract.node]
+theorem rawTerm_code {n : ℕ} (t : Term n) : (rawTerm t).toData.toBits = AbstractEncoding.term (@Term.rec n) t := by
+  induction t <;> simp_all [rawTerm, AbstractEncoding.term, ETR.Term.toData,
+    Data.toBits_l, unary_code, integer_code, AbstractEncoding.node]
 
 theorem rawFormula_code {n : ℕ} (p : Formula n) : (rawFormula p).encode = p.encode := by
-  induction p <;> simp_all [rawFormula, Formula.encode, ETR.Formula.encode,
-    ETR.Formula.toData, Data.toBits_l, unary_code, rawTerm_code, Abstract.node]
+  induction p <;> simp_all [rawFormula, Formula.encode, AbstractEncoding.formula, ETR.Formula.encode,
+    ETR.Formula.toData, Data.toBits_l, unary_code, rawTerm_code, AbstractEncoding.node]
 
 /-- On valid token streams, parsing recovers exactly the old binary input. -/
 theorem translate_formula {n : ℕ} (p : Formula n) :

@@ -2,14 +2,14 @@ import LeanCanny.Abstract
 import Lean.Util.FoldConsts
 import Lean.Util.CollectAxioms
 
-/-! Public definitions and statements must depend only on this abstract and
+/-! Public definitions and statements must depend only on the abstract suite and
 background libraries. Implementation declarations may occur in theorem proofs,
 which are checked separately for unexpected axioms. -/
 
 open Lean in
 run_cmd do
   let env ← getEnv
-  let abstractModule := `LeanCanny.Abstract
+  let abstractModules := #[`LeanCanny.Abstract, `LeanCanny.AbstractEncoding]
   let mut pending : Array Name := #[]
   let mut roots : Nat := 0
   for (name, info) in env.constants.toList do
@@ -30,7 +30,7 @@ run_cmd do
     visited := visited.insert name
     if let some idx := env.getModuleIdxFor? name then
       let owner := env.header.moduleNames[idx.toNat]!
-      if (`LeanCanny).isPrefixOf owner && owner != abstractModule then
+      if (`LeanCanny).isPrefixOf owner && !abstractModules.contains owner then
         throwError "Public abstract depends on implementation declaration {name} from {owner}"
     if let some info := env.find? name then
       pending := pending ++ info.type.getUsedConstants
