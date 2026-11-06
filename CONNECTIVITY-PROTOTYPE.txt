@@ -187,9 +187,14 @@ component, preserving every initial marked coordinate. Retained histories
 preserve actual prefix algebras, all earlier bank values, critical guards,
 full cut receipts and replay on independently sampled own words.
 
-The remaining B contracts are accepted recursive child/proper-edge
-constructors with native edge correctness, and the path induction and marked
-attachment proving bounded association iff. Native identity and cross-point
+Fresh accepted recursive children now realize any prescribed eligible point,
+preserve the literal provider and all earlier fields, and increase depth by
+one. All seven native acceptance gates are derived from the fresh own word.
+Every accepted parent with depth room also has an equal-point child joined
+by an actual native identity edge. Native NoCritical is equivalent to critical-height freedom on the original
+frozen slice. The remaining B contracts are proper-edge constructors with
+native edge correctness, and the path induction and marked attachment
+proving bounded association iff. Native identity and cross-point
 comparisons read the entire current point; recursive edges retain one literal
 provider, while cross-point comparison requires the same original and radius.
 Native NoBad/NoCritical/Near cost theorems alone do not supply geometric iff.

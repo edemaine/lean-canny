@@ -2420,10 +2420,13 @@ marked endpoint roots realize its actual saved prelude, and accepted words
 have a polynomial size bound for each provider. Point/frame/signature and
 replay-to-prelude readbacks are proved. Genuine OLD and EXTERNAL endpoints
 now construct fresh accepted depth-zero seeds in the same marked component.
-Historical fields, critical guards and full cut receipts survive retained
-resampling. Accepted recursive children, proper-edge correctness and path
-induction remain unfinished; component association and both original
-connectivity PSPACE endpoints remain open.
+A fresh accepted recursive child now preserves the entire prescribed point,
+all earlier fields and the literal provider while increasing depth by one.
+Every accepted parent with depth room has an equal-point child connected by
+an actual native identity edge. Native NoCritical is equivalent to critical-height freedom on the original
+frozen slice. Proper-edge correctness, path induction and marked attachment
+remain unfinished; component association and both original connectivity
+PSPACE endpoints remain open.
 
 ## Build and verification
 
@@ -2465,6 +2468,8 @@ lake env lean scripts/CheckConnectivity.lean
 lake env lean scripts/CheckImplicitStratumSampler.lean
 lake env lean scripts/CheckEffectiveBallConnections.lean
 lake env lean scripts/CheckProviderAtomic.lean
+lake env lean scripts/CheckProviderSemantics.lean
+lake env lean scripts/CheckProviderRecursive.lean
 lake env lean scripts/CheckAlgebraicArcs.lean
 lake env lean scripts/CheckAffineShiftArcs.lean
 lake env lean scripts/CheckIntegerGridValues.lean

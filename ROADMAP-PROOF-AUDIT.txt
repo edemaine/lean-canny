@@ -3198,3 +3198,59 @@ Accepted recursive children, proper-edge geometric correctness, fixed-provider
 path induction and marked attachment remain open. Bounded component
 association iff, both-label feasibility, full interval/frontier incidence,
 and BOTH original unconditional connectivity PSPACE endpoints remain open.
+
+63. Accepted retained children and original-slice NoCritical equivalence
+
+FormulaSignSlotRadialProviderRetainedAppend.exists_valid_at constructs a
+fresh accepted child from an accepted parent, depth room, an earlier endpoint
+index and a genuinely eligible point. Eligibility consists only of actual
+frozen-slice membership, the retained height and child derivative equations.
+All seven Atomic.Valid gates are proved internally on ONE fresh complete OWN
+word, including the entire historical cut scan. The child retains the literal
+provider, increases depth by one, has its ENTIRE point HEq to the prescribed
+point, and preserves every meaningful earlier chronological field.
+The equal-point specialization needs ONLY parent validity and depth room.
+It derives eligibility internally and gives an actual native Identity.language
+and Edge.Adjacent edge, retaining the entire point and all earlier fields.
+
+The construction interprets every local and padding physical block, selected
+scalar correlation and latest companion on that same word. Historical guards
+transfer through equal full creating-prefix algebras and exact cut receipts.
+The actual native cut guards are equivalent to the full own-prefix receipt,
+including first-nonzero choice, stored degree and untruncated factor root.
+Marked and replay guards follow from the preserved initial fields.
+
+ProperCritical.noCritical_iff_original_critical_free proves BOTH directions
+between native NoCritical and critical-height freedom on the ORIGINAL frozen
+slice. Its only inputs are actual Atomic.Valid and positive depth. The reverse
+direction builds the independent fresh probe words internally, and derives
+critical-point existence from properness and the accepted occurrence.
+
+Actual BadProbe metadata now identifies the literal saved state, CUT command,
+current-Q rule, kind and modulo degree. A checked hint derives all interval
+bounds, without an assumed command, decoder or interpretation. Actual native
+Near/rank readbacks and ordinary-to-mean midpoint root agreement use the SAME
+saved state and independently accepted words. These intermediate results do
+not yet prove NoBad or the full proper-edge geometric iff.
+
+Proper-edge construction/correctness, graph path induction, marked attachment,
+the original joint-header budget and full two-label incidence remain open.
+Neither original unconditional connectivity PSPACE theorem is yet proved.
+
+This checkpoint contains 78 dependency-closed new modules, 9310 LF lines.
+All pass whole-source checks at 200000 heartbeats, warnings as errors and
+strict implicit variables. Fifteen frozen delegated manifests contribute
+67 distinct matching source hashes; eleven root source hashes are recorded
+separately. The strict three-library build passes 22054 jobs. The retained
+constructor fixture passes six actual consumers and ten standard-three-axiom
+checks; the identity fixture passes two actual edge consumers and ten such
+checks. scripts/CheckProviderRecursive.lean passes four actual consumers,
+seven API checks and thirteen standard-three-axiom closures. The complete
+NoCritical, cut and readback packages also pass their focused fixtures.
+CheckAxioms passes 99986 declarations; CheckSpaceFoundation passes 208204
+transitive constants with no legacy space foundation. CheckRoadmapNativeGraph
+passes; its 10815-line output is byte-identical to the preceding checkpoint.
+All new sources use UTF8/LF, a single final newline, no trailing whitespace
+and mode100644. Only the main worktree exists. Unique earlier WIP and active
+proper-edge/interval proofs are preserved outside this checkpoint. No push
+or external write.
