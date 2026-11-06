@@ -2423,10 +2423,14 @@ now construct fresh accepted depth-zero seeds in the same marked component.
 A fresh accepted recursive child now preserves the entire prescribed point,
 all earlier fields and the literal provider while increasing depth by one.
 Every accepted parent with depth room has an equal-point child connected by
-an actual native identity edge. Native NoCritical is equivalent to critical-height freedom on the original
-frozen slice. Proper-edge correctness, path induction and marked attachment
-remain unfinished; component association and both original connectivity
-PSPACE endpoints remain open.
+an actual native identity edge. Native NoCritical and NoBad are equivalent
+to their original frozen-slice geometric conditions. Genuine matched slab
+interiors now construct accepted proper children on independent own words,
+with the prescribed entire endpoint points and preserved earlier fields.
+The literal provider graph has native PSPACE reachability and a proved
+terminal-fiber completeness case. Proper-edge acceptance/correctness, the
+nonterminal path induction and marked attachment remain unfinished; component
+association and both original connectivity PSPACE endpoints remain open.
 
 ## Build and verification
 

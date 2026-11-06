@@ -3254,3 +3254,63 @@ All new sources use UTF8/LF, a single final newline, no trailing whitespace
 and mode100644. Only the main worktree exists. Unique earlier WIP and active
 proper-edge/interval proofs are preserved outside this checkpoint. No push
 or external write.
+
+
+64. Original NoBad equivalence, accepted proper children and terminal graph case
+
+Proper.noBad_iff_original_bad_free proves BOTH directions for the ORIGINAL
+saved parent and original endpoint fields. Its only inputs are Atomic.Valid,
+positive depth and strict endpoint order. Actual hints, degree bounds,
+cut intervals, all matching fields and independent fresh OWN probe words
+are derived internally. The statement covers the whole selected bad set.
+
+ProperAppend.exists_valid_level constructs accepted proper children from an
+accepted parent, depth room, genuinely allowed endpoints, strict order and
+an actual MatchedSlabInterior with a physical midpoint fiber. ONE canonical
+pair supplies both sides; each side receives its own fresh full word.
+All seven Atomic.Valid gates, the SAME literal provider, successor depth,
+ENTIRE prescribed child point and every meaningful earlier field are proved.
+Local/Proper edge acceptance is not part of this constructor yet.
+
+The constructor reads every physical local and padding block on that SAME
+word. Fresh cut and critical endpoint guards, all historical guards, marked
+and replay gates, critical scans and companion correlations are discharged.
+The canonical endpoint-prefix arity accounts for multi-column critical
+commands; it is not inferred by counting endpoint commands alone.
+
+Near and rank converse witnesses are constructed from the actual ordinary
+and mean physical families. Rank still requires genuine MID-root membership.
+Accepted MID captures now independently supply source roots, frozen values,
+mean height, weak gradients and the actual original selected scalar. Their
+sources are identified with the ordinary row family without an assumed
+source model. The final all-coordinate Local converse remains open.
+
+The actual fixed-provider graph has native PSPACE reachability and connected
+languages, with exact labels/raw-path coding and the literal provider budget.
+These are not the original pointLanguage/connectedLanguage endpoints.
+Identity compares the ENTIRE point, and equal points glue raw paths.
+Terminal-fiber finiteness follows from the accepted OWN bank interpretation;
+a path in the terminal frozen slice forces equal points and an actual native
+identity edge. This closes depth_complete_terminal. Every canonical parent
+slice equals its original provider frozen slice after explicit coordinate
+casts; arbitrary points, slice membership and paths transport both ways.
+Actual accepted points give canonical critical heights and child partials,
+and properness of the canonical source is derived internally.
+
+Proper-edge acceptance/correctness, nonterminal depth induction, marked
+attachment, original joint-header budgets and two-label incidence remain
+open. BOTH original unconditional connectivity PSPACE endpoints remain open.
+
+This checkpoint contains 72 dependency-closed new modules, 10081 LF lines.
+Twenty-eight frozen manifests cover 56 distinct matching source hashes;
+sixteen root source hashes are recorded separately. All new sources use
+UTF8/LF, a single final newline, no trailing whitespace and mode100644.
+
+The strict three-library build passes 22198 jobs. The provider graph fixture
+passes five actual consumers, seven API checks and twenty-two standard-three-
+axiom closures. CheckAxioms passes 100610 declarations; CheckSpaceFoundation
+passes 209292 transitive constants with no legacy space foundation.
+CheckRoadmapNativeGraph passes with its 10815-line output byte-identical to
+the preceding checkpoint. Only the main worktree exists. Unique earlier WIP
+and active next-stage proofs remain outside this checkpoint. No external
+write or push.

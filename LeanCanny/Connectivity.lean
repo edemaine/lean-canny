@@ -1,3 +1,11 @@
+import LeanCanny.Connectivity.FormulaSignSlotRadialProviderGraphCanonicalPoints
+import LeanCanny.Encoding.FormulaSignSlotRadialProviderProperAppendConstruct
+import LeanCanny.Encoding.FormulaSignSlotRadialProviderNoBadComplete
+import LeanCanny.Encoding.FormulaSignSlotRadialProviderProperRowMeaning
+import LeanCanny.Encoding.FormulaSignSlotRadialProviderProperNearComplete
+import LeanCanny.Encoding.FormulaSignSlotRadialProviderProperRankComplete
+import LeanCanny.Encoding.FormulaSignSlotRadialProviderProperProbeWitness
+import LeanCanny.Encoding.FormulaSignSlotRadialProviderProperMidpointMembership
 import LeanCanny.Encoding.FormulaSignSlotRadialProviderRetainedAppendIdentity
 import LeanCanny.Encoding.FormulaSignSlotRadialProviderProperNoCriticalComplete
 import LeanCanny.Encoding.FormulaSignSlotRadialProviderProperRowMeanRoots
@@ -5365,6 +5373,12 @@ of CONNECTIVITY-PROTOTYPE.txt. The effective original-degree/mass ball cutoff no
 connections between endpoints in the ball, including singular and unbounded
 zero sets. External-point bounded association and the full two-label
 prototype remain open.
+The actual provider graph now has native PSPACE reachability and exact
+label/raw-path coding. Its terminal-fiber completeness case and canonical
+parent-slice path transport are proved. Original NoBad and NoCritical have
+geometric equivalences, and genuine matched slab interiors construct
+accepted proper children. Native proper-edge acceptance/correctness, the
+nonterminal induction and marked attachment remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

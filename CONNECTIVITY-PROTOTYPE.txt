@@ -191,10 +191,17 @@ Fresh accepted recursive children now realize any prescribed eligible point,
 preserve the literal provider and all earlier fields, and increase depth by
 one. All seven native acceptance gates are derived from the fresh own word.
 Every accepted parent with depth room also has an equal-point child joined
-by an actual native identity edge. Native NoCritical is equivalent to critical-height freedom on the original
-frozen slice. The remaining B contracts are proper-edge constructors with
-native edge correctness, and the path induction and marked attachment
-proving bounded association iff. Native identity and cross-point
+by an actual native identity edge. Native NoCritical and NoBad are equivalent
+to critical-height freedom and bad-set freedom on the original frozen slice.
+The NoBad equivalence derives all decoder bounds and fresh probes internally.
+Genuine matched slab interiors construct accepted proper children with the
+prescribed entire endpoint points, SAME literal provider and earlier fields.
+Their Local/Proper edge gates are still an integration obligation.
+The fixed-provider graph has native PSPACE reachability, exact raw-path/label
+coding and terminal-fiber completeness. Canonical parent slices and paths
+transport both ways to the provider coordinates. The remaining B contracts
+are proper-edge acceptance/correctness, nonterminal path induction and marked
+attachment proving bounded association iff. Native identity and cross-point
 comparisons read the entire current point; recursive edges retain one literal
 provider, while cross-point comparison requires the same original and radius.
 Native NoBad/NoCritical/Near cost theorems alone do not supply geometric iff.
