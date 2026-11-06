@@ -9,7 +9,7 @@ which are checked separately for unexpected axioms. -/
 open Lean in
 run_cmd do
   let env ← getEnv
-  let abstractModules := #[`LeanCanny.Abstract, `LeanCanny.AbstractEncoding]
+  let abstractModules := #[`LeanCanny.Abstract]
   let mut pending : Array Name := #[]
   let mut roots : Nat := 0
   for (name, info) in env.constants.toList do

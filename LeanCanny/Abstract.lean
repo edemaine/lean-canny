@@ -14,8 +14,7 @@ ETR ∈ PSPACE, ∃ℝ ⊆ PSPACE, and PSPACE bounds for point and whole-space
 connectivity. To check that these are the intended results, a reader only needs
 to inspect the definitions and theorem statements here. Lean checks the proofs
 through `AbstractBridge` and the rest of the development.
-Bit-level serialization currently uses the project's `LeanCanny.AbstractEncoding`
-helper; this is not a Mathlib encoding.
+The input encodings below use Complexitylib's standard encoders.
 
 The background complexity library is Complexitylib. Its PSPACE class means
 that one deterministic Turing machine halts on every input and decides membership
@@ -78,14 +77,33 @@ def ReachableEndpoints {n : ℕ} (p : Formula n) : Set (Formula n × Formula n) 
 
 /-! ## Input convention
 
-Inputs are explicit expression trees with binary integer coefficients and unary
-variable indices and dimensions. The project's `LeanCanny.AbstractEncoding`
-implements the precise serialization; the encoder applies it to the syntax above.
+A flat prefix token list records each syntax constructor once. Left tokens are
+integer constants. Right tokens 0–7 mean add, multiply, false, equal to zero,
+less than zero, not, and, or; a variable index `i` uses token `i + 8`.
+Complexitylib encodes constants in binary and natural tags in unary, and frames
+each token once. Dimensions are unary. Framing has fixed depth.
 -/
 
-/-- Serialize a formula using the stated input-size convention. -/
-def Formula.encode {n : ℕ} : Formula n → List Bool :=
-  AbstractEncoding.formula (@Term.rec n) (@Formula.rec n)
+abbrev Token := ℤ ⊕ ℕ
+
+def Term.tokens {n : ℕ} : Term n → List Token
+  | .const z => [.inl z]
+  | .var i => [.inr (i.val + 8)]
+  | .add a b => .inr 0 :: (a.tokens ++ b.tokens)
+  | .mul a b => .inr 1 :: (a.tokens ++ b.tokens)
+
+def Formula.tokens {n : ℕ} : Formula n → List Token
+  | .falsum => [.inr 2]
+  | .eqZero t => .inr 3 :: t.tokens
+  | .ltZero t => .inr 4 :: t.tokens
+  | .not p => .inr 5 :: p.tokens
+  | .and p q => .inr 6 :: (p.tokens ++ q.tokens)
+  | .or p q => .inr 7 :: (p.tokens ++ q.tokens)
+
+/-- Library list and sum encodings: binary integers and unary natural tags. -/
+def encoding : List Token ↪ List Bool :=
+  Turing.MultiTapeTM.encList
+    (Turing.MultiTapeTM.encSum Turing.MultiTapeTM.encIntBin Turing.MultiTapeTM.encUnary)
 
 /-! ## Encoded decision problems
 
@@ -95,15 +113,18 @@ and, for point queries, the formula describing the space.
 -/
 
 /-- ETR consists of the encodings of real-satisfiable formulas. -/
-def ETR : Set (List Bool) := ⋃ n, (@Formula.encode n) '' {p | p.solutionSet.Nonempty}
+def ETR : Set (List Bool) := ⋃ n, (fun p : Formula n => encoding p.tokens) '' {p | p.solutionSet.Nonempty}
 
 /-- Whole-space connectivity applies the input encoding to connected formulas. -/
 def ConnectedLanguage : Set (List Bool) :=
-  ⋃ n, AbstractEncoding.space Formula.encode n '' ConnectedFormulas n
+  ⋃ n, (fun p : Formula n => Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary
+    encoding (n, p.tokens)) '' ConnectedFormulas n
 
 /-- Point connectivity applies the input encoding to reachable endpoint pairs. -/
 def PointLanguage : Set (List Bool) :=
-  ⋃ n, ⋃ p : Formula n, AbstractEncoding.point Formula.encode n p '' ReachableEndpoints p
+  ⋃ n, ⋃ p : Formula n, (fun (a, b) =>
+    Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary (Turing.MultiTapeTM.encList encoding)
+      (n, [p.tokens, a.tokens, b.tokens])) '' ReachableEndpoints p
 
 /-- The class ∃ℝ consists of binary languages reducible to ETR in polynomial time.
 A reduction is a total algorithm on all input strings that preserves yes/no
