@@ -1,3 +1,12 @@
+import LeanCanny.Connectivity.FormulaSignSlotRadialProviderGraphDepthCompleteness
+import LeanCanny.Connectivity.FormulaSignSlotRadialProviderAssociationGeometry
+import LeanCanny.Connectivity.FormulaSignSlotRadialProviderAnchoredGeometry
+import LeanCanny.Encoding.FormulaSignSlotRadialProviderOriginalBudget
+import LeanCanny.Encoding.FormulaSignSlotRadialProviderJointWitnessNative
+import LeanCanny.Connectivity.FormulaSignSlotRadialProviderMarkedTargetAttachment
+import LeanCanny.Connectivity.FormulaSignSlotRadialProviderPairGeometry
+import LeanCanny.Connectivity.FormulaSignSlotRadialProviderFirstSeedAtPoint
+import LeanCanny.Encoding.FormulaSignSlotRadialProviderMarkedAnchor
 import LeanCanny.Connectivity.FormulaSignSlotRadialProviderGraphCanonicalPoints
 import LeanCanny.Encoding.FormulaSignSlotRadialProviderProperAppendConstruct
 import LeanCanny.Encoding.FormulaSignSlotRadialProviderNoBadComplete
@@ -5374,11 +5383,14 @@ connections between endpoints in the ball, including singular and unbounded
 zero sets. External-point bounded association and the full two-label
 prototype remain open.
 The actual provider graph now has native PSPACE reachability and exact
-label/raw-path coding. Its terminal-fiber completeness case and canonical
-parent-slice path transport are proved. Original NoBad and NoCritical have
-geometric equivalences, and genuine matched slab interiors construct
-accepted proper children. Native proper-edge acceptance/correctness, the
-nonterminal induction and marked attachment remain open.
+label/raw-path coding. Actual proper edges and raw paths are geometrically
+sound, and the entire frozen-depth induction is complete. At depth zero,
+native reachability is equivalent to provider-source joinedness. A genuine
+path to a seed's own marked prelude constructs a reachable terminal marked
+anchor; validity alone does not imply this path. Native anchored association
+and shared two-label witness searches have PSPACE checkers with original
+joint-header budgets. Original stratum-label semantics, complete radial
+interval/grid guards and Boolean frontier integration remain open.
 The effective semialgebraic roadmap construction is not yet
 supplied. In particular, neither
 `Connectivity.pointLanguage` nor `Connectivity.connectedLanguage` has a PSPACE

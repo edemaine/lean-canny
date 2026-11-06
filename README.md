@@ -2427,10 +2427,15 @@ an actual native identity edge. Native NoCritical and NoBad are equivalent
 to their original frozen-slice geometric conditions. Genuine matched slab
 interiors now construct accepted proper children on independent own words,
 with the prescribed entire endpoint points and preserved earlier fields.
-The literal provider graph has native PSPACE reachability and a proved
-terminal-fiber completeness case. Proper-edge acceptance/correctness, the
-nonterminal path induction and marked attachment remain unfinished; component
-association and both original connectivity PSPACE endpoints remain open.
+The actual native proper-edge constructor and graph soundness are proved.
+Full frozen-depth induction now makes native reachability equivalent to
+geometric connectivity between accepted depth-zero representatives of one
+provider. A genuine path to a seed's own marked prelude constructs a reachable
+terminal marked anchor. Native OLD/EXTERNAL association, both marked-anchor
+searches and a shared two-label witness have PSPACE checkers, with original
+joint-header vertex budgets. The original stratum-label bridge, complete
+radial grid/interval guards and Boolean frontier integration remain open;
+both original connectivity PSPACE endpoints remain unproved.
 
 ## Build and verification
 

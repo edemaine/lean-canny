@@ -196,12 +196,24 @@ to critical-height freedom and bad-set freedom on the original frozen slice.
 The NoBad equivalence derives all decoder bounds and fresh probes internally.
 Genuine matched slab interiors construct accepted proper children with the
 prescribed entire endpoint points, SAME literal provider and earlier fields.
-Their Local/Proper edge gates are still an integration obligation.
-The fixed-provider graph has native PSPACE reachability, exact raw-path/label
-coding and terminal-fiber completeness. Canonical parent slices and paths
-transport both ways to the provider coordinates. The remaining B contracts
-are proper-edge acceptance/correctness, nonterminal path induction and marked
-attachment proving bounded association iff. Native identity and cross-point
+Every actual Local/Proper edge gate is now derived internally. Native Local
+incidence gives a path through its whole MID anchor; midpoint signatures
+identify the entire shared point, so every raw native path is sound.
+Full frozen-depth induction proves completeness, and at depth zero native
+reachability is equivalent to original provider-source joinedness.
+A genuine path from a seed to its OWN initial marked vector constructs a
+reachable terminal native marked anchor, retaining all initial fields.
+This attachment is not inferred from Atomic.Valid alone.
+Native current-point OLD/EXTERNAL association has a geometric iff. The
+anchored native checker also requires reachable markers in BOTH providers;
+it does not equate current points with their marked preludes. Same-provider
+marked preludes are joined via their equal original projections; auxiliary
+phases need not agree. Original joint-header bounds now cover both provider
+graphs, with the sampler choosing its bounded metadata internally.
+One bounded two-label checker uses the SAME kind/Gamma/OWN sample on both
+sides. Its native witness iff is proved; the original stratum-label bridge,
+complete radial grid/interval guards and Boolean frontier integration remain
+open. Native identity and cross-point
 comparisons read the entire current point; recursive edges retain one literal
 provider, while cross-point comparison requires the same original and radius.
 Native NoBad/NoCritical/Near cost theorems alone do not supply geometric iff.

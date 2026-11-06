@@ -3314,3 +3314,79 @@ CheckRoadmapNativeGraph passes with its 10815-line output byte-identical to
 the preceding checkpoint. Only the main worktree exists. Unique earlier WIP
 and active next-stage proofs remain outside this checkpoint. No external
 write or push.
+
+65. Actual proper edges, full depth completeness and marked attachment
+
+The actual ProperEdgeConstruct.exists_proper_pair constructs TWO fresh
+accepted OWN words from genuine allowed canonical endpoints, strict order,
+bad/critical-free interval receipts, MatchedSlabInterior and its physical
+midpoint fiber. Every native Local gate is derived internally: the entire
+MID companion packet, order/bounds, NoBad, NoCritical and every coordinate's
+Near/mean-rank search. The two complete native midpoint signatures agree.
+The prescribed ENTIRE endpoint points and all earlier fields survive.
+
+Conversely, actual Local incidence gives a child-to-MID path in the literal
+ordinary-parent source. Accepted midpoint signatures determine the ENTIRE
+MID anchor; source/coordinate transport maps both local paths into one
+original provider source. Every actual proper edge and raw path is sound.
+Native edge/path symmetry is derived from the actual field comparisons.
+
+Actual finite canonical sweeps and weak child-critical representatives
+simulate closed slabs, including artificial empty cut fibers. Next-depth
+fiber recursion uses freshly accepted representatives constructed internally.
+The full nonterminal depth_complete_step and strong depth_complete induction
+are proved. At depth zero, depth_zero_raw_reachable_iff_joined equates actual
+native paths with joinedness in the original provider zero set. There is no
+model, source interpretation or solvability premise in this equivalence.
+
+Every genuine global critical point admits a fresh SAME-provider depth-zero
+word preserving all initial fields, even when the input word has higher
+depth. Actual OLD/EXTERNAL point transport preserves the entire point and
+critical occurrence. Native current-point Association has an unconditional
+PSPACE checker and a geometric iff under its real seed/provider/role guards.
+This is an assertion about CURRENT points, not marked-prelude attachment.
+
+The native MarkedAnchor checker compares the entire current point with the
+SAME word's initial marked vector, at any depth. A genuine source path from
+an accepted depth-zero seed to its OWN prelude constructs a reachable
+terminal marked anchor, retaining ALL initial fields. The underlying retained
+target construction and coordinate induction derive their recursive graph
+completeness internally. Validity alone does not imply that initial path.
+
+AnchoredAssociation additionally requires reachable marked anchors in BOTH
+providers; both witness bounds and its PSPACE checker are proved internally.
+Raw paths do not imply field retention. Same-provider marked preludes are
+joined by equality of their original projections, without identifying their
+auxiliary phases. Native anchored association joins the paired preludes;
+the converse explicitly requires genuine seed-to-own-prelude paths.
+
+One original joint-header UnaryFn bounds both literal OLD/EXTERNAL provider
+graphs and every accepted vertex for the chosen component sample. The closed
+component_hit_bounded_providers consumer calls the sampler internally.
+Acceptance alone permits arbitrary unused Gamma padding; the actual sampler
+choice supplies the table-size certificate. The two-label native checker
+uses ONE shared kind/Gamma/OWN word for both sides, with literal provider
+matches and native anchored associations. It has an unconditional PSPACE
+checker and exact bounded native-witness iff. Its lower of_seed_pairs helper
+takes genuine native acceptance receipts and derives the size caps.
+
+The original AtLabel equivalence, complete radial grid/interval guards and
+Boolean frontier integration remain open. In particular, the coefficient-only
+stratum sampler and native two-label witness do not yet establish Descriptor
+.grid or .cut_free. Neither original pointLanguage nor connectedLanguage has
+an unconditional PSPACE membership theorem yet.
+
+This checkpoint contains 67 dependency-closed new modules, 8084 LF lines.
+Twenty-one frozen manifests cover 46 distinct matching source hashes;
+21 root source hashes are recorded separately. All source checks use 200000
+heartbeats, warnings as errors and strict implicit variables. The strict
+three-library build passes 22332 jobs. The completeness fixture checks eight
+actual consumers, eight public APIs and twenty-five standard-three-axiom
+closures. Sources have UTF8/LF, one final newline, no trailing whitespace and
+mode100644. Active original-label/interval extensions and unique earlier WIP
+are excluded; only the main worktree exists. No external write or push.
+
+Global checks: 101082 declarations use only the standard three axioms;
+210070 transitive constants pass the space-foundation audit, including
+12087 native-P constants. The 10815-line native graph axiom report is byte
+identical to the preceding graph-semantics report.
