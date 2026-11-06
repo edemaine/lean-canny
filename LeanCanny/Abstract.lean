@@ -77,33 +77,17 @@ def ReachableEndpoints {n : ℕ} (p : Formula n) : Set (Formula n × Formula n) 
 
 /-! ## Input convention
 
-A flat prefix token list records each syntax constructor once. Left tokens are
-integer constants. Right tokens 0–7 mean add, multiply, false, equal to zero,
-less than zero, not, and, or; a variable index `i` uses token `i + 8`.
-Complexitylib encodes constants in binary and natural tags in unary, and frames
-each token once. Dimensions are unary. Framing has fixed depth.
+A flat prefix list records each constructor before its children, in field
+order. Integer leaves use binary encoding; variable indices use unary encoding.
+Other constructors receive consecutive unary tags, considering `Term` before
+`Formula`; index tokens are shifted past those tags. The command below generates
+local `Token`, `Term.tokens`, `Formula.tokens`, and `encoding` definitions.
+Complexitylib frames each token once. Dimensions are unary; query framing has
+fixed depth.
 -/
 
-abbrev Token := ℤ ⊕ ℕ
-
-def Term.tokens {n : ℕ} : Term n → List Token
-  | .const z => [.inl z]
-  | .var i => [.inr (i.val + 8)]
-  | .add a b => .inr 0 :: (a.tokens ++ b.tokens)
-  | .mul a b => .inr 1 :: (a.tokens ++ b.tokens)
-
-def Formula.tokens {n : ℕ} : Formula n → List Token
-  | .falsum => [.inr 2]
-  | .eqZero t => .inr 3 :: t.tokens
-  | .ltZero t => .inr 4 :: t.tokens
-  | .not p => .inr 5 :: p.tokens
-  | .and p q => .inr 6 :: (p.tokens ++ q.tokens)
-  | .or p q => .inr 7 :: (p.tokens ++ q.tokens)
-
-/-- Library list and sum encodings: binary integers and unary natural tags. -/
-def encoding : List Token ↪ List Bool :=
-  Turing.MultiTapeTM.encList
-    (Turing.MultiTapeTM.encSum Turing.MultiTapeTM.encIntBin Turing.MultiTapeTM.encUnary)
+derive_syntax_encoding Term Formula
+  (integers := binary) (indices := unary)
 
 /-! ## Encoded decision problems
 

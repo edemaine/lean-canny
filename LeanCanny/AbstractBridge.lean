@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public meta import Lean.Elab.Deriving.Util
 public import LeanCanny.AbstractEncodingBridge
 
 /-! # Transfer from the independent mathematical abstract
@@ -308,3 +309,130 @@ theorem finite_point_upper_bound :
 end Finite
 
 end LeanCanny.AbstractBridge
+
+end
+
+/-! ## Generated input encodings
+
+`derive_syntax_encoding` inspects the supplied inductive declarations. A sole
+integer or natural/finite-index field is a scalar leaf; every other field must
+be another supplied syntax type. Non-leaf constructors receive consecutive
+unary tags in declaration order across the supplied types. Index leaves are
+shifted past these tags. Children are concatenated in field order.
+
+The command emits `Token`, each type's `tokens` function, and `encoding` into
+the calling module. The resulting definitions contain only local syntax and
+background-library operations; the metaprogram is absent from their values.
+Nested, indexed and mutually recursive families are rejected.
+-/
+
+public meta section
+namespace LeanCanny.AbstractBridge
+open Lean Meta Elab Command Deriving Parser.Term
+
+private def encodingRootIdent (name : Name) : Ident := mkIdent (`_root_ ++ name)
+
+private def encodingLeaf (ind : InductiveVal) (ctor : ConstructorVal) : MetaM (Option Bool) :=
+  forallTelescopeReducing ctor.type fun xs _ => do
+    if ctor.numFields != 1 then return none
+    let ty ← inferType xs[ind.numParams]!
+    if ty.isConstOf ``Int then return some true
+    if ty.isConstOf ``Nat || ty.isAppOf ``Fin then return some false
+    return none
+
+private def encodingAlts (types : Array InductiveVal) (ind : InductiveVal)
+    (tags : NameMap Nat) (offset : Nat) : TermElabM (Array (TSyntax ``matchAlt)) := do
+  let mut alts := #[]
+  for ctorName in ind.ctors do
+    let ctor ← getConstInfoCtor ctorName
+    let alt ← forallTelescopeReducing ctor.type fun xs _ => do
+      let mut args : Array Term := #[]
+      for _ in [:ctor.numParams] do args := args.push (← `(_))
+      let mut fields : Array Ident := #[]
+      for _ in [:ctor.numFields] do
+        let a := mkIdent (← mkFreshUserName `a)
+        fields := fields.push a
+        args := args.push a
+      let pattern ← `(@$(mkCIdent ctorName):ident $args:term*)
+      let rhs : Term ← match ← encodingLeaf ind ctor with
+        | some true => `([.inl $(fields[0]!)])
+        | some false =>
+          let ty ← inferType xs[ind.numParams]!
+          let value ← if ty.isAppOf ``Fin then `($(fields[0]!).val) else `($(fields[0]!))
+          `([.inr ($value + $(quote offset))])
+        | none =>
+          let mut children : Array Term := #[]
+          for i in [:ctor.numFields] do
+            let ty ← inferType xs[ind.numParams + i]!
+            let some target := types.find? (ty.isAppOf ·.name)
+              | throwError "Unsupported field type {ty} in {ctorName}"
+            children := children.push (← `($(mkIdent (target.name.str "tokens")) $(fields[i]!)))
+          let payload ← if children.isEmpty then `([])
+            else children.pop.foldrM (init := children.back!) fun child tail => `($child ++ $tail)
+          let some tag := tags.find? ctorName | throwError "Missing constructor tag"
+          `(.inr $(quote tag) :: $payload)
+      `(matchAltExpr| | $pattern => $rhs)
+    alts := alts.push alt
+  return alts
+
+/-- Generate local flat syntax encoders from constructor metadata. Integer and
+index leaf constructors emit scalar tokens. Other constructors receive global
+consecutive tags in the supplied type/declaration order. -/
+elab "derive_syntax_encoding " inputs:ident+
+    "(" &"integers" ":=" &"binary" ")" "(" &"indices" ":=" &"unary" ")" : command => do
+  let mut types : Array InductiveVal := #[]
+  for input in inputs do
+    let name ← liftCoreM <| realizeGlobalConstNoOverloadWithInfo input
+    let info ← getConstInfoInduct name
+    if info.isNested || info.isReflexive || info.numIndices != 0 then
+      throwErrorAt input "Syntax encoding requires a non-nested, unindexed inductive type"
+    if types.any (·.name == name) then throwErrorAt input "Duplicate syntax type"
+    types := types.push info
+  let mut tags : NameMap Nat := {}
+  let mut offset := 0
+  for typeIndex in [:types.size] do
+    let ind := types[typeIndex]!
+    let mut integerSeen := false
+    let mut indexSeen := false
+    for name in ind.ctors do
+      let ctor ← getConstInfoCtor name
+      match ← liftTermElabM (encodingLeaf ind ctor) with
+      | some true =>
+        if integerSeen then throwError "Multiple integer leaf constructors in {ind.name}"
+        integerSeen := true
+      | some false =>
+        if indexSeen then throwError "Multiple index leaf constructors in {ind.name}"
+        indexSeen := true
+      | none =>
+        liftTermElabM <| forallTelescopeReducing ctor.type fun fields _ => do
+          for i in [:ctor.numFields] do
+            let ty ← inferType fields[ind.numParams + i]!
+            let some targetIndex := types.findIdx? (ty.isAppOf ·.name)
+              | throwError "Unsupported field type {ty} in {name}; expected a supplied syntax type or a single integer/index leaf"
+            if targetIndex > typeIndex then
+              throwError "Put the field type {types[targetIndex]!.name} before {ind.name}; mutually recursive syntax families are not supported"
+        tags := tags.insert name offset
+        offset := offset + 1
+  let ns ← getCurrNamespace
+  let tokenName := encodingRootIdent (ns.str "Token")
+  let encodingName := encodingRootIdent (ns.str "encoding")
+  let aliasCmd ← `(command| public abbrev $tokenName:ident := Int ⊕ Nat)
+  elabCommand aliasCmd
+  for ind in types do
+    let cmd ← liftTermElabM do
+      let argNames ← mkInductArgNames ind
+      let binders ← mkImplicitBinders argNames
+      let targetType ← mkInductiveApp ind argNames
+      let x := mkIdent (← mkFreshUserName `x)
+      let alts ← encodingAlts types ind tags offset
+      let discrs := #[← `(matchDiscr| $x:ident)]
+      let body ← `(match $[$discrs],* with $alts:matchAlt*)
+      let fn := encodingRootIdent (ind.name.str "tokens")
+      `(command| @[expose] public def $fn:ident $binders:implicitBinder* ($x:ident : $targetType) :
+          List $tokenName := $body)
+    elabCommand cmd
+  elabCommand (← `(command| @[expose] public def $encodingName:ident : List $tokenName ↪ List Bool :=
+    Turing.MultiTapeTM.encList
+      (Turing.MultiTapeTM.encSum Turing.MultiTapeTM.encIntBin Turing.MultiTapeTM.encUnary)))
+end LeanCanny.AbstractBridge
+end

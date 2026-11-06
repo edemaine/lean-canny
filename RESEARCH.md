@@ -106,8 +106,11 @@ separate future results.
 ### Flat library encoding of the abstract
 
 [`Abstract`](LeanCanny/Abstract.lean) defines its syntax, solution sets and flat
-prefix token lists locally. Complexitylib's `encIntBin`, `encUnary`, `encSum`
-and `encList` supply the binary serialization. Each token is framed once;
+prefix token lists locally. `derive_syntax_encoding` inspects the inductives
+and generates their token functions, numbering constructors automatically. Its
+metaprogram lives in the proof bridge; the generated definitions belong to the
+abstract and have no implementation dependencies. Complexitylib's `encIntBin`,
+`encUnary`, `encSum` and `encList` supply the binary serialization. Each token is framed once;
 query headers use library containers at fixed depth.
 
 [`FlatSyntax`](LeanCanny/Encoding/FlatSyntax.lean) proves a native polynomial-time

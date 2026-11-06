@@ -41,7 +41,8 @@ For independently readable, checked statements of all three PSPACE bounds, see
 and theorem statements to assess the claimed result; Lean verifies the proofs
 through [`AbstractBridge.lean`](LeanCanny/AbstractBridge.lean) and the development.
 All public definitions are local to the abstract or use background libraries.
-Flat token lists use Complexitylib encodings; their PSPACE transfer is checked
+A declaration-driven command generates the local flat token encoding using
+Complexitylib encoders; its PSPACE transfer is checked
 in [`AbstractEncodingBridge.lean`](LeanCanny/AbstractEncodingBridge.lean).
 
 ## ETR proof outline
@@ -187,6 +188,7 @@ lake build LeanCanny LeanCannyAlternatives LeanCannyConnectivity --wfail --iofai
 lake env lean scripts/CheckCoreImports.lean
 lake env lean scripts/CheckAxioms.lean
 lake env lean scripts/CheckAbstract.lean
+lake env lean scripts/CheckAbstractEncoding.lean
 lake env lean scripts/CheckGrammar.lean
 lake env lean scripts/CheckSpaceFoundation.lean
 lake env lean scripts/CheckPolyTimeFoundation.lean
