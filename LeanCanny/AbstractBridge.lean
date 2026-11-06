@@ -30,116 +30,6 @@ def integer : ℤ → List Bool
   | .ofNat n => node [unary 0, node (n.bits.map bit)]
   | .negSucc n => node [unary 1, node (n.bits.map bit)]
 
-structure Presentation where
-  Term : Type
-  Formula : Type
-  const : ℤ → Term
-  var : ℕ → Term
-  add : Term → Term → Term
-  mul : Term → Term → Term
-  falsum : Formula
-  eqZero : Term → Formula
-  ltZero : Term → Formula
-  not : Formula → Formula
-  and : Formula → Formula → Formula
-  or : Formula → Formula → Formula
-  term_induction {P : Term → Prop} :
-    (∀ z, P (const z)) → (∀ i, P (var i)) →
-    (∀ a b, P a → P b → P (add a b)) →
-    (∀ a b, P a → P b → P (mul a b)) → ∀ t, P t
-  formula_induction {P : Formula → Prop} :
-    P falsum → (∀ t, P (eqZero t)) → (∀ t, P (ltZero t)) →
-    (∀ p, P p → P (not p)) →
-    (∀ p q, P p → P q → P (and p q)) →
-    (∀ p q, P p → P q → P (or p q)) → ∀ p, P p
-  eval : (ℕ → ℝ) → Term → ℝ
-  holds : (ℕ → ℝ) → Formula → Prop
-  termCode : Term → List Bool
-  formulaCode : Formula → List Bool
-  termArity : Term → ℕ
-  formulaArity : Formula → ℕ
-
-structure Laws (S : Presentation) : Prop where
-  eval_const : ∀ x z, S.eval x (S.const z) = z
-  eval_var : ∀ x i, S.eval x (S.var i) = x i
-  eval_add : ∀ x a b, S.eval x (S.add a b) = S.eval x a + S.eval x b
-  eval_mul : ∀ x a b, S.eval x (S.mul a b) = S.eval x a * S.eval x b
-  holds_falsum : ∀ x, S.holds x S.falsum ↔ False
-  holds_eqZero : ∀ x t, S.holds x (S.eqZero t) ↔ S.eval x t = 0
-  holds_ltZero : ∀ x t, S.holds x (S.ltZero t) ↔ S.eval x t < 0
-  holds_not : ∀ x p, S.holds x (S.not p) ↔ ¬ S.holds x p
-  holds_and : ∀ x p q, S.holds x (S.and p q) ↔ S.holds x p ∧ S.holds x q
-  holds_or : ∀ x p q, S.holds x (S.or p q) ↔ S.holds x p ∨ S.holds x q
-  code_const : ∀ z, S.termCode (S.const z) = node [unary 0, integer z]
-  code_var : ∀ i, S.termCode (S.var i) = node [unary 1, unary i]
-  code_add : ∀ a b, S.termCode (S.add a b) = node [unary 2, S.termCode a, S.termCode b]
-  code_mul : ∀ a b, S.termCode (S.mul a b) = node [unary 3, S.termCode a, S.termCode b]
-  code_falsum : S.formulaCode S.falsum = node [unary 0]
-  code_eqZero : ∀ t, S.formulaCode (S.eqZero t) = node [unary 1, S.termCode t]
-  code_ltZero : ∀ t, S.formulaCode (S.ltZero t) = node [unary 2, S.termCode t]
-  code_not : ∀ p, S.formulaCode (S.not p) = node [unary 3, S.formulaCode p]
-  code_and : ∀ p q,
-    S.formulaCode (S.and p q) = node [unary 4, S.formulaCode p, S.formulaCode q]
-  code_or : ∀ p q,
-    S.formulaCode (S.or p q) = node [unary 5, S.formulaCode p, S.formulaCode q]
-  arity_const : ∀ z, S.termArity (S.const z) = 0
-  arity_var : ∀ i, S.termArity (S.var i) = i + 1
-  arity_add : ∀ a b, S.termArity (S.add a b) = max (S.termArity a) (S.termArity b)
-  arity_mul : ∀ a b, S.termArity (S.mul a b) = max (S.termArity a) (S.termArity b)
-  arity_falsum : S.formulaArity S.falsum = 0
-  arity_eqZero : ∀ t, S.formulaArity (S.eqZero t) = S.termArity t
-  arity_ltZero : ∀ t, S.formulaArity (S.ltZero t) = S.termArity t
-  arity_not : ∀ p, S.formulaArity (S.not p) = S.formulaArity p
-  arity_and : ∀ p q,
-    S.formulaArity (S.and p q) = max (S.formulaArity p) (S.formulaArity q)
-  arity_or : ∀ p q,
-    S.formulaArity (S.or p q) = max (S.formulaArity p) (S.formulaArity q)
-
-def translateTerm (S : Presentation) : ETR.Term → S.Term
-  | .const z => S.const z
-  | .var i => S.var i
-  | .add a b => S.add (translateTerm S a) (translateTerm S b)
-  | .mul a b => S.mul (translateTerm S a) (translateTerm S b)
-
-def translateFormula (S : Presentation) : ETR.Formula → S.Formula
-  | .falsum => S.falsum
-  | .eqZero t => S.eqZero (translateTerm S t)
-  | .ltZero t => S.ltZero (translateTerm S t)
-  | .not p => S.not (translateFormula S p)
-  | .and p q => S.and (translateFormula S p) (translateFormula S q)
-  | .or p q => S.or (translateFormula S p) (translateFormula S q)
-
-theorem translateTerm_surjective (S : Presentation) : Function.Surjective (translateTerm S) := by
-  intro t
-  refine S.term_induction (P := fun t => ∃ a, translateTerm S a = t) ?_ ?_ ?_ ?_ t
-  · intro z; exact ⟨.const z, rfl⟩
-  · intro i; exact ⟨.var i, rfl⟩
-  · rintro a b ⟨a', rfl⟩ ⟨b', rfl⟩; exact ⟨.add a' b', rfl⟩
-  · rintro a b ⟨a', rfl⟩ ⟨b', rfl⟩; exact ⟨.mul a' b', rfl⟩
-
-theorem translateFormula_surjective (S : Presentation) :
-    Function.Surjective (translateFormula S) := by
-  intro p
-  refine S.formula_induction (P := fun p => ∃ a, translateFormula S a = p)
-    ?_ ?_ ?_ ?_ ?_ ?_ p
-  · exact ⟨.falsum, rfl⟩
-  · intro t; obtain ⟨t, rfl⟩ := translateTerm_surjective S t; exact ⟨.eqZero t, rfl⟩
-  · intro t; obtain ⟨t, rfl⟩ := translateTerm_surjective S t; exact ⟨.ltZero t, rfl⟩
-  · rintro p ⟨p', rfl⟩; exact ⟨.not p', rfl⟩
-  · rintro p q ⟨p', rfl⟩ ⟨q', rfl⟩; exact ⟨.and p' q', rfl⟩
-  · rintro p q ⟨p', rfl⟩ ⟨q', rfl⟩; exact ⟨.or p' q', rfl⟩
-
-theorem eval_translate (S : Presentation) (h : Laws S) (x : ℕ → ℝ) (t : ETR.Term) :
-    S.eval x (translateTerm S t) = t.eval x := by
-  induction t <;> simp_all [translateTerm, ETR.Term.eval,
-    h.eval_const, h.eval_var, h.eval_add, h.eval_mul]
-
-theorem holds_translate (S : Presentation) (h : Laws S) (x : ℕ → ℝ) (p : ETR.Formula) :
-    S.holds x (translateFormula S p) ↔ p.Holds x := by
-  induction p <;> simp_all [translateFormula, ETR.Formula.Holds,
-    h.holds_falsum, h.holds_eqZero, h.holds_ltZero, h.holds_not,
-    h.holds_and, h.holds_or, eval_translate S h]
-
 private theorem unary_eq (n : ℕ) : (ETR.Codec.unary n).toBits = unary n := by
   simp [ETR.Codec.unary, unary, node, Data.toBits_l]
 
@@ -150,35 +40,6 @@ private theorem integer_eq (z : ℤ) : (ETR.Codec.integer z).toBits = integer z 
   cases z <;> simp [ETR.Codec.integer, ETR.Codec.natural, integer, node,
     Data.toBits_l, unary_eq, List.map_map, Function.comp_def, bit_eq]
 
-theorem termCode_translate (S : Presentation) (h : Laws S) (t : ETR.Term) :
-    S.termCode (translateTerm S t) = t.toData.toBits := by
-  induction t <;> simp_all [translateTerm, h.code_const, h.code_var, h.code_add,
-    h.code_mul, ETR.Term.toData, Data.toBits_l, unary_eq, integer_eq, node]
-
-theorem formulaCode_translate (S : Presentation) (h : Laws S) (p : ETR.Formula) :
-    S.formulaCode (translateFormula S p) = p.encode := by
-  induction p <;> simp_all [translateFormula, h.code_falsum, h.code_eqZero,
-    h.code_ltZero, h.code_not, h.code_and, h.code_or, ETR.Formula.encode,
-    ETR.Formula.toData, Data.toBits_l, unary_eq, termCode_translate S h, node]
-
-theorem language_eq (S : Presentation) (h : Laws S) :
-    {bits | ∃ p, bits = S.formulaCode p ∧ ∃ x, S.holds x p} = ETR.language := by
-  ext bits
-  rw [ETR.mem_language_iff]
-  constructor
-  · rintro ⟨p, hp, x, hx⟩
-    obtain ⟨p, rfl⟩ := translateFormula_surjective S p
-    exact ⟨p, hp.trans (formulaCode_translate S h p), x, (holds_translate S h x p).mp hx⟩
-  · rintro ⟨p, hp, x, hx⟩
-    exact ⟨translateFormula S p, hp.trans (formulaCode_translate S h p).symm,
-      x, (holds_translate S h x p).mpr hx⟩
-
-theorem upper_bound (S : Presentation) (h : Laws S) :
-    {bits | ∃ p, bits = S.formulaCode p ∧ ∃ x, S.holds x p} ∈
-      Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
-  rw [language_eq S h]
-  exact ETR.etr_mem_PSPACE
-
 theorem reduction_closure {L : Set (List Bool)}
     (h : L ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits) :
     {K | Cslib.Complexity.PolyTimeReducible Turing.MultiTapeTM.encBits
@@ -187,151 +48,286 @@ theorem reduction_closure {L : Set (List Bool)}
   intro K hK
   exact Computation.mem_PSPACE_of_reduction hK h
 
-theorem termArity_translate (S : Presentation) (h : Laws S) (t : ETR.Term) :
-    S.termArity (translateTerm S t) = t.arity := by
-  induction t <;> simp_all [translateTerm, ETR.Term.arity,
-    h.arity_const, h.arity_var, h.arity_add, h.arity_mul]
+/-! ## Dimension-indexed abstract syntax
 
-theorem formulaArity_translate (S : Presentation) (h : Laws S) (p : ETR.Formula) :
-    S.formulaArity (translateFormula S p) = p.arity := by
-  induction p <;> simp_all [translateFormula, ETR.Formula.arity,
-    h.arity_falsum, h.arity_eqZero, h.arity_ltZero, h.arity_not,
-    h.arity_and, h.arity_or, termArity_translate S h]
+All representation assembly stays in the bridge. The abstract supplies only
+its induction principles and the defining equations for evaluation and coding.
+-/
+section Finite
+variable {T F : ℕ → Type}
+  {const : ∀ {n}, ℤ → T n} {var : ∀ {n}, Fin n → T n}
+  {add mul : ∀ {n}, T n → T n → T n}
+  {falsum : ∀ {n}, F n} {eqZero ltZero : ∀ {n}, T n → F n}
+  {neg : ∀ {n}, F n → F n} {conj disj : ∀ {n}, F n → F n → F n}
+  {eval : ∀ {n}, (Fin n → ℝ) → T n → ℝ}
+  {holds : ∀ {n}, (Fin n → ℝ) → F n → Prop}
+  {termCode : ∀ {n}, T n → List Bool} {formulaCode : ∀ {n}, F n → List Bool}
 
-def realization (S : Presentation) (n : ℕ) (p : S.Formula) : Set (Fin n → ℝ) :=
-  {x | S.holds (fun i => if h : i < n then x ⟨i, h⟩ else 0) p}
+structure FiniteLaws : Prop where
+  holds_eqZero : ∀ n (x : Fin n → ℝ) t, holds x (eqZero t) ↔ eval x t = 0
+  code_eqZero : ∀ n t, formulaCode (n := n) (eqZero t) = node [unary 1, termCode t]
+  eval_const : ∀ n (x : Fin n → ℝ) z, eval x (const z) = z
+  eval_var : ∀ n (x : Fin n → ℝ) i, eval x (var i) = x i
+  eval_add : ∀ n (x : Fin n → ℝ) a b, eval x (add a b) = eval x a + eval x b
+  eval_mul : ∀ n (x : Fin n → ℝ) a b, eval x (mul a b) = eval x a * eval x b
+  holds_falsum : ∀ n (x : Fin n → ℝ), holds x falsum ↔ False
+  holds_ltZero : ∀ n (x : Fin n → ℝ) t, holds x (ltZero t) ↔ eval x t < 0
+  holds_not : ∀ n (x : Fin n → ℝ) p, holds x (neg p) ↔ ¬ holds x p
+  holds_and : ∀ n (x : Fin n → ℝ) p q, holds x (conj p q) ↔ holds x p ∧ holds x q
+  holds_or : ∀ n (x : Fin n → ℝ) p q, holds x (disj p q) ↔ holds x p ∨ holds x q
+  code_const : ∀ n z, termCode (n := n) (const z) = node [unary 0, integer z]
+  code_var : ∀ n i, termCode (n := n) (var i) = node [unary 1, unary i.val]
+  code_add : ∀ n a b, termCode (n := n) (add a b) = node [unary 2, termCode a, termCode b]
+  code_mul : ∀ n a b, termCode (n := n) (mul a b) = node [unary 3, termCode a, termCode b]
+  code_falsum : ∀ n, formulaCode (n := n) falsum = node [unary 0]
+  code_ltZero : ∀ n t, formulaCode (n := n) (ltZero t) = node [unary 2, termCode t]
+  code_not : ∀ n p, formulaCode (n := n) (neg p) = node [unary 3, formulaCode p]
+  code_and : ∀ n p q, formulaCode (n := n) (conj p q) = node [unary 4, formulaCode p, formulaCode q]
+  code_or : ∀ n p q, formulaCode (n := n) (disj p q) = node [unary 5, formulaCode p, formulaCode q]
 
-def denotes (S : Presentation) (n : ℕ) (p : S.Formula) (x : Fin n → ℝ) : Prop :=
-  S.formulaArity p ≤ n ∧ realization S n p = {x}
+variable
+  (ti : ∀ {n} {P : T n → Prop}, (∀ z, P (const z)) → (∀ i, P (var i)) →
+    (∀ a b, P a → P b → P (add a b)) →
+    (∀ a b, P a → P b → P (mul a b)) → ∀ t, P t)
+  (fi : ∀ {n} {P : F n → Prop}, P falsum → (∀ t, P (eqZero t)) →
+    (∀ t, P (ltZero t)) → (∀ p, P p → P (neg p)) →
+    (∀ p q, P p → P q → P (conj p q)) →
+    (∀ p q, P p → P q → P (disj p q)) → ∀ p, P p)
+  (h : FiniteLaws (const := const) (var := var) (add := add) (mul := mul)
+    (falsum := falsum) (eqZero := eqZero) (ltZero := ltZero)
+    (neg := neg) (conj := conj) (disj := disj)
+    (eval := eval) (holds := holds) (termCode := termCode) (formulaCode := formulaCode))
 
-def connectedLanguage (S : Presentation) : Set (List Bool) :=
-  {bits | ∃ n p, bits = node [unary 1, unary n, S.formulaCode p] ∧
-    S.formulaArity p ≤ n ∧ IsPreconnected (realization S n p)}
+private def TermRep {n} (t : T n) (a : ETR.Term) : Prop :=
+  a.arity ≤ n ∧ termCode t = a.toData.toBits ∧
+    ∀ x : Fin n → ℝ, eval x t = a.eval (ETR.Formula.extend x)
 
-def pointLanguage (S : Presentation) : Set (List Bool) :=
-  {bits | ∃ n p a b,
-    bits = node [unary 0, unary n, S.formulaCode p, S.formulaCode a, S.formulaCode b] ∧
-    S.formulaArity p ≤ n ∧ S.formulaArity a ≤ n ∧ S.formulaArity b ≤ n ∧
-    ∃ x y, realization S n a = {x} ∧ realization S n b = {y} ∧
-      JoinedIn (realization S n p) x y}
+private def FormulaRep {n} (p : F n) (a : ETR.Formula) : Prop :=
+  a.arity ≤ n ∧ formulaCode p = a.encode ∧
+    ∀ x : Fin n → ℝ, holds x p ↔ a.Holds (ETR.Formula.extend x)
 
-theorem realization_translate (S : Presentation) (h : Laws S) (n : ℕ) (p : ETR.Formula) :
-    realization S n (translateFormula S p) =
-      (Connectivity.Description.mk n p).realization := by
+include h in
+private theorem termRep_const (n : ℕ) (z : ℤ) :
+    TermRep (eval := eval) (termCode := termCode) (const z : T n) (.const z) := by
+  simp [TermRep, ETR.Term.arity, ETR.Term.toData, Data.toBits_l, unary_eq, integer_eq,
+    h.code_const, node, ETR.Term.eval, h.eval_const]
+
+include h in
+private theorem termRep_var (n : ℕ) (i : Fin n) :
+    TermRep (eval := eval) (termCode := termCode) (var i) (.var i.val) := by
+  refine ⟨by simp [ETR.Term.arity], ?_, ?_⟩
+  · simp [h.code_var, ETR.Term.toData, Data.toBits_l, unary_eq, node]
+  · intro x
+    simp [h.eval_var, ETR.Term.eval, ETR.Formula.extend, i.isLt]
+
+include h in
+private theorem termRep_add {n} {a b : T n} {ra rb : ETR.Term}
+    (ha : TermRep (eval := eval) (termCode := termCode) a ra)
+    (hb : TermRep (eval := eval) (termCode := termCode) b rb) :
+    TermRep (eval := eval) (termCode := termCode) (add a b) (.add ra rb) := by
+  refine ⟨max_le ha.1 hb.1, ?_, ?_⟩
+  · simp [h.code_add, ha.2.1, hb.2.1, ETR.Term.toData, Data.toBits_l, unary_eq, node]
+  · intro x; simp [h.eval_add, ha.2.2 x, hb.2.2 x, ETR.Term.eval]
+
+include h in
+private theorem termRep_mul {n} {a b : T n} {ra rb : ETR.Term}
+    (ha : TermRep (eval := eval) (termCode := termCode) a ra)
+    (hb : TermRep (eval := eval) (termCode := termCode) b rb) :
+    TermRep (eval := eval) (termCode := termCode) (mul a b) (.mul ra rb) := by
+  refine ⟨max_le ha.1 hb.1, ?_, ?_⟩
+  · simp [h.code_mul, ha.2.1, hb.2.1, ETR.Term.toData, Data.toBits_l, unary_eq, node]
+  · intro x; simp [h.eval_mul, ha.2.2 x, hb.2.2 x, ETR.Term.eval]
+
+include ti h in
+private theorem term_to_raw {n} (t : T n) :
+    ∃ a, TermRep (eval := eval) (termCode := termCode) t a := by
+  apply ti (P := fun t => ∃ a, TermRep (eval := eval) (termCode := termCode) t a)
+  · intro z; exact ⟨.const z, termRep_const h n z⟩
+  · intro i; exact ⟨.var i.val, termRep_var h n i⟩
+  · rintro a b ⟨ra, ha⟩ ⟨rb, hb⟩; exact ⟨.add ra rb, termRep_add h ha hb⟩
+  · rintro a b ⟨ra, ha⟩ ⟨rb, hb⟩; exact ⟨.mul ra rb, termRep_mul h ha hb⟩
+
+include h in
+private theorem term_from_raw {n} (a : ETR.Term) (ha : a.arity ≤ n) :
+    ∃ t : T n, TermRep (eval := eval) (termCode := termCode) t a := by
+  induction a with
+  | const z => exact ⟨const z, termRep_const h n z⟩
+  | var i => exact ⟨var ⟨i, ha⟩, termRep_var h n ⟨i, ha⟩⟩
+  | add a b ia ib =>
+    obtain ⟨ta, hta⟩ := ia (le_trans (Nat.le_max_left ..) ha)
+    obtain ⟨tb, htb⟩ := ib (le_trans (Nat.le_max_right ..) ha)
+    exact ⟨add ta tb, termRep_add h hta htb⟩
+  | mul a b ia ib =>
+    obtain ⟨ta, hta⟩ := ia (le_trans (Nat.le_max_left ..) ha)
+    obtain ⟨tb, htb⟩ := ib (le_trans (Nat.le_max_right ..) ha)
+    exact ⟨mul ta tb, termRep_mul h hta htb⟩
+
+include ti fi h in
+private theorem formula_to_raw {n} (p : F n) :
+    ∃ a, FormulaRep (holds := holds) (formulaCode := formulaCode) p a := by
+  apply fi (P := fun p => ∃ a, FormulaRep (holds := holds) (formulaCode := formulaCode) p a)
+  · refine ⟨.falsum, Nat.zero_le _, ?_, ?_⟩
+    · simp [h.code_falsum, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; exact h.holds_falsum n x
+  · intro t; obtain ⟨a, ha⟩ := term_to_raw ti h t
+    refine ⟨.eqZero a, ha.1, ?_, ?_⟩
+    · simp [h.code_eqZero, ha.2.1, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; simp [h.holds_eqZero, ha.2.2 x, ETR.Formula.Holds]
+  · intro t; obtain ⟨a, ha⟩ := term_to_raw ti h t
+    refine ⟨.ltZero a, ha.1, ?_, ?_⟩
+    · simp [h.code_ltZero, ha.2.1, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; simp [h.holds_ltZero, ha.2.2 x, ETR.Formula.Holds]
+  · rintro p ⟨a, ha⟩
+    refine ⟨.not a, ha.1, ?_, ?_⟩
+    · simp [h.code_not, ha.2.1, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; simp [h.holds_not, ha.2.2 x, ETR.Formula.Holds]
+  · rintro p q ⟨a, ha⟩ ⟨b, hb⟩
+    refine ⟨.and a b, max_le ha.1 hb.1, ?_, ?_⟩
+    · simp [h.code_and, ha.2.1, hb.2.1, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; simp [h.holds_and, ha.2.2 x, hb.2.2 x, ETR.Formula.Holds]
+  · rintro p q ⟨a, ha⟩ ⟨b, hb⟩
+    refine ⟨.or a b, max_le ha.1 hb.1, ?_, ?_⟩
+    · simp [h.code_or, ha.2.1, hb.2.1, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; simp [h.holds_or, ha.2.2 x, hb.2.2 x, ETR.Formula.Holds]
+
+include h in
+private theorem formula_from_raw {n} (a : ETR.Formula) (ha : a.arity ≤ n) :
+    ∃ p : F n, FormulaRep (holds := holds) (formulaCode := formulaCode) p a := by
+  induction a with
+  | falsum =>
+    refine ⟨falsum, ha, ?_, ?_⟩
+    · simp [h.code_falsum, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; exact h.holds_falsum n x
+  | eqZero t =>
+    obtain ⟨a, ht⟩ := term_from_raw h t ha
+    refine ⟨eqZero a, ha, ?_, ?_⟩
+    · simp [h.code_eqZero, ht.2.1, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; simp [h.holds_eqZero, ht.2.2 x, ETR.Formula.Holds]
+  | ltZero t =>
+    obtain ⟨a, ht⟩ := term_from_raw h t ha
+    refine ⟨ltZero a, ha, ?_, ?_⟩
+    · simp [h.code_ltZero, ht.2.1, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; simp [h.holds_ltZero, ht.2.2 x, ETR.Formula.Holds]
+  | not p ip =>
+    obtain ⟨a, ht⟩ := ip ha
+    refine ⟨neg a, ha, ?_, ?_⟩
+    · simp [h.code_not, ht.2.1, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; simp [h.holds_not, ht.2.2 x, ETR.Formula.Holds]
+  | and p q ip iq =>
+    obtain ⟨a, ht⟩ := ip (le_trans (Nat.le_max_left ..) ha)
+    obtain ⟨b, hu⟩ := iq (le_trans (Nat.le_max_right ..) ha)
+    refine ⟨conj a b, ha, ?_, ?_⟩
+    · simp [h.code_and, ht.2.1, hu.2.1, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; simp [h.holds_and, ht.2.2 x, hu.2.2 x, ETR.Formula.Holds]
+  | or p q ip iq =>
+    obtain ⟨a, ht⟩ := ip (le_trans (Nat.le_max_left ..) ha)
+    obtain ⟨b, hu⟩ := iq (le_trans (Nat.le_max_right ..) ha)
+    refine ⟨disj a b, ha, ?_, ?_⟩
+    · simp [h.code_or, ht.2.1, hu.2.1, ETR.Formula.encode, ETR.Formula.toData, Data.toBits_l, unary_eq, node]
+    · intro x; simp [h.holds_or, ht.2.2 x, hu.2.2 x, ETR.Formula.Holds]
+
+private theorem solution_eq {n} {p : F n} {a : ETR.Formula}
+    (hp : FormulaRep (holds := holds) (formulaCode := formulaCode) p a) :
+    {x | holds x p} = (Connectivity.Description.mk n a).realization := by
   ext x
-  exact holds_translate S h (ETR.Formula.extend x) p
+  exact hp.2.2 x
 
-theorem denotes_translate (S : Presentation) (h : Laws S) (n : ℕ)
-    (p : ETR.Formula) (x : Fin n → ℝ) :
-    denotes S n (translateFormula S p) x ↔ Connectivity.Denotes n p x := by
-  simp only [denotes, formulaArity_translate S h, realization_translate S h,
-    Connectivity.Denotes, Connectivity.Description.realization,
-    Set.ext_iff, Set.mem_ofPred_eq, Set.mem_singleton_iff]
+private theorem whole_code {n} {p : F n} {a : ETR.Formula}
+    (hp : FormulaRep (holds := holds) (formulaCode := formulaCode) p a) :
+    node [unary 1, unary n, formulaCode p] =
+      (Connectivity.Input.whole ⟨n, a⟩).encode := by
+  simp [hp.2.1, Connectivity.Input.encode, Connectivity.Input.toData,
+    ETR.Formula.encode, Data.toBits_l, unary_eq, node]
 
-private theorem wholeCode_translate (S : Presentation) (h : Laws S)
-    (n : ℕ) (p : ETR.Formula) :
-    node [unary 1, unary n, S.formulaCode (translateFormula S p)] =
-      (Connectivity.Input.whole ⟨n, p⟩).encode := by
-  simp only [formulaCode_translate S h, Connectivity.Input.encode,
-    Connectivity.Input.toData, ETR.Formula.encode, Data.toBits_l,
-    List.map_cons, List.map_nil, unary_eq, node]
+private theorem point_code {n} {p l r : F n} {a b c : ETR.Formula}
+    (hp : FormulaRep (holds := holds) (formulaCode := formulaCode) p a)
+    (hl : FormulaRep (holds := holds) (formulaCode := formulaCode) l b)
+    (hr : FormulaRep (holds := holds) (formulaCode := formulaCode) r c) :
+    node [unary 0, unary n, formulaCode p, formulaCode l, formulaCode r] =
+      (Connectivity.Input.point ⟨⟨n, a⟩, b, c⟩).encode := by
+  simp [hp.2.1, hl.2.1, hr.2.1, Connectivity.Input.encode, Connectivity.Input.toData,
+    ETR.Formula.encode, Data.toBits_l, unary_eq, node]
 
-private theorem pointCode_translate (S : Presentation) (h : Laws S)
-    (n : ℕ) (p a b : ETR.Formula) :
-    node [unary 0, unary n, S.formulaCode (translateFormula S p),
-      S.formulaCode (translateFormula S a), S.formulaCode (translateFormula S b)] =
-      (Connectivity.Input.point ⟨⟨n, p⟩, a, b⟩).encode := by
-  simp only [formulaCode_translate S h, Connectivity.Input.encode,
-    Connectivity.Input.toData, ETR.Formula.encode, Data.toBits_l,
-    List.map_cons, List.map_nil, unary_eq, node]
-
-/-- Literal input bits agree, so no extra computational reduction is needed. -/
-theorem connectedLanguage_eq (S : Presentation) (h : Laws S) :
-    connectedLanguage S = Connectivity.connectedLanguage := by
-  ext bits
+private theorem singleton_iff {n} {p : F n} {a : ETR.Formula}
+    (hp : FormulaRep (holds := holds) (formulaCode := formulaCode) p a) (x : Fin n → ℝ) :
+    {y | holds y p} = {x} ↔ Connectivity.Denotes n a x := by
+  simp only [Set.ext_iff, Set.mem_ofPred_eq, Set.mem_singleton_iff,
+    Connectivity.Denotes, hp.1, true_and]
   constructor
-  · rintro ⟨n, p, hb, hp, hc⟩
-    obtain ⟨p, rfl⟩ := translateFormula_surjective S p
-    exact ⟨⟨n, p⟩, hb.trans (wholeCode_translate S h n p),
-      (by simpa only [Connectivity.Description.WellFormed, formulaArity_translate S h] using hp),
-      (realization_translate S h n p) ▸ hc⟩
-  · rintro ⟨⟨n, p⟩, hb, hp, hc⟩
-    exact ⟨n, translateFormula S p, hb.trans (wholeCode_translate S h n p).symm,
-      (formulaArity_translate S h p).symm ▸ hp,
-      (realization_translate S h n p).symm ▸ hc⟩
+  · intro H y
+    exact (hp.2.2 y).symm.trans (H y)
+  · intro H y
+    exact (hp.2.2 y).trans (H y)
 
-theorem pointLanguage_eq (S : Presentation) (h : Laws S) :
-    pointLanguage S = Connectivity.pointLanguage := by
-  ext bits
-  constructor
-  · rintro ⟨n, p, a, b, hb, hp, ha, hb', x, y, hx, hy, hxy⟩
-    obtain ⟨p, rfl⟩ := translateFormula_surjective S p
-    obtain ⟨a, rfl⟩ := translateFormula_surjective S a
-    obtain ⟨b, rfl⟩ := translateFormula_surjective S b
-    exact ⟨⟨⟨n, p⟩, a, b⟩, hb.trans (pointCode_translate S h n p a b),
-      (by simpa only [Connectivity.Description.WellFormed, formulaArity_translate S h] using hp), x, y,
-      (denotes_translate S h n a x).mp ⟨ha, hx⟩,
-      (denotes_translate S h n b y).mp ⟨hb', hy⟩,
-      (realization_translate S h n p) ▸ hxy⟩
-  · rintro ⟨⟨⟨n, p⟩, a, b⟩, hb, hp, x, y, ha, hby, hxy⟩
-    obtain ⟨ha', hx⟩ := (denotes_translate S h n a x).mpr ha
-    obtain ⟨hb', hy⟩ := (denotes_translate S h n b y).mpr hby
-    exact ⟨n, translateFormula S p, translateFormula S a, translateFormula S b,
-      hb.trans (pointCode_translate S h n p a b).symm,
-      (formulaArity_translate S h p).symm ▸ hp, ha', hb', x, y, hx, hy,
-      (realization_translate S h n p).symm ▸ hxy⟩
+include ti fi h in
+/-- The finite syntax uses exactly the original ETR input bits. -/
+theorem finite_etr_upper_bound :
+    (⋃ n, (@formulaCode n) '' {p | ∃ x, holds x p}) ∈
+      Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
+  have HE : (⋃ n, (@formulaCode n) '' {p | ∃ x, holds x p}) = ETR.language := by
+    ext bits
+    simp only [Set.mem_iUnion, Set.mem_image, Set.mem_ofPred_eq, ETR.mem_language_iff]
+    constructor
+    · rintro ⟨n, p, ⟨x, hx⟩, hb⟩
+      obtain ⟨a, ha⟩ := formula_to_raw ti fi h p
+      exact ⟨a, hb.symm.trans ha.2.1, ETR.Formula.extend x, (ha.2.2 x).mp hx⟩
+    · rintro ⟨a, hb, hx⟩
+      obtain ⟨p, hp⟩ := formula_from_raw h a (le_refl a.arity)
+      obtain ⟨x, hx⟩ := (ETR.Formula.satisfiable_iff_fin a).mp hx
+      exact ⟨a.arity, p, ⟨x, (hp.2.2 x).mpr hx⟩, hp.2.1.trans hb.symm⟩
+  rw [HE]
+  exact ETR.etr_mem_PSPACE
 
-theorem connected_upper_bound (S : Presentation) (h : Laws S) :
-    connectedLanguage S ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
-  rw [connectedLanguage_eq S h]
+include ti fi h in
+theorem finite_connected_upper_bound :
+    (⋃ n, (fun p : F n => node [unary 1, unary n, formulaCode p]) ''
+      {p | IsPreconnected {x | holds x p}}) ∈
+        Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
+  have HE : (⋃ n, (fun p : F n => node [unary 1, unary n, formulaCode p]) ''
+      {p | IsPreconnected {x | holds x p}}) = Connectivity.connectedLanguage := by
+    ext bits
+    simp only [Set.mem_iUnion, Set.mem_image, Set.mem_ofPred_eq, Connectivity.connectedLanguage]
+    constructor
+    · rintro ⟨n, p, hc, hb⟩
+      obtain ⟨a, ha⟩ := formula_to_raw ti fi h p
+      exact ⟨⟨n, a⟩, hb.symm.trans (whole_code ha), ha.1, (solution_eq ha) ▸ hc⟩
+    · rintro ⟨⟨n, a⟩, hb, ha, hc⟩
+      obtain ⟨p, hp⟩ := formula_from_raw h a ha
+      exact ⟨n, p, (solution_eq hp).symm ▸ hc, (whole_code hp).trans hb.symm⟩
+  rw [HE]
   exact Connectivity.connectedLanguage_mem_PSPACE
 
-theorem point_upper_bound (S : Presentation) (h : Laws S) :
-    pointLanguage S ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
-  rw [pointLanguage_eq S h]
+include ti fi h in
+theorem finite_point_upper_bound :
+    (⋃ n, ⋃ p : F n, (fun ab : F n × F n =>
+      node [unary 0, unary n, formulaCode p, formulaCode ab.1, formulaCode ab.2]) ''
+      {ab | ∃ x y, {v | holds v ab.1} = {x} ∧ {v | holds v ab.2} = {y} ∧
+        JoinedIn {v | holds v p} x y}) ∈
+          Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
+  have HE : (⋃ n, ⋃ p : F n, (fun ab : F n × F n =>
+      node [unary 0, unary n, formulaCode p, formulaCode ab.1, formulaCode ab.2]) ''
+      {ab | ∃ x y, {v | holds v ab.1} = {x} ∧ {v | holds v ab.2} = {y} ∧
+        JoinedIn {v | holds v p} x y}) = Connectivity.pointLanguage := by
+    ext bits
+    simp only [Set.mem_iUnion, Set.mem_image, Set.mem_ofPred_eq, Connectivity.pointLanguage]
+    constructor
+    · rintro ⟨n, p, ⟨l, r⟩, ⟨x, y, hx, hy, hxy⟩, hb⟩
+      obtain ⟨a, ha⟩ := formula_to_raw ti fi h p
+      obtain ⟨b, hl⟩ := formula_to_raw ti fi h l
+      obtain ⟨c, hr⟩ := formula_to_raw ti fi h r
+      exact ⟨⟨⟨n, a⟩, b, c⟩, hb.symm.trans (point_code ha hl hr), ha.1,
+        x, y, (singleton_iff hl x).mp hx, (singleton_iff hr y).mp hy,
+        (solution_eq ha) ▸ hxy⟩
+    · rintro ⟨⟨⟨n, a⟩, b, c⟩, hb, ha, x, y, hx, hy, hxy⟩
+      obtain ⟨p, hp⟩ := formula_from_raw h a ha
+      obtain ⟨l, hl⟩ := formula_from_raw h b hx.1
+      obtain ⟨r, hr⟩ := formula_from_raw h c hy.1
+      exact ⟨n, p, (l, r), ⟨x, y, (singleton_iff hl x).mpr hx,
+        (singleton_iff hr y).mpr hy, (solution_eq hp).symm ▸ hxy⟩,
+        (point_code hp hl hr).trans hb.symm⟩
+  rw [HE]
   exact Connectivity.pointLanguage_mem_PSPACE
 
-/-! ## Encoding images of the mathematical input sets -/
-
-theorem etr_image_upper_bound (S : Presentation) (h : Laws S) :
-    S.formulaCode '' {p | ∃ x, S.holds x p} ∈
-      Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
-  convert upper_bound S h using 1
-  ext bits
-  simp only [Set.mem_image, Set.mem_ofPred_eq]
-  constructor
-  · rintro ⟨p, hp, hb⟩
-    exact ⟨p, hb.symm, hp⟩
-  · rintro ⟨p, hb, hp⟩
-    exact ⟨p, hp, hb.symm⟩
-
-theorem connected_image_upper_bound (S : Presentation) (h : Laws S) :
-    (⋃ n, (fun p => node [unary 1, unary n, S.formulaCode p]) ''
-      {p | S.formulaArity p ≤ n ∧ IsPreconnected (realization S n p)}) ∈
-        Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
-  convert connected_upper_bound S h using 1
-  ext bits
-  simp only [Set.mem_iUnion, Set.mem_image, Set.mem_ofPred_eq, connectedLanguage]
-  constructor
-  · rintro ⟨n, p, hp, hb⟩
-    exact ⟨n, p, hb.symm, hp⟩
-  · rintro ⟨n, p, hb, hp⟩
-    exact ⟨n, p, hp, hb.symm⟩
-
-theorem point_image_upper_bound (S : Presentation) (h : Laws S) :
-    (⋃ n, ⋃ p, (fun ab : S.Formula × S.Formula =>
-      node [unary 0, unary n, S.formulaCode p, S.formulaCode ab.1, S.formulaCode ab.2]) ''
-      {ab | S.formulaArity p ≤ n ∧ S.formulaArity ab.1 ≤ n ∧ S.formulaArity ab.2 ≤ n ∧
-        ∃ x y, realization S n ab.1 = {x} ∧ realization S n ab.2 = {y} ∧
-          JoinedIn (realization S n p) x y}) ∈
-            Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
-  convert point_upper_bound S h using 1
-  ext bits
-  simp only [Set.mem_iUnion, Set.mem_image, Set.mem_ofPred_eq, pointLanguage]
-  constructor
-  · rintro ⟨n, p, ⟨a, b⟩, hp, hb⟩
-    exact ⟨n, p, a, b, hb.symm, hp⟩
-  · rintro ⟨n, p, a, b, hb, hp⟩
-    exact ⟨n, p, (a, b), hp, hb.symm⟩
+end Finite
 
 end LeanCanny.AbstractBridge

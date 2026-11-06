@@ -24,34 +24,34 @@ using polynomially many work-tape cells in the input's bit length.
 namespace LeanCanny.Abstract
 
 /-- Integer polynomial expressions use constants, variables, addition, and
-multiplication. Variable names are natural numbers. -/
-inductive Term where
-  | const : ℤ → Term
-  | var : ℕ → Term
-  | add : Term → Term → Term
-  | mul : Term → Term → Term
+multiplication. In dimension `n`, variables are the indices `Fin n`. -/
+inductive Term (n : ℕ) where
+  | const : ℤ → Term n
+  | var : Fin n → Term n
+  | add : Term n → Term n → Term n
+  | mul : Term n → Term n → Term n
 
 /-- A Boolean formula compares polynomial expressions with zero, using equality
 or strict inequality, and combines these assertions by negation, conjunction,
 and disjunction. ETR existentially quantifies all occurring variables;
 connectivity treats them as coordinates of the described space. -/
-inductive Formula where
-  | falsum : Formula
-  | eqZero : Term → Formula
-  | ltZero : Term → Formula
-  | not : Formula → Formula
-  | and : Formula → Formula → Formula
-  | or : Formula → Formula → Formula
+inductive Formula (n : ℕ) where
+  | falsum : Formula n
+  | eqZero : Term n → Formula n
+  | ltZero : Term n → Formula n
+  | not : Formula n → Formula n
+  | and : Formula n → Formula n → Formula n
+  | or : Formula n → Formula n → Formula n
 
 /-- Evaluate an integer polynomial expression at a real assignment `x`. -/
-def Term.eval (x : ℕ → ℝ) : Term → ℝ
+def Term.eval {n : ℕ} (x : Fin n → ℝ) : Term n → ℝ
   | .const z => z
   | .var i => x i
   | .add a b => a.eval x + b.eval x
   | .mul a b => a.eval x * b.eval x
 
 /-- Truth of a formula at a real assignment has the usual Boolean semantics. -/
-def Formula.Holds (x : ℕ → ℝ) : Formula → Prop
+def Formula.Holds {n : ℕ} (x : Fin n → ℝ) : Formula n → Prop
   | .falsum => False
   | .eqZero t => t.eval x = 0
   | .ltZero t => t.eval x < 0
@@ -59,43 +59,27 @@ def Formula.Holds (x : ℕ → ℝ) : Formula → Prop
   | .and p q => p.Holds x ∧ q.Holds x
   | .or p q => p.Holds x ∨ q.Holds x
 
-/-- Arity is zero for closed expressions; otherwise it is one more than the
-largest variable index. An input of dimension `n` requires arity at most `n`. -/
-def Term.arity : Term → ℕ
-  | .const _ => 0
-  | .var i => i + 1
-  | .add a b | .mul a b => max a.arity b.arity
-
-def Formula.arity : Formula → ℕ
-  | .falsum => 0
-  | .eqZero t | .ltZero t => t.arity
-  | .not p => p.arity
-  | .and p q | .or p q => max p.arity q.arity
-
-/-- Real satisfiability means that some assignment makes the formula true.
-A finite formula uses only finitely many of the variables in `ℕ → ℝ`. -/
-def Formula.Satisfiable (p : Formula) : Prop := ∃ x : ℕ → ℝ, p.Holds x
+/-- Real satisfiability means that some point in `ℝⁿ` makes the formula true. -/
+def Formula.Satisfiable {n : ℕ} (p : Formula n) : Prop := ∃ x, p.Holds x
 
 /-! ## Semialgebraic connectivity -/
 
 /-- The solution set consists of the points in `ℝⁿ` satisfying the formula.
-Here `Fin n → ℝ` represents `ℝⁿ`; evaluation extends these coordinates by zero. -/
-def Formula.solutionSet (n : ℕ) (p : Formula) : Set (Fin n → ℝ) :=
-  {x | p.Holds (fun i => if h : i < n then x ⟨i, h⟩ else 0)}
+Here `Fin n → ℝ` represents `ℝⁿ`. -/
+def Formula.solutionSet {n : ℕ} (p : Formula n) : Set (Fin n → ℝ) :=
+  {x | p.Holds x}
 
 /-- Connected formulas describe connected solution sets in `ℝⁿ`, allowing the
-empty set (`IsPreconnected`). Only variables below `n` may occur. -/
-def ConnectedFormulas (n : ℕ) : Set Formula :=
-  {p | p.arity ≤ n ∧ IsPreconnected (p.solutionSet n)}
+empty set (`IsPreconnected`). -/
+def ConnectedFormulas (n : ℕ) : Set (Formula n) :=
+  {p | IsPreconnected p.solutionSet}
 
 /-- Reachable endpoint pairs describe two unique points joined by a continuous
 path inside the solution set of `p` (`JoinedIn`). The endpoints may be irrational.
-All three formulas must use only the `n` coordinates; each endpoint formula
-must have a singleton solution set. -/
-def ReachableEndpoints (n : ℕ) (p : Formula) : Set (Formula × Formula) :=
-  {ab | p.arity ≤ n ∧ ab.1.arity ≤ n ∧ ab.2.arity ≤ n ∧
-    ∃ x y, ab.1.solutionSet n = {x} ∧ ab.2.solutionSet n = {y} ∧
-      JoinedIn (p.solutionSet n) x y}
+Each endpoint formula must have a singleton solution set. -/
+def ReachableEndpoints {n : ℕ} (p : Formula n) : Set (Formula n × Formula n) :=
+  {ab | ∃ x y, ab.1.solutionSet = {x} ∧ ab.2.solutionSet = {y} ∧
+    JoinedIn p.solutionSet x y}
 
 /-! ## Binary input convention
 
@@ -116,15 +100,15 @@ def integer : ℤ → List Bool
   | .negSucc n => node [unary 1, node (n.bits.map bit)]
 
 /-- Expression tags, in order, are constant, variable, addition, multiplication. -/
-def Term.encode : Term → List Bool
+def Term.encode {n : ℕ} : Term n → List Bool
   | .const z => node [unary 0, integer z]
-  | .var i => node [unary 1, unary i]
+  | .var i => node [unary 1, unary i.val]
   | .add a b => node [unary 2, a.encode, b.encode]
   | .mul a b => node [unary 3, a.encode, b.encode]
 
 /-- Formula tags, in order, are false, equality, strict inequality, negation,
 conjunction, disjunction. The encoding includes the entire formula. -/
-def Formula.encode : Formula → List Bool
+def Formula.encode {n : ℕ} : Formula n → List Bool
   | .falsum => node [unary 0]
   | .eqZero t => node [unary 1, t.encode]
   | .ltZero t => node [unary 2, t.encode]
@@ -133,12 +117,12 @@ def Formula.encode : Formula → List Bool
   | .or p q => node [unary 5, p.encode, q.encode]
 
 /-- Encode a whole-space query by its tag, unary dimension, and formula. -/
-def encodeSpace (n : ℕ) (p : Formula) : List Bool :=
+def encodeSpace (n : ℕ) (p : Formula n) : List Bool :=
   node [unary 1, unary n, p.encode]
 
 /-- Encode a point query by its tag, unary dimension, space formula, and the two
 endpoint formulas. -/
-def encodePoint (n : ℕ) (p : Formula) (ab : Formula × Formula) : List Bool :=
+def encodePoint (n : ℕ) (p : Formula n) (ab : Formula n × Formula n) : List Bool :=
   node [unary 0, unary n, p.encode, ab.1.encode, ab.2.encode]
 
 /-! ## Encoded decision problems
@@ -149,7 +133,7 @@ and, for point queries, the formula describing the space.
 -/
 
 /-- ETR consists of the encodings of real-satisfiable formulas. -/
-def ETR : Set (List Bool) := Formula.encode '' {p | p.Satisfiable}
+def ETR : Set (List Bool) := ⋃ n, (@Formula.encode n) '' {p | p.Satisfiable}
 
 /-- Whole-space connectivity applies the input encoding to connected formulas. -/
 def ConnectedLanguage : Set (List Bool) :=
@@ -157,7 +141,7 @@ def ConnectedLanguage : Set (List Bool) :=
 
 /-- Point connectivity applies the input encoding to reachable endpoint pairs. -/
 def PointLanguage : Set (List Bool) :=
-  ⋃ n, ⋃ p, encodePoint n p '' ReachableEndpoints n p
+  ⋃ n, ⋃ p, encodePoint n p '' ReachableEndpoints p
 
 /-- The class ∃ℝ consists of binary languages reducible to ETR in polynomial time.
 A reduction is a total algorithm on all input strings that preserves yes/no
@@ -166,37 +150,10 @@ def ExistsReal : Set (Set (List Bool)) :=
   {L | Cslib.Complexity.PolyTimeReducible Turing.MultiTapeTM.encBits
     Turing.MultiTapeTM.encBits L ETR}
 
-/- A private proof adapter supplies the bridge's syntax and its defining laws.
-The mathematical definitions and theorem statements above and below do not
-refer to this adapter. -/
-private def presentation : AbstractBridge.Presentation where
-  Term := Term
-  Formula := Formula
-  const := Term.const
-  var := Term.var
-  add := Term.add
-  mul := Term.mul
-  falsum := Formula.falsum
-  eqZero := Formula.eqZero
-  ltZero := Formula.ltZero
-  not := Formula.not
-  and := Formula.and
-  or := Formula.or
-  term_induction := @Term.rec
-  formula_induction := @Formula.rec
-  eval := Term.eval
-  holds := Formula.Holds
-  termCode := Term.encode
-  formulaCode := Formula.encode
-  termArity := Term.arity
-  formulaArity := Formula.arity
-
-private theorem laws : AbstractBridge.Laws presentation := by constructor <;> intros <;> rfl
-
 /-- Theorem (Canny): existential real satisfiability is decidable in deterministic
 polynomial space, including rejection of malformed binary inputs. -/
 theorem etr_mem_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.etr_image_upper_bound presentation laws
+  AbstractBridge.finite_etr_upper_bound @Term.rec @Formula.rec (by constructor <;> intros <;> rfl)
 
 /-- Corollary: every problem in ∃ℝ is decidable in deterministic polynomial space. -/
 theorem existsReal_subset_PSPACE :
@@ -207,12 +164,12 @@ theorem existsReal_subset_PSPACE :
 including singular and unbounded sets and accepting the empty set. -/
 theorem connectedLanguage_mem_PSPACE :
     ConnectedLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.connected_image_upper_bound presentation laws
+  AbstractBridge.finite_connected_upper_bound @Term.rec @Formula.rec (by constructor <;> intros <;> rfl)
 
 /-- Theorem: path connectivity between two formula-described points in an
 integer semialgebraic set is in PSPACE, including endpoint validation. -/
 theorem pointLanguage_mem_PSPACE :
     PointLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.point_image_upper_bound presentation laws
+  AbstractBridge.finite_point_upper_bound @Term.rec @Formula.rec (by constructor <;> intros <;> rfl)
 
 end LeanCanny.Abstract
