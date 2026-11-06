@@ -122,16 +122,6 @@ def ExistsReal : Set (Set (List Bool)) :=
   {L | Cslib.Complexity.PolyTimeReducible Turing.MultiTapeTM.encBits
     Turing.MultiTapeTM.encBits L ETR}
 
-/-- Theorem (Canny): existential real satisfiability is decidable in deterministic
-polynomial space, including rejection of malformed binary inputs. -/
-theorem etr_mem_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  by canny_abstract AbstractBridge.upper_bound
-
-/-- Corollary: every problem in ∃ℝ is decidable in deterministic polynomial space. -/
-theorem existsReal_subset_PSPACE :
-    ExistsReal ⊆ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.reduction_closure etr_mem_PSPACE
-
 /-! ## Semialgebraic connectivity -/
 
 /-- The solution set consists of the points in `ℝⁿ` satisfying the formula.
@@ -158,16 +148,53 @@ def PointLanguage : Set (List Bool) :=
     ∃ x y, a.solutionSet n = {x} ∧ b.solutionSet n = {y} ∧
       JoinedIn (p.solutionSet n) x y}
 
+/- A private proof adapter supplies the bridge's syntax and its defining laws.
+The mathematical definitions and theorem statements above and below do not
+refer to this adapter. -/
+private def presentation : AbstractBridge.Presentation where
+  Term := Term
+  Formula := Formula
+  const := Term.const
+  var := Term.var
+  add := Term.add
+  mul := Term.mul
+  falsum := Formula.falsum
+  eqZero := Formula.eqZero
+  ltZero := Formula.ltZero
+  not := Formula.not
+  and := Formula.and
+  or := Formula.or
+  term_induction := @Term.rec
+  formula_induction := @Formula.rec
+  eval := Term.eval
+  holds := Formula.Holds
+  termCode := Term.encode
+  formulaCode := Formula.encode
+  termArity := Term.arity
+  formulaArity := Formula.arity
+
+private theorem laws : AbstractBridge.Laws presentation := by constructor <;> intros <;> rfl
+
+/-- Theorem (Canny): existential real satisfiability is decidable in deterministic
+polynomial space, including rejection of malformed binary inputs. -/
+theorem etr_mem_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
+  AbstractBridge.upper_bound presentation laws
+
+/-- Corollary: every problem in ∃ℝ is decidable in deterministic polynomial space. -/
+theorem existsReal_subset_PSPACE :
+    ExistsReal ⊆ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
+  AbstractBridge.reduction_closure etr_mem_PSPACE
+
 /-- Theorem: connectivity of an integer semialgebraic set is in PSPACE,
 including singular and unbounded sets and accepting the empty set. -/
 theorem connectedLanguage_mem_PSPACE :
     ConnectedLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  by canny_abstract AbstractBridge.connected_upper_bound
+  AbstractBridge.connected_upper_bound presentation laws
 
 /-- Theorem: path connectivity between two formula-described points in an
 integer semialgebraic set is in PSPACE, including endpoint validation. -/
 theorem pointLanguage_mem_PSPACE :
     PointLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  by canny_abstract AbstractBridge.point_upper_bound
+  AbstractBridge.point_upper_bound presentation laws
 
 end LeanCanny.Abstract
