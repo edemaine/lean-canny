@@ -134,32 +134,29 @@ theorem existsReal_subset_PSPACE :
 
 /-! ## Semialgebraic connectivity -/
 
-/-- The realization of a formula in dimension `n` is its solution set in `ℝⁿ`,
-represented by `Fin n → ℝ`. Unused coordinates beyond `n` are set to zero. -/
-def Formula.realization (n : ℕ) (p : Formula) : Set (Fin n → ℝ) :=
+/-- The solution set consists of the points in `ℝⁿ` satisfying the formula.
+Here `Fin n → ℝ` represents `ℝⁿ`; evaluation extends these coordinates by zero. -/
+def Formula.solutionSet (n : ℕ) (p : Formula) : Set (Fin n → ℝ) :=
   {x | p.Holds (fun i => if h : i < n then x ⟨i, h⟩ else 0)}
-
-/-- A formula denotes an endpoint when it uses only the `n` coordinates and
-its solution set is exactly that point. Endpoints may be irrational. -/
-def Formula.Denotes (n : ℕ) (p : Formula) (x : Fin n → ℝ) : Prop :=
-  p.arity ≤ n ∧ p.realization n = {x}
 
 /-- Whole-space inputs consist of tag one, a unary dimension, and a formula.
 The solution set must be connected, allowing the empty set (`IsPreconnected`).
 Malformed encodings and out-of-dimension variables are rejected. -/
 def ConnectedLanguage : Set (List Bool) :=
   {bits | ∃ (n : ℕ) (p : Formula), bits = node [unary 1, unary n, p.encode] ∧
-    p.arity ≤ n ∧ IsPreconnected (p.realization n)}
+    p.arity ≤ n ∧ IsPreconnected (p.solutionSet n)}
 
 /-- Point inputs consist of tag zero, a unary dimension, the space formula,
-and two endpoint formulas. Each endpoint must denote exactly one point;
+and two endpoint formulas, each with a singleton solution set. The endpoints
+may be irrational. All three formulas must use only the `n` coordinates.
 `JoinedIn` requires a continuous path between them inside the space.
 Malformed, out-of-dimension, inconsistent, or nonunique inputs are rejected. -/
 def PointLanguage : Set (List Bool) :=
   {bits | ∃ (n : ℕ) (p a b : Formula),
     bits = node [unary 0, unary n, p.encode, a.encode, b.encode] ∧
-    p.arity ≤ n ∧ ∃ x y, a.Denotes n x ∧ b.Denotes n y ∧
-      JoinedIn (p.realization n) x y}
+    p.arity ≤ n ∧ a.arity ≤ n ∧ b.arity ≤ n ∧
+    ∃ x y, a.solutionSet n = {x} ∧ b.solutionSet n = {y} ∧
+      JoinedIn (p.solutionSet n) x y}
 
 /-- Theorem: connectivity of an integer semialgebraic set is in PSPACE,
 including singular and unbounded sets and accepting the empty set. -/

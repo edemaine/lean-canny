@@ -211,7 +211,8 @@ def connectedLanguage (S : Presentation) : Set (List Bool) :=
 def pointLanguage (S : Presentation) : Set (List Bool) :=
   {bits | ∃ n p a b,
     bits = node [unary 0, unary n, S.formulaCode p, S.formulaCode a, S.formulaCode b] ∧
-    S.formulaArity p ≤ n ∧ ∃ x y, denotes S n a x ∧ denotes S n b y ∧
+    S.formulaArity p ≤ n ∧ S.formulaArity a ≤ n ∧ S.formulaArity b ≤ n ∧
+    ∃ x y, realization S n a = {x} ∧ realization S n b = {y} ∧
       JoinedIn (realization S n p) x y}
 
 theorem realization_translate (S : Presentation) (h : Laws S) (n : ℕ) (p : ETR.Formula) :
@@ -263,19 +264,21 @@ theorem pointLanguage_eq (S : Presentation) (h : Laws S) :
     pointLanguage S = Connectivity.pointLanguage := by
   ext bits
   constructor
-  · rintro ⟨n, p, a, b, hb, hp, x, y, ha, hby, hxy⟩
+  · rintro ⟨n, p, a, b, hb, hp, ha, hb', x, y, hx, hy, hxy⟩
     obtain ⟨p, rfl⟩ := translateFormula_surjective S p
     obtain ⟨a, rfl⟩ := translateFormula_surjective S a
     obtain ⟨b, rfl⟩ := translateFormula_surjective S b
     exact ⟨⟨⟨n, p⟩, a, b⟩, hb.trans (pointCode_translate S h n p a b),
       (by simpa only [Connectivity.Description.WellFormed, formulaArity_translate S h] using hp), x, y,
-      (denotes_translate S h n a x).mp ha, (denotes_translate S h n b y).mp hby,
+      (denotes_translate S h n a x).mp ⟨ha, hx⟩,
+      (denotes_translate S h n b y).mp ⟨hb', hy⟩,
       (realization_translate S h n p) ▸ hxy⟩
   · rintro ⟨⟨⟨n, p⟩, a, b⟩, hb, hp, x, y, ha, hby, hxy⟩
+    obtain ⟨ha', hx⟩ := (denotes_translate S h n a x).mpr ha
+    obtain ⟨hb', hy⟩ := (denotes_translate S h n b y).mpr hby
     exact ⟨n, translateFormula S p, translateFormula S a, translateFormula S b,
       hb.trans (pointCode_translate S h n p a b).symm,
-      (formulaArity_translate S h p).symm ▸ hp, x, y,
-      (denotes_translate S h n a x).mpr ha, (denotes_translate S h n b y).mpr hby,
+      (formulaArity_translate S h p).symm ▸ hp, ha', hb', x, y, hx, hy,
       (realization_translate S h n p).symm ▸ hxy⟩
 
 theorem connected_upper_bound (S : Presentation) (h : Laws S) :
