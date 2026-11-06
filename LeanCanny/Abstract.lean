@@ -14,7 +14,8 @@ ETR ∈ PSPACE, ∃ℝ ⊆ PSPACE, and PSPACE bounds for point and whole-space
 connectivity. To check that these are the intended results, a reader only needs
 to inspect the definitions and theorem statements here. Lean checks the proofs
 through `AbstractBridge` and the rest of the development.
-Bit-level serialization is isolated in the `AbstractEncoding` helper.
+Bit-level serialization currently uses the project's `LeanCanny.AbstractEncoding`
+helper; this is not a Mathlib encoding.
 
 The background complexity library is Complexitylib. Its PSPACE class means
 that one deterministic Turing machine halts on every input and decides membership
@@ -63,22 +64,23 @@ def Formula.solutionSet {n : ℕ} : Formula n → Set (Fin n → ℝ)
   | .or p q => p.solutionSet ∪ q.solutionSet
 
 /-- Connected formulas describe connected solution sets in `ℝⁿ`, allowing the
-empty set (`IsPreconnected`). -/
+empty set (Mathlib's root-level `IsPreconnected`). -/
 def ConnectedFormulas (n : ℕ) : Set (Formula n) :=
-  {p | IsPreconnected p.solutionSet}
+  {p | _root_.IsPreconnected p.solutionSet}
 
 /-- Reachable endpoint pairs describe two unique points joined by a continuous
-path inside the solution set of `p` (`JoinedIn`). The endpoints may be irrational.
-Each endpoint formula must have a singleton solution set. -/
+path inside the solution set of `p`. Mathlib's root-level `Path x y` is a
+continuous map from `[0,1]` with endpoints `x` and `y`. The endpoints may be
+irrational; each endpoint formula must have a singleton solution set. -/
 def ReachableEndpoints {n : ℕ} (p : Formula n) : Set (Formula n × Formula n) :=
-  {ab | ∃ x y, ab.1.solutionSet = {x} ∧ ab.2.solutionSet = {y} ∧
-    JoinedIn p.solutionSet x y}
+  {(a, b) | ∃ x y, a.solutionSet = {x} ∧ b.solutionSet = {y} ∧
+    ∃ γ : _root_.Path x y, ∀ t, γ t ∈ p.solutionSet}
 
 /-! ## Input convention
 
 Inputs are explicit expression trees with binary integer coefficients and unary
-variable indices and dimensions. `AbstractEncoding` implements the precise
-serialization; the encoder applies it to the syntax above.
+variable indices and dimensions. The project's `LeanCanny.AbstractEncoding`
+implements the precise serialization; the encoder applies it to the syntax above.
 -/
 
 /-- Serialize a formula using the stated input-size convention. -/

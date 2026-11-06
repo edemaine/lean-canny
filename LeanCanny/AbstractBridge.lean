@@ -294,12 +294,12 @@ theorem finite_connected_upper_bound :
 include ti fi h in
 theorem finite_point_upper_bound :
     (⋃ n, ⋃ p : F n, AbstractEncoding.point (@formulaCode n) n p ''
-      {ab | ∃ x y, {v | holds v ab.1} = {x} ∧ {v | holds v ab.2} = {y} ∧
-        JoinedIn {v | holds v p} x y}) ∈
+      {(a, b) | ∃ x y, {v | holds v a} = {x} ∧ {v | holds v b} = {y} ∧
+        ∃ γ : _root_.Path x y, ∀ t, holds (γ t) p}) ∈
           Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
   have HE : (⋃ n, ⋃ p : F n, AbstractEncoding.point (@formulaCode n) n p ''
-      {ab | ∃ x y, {v | holds v ab.1} = {x} ∧ {v | holds v ab.2} = {y} ∧
-        JoinedIn {v | holds v p} x y}) = Connectivity.pointLanguage := by
+      {(a, b) | ∃ x y, {v | holds v a} = {x} ∧ {v | holds v b} = {y} ∧
+        ∃ γ : _root_.Path x y, ∀ t, holds (γ t) p}) = Connectivity.pointLanguage := by
     ext bits
     simp only [Set.mem_iUnion, Set.mem_image, Set.mem_ofPred_eq, Connectivity.pointLanguage]
     constructor
@@ -315,7 +315,9 @@ theorem finite_point_upper_bound :
       obtain ⟨l, hl⟩ := formula_from_raw h b hx.1
       obtain ⟨r, hr⟩ := formula_from_raw h c hy.1
       exact ⟨n, p, (l, r), ⟨x, y, (singleton_iff hl x).mpr hx,
-        (singleton_iff hr y).mpr hy, (solution_eq hp).symm ▸ hxy⟩,
+        (singleton_iff hr y).mpr hy, (by
+          have H : JoinedIn {v | holds v p} x y := (solution_eq hp).symm ▸ hxy
+          exact H)⟩,
         (point_code hp hl hr).trans hb.symm⟩
   rw [HE]
   exact Connectivity.pointLanguage_mem_PSPACE
