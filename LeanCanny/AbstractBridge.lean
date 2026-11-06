@@ -291,4 +291,47 @@ theorem point_upper_bound (S : Presentation) (h : Laws S) :
   rw [pointLanguage_eq S h]
   exact Connectivity.pointLanguage_mem_PSPACE
 
+/-! ## Encoding images of the mathematical input sets -/
+
+theorem etr_image_upper_bound (S : Presentation) (h : Laws S) :
+    S.formulaCode '' {p | ∃ x, S.holds x p} ∈
+      Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
+  convert upper_bound S h using 1
+  ext bits
+  simp only [Set.mem_image, Set.mem_ofPred_eq]
+  constructor
+  · rintro ⟨p, hp, hb⟩
+    exact ⟨p, hb.symm, hp⟩
+  · rintro ⟨p, hb, hp⟩
+    exact ⟨p, hp, hb.symm⟩
+
+theorem connected_image_upper_bound (S : Presentation) (h : Laws S) :
+    (⋃ n, (fun p => node [unary 1, unary n, S.formulaCode p]) ''
+      {p | S.formulaArity p ≤ n ∧ IsPreconnected (realization S n p)}) ∈
+        Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
+  convert connected_upper_bound S h using 1
+  ext bits
+  simp only [Set.mem_iUnion, Set.mem_image, Set.mem_ofPred_eq, connectedLanguage]
+  constructor
+  · rintro ⟨n, p, hp, hb⟩
+    exact ⟨n, p, hb.symm, hp⟩
+  · rintro ⟨n, p, hb, hp⟩
+    exact ⟨n, p, hp, hb.symm⟩
+
+theorem point_image_upper_bound (S : Presentation) (h : Laws S) :
+    (⋃ n, ⋃ p, (fun ab : S.Formula × S.Formula =>
+      node [unary 0, unary n, S.formulaCode p, S.formulaCode ab.1, S.formulaCode ab.2]) ''
+      {ab | S.formulaArity p ≤ n ∧ S.formulaArity ab.1 ≤ n ∧ S.formulaArity ab.2 ≤ n ∧
+        ∃ x y, realization S n ab.1 = {x} ∧ realization S n ab.2 = {y} ∧
+          JoinedIn (realization S n p) x y}) ∈
+            Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
+  convert point_upper_bound S h using 1
+  ext bits
+  simp only [Set.mem_iUnion, Set.mem_image, Set.mem_ofPred_eq, pointLanguage]
+  constructor
+  · rintro ⟨n, p, ⟨a, b⟩, hp, hb⟩
+    exact ⟨n, p, a, b, hb.symm, hp⟩
+  · rintro ⟨n, p, a, b, hb, hp⟩
+    exact ⟨n, p, (a, b), hp, hb.symm⟩
+
 end LeanCanny.AbstractBridge

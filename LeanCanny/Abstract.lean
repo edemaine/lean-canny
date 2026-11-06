@@ -76,6 +76,27 @@ def Formula.arity : Formula → ℕ
 A finite formula uses only finitely many of the variables in `ℕ → ℝ`. -/
 def Formula.Satisfiable (p : Formula) : Prop := ∃ x : ℕ → ℝ, p.Holds x
 
+/-! ## Semialgebraic connectivity -/
+
+/-- The solution set consists of the points in `ℝⁿ` satisfying the formula.
+Here `Fin n → ℝ` represents `ℝⁿ`; evaluation extends these coordinates by zero. -/
+def Formula.solutionSet (n : ℕ) (p : Formula) : Set (Fin n → ℝ) :=
+  {x | p.Holds (fun i => if h : i < n then x ⟨i, h⟩ else 0)}
+
+/-- Connected formulas describe connected solution sets in `ℝⁿ`, allowing the
+empty set (`IsPreconnected`). Only variables below `n` may occur. -/
+def ConnectedFormulas (n : ℕ) : Set Formula :=
+  {p | p.arity ≤ n ∧ IsPreconnected (p.solutionSet n)}
+
+/-- Reachable endpoint pairs describe two unique points joined by a continuous
+path inside the solution set of `p` (`JoinedIn`). The endpoints may be irrational.
+All three formulas must use only the `n` coordinates; each endpoint formula
+must have a singleton solution set. -/
+def ReachableEndpoints (n : ℕ) (p : Formula) : Set (Formula × Formula) :=
+  {ab | p.arity ≤ n ∧ ab.1.arity ≤ n ∧ ab.2.arity ≤ n ∧
+    ∃ x y, ab.1.solutionSet n = {x} ∧ ab.2.solutionSet n = {y} ∧
+      JoinedIn (p.solutionSet n) x y}
+
 /-! ## Binary input convention
 
 The size of an input is its literal bit length. A node is encoded by an opening
@@ -111,9 +132,32 @@ def Formula.encode : Formula → List Bool
   | .and p q => node [unary 4, p.encode, q.encode]
   | .or p q => node [unary 5, p.encode, q.encode]
 
-/-- ETR is the language of encodings of satisfiable existential real formulas.
-Every other bitstring is rejected. -/
-def ETR : Set (List Bool) := {bits | ∃ p : Formula, bits = p.encode ∧ p.Satisfiable}
+/-- Encode a whole-space query by its tag, unary dimension, and formula. -/
+def encodeSpace (n : ℕ) (p : Formula) : List Bool :=
+  node [unary 1, unary n, p.encode]
+
+/-- Encode a point query by its tag, unary dimension, space formula, and the two
+endpoint formulas. -/
+def encodePoint (n : ℕ) (p : Formula) (ab : Formula × Formula) : List Bool :=
+  node [unary 0, unary n, p.encode, ab.1.encode, ab.2.encode]
+
+/-! ## Encoded decision problems
+
+An encoding image contains exactly the encodings of the specified mathematical
+inputs. Every other bitstring is rejected. Unions range over input dimensions
+and, for point queries, the formula describing the space.
+-/
+
+/-- ETR consists of the encodings of real-satisfiable formulas. -/
+def ETR : Set (List Bool) := Formula.encode '' {p | p.Satisfiable}
+
+/-- Whole-space connectivity applies the input encoding to connected formulas. -/
+def ConnectedLanguage : Set (List Bool) :=
+  ⋃ n, encodeSpace n '' ConnectedFormulas n
+
+/-- Point connectivity applies the input encoding to reachable endpoint pairs. -/
+def PointLanguage : Set (List Bool) :=
+  ⋃ n, ⋃ p, encodePoint n p '' ReachableEndpoints n p
 
 /-- The class ∃ℝ consists of binary languages reducible to ETR in polynomial time.
 A reduction is a total algorithm on all input strings that preserves yes/no
@@ -121,32 +165,6 @@ answers; the background library's `PolyTimeReducible` includes its time bound. -
 def ExistsReal : Set (Set (List Bool)) :=
   {L | Cslib.Complexity.PolyTimeReducible Turing.MultiTapeTM.encBits
     Turing.MultiTapeTM.encBits L ETR}
-
-/-! ## Semialgebraic connectivity -/
-
-/-- The solution set consists of the points in `ℝⁿ` satisfying the formula.
-Here `Fin n → ℝ` represents `ℝⁿ`; evaluation extends these coordinates by zero. -/
-def Formula.solutionSet (n : ℕ) (p : Formula) : Set (Fin n → ℝ) :=
-  {x | p.Holds (fun i => if h : i < n then x ⟨i, h⟩ else 0)}
-
-/-- Whole-space inputs consist of tag one, a unary dimension, and a formula.
-The solution set must be connected, allowing the empty set (`IsPreconnected`).
-Malformed encodings and out-of-dimension variables are rejected. -/
-def ConnectedLanguage : Set (List Bool) :=
-  {bits | ∃ (n : ℕ) (p : Formula), bits = node [unary 1, unary n, p.encode] ∧
-    p.arity ≤ n ∧ IsPreconnected (p.solutionSet n)}
-
-/-- Point inputs consist of tag zero, a unary dimension, the space formula,
-and two endpoint formulas, each with a singleton solution set. The endpoints
-may be irrational. All three formulas must use only the `n` coordinates.
-`JoinedIn` requires a continuous path between them inside the space.
-Malformed, out-of-dimension, inconsistent, or nonunique inputs are rejected. -/
-def PointLanguage : Set (List Bool) :=
-  {bits | ∃ (n : ℕ) (p a b : Formula),
-    bits = node [unary 0, unary n, p.encode, a.encode, b.encode] ∧
-    p.arity ≤ n ∧ a.arity ≤ n ∧ b.arity ≤ n ∧
-    ∃ x y, a.solutionSet n = {x} ∧ b.solutionSet n = {y} ∧
-      JoinedIn (p.solutionSet n) x y}
 
 /- A private proof adapter supplies the bridge's syntax and its defining laws.
 The mathematical definitions and theorem statements above and below do not
@@ -178,7 +196,7 @@ private theorem laws : AbstractBridge.Laws presentation := by constructor <;> in
 /-- Theorem (Canny): existential real satisfiability is decidable in deterministic
 polynomial space, including rejection of malformed binary inputs. -/
 theorem etr_mem_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.upper_bound presentation laws
+  AbstractBridge.etr_image_upper_bound presentation laws
 
 /-- Corollary: every problem in ∃ℝ is decidable in deterministic polynomial space. -/
 theorem existsReal_subset_PSPACE :
@@ -189,12 +207,12 @@ theorem existsReal_subset_PSPACE :
 including singular and unbounded sets and accepting the empty set. -/
 theorem connectedLanguage_mem_PSPACE :
     ConnectedLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.connected_upper_bound presentation laws
+  AbstractBridge.connected_image_upper_bound presentation laws
 
 /-- Theorem: path connectivity between two formula-described points in an
 integer semialgebraic set is in PSPACE, including endpoint validation. -/
 theorem pointLanguage_mem_PSPACE :
     PointLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.point_upper_bound presentation laws
+  AbstractBridge.point_image_upper_bound presentation laws
 
 end LeanCanny.Abstract
