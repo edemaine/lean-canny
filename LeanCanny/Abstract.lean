@@ -59,9 +59,6 @@ def Formula.Holds {n : ℕ} (x : Fin n → ℝ) : Formula n → Prop
   | .and p q => p.Holds x ∧ q.Holds x
   | .or p q => p.Holds x ∨ q.Holds x
 
-/-- Real satisfiability means that some point in `ℝⁿ` makes the formula true. -/
-def Formula.Satisfiable {n : ℕ} (p : Formula n) : Prop := ∃ x, p.Holds x
-
 /-! ## Semialgebraic connectivity -/
 
 /-- The solution set consists of the points in `ℝⁿ` satisfying the formula.
@@ -133,7 +130,7 @@ and, for point queries, the formula describing the space.
 -/
 
 /-- ETR consists of the encodings of real-satisfiable formulas. -/
-def ETR : Set (List Bool) := ⋃ n, (@Formula.encode n) '' {p | p.Satisfiable}
+def ETR : Set (List Bool) := ⋃ n, (@Formula.encode n) '' {p | p.solutionSet.Nonempty}
 
 /-- Whole-space connectivity applies the input encoding to connected formulas. -/
 def ConnectedLanguage : Set (List Bool) :=

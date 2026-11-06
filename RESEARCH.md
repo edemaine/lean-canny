@@ -103,6 +103,32 @@ the ETR algorithm and proved PSPACE reduction closure. Relating the encoding
 to other standard ETR presentations and proving the NP lower inclusion are
 separate future results.
 
+### Flat encoding experiment for the abstract
+
+[`FlatTokenEncoding`](experiments/FlatTokenEncoding.lean) prototypes prefix
+tokens using Complexitylib's `encIntBin`, `encUnary`, `encSum`, and `encList`.
+Each token is framed once; recursive syntax does not add framing layers.
+The checked parser recovers the original formula and its current binary code.
+The prototype also proves semantic preservation, injectivity, and two-sided
+linear bounds on bit length relative to tree size, counting binary coefficient
+lengths and unary variable indices. Whole-space and point-query encoders use
+library containers at fixed depth.
+
+The public abstract retains its current codec. The prototype parser consumes
+token lists, and adoption still needs a total bit-level translator with native
+resource certificates and malformed-input rejection. Its mathematical
+round-trip and size proofs alone do not transfer the PSPACE bounds.
+
+To check the experiment, first build its library imports, then run the file:
+
+```sh
+lake build LeanCanny.Abstract \
+  Complexity.Computability.Machines.Turing.MultiTape.Encodings.IntBinary \
+  Complexity.Computability.Machines.Turing.MultiTape.Encodings.Sum \
+  Complexity.Computability.Machines.Turing.MultiTape.Encodings.List --wfail --iofail
+lake env lean -DwarningAsError=true experiments/FlatTokenEncoding.lean
+```
+
 ## Effective bounded critical samples
 
 For a compiled polynomial q in n variables and D at least its total degree,
