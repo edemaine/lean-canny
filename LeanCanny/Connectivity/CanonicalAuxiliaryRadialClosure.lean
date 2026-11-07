@@ -31,49 +31,23 @@ theorem rawPiece_closure_iff (d :Description) (i :CanonicalAuxiliaryCandidateCov
       x∈(CanonicalAuxiliaryCandidateCover.data d).rawPiece i ∨Nonempty (Descriptor d i x):=by
   let P:=FormulaSignSlotRadialAccess.projectedPiece (CanonicalSignRefinement.source d i.1)
     ((CanonicalAuxiliaryCandidateLabelLock.positiveCover (CanonicalSignRefinement.source d i.1)).piece i.2)
-  have HE:x∈closure ((CanonicalAuxiliaryCandidateCover.data d).rawPiece i) ↔
-      (CanonicalSignRefinement.tuple d i.1).symm x∈closure P:=by
-    change x∈closure (CanonicalSignRefinement.tuple d i.1 '' P) ↔_
-    rw [(CanonicalSignRefinement.tuple d i.1).isClosedMap.closure_image_eq_of_continuous
-      (CanonicalSignRefinement.tuple d i.1).continuous]
-    constructor
-    · rintro ⟨y,HY,HP⟩
-      have HI:=(congrArg (CanonicalSignRefinement.tuple d i.1).symm HP)
-      rw [Homeomorph.symm_apply_apply] at HI
-      exact HI ▸ HY
-    · intro HY
-      exact ⟨_,HY,(CanonicalSignRefinement.tuple d i.1).apply_symm_apply x⟩
-  have HM:x∈(CanonicalAuxiliaryCandidateCover.data d).rawPiece i ↔
-      (CanonicalSignRefinement.tuple d i.1).symm x∈P:=by
-    constructor
-    · rintro ⟨y,HY,HP⟩
-      have HI:=congrArg (CanonicalSignRefinement.tuple d i.1).symm HP
-      rw [Homeomorph.symm_apply_apply] at HI
-      exact HI ▸ HY
-    · intro HY
-      exact ⟨_,HY,(CanonicalSignRefinement.tuple d i.1).apply_symm_apply x⟩
-  rw [HE,FormulaSignSlotCandidateRadialDescriptor.projected_closure_iff,←HM]
+  change x∈closure (CanonicalSignRefinement.tuple d i.1 '' P) ↔
+    x∈CanonicalSignRefinement.tuple d i.1 '' P ∨_
+  rw [←(CanonicalSignRefinement.tuple d i.1).image_closure,
+    (CanonicalSignRefinement.tuple d i.1).image_eq_preimage_symm,
+    (CanonicalSignRefinement.tuple d i.1).image_eq_preimage_symm]
+  exact FormulaSignSlotCandidateRadialDescriptor.projected_closure_iff _ _ _
 
 theorem piece_closure_iff (d :Description) (hd :d.WellFormed)
     (i :CanonicalAuxiliaryCandidateCover.Index d) (x :d.realization):
     x∈closure (CanonicalAuxiliaryCandidateCover.piece d i) ↔
       x∈CanonicalAuxiliaryCandidateCover.piece d i ∨Nonempty (Descriptor d i x.val):=by
-  have HImage:(Subtype.val :d.realization→Fin d.dimension→ℝ) '' CanonicalAuxiliaryCandidateCover.piece d i=
-      (CanonicalAuxiliaryCandidateCover.data d).rawPiece i:=by
-    change (Subtype.val :d.realization→Fin d.dimension→ℝ) ''
-      (Subtype.val ⁻¹' (CanonicalAuxiliaryCandidateCover.data d).rawPiece i)=_
-    apply image_preimage_eq_of_subset
-    intro point HP
-    exact ⟨⟨point,CanonicalSignRefinement.ClosedCovers.rawPiece_subset hd
-      (CanonicalAuxiliaryCandidateCover.data d) i HP⟩,rfl⟩
-  have HC:x∈closure (CanonicalAuxiliaryCandidateCover.piece d i) ↔
-      x.val∈closure ((CanonicalAuxiliaryCandidateCover.data d).rawPiece i):=by
-    rw [Topology.IsEmbedding.subtypeVal.closure_eq_preimage_closure_image]
-    change x.val∈closure ((Subtype.val :d.realization→Fin d.dimension→ℝ) ''
-      CanonicalAuxiliaryCandidateCover.piece d i) ↔_
-    rw [HImage]
-  rw [HC,rawPiece_closure_iff]
-  rfl
+  change x∈closure (Subtype.val ⁻¹' (CanonicalAuxiliaryCandidateCover.data d).rawPiece i :
+    Set d.realization) ↔_
+  rw [Topology.IsEmbedding.subtypeVal.closure_eq_preimage_closure_image,
+    Subtype.image_preimage_val,inter_eq_right.mpr
+      (CanonicalSignRefinement.ClosedCovers.rawPiece_subset hd (CanonicalAuxiliaryCandidateCover.data d) i)]
+  exact rawPiece_closure_iff d i x.val
 
 theorem bit_piece_closure_iff (d :Description) (hd :d.WellFormed)
     (i :Vertex (CanonicalAuxiliaryBitFrontier.width d)) (x :d.realization):
@@ -86,18 +60,7 @@ theorem bit_piece_closure_iff (d :Description) (hd :d.WellFormed)
         CanonicalAuxiliaryCandidateCover.piece d (CanonicalAuxiliaryCandidateLabels.decode d i.val hv):=by
       exact dite_eq_left hv
     rw [HE,piece_closure_iff d hd]
-    constructor
-    · rintro (HM|HD)
-      · exact Or.inl HM
-      · exact Or.inr ⟨hv,HD⟩
-    · rintro (HM|⟨_,HD⟩)
-      · exact Or.inl HM
-      · exact Or.inr HD
-  · rw [CanonicalAuxiliaryBitPieceLabelLock.piece_eq_empty_of_invalid d i hv,closure_empty]
-    constructor
-    · exact fun H=>False.elim H
-    · rintro (H|⟨HV,_⟩)
-      · exact False.elim H
-      · exact False.elim (hv HV)
+    simp only [hv, exists_true_left]
+  · simp [CanonicalAuxiliaryBitPieceLabelLock.piece_eq_empty_of_invalid d i hv,hv]
 
 end LeanCanny.Connectivity.CanonicalAuxiliaryRadialClosure

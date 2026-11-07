@@ -90,9 +90,7 @@ theorem subset_imagePiece_of_isPreconnected {L : Set X} (hL : IsPreconnected L)
     (hsub : L ⊆ S) {i : I} {z : X} (hz : z ∈ L) (hzi : z ∈ C.imagePiece i) :
     L ⊆ C.imagePiece i := by
   have himage : Subtype.val '' ((Subtype.val : S → X) ⁻¹' L) = L := by
-    apply image_preimage_eq_of_subset
-    intro x hx
-    exact ⟨⟨x, hsub hx⟩, rfl⟩
+    exact (Subtype.image_preimage_val _ _).trans (inter_eq_right.mpr hsub)
   have hc : IsPreconnected ((Subtype.val : S → X) ⁻¹' L) := by
     apply Topology.IsEmbedding.subtypeVal.isInducing.isPreconnected_image.mp
     rwa [himage]

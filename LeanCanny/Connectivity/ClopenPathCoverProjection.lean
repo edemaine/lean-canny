@@ -31,9 +31,7 @@ theorem saturated_image_eq (C :ClopenPathCover X I) (p :X→Y) (hp :IsClosedMap 
       p '' C.piece k⊆p '' C.piece j:=by
     rw [FrontierCover.Incident,(HC j).closure_eq,(HC k).closure_eq] at h
     have HN:(p '' C.piece j∩p '' C.piece k).Nonempty:=by
-      rcases h with ⟨y,hj,hk⟩|⟨y,hk,hj⟩
-      · exact ⟨y,hj,hk⟩
-      · exact ⟨y,hj,hk⟩
+      simpa only [Set.inter_comm,or_self] using h
     obtain ⟨y,⟨x,hx,Hx⟩,⟨z,hz,Hz⟩⟩:=HN
     have HZ:z∈C.piece j:=C.mem_of_joined j hx (hf x z (Hx.trans Hz.symm))
     rintro t ⟨w,hw,rfl⟩

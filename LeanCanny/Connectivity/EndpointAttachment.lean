@@ -38,9 +38,7 @@ theorem reachable_in_slice {L : Set X} (hL : IsPreconnected L) (hsub : L ⊆ p �
     (hxi : x ∈ piece i) (hyj : y ∈ piece j) :
     Relation.ReflTransGen (FrontierCover.Incident piece) i j := by
   have himage : Subtype.val '' ((Subtype.val : p ⁻¹' {a} → X) ⁻¹' L) = L := by
-    apply image_preimage_eq_of_subset
-    intro z hz
-    exact ⟨⟨z, hsub hz⟩, rfl⟩
+    exact (Subtype.image_preimage_val _ _).trans (inter_eq_right.mpr hsub)
   have hc : IsPreconnected ((Subtype.val : p ⁻¹' {a} → X) ⁻¹' L) := by
     apply Topology.IsEmbedding.subtypeVal.isInducing.isPreconnected_image.mp
     rwa [himage]
