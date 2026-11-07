@@ -46,12 +46,7 @@ theorem isPathConnected_ambient_restrict (j : J) {c d : ℝ} (hcd : c < d)
   have hU : IsPathConnected U := by
     apply (Topology.IsEmbedding.subtypeVal.isInducing.isPathConnected_iff).mpr
     have he : Subtype.val '' U = Ioo c d := by
-      ext t
-      constructor
-      · rintro ⟨w, hw, rfl⟩
-        exact hw
-      · intro ht
-        exact ⟨⟨t, hsub ht⟩, ht, rfl⟩
+      exact (Subtype.image_preimage_val _ _).trans (inter_eq_right.mpr hsub)
     rw [he]
     exact (convex_Ioo c d).isPathConnected ⟨(c + d) / 2, by constructor <;> linarith⟩
   have hpaths := isPathConnected_piece_preimage ((Ioo a b).restrictPreimage p)
@@ -59,12 +54,7 @@ theorem isPathConnected_ambient_restrict (j : J) {c d : ℝ} (hcd : c < d)
   have he : ambientPiece p sectionMap j ∩ p ⁻¹' Ioo c d =
       Subtype.val '' (piece ((Ioo a b).restrictPreimage p) sectionMap j ∩
         ((Ioo a b).restrictPreimage p) ⁻¹' U) := by
-    ext x
-    constructor
-    · rintro ⟨⟨z, hz, rfl⟩, hx⟩
-      exact ⟨z, ⟨hz, hx⟩, rfl⟩
-    · rintro ⟨z, ⟨hz, hx⟩, rfl⟩
-      exact ⟨⟨z, hz, rfl⟩, hx⟩
+    exact (Set.image_inter_preimage (Subtype.val : p ⁻¹' Ioo a b → X) _ _).symm
   rw [he]
   exact hpaths.image continuous_subtype_val
 

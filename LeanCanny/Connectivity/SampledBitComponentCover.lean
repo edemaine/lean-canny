@@ -71,13 +71,9 @@ theorem piece_nonempty (A : Samples X w) (i : Vertex w) : (piece A i).Nonempty�
     exact iff_of_false Set.not_nonempty_empty hi
 
 theorem vertex_card_le (w : ℕ) : Nat.card (Vertex w)≤2^w := by
-  let E := (Cslib.BitString.enumList w).toFinset
-  let f : Vertex w→E := fun v=>⟨v.val,by simpa only [E,List.mem_toFinset,Cslib.BitString.mem_enumList] using v.property⟩
-  have HF : Function.Injective f := by intro i j hij; exact Subtype.ext (congrArg (fun z : E=>z.val) hij)
-  have H:=Nat.card_le_card_of_injective f HF
-  have HC : Nat.card E=E.card := by simp
-  rw [HC] at H
-  exact H.trans ((List.toFinset_card_le _).trans_eq (Cslib.BitString.length_enumList w))
+  change Nat.card (List.Vector Bool w) ≤ 2 ^ w
+  rw [Nat.card_congr (Equiv.vectorEquivFin Bool w),Nat.card_fun]
+  simp
 
 theorem component_card_le (A : Samples X w) : Nat.card (ConnectedComponents X)≤2^w :=
   (Nat.card_le_card_of_surjective _ (component_surjective A)).trans
@@ -105,12 +101,7 @@ theorem overlap_iff (A : Samples X w) (i j : Vertex w) :
 theorem incident_iff_overlap (A : Samples X w) (i j : Vertex w) :
     FrontierCover.Incident (piece A) i j↔(piece A i∩piece A j).Nonempty := by
   rw [FrontierCover.Incident,(piece_clopen A i).isClosed.closure_eq,(piece_clopen A j).isClosed.closure_eq]
-  constructor
-  · rintro (⟨x,hx,hy⟩|⟨x,hx,hy⟩)
-    · exact ⟨x,hx,hy⟩
-    · exact ⟨x,hy,hx⟩
-  · intro h
-    exact Or.inl h
+  simp only [Set.inter_comm,or_self]
 
 theorem incident_iff (A : Samples X w) (i j : Vertex w) :
     FrontierCover.Incident (piece A) i j↔

@@ -26,12 +26,9 @@ theorem piece_cover (d : Description) : ∀ x : d.realization, ∃ σ, x∈piece
 
 theorem piece_image (d : Description) (σ : {σ : Pattern d.formula // accepted σ}) :
     Subtype.val '' piece d σ=Stratum d.dimension σ.val := by
-  ext x
-  constructor
-  · rintro ⟨y,hy,rfl⟩
-    exact hy
-  · intro hx
-    exact ⟨⟨x,(stratum_truth d.dimension σ.val hx).mp σ.property⟩,hx,rfl⟩
+  apply image_preimage_eq_of_subset
+  intro x hx
+  exact ⟨⟨x,(stratum_truth d.dimension σ.val hx).mp σ.property⟩,rfl⟩
 
 theorem closure_piece (d : Description) (σ : {σ : Pattern d.formula // accepted σ}) :
     closure (piece d σ)=Subtype.val ⁻¹' closure (Stratum d.dimension σ.val) := by
@@ -47,16 +44,11 @@ theorem incidence_iff (d : Description) (σ τ : {σ : Pattern d.formula // acce
     FrontierCover.Incident (piece d) σ τ ↔
       (∃ x : Fin d.dimension → ℝ, x∈Stratum d.dimension σ.val ∧ x∈closure (Stratum d.dimension τ.val)) ∨
       (∃ x : Fin d.dimension → ℝ, x∈Stratum d.dimension τ.val ∧ x∈closure (Stratum d.dimension σ.val)) := by
-  have HE (a b : {σ : Pattern d.formula // accepted σ}) :
-      (piece d a ∩ closure (piece d b)).Nonempty ↔
-        ∃ x : Fin d.dimension → ℝ, x∈Stratum d.dimension a.val ∧ x∈closure (Stratum d.dimension b.val) := by
-    rw [closure_piece]
-    constructor
-    · rintro ⟨x,hx,hb⟩
-      exact ⟨x.val,hx,hb⟩
-    · rintro ⟨x,hx,hb⟩
-      exact ⟨⟨x,(stratum_truth d.dimension a.val hx).mp a.property⟩,hx,hb⟩
-  exact or_congr (HE _ _) (HE _ _)
+  exact FrontierCover.incident_preimage_iff
+    (fun a : {σ : Pattern d.formula // accepted σ} => Stratum d.dimension a.val)
+    Topology.IsEmbedding.subtypeVal (fun a => by
+      rw [←piece_image d a]
+      exact Set.image_subset_range _ _) σ τ
 
 theorem necessary_walk (d : Description) (σ τ : {σ : Pattern d.formula // accepted σ})
     {x y : d.realization} (hx : x∈piece d σ) (hy : y∈piece d τ) (H : JoinedIn univ x y) :

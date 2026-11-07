@@ -46,24 +46,16 @@ private theorem incident_alternative {X I : Type*} [TopologicalSpace X]
   have step (a b : I) (x : X) (ha : x ∈ P a) (hb : x ∈ closure (P b)) :
       (∃ x, P a = {x} ∧ P b = {x}) ∨
       (∃ x ∈ P a, D b x) ∨ (∃ x ∈ P b, D a x) := by
-    rcases (H b x).mp hb with HSb | HDb
-    · have hxb : x ∈ P b := by rw [HSb]; exact mem_singleton x
-      rcases (H a x).mp (subset_closure ha) with HSa | HDa
-      · exact Or.inl ⟨x,HSa,HSb⟩
-      · exact Or.inr (Or.inr ⟨x,hxb,HDa⟩)
-    · exact Or.inr (Or.inl ⟨x,ha,HDb⟩)
+    have hA := (H a x).mp (subset_closure ha)
+    have hB := (H b x).mp hb
+    clear H
+    aesop
   constructor
   · rintro (⟨x,ha,hb⟩ | ⟨x,hb,ha⟩)
     · exact step i j x ha hb
-    · rcases step j i x hb ha with ⟨y,hj,hi⟩ | HJ | HI
-      · exact Or.inl ⟨y,hi,hj⟩
-      · exact Or.inr (Or.inr HJ)
-      · exact Or.inr (Or.inl HI)
+    · simpa only [and_comm,or_comm,or_left_comm,or_assoc] using step j i x hb ha
   · rintro (⟨x,hi,hj⟩ | ⟨x,hi,hDj⟩ | ⟨x,hj,hDi⟩)
-    · left
-      refine ⟨x,?_,?_⟩
-      · rw [hi]; exact mem_singleton x
-      · rw [hj]; exact subset_closure (mem_singleton x)
+    · exact Or.inl ⟨x,hi ▸ mem_singleton x,subset_closure (hj ▸ mem_singleton x)⟩
     · exact Or.inl ⟨x,hi,(H j x).mpr (Or.inr hDj)⟩
     · exact Or.inr ⟨x,hj,(H i x).mpr (Or.inr hDi)⟩
 
