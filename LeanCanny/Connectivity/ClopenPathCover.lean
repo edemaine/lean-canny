@@ -36,11 +36,8 @@ def comap {Y : Type*} [TopologicalSpace Y] (C : ClopenPathCover Y I)
   cover := fun x => C.cover (e x)
   paths := by
     intro i x hx y hy
-    have hj := (C.paths i (e x) hx (e y) hy).map e.symm.continuous.continuousOn
-    have hsub : e.symm '' C.piece i ⊆ e ⁻¹' C.piece i := by
-      rintro z ⟨w, hw, rfl⟩
-      simpa only [mem_preimage, Homeomorph.apply_symm_apply] using hw
-    simpa only [Homeomorph.symm_apply_apply] using hj.mono hsub
+    apply (e.isInducing.joinedIn_image hx hy).mp
+    simpa only [e.image_preimage] using C.paths i (e x) hx (e y) hy
 
 /-- Recursive accessible slice covers supply the clopen pieces required for
 attaching adjacent slabs. No connected-component oracle is an input. -/

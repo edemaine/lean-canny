@@ -13,12 +13,9 @@ set_option backward.isDefEq.respectTransparency false
 local notation "num" => FormulaSignSlotRadialProviderMarkedGeometry.number
 
 theorem raw_reachable_symm {c a b : List Bool} (H : RawReachable c a b) : RawReachable c b a := by
-  refine ⟨H.2.1,H.1,H.2.2.2.1,H.2.2.1,?_⟩
-  have HP := H.2.2.2.2
-  clear H
-  induction HP with
-  | refl => exact .refl
-  | tail _ HE IH => exact (Relation.ReflTransGen.single (FormulaSignSlotRadialProviderEdge.symm HE)).trans IH
+  let : Std.Symm FormulaSignSlotRadialProviderEdge.Adjacent :=
+    ⟨fun _ _ => FormulaSignSlotRadialProviderEdge.symm⟩
+  exact ⟨H.2.1,H.1,H.2.2.2.1,H.2.2.1,symm H.2.2.2.2⟩
 
 theorem PointReachable.symm {c : List Bool} {p q : Fin (num c+4)→ℝ}
     (H : PointReachable c p q) : PointReachable c q p := by

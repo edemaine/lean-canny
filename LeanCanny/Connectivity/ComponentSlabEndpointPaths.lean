@@ -34,9 +34,8 @@ theorem endpointStep_symm {x y : X} (H : EndpointStep D x y) : EndpointStep D y 
   | backward j=>exact .forward j
 
 theorem endpointReach_symm {x y : X} (H : EndpointReach D x y) : EndpointReach D y x :=by
-  induction H with
-  | refl=>exact .refl
-  | tail H h IH=>exact (Relation.ReflTransGen.single (D.endpointStep_symm h)).trans IH
+  let : Std.Symm (EndpointStep D) := ⟨fun _ _ => D.endpointStep_symm⟩
+  exact symm H
 
 theorem endpointStep_joined (hab : a<b) {x y : X} (H : EndpointStep D x y) :
     JoinedIn (p ⁻¹' Icc a b) x y :=by

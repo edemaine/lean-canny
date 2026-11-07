@@ -57,9 +57,7 @@ theorem exists_original_component_critical (u label : List Bool)
   let old : Fin 0→ℝ:=Fin.elim0
   have HE : IntegralMixedFrozenFrame.slice P F old=firstZeroSet (n:=n) (t:=t) (R0:=R0) u:=by
     ext p
-    constructor
-    · exact fun hp=>hp.1
-    · exact fun hp=>⟨hp,fun i hi=>False.elim (Finset.notMem_empty i hi)⟩
+    exact and_iff_left (by simp [F, IntegralMixedFrozenFrame.originalFrame])
   have HZ : firstMarkedPoint hn ht ha u label hg hR∈IntegralMixedFrozenFrame.slice P F old:=by
     rw [HE]
     exact firstMarkedPoint_mem hn ht ha u label hg hR

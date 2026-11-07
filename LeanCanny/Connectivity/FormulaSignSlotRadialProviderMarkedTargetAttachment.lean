@@ -116,11 +116,7 @@ theorem exists_reachable_marked_anchor_of_source_path (c old :List Bool) (hv:A o
       ∀i < initial old,field finished hFinished i=field old hv i:=by
   have HZero:frozenSlice c (depth old) (FormulaSignSlotRadialProviderAtomic.levels old hv)=
       FormulaSignSlotRadialProviderMarkedGeometry.zeroSet c:=by
-    ext p
-    constructor
-    · exact fun hp=>hp.1
-    · intro hp
-      exact ⟨hp,fun i hi=>False.elim (by omega)⟩
+    simp [frozenSlice, h0]
   exact exists_reachable_marked_anchor c old hv hc (by simpa only [HZero] using HPath)
 
 end LeanCanny.Encoding.FormulaSignSlotRadialProviderProperAppend

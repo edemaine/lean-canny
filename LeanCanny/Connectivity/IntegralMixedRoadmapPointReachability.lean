@@ -28,12 +28,9 @@ theorem raw_reachable_trans {c a b d :List Bool}
 
 theorem raw_reachable_symm {c a b :List Bool} (H :RawReachable hn ht ha hR0 c a b) :
     RawReachable hn ht ha hR0 c b a:=by
-  refine ⟨H.2.1,H.1,H.2.2.2.1,H.2.2.1,?_⟩
-  have HP:=H.2.2.2.2
-  clear H
-  induction HP with
-  | refl=>exact .refl
-  | tail _ HE IH=>exact (Relation.ReflTransGen.single (IntegralMixedRoadmapEdge.symm hn ht ha hR0 HE)).trans IH
+  let : Std.Symm (IntegralMixedRoadmapEdge.Adjacent hn ht ha hR0) :=
+    ⟨fun _ _ => IntegralMixedRoadmapEdge.symm hn ht ha hR0⟩
+  exact ⟨H.2.1,H.1,H.2.2.2.1,H.2.2.1,symm H.2.2.2.2⟩
 
 /-- Actual native paths between accepted representatives of two entire points. -/
 noncomputable def PointReachable (c :List Bool)

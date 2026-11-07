@@ -308,9 +308,7 @@ theorem finite_point_upper_bound :
       obtain ⟨l, hl⟩ := formula_from_raw h b hx.1
       obtain ⟨r, hr⟩ := formula_from_raw h c hy.1
       exact ⟨n, p, (l, r), ⟨x, y, (singleton_iff hl x).mpr hx,
-        (singleton_iff hr y).mpr hy, (by
-          have H : JoinedIn {v | holds v p} x y := (solution_eq hp).symm ▸ hxy
-          exact H)⟩,
+        (singleton_iff hr y).mpr hy, (show JoinedIn {v | holds v p} x y from (solution_eq hp).symm ▸ hxy)⟩,
         (point_code hp hl hr).trans hb.symm⟩
   rw [HE]
   exact AbstractEncodingBridge.point_mem_PSPACE

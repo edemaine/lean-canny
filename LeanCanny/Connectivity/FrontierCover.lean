@@ -32,32 +32,37 @@ def Incident (i j : ι) : Prop :=
 
 theorem incident_symm {i j : ι} : Incident piece i j ↔ Incident piece j i := or_comm
 
+instance : Std.Symm (Incident piece) where
+  symm _ _ := (incident_symm piece).mp
+
 theorem Incident.nonempty {i j : ι} (h : Incident piece i j) :
     (piece i).Nonempty ∧ (piece j).Nonempty := by
   rcases h with ⟨x, hx, hy⟩ | ⟨x, hy, hx⟩
   · exact ⟨⟨x, hx⟩, (show (closure (piece j)).Nonempty from ⟨x, hy⟩).of_closure⟩
   · exact ⟨(show (closure (piece i)).Nonempty from ⟨x, hx⟩).of_closure, ⟨x, hy⟩⟩
 
-private def cluster (i : ι) : Set X :=
+/-- Saturate a piece by its finite frontier-graph component. Keeping the
+original labels avoids choosing representatives or discarding empty records. -/
+def component (i : ι) : Set X :=
   {x | ∃ j, Relation.ReflTransGen (Incident piece) i j ∧ x ∈ piece j}
 
-private theorem cluster_isClopen [Finite ι]
-    (cover : ∀ x, ∃ i, x ∈ piece i) (i : ι) : IsClopen (cluster piece i) := by
+theorem component_isClopen [Finite ι]
+    (cover : ∀ x, ∃ i, x ∈ piece i) (i : ι) : IsClopen (component piece i) := by
   classical
-  have hcluster : cluster piece i =
+  have hcluster : component piece i =
       ⋃ j : {j // Relation.ReflTransGen (Incident piece) i j}, closure (piece j.val) := by
     ext x
-    simp only [cluster, mem_ofPred_eq, mem_iUnion, Subtype.exists, exists_prop]
+    simp only [component, mem_ofPred_eq, mem_iUnion, Subtype.exists, exists_prop]
     constructor
     · rintro ⟨j, hj, hx⟩
       exact ⟨j, hj, subset_closure hx⟩
     · rintro ⟨j, hj, hx⟩
       obtain ⟨k, hk⟩ := cover x
       exact ⟨k, hj.tail (Or.inr ⟨x, hk, hx⟩), hk⟩
-  have hcompl : (cluster piece i)ᶜ =
+  have hcompl : (component piece i)ᶜ =
       ⋃ j : {j // ¬ Relation.ReflTransGen (Incident piece) i j}, closure (piece j.val) := by
     ext x
-    simp only [mem_compl_iff, cluster, mem_ofPred_eq, mem_iUnion, Subtype.exists, exists_prop]
+    simp only [mem_compl_iff, component, mem_ofPred_eq, mem_iUnion, Subtype.exists, exists_prop]
     constructor
     · intro hx
       obtain ⟨j, hj⟩ := cover x
@@ -77,7 +82,7 @@ theorem reachable_of_isPreconnected [Finite ι]
     {i j : ι} {x y : X} (hx : x ∈ piece i) (hy : y ∈ piece j)
     (hxs : x ∈ s) (hys : y ∈ s) :
     Relation.ReflTransGen (Incident piece) i j := by
-  have hsub := hs.subset_isClopen (cluster_isClopen piece cover i)
+  have hsub := hs.subset_isClopen (component_isClopen piece cover i)
     ⟨x, hxs, i, .refl, hx⟩
   obtain ⟨k, hk, hyk⟩ := hsub hys
   exact hk.tail (Or.inl ⟨y, hyk, subset_closure hy⟩)
@@ -146,14 +151,6 @@ theorem joinedIn_of_isPreconnected [Finite ι] (cover : ∀ x, ∃ i, x ∈ piec
   exact joinedIn_of_reachable piece access hi hj
     (reachable_of_isPreconnected piece cover hs hi hj hx hy)
 
-/-- Saturate a piece by its finite frontier-graph component. Keeping the
-original labels avoids choosing representatives or discarding empty records. -/
-def component (i : ι) : Set X :=
-  {x | ∃ j, Relation.ReflTransGen (Incident piece) i j ∧ x ∈ piece j}
-
-theorem component_isClopen [Finite ι] (cover : ∀ x, ∃ i, x ∈ piece i) (i : ι) :
-    IsClopen (component piece i) := cluster_isClopen piece cover i
-
 theorem component_cover (cover : ∀ x, ∃ i, x ∈ piece i) :
     ∀ x, ∃ i, x ∈ component piece i := by
   intro x
@@ -161,14 +158,11 @@ theorem component_cover (cover : ∀ x, ∃ i, x ∈ piece i) :
   exact ⟨i, i, .refl, hi⟩
 
 theorem component_nonempty_iff (i : ι) : (component piece i).Nonempty ↔ (piece i).Nonempty := by
-  have hsource {u v : ι} (h : Relation.ReflTransGen (Incident piece) u v) :
-      (piece v).Nonempty → (piece u).Nonempty := by
-    induction h with
-    | refl => exact id
-    | tail _ he ih => exact fun _ => ih (he.nonempty piece).1
   constructor
   · rintro ⟨x, j, hj, hx⟩
-    exact hsource hj ⟨x, hx⟩
+    rcases hj.cases_head with rfl | ⟨k, hik, _⟩
+    · exact ⟨x, hx⟩
+    · exact (hik.nonempty piece).1
   · rintro ⟨x, hx⟩
     exact ⟨x, i, .refl, hx⟩
 
@@ -178,12 +172,7 @@ theorem component_paths [Finite ι] (cover : ∀ x, ∃ i, x ∈ piece i)
     JoinedIn (component piece i) x y := by
   obtain ⟨j, hj, hxj⟩ := hx
   obtain ⟨k, hk, hyk⟩ := hy
-  have reverse {u v : ι} (h : Relation.ReflTransGen (Incident piece) u v) :
-      Relation.ReflTransGen (Incident piece) v u := by
-    induction h with
-    | refl => exact .refl
-    | tail _ he ih => exact ih.head ((incident_symm piece).mp he)
-  obtain ⟨γ, _⟩ := joinedIn_of_reachable piece access hxj hyk ((reverse hj).trans hk)
+  obtain ⟨γ, _⟩ := joinedIn_of_reachable piece access hxj hyk ((symm hj).trans hk)
   have hsub := (isPreconnected_range γ.continuous).subset_isClopen
     (component_isClopen piece cover i) ⟨x, γ.source_mem_range, j, hj, hxj⟩
   exact ⟨γ, fun t => hsub ⟨t, rfl⟩⟩
