@@ -4,6 +4,17 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
+public import Mathlib.Topology.Connected.Basic
+public import Mathlib.Topology.Path
+
+public import Complexity.Computability.Complexity.Classes.Space
+public import Complexity.Computability.Complexity.Reduction
+public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.Primitives
+public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.IntBinary
+public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.List
+public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.Pair
+public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.Sum
+
 public import LeanCanny.AbstractBridge
 
 /-! # A formal abstract of Canny's real-algebraic PSPACE bounds
