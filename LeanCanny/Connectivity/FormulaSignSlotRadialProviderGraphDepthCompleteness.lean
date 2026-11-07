@@ -50,18 +50,9 @@ theorem depth_complete_step (c : List Bool) (k : ℕ) (hk : k<num c+3)
     simpa only [HEp,HEq] using HReach)
 
 theorem depth_complete (c : List Bool) (k : ℕ) (hk : k≤num c+3) : DepthComplete c k := by
-  let D := num c+3
-  have H : ∀remaining,∀j,j≤D→D-j=remaining→DepthComplete c j := by
-    intro remaining
-    induction remaining using Nat.strong_induction_on with
-    | h remaining IH =>
-      intro j hj _
-      by_cases HE : j=D
-      · simpa only [HE,D] using depth_complete_terminal c
-      · have HJ : j<D := by omega
-        apply depth_complete_step c j HJ
-        exact IH (D-(j+1)) (by omega) (j+1) (by omega) rfl
-  exact H (D-k) k hk rfl
+  induction hk using Nat.decreasingInduction with
+  | self => exact depth_complete_terminal c
+  | of_succ k hk ih => exact depth_complete_step c k hk ih
 
 theorem depth_zero_raw_reachable_iff_joined (c first second : List Bool) (hFirst : A first) (hSecond : A second)
     (hcFirst : provider first=c) (hcSecond : provider second=c)
@@ -73,11 +64,7 @@ theorem depth_zero_raw_reachable_iff_joined (c first second : List Bool) (hFirst
   · intro H
     have HZero : frozenSlice c 0 (FormulaSignSlotRadialProviderAtomic.levels first hFirst)=
         FormulaSignSlotRadialProviderMarkedGeometry.zeroSet c := by
-      ext p
-      constructor
-      · exact fun hp=>hp.1
-      · intro hp
-        exact ⟨hp,fun i hi=>False.elim (Nat.not_lt_zero i.val hi)⟩
+      simp [frozenSlice]
     exact depth_complete c 0 (by omega) first second hFirst hSecond hcFirst hcSecond hDepthFirst hDepthSecond
       (by simpa only [HZero] using H)
 

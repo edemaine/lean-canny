@@ -73,31 +73,43 @@ theorem connected_language_iff (d : Description) (hd : d.WellFormed) :
   rw [HV,HW]
   exact HS.trans (CanonicalEndpointFrontier.cover q HD).isPreconnected_iff_connected
 
+/-- A total whole-space decider only needs a space-bounded test that is correct
+on well-formed canonical inputs. Tag and dimension validation are shared by
+all frontier implementations. -/
+theorem connected_mem_PSPACE_of_test {test : List Bool → Bool}
+    (htest : ComputableTidilyInPolySpace test encBits encBool)
+    (hcorrect : ∀ d : Description, d.WellFormed →
+      ((Input.whole d).encode ∈ connectedLanguage ↔ test (Input.whole d).encode = true)) :
+    connectedLanguage ∈ PSPACE := by
+  have HP := ComputableTidilyInPolySpace.of_polyTime Input.isWhole_fppred.computable
+  have HW := ComputableTidilyInPolySpace.of_polyTime wellFormed_computable
+  have HF : ComputableTidilyInPolySpace (fun _ : List Bool => false) encBits encBool :=
+    .of_polyTime (.const false)
+  apply NativeSpace.of_computable (HP.ite (HW.ite htest HF) HF)
+  intro c
+  by_cases hp : Input.IsWhole c
+  · obtain ⟨d, rfl⟩ := (Input.isWhole_iff c).mp hp
+    simp only [hp, decide_true, ite_true, description_whole]
+    by_cases hd : d.WellFormed
+    · simpa only [hd, decide_true, ite_true] using hcorrect d hd
+    · have HB : (Input.whole d).encode ∉ connectedLanguage := by
+        rw [whole_encode_mem_iff]
+        exact fun h => hd h.1
+      simp only [hd, decide_false, ite_false, Bool.false_eq_true]
+      exact iff_of_false HB id
+  · have HB : c ∉ connectedLanguage := by
+      rintro ⟨d, rfl, _⟩
+      exact hp ((Input.isWhole_iff _).mpr ⟨d, rfl⟩)
+    simp only [hp, decide_false, ite_false, Bool.false_eq_true]
+    exact iff_of_false HB id
+
 theorem connected_mem_PSPACE
     (he : ComputableTidilyInPolySpace
       (fun p : List Bool×List Bool×List Bool=>edge p.1 p.2.1 p.2.2)
       (encPair encBits (encPair encBits encBits)) encBool) : connectedLanguage∈PSPACE := by
-  have HC:=ImplicitGraph.connected_computable he valid_computable width_unary
-  have HP:=ComputableTidilyInPolySpace.of_polyTime Input.isWhole_fppred.computable
-  have HW:=ComputableTidilyInPolySpace.of_polyTime wellFormed_computable
-  have HF : ComputableTidilyInPolySpace (fun _ : List Bool=>false) encBits encBool:=.of_polyTime (.const false)
-  apply NativeSpace.of_computable (HP.ite (HW.ite HC HF) HF)
-  intro c
-  by_cases hp : Input.IsWhole c
-  · obtain ⟨d,rfl⟩:=(Input.isWhole_iff c).mp hp
-    simp only [hp,decide_true,ite_true,description_whole,decide_eq_true_eq]
-    by_cases hd : d.WellFormed
-    · simp only [hd,ite_true,decide_eq_true_eq]
-      exact connected_language_iff d hd
-    · have HB : (Input.whole d).encode∉connectedLanguage := by
-        rw [whole_encode_mem_iff]
-        exact fun h=>hd h.1
-      simp only [hd,ite_false,Bool.false_eq_true]
-      exact iff_of_false HB id
-  · have HB : c∉connectedLanguage := by
-      rintro ⟨d,rfl,_⟩
-      exact hp ((Input.isWhole_iff _).mpr ⟨d,rfl⟩)
-    simp only [hp,decide_false,ite_false,Bool.false_eq_true]
-    exact iff_of_false HB id
+  apply connected_mem_PSPACE_of_test
+    (ImplicitGraph.connected_computable he valid_computable width_unary)
+  intro d hd
+  simpa only [decide_eq_true_eq] using connected_language_iff d hd
 
 end LeanCanny.Connectivity.CanonicalEndpointNative

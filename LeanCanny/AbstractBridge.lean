@@ -244,12 +244,7 @@ private theorem singleton_iff {n} {p : F n} {a : ETR.Formula}
     (hp : FormulaRep (solutions := solutions) (formulaCode := formulaCode) p a) (x : Fin n → ℝ) :
     {y | holds y p} = {x} ↔ Connectivity.Denotes n a x := by
   simp only [Set.ext_iff, Set.mem_ofPred_eq, Set.mem_singleton_iff,
-    Connectivity.Denotes, hp.1, true_and]
-  constructor
-  · intro H y
-    exact (hp.2.2 y).symm.trans (H y)
-  · intro H y
-    exact (hp.2.2 y).trans (H y)
+    Connectivity.Denotes, hp.1, true_and, hp.2.2]
 
 include ti fi h in
 /-- The independent syntax describes the flat encoded ETR language. -/

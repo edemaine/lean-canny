@@ -93,19 +93,9 @@ theorem prelude_target_complete_step (candidate :List Bool) (k :ℕ)
 supply every new target height, including noncritical boundary heights. -/
 theorem prelude_target_complete (candidate :List Bool) (k :ℕ) (hk :k≤n (pairFst candidate)+3):
     PreludeTargetComplete hn ht ha hR0 candidate k:=by
-  let D:=n (pairFst candidate)+3
-  have H :∀remaining,∀j,j≤D→D-j=remaining→PreludeTargetComplete hn ht ha hR0 candidate j:=by
-    intro remaining
-    induction remaining using Nat.strong_induction_on with
-    | h remaining ih=>
-      intro j hj hremaining
-      by_cases he :j=D
-      · subst j
-        exact prelude_target_complete_terminal hn ht ha hR0 candidate
-      · have hlt :j<D:=by omega
-        apply prelude_target_complete_step hn ht ha hR0 candidate j hlt
-        exact ih (D-(j+1)) (by omega) (j+1) (by omega) rfl
-  exact H (D-k) k hk rfl
+  induction hk using Nat.decreasingInduction with
+  | self => exact prelude_target_complete_terminal hn ht ha hR0 candidate
+  | of_succ k hk ih => exact prelude_target_complete_step hn ht ha hR0 candidate k hk ih
 
 /-- A genuine frozen-slice path to the bound prelude constructs an actual
 reachable terminal MarkerAt word, without assuming a marker in advance. -/

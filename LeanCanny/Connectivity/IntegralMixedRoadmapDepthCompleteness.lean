@@ -64,22 +64,13 @@ theorem depth_complete_step (candidate :List Bool) (k :ℕ) (hk :k<n (pairFst ca
   exact (point_reachable_iff_raw hn ht ha hR0 (IntegralMixedRoadmapAtomic.candidate first)
     first second hFirst hSecond rfl hcSecond).mp HNative
 
-/-- Every legal depth is complete. The measure is the number of coordinates
-remaining, and its terminal case is the actual terminal-fiber theorem. -/
+/-- Every legal depth is complete, by descending induction from the
+terminal-fiber theorem. -/
 theorem depth_complete (candidate :List Bool) (k :ℕ) (hk :k≤n (pairFst candidate)+3):
     DepthComplete hn ht ha hR0 candidate k:=by
-  let D:=n (pairFst candidate)+3
-  have H :∀remaining,∀j,j≤D→D-j=remaining→DepthComplete hn ht ha hR0 candidate j:=by
-    intro remaining
-    induction remaining using Nat.strong_induction_on with
-    | h remaining IH=>
-      intro j hj hRemaining
-      by_cases HE :j=D
-      · simpa only [HE,D] using depth_complete_terminal hn ht ha hR0 candidate
-      · have HJ :j<D:=by omega
-        apply depth_complete_step hn ht ha hR0 candidate j HJ
-        exact IH (D-(j+1)) (by omega) (j+1) (by omega) rfl
-  exact H (D-k) k hk rfl
+  induction hk using Nat.decreasingInduction with
+  | self => exact depth_complete_terminal hn ht ha hR0 candidate
+  | of_succ k hk ih => exact depth_complete_step hn ht ha hR0 candidate k hk ih
 
 /-- At depth zero the frozen slice is the original regular zero set. Both
 endpoint histories remain independently accepted with their own full words. -/
@@ -100,14 +91,7 @@ theorem depth_zero_raw_reachable_iff_joined (candidate first second :List Bool)
     have HZero :frozenSlice (n:=n) (t:=t) (R0:=R0) candidate
         (IntegralMixedRoadmapAtomic.depth first) (IntegralMixedRoadmapAtomic.levels hn ht ha hR0 first hFirst)=
         zeroSet (n:=n) (t:=t) (R0:=R0) candidate:=by
-      ext p
-      constructor
-      · exact fun HP=>HP.1
-      · intro HP
-        refine ⟨HP,?_⟩
-        intro i hi
-        rw [hDepthFirst] at hi
-        exact False.elim (Nat.not_lt_zero _ hi)
+      simp [frozenSlice, hDepthFirst]
     exact depth_complete hn ht ha hR0 candidate 0 (by omega) first second hFirst hSecond
       hcFirst hcSecond hDepthFirst hDepthSecond (by simpa only [HZero] using H)
 

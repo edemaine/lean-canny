@@ -41,14 +41,7 @@ theorem incidence_iff_joined_prelude (candidate seed :List Bool)
   · intro HJoined
     have HZero:frozenSlice (n:=n) (t:=t) (R0:=R0) candidate (IntegralMixedRoadmapAtomic.depth seed)
         (IntegralMixedRoadmapAtomic.levels hn ht ha hR0 seed hv)=zeroSet (n:=n) (t:=t) (R0:=R0) candidate:=by
-      ext point
-      constructor
-      · exact fun H=>H.1
-      · intro H
-        refine ⟨H,?_⟩
-        intro i hi
-        rw [hd] at hi
-        exact False.elim (Nat.not_lt_zero _ hi)
+      simp [frozenSlice, hd]
     exact IntegralMixedRoadmapProperAppend.incidence_of_prelude_path hn ht ha hR0 candidate seed hv hc hr
       (by simpa only [HZero] using HJoined)
 

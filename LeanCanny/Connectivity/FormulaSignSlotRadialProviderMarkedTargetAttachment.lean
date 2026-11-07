@@ -79,19 +79,9 @@ theorem prelude_target_complete_step (c :List Bool) (k :ℕ) (hk:k<num c+3)
   exact (HFinalFields i (hi.trans_eq HCount.symm)).trans (HInitial i hi)
 
 theorem prelude_target_complete (c :List Bool) (k :ℕ) (hk:k≤num c+3):PreludeTargetComplete c k:=by
-  let D:=num c+3
-  have H:∀remaining,∀j,j≤D→D-j=remaining→PreludeTargetComplete c j:=by
-    intro remaining
-    induction remaining using Nat.strong_induction_on with
-    | h remaining ih=>
-      intro j hj _
-      by_cases HE:j=D
-      · subst j
-        exact prelude_target_complete_terminal c
-      · have Hlt:j<D:=by omega
-        apply prelude_target_complete_step c j Hlt
-        exact ih (D-(j+1)) (by omega) (j+1) (by omega) rfl
-  exact H (D-k) k hk rfl
+  induction hk using Nat.decreasingInduction with
+  | self => exact prelude_target_complete_terminal c
+  | of_succ k hk ih => exact prelude_target_complete_step c k hk ih
 
 /-- A genuine path to the word's own prelude constructs a native reachable
 terminal marked anchor, retaining every original initial field. -/
