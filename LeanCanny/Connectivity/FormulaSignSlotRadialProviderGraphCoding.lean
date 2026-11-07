@@ -56,10 +56,9 @@ theorem decode_path (c u v : List Bool)
 
 theorem path_provider_eq (a b : List Bool)
     (h : Relation.ReflTransGen (FormulaSignSlotRadialProviderEdge.Adjacent) a b) :
-    FormulaSignSlotRadialProviderAtomic.provider a=FormulaSignSlotRadialProviderAtomic.provider b :=by
-  induction h with
-  | refl=>rfl
-  | tail _ HE IH=>exact IH.trans (FormulaSignSlotRadialProviderEdge.provider_eq _ _ HE)
+    FormulaSignSlotRadialProviderAtomic.provider a=FormulaSignSlotRadialProviderAtomic.provider b :=
+  Relation.reflTransGen_le_of_equivalence_of_le (Setoid.ker FormulaSignSlotRadialProviderAtomic.provider).iseqv
+    (fun _ _ => FormulaSignSlotRadialProviderEdge.provider_eq _ _) _ _ h
 
 theorem encode_path (c a b : List Bool)
     (hc : FormulaSignSlotRadialProviderAtomic.provider a=c)

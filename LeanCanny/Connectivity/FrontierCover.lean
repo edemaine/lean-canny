@@ -109,14 +109,10 @@ theorem accessible_singleton [T1Space X] (x : X) : Accessible ({x} : Set X) := b
   exact JoinedIn.refl (mem_insert _ _)
 
 theorem Accessible.isPreconnected {s : Set X} (h : Accessible s) : IsPreconnected s := by
-  apply isPreconnected_of_forall_pair
-  intro x hx y hy
-  obtain ⟨γ, hγ⟩ := h x (subset_closure hx) y hy
-  have hsub : range γ ⊆ s := by
-    rintro z ⟨t, rfl⟩
-    simpa only [insert_eq_of_mem hx] using hγ t
-  exact ⟨range γ, hsub, γ.source_mem_range, γ.target_mem_range,
-    isPreconnected_range γ.continuous⟩
+  obtain rfl | ⟨x,hx⟩ := s.eq_empty_or_nonempty
+  · exact isPreconnected_empty
+  · exact (show IsPathConnected s from ⟨x,hx,fun y hy => by
+      simpa only [insert_eq_of_mem hx] using h x (subset_closure hx) y hy⟩).isConnected.isPreconnected
 
 /-- Boundary accessibility turns each incidence into an actual path. -/
 theorem joinedIn_of_reachable
@@ -209,15 +205,11 @@ theorem incident_preimage_iff {f : Y → X} (hf : Topology.IsEmbedding f)
   have hcl (k : ι) : closure (f ⁻¹' piece k) = f ⁻¹' closure (piece k) := by
     rw [hf.closure_eq_preimage_closure_image, image_preimage_eq_of_subset (hsub k)]
   simp only [Incident, hcl]
-  constructor
-  · rintro (⟨x, hx, hy⟩ | ⟨x, hx, hy⟩)
-    · exact Or.inl ⟨f x, hx, hy⟩
-    · exact Or.inr ⟨f x, hx, hy⟩
-  · rintro (⟨z, hz, hcl⟩ | ⟨z, hz, hcl⟩)
-    · obtain ⟨x, rfl⟩ := hsub i hz
-      exact Or.inl ⟨x, hz, hcl⟩
-    · obtain ⟨x, rfl⟩ := hsub j hz
-      exact Or.inr ⟨x, hz, hcl⟩
+  have hne (a b : ι) : (f ⁻¹' piece a ∩ f ⁻¹' closure (piece b)).Nonempty ↔
+      (piece a ∩ closure (piece b)).Nonempty := by
+    rw [← preimage_inter,nonempty_preimage_iff,
+      inter_eq_left.mpr (inter_subset_left.trans (hsub a))]
+  exact or_congr (hne i j) (hne j i)
 
 /-- Closed continuous parametrizations preserve boundary accessibility.
 Closedness is what prevents missing limit points of the parametrization. -/
@@ -226,12 +218,7 @@ theorem Accessible.image {s : Set X} (hs : Accessible s) {f : X → Y}
   intro x hx y hy
   obtain ⟨a, ha, rfl⟩ := hclosed.closure_image_subset s hx
   obtain ⟨b, hb, rfl⟩ := hy
-  have h := (hs a ha b hb).map hf.continuousOn
-  exact h.mono (by
-    rintro z ⟨t, ht, rfl⟩
-    rcases ht with rfl | ht
-    · exact mem_insert _ _
-    · exact mem_insert_of_mem _ ⟨t, ht, rfl⟩)
+  simpa only [image_insert_eq] using (hs a ha b hb).map hf.continuousOn
 
 /-- Passing to an embedded ambient subspace retains accessibility for pieces
 contained in that subspace. Only relative closure points are used. -/

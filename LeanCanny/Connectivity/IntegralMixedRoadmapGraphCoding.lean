@@ -61,10 +61,9 @@ theorem decode_path (c u v : List Bool)
 
 theorem path_candidate_eq (a b : List Bool)
     (h : Relation.ReflTransGen (IntegralMixedRoadmapEdge.Adjacent hn ht ha hR0) a b) :
-    IntegralMixedRoadmapAtomic.candidate a=IntegralMixedRoadmapAtomic.candidate b :=by
-  induction h with
-  | refl=>rfl
-  | tail _ HE IH=>exact IH.trans (IntegralMixedRoadmapEdge.candidate_eq hn ht ha hR0 _ _ HE)
+    IntegralMixedRoadmapAtomic.candidate a=IntegralMixedRoadmapAtomic.candidate b :=
+  Relation.reflTransGen_le_of_equivalence_of_le (Setoid.ker IntegralMixedRoadmapAtomic.candidate).iseqv
+    (fun _ _ => IntegralMixedRoadmapEdge.candidate_eq hn ht ha hR0 _ _) _ _ h
 
 theorem encode_path (c a b : List Bool)
     (hc : IntegralMixedRoadmapAtomic.candidate a=c)
