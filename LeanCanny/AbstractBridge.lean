@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public meta import Lean.Elab.Deriving.Util
+public meta import Lean.Elab.Tactic.Basic
 public import LeanCanny.AbstractEncodingBridge
 
 /-! # Transfer from the independent mathematical abstract
@@ -25,6 +26,19 @@ theorem reduction_closure {L : Set (List Bool)}
         Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
   intro K hK
   exact Computation.mem_PSPACE_of_reduction hK h
+
+open Lean Lean.Meta Lean.Elab Lean.Elab.Tactic in
+/-- Supply an inductive type's own recursor to a default proof argument.
+The final quantified input reveals the type after the conclusion is matched. -/
+elab "bridge_induction" : tactic => withMainContext do
+  let name ← forallTelescopeReducing (← getMainTarget) fun args _ => do
+    if args.isEmpty then throwError "Expected an induction principle"
+    let ty ← whnf (← inferType args.back!)
+    let .const name _ := ty.getAppFn
+      | throwError "Cannot infer the inductive type from {ty}"
+    discard <| getConstInfoInduct name
+    return name.str "rec"
+  evalTactic (← `(tactic| exact @$(mkCIdent name)))
 
 /-! ## Dimension-indexed abstract syntax
 
@@ -306,7 +320,71 @@ theorem finite_point_upper_bound :
   rw [HE]
   exact AbstractEncodingBridge.point_mem_PSPACE
 
+/-! The compact entry points infer the syntax from the displayed language.
+Default proof arguments supply its recursors and check its defining equations. -/
+
+theorem etr_upper_bound
+    (formulaInduction : ∀ {n} {P : F n → Prop}, P falsum → (∀ t, P (eqZero t)) →
+      (∀ t, P (ltZero t)) → (∀ p, P p → P (neg p)) →
+      (∀ p q, P p → P q → P (conj p q)) →
+      (∀ p q, P p → P q → P (disj p q)) → ∀ p, P p := by bridge_induction)
+    (termInduction : ∀ {n} {P : T n → Prop}, (∀ z, P (const z)) → (∀ i, P (var i)) →
+      (∀ a b, P a → P b → P (add a b)) →
+      (∀ a b, P a → P b → P (mul a b)) → ∀ t, P t := by bridge_induction)
+    (laws : FiniteLaws (const := const) (var := var) (add := add) (mul := mul)
+      (falsum := falsum) (eqZero := eqZero) (ltZero := ltZero)
+      (neg := neg) (conj := conj) (disj := disj)
+      (eval := eval) (solutions := solutions) (termCode := termCode) (formulaCode := formulaCode)
+      := by constructor <;> intros <;> rfl) :
+    (⋃ n, (fun p => encoding (@formulaCode n p)) '' {p | ∃ x, holds x p}) ∈
+      Cslib.Complexity.PSPACE encBits :=
+  finite_etr_upper_bound termInduction formulaInduction laws
+
+theorem connected_upper_bound
+    (formulaInduction : ∀ {n} {P : F n → Prop}, P falsum → (∀ t, P (eqZero t)) →
+      (∀ t, P (ltZero t)) → (∀ p, P p → P (neg p)) →
+      (∀ p q, P p → P q → P (conj p q)) →
+      (∀ p q, P p → P q → P (disj p q)) → ∀ p, P p := by bridge_induction)
+    (termInduction : ∀ {n} {P : T n → Prop}, (∀ z, P (const z)) → (∀ i, P (var i)) →
+      (∀ a b, P a → P b → P (add a b)) →
+      (∀ a b, P a → P b → P (mul a b)) → ∀ t, P t := by bridge_induction)
+    (laws : FiniteLaws (const := const) (var := var) (add := add) (mul := mul)
+      (falsum := falsum) (eqZero := eqZero) (ltZero := ltZero)
+      (neg := neg) (conj := conj) (disj := disj)
+      (eval := eval) (solutions := solutions) (termCode := termCode) (formulaCode := formulaCode)
+      := by constructor <;> intros <;> rfl) :
+    (⋃ n, (fun p : F n => encPair encUnary encoding (n, formulaCode p)) ''
+      {p | IsPreconnected {x | holds x p}}) ∈ Cslib.Complexity.PSPACE encBits :=
+  finite_connected_upper_bound termInduction formulaInduction laws
+
+theorem point_upper_bound
+    (formulaInduction : ∀ {n} {P : F n → Prop}, P falsum → (∀ t, P (eqZero t)) →
+      (∀ t, P (ltZero t)) → (∀ p, P p → P (neg p)) →
+      (∀ p q, P p → P q → P (conj p q)) →
+      (∀ p q, P p → P q → P (disj p q)) → ∀ p, P p := by bridge_induction)
+    (termInduction : ∀ {n} {P : T n → Prop}, (∀ z, P (const z)) → (∀ i, P (var i)) →
+      (∀ a b, P a → P b → P (add a b)) →
+      (∀ a b, P a → P b → P (mul a b)) → ∀ t, P t := by bridge_induction)
+    (laws : FiniteLaws (const := const) (var := var) (add := add) (mul := mul)
+      (falsum := falsum) (eqZero := eqZero) (ltZero := ltZero)
+      (neg := neg) (conj := conj) (disj := disj)
+      (eval := eval) (solutions := solutions) (termCode := termCode) (formulaCode := formulaCode)
+      := by constructor <;> intros <;> rfl) :
+    (⋃ n, ⋃ p : F n,
+      (fun ab : F n × F n => encPair encUnary (encList encoding)
+        (n, [formulaCode p, formulaCode ab.1, formulaCode ab.2])) ''
+      {(a, b) | ∃ x y, {v | holds v a} = {x} ∧ {v | holds v b} = {y} ∧
+        ∃ γ : _root_.Path x y, ∀ t, holds (γ t) p}) ∈ Cslib.Complexity.PSPACE encBits :=
+  finite_point_upper_bound termInduction formulaInduction laws
+
 end Finite
+
+/-- Reduction closure with the arithmetic upper bound supplied automatically. -/
+theorem existsReal_upper_bound {L : Set (List Bool)}
+    (hL : L ∈ Cslib.Complexity.PSPACE encBits := by exact _root_.LeanCanny.AbstractBridge.etr_upper_bound) :
+    {K | Cslib.Complexity.PolyTimeReducible encBits encBits K L} ⊆
+      Cslib.Complexity.PSPACE encBits :=
+  reduction_closure hL
 
 end LeanCanny.AbstractBridge
 

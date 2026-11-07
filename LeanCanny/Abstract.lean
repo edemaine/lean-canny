@@ -120,23 +120,23 @@ def ExistsReal : Set (Set (List Bool)) :=
 /-- Theorem (Canny): existential real satisfiability is decidable in deterministic
 polynomial space, including rejection of malformed binary inputs. -/
 theorem etr_mem_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.finite_etr_upper_bound @Term.rec @Formula.rec (by constructor <;> intros <;> rfl)
+  AbstractBridge.etr_upper_bound
 
 /-- Corollary: every problem in ∃ℝ is decidable in deterministic polynomial space. -/
 theorem existsReal_subset_PSPACE :
     ExistsReal ⊆ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.reduction_closure etr_mem_PSPACE
+  AbstractBridge.existsReal_upper_bound
 
 /-- Theorem: connectivity of an integer semialgebraic set is in PSPACE,
 including singular and unbounded sets and accepting the empty set. -/
 theorem connectedLanguage_mem_PSPACE :
     ConnectedLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.finite_connected_upper_bound @Term.rec @Formula.rec (by constructor <;> intros <;> rfl)
+  AbstractBridge.connected_upper_bound
 
 /-- Theorem: path connectivity between two formula-described points in an
 integer semialgebraic set is in PSPACE, including endpoint validation. -/
 theorem pointLanguage_mem_PSPACE :
     PointLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.finite_point_upper_bound @Term.rec @Formula.rec (by constructor <;> intros <;> rfl)
+  AbstractBridge.point_upper_bound
 
 end LeanCanny.Abstract
