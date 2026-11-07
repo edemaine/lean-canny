@@ -33,12 +33,8 @@ theorem positiveCover_nonempty (i : I) :
 
 theorem projectedPiece_nonempty (i : I) :
     (FormulaSignSlotRadialAccess.projectedPiece c ((positiveCover c p hcover haccess).piece i)).Nonempty↔(p i).Nonempty := by
-  constructor
-  · rintro ⟨x,y,⟨z,hz,_⟩,_⟩
-    exact (positiveCover_nonempty c p hcover haccess i).mp ⟨z,hz⟩
-  · intro h
-    obtain ⟨z,hz⟩:=(positiveCover_nonempty c p hcover haccess i).mpr h
-    exact ⟨_,z.val,⟨z,hz,rfl⟩,rfl⟩
+  exact Set.image_nonempty.trans (Set.image_nonempty.trans
+    (positiveCover_nonempty c p hcover haccess i))
 end LeanCanny.Connectivity.FormulaSignSlotCircularBoundedCover
 
 namespace LeanCanny.Connectivity.CanonicalSignRefinement.ClosedCovers
@@ -48,11 +44,7 @@ open scoped Classical
 theorem piece_nonempty_iff {d : Description} (hd : d.WellFormed) (D : ClosedCovers d) (i : D.Tag) :
     (D.piece i).Nonempty↔(D.closedPiece i.1 i.2).Nonempty := by
   have H : (D.piece i).Nonempty↔(D.rawPiece i).Nonempty := by
-    constructor
-    · rintro ⟨x,hx⟩
-      exact ⟨x.val,hx⟩
-    · rintro ⟨x,hx⟩
-      exact ⟨⟨x,rawPiece_subset hd D i hx⟩,hx⟩
+    rw [piece,Subtype.preimage_coe_nonempty,inter_eq_right.mpr (rawPiece_subset hd D i)]
   rw [H,rawPiece,Set.image_nonempty]
   exact FormulaSignSlotCircularBoundedCover.projectedPiece_nonempty _ _ _ _ _
 end LeanCanny.Connectivity.CanonicalSignRefinement.ClosedCovers
@@ -64,18 +56,8 @@ open scoped Classical
 theorem closed_nonempty_iff_good (c : List Bool) (i : Vertex (width c)) :
     ((closedCover c).piece i).Nonempty↔AuxiliaryCandidateComponentCover.Good
       dimension_unary equation_FP equation_scope c i.val := by
-  have HE : ((closedCover c).piece i).Nonempty↔
-      ((AuxiliaryCandidateComponentCover.cover dimension_unary equation_FP equation_scope c).piece i).Nonempty := by
-    constructor
-    · rintro ⟨x,hx⟩
-      exact ⟨sourceHomeomorph c x,hx⟩
-    · rintro ⟨x,hx⟩
-      refine ⟨(sourceHomeomorph c).symm x,?_⟩
-      change sourceHomeomorph c ((sourceHomeomorph c).symm x)∈
-        (AuxiliaryCandidateComponentCover.cover dimension_unary equation_FP equation_scope c).piece i
-      rw [Homeomorph.apply_symm_apply]
-      exact hx
-  exact HE.trans (AuxiliaryCandidateComponentCover.nonempty_iff_good dimension_unary equation_FP equation_scope c i)
+  exact (sourceHomeomorph c).surjective.nonempty_preimage.trans
+    (AuxiliaryCandidateComponentCover.nonempty_iff_good dimension_unary equation_FP equation_scope c i)
 
 theorem piece_nonempty_iff_good (d : Description) (hd : d.WellFormed) (i : Index d) :
     (piece d i).Nonempty↔AuxiliaryCandidateComponentCover.Good dimension_unary equation_FP equation_scope

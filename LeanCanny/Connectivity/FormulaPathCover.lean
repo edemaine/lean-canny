@@ -59,21 +59,16 @@ theorem nonemptyQuery_correct {d : Description} (hd : d.WellFormed)
     {p : Formula} (hp : p.arity ≤ d.dimension) :
     (nonemptyQuery d p).Satisfiable ↔ (formulaPiece d p).Nonempty := by
   rw [satisfiable_iff_tuple (by exact max_le hd hp)]
-  constructor
-  · rintro ⟨x, hx, hp⟩
-    exact ⟨⟨x, hx⟩, hp⟩
-  · rintro ⟨x, hx⟩
-    exact ⟨x.val, x.property, hx⟩
+  simp only [Set.Nonempty, formulaPiece, Set.mem_ofPred_eq, Subtype.exists, exists_prop]
+  rfl
 
 theorem overlapQuery_correct {d : Description} (hd : d.WellFormed)
     {p q : Formula} (hp : p.arity ≤ d.dimension) (hq : q.arity ≤ d.dimension) :
     (overlapQuery d p q).Satisfiable ↔ (formulaPiece d p ∩ formulaPiece d q).Nonempty := by
   rw [satisfiable_iff_tuple (by exact max_le hd (max_le hp hq))]
-  constructor
-  · rintro ⟨x, hx, hp, hq⟩
-    exact ⟨⟨x, hx⟩, hp, hq⟩
-  · rintro ⟨x, hp, hq⟩
-    exact ⟨x.val, x.property, hp, hq⟩
+  simp only [Set.Nonempty, Set.mem_inter_iff, formulaPiece, Set.mem_ofPred_eq,
+    Subtype.exists, exists_prop]
+  rfl
 
 /-- Geometric data only. Effectivity of the query writers is stated separately
 and is not inferred from the existence of a mathematical cover. -/
@@ -104,12 +99,8 @@ theorem endpointTest_correct {p : Formula} {x : d.realization}
     C.endpointTest p u = true ↔ x ∈ formulaPiece d (C.formula u) := by
   rw [endpointTest, decide_eq_true_eq,
     overlapQuery_correct C.wellFormed (C.arity u hu) hx.1]
-  constructor
-  · rintro ⟨y, hy, hyp⟩
-    have he : y = x := Subtype.ext ((hx.2 y.val).mp hyp)
-    simpa only [he] using hy
-  · intro h
-    exact ⟨x, h, (hx.2 x.val).mpr rfl⟩
+  simp only [Set.Nonempty, Set.mem_inter_iff, formulaPiece, Set.mem_ofPred_eq, hx.2,
+    Subtype.val_injective.eq_iff, exists_eq_right]
 
 /-- ETR supplies exact nonemptiness and intersection tests for the cover. -/
 noncomputable def toBitPathCover : BitPathCover d.realization w C.edge C.valid where

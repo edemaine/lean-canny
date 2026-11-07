@@ -25,28 +25,16 @@ def piece (label : ι → List Bool) (original : ι → Set X) (word : List Bool
 theorem piece_label (label : ι → List Bool) (hl : Function.Injective label) (original : ι → Set X) (i : ι) :
     piece label original (label i) = original i := by
   ext x
-  constructor
-  · rintro ⟨j, hj, hx⟩
-    exact hl hj ▸ hx
-  · intro hx
-    exact ⟨i, rfl, hx⟩
+  simp only [piece, Set.mem_ofPred_eq, hl.eq_iff, exists_eq_left]
 
 theorem piece_empty (label : ι → List Bool) (original : ι → Set X) (word : List Bool)
     (hw : ¬ ∃ i, label i = word) : piece label original word = ∅ := by
-  ext x
-  constructor
-  · rintro ⟨i, hi, _⟩
-    exact (hw ⟨i, hi⟩).elim
-  · intro hx
-    exact hx.elim
+  simp [piece, not_exists.mp hw]
 
 theorem nonempty_iff (label : ι → List Bool) (original : ι → Set X) (word : List Bool) :
     (piece label original word).Nonempty ↔ ∃ i, label i = word ∧ (original i).Nonempty := by
-  constructor
-  · rintro ⟨x, i, hi, hx⟩
-    exact ⟨i, hi, x, hx⟩
-  · rintro ⟨i, hi, x, hx⟩
-    exact ⟨x, i, hi, hx⟩
+  simp only [Set.Nonempty, piece, Set.mem_ofPred_eq, ← exists_and_left]
+  exact exists_comm
 
 variable [TopologicalSpace X]
 

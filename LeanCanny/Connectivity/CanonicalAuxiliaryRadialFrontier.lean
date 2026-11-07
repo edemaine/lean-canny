@@ -16,55 +16,10 @@ private theorem closure_image_iff {X Y : Type*} [TopologicalSpace X] [Topologica
     (e : X ≃ₜ Y) (P : Set X) (D : X → Prop)
     (H : ∀ a, a ∈ closure P ↔ P = {a} ∨ D a) (y : Y) :
     y ∈ closure (e '' P) ↔ e '' P = {y} ∨ D (e.symm y) := by
-  constructor
-  · intro hy
-    rw [← e.image_closure] at hy
-    obtain ⟨a,ha,hay⟩ := hy
-    rcases (H a).mp ha with HS | HD
-    · left
-      rw [HS, Set.image_singleton, hay]
-    · right
-      have HE : a = e.symm y := by rw [← hay, e.symm_apply_apply]
-      exact HE ▸ HD
-  · rintro (HS | HD)
-    · rw [HS]
-      exact subset_closure (mem_singleton y)
-    · rw [← e.image_closure]
-      exact ⟨e.symm y,(H _).mpr (Or.inr HD),e.apply_symm_apply y⟩
-
-private theorem subtype_closure {X : Type*} [TopologicalSpace X]
-    (s P : Set X) (hP : P ⊆ s) :
-    closure (Subtype.val ⁻¹' P : Set s) = Subtype.val ⁻¹' closure P := by
-  have HI : Subtype.val '' (Subtype.val ⁻¹' P : Set s) = P := by
-    ext x
-    constructor
-    · rintro ⟨y,hy,rfl⟩
-      exact hy
-    · intro hx
-      exact ⟨⟨x,hP hx⟩,hx,rfl⟩
-  rw [Topology.IsEmbedding.subtypeVal.closure_eq_preimage_closure_image, HI]
-
-private theorem subtype_incident {X I : Type*} [TopologicalSpace X]
-    (s : Set X) (P : I → Set X) (hP : ∀ i, P i ⊆ s) (i j : I) :
-    FrontierCover.Incident (fun i => (Subtype.val ⁻¹' P i : Set s)) i j ↔
-      FrontierCover.Incident P i j := by
-  constructor
-  · rintro (⟨x,hi,hj⟩ | ⟨x,hj,hi⟩)
-    · left
-      rw [subtype_closure s (P j) (hP j)] at hj
-      exact ⟨x.val,hi,hj⟩
-    · right
-      rw [subtype_closure s (P i) (hP i)] at hi
-      exact ⟨x.val,hj,hi⟩
-  · rintro (⟨x,hi,hj⟩ | ⟨x,hj,hi⟩)
-    · left
-      refine ⟨⟨x,hP i hi⟩,hi,?_⟩
-      rw [subtype_closure s (P j) (hP j)]
-      exact hj
-    · right
-      refine ⟨⟨x,hP j hj⟩,hj,?_⟩
-      rw [subtype_closure s (P i) (hP i)]
-      exact hi
+  have HS : e '' P = {y} ↔ P = {e.symm y} := by
+    rw [←show e '' {e.symm y} = {y} by simp only [Set.image_singleton,e.apply_symm_apply],
+      e.injective.image_injective.eq_iff]
+  rw [←e.image_closure,e.image_eq_preimage_symm,mem_preimage,H,HS]
 
 noncomputable def descriptorAt (d : Description) (t : CanonicalAuxiliaryCandidateCover.Index d)
     (x : Fin d.dimension → ℝ) : Prop :=
@@ -123,15 +78,19 @@ theorem raw_incident_iff (d : Description) (i j : CanonicalAuxiliaryCandidateCov
 theorem piece_closure_eq (d : Description) (hd : d.WellFormed)
     (i : CanonicalAuxiliaryCandidateCover.Index d) :
     closure (CanonicalAuxiliaryCandidateCover.piece d i) =
-      Subtype.val ⁻¹' closure ((CanonicalAuxiliaryCandidateCover.data d).rawPiece i) :=
-  subtype_closure d.realization ((CanonicalAuxiliaryCandidateCover.data d).rawPiece i)
-    (CanonicalSignRefinement.ClosedCovers.rawPiece_subset hd (CanonicalAuxiliaryCandidateCover.data d) i)
+      Subtype.val ⁻¹' closure ((CanonicalAuxiliaryCandidateCover.data d).rawPiece i) := by
+  change closure (Subtype.val ⁻¹' (CanonicalAuxiliaryCandidateCover.data d).rawPiece i : Set d.realization) = _
+  rw [Topology.IsEmbedding.subtypeVal.closure_eq_preimage_closure_image,
+    Subtype.image_preimage_val,inter_eq_right.mpr
+      (CanonicalSignRefinement.ClosedCovers.rawPiece_subset hd (CanonicalAuxiliaryCandidateCover.data d) i)]
 
 theorem incident_iff_raw (d : Description) (hd : d.WellFormed)
     (i j : CanonicalAuxiliaryCandidateCover.Index d) :
     FrontierCover.Incident (CanonicalAuxiliaryCandidateCover.piece d) i j ↔
       FrontierCover.Incident (CanonicalAuxiliaryCandidateCover.data d).rawPiece i j :=
-  subtype_incident d.realization (CanonicalAuxiliaryCandidateCover.data d).rawPiece
-    (fun t => CanonicalSignRefinement.ClosedCovers.rawPiece_subset hd (CanonicalAuxiliaryCandidateCover.data d) t) i j
+  FrontierCover.incident_preimage_iff _ Topology.IsEmbedding.subtypeVal
+    (fun t => by
+      simpa using CanonicalSignRefinement.ClosedCovers.rawPiece_subset hd
+        (CanonicalAuxiliaryCandidateCover.data d) t) i j
 
 end LeanCanny.Connectivity.CanonicalAuxiliaryRadialFrontier
