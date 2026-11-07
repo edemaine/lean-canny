@@ -36,9 +36,7 @@ variable (D:SpaceDecider FormulaSignSlotRadialGuardedFeasibility.language)
 private theorem endpoint_evaluator (side:Bool):SpaceFunction (fun p=>[decide (Endpoint side p)]):=by
   have E:=(CanonicalEndpointSampleBits.evaluator side).precompose (endpointQuery side) (endpointQuery_FP side)
   exact E.congr (funext fun p=>by
-    apply congrArg List.singleton
-    apply Bool.eq_iff_iff.mpr
-    simp only [Endpoint,decide_eq_true_eq])
+    simp only [Endpoint,Bool.decide_eq_true,Function.comp_apply])
 include D in
 theorem at_evaluator:SpaceFunction (fun p=>[decide (At p)]):=
   IntegralPolynomialWindowTarskiDecision.flag_and _ _ (endpoint_evaluator false)
@@ -48,11 +46,8 @@ theorem at_evaluator:SpaceFunction (fun p=>[decide (At p)]):=
 noncomputable def Holds (c:List Bool):Prop:=∃a:List Bool,a.length=width c ∧∃b:List Bool,b.length=width c∧At (pair (pair c a) b)
 include D in
 theorem holds_evaluator:SpaceFunction (fun c=>[decide (Holds c)]):=by
-  have EB:=(at_evaluator D).exists_words (width_unary.comp pairFst_mem_FP)
-  have EA:=EB.exists_words width_unary
-  exact EA.congr (funext fun c=>by
-    apply congrArg List.singleton
-    apply Bool.eq_iff_iff.mpr
+  have E:=((at_evaluator D).exists_words (width_unary.comp pairFst_mem_FP)).exists_words width_unary
+  exact E.congr (funext fun c=>by
     simp only [Holds,pairFst_pair,List.cons.injEq,and_true,decide_eq_true_eq])
 
 noncomputable def WellFormed (c:List Bool):Prop:=(CanonicalEndpointNative.description c).WellFormed
@@ -139,15 +134,13 @@ theorem holds_point_iff (q:PointQuery) (hd:q.space.WellFormed)
       simpa only [width,HF] using CanonicalAuxiliaryCandidateCover.encode_length d j
     refine ⟨a,HA,b,HB,?_,?_,?_⟩
     · change CanonicalEndpointSampleBits.value false (endpointQuery false (packet (Input.point q).encode a b))=true
-      rw [endpoint_packet]
-      simp only [Bool.false_eq_true,ite_false]
-      rw [CanonicalEndpointSampleBits.value_source_point q i hi hs]
-      exact decide_eq_true ((HX.2 _).mpr rfl)
+      simpa only [endpoint_packet,Bool.false_eq_true,ite_false,a,d,
+        CanonicalEndpointSampleBits.value_source_point q i hi hs,decide_eq_true_eq]
+        using (HX.2 _).mpr rfl
     · change CanonicalEndpointSampleBits.value true (endpointQuery true (packet (Input.point q).encode a b))=true
-      rw [endpoint_packet]
-      simp only [ite_true]
-      rw [CanonicalEndpointSampleBits.value_target_point q j hj ht]
-      exact decide_eq_true ((HY.2 _).mpr rfl)
+      simpa only [endpoint_packet,ite_true,b,d,
+        CanonicalEndpointSampleBits.value_target_point q j hj ht,decide_eq_true_eq]
+        using (HY.2 _).mpr rfl
     · change CanonicalAuxiliaryNativeGraph.Reachable (graphQuery (packet (Input.point q).encode a b))
       rw [graph_packet]
       apply (CanonicalAuxiliaryNativeGraph.reachable_packet _ a b HA HB).mpr
@@ -156,9 +149,8 @@ theorem holds_point_iff (q:PointQuery) (hd:q.space.WellFormed)
 
 theorem language_point_iff (q:PointQuery):(Input.point q).encode∈language ↔(Input.point q).encode∈pointLanguage:=by
   have HP:Input.IsPoint (Input.point q).encode:=(Input.isPoint_iff _).mpr ⟨q,rfl⟩
-  change (PointInput (Input.point q).encode∧WellFormed (Input.point q).encode∧
-    (Input.point q).encode∈EndpointValidation.validEndpointLanguage∧Holds (Input.point q).encode)↔_
-  simp only [PointInput,HP,true_and,WellFormed,CanonicalEndpointNative.description_point,EndpointValidation.validEndpoint_encode]
+  simp only [language,Set.mem_ofPred_eq,PointInput,HP,true_and,WellFormed,
+    CanonicalEndpointNative.description_point,EndpointValidation.validEndpoint_encode]
   constructor
   · rintro ⟨hd,HE,HH⟩
     exact (holds_point_iff q hd HE).mp HH
@@ -177,7 +169,5 @@ theorem language_eq_point:language=pointLanguage:=by
       exact hp ((Input.isPoint_iff _).mpr ⟨q,rfl⟩)
     exact iff_of_false (fun H=>hp H.1) HN
 include D in
-theorem point_mem_PSPACE:pointLanguage∈PSPACE:=by
-  rw [←language_eq_point]
-  exact mem_PSPACE D
+theorem point_mem_PSPACE:pointLanguage∈PSPACE:=language_eq_point ▸ mem_PSPACE D
 end LeanCanny.Connectivity.CanonicalAuxiliaryNativePointSearch

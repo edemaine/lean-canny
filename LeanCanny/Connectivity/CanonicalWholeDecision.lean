@@ -19,9 +19,8 @@ set_option backward.isDefEq.respectTransparency false
 attribute [local irreducible] FormulaView.formula Input.field Codec.unaryValue
 
 @[simp] theorem description_whole (d : Description) : description (Input.whole d).encode=d := by
-  have H:=congrArg Codec.unaryValue (Input.field_whole_dimension d)
-  simp only [Codec.unaryValue_toBits] at H
-  simp only [description,H,Input.field_whole_space,FormulaView.formula_encode]
+  simp only [description,Input.field_whole_dimension,Codec.unaryValue_toBits,
+    Input.field_whole_space,FormulaView.formula_encode]
 
 theorem wholeFrame_whole (d : Description) : Input.wholeFrame (Input.whole d).encode=CanonicalSignRefinement.original d := by
   simp only [Input.wholeFrame,Input.field_whole_dimension,Input.field_whole_space]
@@ -37,10 +36,7 @@ theorem wellFormed_computable :
     exact congrArg encUnary (FormulaArity.value_encode _).symm
   apply (ComputableTidilyInPolyTime.unary_le' HA (Codec.unaryValue_unary.comp (Input.field_mem_FP 1))).of_enc_eq
   intro c
-  apply congrArg encBool
-  apply Bool.eq_iff_iff.mpr
-  simp only [decide_eq_true_eq]
-  rfl
+  exact congrArg encBool (decide_eq_decide.mpr Iff.rfl)
 
 theorem connected_language_iff (d : Description) (hd : d.WellFormed) :
     (Input.whole d).encode∈connectedLanguage ↔

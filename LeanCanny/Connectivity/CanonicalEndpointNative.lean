@@ -50,9 +50,8 @@ theorem valid_computable :
     baseWidth_unary HV (endpoint_computable 3) (endpoint_computable 4)
 
 @[simp] theorem description_point (q : PointQuery) : description (Input.point q).encode=q.space := by
-  have H:=congrArg Codec.unaryValue (Input.field_point_dimension q)
-  simp only [Codec.unaryValue_toBits] at H
-  simp only [description,H,Input.field_point_space,FormulaView.formula_encode]
+  simp only [description,Input.field_point_dimension,Codec.unaryValue_toBits,
+    Input.field_point_space,FormulaView.formula_encode]
 
 @[simp] theorem endpoint_source (q : PointQuery) : endpoint 3 (Input.point q).encode=q.source := by
   simp only [endpoint,Input.field_point_source,FormulaView.formula_encode]

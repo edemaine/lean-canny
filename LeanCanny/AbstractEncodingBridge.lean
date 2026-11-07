@@ -41,13 +41,8 @@ theorem etr_mem_PSPACE : etrLanguage ∈ PSPACE := by
       simpa only [ETR.Formula.encode, Data.length_toBits] using (formula_lengths p).2)
   have HE : translate '' ETR.language = etrLanguage := by
     ext bits
-    simp only [Set.mem_image, etrLanguage, Set.mem_ofPred_eq]
-    constructor
-    · rintro ⟨w, hw, rfl⟩
-      obtain ⟨p, rfl, hp⟩ := (ETR.mem_language_iff w).mp hw
-      exact ⟨p, translate_formula p, hp⟩
-    · rintro ⟨p, rfl, hp⟩
-      exact ⟨p.encode, ETR.encode_mem_language p |>.mpr hp, translate_formula p⟩
+    simp only [Set.mem_image, ETR.mem_language_iff, etrLanguage, Set.mem_ofPred_eq]
+    aesop (add simp [translate_formula])
   exact HE ▸ H
 
 def dimension (bits : List Bool) : ℕ := ETR.Codec.unaryValue (Connectivity.Input.field 1 bits)
@@ -122,9 +117,7 @@ theorem connected_mem_PSPACE : connectedLanguage ∈ PSPACE := by
   have HE : translateSpace '' Connectivity.connectedLanguage = connectedLanguage := by
     ext bits
     simp only [Set.mem_image, connectedLanguage, Set.mem_ofPred_eq, Connectivity.connectedLanguage]
-    constructor
-    · rintro ⟨w, ⟨d, rfl, hd⟩, rfl⟩; exact ⟨d, translateSpace_whole d, hd⟩
-    · rintro ⟨d, rfl, hd⟩; exact ⟨_, ⟨d, rfl, hd⟩, translateSpace_whole d⟩
+    aesop (add simp [translateSpace_whole])
   exact HE ▸ H
 
 theorem point_mem_PSPACE : pointLanguage ∈ PSPACE := by
@@ -136,9 +129,7 @@ theorem point_mem_PSPACE : pointLanguage ∈ PSPACE := by
   have HE : translatePoint '' Connectivity.pointLanguage = pointLanguage := by
     ext bits
     simp only [Set.mem_image, pointLanguage, Set.mem_ofPred_eq, Connectivity.pointLanguage]
-    constructor
-    · rintro ⟨w, ⟨q, rfl, hq⟩, rfl⟩; exact ⟨q, translatePoint_point q, hq⟩
-    · rintro ⟨q, rfl, hq⟩; exact ⟨_, ⟨q, rfl, hq⟩, translatePoint_point q⟩
+    aesop (add simp [translatePoint_point])
   exact HE ▸ H
 
 end LeanCanny.AbstractEncodingBridge

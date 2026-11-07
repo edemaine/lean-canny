@@ -85,42 +85,35 @@ private theorem edge_encoded_iff (d:Description) (hd:d.WellFormed) (i j:Canonica
 theorem edge_eq (d:Description) (hd:d.WellFormed) (a b:List Bool):
     edge (CanonicalSignRefinement.original d) a b=CanonicalAuxiliaryBitFrontier.edge d a b:=by
   apply Bool.eq_iff_iff.mpr
-  by_cases ha:CanonicalAuxiliaryCandidateLabels.Valid (pair (CanonicalSignRefinement.original d) a)
-  · by_cases hb:CanonicalAuxiliaryCandidateLabels.Valid (pair (CanonicalSignRefinement.original d) b)
-    · let i:=CanonicalAuxiliaryCandidateLabels.decode d a ha
-      let j:=CanonicalAuxiliaryCandidateLabels.decode d b hb
-      have HA:=valid_length d a ha
-      have HB:=valid_length d b hb
-      have HE:=edge_encoded_iff d hd i j
-      rw [CanonicalAuxiliaryCandidateLabels.encode_decode d a ha,CanonicalAuxiliaryCandidateLabels.encode_decode d b hb] at HE
-      rw [HE]
-      simp only [CanonicalAuxiliaryBitFrontier.edge,dite_eq_left HA,dite_eq_left HB,decide_eq_true_eq]
-      change FrontierCover.Incident (CanonicalAuxiliaryCandidateCover.piece d) i j ↔ _
-      unfold FrontierCover.Incident
-      simp only [CanonicalAuxiliaryBitFrontier.piece,dite_eq_left ha,dite_eq_left hb]
-      rfl
-    · have HFalse:edge (CanonicalSignRefinement.original d) a b≠true:=by
-        intro H
-        have HT:Holds (pair (CanonicalSignRefinement.original d) (pair a b)):=of_decide_eq_true H
-        exact hb (by simpa only [rightQuery,pairFst_pair,pairSnd_pair] using HT.2.1)
-      have HOld:CanonicalAuxiliaryBitFrontier.edge d a b≠true:=by
-        unfold CanonicalAuxiliaryBitFrontier.edge
-        split_ifs with hA hB
-        · intro H0
-          have H:=of_decide_eq_true H0
-          exact hb ((CanonicalAuxiliaryBitFrontier.piece_nonempty_iff d hd ⟨b,hB⟩).mp (H.nonempty _).2)
-        all_goals exact Bool.false_ne_true
-      exact iff_of_false HFalse HOld
+  by_cases hv:CanonicalAuxiliaryCandidateLabels.Valid (pair (CanonicalSignRefinement.original d) a) ∧
+      CanonicalAuxiliaryCandidateLabels.Valid (pair (CanonicalSignRefinement.original d) b)
+  · obtain ⟨ha,hb⟩:=hv
+    let i:=CanonicalAuxiliaryCandidateLabels.decode d a ha
+    let j:=CanonicalAuxiliaryCandidateLabels.decode d b hb
+    have HA:=valid_length d a ha
+    have HB:=valid_length d b hb
+    have HE:=edge_encoded_iff d hd i j
+    rw [CanonicalAuxiliaryCandidateLabels.encode_decode d a ha,CanonicalAuxiliaryCandidateLabels.encode_decode d b hb] at HE
+    rw [HE]
+    simp only [CanonicalAuxiliaryBitFrontier.edge,dite_eq_left HA,dite_eq_left HB,decide_eq_true_eq]
+    change FrontierCover.Incident (CanonicalAuxiliaryCandidateCover.piece d) i j ↔ _
+    unfold FrontierCover.Incident
+    simp only [CanonicalAuxiliaryBitFrontier.piece,dite_eq_left ha,dite_eq_left hb]
+    rfl
   · have HFalse:edge (CanonicalSignRefinement.original d) a b≠true:=by
       intro H
       have HT:Holds (pair (CanonicalSignRefinement.original d) (pair a b)):=of_decide_eq_true H
-      exact ha (by simpa only [leftQuery,pairFst_pair,pairSnd_pair] using HT.1)
+      apply hv
+      exact ⟨by simpa only [leftQuery,pairFst_pair,pairSnd_pair] using HT.1,
+        by simpa only [rightQuery,pairFst_pair,pairSnd_pair] using HT.2.1⟩
     have HOld:CanonicalAuxiliaryBitFrontier.edge d a b≠true:=by
       unfold CanonicalAuxiliaryBitFrontier.edge
       split_ifs with hA hB
       · intro H0
         have H:=of_decide_eq_true H0
-        exact ha ((CanonicalAuxiliaryBitFrontier.piece_nonempty_iff d hd ⟨a,hA⟩).mp (H.nonempty _).1)
+        have HN:=H.nonempty _
+        exact hv ⟨(CanonicalAuxiliaryBitFrontier.piece_nonempty_iff d hd ⟨a,hA⟩).mp HN.1,
+          (CanonicalAuxiliaryBitFrontier.piece_nonempty_iff d hd ⟨b,hB⟩).mp HN.2⟩
       all_goals exact Bool.false_ne_true
     exact iff_of_false HFalse HOld
 end LeanCanny.Connectivity.CanonicalAuxiliaryNativeFrontier
