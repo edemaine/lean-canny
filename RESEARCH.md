@@ -330,7 +330,7 @@ correctness from the coercive algebraic specialization.
 Complexitylib's canonical repository is now
 [`cslib-community/complexitylib`](https://github.com/cslib-community/complexitylib).
 The project uses the renamed Lake package `complexitylib`, pinned to revision
-`9ab0bda6` with Lean `v4.36.0-rc2` and the matching CSLib/Mathlib dependency pins.
+`0f605ae2` with Lean `v4.36.0-rc2` and the matching CSLib/Mathlib dependency pins.
 
 ## Unused tube route: remaining quantitative choices
 
