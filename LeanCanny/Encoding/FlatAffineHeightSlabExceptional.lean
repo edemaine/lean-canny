@@ -70,7 +70,7 @@ theorem trailingEvaluator {F : Inputs} (h : F.Access) (height : (u : List Bool) 
 
 theorem trailing_ne_zero (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCertificate F)
     (height : (u : List Bool) → Fin (count F u)) (z : List Bool) : trailing F height z ≠ 0 := by
-  apply Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr
+  apply Polynomial.trailingCoeff_ne_zero.mpr
   rw [certificate_eq]
   exact FlatAffineHeightValues.ne_zero F hcone height _ _
 

@@ -69,7 +69,7 @@ noncomputable def coordinate (φ : R →+* ℝ) (p : Polynomial (Polynomial R)) 
 
 theorem coordinate_ne_zero (φ : R →+* ℝ) (p : Polynomial (Polynomial R)) (q a : R)
     (ha : φ a≠0) (hd : p.coeff p.natDegree = C a) : coordinate φ p q≠0 :=
-  trailingCoeff_nonzero_iff_nonzero.mpr (selected_ne_zero φ p q a ha hd)
+  trailingCoeff_ne_zero.mpr (selected_ne_zero φ p q a ha hd)
 
 theorem coordinate_eq_coefficient (φ : R →+* ℝ) (p : Polynomial (Polynomial R)) (q : R) :
     coordinate φ p q =

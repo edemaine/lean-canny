@@ -82,7 +82,7 @@ theorem integer_sign_eval_of_small (p : ℤ[X]) (x : ℝ) (hx : 0 < x) (hx1 : x 
   have hc : q.coeff 0 = p.trailingCoeff := by
     rw [PseudoRemainder.high_coeff, Nat.zero_add]
     rfl
-  have hq : q.coeff 0 ≠ 0 := by rw [hc]; exact Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hp
+  have hq : q.coeff 0 ≠ 0 := by rw [hc]; exact Polynomial.trailingCoeff_ne_zero.mpr hp
   have hm : coefficientMass q ≤ coefficientMass p := PseudoRemainder.high_mass_le _ _
   have hs : x * (coefficientMass q : ℝ) < 1 :=
     (mul_le_mul_of_nonneg_left (by exact_mod_cast hm) hx.le).trans_lt hsmall

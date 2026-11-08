@@ -118,11 +118,11 @@ noncomputable def record (P : Readers) : List Bool → List Bool :=
   ImplicitGraph.findWord (test P) (fun c => (P.dim c + 4) * BoundedCriticalSeparator.width P c)
 
 theorem test_computable {P : Readers} (h : P.PolyTime) (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
-    ComputableTidilyInPolySpace (test P) (encPair encBits encBits) encBool := by
+    ComputableInPolySpace (test P) (encPair encBits encBits) encBool := by
   have hc := check_evaluator (h.comp pairFst_mem_FP) pairSnd_mem_FP (fun p => ht (pairFst p))
   have hp := pair_computable (ComputableTidilyInPolyTime.fst encBits encBits) (ComputableTidilyInPolyTime.snd encBits encBits)
   have heq := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).computable
-  have E := (ComputableTidilyInPolySpace.of_polyTime heq).comp (hc.computable.comp (.of_polyTime hp))
+  have E := (ComputableInPolySpace.of_tidyPolyTime heq).comp (hc.computable.comp (.of_tidyPolyTime hp))
   apply E.congr
   intro p
   apply Bool.eq_iff_iff.mpr

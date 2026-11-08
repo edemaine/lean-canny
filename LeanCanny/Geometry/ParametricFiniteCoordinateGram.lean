@@ -29,7 +29,7 @@ noncomputable def exceptional (q : MvPolynomial (Fin n) (Polynomial ℤ)) (D : �
 
 theorem head_ne_zero (q : MvPolynomial (Fin n) (Polynomial ℤ)) (D : ℕ)
     (hD : q.totalDegree ≤ D) (i : Fin n) : head q D i ≠ 0 :=
-  Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (ParametricCoerciveBoxGramEliminant.ne_zero q D hD i)
+  Polynomial.trailingCoeff_ne_zero.mpr (ParametricCoerciveBoxGramEliminant.ne_zero q D hD i)
 
 theorem exceptional_ne_zero (q : MvPolynomial (Fin n) (Polynomial ℤ)) (D : ℕ)
     (hD : q.totalDegree ≤ D) (i : Fin n) : exceptional q D i ≠ 0 :=

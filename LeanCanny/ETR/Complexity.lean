@@ -87,7 +87,7 @@ theorem reduces_to_nontrivial_of_mem_P {L K : Language} (hL : L ∈ P)
     (yes no : List Bool) (hyes : yes ∈ K) (hno : no ∉ K) : PolyTimeReduces L K := by
   obtain ⟨g, hgTime, hg⟩ := hL
   let reduce := fun x => if g x then yes else no
-  refine ⟨reduce, hgTime.cond (.const yes) (.const no), ?_⟩
+  refine ⟨reduce, (hgTime.tidy.cond (.const yes) (.const no)).computableInPolyTime, ?_⟩
   intro x
   rw [hg x]
   by_cases h : g x = true <;> simp [reduce, h, hyes, hno]

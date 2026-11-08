@@ -57,7 +57,7 @@ theorem unique (n : ℕ) (b : (i : ℕ) → (Fin (n+i) → ℝ) → ℝ) (m : �
   have HE : ∀ j (hj : j<n+m), y.val ⟨j,hj⟩=extend n b (projection n m y.val) m ⟨j,hj⟩ := by
     intro j
     induction j using Nat.strong_induction_on with
-    | h j IH =>
+    | ind j IH =>
       intro hj
       by_cases H : j<n
       · exact (old n b (projection n m y.val) m ⟨j,H⟩).symm

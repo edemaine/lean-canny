@@ -141,6 +141,6 @@ theorem normalize_correct (bits : List Bool) :
     simp [normalize, hr, hn, hf]
 
 theorem etr_reduces_to_nnf : PolyTimeReduces ETR.language language :=
-  ⟨normalize, FP.computable normalize_mem_FP, normalize_correct⟩
+  ⟨normalize, (FP.computable normalize_mem_FP).computableInPolyTime, normalize_correct⟩
 
 end LeanCanny.ETR.NNF

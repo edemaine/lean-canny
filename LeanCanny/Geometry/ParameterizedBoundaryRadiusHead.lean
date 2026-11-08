@@ -27,7 +27,7 @@ noncomputable def polynomial (q : MvPolynomial (Fin n) ℤ) (D : ℕ) : Polynomi
   (Polynomial.Bivariate.swap (ParameterizedBoundaryGramValues.head q D)).trailingCoeff
 
 theorem ne_zero (q : MvPolynomial (Fin n) ℤ) (D : ℕ) (hD : q.totalDegree ≤ D) : polynomial q D ≠ 0 := by
-  apply Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr
+  apply Polynomial.trailingCoeff_ne_zero.mpr
   intro H
   apply ParameterizedBoundaryGramValues.head_ne_zero q D hD
   have HE := congrArg Polynomial.Bivariate.swap H

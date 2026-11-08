@@ -85,7 +85,7 @@ theorem exists_done_le (a : ℕ → ℕ) (H K : ℕ) (s : State) (hs : Fits H K 
     ∃ t ≤ stateWork K s, isDone ((step a)^[t] s) = true := by
   generalize heq : stateWork K s = n
   induction n using Nat.strong_induction_on generalizing s with
-  | h n ih =>
+  | ind n ih =>
     by_cases hd : isDone s = true
     · exact ⟨0, Nat.zero_le _, hd⟩
     · have hn : isDone s = false := Bool.eq_false_iff.mpr hd

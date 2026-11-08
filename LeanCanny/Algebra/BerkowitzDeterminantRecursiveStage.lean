@@ -58,7 +58,7 @@ theorem certificates (ha : a.ControlsPolyTime) (factorTask : List Bool → List 
     (controller a factorTask zeroTask).Certificates (encQ := encBits) (encS := encBits) := by
   have h := PolynomialPower.RecursiveStage.certificates a.powerAccess (power_controls a ha)
     (entryTask a factorTask zeroTask) (entryTask_FP a ha factorTask hf zeroTask)
-  exact ⟨h.initial, h.halted, .of_polyTime (FP.computable (output_FP a ha)), h.needs, h.query, h.advance, h.resume⟩
+  exact ⟨h.initial, h.halted, .of_tidyPolyTime (FP.computable (output_FP a ha)), h.needs, h.query, h.advance, h.resume⟩
 
 theorem reference_eq (factorTask answer : List Bool → List Bool) (zeroTask : List Bool) :
     (controller a factorTask zeroTask).reference answer =

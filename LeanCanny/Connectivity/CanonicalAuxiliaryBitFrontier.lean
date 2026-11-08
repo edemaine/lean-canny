@@ -72,8 +72,8 @@ noncomputable def cover (d : Description) (hd : d.WellFormed) :
   edge_iff i j := by simp only [edge,dite_eq_left i.property,dite_eq_left j.property,decide_eq_true_eq]
 
 theorem vertex_computable :
-    ComputableTidilyInPolySpace (fun p : List Bool×List Bool=>valid p.1 p.2) (encPair encBits encBits) encBool := by
-  have H:=CanonicalAuxiliaryCandidateLabels.decider.computable.comp (.of_polyTime (pair_computable
+    ComputableInPolySpace (fun p : List Bool×List Bool=>valid p.1 p.2) (encPair encBits encBits) encBool := by
+  have H:=CanonicalAuxiliaryCandidateLabels.decider.computable.comp (.of_tidyPolyTime (pair_computable
     (ComputableTidilyInPolyTime.fst encBits encBits) (ComputableTidilyInPolyTime.snd encBits encBits)))
   exact H.congr (fun _=>rfl)
 

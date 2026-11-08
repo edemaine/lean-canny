@@ -111,7 +111,7 @@ theorem iterate_done (A : Matrix (Fin n) (Fin n) R) (s : State R n) :
     ∃ x, (step A)^[stateWork s] s = .done x := by
   generalize heq : stateWork s = t
   induction t using Nat.strong_induction_on generalizing s with
-  | h t ih =>
+  | ind t ih =>
       by_cases ht : t = 0
       · obtain ⟨x, hx⟩ := stateWork_zero s (heq.trans ht)
         exact ⟨x, by simpa only [ht, Function.iterate_zero, id_eq] using hx⟩

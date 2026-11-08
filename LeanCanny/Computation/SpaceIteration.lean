@@ -18,7 +18,7 @@ allows any certified binary upper bound. Child execution times never enter.
 
 @[expose] public section
 
-namespace Turing.MultiTapeTM.ComputableTidilyInPolySpace
+namespace Turing.MultiTapeTM.ComputableInPolySpace
 
 private def freeze {β : Type} (step : β → β) (halt : β → Bool) (x : β) :=
   if halt x then x else step x
@@ -43,10 +43,10 @@ space orbit. Initialization, transitions, tests, and output may all use space. -
 theorem orbit_of_polyBounded {α β γ : Type} [Inhabited β]
     {encIn : α ↪ List Bool} {encState : β ↪ List Bool} {encOut : γ ↪ List Bool}
     {step : β → β} {init : α → β} {halt : β → Bool} {output : β → γ}
-    (hi : ComputableTidilyInPolySpace init encIn encState)
-    (hs : ComputableTidilyInPolySpace step encState encState)
-    (hh : ComputableTidilyInPolySpace halt encState encBool)
-    (ho : ComputableTidilyInPolySpace output encState encOut)
+    (hi : ComputableInPolySpace init encIn encState)
+    (hs : ComputableInPolySpace step encState encState)
+    (hh : ComputableInPolySpace halt encState encBool)
+    (ho : ComputableInPolySpace output encState encOut)
     (N B W : α → ℕ)
     (hB : PolyBounded (fun x => (encIn x).length) B)
     (hW : PolyBounded (fun x => (encIn x).length) W)
@@ -54,15 +54,15 @@ theorem orbit_of_polyBounded {α β γ : Type} [Inhabited β]
     (hN : ∀ x, N x ≤ 2 ^ W x)
     (hb : ∀ x k, k < N x → halt (step^[k] (init x)) = false)
     (ha : ∀ x, halt (step^[N x] (init x)) = true) :
-    ComputableTidilyInPolySpace (fun x => output (step^[N x] (init x))) encIn encOut := by
+    ComputableInPolySpace (fun x => output (step^[N x] (init x))) encIn encOut := by
   obtain ⟨w, hw⟩ := hW.exists_polynomial
   have hlength : ComputableTidilyInPolyTime (fun x => (encIn x).length) encIn encUnary :=
     ComputableTidilyInPolyTime.length_bits.comp (ComputableTidilyInPolyTime.encode encIn)
   have hcount := ComputableTidilyInPolyTime.binary_two_pow.comp
     ((ComputableTidilyInPolyTime.unary_eval w).comp hlength)
-  have hstep : ComputableTidilyInPolySpace (freeze step halt) encState encState :=
+  have hstep : ComputableInPolySpace (freeze step halt) encState encState :=
     hh.ite id' hs
-  have h := iterate hcount hi hstep hB (fun x k _ => by
+  have h := iterate hcount.computableInPolyTime hi hstep hB (fun x k _ => by
     rw [freeze_iterate step halt _ _ (hb x) (ha x)]
     exact hstate x _ (Nat.min_le_right _ _))
   refine (ho.comp h).congr fun x => ?_
@@ -70,7 +70,7 @@ theorem orbit_of_polyBounded {α β γ : Type} [Inhabited β]
   rw [freeze_iterate step halt _ _ (hb x) (ha x),
     Nat.min_eq_right ((hN x).trans (Nat.pow_le_pow_right (by decide) (hw x))) ]
 
-end Turing.MultiTapeTM.ComputableTidilyInPolySpace
+end Turing.MultiTapeTM.ComputableInPolySpace
 
 namespace LeanCanny.Computation.SpaceFunction
 open Turing.MultiTapeTM
@@ -83,9 +83,9 @@ theorem iterate_of_polyBounded {step : List Bool → List Bool} (E : SpaceFuncti
     (hstate : ∀ x k, k ≤ Nat.fromBitsLE (count x) →
       (step^[k] (init x)).length ≤ bound x) :
     SpaceFunction (fun x => step^[Nat.fromBitsLE (count x)] (init x)) :=
-  ⟨ComputableTidilyInPolySpace.iterate
-    (fromBitsLE_computable.comp (FP.computable hc))
-    (ComputableTidilyInPolySpace.of_polyTime (FP.computable hi)) E.computable
+  ⟨ComputableInPolySpace.iterate
+    (fromBitsLE_computable.comp (FP.computable hc)).computableInPolyTime
+    (ComputableInPolySpace.of_tidyPolyTime (FP.computable hi)) E.computable
     hbound hstate⟩
 
 theorem iterate {step : List Bool → List Bool} (E : SpaceFunction step)
@@ -108,8 +108,8 @@ theorem orbit_of_polyBounded {step : List Bool → List Bool} (E : SpaceFunction
     (hb : ∀ x k, k < N x → halt (step^[k] (init x)) = false)
     (ha : ∀ x, halt (step^[N x] (init x)) = true) :
     SpaceFunction (fun x => output (step^[N x] (init x))) :=
-  ⟨ComputableTidilyInPolySpace.orbit_of_polyBounded (.of_polyTime hi) E.computable
-    (.of_polyTime (flag_computable hh)) (.of_polyTime ho) N B W hB hW hstate hN hb ha⟩
+  ⟨ComputableInPolySpace.orbit_of_polyBounded (.of_tidyPolyTime hi) E.computable
+    (.of_tidyPolyTime (flag_computable hh)) (.of_tidyPolyTime ho) N B W hB hW hstate hN hb ha⟩
 
 theorem orbit {step : List Bool → List Bool} (E : SpaceFunction step)
     (init : List Bool → List Bool) (hi : init ∈ FP)

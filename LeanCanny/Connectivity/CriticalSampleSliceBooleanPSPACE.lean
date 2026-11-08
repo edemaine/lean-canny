@@ -111,19 +111,19 @@ theorem piece_label (P : Readers) (Q : BivariateQueryProductBits.Family) (S : So
 
 theorem edge_computable {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family}
     (A : BivariateQueryProductBits.Access Q) (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (S : Source) (B : Access S) :
-    ComputableTidilyInPolySpace (fun p : List Bool × List Bool × List Bool => edge P Q S p.1 p.2.1 p.2.2)
+    ComputableInPolySpace (fun p : List Bool × List Bool × List Bool => edge P Q S p.1 p.2.1 p.2.2)
       (encPair encBits (encPair encBits encBits)) encBool := by
   have hc := ComputableTidilyInPolyTime.fst encBits (encPair encBits encBits)
   have hr := ComputableTidilyInPolyTime.snd encBits (encPair encBits encBits)
   have hq := pair_computable hc (pair_computable hr.fst' hr.snd')
-  exact (edge_decider h A ha S B).computable.comp (.of_polyTime hq)
+  exact (edge_decider h A ha S B).computable.comp (.of_tidyPolyTime hq)
 
 theorem vertex_computable {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Family}
     (A : BivariateQueryProductBits.Access Q) (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (S : Source) (B : Access S) :
-    ComputableTidilyInPolySpace (fun p : List Bool × List Bool => vertex P Q S p.1 p.2)
+    ComputableInPolySpace (fun p : List Bool × List Bool => vertex P Q S p.1 p.2)
       (encPair encBits encBits) encBool := by
   have hq := pair_computable (ComputableTidilyInPolyTime.fst encBits encBits) (ComputableTidilyInPolyTime.snd encBits encBits)
-  exact (CriticalSampleSliceBooleanCells.decider h A ha S B).computable.comp (.of_polyTime hq)
+  exact (CriticalSampleSliceBooleanCells.decider h A ha S B).computable.comp (.of_tidyPolyTime hq)
 
 noncomputable def connectedLanguage (P : Readers) (Q : BivariateQueryProductBits.Family) (S : Source) : Language := {u |
   u ∈ valid P ∧ IsPreconnected (univ : Set (solutionSet P Q u (CriticalSampleSliceBooleanCells.truth S (context u))))}
@@ -132,8 +132,8 @@ theorem connected_decider {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProd
     (A : BivariateQueryProductBits.Access Q) (ha : ∀ c, (ETR.TermView.term (P.source c)).arity ≤ P.dim c) (S : Source) (B : Access S) :
     SpaceDecider (connectedLanguage P Q S) := by
   have G := ImplicitGraph.connected_computable (edge_computable h A ha S B) (vertex_computable h A ha S B) (labelWidth_unary A)
-  have F : ComputableTidilyInPolySpace (fun _ : List Bool => false) encBits encBool :=
-    .of_polyTime (ComputableTidilyInPolyTime.const false)
+  have F : ComputableInPolySpace (fun _ : List Bool => false) encBits encBool :=
+    .of_tidyPolyTime (ComputableTidilyInPolyTime.const false)
   apply SpaceDecider.of_computable ((valid_decider h ha).computable.ite G F)
   intro u
   by_cases hu : u ∈ valid P

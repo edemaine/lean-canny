@@ -73,14 +73,14 @@ theorem connected_language_iff (d : Description) (hd : d.WellFormed) :
 on well-formed canonical inputs. Tag and dimension validation are shared by
 all frontier implementations. -/
 theorem connected_mem_PSPACE_of_test {test : List Bool → Bool}
-    (htest : ComputableTidilyInPolySpace test encBits encBool)
+    (htest : ComputableInPolySpace test encBits encBool)
     (hcorrect : ∀ d : Description, d.WellFormed →
       ((Input.whole d).encode ∈ connectedLanguage ↔ test (Input.whole d).encode = true)) :
     connectedLanguage ∈ PSPACE := by
-  have HP := ComputableTidilyInPolySpace.of_polyTime Input.isWhole_fppred.computable
-  have HW := ComputableTidilyInPolySpace.of_polyTime wellFormed_computable
-  have HF : ComputableTidilyInPolySpace (fun _ : List Bool => false) encBits encBool :=
-    .of_polyTime (.const false)
+  have HP := ComputableInPolySpace.of_tidyPolyTime Input.isWhole_fppred.computable
+  have HW := ComputableInPolySpace.of_tidyPolyTime wellFormed_computable
+  have HF : ComputableInPolySpace (fun _ : List Bool => false) encBits encBool :=
+    .of_tidyPolyTime (.const false)
   apply NativeSpace.of_computable (HP.ite (HW.ite htest HF) HF)
   intro c
   by_cases hp : Input.IsWhole c
@@ -100,7 +100,7 @@ theorem connected_mem_PSPACE_of_test {test : List Bool → Bool}
     exact iff_of_false HB id
 
 theorem connected_mem_PSPACE
-    (he : ComputableTidilyInPolySpace
+    (he : ComputableInPolySpace
       (fun p : List Bool×List Bool×List Bool=>edge p.1 p.2.1 p.2.2)
       (encPair encBits (encPair encBits encBits)) encBool) : connectedLanguage∈PSPACE := by
   apply connected_mem_PSPACE_of_test

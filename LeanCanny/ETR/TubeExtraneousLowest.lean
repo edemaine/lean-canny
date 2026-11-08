@@ -35,7 +35,7 @@ noncomputable def lowestCoefficient (source active : List Bool → List Bool)
 theorem lowestCoefficient_ne_zero (source active : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) :
     lowestCoefficient source active n d ell c ≠ 0 :=
-  Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (determinant_ne_zero source active n d ell c)
+  Polynomial.trailingCoeff_ne_zero.mpr (determinant_ne_zero source active n d ell c)
 
 theorem determinant_map_ne_zero {K : Type*} [CommRing K] [Nontrivial K]
     (source active : List Bool → List Bool) (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ)

@@ -57,7 +57,7 @@ noncomputable def packet (code : List Bool→ℕ) (z : List Bool) :=
 theorem packet_evaluator (hp : parent∈FP) (hj : BinaryFn selected) (code : List Bool→ℕ) (hc : BinaryFn code) :
     SpaceFunction (packet hn ht ha hR outer parent selected code) :=by
   have EC : SpaceFunction (fun z=>BinaryNatCode.encode (code (pairFst z))) :=
-    ⟨Turing.MultiTapeTM.ComputableTidilyInPolySpace.of_polyTime (FP.computable (mem_FP_comp pairFst_mem_FP hc.bits_mem_FP))⟩
+    ⟨Turing.MultiTapeTM.ComputableInPolySpace.of_tidyPolyTime (FP.computable (mem_FP_comp pairFst_mem_FP hc.bits_mem_FP))⟩
   exact EC.pairOutputs ((evaluator hn ht ha hR outer parent selected hp hj 0 false).pairOutputs
     ((evaluator hn ht ha hR outer parent selected hp hj 2 false).pairOutputs
       ((evaluator hn ht ha hR outer parent selected hp hj 1 false).pairOutputs

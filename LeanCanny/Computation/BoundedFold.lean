@@ -12,7 +12,7 @@ public import LeanCanny.Encoding.BinarySubFP
 
 The update receives `pair context (pair index accumulator)`. A binary bound
 permits exponentially many updates, while the retained accumulator remains
-short. Updates compose directly in the tidy space calculus.
+short. Updates compose directly in the native space calculus.
 -/
 
 @[expose] public section

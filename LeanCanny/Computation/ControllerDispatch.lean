@@ -174,6 +174,6 @@ theorem prepare_query_iterate {S : Type} (E : Controller Q S) (input : Q → Q)
 theorem prepare_certificates {S : Type} {eS : S ↪ List Bool} (E : Controller Q S) (input : Q → Q)
     (hE : E.Certificates (encQ := eQ) (encS := eS)) (hi : ComputableTidilyInPolyTime input eQ eQ) :
     (prepare E input).Certificates (encQ := eQ) (encS := eS) :=
-  ⟨hE.initial.comp (.of_polyTime hi), hE.halted, hE.output, hE.needs, hE.query, hE.advance, hE.resume⟩
+  ⟨hE.initial.comp (.of_tidyPolyTime hi), hE.halted, hE.output, hE.needs, hE.query, hE.advance, hE.resume⟩
 
 end LeanCanny.Computation.RecursiveController.Controller

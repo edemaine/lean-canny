@@ -126,20 +126,20 @@ structure Controls : Prop where
 /-- Local output processing may use arbitrary polynomial space and time.
 Only the request flag and child-task writer are required to be FP. -/
 theorem certificates_of_space (hrequest : (fun p => [P.request p]) ∈ FP) (hquery : P.query ∈ FP)
-    (himmediate : ComputableTidilyInPolySpace P.immediate encBits encBits)
-    (hfinish : ComputableTidilyInPolySpace P.finish encBits encBits) :
+    (himmediate : ComputableInPolySpace P.immediate encBits encBits)
+    (hfinish : ComputableInPolySpace P.finish encBits encBits) :
     P.controller.Certificates (encQ := encBits) (encS := encState) := by
   have hr := flag_computable hrequest
   have hq := FP.computable hquery
   constructor
-  · change ComputableTidilyInPolySpace (fun p : List Bool => (p, false, [])) _ _
+  · change ComputableInPolySpace (fun p : List Bool => (p, false, [])) _ _
     fun_prop
   all_goals dsimp only [controller, encState]
   all_goals fun_prop (config := { maxSteps := 256, maxTransitionDepth := 2 })
 
 theorem certificates (h : P.Controls) : P.controller.Certificates (encQ := encBits) (encS := encState) :=
   P.certificates_of_space h.request h.query
-    (.of_polyTime (FP.computable h.immediate)) (.of_polyTime (FP.computable h.finish))
+    (.of_tidyPolyTime (FP.computable h.immediate)) (.of_tidyPolyTime (FP.computable h.finish))
 
 end Program
 end LeanCanny.Computation.SingleCall

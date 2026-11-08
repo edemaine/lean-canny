@@ -31,8 +31,8 @@ theorem decider : SpaceDecider language := by
     CanonicalAuxiliaryCandidateCover.equation_FP CanonicalAuxiliaryCandidateCover.equation_scope).precompose
       candidatePacket candidatePacket_FP
   let S:=FormulaSignSlotCircuit.decider.precompose source source_FP
-  have HG:=ComputableTidilyInPolySpace.of_polyTime guard_FP.computable
-  have HF:=ComputableTidilyInPolySpace.of_polyTime
+  have HG:=ComputableInPolySpace.of_tidyPolyTime guard_FP.computable
+  have HF:=ComputableInPolySpace.of_tidyPolyTime
     (ComputableTidilyInPolyTime.const (encIn:=encBits) (encMid:=encBool) false)
   apply SpaceDecider.of_computable (HG.ite (S.computable.ite Z.computable HF) HF)
   intro q

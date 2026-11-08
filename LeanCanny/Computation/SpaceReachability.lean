@@ -22,19 +22,21 @@ open Turing.MultiTapeTM Cslib.Reachability Cslib.BitString
 
 theorem savitch_computable_polySpace {π γ : Type} {encP : π ↪ List Bool}
     {encIn : γ ↪ List Bool} {edge : π → List Bool → List Bool → Bool}
-    (hedge : ComputableTidilyInPolySpace
+    (hedge : ComputableInPolySpace
       (fun q : π × List Bool × List Bool => edge q.1 q.2.1 q.2.2)
       (encPair encP (encPair encBits encBits)) encBool)
     {par : γ → π} {width depth : γ → ℕ} {src dst : γ → List Bool}
-    (hin : ComputableTidilyInPolySpace (fun x => (par x, width x, depth x, src x, dst x))
+    (hin : ComputableInPolySpace (fun x => (par x, width x, depth x, src x, dst x))
       encIn (encArgs encP))
     (hsrc : ∀ x, (src x).length = width x) (hdst : ∀ x, (dst x).length = width x) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun x => savitch (edge (par x)) (width x) (depth x) (src x) (dst x)) encIn encBool := by
-  obtain ⟨te, se, hse, he⟩ := hedge
+  obtain ⟨se, hse, he⟩ := hedge.exists_inSpace
+  obtain ⟨te, he⟩ := he.exists_inO
   have hlength := hin.polyBounded_length
-  obtain ⟨ti, si, hsi, hi⟩ := hin
-  have H := computableTidilyInO_savitch he hi hsrc hdst
+  obtain ⟨si, hsi, hi⟩ := hin.exists_inSpace
+  obtain ⟨ti, hi⟩ := hi.exists_inO
+  have H := computableInO_savitch he hi hsrc hdst
   obtain ⟨cs, ds, hcs⟩ := hse.exists_le
   let L := fun x => (encArgs encP (par x, width x, depth x, src x, dst x)).length
   have hlen : PolyBounded (fun x => (encIn x).length) L := hlength
@@ -53,7 +55,8 @@ theorem savitch_computable_polySpace {π γ : Type} {encP : π ↪ List Bool}
   have hg : PolyBounded (fun x => (encIn x).length)
       (fun x => (L x + 1) * (2 * L x + 1) + L x + cs * (5 * L x + 3) ^ ds + 1) :=
     PolyBounded.comp (size' := id) (g := L) (PolyBounded.of_polynomiallyBounded id hpoly) hlen
-  refine ⟨_, _, (hsi.add hg).mono (fun x => ?_), H⟩
+  refine ComputableInPolySpace.of_inSpace ((hsi.add hg).mono (fun x => ?_))
+    (ComputableInSpace.of_inO H)
   obtain ⟨hd, hw, hp⟩ := hL x
   have hs := Nat.mul_le_mul (show depth x + 1 ≤ L x + 1 by omega)
     (show depth x + width x + 1 ≤ 2 * L x + 1 by omega)

@@ -28,7 +28,7 @@ noncomputable def lowest (A : Matrix ι ι (Polynomial R)) : Polynomial R :=
   (AffineCharacteristic.subtractiveMatrix A).det.trailingCoeff
 
 theorem lowest_ne_zero [IsDomain R] (A : Matrix ι ι (Polynomial R)) : lowest A ≠ 0 :=
-  Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (AffineCharacteristic.subtractive_det_ne_zero A)
+  Polynomial.trailingCoeff_ne_zero.mpr (AffineCharacteristic.subtractive_det_ne_zero A)
 
 theorem coefficient_degree_le (A : Matrix ι ι (Polynomial R)) (E : ℕ)
     (hA : ∀ r s, (A r s).natDegree ≤ E) (k : ℕ) :

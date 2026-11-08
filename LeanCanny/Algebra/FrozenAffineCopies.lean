@@ -135,7 +135,7 @@ theorem parameter_at_infinity (E : Polynomial ℤ) (hE : 0 < E.natDegree)
     apply (IndexedMultivariateRational.parameter_degree _ _).trans_lt
     by_cases hz : E.eraseLead = 0
     · simpa only [hz, Polynomial.natDegree_zero] using hE
-    · exact Polynomial.lt_natDegree_of_mem_eraseLead_support (Polynomial.natDegree_mem_support_of_nonzero hz)
+    · exact Polynomial.lt_natDegree_of_mem_eraseLead_support (Polynomial.natDegree_mem_support_of_ne_zero hz)
   have he : IndexedMultivariateRational.parameter n E =
       C E.leadingCoeff * X 0 ^ E.natDegree + IndexedMultivariateRational.parameter n E.eraseLead := by
     have H := congrArg (IndexedMultivariateRational.parameter n) E.eraseLead_add_C_mul_X_pow

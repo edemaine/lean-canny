@@ -93,7 +93,7 @@ theorem exists_root_with_annihilants (q : MvPolynomial (Fin n) ℝ) (D : ℕ)
   refine ⟨a, hq, ha, htr, ?_⟩
   intro i
   exact abs_root_lt_coefficientMass_add_one (H i).trailingCoeff
-    (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (hH i)) (a i) (htr i)
+    (Polynomial.trailingCoeff_ne_zero.mpr (hH i)) (a i) (htr i)
 
 /-- A uniform integer mass allowance on the lowest-parameter coefficients gives
 one uniform root radius. The allowance remains an explicit arithmetic premise. -/

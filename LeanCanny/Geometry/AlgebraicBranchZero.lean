@@ -26,7 +26,7 @@ lemma continuous_evaluation (p : Polynomial (Polynomial ℝ)) :
 /-- A nonzero value annihilator has only finitely many excluded parameters. -/
 theorem finite_exceptional (p : Polynomial (Polynomial ℝ)) (hp : p ≠ 0) :
     {t : ℝ | p.trailingCoeff.eval t = 0}.Finite :=
-  Polynomial.finite_setOfPred_isRoot (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hp)
+  Polynomial.finite_setOfPred_isRoot (Polynomial.trailingCoeff_ne_zero.mpr hp)
 
 variable {X : Type*} [TopologicalSpace X]
 

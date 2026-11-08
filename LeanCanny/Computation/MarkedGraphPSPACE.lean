@@ -55,12 +55,12 @@ theorem markedConnected_correct (edge : List Bool → List Bool → Bool) (valid
 
 theorem marked_connected_computable {α : Type} [Inhabited α] {eA : α ↪ List Bool}
     {edge : α → List Bool → List Bool → Bool} {valid marked : α → List Bool → Bool} {width : α → ℕ}
-    (he : ComputableTidilyInPolySpace (fun p : α × List Bool × List Bool => edge p.1 p.2.1 p.2.2)
+    (he : ComputableInPolySpace (fun p : α × List Bool × List Bool => edge p.1 p.2.1 p.2.2)
       (encPair eA (encPair encBits encBits)) encBool)
-    (hv : ComputableTidilyInPolySpace (fun p : α × List Bool => valid p.1 p.2) (encPair eA encBits) encBool)
-    (hm : ComputableTidilyInPolySpace (fun p : α × List Bool => marked p.1 p.2) (encPair eA encBits) encBool)
+    (hv : ComputableInPolySpace (fun p : α × List Bool => valid p.1 p.2) (encPair eA encBits) encBool)
+    (hm : ComputableInPolySpace (fun p : α × List Bool => marked p.1 p.2) (encPair eA encBits) encBool)
     (hw : ComputableTidilyInPolyTime width eA encUnary) :
-    ComputableTidilyInPolySpace (fun c => decide (MarkedConnected (edge c) (valid c) (marked c) (width c))) eA encBool := by
+    ComputableInPolySpace (fun c => decide (MarkedConnected (edge c) (valid c) (marked c) (width c))) eA encBool := by
   let packet := encPair eA (encPair encNat encNat)
   have hp := ComputableTidilyInPolyTime.fst eA (encPair encNat encNat)
   have hi := (ComputableTidilyInPolyTime.snd eA (encPair encNat encNat)).fst'
@@ -70,22 +70,22 @@ theorem marked_connected_computable {α : Type} [Inhabited α] {eA : α ↪ List
   have hv' := word_computable hW hj
   have hargs := hp.prod (hW.prod (hW.prod (hu.prod hv')))
   have hs := savitch_computable_polySpace (edge := fun c => guard (edge c) (valid c))
-    (guard_computable he hv) (.of_polyTime hargs) (fun p => length_word _ _) (fun p => length_word _ _)
-  have hU := hv.comp (.of_polyTime (hp.prod hu))
-  have hV := hv.comp (.of_polyTime (hp.prod hv'))
-  have hMU := hm.comp (.of_polyTime (hp.prod hu))
-  have hMV := hm.comp (.of_polyTime (hp.prod hv'))
-  have hf : ComputableTidilyInPolySpace (fun _ : α × ℕ × ℕ => false) packet encBool :=
-    .of_polyTime (ComputableTidilyInPolyTime.const false)
-  have ht : ComputableTidilyInPolySpace (fun _ : α × ℕ × ℕ => true) packet encBool :=
-    .of_polyTime (ComputableTidilyInPolyTime.const true)
+    (guard_computable he hv) (.of_tidyPolyTime hargs) (fun p => length_word _ _) (fun p => length_word _ _)
+  have hU := hv.comp (.of_tidyPolyTime (hp.prod hu))
+  have hV := hv.comp (.of_tidyPolyTime (hp.prod hv'))
+  have hMU := hm.comp (.of_tidyPolyTime (hp.prod hu))
+  have hMV := hm.comp (.of_tidyPolyTime (hp.prod hv'))
+  have hf : ComputableInPolySpace (fun _ : α × ℕ × ℕ => false) packet encBool :=
+    .of_tidyPolyTime (ComputableTidilyInPolyTime.const false)
+  have ht : ComputableInPolySpace (fun _ : α × ℕ × ℕ => true) packet encBool :=
+    .of_tidyPolyTime (ComputableTidilyInPolyTime.const true)
   let test := fun p : α × ℕ × ℕ =>
     if marked p.1 (word (width p.1) p.2.1) && marked p.1 (word (width p.1) p.2.2) then
       valid p.1 (word (width p.1) p.2.1) && valid p.1 (word (width p.1) p.2.2) &&
         savitch (guard (edge p.1) (valid p.1)) (width p.1) (width p.1)
           (word (width p.1) p.2.1) (word (width p.1) p.2.2)
     else true
-  have hc : ComputableTidilyInPolySpace test packet encBool := by
+  have hc : ComputableInPolySpace test packet encBool := by
     have h := hMU.ite (hMV.ite (hU.ite (hV.ite hs hf) hf) ht) ht
     exact h.congr fun p => by
       cases hm₁ : marked p.1 (word (width p.1) p.2.1) <;>
@@ -98,7 +98,7 @@ theorem marked_connected_computable {α : Type} [Inhabited α] {eA : α ↪ List
     (ComputableTidilyInPolyTime.fst (encPair eA encNat) encNat).fst'.prod
       ((ComputableTidilyInPolyTime.fst (encPair eA encNat) encNat).snd'.prod
         (ComputableTidilyInPolyTime.snd (encPair eA encNat) encNat))
-  have hinner := forall_below_computable (hc.comp (.of_polyTime hswap))
+  have hinner := forall_below_computable (hc.comp (.of_tidyPolyTime hswap))
     (hcount.comp (ComputableTidilyInPolyTime.fst eA encNat))
   have houter := forall_below_computable hinner hcount
   refine houter.congr fun c => Bool.eq_iff_iff.mpr ?_
@@ -125,12 +125,12 @@ theorem marked_connected_computable {α : Type} [Inhabited α] {eA : α ↪ List
 
 theorem markedConnected_computable {α : Type} [Inhabited α] {eA : α ↪ List Bool}
     {edge : α → List Bool → List Bool → Bool} {valid marked : α → List Bool → Bool} {width : α → ℕ}
-    (he : ComputableTidilyInPolySpace (fun p : α × List Bool × List Bool => edge p.1 p.2.1 p.2.2)
+    (he : ComputableInPolySpace (fun p : α × List Bool × List Bool => edge p.1 p.2.1 p.2.2)
       (encPair eA (encPair encBits encBits)) encBool)
-    (hv : ComputableTidilyInPolySpace (fun p : α × List Bool => valid p.1 p.2) (encPair eA encBits) encBool)
-    (hm : ComputableTidilyInPolySpace (fun p : α × List Bool => marked p.1 p.2) (encPair eA encBits) encBool)
+    (hv : ComputableInPolySpace (fun p : α × List Bool => valid p.1 p.2) (encPair eA encBits) encBool)
+    (hm : ComputableInPolySpace (fun p : α × List Bool => marked p.1 p.2) (encPair eA encBits) encBool)
     (hw : ComputableTidilyInPolyTime width eA encUnary) :
-    ComputableTidilyInPolySpace (fun c => markedConnected (edge c) (valid c) (marked c) (width c)) eA encBool := by
+    ComputableInPolySpace (fun c => markedConnected (edge c) (valid c) (marked c) (width c)) eA encBool := by
   apply (marked_connected_computable he hv hm hw).congr
   intro c
   apply Bool.eq_iff_iff.mpr

@@ -21,7 +21,7 @@ theorem select {pred f g : List Bool → List Bool}
     SpaceFunction (fun c => if (pred c)[0]?.getD false then f c else g c) := by
   have hp : (fun p : List Bool => [p[0]?.getD false]) ∈ FP :=
     (FPPred.getBit id_mem_FP (UnaryFn.const 0)).flag_mem_FP
-  exact ⟨((Turing.MultiTapeTM.ComputableTidilyInPolySpace.of_polyTime
+  exact ⟨((Turing.MultiTapeTM.ComputableInPolySpace.of_tidyPolyTime
     (flag_computable hp)).comp P.computable).ite L.computable R.computable⟩
 
 end LeanCanny.Computation.SpaceFunction

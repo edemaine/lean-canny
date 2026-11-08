@@ -16,7 +16,7 @@ open scoped Classical
 
 theorem SpaceDecider.flagEvaluator {L : Language} (D : SpaceDecider L) :
     SpaceFunction (fun x => [decide (x ∈ L)]) := by
-  obtain ⟨T, S, hS, h⟩ := D.computable
-  exact ⟨T, S, hS, h.of_enc_eq fun _ => rfl⟩
+  obtain ⟨S, hS, h⟩ := D.computable.exists_inSpace
+  exact ⟨ComputableInPolySpace.of_inSpace hS (h.of_enc_eq fun _ => rfl)⟩
 
 end LeanCanny.Computation

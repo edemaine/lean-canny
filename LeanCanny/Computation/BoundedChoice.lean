@@ -83,26 +83,26 @@ theorem witness (L : Language) (c : List Bool) (n : ℕ)
 
 theorem computable {L : Language} (D : SpaceDecider L)
     (bound : List Bool → List Bool) (hb : bound ∈ FP) :
-    ComputableTidilyInPolySpace (fun c => search L c (Nat.fromBitsLE (bound c))) encBits encNat := by
+    ComputableInPolySpace (fun c => search L c (Nat.fromBitsLE (bound c))) encBits encNat := by
   let child := fun p : List Bool × ℕ × ℕ =>
     if pair p.1 (BinaryNatCode.encode p.2.1) ∈ L then p.2.1 + 1 else p.2.2
   have hc := ComputableTidilyInPolyTime.fst encBits (encPair encNat encNat)
   have hr := ComputableTidilyInPolyTime.snd encBits (encPair encNat encNat)
   have hquery := pair_computable hc (natBits_computable.comp hr.fst')
-  have hi := ComputableTidilyInPolySpace.of_polyTime hr.fst'
+  have hi := ComputableInPolySpace.of_tidyPolyTime hr.fst'
   have hs := TidyBoundedFold.of_linear
-    (ComputableTidilyInSpace.natSucc.weaken ComputableTidilyInSpace.linear_succ)
-  have hchild : ComputableTidilyInPolySpace child
+    (ComputableInSpace.natSucc.weaken ComputableInSpace.linear_succ)
+  have hchild : ComputableInPolySpace child
       (TidyBoundedFold.encPacket encBits encNat) encNat := by
-    have h := (D.computable.comp (ComputableTidilyInPolySpace.of_polyTime hquery)).ite
-      (hs.comp hi) (ComputableTidilyInPolySpace.of_polyTime hr.snd')
+    have h := (D.computable.comp (ComputableInPolySpace.of_tidyPolyTime hquery)).ite
+      (hs.comp hi) (ComputableInPolySpace.of_tidyPolyTime hr.snd')
     exact h.congr fun p => by
       dsimp +instances only [child, Function.comp_apply, BinaryNatCode.encode]
       by_cases hp : pair p.1 p.2.1.bits ∈ L <;> simp only [hp, decide_true, decide_false, Bool.false_eq_true,
         ite_true, ite_false]
   have hn := fromBitsLE_computable.comp (FP.computable hb)
   exact TidyBoundedFold.evaluator_spec hchild hn
-    (ComputableTidilyInPolySpace.of_polyTime (ComputableTidilyInPolyTime.const 0))
+    (ComputableInPolySpace.of_tidyPolyTime (ComputableTidilyInPolyTime.const 0))
     (search L) (fun _ => rfl) (fun c k _ => by simp only [child, search])
     hn.polyBounded_length (fun c k hk =>
       ComputableTidilyInO.length_encNat_mono ((search_le L c k).trans hk))
@@ -110,8 +110,8 @@ theorem computable {L : Language} (D : SpaceDecider L)
 theorem evaluator {L : Language} (D : SpaceDecider L)
     (bound : List Bool → List Bool) (hb : bound ∈ FP) :
     SpaceFunction (fun c => BinaryNatCode.encode (search L c (Nat.fromBitsLE (bound c)) - 1)) := by
-  have h := (ComputableTidilyInPolySpace.of_polyTime ComputableTidilyInPolyTime.binary_sub).comp
-    ((computable D bound hb).prod (ComputableTidilyInPolySpace.const encBits encNat 1))
-  exact ⟨(ComputableTidilyInPolySpace.of_polyTime natBits_computable).comp h⟩
+  have h := (ComputableInPolySpace.of_tidyPolyTime ComputableTidilyInPolyTime.binary_sub).comp
+    ((computable D bound hb).prod (ComputableInPolySpace.const encBits encNat 1))
+  exact ⟨(ComputableInPolySpace.of_tidyPolyTime natBits_computable).comp h⟩
 
 end LeanCanny.Computation.BoundedChoice

@@ -100,7 +100,7 @@ theorem map_ne_zero_on_interval {J : Type*} [Fintype J] (p : (ℤ[X])[X]) (hp : 
   have hm := (pattern_bounded p Q (fun _ => 0)).head
   have he := InfinitesimalSign.integer_sign_eval_le_dyadic p.leadingCoeff _ _ hm (Nat.lt_succ_self _) x hx hxs
   have ht : p.leadingCoeff.trailingCoeff ≠ 0 :=
-    trailingCoeff_nonzero_iff_nonzero.mpr (leadingCoeff_ne_zero.mpr hp)
+    trailingCoeff_ne_zero.mpr (leadingCoeff_ne_zero.mpr hp)
   intro hz
   have hc := congrArg (fun q : ℝ[X] => q.coeff p.natDegree) hz
   rw [coeff_map, coeff_natDegree, coeff_zero] at hc

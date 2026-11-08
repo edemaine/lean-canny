@@ -33,14 +33,14 @@ theorem decider (P : Parameters) (a : Access P) (D : Plan P) (H : IntegralMixedF
     (key : List Bool→List Bool) (hk : key∈FP) (hpos : ∀ c,0<(atKey P D H (key c)).count)
     (left right : List Bool→ℕ) (hl : BinaryFn left) (hr : BinaryFn right) (sign : SignType) :
     SpaceDecider (language P D H s hs key hpos left right sign) := by
-  have HG := ComputableTidilyInPolySpace.of_polyTime
+  have HG := ComputableInPolySpace.of_tidyPolyTime
     ((IntegralMixedFramedBankOrderBits.labels_FP P a D H key hk left right hl hr).comp
       (mem_FP_comp pairFst_mem_FP pairFst_mem_FP)).computable
   have DT := SquareSampleCompleteIndexedPolynomialTest.decider
     (IntegralFramedBankTermTest.input_access P a D H s hs hF hL key hk hpos)
     (IntegralFramedBankTermTest.test_access P a D H s hs hF hL key hk hpos _
       (IntegralMixedFramedBankOrderBits.word_FP P a D H key hk left right hl hr)) sign
-  have HF := ComputableTidilyInPolySpace.of_polyTime
+  have HF := ComputableInPolySpace.of_tidyPolyTime
     (ComputableTidilyInPolyTime.const (encIn:=encBits) (encMid:=encBool) false)
   apply SpaceDecider.of_computable (HG.ite DT.computable HF)
   intro q

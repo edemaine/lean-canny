@@ -74,8 +74,8 @@ theorem decider {n : List Bool → ℕ} {t : List Bool → Term}
     SpaceDecider (language hn ht ha) := by
   let D := (SquareSampleCompleteVertices.decider (native_access hn ht ha)).precompose
     (packet hn ht ha) (packet_FP hn ht ha)
-  have HG := ComputableTidilyInPolySpace.of_polyTime (guard_FP hn ht ha).computable
-  have Hfalse := ComputableTidilyInPolySpace.of_polyTime
+  have HG := ComputableInPolySpace.of_tidyPolyTime (guard_FP hn ht ha).computable
+  have Hfalse := ComputableInPolySpace.of_tidyPolyTime
     (ComputableTidilyInPolyTime.const (encIn:=encBits) (encMid:=encBool) false)
   apply SpaceDecider.of_computable (HG.ite D.computable Hfalse)
   intro q

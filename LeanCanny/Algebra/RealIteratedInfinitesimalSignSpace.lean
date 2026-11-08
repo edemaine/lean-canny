@@ -47,7 +47,7 @@ theorem value_at (f : List Bool→List Bool) (delta epsilon : List Bool→ℕ) (
     rw [RealInfinitesimalSignSpace.scan_zero _ _ (by simp)]
     exact (RealInfinitesimalSignSpace.tag_nil _).mpr (by simp) |>.symm
   · have HN : (p.coeff p.natTrailingDegree).trailingCoeff≠0 :=
-      Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (Polynomial.coeff_natTrailingDegree_ne_zero.mpr hp)
+      Polynomial.trailingCoeff_ne_zero.mpr (Polynomial.coeff_natTrailingDegree_ne_zero.mpr hp)
     exact RealInfinitesimalSignSpace.scan_first _ p.natTrailingDegree (delta c+1)
       ((p.natTrailingDegree_le_natDegree.trans hd).trans_lt (Nat.lt_succ_self _)) HN
       (fun i hi=>by rw [Polynomial.coeff_eq_zero_of_lt_natTrailingDegree hi,Polynomial.trailingCoeff_zero])
@@ -75,8 +75,8 @@ theorem eventually_correct (p : (ℝ[X])[X]) : ∃ η : ℝ,0<η ∧ ∀ ε : �
     intro HZ
     have H:=HS ε Hε Hεη
     rw [HZ,sign_zero] at H
-    exact (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr
-      (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hp)) (sign_eq_zero_iff.mp H.symm)
+    exact (Polynomial.trailingCoeff_ne_zero.mpr
+      (Polynomial.trailingCoeff_ne_zero.mpr hp)) (sign_eq_zero_iff.mp H.symm)
   obtain ⟨ζ,Hζ,HD⟩:=InfinitesimalSign.sign_eval_eq_trailingCoeff (p.map (Polynomial.evalRingHom ε))
   refine ⟨ζ,Hζ,fun δ Hδ Hδζ=>?_⟩
   have H:=HD δ Hδ Hδζ

@@ -105,7 +105,7 @@ theorem certificates (ha : a.ControlsPolyTime) (leftTask rightTask : List Bool �
   have hq := (flag_computable (selectRight_FP a ha)).ite'
     (mem_FP_comp rightQuery_FP hr) (mem_FP_comp (leftQuery_FP a ha) hl)
   exact (program a leftTask rightTask).certificates_of_space (request_FP a ha) hq
-    (.of_polyTime (FP.computable (constFn_mem_FP []))) (finish_space a ha).computable
+    (.of_tidyPolyTime (FP.computable (constFn_mem_FP []))) (finish_space a ha).computable
 
 theorem value_eq (leftTask rightTask answer : List Bool → List Bool)
     (hl : ∀ p, answer (leftTask p) = a.leftCoefficient p)

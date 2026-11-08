@@ -96,7 +96,7 @@ theorem projectionPolynomial_ne_zero_of_small (source active read : List Bool �
   rw [Polynomial.coeff_map, Polynomial.coeff_natDegree] at he
   have hqa : q.eval₂ (Int.castRingHom ℝ) a = 0 := he
   rw [hqa, sign_zero] at hsign
-  exact (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hq) (sign_eq_zero_iff.mp hsign.symm)
+  exact (Polynomial.trailingCoeff_ne_zero.mpr hq) (sign_eq_zero_iff.mp hsign.symm)
 
 theorem projectionPolynomial_ne_zero_dyadic (source active read : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ)

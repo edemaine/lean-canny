@@ -31,7 +31,7 @@ theorem fallback_degree (d : ℕ) : (fallback d).natDegree = d := by
   by_cases hd : d = 0
   · simp only [fallback, hd, ite_true, natDegree_one]
   · rw [fallback, ite_eq_right hd]
-    simpa only [Polynomial.C_1] using (natDegree_X_pow_sub_C (R := ℤ) (n := d) (r := 1))
+    simpa only [Polynomial.C_1] using (natDegree_X_pow_sub_C (R := ℤ) (n := d) 1)
 
 theorem fallback_separable {L : Type*} [Field L] [CharZero L] (d : ℕ) :
     ((fallback d).map (Int.castRingHom L)).Separable := by

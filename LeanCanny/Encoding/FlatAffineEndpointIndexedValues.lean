@@ -129,7 +129,7 @@ theorem trailing_ne_zero (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCerti
     (hr : FlatAffineEndpointValidity.Valid F height (pairFst z)) (a : ℝ)
     (ha : SymbolicScaledSquarefree.scalarEvaluation a (FlatAffineHeightSlabExceptional.polynomial F height (pairFst (pairFst z))) = 0) :
     trailing F height z ≠ 0 := by
-  apply Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr
+  apply Polynomial.trailingCoeff_ne_zero.mpr
   rw [polynomial_eq]
   exact Geometry.FlatAffineEndpointMidpoint.nonzero F hcone height _ (pairFst z) hr a ha
 

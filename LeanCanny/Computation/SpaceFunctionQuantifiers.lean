@@ -45,9 +45,9 @@ theorem forall_unary {test : List Bool → List Bool} {count : List Bool → ℕ
       encNat_apply, Nat.min_comm]
   have hpacket := pair_computable hpar hindex.encoded
   have heq := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).computable
-  have hchild := (ComputableTidilyInPolySpace.of_polyTime heq).comp
-    (ht.computable.comp (.of_polyTime hpacket))
-  have hchild' : ComputableTidilyInPolySpace
+  have hchild := (ComputableInPolySpace.of_tidyPolyTime heq).comp
+    (ht.computable.comp (.of_tidyPolyTime hpacket))
+  have hchild' : ComputableInPolySpace
       (fun p : List Bool × ℕ => decide (test (pair p.1 (List.replicate (min p.2 (count p.1)) true)) = [true]))
       (encPair encBits encNat) encBool := by
     apply hchild.congr

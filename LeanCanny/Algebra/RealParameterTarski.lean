@@ -37,7 +37,7 @@ theorem natDegree_eval (p : (ℝ[X])[X]) (x : ℝ)
   by_cases hp : p=0
   · subst p
     rw [Polynomial.map_zero,Polynomial.natDegree_zero,Polynomial.natDegree_zero]
-  have HL : p.leadingCoeff.trailingCoeff≠0:=Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (Polynomial.leadingCoeff_ne_zero.mpr hp)
+  have HL : p.leadingCoeff.trailingCoeff≠0:=Polynomial.trailingCoeff_ne_zero.mpr (Polynomial.leadingCoeff_ne_zero.mpr hp)
   have HE : p.leadingCoeff.eval x≠0 := by
     intro Hzero
     rw [Hzero,sign_zero] at hs

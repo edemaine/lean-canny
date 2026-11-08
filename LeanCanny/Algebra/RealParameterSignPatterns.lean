@@ -59,7 +59,7 @@ theorem exists_realizable_interval (p : (ℝ[X])[X]) (hp : p≠0) (Q : J→(ℝ[
   let δ:=min η (patternThreshold p Q)
   have Hδ : 0<δ:=lt_min Hη (patternThreshold_pos p Q)
   have Hnonzero (x : ℝ) (Hx : 0<x) (Hxd : x<δ) : p.map (Polynomial.evalRingHom x)≠0 := by
-    have HL : p.leadingCoeff.trailingCoeff≠0:=Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (Polynomial.leadingCoeff_ne_zero.mpr hp)
+    have HL : p.leadingCoeff.trailingCoeff≠0:=Polynomial.trailingCoeff_ne_zero.mpr (Polynomial.leadingCoeff_ne_zero.mpr hp)
     have HE:=HS x Hx (Hxd.trans_le (min_le_left _ _))
     intro Hzero
     have HC:=congrArg (fun q : Polynomial ℝ=>q.coeff p.natDegree) Hzero

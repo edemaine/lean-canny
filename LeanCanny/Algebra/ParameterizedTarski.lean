@@ -65,7 +65,7 @@ theorem natDegree_eval (p : (ℤ[X])[X]) (b s : ℕ)
   by_cases hp : p = 0
   · simp [hp]
   · have hl : p.leadingCoeff ≠ 0 := leadingCoeff_ne_zero.mpr hp
-    have ht : p.leadingCoeff.trailingCoeff ≠ 0 := trailingCoeff_nonzero_iff_nonzero.mpr hl
+    have ht : p.leadingCoeff.trailingCoeff ≠ 0 := trailingCoeff_ne_zero.mpr hl
     have he := InfinitesimalSign.integer_sign_eval_le_dyadic p.leadingCoeff b s hm hs x hx hxs
     have hn : evalHom x p.leadingCoeff ≠ 0 := by
       intro hz

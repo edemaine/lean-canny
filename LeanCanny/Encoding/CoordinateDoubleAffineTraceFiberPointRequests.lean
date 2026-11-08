@@ -126,12 +126,12 @@ theorem certificates {P : BoundedFullWriter.Readers} (hP : P.PolyTime)
       (encQ := encBits) (encS := SingleCall.encState) := by
   have hr := (ready_decider hP hd ho hl hA).computable
   have hq := (query_evaluator hP hd ho hl hA).computable
-  have hreq := hr.comp (.of_polyTime
+  have hreq := hr.comp (.of_tidyPolyTime
     (ComputableTidilyInPolyTime.fst encBits (encPair encBool encBits)))
-  have hnot := (ComputableTidilyInPolySpace.of_polyTime
+  have hnot := (ComputableInPolySpace.of_tidyPolyTime
     ComputableTidilyInPolyTime.bool_not).comp hreq
   constructor
-  · change ComputableTidilyInPolySpace (fun q : List Bool => (q, false, [])) _ _
+  · change ComputableInPolySpace (fun q : List Bool => (q, false, [])) _ _
     fun_prop
   all_goals dsimp only [SingleCall.Program.controller, program, SingleCall.encState]
   all_goals fun_prop

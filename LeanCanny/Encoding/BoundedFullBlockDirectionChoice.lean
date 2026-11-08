@@ -90,13 +90,13 @@ theorem test_correct (F : Inputs) (c r : List Bool) : test F (c, r) = true ↔ G
 theorem test_computable {F : Inputs} (h : F.PolyTime)
     (htP : ∀ c, (TermView.term (F.parent.source c)).arity ≤ F.parent.dim c)
     (htS : ∀ c, (TermView.term (F.source.source c)).arity ≤ F.source.dim c) :
-    ComputableTidilyInPolySpace (test F) (encPair encBits encBits) encBool := by
+    ComputableInPolySpace (test F) (encPair encBits encBits) encBool := by
   have hc := BoundedFullBlockRegularity.evaluator (h.parent.comp pairFst_mem_FP) (family_polyTime h)
     (fun q => htP (pairFst q)) (fun q => htS (pairFst q))
   have hp := pair_computable (ComputableTidilyInPolyTime.fst encBits encBits)
     (ComputableTidilyInPolyTime.snd encBits encBits)
   have heq := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).computable
-  have he := (ComputableTidilyInPolySpace.of_polyTime heq).comp (hc.computable.comp (.of_polyTime hp))
+  have he := (ComputableInPolySpace.of_tidyPolyTime heq).comp (hc.computable.comp (.of_tidyPolyTime hp))
   apply he.congr
   intro p
   apply Bool.eq_iff_iff.mpr

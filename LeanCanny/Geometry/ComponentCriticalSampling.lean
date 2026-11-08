@@ -143,7 +143,7 @@ theorem regular_level_of_annihilator (p : MvPolynomial ι ℝ) (c : Polynomial �
     have hpval : aeval x p = t := by simpa only [aeval_def, Algebra.algebraMap_self, eval₂_id] using hx
     rw [hpval] at he
     exact ht he
-  exact surjective_of_nonzero_of_finrank_eq_one (K := ℝ)
+  exact surjective_of_ne_zero_of_finrank_eq_one (K := ℝ)
     (by simp) (fun h => hne (ContinuousLinearMap.coe_injective h))
 
 /-- For a proper polynomial, one constructed integer direction gives a finite

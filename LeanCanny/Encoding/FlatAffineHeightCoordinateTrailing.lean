@@ -54,7 +54,7 @@ theorem indexedEvaluator {F : Inputs} (h : F.Access) (height : (u : List Bool) �
 
 theorem indexed_ne_zero (F : Inputs) (cone : FlatAffinePowerPositive.ConeCertificate F)
     (height : (u : List Bool) → Fin (count F u)) (z : List Bool) : indexed F height z ≠ 0 := by
-  apply Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr
+  apply Polynomial.trailingCoeff_ne_zero.mpr
   apply Polynomial.ne_zero_of_natDegree_gt
   rw [FlatAffineHeightExceptional.indexed_degree_eq F cone height]
   exact Nat.zero_lt_succ _

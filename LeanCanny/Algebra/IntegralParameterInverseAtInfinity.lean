@@ -57,7 +57,7 @@ theorem natTrailingDegree_after_mass (p :(ℤ[X])[X]) (b :ℕ)
     · intro k hk
       rw [coeff_eq_zero_of_lt_natTrailingDegree hk,map_zero]
     · exact (coefficient_ne_zero_iff p b hb x hx p.natTrailingDegree).mpr
-        (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hp)
+        (Polynomial.trailingCoeff_ne_zero.mpr hp)
 
 theorem denominator_after_mass (p :(ℤ[X])[X]) (b :ℕ)
     (hb :∀k,coefficientMass (p.coeff k)≤2^b) (x :ℝ) (hx :(2:ℝ)^(b+1)≤x):

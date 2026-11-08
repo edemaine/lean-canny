@@ -126,7 +126,7 @@ theorem decider_of_endpoints (hd : BinaryFn d)
   have HN : BinaryFn (fun z=>d (pairFst z)):=hd.comp pairFst_mem_FP
   have HZ := HN.eq (BinaryFn.const 0)
   have Z : SpaceDecider {z | d (pairFst z)=0} :=SpaceDecider.of_computable
-    (.of_polyTime HZ.computable) (fun z=>by simp only [Set.mem_ofPred_eq,decide_eq_true_eq])
+    (.of_tidyPolyTime HZ.computable) (fun z=>by simp only [Set.mem_ofPred_eq,decide_eq_true_eq])
   have E : SpaceDecider {z | endpoint P D H L F C hs parent terminal d hpos hf hdefault left true z=
       endpoint P D H L F C hs parent terminal d hpos hf hdefault right false z} :=by
     apply (EL.pairOutputs ER).decider (fun z=>decide (pairFst z=pairSnd z))

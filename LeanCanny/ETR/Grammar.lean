@@ -99,11 +99,11 @@ def termLanguage : Language := {bits | ∃ t : Term, bits = t.toData.toBits}
 def formulaLanguage : Language := {bits | ∃ p : Formula, bits = p.encode}
 
 theorem termLanguage_mem_P : termLanguage ∈ P :=
-  ⟨recognizeTerm, flag_computable recognizeTerm_mem_FP,
+  ⟨recognizeTerm, (flag_computable recognizeTerm_mem_FP).computableInPolyTime,
     fun bits => (recognizeTerm_true_iff bits).symm⟩
 
 theorem formulaLanguage_mem_P : formulaLanguage ∈ P :=
-  ⟨recognizeFormula, flag_computable recognizeFormula_mem_FP,
+  ⟨recognizeFormula, (flag_computable recognizeFormula_mem_FP).computableInPolyTime,
     fun bits => (recognizeFormula_true_iff bits).symm⟩
 
 end LeanCanny.ETR.Grammar

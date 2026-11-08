@@ -33,19 +33,19 @@ noncomputable def edge (F : Inputs) (cone : FlatAffinePowerPositive.ConeCertific
 
 theorem valid_computable {F : Inputs} (h : F.Access) (cone : FlatAffinePowerPositive.ConeCertificate F)
     (height : (u : List Bool) → Fin (count F u)) (hh : UnaryFn (fun u => (height u).val)) :
-    ComputableTidilyInPolySpace (fun p : List Bool × List Bool => valid F cone height p.1 p.2)
+    ComputableInPolySpace (fun p : List Bool × List Bool => valid F cone height p.1 p.2)
       (encPair encBits encBits) encBool := by
   have C := ComputableTidilyInPolyTime.fst encBits encBits
   have W := ComputableTidilyInPolyTime.snd encBits encBits
-  exact (validDecider h cone height hh).computable.comp (.of_polyTime (pair_computable C W))
+  exact (validDecider h cone height hh).computable.comp (.of_tidyPolyTime (pair_computable C W))
 
 theorem edge_computable {F : Inputs} (h : F.Access) (cone : FlatAffinePowerPositive.ConeCertificate F)
     (height : (u : List Bool) → Fin (count F u)) (hh : UnaryFn (fun u => (height u).val)) :
-    ComputableTidilyInPolySpace (fun p : List Bool × List Bool × List Bool => edge F cone height p.1 p.2.1 p.2.2)
+    ComputableInPolySpace (fun p : List Bool × List Bool × List Bool => edge F cone height p.1 p.2.1 p.2.2)
       (encPair encBits (encPair encBits encBits)) encBool := by
   have C := ComputableTidilyInPolyTime.fst encBits (encPair encBits encBits)
   have R := ComputableTidilyInPolyTime.snd encBits (encPair encBits encBits)
-  exact (edgeDecider h cone height hh).computable.comp (.of_polyTime (pair_computable C (pair_computable R.fst' R.snd')))
+  exact (edgeDecider h cone height hh).computable.comp (.of_tidyPolyTime (pair_computable C (pair_computable R.fst' R.snd')))
 
 noncomputable def connectedLanguage (F : Inputs) (cone : FlatAffinePowerPositive.ConeCertificate F)
     (height : (u : List Bool) → Fin (count F u)) : Language :=

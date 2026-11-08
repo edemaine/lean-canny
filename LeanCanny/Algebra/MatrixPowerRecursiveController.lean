@@ -36,14 +36,14 @@ theorem certificates (ops : Callbacks) (ho : ops.ControlsPolyTime)
     (init entryTask : List Bool → List Bool) (hi : SpaceFunction init) (he : entryTask ∈ FP) :
     (controller ops init entryTask).Certificates (encQ := encBits) (encS := encBits) := by
   have hquery : (entryTask ∘ entryInput) ∈ FP := mem_FP_comp entryInput_mem_FP he
-  refine ⟨hi.computable, .of_polyTime (flag_computable halted_mem_FP),
-    .of_polyTime (FP.computable ModularAccess.valueBits_mem_FP),
-    .of_polyTime (flag_computable needsEntry_mem_FP),
-    .of_polyTime (FP.computable hquery),
-    .of_polyTime (FP.computable (step_mem_FP _ (withoutEntry_polyTime ops ho))), ?_⟩
+  refine ⟨hi.computable, .of_tidyPolyTime (flag_computable halted_mem_FP),
+    .of_tidyPolyTime (FP.computable ModularAccess.valueBits_mem_FP),
+    .of_tidyPolyTime (flag_computable needsEntry_mem_FP),
+    .of_tidyPolyTime (FP.computable hquery),
+    .of_tidyPolyTime (FP.computable (step_mem_FP _ (withoutEntry_polyTime ops ho))), ?_⟩
   have hp := pair_computable (ComputableTidilyInPolyTime.fst encBits encBits)
     (ComputableTidilyInPolyTime.snd encBits encBits)
-  exact .of_polyTime ((FP.computable (resumeEntry_mem_FP id_mem_FP)).comp hp)
+  exact .of_tidyPolyTime ((FP.computable (resumeEntry_mem_FP id_mem_FP)).comp hp)
 
 def oracleCallbacks (ops : Callbacks) (entryTask answer : List Bool → List Bool) : Callbacks :=
   { ops with entry := answer ∘ entryTask }

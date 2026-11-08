@@ -70,7 +70,7 @@ theorem toETR_correct (bits : List Bool) : bits ∈ language ↔ toETR bits ∈ 
     simp [toETR, hn, hnot]
 
 theorem reduces_to_etr : PolyTimeReduces language ETR.language :=
-  ⟨toETR, FP.computable toETR_mem_FP, toETR_correct⟩
+  ⟨toETR, (FP.computable toETR_mem_FP).computableInPolyTime, toETR_correct⟩
 
 theorem mem_existsReal : language ∈ LeanCanny.ExistsReal := reduces_to_etr
 

@@ -20,6 +20,26 @@ example {f g : List Bool → List Bool}
   constructor
   fun_prop
 
+section
+attribute [local irreducible] LeanCanny.pair LeanCanny.pairFst LeanCanny.pairSnd
+
+/- A space reader composes with tidy-time packet projections through one transition. -/
+example {f : List Bool → List Bool} (hf : LeanCanny.Computation.SpaceFunction f) :
+    LeanCanny.Computation.SpaceFunction (fun z =>
+      LeanCanny.pair (f (LeanCanny.pairFst z)) (LeanCanny.pairSnd z)) := by
+  have hf := hf.computable
+  constructor
+  fun_prop
+
+example {α β : Type} {eA : α ↪ List Bool} {eB : β ↪ List Bool}
+    {select : α → Bool} {f g : α → β}
+    (hs : ComputableTidilyInPolyTime select eA encBool)
+    (hf : ComputableInPolySpace f eA eB) (hg : ComputableInPolySpace g eA eB) :
+    ComputableInPolySpace (fun a => if select a then f a else g a) eA eB := by
+  fun_prop
+
+end
+
 /- Recursive midpoint scans accept arbitrary native space-bounded child
 writers while retaining explicit state and request contracts. -/
 example (P : LeanCanny.Computation.PairedScan.Program)
@@ -50,7 +70,7 @@ example {L K : Set (List Bool)} {f : List Bool → List Bool}
     (hf : ComputableTidilyInPolyTime f encBits encBits)
     (hcorrect : ∀ x, x ∈ L ↔ f x ∈ K) (hK : K ∈ LeanCanny.ExistsReal) :
     L ∈ LeanCanny.ExistsReal :=
-  LeanCanny.existsReal_of_reduction ⟨f, hf, hcorrect⟩ hK
+  LeanCanny.existsReal_of_reduction ⟨f, hf.computableInPolyTime, hcorrect⟩ hK
 
 example : LeanCanny.ExistsReal ⊆ Cslib.Complexity.PSPACE encBits ↔
     LeanCanny.ETR.language ∈ Cslib.Complexity.PSPACE encBits :=
@@ -59,7 +79,7 @@ example : LeanCanny.ExistsReal ⊆ Cslib.Complexity.PSPACE encBits ↔
 /-! The concrete table tree derives every graph bound from the original
 leaf readers. No task-word, reply, metadata, rank, or closure assumption remains. -/
 example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.BalancedTablePolynomials.nodeValue F) encBits encBits :=
+    ComputableInPolySpace (LeanCanny.Algebra.BalancedTablePolynomials.nodeValue F) encBits encBits :=
   (LeanCanny.Algebra.BalancedTablePolynomials.evaluator F A).computable
 
 /-! A candidate scan and direction write use only the original readers and
@@ -67,20 +87,20 @@ a native binary height control. Semantic promises are absent from the
 computation certificate; they enter the separate consistency theorem. -/
 example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
     (H : List Bool → ℕ) (hH : ComputableTidilyInPolyTime H encBits encNat) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.BalancedTablePolynomials.Candidate.update F H) encBits encBits :=
+    ComputableInPolySpace (LeanCanny.Algebra.BalancedTablePolynomials.Candidate.update F H) encBits encBits :=
   (LeanCanny.Algebra.BalancedTablePolynomials.Candidate.updateEvaluator F A H hH).computable
 
 example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
     (n D b : List Bool → ℕ) (hn : LeanCanny.UnaryFn n)
     (hD : ComputableTidilyInPolyTime D encBits encNat) (hb : ComputableTidilyInPolyTime b encBits encNat) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.PaddedAnnihilatorBits.updateDirection F n D b) encBits encBits :=
+    ComputableInPolySpace (LeanCanny.Algebra.PaddedAnnihilatorBits.updateDirection F n D b) encBits encBits :=
   (LeanCanny.Algebra.PaddedAnnihilatorBits.updateDirectionEvaluator F A n D b hn hD hb).computable
 
 /-! Complete preparation uses the same native fold with a fixed-size table
 accumulator on all words, without semantic table promises. -/
 example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
     (H n : List Bool → ℕ) (hH : ComputableTidilyInPolyTime H encBits encNat) (hn : LeanCanny.UnaryFn n) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.BalancedDirectionPreparation.directions F H n) encBits encBits :=
+    ComputableInPolySpace (LeanCanny.Algebra.BalancedDirectionPreparation.directions F H n) encBits encBits :=
   (LeanCanny.Algebra.BalancedDirectionPreparation.directionsEvaluator F A H n hH hn).computable
 
 /-! The actual canonical finite-annihilator reader constructs its own table.
@@ -91,7 +111,7 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
     (hne : ∀ c i, i < n c → F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≠ 0)
     (hdegree : ∀ c i, i < n c → (F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i))).natDegree ≤ D c)
     (hheight : ∀ c i, i < n c → F.height (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≤ b c) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.FiniteAnnihilatorBits.coefficient F n hne) encBits encBits :=
+    ComputableInPolySpace (LeanCanny.Algebra.FiniteAnnihilatorBits.coefficient F n hne) encBits encBits :=
   (LeanCanny.Algebra.FiniteAnnihilatorBits.coefficientEvaluator F A n D b hn hD hb hne hdegree hheight).computable
 
 /-! Every canonical pair coordinate uses original readers and source bounds.
@@ -102,11 +122,11 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
     (hne : ∀ c i, i < n c → F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≠ 0)
     (hdegree : ∀ c i, i < n c → (F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i))).natDegree ≤ D c)
     (hheight : ∀ c i, i < n c → F.height (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≤ b c) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun p => (LeanCanny.Algebra.CanonicalPairBits.leftCoordinate F n hne p).numerator)) encBits encBits ∧
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun p => (LeanCanny.Algebra.CanonicalPairBits.rightCoordinate F n hne p).numerator)) encBits encBits ∧
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun p => (LeanCanny.Algebra.CanonicalPairBits.leftCoordinate F n hne p).denominator)) encBits encBits := by
   have E := LeanCanny.Algebra.CanonicalPairBits.coordinateEvaluators F n D b hne hdegree hheight A hn hD hb
   exact ⟨E.1.computable, E.2.1.computable, E.2.2.computable⟩
@@ -115,13 +135,13 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
 intermediate coordinate or exact-degree computation certificate is supplied. -/
 example (F : LeanCanny.Algebra.RationalCoordinatePathBits.Source)
     (hD : LeanCanny.BinaryFn F.degree) (hK : LeanCanny.UnaryFn F.depth)
-    (N : ComputableTidilyInPolySpace
+    (N : ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Algebra.RationalCoordinatePathBits.indexedNumerator F)) encBits encBits)
-    (D : ComputableTidilyInPolySpace
+    (D : ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Algebra.RationalCoordinatePathBits.indexedDenominator F)) encBits encBits) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (F.coordinate c).numerator)) encBits encBits ∧
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (F.coordinate c).denominator)) encBits encBits := by
   have E := LeanCanny.Algebra.RationalCoordinatePathBits.coefficientEvaluators F hD hK ⟨N⟩ ⟨D⟩
   exact ⟨E.1.computable, E.2.computable⟩
@@ -134,10 +154,10 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
     (hne : ∀ c i, i < n c → F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≠ 0)
     (hdegree : ∀ c i, i < n c → (F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i))).natDegree ≤ D c)
     (hheight : ∀ c i, i < n c → F.height (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≤ b c) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient
         (fun u => (LeanCanny.Algebra.FiniteLeafCoordinateBits.coordinate F n D b hne u).numerator)) encBits encBits ∧
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient
         (fun u => (LeanCanny.Algebra.FiniteLeafCoordinateBits.coordinate F n D b hne u).denominator)) encBits encBits := by
   have E := LeanCanny.Algebra.FiniteLeafCoordinateBits.coefficientEvaluators F n D b hne hdegree hheight A hn hD hb
@@ -156,7 +176,7 @@ example (F : SeparableBits.Family) (n D b : List Bool → ℕ)
     (hne : ∀ c i, i < n c → F.polynomial (pair c (BinaryNatCode.encode i)) ≠ 0)
     (hd : ∀ c i, i < n c → (F.polynomial (pair c (BinaryNatCode.encode i))).natDegree ≤ D c)
     (hm : ∀ c i, i < n c → coefficientMass (F.polynomial (pair c (BinaryNatCode.encode i))) ≤ 2 ^ b c)
-    (E : ComputableTidilyInPolySpace (PrimitivePairBits.coefficient F.polynomial) encBits encBits) :
+    (E : ComputableInPolySpace (PrimitivePairBits.coefficient F.polynomial) encBits encBits) :
     FiniteLeafSignBits.finiteSignLanguage F n S ∈ Cslib.Complexity.PSPACE encBits :=
   FiniteLeafSignBits.finiteSignLanguage_mem_PSPACE_from_residues F n D b hne hd hm S A hn hD hb ⟨E⟩
 
@@ -164,9 +184,9 @@ end FiniteRootSigns
 
 example (A W : List Bool → ℕ) (e : List Bool → ℕ → ℕ)
     (hA : ComputableTidilyInPolyTime A encBits encUnary) (hW : ComputableTidilyInPolyTime W encBits encUnary)
-    (read : List Bool → List Bool) (R : ComputableTidilyInPolySpace read encBits encBits)
+    (read : List Bool → List Bool) (R : ComputableInPolySpace read encBits encBits)
     (he : ∀ c i, read (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) = LeanCanny.BinaryNatCode.encode (e c i)) :
-    ComputableTidilyInPolySpace (fun c => LeanCanny.Encoding.FixedWidthNatVector.encode (A c) (W c) (e c)) encBits encBits :=
+    ComputableInPolySpace (fun c => LeanCanny.Encoding.FixedWidthNatVector.encode (A c) (W c) (e c)) encBits encBits :=
   (LeanCanny.Encoding.FixedWidthNatVector.encodeEvaluator A W e hA hW read ⟨R⟩ he).computable
 
 example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.SeparableBits.Readers F)
@@ -174,7 +194,7 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
     (hn : ComputableTidilyInPolyTime count encBits encUnary) (hD : ComputableTidilyInPolyTime D encBits encNat)
     (hne : ∀ c i, i < count c → F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i)) ≠ 0)
     (hdegree : ∀ c i, i < count c → (F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i))).natDegree ≤ D c) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.PaddedAnnihilatorBits.prepareDegrees F count D) encBits encBits :=
+    ComputableInPolySpace (LeanCanny.Algebra.PaddedAnnihilatorBits.prepareDegrees F count D) encBits encBits :=
   (LeanCanny.Algebra.PaddedAnnihilatorBits.prepareDegreesEvaluator F A count D hn hD hne hdegree).computable
 
 /-! The bounded test is a native decider on all words. Its separability
@@ -190,9 +210,9 @@ example {localStep : List Bool → LeanCanny.Computation.RecursiveStack.Action (
     {receive : List Bool × List Bool → List Bool} {value : List Bool → List Bool}
     {rank fuel : List Bool → ℕ} {valid : List Bool → List Bool → Prop}
     {N R B : List Bool → ℕ}
-    (hl : ComputableTidilyInPolySpace localStep encBits
+    (hl : ComputableInPolySpace localStep encBits
       (LeanCanny.Computation.RecursiveStack.encAction encBits))
-    (hr : ComputableTidilyInPolySpace receive (encPair encBits encBits) encBits)
+    (hr : ComputableInPolySpace receive (encPair encBits encBits) encBits)
     (hN : ComputableTidilyInPolyTime N encBits encNat)
     (hR : ComputableTidilyInPolyTime R encBits encUnary)
     (hB : PolyBounded List.length B)
@@ -201,8 +221,8 @@ example {localStep : List Bool → LeanCanny.Computation.RecursiveStack.Action (
     (hrank : ∀ x p, valid x p → rank p ≤ R x)
     (hframe : ∀ x p, valid x p → p.length ≤ B x)
     (hvalue : ∀ x p, valid x p → (value p).length ≤ B x) :
-    ComputableTidilyInPolySpace value encBits encBits :=
-  LeanCanny.Computation.RecursiveStack.evaluator hl hr ComputableTidilyInPolySpace.id'
+    ComputableInPolySpace value encBits encBits :=
+  LeanCanny.Computation.RecursiveStack.evaluator hl hr ComputableInPolySpace.id'
     hN hR hB rules hstart hrank hframe hvalue
 
 /-! Recursive entries receive no answer certificate; native base computations
@@ -222,7 +242,7 @@ example (S : LeanCanny.Algebra.RecursiveMatrixPower.Source) (h : S.Controls)
         (LeanCanny.BinaryNatCode.encode i.val) (LeanCanny.BinaryNatCode.encode j.val)))) ∧
       rank (S.entryTask (LeanCanny.pair q (LeanCanny.pair
         (LeanCanny.BinaryNatCode.encode i.val) (LeanCanny.BinaryNatCode.encode j.val)))) < rank q) :
-    ComputableTidilyInPolySpace S.answer encBits encBits :=
+    ComputableInPolySpace S.answer encBits encBits :=
   (S.evaluator h rank tasks R K M hR hK hM hroot hrank htask hbase hbits hgraph).computable
 
 /-! Determinant and factor stages expose task calls. Their local certificates
@@ -255,32 +275,32 @@ example {F : LeanCanny.Algebra.BerkowitzPolynomial.ModularFamily}
 
 example {F : LeanCanny.Algebra.BerkowitzPolynomial.ModularFamily}
     (a : LeanCanny.Algebra.BerkowitzPolynomial.ModularAccess F)
-    (h : ComputableTidilyInPolySpace (LeanCanny.Algebra.BerkowitzPolynomial.TaskDispatch.answer a) encBits encBits) :
+    (h : ComputableInPolySpace (LeanCanny.Algebra.BerkowitzPolynomial.TaskDispatch.answer a) encBits encBits) :
     F.zeroLanguage ∈ Cslib.Complexity.PSPACE encBits :=
   (LeanCanny.Algebra.BerkowitzPolynomial.TaskDispatch.determinant_decider a ⟨h⟩).mem_PSPACE
 
 example {F : LeanCanny.Algebra.MatrixPower.ModularFamily}
     (a : LeanCanny.Algebra.MatrixPower.ModularAccess F) (ha : a.ControlsPolyTime)
-    (he : ComputableTidilyInPolySpace a.entry encBits encBits) :
-    ComputableTidilyInPolySpace F.value encBits encBits :=
+    (he : ComputableInPolySpace a.entry encBits encBits) :
+    ComputableInPolySpace F.value encBits encBits :=
   (LeanCanny.Algebra.MatrixPower.ModularAccess.evaluatorWithEntry a ha ⟨he⟩).computable
 
 example {F : LeanCanny.Algebra.Berkowitz.ModularFamily}
     (a : LeanCanny.Algebra.Berkowitz.ModularAccess F) (ha : a.ControlsPolyTime)
-    (he : ComputableTidilyInPolySpace a.access.entry encBits encBits) :
+    (he : ComputableInPolySpace a.access.entry encBits encBits) :
     F.zeroLanguage ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.Algebra.Berkowitz.ModularAccess.zeroLanguage_mem_PSPACE_of_evaluator a ha ⟨he⟩
 
 example {F : LeanCanny.Algebra.CannySubresultantBits.Family}
     (a : LeanCanny.Algebra.CannySubresultantBits.Access F) (ha : a.ControlsPolyTime)
-    (L : ComputableTidilyInPolySpace a.source.leftCoefficient encBits encBits)
-    (R : ComputableTidilyInPolySpace a.source.rightCoefficient encBits encBits) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.CannyCoordinateBits.value F) encBits encBits :=
+    (L : ComputableInPolySpace a.source.leftCoefficient encBits encBits)
+    (R : ComputableInPolySpace a.source.rightCoefficient encBits encBits) :
+    ComputableInPolySpace (LeanCanny.Algebra.CannyCoordinateBits.value F) encBits encBits :=
   (LeanCanny.Algebra.CannyCoordinateBits.evaluatorWithCoefficients a ha ⟨L⟩ ⟨R⟩).computable
 
 example (S : LeanCanny.Algebra.PrimitivePairBits.Source)
     (A : LeanCanny.Algebra.PrimitivePairBits.Readers S) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+    ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
       (fun c => LeanCanny.Algebra.PrimitivePair.leftNumerator (S.left c) (S.right c) (S.direction c))) encBits encBits :=
   (LeanCanny.Algebra.PrimitivePairBits.leftNumeratorEvaluator S A).computable
 
@@ -291,19 +311,19 @@ example (F : LeanCanny.Algebra.SeparableBits.Family)
 
 example (F : LeanCanny.Algebra.SeparableBits.Family)
     (A : LeanCanny.Algebra.SeparableBits.Readers F) :
-    ComputableTidilyInPolySpace (fun c => LeanCanny.BinaryNatCode.encode
+    ComputableInPolySpace (fun c => LeanCanny.BinaryNatCode.encode
       (LeanCanny.Algebra.SquarefreePart.common ((F.polynomial c).map (Int.castRingHom ℚ))).natDegree) encBits encBits :=
   (LeanCanny.Algebra.SeparableBits.gcdDegreeEvaluator F A).computable
 
 example (F : LeanCanny.Algebra.SeparableBits.Family)
     (A : LeanCanny.Algebra.SeparableBits.Readers F) (hne : ∀ c, F.polynomial c ≠ 0) :
-    ComputableTidilyInPolySpace (fun c => LeanCanny.BinaryNatCode.encode
+    ComputableInPolySpace (fun c => LeanCanny.BinaryNatCode.encode
       (LeanCanny.Algebra.SquarefreePart.part ((F.polynomial c).map (Int.castRingHom ℚ))).natDegree) encBits encBits :=
   (LeanCanny.Algebra.SeparableBits.squarefreeDegreeEvaluator F A hne).computable
 
 example (F : LeanCanny.Algebra.SeparableBits.Family)
     (A : LeanCanny.Algebra.SeparableBits.Readers F) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.SeparableBits.squarefreeValue F) encBits encBits :=
+    ComputableInPolySpace (LeanCanny.Algebra.SeparableBits.squarefreeValue F) encBits encBits :=
   (LeanCanny.Algebra.SeparableBits.squarefreeEvaluator F A).computable
 
 example (F : LeanCanny.Algebra.SeparableBits.Family)
@@ -319,7 +339,7 @@ example {L : Type*} [Field L] [CharZero L]
     (hq : ∀ c, ((S.right c).map (Int.castRingHom L)).Separable)
     (hsp : ∀ c, ((S.left c).map (Int.castRingHom L)).Splits)
     (hsq : ∀ c, ((S.right c).map (Int.castRingHom L)).Splits) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c =>
         LeanCanny.Algebra.cannyResultant (S.left c) (S.right c)
           (LeanCanny.Algebra.PrimitivePair.select (S.left c) (S.right c)))) encBits encBits := by
@@ -330,7 +350,7 @@ example (F G : LeanCanny.Algebra.SeparableBits.Family)
     (A : LeanCanny.Algebra.SeparableBits.Readers F)
     (B : LeanCanny.Algebra.SeparableBits.Readers G)
     (hF : ∀ c, F.polynomial c ≠ 0) (hG : ∀ c, G.polynomial c ≠ 0) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+    ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
       (LeanCanny.Algebra.PreprocessedPair.parameter F G A B hF hG)) encBits encBits :=
   (LeanCanny.Algebra.PreprocessedPair.parameterEvaluator F G A B hF hG).computable
 
@@ -338,7 +358,7 @@ example (F G : LeanCanny.Algebra.SeparableBits.Family)
     (A : LeanCanny.Algebra.SeparableBits.Readers F)
     (B : LeanCanny.Algebra.SeparableBits.Readers G)
     (hF : ∀ c, F.polynomial c ≠ 0) (hG : ∀ c, G.polynomial c ≠ 0) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+    ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
       (LeanCanny.Algebra.PreprocessedPair.denominator F G A B hF hG)) encBits encBits :=
   (LeanCanny.Algebra.PreprocessedPair.coordinateEvaluators F G A B hF hG).2.2.computable
 
@@ -358,7 +378,7 @@ example (F G : LeanCanny.Algebra.SeparableBits.Family)
     (A : LeanCanny.Algebra.SeparableBits.Readers F)
     (B : LeanCanny.Algebra.SeparableBits.Readers G)
     (hF : ∀ c, F.polynomial c ≠ 0) (hG : ∀ c, G.polynomial c ≠ 0) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PreprocessedPair.reusableReaders F G A B hF hG).coefficient encBits encBits :=
   (LeanCanny.Algebra.PreprocessedPair.reusableReaders F G A B hF hG).evaluator.computable
 
@@ -371,29 +391,29 @@ example (F : LeanCanny.Algebra.SeparableBits.Family) (A : LeanCanny.Algebra.Sepa
     (hn : LeanCanny.UnaryFn count) (hD : LeanCanny.BinaryFn D)
     (hdegree : ∀ c i, i < count c →
       (F.polynomial (LeanCanny.pair c (LeanCanny.BinaryNatCode.encode i))).natDegree ≤ D c) :
-    ComputableTidilyInPolySpace (fun c => LeanCanny.BinaryNatCode.encode
+    ComputableInPolySpace (fun c => LeanCanny.BinaryNatCode.encode
       (LeanCanny.Algebra.FiniteAnnihilatorBits.parameter F count hne c).natDegree) encBits encBits :=
   (LeanCanny.Algebra.FiniteAnnihilatorBits.degreeEvaluator F A hne count D hn hD hdegree).computable
 
 example (p n d : List Bool → Polynomial ℤ) (e : List Bool → ℕ)
-    (E : ComputableTidilyInPolySpace (fun c => LeanCanny.BinaryNatCode.encode (e c)) encBits encBits)
-    (P : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient p) encBits encBits)
-    (N : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient n) encBits encBits)
-    (D : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient d) encBits encBits) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+    (E : ComputableInPolySpace (fun c => LeanCanny.BinaryNatCode.encode (e c)) encBits encBits)
+    (P : ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient p) encBits encBits)
+    (N : ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient n) encBits encBits)
+    (D : ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient d) encBits encBits) :
+    ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
       (fun c => LeanCanny.Algebra.UnivariateRational.clear (e c) (p c) (n c) (d c))) encBits encBits :=
   (LeanCanny.Algebra.UnivariateRationalBits.evaluatorWithExponent p n d e ⟨E⟩ ⟨P⟩ ⟨N⟩ ⟨D⟩).computable
 
 example (outer inner : List Bool → LeanCanny.Algebra.UnivariateRational.Coordinate)
-    (ON : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (outer c).numerator)) encBits encBits)
-    (OD : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (outer c).denominator)) encBits encBits)
-    (IN : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (inner c).numerator)) encBits encBits)
-    (ID : ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (inner c).denominator)) encBits encBits)
+    (ON : ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (outer c).numerator)) encBits encBits)
+    (OD : ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (outer c).denominator)) encBits encBits)
+    (IN : ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (inner c).numerator)) encBits encBits)
+    (ID : ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient (fun c => (inner c).denominator)) encBits encBits)
     (bound mass : List Bool → ℕ) (hB : LeanCanny.BinaryFn bound) (hM : LeanCanny.BinaryFn mass)
     (hdegree : ∀ c, (outer c).degree ≤ bound c)
     (hn : ∀ c, LeanCanny.Algebra.coefficientMass (outer c).numerator ≤ 2 ^ mass c)
     (hd : ∀ c, LeanCanny.Algebra.coefficientMass (outer c).denominator ≤ 2 ^ mass c) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+    ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
       (fun c => ((outer c).comp (inner c)).numerator)) encBits encBits :=
   (LeanCanny.Algebra.RationalCoordinateBits.evaluators outer inner ⟨ON⟩ ⟨OD⟩ ⟨IN⟩ ⟨ID⟩ bound mass hB hM hdegree hn hd).1.computable
 
@@ -401,7 +421,7 @@ example (S : LeanCanny.Algebra.PrimitivePairBits.Source)
     (A : LeanCanny.Algebra.PrimitivePairBits.Readers S)
     (hdegree : ∀ c, (LeanCanny.Algebra.cannyResultant (S.left c) (S.right c) (S.direction c)).natDegree =
       (S.left c).natDegree * (S.right c).natDegree) :
-    ComputableTidilyInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
+    ComputableInPolySpace (LeanCanny.Algebra.PrimitivePairBits.coefficient
       (fun c => LeanCanny.Algebra.cannyResultant
         (LeanCanny.Algebra.cannyResultant (S.left c) (S.right c) (S.direction c)) (S.right c) (S.direction c))) encBits encBits :=
   (LeanCanny.Algebra.PrimitivePairBits.nestedResultantEvaluator S A hdegree).computable
@@ -409,16 +429,16 @@ example (S : LeanCanny.Algebra.PrimitivePairBits.Source)
 example {S : LeanCanny.ETR.TubeLevelSign.Source} {B : LeanCanny.ETR.TubeLevelSign.Budget S}
     (a : LeanCanny.Algebra.SignPatternBits.Access (LeanCanny.ETR.TubeLevelSign.family S B))
     (hF : LeanCanny.Algebra.SignPatternBits.ControlsPolyTime (LeanCanny.ETR.TubeLevelSign.family S B))
-    (hroot : ComputableTidilyInPolySpace a.rootCoefficient encBits encBits)
-    (hquery : ComputableTidilyInPolySpace a.polynomialCoefficient encBits encBits) :
+    (hroot : ComputableInPolySpace a.rootCoefficient encBits encBits)
+    (hquery : ComputableInPolySpace a.polynomialCoefficient encBits encBits) :
     LeanCanny.ETR.TubeLevelSign.sampleLanguage S ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.ETR.TubeLevelSign.sampleLanguage_mem_PSPACE a hF ⟨hroot⟩ ⟨hquery⟩
 
 example {S : LeanCanny.ETR.TubeLevelSign.Source}
     (B : LeanCanny.ETR.TubeLevelSign.CoordinateBudget S) (hp : S.packet ∈ LeanCanny.FP)
     (a : LeanCanny.Algebra.SignPatternBits.Access (LeanCanny.ETR.TubeLevelSign.family S B.budget))
-    (hroot : ComputableTidilyInPolySpace a.rootCoefficient encBits encBits)
-    (hquery : ComputableTidilyInPolySpace a.polynomialCoefficient encBits encBits) :
+    (hroot : ComputableInPolySpace a.rootCoefficient encBits encBits)
+    (hquery : ComputableInPolySpace a.polynomialCoefficient encBits encBits) :
     LeanCanny.ETR.TubeLevelSign.sampleLanguage S ∈ Cslib.Complexity.PSPACE encBits :=
   B.sampleLanguage_mem_PSPACE hp a ⟨hroot⟩ ⟨hquery⟩
 
@@ -440,7 +460,7 @@ example {S : LeanCanny.ETR.TubeLevelSign.Source}
 example (packet row target modulus : List Bool → List Bool) (W : List Bool → ℕ)
     (hp : packet ∈ LeanCanny.FP) (hr : row ∈ LeanCanny.FP) (ht : target ∈ LeanCanny.FP)
     (hm : modulus ∈ LeanCanny.FP) (hW : LeanCanny.UnaryFn W) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun c => LeanCanny.Algebra.MatrixPower.residueBits
         (((LeanCanny.ETR.TubeLevelPacket.integerConstraint (packet c)
           (LeanCanny.ETR.TubeConstraintCoefficient.decodedRow packet row c)).coeff
@@ -529,7 +549,7 @@ regular source, with no derivative or determinant oracle. -/
 example (source active modulus degree : List Bool → List Bool)
     (hs : source ∈ LeanCanny.FP) (ha : active ∈ LeanCanny.FP)
     (hm : modulus ∈ LeanCanny.FP) (hd : degree ∈ LeanCanny.FP) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.ETR.TubeRegularJacobianBits.value source active modulus degree) encBits encBits :=
   (LeanCanny.ETR.TubeRegularJacobianBits.evaluator source active modulus degree hs ha hm hd).computable
 
@@ -558,7 +578,7 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
   LeanCanny.Encoding.FlatAffineSampleVertices.existence_mem_PSPACE h
 
 example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun u => LeanCanny.BinaryNatCode.encode (LeanCanny.Encoding.FlatAffineSampleVertices.count F u))
         encBits encBits :=
   (LeanCanny.Encoding.FlatAffineSampleVertices.count_evaluator h).computable
@@ -585,7 +605,7 @@ example (F : LeanCanny.Encoding.SquareSampleInput.Inputs) (h : F.Access)
 
 example (F : LeanCanny.Encoding.SquareSampleInput.Inputs) (h : F.Access)
     (hc : LeanCanny.Encoding.SquareSampleComplete.Complete F) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun u => LeanCanny.BinaryNatCode.encode (LeanCanny.Encoding.SquareSampleComplete.count F u)) encBits encBits :=
   (LeanCanny.Encoding.SquareSampleComplete.count_evaluator h hc).computable
 
@@ -593,7 +613,7 @@ example (F : LeanCanny.Encoding.SquareSampleInput.Inputs) (h : F.Access)
 example (p : List Bool → Polynomial ℤ) (D : List Bool → ℕ)
     (hp : ∀ u, (p u).natDegree ≤ D u) (hd : LeanCanny.BinaryFn D)
     (E : LeanCanny.Computation.SpaceFunction (LeanCanny.Algebra.PrimitivePairBits.coefficient p)) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Algebra.PolynomialReflectBits.polynomial p D))
       encBits encBits :=
   (LeanCanny.Algebra.PolynomialReflectBits.evaluator p D hp hd E).computable
@@ -604,7 +624,7 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
     (row : (u : List Bool) → Fin (LeanCanny.Encoding.FlatAffineFullSourcePositive.count F u))
     (hr : LeanCanny.UnaryFn (fun u => (row u).val))
     (target modulus : List Bool → List Bool) (ht : target ∈ LeanCanny.FP) (hm : modulus ∈ LeanCanny.FP) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.FixedWidthRowBits.value (LeanCanny.Encoding.FlatAffineFullSourcePositive.count F) W
         (fun u => LeanCanny.Encoding.FlatAffinePowerPositive.system F u (row u)) target modulus) encBits encBits :=
   (LeanCanny.Encoding.FlatAffinePowerPositive.evaluator h row hr hW ht hm).computable
@@ -616,7 +636,7 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
     (row : (u : List Bool) → Fin (LeanCanny.Encoding.FlatAffineFullSourcePositive.count F u + 1))
     (hr : LeanCanny.UnaryFn (fun u => (row u).val))
     (parameter modulus : List Bool → List Bool) (hk : parameter ∈ LeanCanny.FP) (hm : modulus ∈ LeanCanny.FP) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Encoding.FlatAffinePowerCoordinateRows.value F W coordinate row parameter modulus) encBits encBits :=
   (LeanCanny.Encoding.FlatAffinePowerCoordinateRows.evaluator h hW coordinate hc row hr hk hm).computable
 
@@ -625,7 +645,7 @@ No coefficient, determinant, or selected-minor oracle is assumed. -/
 example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
     (coordinate : (u : List Bool) → Fin (LeanCanny.Encoding.FlatAffineFullSourcePositive.count F u))
     (hc : LeanCanny.UnaryFn (fun u => (coordinate u).val)) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Encoding.FlatAffinePowerGram.polynomial F coordinate))
       encBits encBits :=
   (LeanCanny.Encoding.FlatAffinePowerGram.coefficient_evaluator h coordinate hc).computable
@@ -633,7 +653,7 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
 example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
     (coordinate : (u : List Bool) → Fin (LeanCanny.Encoding.FlatAffineFullSourcePositive.count F u))
     (hc : LeanCanny.UnaryFn (fun u => (coordinate u).val)) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (LeanCanny.Algebra.PrimitivePairBits.coefficient (LeanCanny.Encoding.FlatAffinePowerGram.annihilator F coordinate))
       encBits encBits :=
   (LeanCanny.Encoding.FlatAffinePowerGram.annihilator_evaluator h coordinate hc).computable
@@ -649,7 +669,7 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
 cone exclusion is a mathematical promise, with no runtime oracle. -/
 example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
     (hcone : LeanCanny.Encoding.FlatAffinePowerPositive.ConeCertificate F) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun u => LeanCanny.BinaryNatCode.encode (LeanCanny.Encoding.FlatAffinePowerSampleInput.originalCount F u))
       encBits encBits :=
   (LeanCanny.Encoding.FlatAffinePowerSampleInput.original_count_evaluator h hcone).computable
@@ -684,7 +704,7 @@ example (F : LeanCanny.Encoding.FlatAffineFullSourceTower.Inputs) (h : F.Access)
 
 example (F : LeanCanny.Encoding.SquareSampleInput.Inputs) (h : F.Access)
     (T : LeanCanny.Encoding.SquareSampleTestMoments.Test) (A : T.Access) :
-    ComputableTidilyInPolySpace (LeanCanny.Encoding.SquareSampleCompleteVertices.signValue F T) encBits encBits :=
+    ComputableInPolySpace (LeanCanny.Encoding.SquareSampleCompleteVertices.signValue F T) encBits encBits :=
   (LeanCanny.Encoding.SquareSampleCompleteVertices.sign_evaluator h A).computable
 
 -- Coordinate-prefix sampling constructs its own cone certificate.

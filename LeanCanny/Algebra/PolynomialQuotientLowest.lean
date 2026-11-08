@@ -46,10 +46,10 @@ theorem invariant {p q p' q' : Polynomial R} (hp : p ≠ 0) (hq : q ≠ 0) (hp' 
   refine ⟨by unfold order; omega, ?_⟩
   have hn : algebraMap R (FractionRing R) q.trailingCoeff ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective R (FractionRing R))).mpr
-      (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hq)
+      (Polynomial.trailingCoeff_ne_zero.mpr hq)
   have hn' : algebraMap R (FractionRing R) q'.trailingCoeff ≠ 0 :=
     (map_ne_zero_iff _ (IsFractionRing.injective R (FractionRing R))).mpr
-      (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hq')
+      (Polynomial.trailingCoeff_ne_zero.mpr hq')
   apply (div_eq_div_iff hn hn').mpr
   simpa only [map_mul] using congrArg (algebraMap R (FractionRing R)) ht
 
@@ -62,9 +62,9 @@ theorem normalized (p q : Polynomial R) (hp : p ≠ 0) (hq : q ≠ 0) :
   obtain ⟨b, hb, hb0⟩ := InfinitesimalSign.factor_at_trailingDegree q
   refine ⟨a, b, ha, hb, ha0, hb0, ?_, ?_, ?_⟩
   · rw [ha0]
-    exact Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hp
+    exact Polynomial.trailingCoeff_ne_zero.mpr hp
   · rw [hb0]
-    exact Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hq
+    exact Polynomial.trailingCoeff_ne_zero.mpr hq
   · have hX : algebraMap (Polynomial R) (RatFunc R) Polynomial.X ≠ 0 :=
       RatFunc.algebraMap_ne_zero Polynomial.X_ne_zero
     simp only [quotient, RatFunc.mk_eq_div, order, zpow_sub₀ hX, zpow_natCast]

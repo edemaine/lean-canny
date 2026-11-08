@@ -62,7 +62,7 @@ theorem nonempty_computable {α : Type} [Inhabited α] {enc : α↪List Bool}
     (hn : ComputableTidilyInPolyTime n enc encUnary)
     (hs : ComputableTidilyInPolyTime (fun a=>(s a).encode) enc encBits)
     (hp : ComputableTidilyInPolyTime (fun a=>(p a).encode) enc encBits) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun a=>decide ((Description.mk (n a) (s a)).WellFormed ∧
         (piece (Description.mk (n a) (s a)) (p a)).Nonempty)) enc encBool := by
   have HU:=EndpointValidation.exists_denotes_computable hp hn
@@ -71,8 +71,8 @@ theorem nonempty_computable {α : Type} [Inhabited α] {enc : α↪List Bool}
     apply (ComputableTidilyInPolyTime.comp FormulaArity.value_unary hs).of_enc_eq
     intro a
     exact congrArg encUnary (FormulaArity.value_encode (s a)).symm
-  have HW:=ComputableTidilyInPolySpace.of_polyTime (ComputableTidilyInPolyTime.unary_le' HA hn)
-  have HF : ComputableTidilyInPolySpace (fun _ : α=>false) enc encBool:=.of_polyTime (.const false)
+  have HW:=ComputableInPolySpace.of_tidyPolyTime (ComputableTidilyInPolyTime.unary_le' HA hn)
+  have HF : ComputableInPolySpace (fun _ : α=>false) enc encBool:=.of_tidyPolyTime (.const false)
   apply (HW.ite (HU.ite HE HF) HF).congr
   intro a
   apply Bool.eq_iff_iff.mpr

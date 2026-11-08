@@ -93,21 +93,21 @@ private theorem allBelow_correct {α : Type} (test : α × ℕ → Bool) (c : α
 /-- A typed binary-counted universal scan. No bound on the child's time is needed. -/
 theorem forall_below_computable {α : Type} [Inhabited α] {eA : α ↪ List Bool}
     {test : α × ℕ → Bool} {count : α → ℕ}
-    (ht : ComputableTidilyInPolySpace test (encPair eA encNat) encBool)
+    (ht : ComputableInPolySpace test (encPair eA encNat) encBool)
     (hn : ComputableTidilyInPolyTime count eA encNat) :
-    ComputableTidilyInPolySpace (fun c => decide (∀ k < count c, test (c, k) = true))
+    ComputableInPolySpace (fun c => decide (∀ k < count c, test (c, k) = true))
       eA encBool := by
   let child := fun p : α × ℕ × Bool => p.2.2 && test (p.1, p.2.1)
   have hp := ComputableTidilyInPolyTime.fst eA (encPair encNat encBool)
   have hr := ComputableTidilyInPolyTime.snd eA (encPair encNat encBool)
   have hq := hp.prod hr.fst'
-  have hc : ComputableTidilyInPolySpace child (TidyBoundedFold.encPacket eA encBool)
+  have hc : ComputableInPolySpace child (TidyBoundedFold.encPacket eA encBool)
       encBool := by
-    have h := (ComputableTidilyInPolySpace.of_polyTime hr.snd').ite
-      (ht.comp (.of_polyTime hq)) (.of_polyTime (ComputableTidilyInPolyTime.const false))
+    have h := (ComputableInPolySpace.of_tidyPolyTime hr.snd').ite
+      (ht.comp (.of_tidyPolyTime hq)) (.of_tidyPolyTime (ComputableTidilyInPolyTime.const false))
     exact h.congr fun p => by cases hb : p.2.2 <;> simp [child, hb]
   have h := TidyBoundedFold.evaluator_spec hc hn
-    (.of_polyTime (ComputableTidilyInPolyTime.const true)) (allBelow test)
+    (.of_tidyPolyTime (ComputableTidilyInPolyTime.const true)) (allBelow test)
     (fun _ => rfl) (fun _ _ _ => rfl)
     (B := fun _ => 1) (PolyBounded.const 1) (fun _ _ _ => by simp)
   exact h.congr fun c => Bool.eq_iff_iff.mpr (by
@@ -117,15 +117,15 @@ theorem forall_below_computable {α : Type} [Inhabited α] {eA : α ↪ List Boo
 width and a polynomial-space predicate. This includes width zero. -/
 theorem forall_words_computable {α : Type} [Inhabited α] {eA : α ↪ List Bool}
     {test : α × List Bool → Bool} {width : α → ℕ}
-    (ht : ComputableTidilyInPolySpace test (encPair eA encBits) encBool)
+    (ht : ComputableInPolySpace test (encPair eA encBits) encBool)
     (hw : ComputableTidilyInPolyTime width eA encUnary) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun c => decide (∀ u : List Bool, u.length = width c → test (c, u) = true))
       eA encBool := by
   have hp := ComputableTidilyInPolyTime.fst eA encNat
   have hk := ComputableTidilyInPolyTime.snd eA encNat
   have hword := word_computable (hw.comp hp) hk
-  have h := forall_below_computable (ht.comp (.of_polyTime (hp.prod hword)))
+  have h := forall_below_computable (ht.comp (.of_tidyPolyTime (hp.prod hword)))
     (ComputableTidilyInPolyTime.binary_two_pow.comp hw)
   refine h.congr fun c => Bool.eq_iff_iff.mpr ?_
   simp only [decide_eq_true_eq, Function.comp_apply]
@@ -202,17 +202,17 @@ theorem findWord_correct {α : Type} {test : α × List Bool → Bool} {width : 
 membership routine runs for arbitrarily long. -/
 theorem findWord_computable {α : Type} [Inhabited α] {eA : α ↪ List Bool}
     {test : α × List Bool → Bool} {width : α → ℕ}
-    (ht : ComputableTidilyInPolySpace test (encPair eA encBits) encBool)
+    (ht : ComputableInPolySpace test (encPair eA encBits) encBool)
     (hw : ComputableTidilyInPolyTime width eA encUnary) :
-    ComputableTidilyInPolySpace (findWord test width) eA encBits := by
+    ComputableInPolySpace (findWord test width) eA encBits := by
   have hp := ComputableTidilyInPolyTime.fst eA (encPair encNat encBits)
   have hr := ComputableTidilyInPolyTime.snd eA (encPair encNat encBits)
-  have htest := ht.comp (.of_polyTime (hp.prod hr.snd'))
+  have htest := ht.comp (.of_tidyPolyTime (hp.prod hr.snd'))
   have hword := word_computable (hw.comp hp) hr.fst'
-  have hstep := htest.ite (.of_polyTime hr.snd') (.of_polyTime hword)
+  have hstep := htest.ite (.of_tidyPolyTime hr.snd') (.of_tidyPolyTime hword)
   have hi := word_computable hw (ComputableTidilyInPolyTime.const 0)
   exact TidyBoundedFold.evaluator_spec hstep
-    (ComputableTidilyInPolyTime.binary_two_pow.comp hw) (.of_polyTime hi)
+    (ComputableTidilyInPolyTime.binary_two_pow.comp hw) (.of_tidyPolyTime hi)
     (selectBelow test width) (fun _ => rfl) (fun _ _ _ => rfl)
     (B := width) (by
       simpa only [encUnary_apply, List.length_replicate] using hw.polyBounded_length)
@@ -224,21 +224,21 @@ def guard (edge : List Bool → List Bool → Bool) (valid : List Bool → Bool)
 
 theorem guard_computable {α : Type} {eA : α ↪ List Bool}
     {edge : α → List Bool → List Bool → Bool} {valid : α → List Bool → Bool}
-    (he : ComputableTidilyInPolySpace
+    (he : ComputableInPolySpace
       (fun p : α × List Bool × List Bool => edge p.1 p.2.1 p.2.2)
       (encPair eA (encPair encBits encBits)) encBool)
-    (hv : ComputableTidilyInPolySpace (fun p : α × List Bool => valid p.1 p.2)
+    (hv : ComputableInPolySpace (fun p : α × List Bool => valid p.1 p.2)
       (encPair eA encBits) encBool) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun p : α × List Bool × List Bool => guard (edge p.1) (valid p.1) p.2.1 p.2.2)
       (encPair eA (encPair encBits encBits)) encBool := by
   have hp := ComputableTidilyInPolyTime.fst eA (encPair encBits encBits)
   have hr := ComputableTidilyInPolyTime.snd eA (encPair encBits encBits)
-  have hu := hv.comp (.of_polyTime (hp.prod hr.fst'))
-  have hv' := hv.comp (.of_polyTime (hp.prod hr.snd'))
-  have hf : ComputableTidilyInPolySpace (fun _ : α × List Bool × List Bool => false)
+  have hu := hv.comp (.of_tidyPolyTime (hp.prod hr.fst'))
+  have hv' := hv.comp (.of_tidyPolyTime (hp.prod hr.snd'))
+  have hf : ComputableInPolySpace (fun _ : α × List Bool × List Bool => false)
       (encPair eA (encPair encBits encBits)) encBool :=
-    .of_polyTime (ComputableTidilyInPolyTime.const false)
+    .of_tidyPolyTime (ComputableTidilyInPolyTime.const false)
   have h := hu.ite (hv'.ite he hf) hf
   exact h.congr fun p => by
     cases h₁ : valid p.1 p.2.1 <;> cases h₂ : valid p.1 p.2.2 <;> simp [guard, h₁, h₂]
@@ -253,26 +253,26 @@ def Reachable (edge : List Bool → List Bool → Bool) (valid : List Bool → B
 theorem reachable_computable {α : Type} {eA : α ↪ List Bool}
     {edge : α → List Bool → List Bool → Bool} {valid : α → List Bool → Bool}
     {width : α → ℕ} {src dst : α → List Bool}
-    (he : ComputableTidilyInPolySpace
+    (he : ComputableInPolySpace
       (fun p : α × List Bool × List Bool => edge p.1 p.2.1 p.2.2)
       (encPair eA (encPair encBits encBits)) encBool)
-    (hv : ComputableTidilyInPolySpace (fun p : α × List Bool => valid p.1 p.2)
+    (hv : ComputableInPolySpace (fun p : α × List Bool => valid p.1 p.2)
       (encPair eA encBits) encBool)
     (hw : ComputableTidilyInPolyTime width eA encUnary)
-    (hs : ComputableTidilyInPolySpace src eA encBits)
-    (hd : ComputableTidilyInPolySpace dst eA encBits)
+    (hs : ComputableInPolySpace src eA encBits)
+    (hd : ComputableInPolySpace dst eA encBits)
     (hsrc : ∀ c, (src c).length = width c) (hdst : ∀ c, (dst c).length = width c) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun c => decide (Reachable (edge c) (valid c) (width c) (src c) (dst c))) eA encBool := by
-  have hi : ComputableTidilyInPolySpace (id : α → α) eA eA := .id'
-  have hw' := ComputableTidilyInPolySpace.of_polyTime hw
+  have hi : ComputableInPolySpace (id : α → α) eA eA := .id'
+  have hw' := ComputableInPolySpace.of_tidyPolyTime hw
   have hargs := hi.prod (hw'.prod (hw'.prod (hs.prod hd)))
   have hr := savitch_computable_polySpace (edge := fun c => guard (edge c) (valid c))
     (guard_computable he hv) hargs hsrc hdst
   have hU := hv.comp (hi.prod hs)
   have hV := hv.comp (hi.prod hd)
-  have hf : ComputableTidilyInPolySpace (fun _ : α => false) eA encBool :=
-    .of_polyTime (ComputableTidilyInPolyTime.const false)
+  have hf : ComputableInPolySpace (fun _ : α => false) eA encBool :=
+    .of_tidyPolyTime (ComputableTidilyInPolyTime.const false)
   have h := hU.ite (hV.ite hr hf) hf
   refine h.congr fun c => Bool.eq_iff_iff.mpr ?_
   rw [decide_eq_true_eq]
@@ -291,13 +291,13 @@ on `edge` permits a polynomial-space algebraic adjacency routine. -/
 theorem connected_computable {α : Type} [Inhabited α] {eA : α ↪ List Bool}
     {edge : α → List Bool → List Bool → Bool} {valid : α → List Bool → Bool}
     {width : α → ℕ}
-    (he : ComputableTidilyInPolySpace
+    (he : ComputableInPolySpace
       (fun p : α × List Bool × List Bool => edge p.1 p.2.1 p.2.2)
       (encPair eA (encPair encBits encBits)) encBool)
-    (hv : ComputableTidilyInPolySpace (fun p : α × List Bool => valid p.1 p.2)
+    (hv : ComputableInPolySpace (fun p : α × List Bool => valid p.1 p.2)
       (encPair eA encBits) encBool)
     (hw : ComputableTidilyInPolyTime width eA encUnary) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun c => decide (Connected (edge c) (valid c) (width c))) eA encBool := by
   -- Enumerate normalized counter words, so every Savitch call has the right width.
   let packet := encPair eA (encPair encNat encNat)
@@ -309,18 +309,18 @@ theorem connected_computable {α : Type} [Inhabited α] {eA : α ↪ List Bool}
   have hv' := word_computable hW hj
   have hargs := hp.prod (hW.prod (hW.prod (hu.prod hv')))
   have hs := savitch_computable_polySpace (edge := fun c => guard (edge c) (valid c))
-    (guard_computable he hv) (.of_polyTime hargs)
+    (guard_computable he hv) (.of_tidyPolyTime hargs)
     (fun p => length_word _ _) (fun p => length_word _ _)
-  have hU := hv.comp (.of_polyTime (hp.prod hu))
-  have hV := hv.comp (.of_polyTime (hp.prod hv'))
+  have hU := hv.comp (.of_tidyPolyTime (hp.prod hu))
+  have hV := hv.comp (.of_tidyPolyTime (hp.prod hv'))
   let test := fun p : α × ℕ × ℕ =>
     if valid p.1 (word (width p.1) p.2.1) && valid p.1 (word (width p.1) p.2.2) then
       savitch (guard (edge p.1) (valid p.1)) (width p.1) (width p.1)
         (word (width p.1) p.2.1) (word (width p.1) p.2.2)
     else true
-  have ht : ComputableTidilyInPolySpace test packet encBool := by
-    have h := hU.ite (hV.ite hs (.of_polyTime (ComputableTidilyInPolyTime.const true)))
-      (.of_polyTime (ComputableTidilyInPolyTime.const true))
+  have ht : ComputableInPolySpace test packet encBool := by
+    have h := hU.ite (hV.ite hs (.of_tidyPolyTime (ComputableTidilyInPolyTime.const true)))
+      (.of_tidyPolyTime (ComputableTidilyInPolyTime.const true))
     exact h.congr fun p => by
       cases h₁ : valid p.1 (word (width p.1) p.2.1) <;>
         cases h₂ : valid p.1 (word (width p.1) p.2.2) <;> simp [test, h₁, h₂]
@@ -332,7 +332,7 @@ theorem connected_computable {α : Type} [Inhabited α] {eA : α ↪ List Bool}
     (ComputableTidilyInPolyTime.fst (encPair eA encNat) encNat).fst'.prod
       ((ComputableTidilyInPolyTime.fst (encPair eA encNat) encNat).snd'.prod
         (ComputableTidilyInPolyTime.snd (encPair eA encNat) encNat))
-  have hinner := forall_below_computable (ht.comp (.of_polyTime hswap))
+  have hinner := forall_below_computable (ht.comp (.of_tidyPolyTime hswap))
     (hcount.comp (ComputableTidilyInPolyTime.fst eA encNat))
   have houter := forall_below_computable hinner hcount
   refine houter.congr fun c => Bool.eq_iff_iff.mpr ?_

@@ -119,7 +119,7 @@ theorem exists_limit (p : Polynomial (Polynomial ℝ)) (hp : p ≠ 0)
     (hzero : ∀ᶠ t in 𝓝[>] (0 : ℝ), value p t (f t) = 0) :
     ∃ x ∈ K, Tendsto f (𝓝[>] (0 : ℝ)) (𝓝 x) ∧
       p.trailingCoeff.eval x = 0 := by
-  have htc : p.trailingCoeff ≠ 0 := Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hp
+  have htc : p.trailingCoeff ≠ 0 := Polynomial.trailingCoeff_ne_zero.mpr hp
   have hroots : {x : ℝ | p.trailingCoeff.eval x = 0}.Finite :=
     Polynomial.finite_setOfPred_isRoot htc
   have hfinite : {x | MapClusterPt x (𝓝[>] (0 : ℝ)) f}.Finite :=

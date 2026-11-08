@@ -62,7 +62,7 @@ lemma exceptional_ne_zero (p : Fin n → Polynomial Base) (q : κ → MvPolynomi
     exact Polynomial.ne_zero_of_natDegree_gt (hp i)
   · apply Finset.prod_ne_zero_iff.mpr
     intro k _
-    exact Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (IntegerGridValueCertificate.ne_zero p (q k) hp)
+    exact Polynomial.trailingCoeff_ne_zero.mpr (IntegerGridValueCertificate.ne_zero p (q k) hp)
 
 lemma exceptional_degree_le (p : Fin n → Polynomial Base) (q : κ → MvPolynomial (Fin n) Base)
     (E : ℕ) (hp : ∀ i k, ((p i).coeff k).natDegree ≤ E)

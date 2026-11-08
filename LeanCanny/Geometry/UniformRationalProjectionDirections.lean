@@ -49,7 +49,7 @@ theorem exists_rational_direction_avoiding_levels (base : ι) (v : ι → ℝ) (
     exact hz
   have hsign := hs alpha hp hl
   rw [hz', sign_zero] at hsign
-  exact (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hr) (sign_eq_zero_iff.mp hsign.symm)
+  exact (Polynomial.trailingCoeff_ne_zero.mpr hr) (sign_eq_zero_iff.mp hsign.symm)
 
 theorem exists_common_rational_extended_direction_near {σ : Type*} [Fintype σ]
     (p : σ → MvPolynomial ι ℝ) (base : ι)

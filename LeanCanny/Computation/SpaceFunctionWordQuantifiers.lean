@@ -20,8 +20,8 @@ theorem forall_words {test : List Bool → List Bool} {width : List Bool → ℕ
   have hu := ComputableTidilyInPolyTime.snd encBits encBits
   have hq := pair_computable hp hu
   have he := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).computable
-  have hc := (ComputableTidilyInPolySpace.of_polyTime he).comp
-    (ht.computable.comp (.of_polyTime hq))
+  have hc := (ComputableInPolySpace.of_tidyPolyTime he).comp
+    (ht.computable.comp (.of_tidyPolyTime hq))
   have hall := ImplicitGraph.forall_words_computable hc hw
   let L : Language := {c | ∀ w : List Bool, w.length = width c → test (pair c w) = [true]}
   have hd : SpaceDecider L := SpaceDecider.of_computable hall (fun c => by

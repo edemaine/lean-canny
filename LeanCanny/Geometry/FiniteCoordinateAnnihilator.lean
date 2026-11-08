@@ -59,7 +59,7 @@ theorem exists_bounded (q : MvPolynomial (Fin n) ℤ) (D : ℕ)
         p.eval₂ (Int.castRingHom ℝ) (x i) = 0 := by
   obtain ⟨H, hH, _hs, ht, hm, hann⟩ :=
     CoerciveCoordinateEliminant.exists_annihilator q D hD i
-  refine ⟨H.trailingCoeff, Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hH,
+  refine ⟨H.trailingCoeff, Polynomial.trailingCoeff_ne_zero.mpr hH,
     ht _, (NestedMass.coeff_le H H.natTrailingDegree).trans hm, ?_⟩
   intro x hx
   apply trailingCoeff_eval_eq_zero (q.map (Int.castRingHom ℝ)) D i H

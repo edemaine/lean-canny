@@ -75,7 +75,7 @@ theorem ne_zero (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCertificate F)
     (u : List Bool) (a : ℝ)
     (ha : SymbolicScaledSquarefree.scalarEvaluation a (FlatAffineHeightSlabExceptional.polynomial F height u) = 0) :
     (polynomial F height index (FlatAffineEndpointPreparation.record F height u)).trailingCoeff ≠ 0 :=
-  Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (FlatAffineEndpointValues.ne_zero F hcone height index u a ha)
+  Polynomial.trailingCoeff_ne_zero.mpr (FlatAffineEndpointValues.ne_zero F hcone height index u a ha)
 
 theorem degree_le (F : Inputs) (height : (u : List Bool) → Fin (count F u))
     (index : (r : List Bool) → Fin (count F (pairFst r))) (r : List Bool) :

@@ -33,10 +33,10 @@ theorem certificates (left right post : List Bool → List Bool) (hl : left ∈ 
     (controller left right post).Certificates (encQ := encBits) (encS := RecursiveFold.encState) := by
   have H := TwoCall.certificates left (fun _ => []) post hl (constFn_mem_FP []) hp
   refine { H with query := ?_ }
-  change ComputableTidilyInPolySpace
+  change ComputableInPolySpace
     (fun s : RecursiveFold.State => if s.2.1 = 0 then left s.1 else right (pair s.1 s.2.2)) RecursiveFold.encState encBits
-  have HQ := ComputableTidilyInPolySpace.of_polyTime (FP.computable (queryPacket_FP left right hl hr))
-  have HB := ComputableTidilyInPolySpace.of_polyTime BoundedFold.packet_polyTime
+  have HQ := ComputableInPolySpace.of_tidyPolyTime (FP.computable (queryPacket_FP left right hl hr))
+  have HB := ComputableInPolySpace.of_tidyPolyTime BoundedFold.packet_polyTime
   have HE := HQ.comp HB
   simpa only [controller, query, RecursiveFold.encState, TidyBoundedFold.encPacket, queryPacket, BoundedFold.counter_packet, BoundedFold.accumulator_packet, BoundedFold.context_packet,
     BinaryNatCode.encode, Nat.fromBitsLE_bits] using HE

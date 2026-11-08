@@ -35,24 +35,24 @@ theorem decider {P : Readers} (h : P.PolyTime) {Q : BivariateQueryProductBits.Fa
   have hp := ComputableTidilyInPolyTime.fst encBits (encPair encBits encBits)
   have hr := ComputableTidilyInPolyTime.snd encBits (encPair encBits encBits)
   have he := (edge_computable h A ha S B).comp
-    (.of_polyTime (((FP.computable pairFst_mem_FP).comp hp).prod hr))
+    (.of_tidyPolyTime (((FP.computable pairFst_mem_FP).comp hp).prod hr))
   have hq := ComputableTidilyInPolyTime.fst encBits encBits
   have ht := ComputableTidilyInPolyTime.snd encBits encBits
   have hv := (vertex_computable h A ha S B).comp
-    (.of_polyTime (((FP.computable pairFst_mem_FP).comp hq).prod ht))
+    (.of_tidyPolyTime (((FP.computable pairFst_mem_FP).comp hq).prod ht))
   have hw : UnaryFn (fun q => labelWidth Q (pairFst q)) := (labelWidth_unary A).comp pairFst_mem_FP
   have hl : leftWord ∈ FP := mem_FP_comp pairSnd_mem_FP pairFst_mem_FP
   have hd : rightWord ∈ FP := mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP
   have hs := ImplicitGraph.word_computable hw (BinaryFn.fromBits hl)
   have ht' := ImplicitGraph.word_computable hw (BinaryFn.fromBits hd)
   have G := ImplicitGraph.reachable_computable (edge := fun q => edge P Q S (pairFst q))
-    (valid := fun q => vertex P Q S (pairFst q)) he hv hw (.of_polyTime hs) (.of_polyTime ht')
+    (valid := fun q => vertex P Q S (pairFst q)) he hv hw (.of_tidyPolyTime hs) (.of_tidyPolyTime ht')
     (fun _ => ImplicitGraph.length_word _ _) (fun _ => ImplicitGraph.length_word _ _)
   have HG := (FPPred.eq (UnaryFn.length hl) hw).and (FPPred.eq (UnaryFn.length hd) hw)
-  have F : ComputableTidilyInPolySpace (fun _ : List Bool => false) encBits encBool :=
-    .of_polyTime (ComputableTidilyInPolyTime.const false)
+  have F : ComputableInPolySpace (fun _ : List Bool => false) encBits encBool :=
+    .of_tidyPolyTime (ComputableTidilyInPolyTime.const false)
   have D := (valid_decider h ha).precompose pairFst pairFst_mem_FP
-  apply SpaceDecider.of_computable (D.computable.ite ((ComputableTidilyInPolySpace.of_polyTime HG.computable).ite G F) F)
+  apply SpaceDecider.of_computable (D.computable.ite ((ComputableInPolySpace.of_tidyPolyTime HG.computable).ite G F) F)
   intro q
   by_cases hu : pairFst q ∈ valid P
   · by_cases hwidth : (leftWord q).length = labelWidth Q (pairFst q) ∧ (rightWord q).length = labelWidth Q (pairFst q)

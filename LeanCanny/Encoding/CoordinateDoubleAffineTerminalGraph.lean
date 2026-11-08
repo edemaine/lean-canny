@@ -46,23 +46,23 @@ theorem valid_computable {P : BoundedFullWriter.Readers} (hP : P.PolyTime)
     {depth objective : List Bool → ℕ} {level : List Bool → List Bool}
     (hd : UnaryFn depth) (ho : UnaryFn objective) (hl : SpaceFunction level)
     (hA : ∀ u, (LeanCanny.ETR.TermView.term (P.source u)).arity ≤ P.dim u) :
-    ComputableTidilyInPolySpace (fun p : List Bool × List Bool => valid P depth objective level p.1 p.2)
+    ComputableInPolySpace (fun p : List Bool × List Bool => valid P depth objective level p.1 p.2)
       (encPair encBits encBits) encBool := by
   have D := (FlatAffineCompleteChildLabels.decider (CoordinateDoubleAffinePrefix.access hP hd ho hl hA)
     (CoordinateDoubleAffineSliceRegularity.cone P depth objective level)).precompose FlatAffineSliceRegularity.query FlatAffineSliceRegularity.query_FP
-  exact D.computable.comp (.of_polyTime (pair_computable
+  exact D.computable.comp (.of_tidyPolyTime (pair_computable
     (ComputableTidilyInPolyTime.fst encBits encBits) (ComputableTidilyInPolyTime.snd encBits encBits)))
 
 theorem edge_computable {P : BoundedFullWriter.Readers} (hP : P.PolyTime)
     {depth objective : List Bool → ℕ} {level : List Bool → List Bool}
     (hd : UnaryFn depth) (ho : UnaryFn objective) (hl : SpaceFunction level)
     (hA : ∀ u, (LeanCanny.ETR.TermView.term (P.source u)).arity ≤ P.dim u) :
-    ComputableTidilyInPolySpace (fun p : List Bool × List Bool × List Bool => edge P depth objective level p.1 p.2.1 p.2.2)
+    ComputableInPolySpace (fun p : List Bool × List Bool × List Bool => edge P depth objective level p.1 p.2.1 p.2.2)
       (encPair encBits (encPair encBits encBits)) encBool := by
   have C := ComputableTidilyInPolyTime.fst encBits (encPair encBits encBits)
   have R := ComputableTidilyInPolyTime.snd encBits (encPair encBits encBits)
   exact (LeanCanny.Connectivity.CoordinateDoubleAffineTerminalReachability.decider hP hd ho hl hA).computable.comp
-    (.of_polyTime (pair_computable C (pair_computable R.fst' R.snd')))
+    (.of_tidyPolyTime (pair_computable C (pair_computable R.fst' R.snd')))
 
 noncomputable def width (P : BoundedFullWriter.Readers) (depth objective : List Bool → ℕ) (level : List Bool → List Bool) :=
   FlatAffineSliceRegularity.width (inputs P depth objective level) (CoordinateDoubleAffineSliceRegularity.cone P depth objective level)

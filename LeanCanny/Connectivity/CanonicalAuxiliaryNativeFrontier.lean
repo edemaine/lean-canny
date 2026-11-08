@@ -46,16 +46,16 @@ theorem evaluator:SpaceFunction (fun q=>[decide (Holds q)]):=by
       (IntegralPolynomialWindowTarskiDecision.flag_or _ _ EQ (IntegralPolynomialWindowTarskiDecision.flag_or _ _ EF EB)))
 
 include D in
-theorem edge_computable:ComputableTidilyInPolySpace
+theorem edge_computable:ComputableInPolySpace
     (fun p:List Bool×List Bool×List Bool=>edge p.1 p.2.1 p.2.2)
     (encPair encBits (encPair encBits encBits)) encBool:=by
   have EQ:=pair_computable (ComputableTidilyInPolyTime.fst encBits (encPair encBits encBits))
     (pair_computable (ComputableTidilyInPolyTime.snd encBits (encPair encBits encBits)).fst'
       (ComputableTidilyInPolyTime.snd encBits (encPair encBits encBits)).snd')
-  have E:=(evaluator D).computable.comp (.of_polyTime EQ)
-  obtain ⟨T,S,hS,h⟩:=E
-  exact ⟨T,S,hS,h.of_enc_eq (fun p=>rfl)⟩
-theorem valid_computable:ComputableTidilyInPolySpace
+  have E:=(evaluator D).computable.comp (.of_tidyPolyTime EQ)
+  obtain ⟨S,hS,h⟩:=E.exists_inSpace
+  exact .of_inSpace hS (h.of_enc_eq (fun p=>rfl))
+theorem valid_computable:ComputableInPolySpace
     (fun p:List Bool×List Bool=>valid p.1 p.2) (encPair encBits encBits) encBool:=
   CanonicalAuxiliaryBitFrontier.vertex_computable
 theorem width_unary:UnaryFn width:=CanonicalAuxiliaryCandidateCover.tagWidth_unary

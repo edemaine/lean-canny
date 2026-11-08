@@ -15,15 +15,15 @@ attribute [local irreducible] CanonicalAuxiliaryNativeFrontier.edge
 
 variable (D:SpaceDecider FormulaSignSlotRadialGuardedFeasibility.language)
 include D in
-theorem edges_reindex (f:List Bool→List Bool) (hf:f∈FP):ComputableTidilyInPolySpace
+theorem edges_reindex (f:List Bool→List Bool) (hf:f∈FP):ComputableInPolySpace
     (fun p:List Bool×List Bool×List Bool=>CanonicalAuxiliaryNativeFrontier.edge (f p.1) p.2.1 p.2.2)
     (encPair encBits (encPair encBits encBits)) encBool:=by
   have E:=CanonicalAuxiliaryNativeFrontier.edge_computable D
   have HP:=ComputableTidilyInPolyTime.fst encBits (encPair encBits encBits)
   have HS:=ComputableTidilyInPolyTime.snd encBits (encPair encBits encBits)
-  exact E.comp (.of_polyTime ((hf.comp HP).prod (HS.fst'.prod HS.snd')))
+  exact E.comp (.of_tidyPolyTime ((hf.comp HP).prod (HS.fst'.prod HS.snd')))
 include D in
-theorem connected_computable:ComputableTidilyInPolySpace
+theorem connected_computable:ComputableInPolySpace
     (fun c=>decide (ImplicitGraph.Connected (CanonicalAuxiliaryNativeFrontier.edge c)
       (CanonicalAuxiliaryNativeFrontier.valid c) (CanonicalAuxiliaryNativeFrontier.width c))) encBits encBool:=
   ImplicitGraph.connected_computable (CanonicalAuxiliaryNativeFrontier.edge_computable D)
@@ -41,16 +41,16 @@ theorem source_FP:source∈FP:=ImplicitGraph.word_computable width_unary
 theorem target_FP:target∈FP:=ImplicitGraph.word_computable width_unary
   (BinaryFn.fromBits (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP))
 include D in
-theorem reachable_computable:ComputableTidilyInPolySpace (fun q=>decide (Reachable q)) encBits encBool:=by
+theorem reachable_computable:ComputableInPolySpace (fun q=>decide (Reachable q)) encBits encBool:=by
   have HP:=ComputableTidilyInPolyTime.fst encBits encBits
   have HS:=ComputableTidilyInPolyTime.snd encBits encBits
-  have HV:=CanonicalAuxiliaryNativeFrontier.valid_computable.comp (.of_polyTime ((pairFst_mem_FP.comp HP).prod HS))
+  have HV:=CanonicalAuxiliaryNativeFrontier.valid_computable.comp (.of_tidyPolyTime ((pairFst_mem_FP.comp HP).prod HS))
   exact ImplicitGraph.reachable_computable (edges_reindex D pairFst pairFst_mem_FP) HV width_unary
-    (.of_polyTime source_FP) (.of_polyTime target_FP) (fun q=>ImplicitGraph.length_word _ _) (fun q=>ImplicitGraph.length_word _ _)
+    (.of_tidyPolyTime source_FP) (.of_tidyPolyTime target_FP) (fun q=>ImplicitGraph.length_word _ _) (fun q=>ImplicitGraph.length_word _ _)
 include D in
 theorem evaluator:SpaceFunction (fun q=>[decide (Reachable q)]):=by
-  obtain ⟨T,S,hS,h⟩:=reachable_computable D
-  exact ⟨T,S,hS,h.of_enc_eq (fun q=>rfl)⟩
+  obtain ⟨S,hS,h⟩:=(reachable_computable D).exists_inSpace
+  exact ⟨.of_inSpace hS (h.of_enc_eq (fun q=>rfl))⟩
 
 theorem reachable_packet (c a b:List Bool) (ha:a.length=CanonicalAuxiliaryNativeFrontier.width c)
     (hb:b.length=CanonicalAuxiliaryNativeFrontier.width c):Reachable (pair c (pair a b)) ↔

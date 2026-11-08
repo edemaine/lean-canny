@@ -33,14 +33,14 @@ noncomputable def record (source : List Bool → List Bool) (dim degree exponent
 theorem test_computable {source : List Bool → List Bool} {dim degree exponent : List Bool → ℕ}
     {a : List Bool → ℤ} (ht : source ∈ FP) (hd : UnaryFn dim) (hN : BinaryFn degree) (hE : BinaryFn exponent)
     (ha : (fun c => (Term.const (a c)).toData.toBits) ∈ FP) :
-    ComputableTidilyInPolySpace (test source dim degree exponent a) (encPair encBits encBits) encBool := by
+    ComputableInPolySpace (test source dim degree exponent a) (encPair encBits encBits) encBool := by
   have hcheck := FermatValidity.evaluator (mem_FP_comp pairFst_mem_FP ht) pairSnd_mem_FP
     (UnaryFn.comp hd pairFst_mem_FP) (hN.comp (FP.computable pairFst_mem_FP))
     (hE.comp (FP.computable pairFst_mem_FP)) (mem_FP_comp pairFst_mem_FP ha)
   have hpacket := pair_computable (ComputableTidilyInPolyTime.fst encBits encBits)
     (ComputableTidilyInPolyTime.snd encBits encBits)
   have heq := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).computable
-  have h := (ComputableTidilyInPolySpace.of_polyTime heq).comp (hcheck.computable.comp (.of_polyTime hpacket))
+  have h := (ComputableInPolySpace.of_tidyPolyTime heq).comp (hcheck.computable.comp (.of_tidyPolyTime hpacket))
   apply h.congr
   intro p
   apply Bool.eq_iff_iff.mpr

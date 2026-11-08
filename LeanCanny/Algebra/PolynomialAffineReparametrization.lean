@@ -67,7 +67,7 @@ theorem preserves_lowest (p : Polynomial R) (n : ℕ) (hp : p.natDegree ≤ n) :
     coefficient_of_zero_prefix p n _ hp ht (fun _ hi => Polynomial.coeff_eq_zero_of_lt_natTrailingDegree hi)
   have hcn : (transform p n).coeff p.natTrailingDegree ≠ 0 := by
     rw [hc]
-    exact Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hzero
+    exact Polynomial.trailingCoeff_ne_zero.mpr hzero
   have hpn : transform p n ≠ 0 := by
     intro hz
     exact hcn (by rw [hz, Polynomial.coeff_zero])

@@ -16,22 +16,22 @@ open RecursiveStack Turing.MultiTapeTM
 variable {Q S : Type} {encQ : Q ↪ List Bool} {encS : S ↪ List Bool} (C : Controller Q S)
 
 structure Certificates : Prop where
-  initial : ComputableTidilyInPolySpace C.initial encQ encS
-  halted : ComputableTidilyInPolySpace C.halted encS encBool
-  output : ComputableTidilyInPolySpace C.output encS encBits
-  needs : ComputableTidilyInPolySpace C.needs encS encBool
-  query : ComputableTidilyInPolySpace C.query encS encQ
-  advance : ComputableTidilyInPolySpace C.advance encS encS
-  resume : ComputableTidilyInPolySpace C.resume (encPair encS encBits) encS
+  initial : ComputableInPolySpace C.initial encQ encS
+  halted : ComputableInPolySpace C.halted encS encBool
+  output : ComputableInPolySpace C.output encS encBits
+  needs : ComputableInPolySpace C.needs encS encBool
+  query : ComputableInPolySpace C.query encS encQ
+  advance : ComputableInPolySpace C.advance encS encS
+  resume : ComputableInPolySpace C.resume (encPair encS encBits) encS
 
 theorem instruction_computable (hC : C.Certificates (encQ := encQ) (encS := encS)) :
-    ComputableTidilyInPolySpace C.instruction (encPair encQ encS) (encAction (encPair encQ encS)) := by
+    ComputableInPolySpace C.instruction (encPair encQ encS) (encAction (encPair encQ encS)) := by
   rcases hC with ⟨hi, hh, ho, hn, hq, ha, hr⟩
   unfold instruction Action.done Action.call Action.next
   fun_prop (config := { maxSteps := 256 })
 
 theorem receive_computable (hC : C.Certificates (encQ := encQ) (encS := encS)) :
-    ComputableTidilyInPolySpace C.receive (encPair (encPair encQ encS) encBits) (encPair encQ encS) := by
+    ComputableInPolySpace C.receive (encPair (encPair encQ encS) encBits) (encPair encQ encS) := by
   have hr := hC.resume
   unfold receive
   fun_prop
@@ -56,9 +56,9 @@ theorem evaluator [Inhabited Q] [Inhabited S]
     (hstate : ∀ root q, tasks root q → ∀ t ≤ budget q,
       (encS ((C.reference answer)^[t] (C.initial q))).length ≤ B root)
     (hanswer : ∀ root q, tasks root q → (answer q).length ≤ B root) :
-    ComputableTidilyInPolySpace answer encQ encBits := by
-  have hi : ComputableTidilyInPolySpace (fun q => (q, C.initial q)) encQ (encPair encQ encS) :=
-    ComputableTidilyInPolySpace.id'.prod hC.initial
+    ComputableInPolySpace answer encQ encBits := by
+  have hi : ComputableInPolySpace (fun q => (q, C.initial q)) encQ (encPair encQ encS) :=
+    ComputableInPolySpace.id'.prod hC.initial
   have hsize : PolyBounded (fun q => (encQ q).length) (fun q => 3 * B q + 1) :=
     ((PolyBounded.const 3).mul hB).add (PolyBounded.const 1)
   exact RecursiveStack.evaluator (F := Frame Q S) (encF := encPair encQ encS)

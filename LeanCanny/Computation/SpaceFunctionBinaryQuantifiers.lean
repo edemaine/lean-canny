@@ -26,8 +26,8 @@ theorem forall_binary {test : List Bool → List Bool} {count : List Bool → �
   have hk := ComputableTidilyInPolyTime.snd encBits encNat
   have hq := pair_computable hp (natBits_computable.comp hk)
   have he := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).computable
-  have hc := (ComputableTidilyInPolySpace.of_polyTime he).comp
-    (ht.computable.comp (.of_polyTime hq))
+  have hc := (ComputableInPolySpace.of_tidyPolyTime he).comp
+    (ht.computable.comp (.of_tidyPolyTime hq))
   have hall := ImplicitGraph.forall_below_computable hc hn
   let L : Language := {c | ∀ k < count c, test (pair c (BinaryNatCode.encode k)) = [true]}
   have hd : SpaceDecider L := SpaceDecider.of_computable hall (fun c => by

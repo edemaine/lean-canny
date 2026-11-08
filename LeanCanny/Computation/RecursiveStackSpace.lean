@@ -26,9 +26,9 @@ The fuel is a logical progress measure, not an execution clock for either one. -
 theorem evaluator {α F : Type} [Inhabited F] {encIn : α ↪ List Bool} {encF : F ↪ List Bool}
     {localStep : F → Action F} {receive : F × List Bool → F} {start : α → F}
     {value : F → List Bool} {rank fuel : F → ℕ} {valid : α → F → Prop} {N R B : α → ℕ}
-    (hl : ComputableTidilyInPolySpace localStep encF (encAction encF))
-    (hr : ComputableTidilyInPolySpace receive (encPair encF encBits) encF)
-    (hs : ComputableTidilyInPolySpace start encIn encF)
+    (hl : ComputableInPolySpace localStep encF (encAction encF))
+    (hr : ComputableInPolySpace receive (encPair encF encBits) encF)
+    (hs : ComputableInPolySpace start encIn encF)
     (hN : ComputableTidilyInPolyTime N encIn encNat)
     (hR : ComputableTidilyInPolyTime R encIn encUnary)
     (hB : PolyBounded (fun x => (encIn x).length) B)
@@ -37,7 +37,7 @@ theorem evaluator {α F : Type} [Inhabited F] {encIn : α ↪ List Bool} {encF :
     (hrank : ∀ x p, valid x p → rank p ≤ R x)
     (hframe : ∀ x p, valid x p → (encF p).length ≤ B x)
     (hvalue : ∀ x p, valid x p → (value p).length ≤ B x) :
-    ComputableTidilyInPolySpace (fun x => value (start x)) encIn encBits := by
+    ComputableInPolySpace (fun x => value (start x)) encIn encBits := by
   have hcount : ComputableTidilyInPolyTime (fun x => (N x + 2) ^ (R x + 1)) encIn encNat :=
     ComputableTidilyInPolyTime.binary_pow'
       (ComputableTidilyInPolyTime.binary_add' hN (ComputableTidilyInPolyTime.const 2))
@@ -48,14 +48,14 @@ theorem evaluator {α F : Type} [Inhabited F] {encIn : α ↪ List Bool} {encF :
       (fun x => 5 + 4 * B x + R x * (2 * B x + 1)) :=
     ((PolyBounded.const 5).add ((PolyBounded.const 4).mul hB)).add
       (hRbound.mul (((PolyBounded.const 2).mul hB).add (PolyBounded.const 1)))
-  have hit := ComputableTidilyInPolySpace.iterate hcount (initial_computable hs)
+  have hit := ComputableInPolySpace.iterate hcount.computableInPolyTime (initial_computable hs)
     (step_computable encF hl hr) hsize (fun x k _ => by
       exact encoded_length_bound encF (hrank x) (hframe x) _
         (good_iterate (rules x) _ (good_initial _ _ _ _ _ (hstart x)) k)
         (output_length_iterate (rules x) (hvalue x) _ (hstart x) k))
   have hout : ComputableTidilyInPolyTime (fun s : State F => s.2.1) (encState encF) encBits := by
     fun_prop
-  refine ((ComputableTidilyInPolySpace.of_polyTime hout).comp hit).congr fun x => ?_
+  refine ((ComputableInPolySpace.of_tidyPolyTime hout).comp hit).congr fun x => ?_
   exact output_after (rules x) _ (good_initial _ _ _ _ _ (hstart x)) _
     (initial_potential_le (rules x) _ (hstart x) _ (hrank x _ (hstart x)))
 

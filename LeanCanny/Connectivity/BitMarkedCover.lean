@@ -59,12 +59,12 @@ variable {α : Type} [Inhabited α] {eA : α ↪ List Bool} {Y : α → Type*} [
 
 theorem marked_components_computable
     (hmarks : ∀ c (i : Vertex (width c)), marks c i.val = true ↔ ((covers c).piece i ∩ sets c).Nonempty)
-    (he : ComputableTidilyInPolySpace (fun p : α × List Bool × List Bool => edges p.1 p.2.1 p.2.2)
+    (he : ComputableInPolySpace (fun p : α × List Bool × List Bool => edges p.1 p.2.1 p.2.2)
       (encPair eA (encPair encBits encBits)) encBool)
-    (hv : ComputableTidilyInPolySpace (fun p : α × List Bool => valids p.1 p.2) (encPair eA encBits) encBool)
-    (hm : ComputableTidilyInPolySpace (fun p : α × List Bool => marks p.1 p.2) (encPair eA encBits) encBool)
+    (hv : ComputableInPolySpace (fun p : α × List Bool => valids p.1 p.2) (encPair eA encBits) encBool)
+    (hm : ComputableInPolySpace (fun p : α × List Bool => marks p.1 p.2) (encPair eA encBits) encBool)
     (hw : ComputableTidilyInPolyTime width eA encUnary) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun c => decide (∀ x ∈ sets c, ∀ y ∈ sets c, y ∈ connectedComponent x)) eA encBool := by
   apply (ImplicitGraph.marked_connected_computable he hv hm hw).congr
   intro c

@@ -36,7 +36,7 @@ theorem complete_exists (F : SampleFrame n S B D t ht) (ha : t.arity≤n)
         ∃ p : slice (polynomial n t) F.frozen F.parameters, p∈C ∧ L.parameters=p.val := by
     intro r
     induction r using Nat.strong_induction_on with
-    | h r ih =>
+    | ind r ih =>
       intro F hrem C hC x0 hx0
       by_cases hk : F.frozen<n
       · obtain ⟨b,hb,⟨W⟩⟩ := exists_cut F hk ha C hC x0 hx0

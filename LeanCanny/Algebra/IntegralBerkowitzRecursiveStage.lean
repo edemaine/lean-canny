@@ -39,7 +39,7 @@ theorem output_FP (S : Source) (a : Access S) : output S ∈ FP := by
 theorem certificates (S : Source) (a : Access S) (task : List Bool → List Bool) (ht : task ∈ FP) :
     (controller S a task).Certificates (encQ := encBits) (encS := encBits) := by
   obtain ⟨hi, hh, _ho, hn, hq, ha, hr⟩ := ModularRecursiveStage.certificates (powerAccess S a) (power_controls S a) task ht
-  exact ⟨hi, hh, .of_polyTime (FP.computable (output_FP S a)), hn, hq, ha, hr⟩
+  exact ⟨hi, hh, .of_tidyPolyTime (FP.computable (output_FP S a)), hn, hq, ha, hr⟩
 
 theorem reply_correct (S : Source) (_a : Access S) (task answer : List Bool → List Bool)
     (he : ∀ c (i j : Fin (powerDimension S c)), answer (task (pair c

@@ -141,12 +141,12 @@ noncomputable def record (P : Readers) : List Bool → List Bool :=
 
 theorem test_computable {P : Readers} (h : P.PolyTime)
     (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c) :
-    ComputableTidilyInPolySpace (test P) (encPair encBits encBits) encBool := by
+    ComputableInPolySpace (test P) (encPair encBits encBits) encBool := by
   have hc := check_evaluator (h.comp pairFst_mem_FP) pairSnd_mem_FP (fun p => ht (pairFst p))
   have hp := pair_computable (ComputableTidilyInPolyTime.fst encBits encBits)
     (ComputableTidilyInPolyTime.snd encBits encBits)
   have heq := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).computable
-  have he := (ComputableTidilyInPolySpace.of_polyTime heq).comp (hc.computable.comp (.of_polyTime hp))
+  have he := (ComputableInPolySpace.of_tidyPolyTime heq).comp (hc.computable.comp (.of_tidyPolyTime hp))
   apply he.congr
   intro p
   apply Bool.eq_iff_iff.mpr

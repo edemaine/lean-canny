@@ -91,7 +91,7 @@ theorem leading_roots_zero (H : MvPolynomial (Fin n) ℤ) (D : ℕ) (hD : 1 < D)
   have hs : ∀ m, ∀ hm : m < k, ∀ j : Variables n, z (rowEquiv n k (⟨m, hm⟩, j)) = 0 := by
     intro m
     induction m using Nat.strong_induction_on with
-    | h m ih =>
+    | ind m ih =>
       intro hm
       let t : Fin k := ⟨m, hm⟩
       have hb (r : Fin n) : (levelLinear t (b t r)).eval₂ (Int.castRingHom ℂ) z = 0 := by

@@ -28,15 +28,15 @@ theorem baseWidth_point (q : PointQuery) :
   rw [wholeFrame_point]
 
 theorem point_mem_PSPACE
-    (he : ComputableTidilyInPolySpace
+    (he : ComputableInPolySpace
       (fun p : List Bool×List Bool×List Bool=>edge p.1 p.2.1 p.2.2)
       (encPair encBits (encPair encBits encBits)) encBool) : pointLanguage∈PSPACE := by
   have HR:=ImplicitGraph.reachable_computable he valid_computable width_unary
-    (.of_polyTime source_computable) (.of_polyTime target_computable)
+    (.of_tidyPolyTime source_computable) (.of_tidyPolyTime target_computable)
     (fun c=>BitEndpointFrontier.source_length (baseWidth c))
     (fun c=>BitEndpointFrontier.target_length (baseWidth c))
-  have HP:=ComputableTidilyInPolySpace.of_polyTime Input.isPoint_fppred.computable
-  have HF : ComputableTidilyInPolySpace (fun _ : List Bool=>false) encBits encBool:=.of_polyTime (.const false)
+  have HP:=ComputableInPolySpace.of_tidyPolyTime Input.isPoint_fppred.computable
+  have HF : ComputableInPolySpace (fun _ : List Bool=>false) encBits encBool:=.of_tidyPolyTime (.const false)
   apply NativeSpace.of_computable (HP.ite HR HF)
   intro c
   by_cases hp : Input.IsPoint c

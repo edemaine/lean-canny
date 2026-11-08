@@ -20,7 +20,7 @@ open scoped Classical
 
 theorem SpaceDecider.union {L M : Language} (D : SpaceDecider L) (E : SpaceDecider M) :
     SpaceDecider (L ∪ M) := by
-  have ht := ComputableTidilyInPolySpace.of_polyTime
+  have ht := ComputableInPolySpace.of_tidyPolyTime
     (ComputableTidilyInPolyTime.const (encIn := encBits) (encMid := encBool) true)
   apply SpaceDecider.of_computable (D.computable.ite ht E.computable)
   intro x

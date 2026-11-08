@@ -364,7 +364,7 @@ private theorem regular_level (x : Unit → ℝ) (hx : p.eval x = 1) :
     have hs : x () ^ 2 = 1 := by simpa [p] using hx
     simp [p] at hh
     nlinarith
-  exact surjective_of_nonzero_of_finrank_eq_one (K := ℝ) (by simp)
+  exact surjective_of_ne_zero_of_finrank_eq_one (K := ℝ) (by simp)
     (fun h => hne (ContinuousLinearMap.coe_injective h))
 
 -- The global maximum of the projection is +1. A component-wise sampler
@@ -718,7 +718,7 @@ example {α : Type} [Inhabited α] {enc : α ↪ List Bool} {p s t : α → Form
     (hp : ComputableTidilyInPolyTime (fun a => (p a).encode) enc encBits)
     (hs : ComputableTidilyInPolyTime (fun a => (s a).encode) enc encBits)
     (ht : ComputableTidilyInPolyTime (fun a => (t a).encode) enc encBits) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun a => @decide (PointQuery.mk ⟨1, p a⟩ (s a) (t a)).Reachable (Classical.propDecidable _))
       enc encBool := OneDimension.point_computable hp hs ht
 
@@ -17517,16 +17517,16 @@ example : () ∉ globalCover.toFrontierCover.componentCover.piece
 
 -- Both native results are instantiated from the local constant routines;
 -- there is no assumed global edge or membership evaluator.
-example : ComputableTidilyInPolySpace
+example : ComputableInPolySpace
     (fun _ : List Bool => decide (IsPreconnected (univ : Set Unit))) encBits encBool := by
   apply connected_computable (n := fun _ => 1) (s := fun _ => 2) (w := fun _ => 0)
     (fun _ => height) (fun _ => cut) (fun _ => inner) (fun _ => touching)
     (fun _ => validLocal) (fun _ => localCover) (fun _ => touching_ok)
     (fun _ => continuous_height) (fun _ => strict_cuts) (fun _ => height_bound)
     (fun _ => by decide) (BinaryFn.const 1) (UnaryFn.const 2) (UnaryFn.const 0)
-  all_goals exact .of_polyTime (ComputableTidilyInPolyTime.const true)
+  all_goals exact .of_tidyPolyTime (ComputableTidilyInPolyTime.const true)
 
-example : ComputableTidilyInPolySpace
+example : ComputableInPolySpace
     (fun _ : List Bool => decide (() ∈ globalCover.toFrontierCover.componentCover.piece
       ⟨encode 2 2 [], by decide⟩)) encBits encBool := by
   apply component_membership_computable (n := fun _ => 1) (s := fun _ => 2) (w := fun _ => 0)
@@ -17534,13 +17534,13 @@ example : ComputableTidilyInPolySpace
     (fun _ => validLocal) (fun _ => localCover) (fun _ => touching_ok)
     (fun _ => continuous_height) (fun _ => strict_cuts) (fun _ => height_bound)
     (fun _ => by decide) (BinaryFn.const 1) (UnaryFn.const 2) (UnaryFn.const 0)
-    (.of_polyTime (ComputableTidilyInPolyTime.const true))
-    (.of_polyTime (ComputableTidilyInPolyTime.const true))
-    (.of_polyTime (ComputableTidilyInPolyTime.const true))
+    (.of_tidyPolyTime (ComputableTidilyInPolyTime.const true))
+    (.of_tidyPolyTime (ComputableTidilyInPolyTime.const true))
+    (.of_tidyPolyTime (ComputableTidilyInPolyTime.const true))
     (srcSlab := fun _ => 0) (srcWord := fun _ => [])
-    (.of_polyTime (ComputableTidilyInPolyTime.const (encode 2 2 [])))
-    (.of_polyTime (ComputableTidilyInPolyTime.const 0))
-    (.of_polyTime (ComputableTidilyInPolyTime.const []))
+    (.of_tidyPolyTime (ComputableTidilyInPolyTime.const (encode 2 2 [])))
+    (.of_tidyPolyTime (ComputableTidilyInPolyTime.const 0))
+    (.of_tidyPolyTime (ComputableTidilyInPolyTime.const []))
     (fun _ => by decide) (fun _ => by decide) (fun _ => rfl)
   intro _
   exact ⟨⟨(), fiber_mem 0⟩, trivial, rfl⟩
@@ -43275,12 +43275,12 @@ def allAllowed (_ _ : List Bool) : Prop := True
 theorem equality_decider : SpaceDecider (edgeLanguage equalityEdge) := by
   have H := stringEq_fppred (mem_FP_comp pairSnd_mem_FP pairFst_mem_FP)
     (mem_FP_comp pairSnd_mem_FP pairSnd_mem_FP)
-  apply SpaceDecider.of_computable (.of_polyTime H.computable)
+  apply SpaceDecider.of_computable (.of_tidyPolyTime H.computable)
   intro q
   simp only [edgeLanguage,equalityEdge,Set.mem_ofPred_eq,decide_eq_true_eq,Function.comp_apply]
 
 theorem allowed_decider : SpaceDecider (filterLanguage allAllowed) := by
-  apply SpaceDecider.of_computable (.of_polyTime
+  apply SpaceDecider.of_computable (.of_tidyPolyTime
     (ComputableTidilyInPolyTime.const (encIn:=encBits) (encMid:=encBool) true))
   intro q
   simp only [filterLanguage,allAllowed,Set.mem_ofPred_eq]
@@ -44556,7 +44556,7 @@ example : ¬(EndpointSingletonPieces.piece ⟨1,.not .falsum⟩ (.not .falsum)).
 example (v : List Bool→Bool) (s t : Bool) : BitEndpointFrontier.valid 0 v s t [false,true,false]=false := by
   simp [BitEndpointFrontier.valid,BitEndpointFrontier.IsOriginal,BitEndpointFrontier.source,BitEndpointFrontier.target]
 
-example : ComputableTidilyInPolySpace
+example : ComputableInPolySpace
     (fun p : List Bool×List Bool=>CanonicalEndpointNative.valid p.1 p.2)
     (Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
     Turing.MultiTapeTM.encBool:=CanonicalEndpointNative.valid_computable

@@ -26,16 +26,16 @@ variable (P : PairedScan.Program)
 
 theorem certificates (hc : BinaryFn P.count) (hl : SpaceFunction P.left) (hr : SpaceFunction P.right) :
     P.controller.Certificates (encQ := encBits) (encS := PairedScan.encState) := by
-  have hcount := ComputableTidilyInPolySpace.of_polyTime hc
+  have hcount := ComputableInPolySpace.of_tidyPolyTime hc
   have hleft := hl.computable
   have hright := hr.computable
   have hreply : ComputableTidilyInPolyTime reply encBits encBool :=
     (ComputableTidilyInPolyTime.decide_eq encBits).comp
       (ComputableTidilyInPolyTime.id'.prod (ComputableTidilyInPolyTime.const [true]))
-  have hbits : ComputableTidilyInPolySpace BinaryNatCode.encode encNat encBits :=
-    .of_polyTime natBits_computable
+  have hbits : ComputableInPolySpace BinaryNatCode.encode encNat encBits :=
+    .of_tidyPolyTime natBits_computable
   constructor
-  · change ComputableTidilyInPolySpace (fun q : List Bool => (q, 0, false, false, false)) _ _
+  · change ComputableInPolySpace (fun q : List Bool => (q, 0, false, false, false)) _ _
     fun_prop
   all_goals dsimp only [controller, PairedScan.encState, entry]
   all_goals fun_prop (config := { maxSteps := 512, maxTransitionDepth := 2 })

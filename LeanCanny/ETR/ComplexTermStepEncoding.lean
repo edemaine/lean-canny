@@ -109,7 +109,7 @@ def joinStep (multiply : Bool) (s : List Bool) : List Bool :=
 def HasTag (tag : ℕ) (bits : List Bool) : Prop := firstChild bits = (Codec.unary tag).toBits
 instance (tag : ℕ) (bits : List Bool) : Decidable (HasTag tag bits) := inferInstanceAs (Decidable (_ = _))
 
-@[program_certificate] theorem hasTag_fppred (tag : ℕ) : FPPred (HasTag tag) :=
+theorem hasTag_fppred (tag : ℕ) : FPPred (HasTag tag) :=
   stringEq_fppred firstChild_mem_FP (constFn_mem_FP _)
 
 def stepBits (s : List Bool) : List Bool :=

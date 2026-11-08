@@ -56,20 +56,20 @@ theorem degreeEvaluator (F : Family) (A : Readers F) (hne : ∀ c, F.polynomial 
   have hc := ComputableTidilyInPolyTime.fst encBits encNat
   have hi := ComputableTidilyInPolyTime.snd encBits encNat
   have hquery := pair_computable hc (natBits_computable.comp hi)
-  have hd0 := (ComputableTidilyInPolySpace.of_polyTime fromBitsLE_computable).comp
+  have hd0 := (ComputableInPolySpace.of_tidyPolyTime fromBitsLE_computable).comp
     (SeparableBits.scaledSquarefreeDegreeEvaluator F A hne).computable
-  have hd : ComputableTidilyInPolySpace
+  have hd : ComputableInPolySpace
       (fun c => (ScaledSquarefree.polynomial (F.polynomial c)).natDegree) encBits encNat :=
     hd0.congr fun c => Nat.fromBitsLE_bits _
-  have hleaf := hd.comp (ComputableTidilyInPolySpace.of_polyTime hquery)
+  have hleaf := hd.comp (ComputableInPolySpace.of_tidyPolyTime hquery)
   have hbound : BinaryFn (fun c => (D c + 1) ^ count c) := (hD.add (BinaryFn.const 1)).powUnary hn
   have hcount := ComputableTidilyInPolyTime.unary_to_binary.comp hn
   have hout := TidyBoundedFold.product_evaluator (factor := leafDegree F) hleaf hcount
     hbound.polyBounded_length (fun c k hk =>
       ComputableTidilyInO.length_encNat_mono ((degreeProduct_bound F count D hne hdegree c k hk).trans
         (Nat.pow_le_pow_right (by omega) hk)))
-  have hparam : ComputableTidilyInPolySpace (fun c => (parameter F count hne c).natDegree) encBits encNat :=
+  have hparam : ComputableInPolySpace (fun c => (parameter F count hne c).natDegree) encBits encNat :=
     hout.congr fun c => (parameter_degree F count hne c).symm
-  exact ⟨((ComputableTidilyInPolySpace.of_polyTime natBits_computable).comp hparam).congr fun _ => rfl⟩
+  exact ⟨((ComputableInPolySpace.of_tidyPolyTime natBits_computable).comp hparam).congr fun _ => rfl⟩
 
 end LeanCanny.Algebra.FiniteAnnihilatorBits

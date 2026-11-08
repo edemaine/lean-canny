@@ -96,7 +96,7 @@ theorem eval_level_ne_zero_real (p : MvPolynomial (Fin n) ℤ) (D W b : ℕ)
     (exponent n D W b) (mass_le p D W b hD hp) (by simp [exponent])
   intro hz
   rw [hz, sign_zero] at hs
-  exact (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (CriticalValueBounds.ne_zero p D W))
+  exact (Polynomial.trailingCoeff_ne_zero.mpr (CriticalValueBounds.ne_zero p D W))
     (sign_eq_zero_iff.mp hs.symm)
 
 theorem eval_level_ne_zero (p : MvPolynomial (Fin n) ℤ) (D W b : ℕ)

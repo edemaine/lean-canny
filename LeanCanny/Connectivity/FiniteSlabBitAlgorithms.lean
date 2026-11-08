@@ -40,13 +40,13 @@ variable {Y : List Bool → Type} [∀ c, TopologicalSpace (Y c)]
   (hbound : ∀ c x, p c x ∈ Icc (cut c 0) (cut c (n c + 1)))
   (hcap : ∀ c, n c + 1 ≤ 2 ^ s c)
   (hn : BinaryFn n) (hs : UnaryFn s) (hw : UnaryFn w)
-  (he : ComputableTidilyInPolySpace
+  (he : ComputableInPolySpace
     (fun q : List Bool × ℕ × List Bool × List Bool => localEdge q.1 q.2.1 q.2.2.1 q.2.2.2)
     (encPair encBits (encPair encNat (encPair encBits encBits))) encBool)
-  (hv : ComputableTidilyInPolySpace
+  (hv : ComputableInPolySpace
     (fun q : List Bool × ℕ × List Bool => localValid q.1 q.2.1 q.2.2)
     (encPair encBits (encPair encNat encBits)) encBool)
-  (ht : ComputableTidilyInPolySpace
+  (ht : ComputableInPolySpace
     (fun q : List Bool × ℕ × List Bool × List Bool => touch q.1 q.2.1 q.2.2.1 q.2.2.2)
     (encPair encBits (encPair encNat (encPair encBits encBits))) encBool)
 
@@ -57,7 +57,7 @@ include C htouch hp hcut hbound hcap hn hs hw he hv ht in
 /-- Native whole-space connectivity is obtained from the assembled geometric
 cover and its locally dispatched graph, rather than an assumed global test. -/
 theorem connected_computable :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun c => decide (IsPreconnected (univ : Set (Y c)))) encBits encBool := by
   classical
   exact BitPathCover.connected_computable B
@@ -69,16 +69,16 @@ include C htouch hp hcut hbound hcap hn hs hw he hv ht in
 component record. The component record itself may have an invalid slab tag. -/
 theorem component_membership_computable
     {label : List Bool → List Bool} {srcSlab : List Bool → ℕ} {srcWord : List Bool → List Bool}
-    (hl : ComputableTidilyInPolySpace label encBits encBits)
-    (hi : ComputableTidilyInPolySpace srcSlab encBits encNat)
-    (hu : ComputableTidilyInPolySpace srcWord encBits encBits)
+    (hl : ComputableInPolySpace label encBits encBits)
+    (hi : ComputableInPolySpace srcSlab encBits encNat)
+    (hu : ComputableInPolySpace srcWord encBits encBits)
     (hlabel : ∀ c, (label c).length = s c + w c)
     (hindex : ∀ c, srcSlab c < n c + 1)
     (hword : ∀ c, (srcWord c).length = w c)
     {x : (c : List Bool) → Y c}
     (hx : ∀ c, x c ∈ imagePiece (p c) (cut c) (localEdge c) (localValid c) (C c)
       ⟨srcSlab c, hindex c⟩ ⟨srcWord c, hword c⟩) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun c => decide (x c ∈ (B c).toFrontierCover.componentCover.piece
         ⟨label c, hlabel c⟩)) encBits encBool := by
   classical

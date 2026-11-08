@@ -82,7 +82,7 @@ Selected entry points:
 | Final decision | [`CoerciveInfinitesimalSemantics`](LeanCanny/ETR/CoerciveInfinitesimalSemantics.lean), [`CoercivePSPACE`](LeanCanny/ETR/CoercivePSPACE.lean) |
 
 [`SpaceFunction`](LeanCanny/Computation/SpaceFunction.lean) wraps
-Complexitylib's `ComputableTidilyInPolySpace`.
+Complexitylib's `ComputableInPolySpace`.
 [`SpaceDecider`](LeanCanny/Computation/SpaceDecider.lean) carries membership in
 its native PSPACE class. Polynomial-time reductions and all FP controls also
 use Complexitylib directly. Space composition charges the original readers;
@@ -175,11 +175,11 @@ Build the connectivity extension with `lake build LeanCannyConnectivity`.
 Import the formal abstract with `import LeanCanny.Abstract`, or build it with
 `lake build --wfail LeanCanny.Abstract`. It is also included in the default build.
 
-Complexitylib moved to `cslib-community/complexitylib` from its temporary
-`complexitylib2` repository. This project retains the checked revision
-`cb1b7ce8`; that revision still declares the Lake package `complexitylib2`.
-The dependency URLs use the canonical repository. Updating to the renamed
-`complexitylib` package also requires advancing the dependency pins.
+Dependencies are pinned to Complexitylib revision `9ab0bda6` and Lean
+`v4.36.0-rc2`, with matching CSLib and Mathlib revisions. The Lake package is
+`complexitylib`, from its canonical `cslib-community/complexitylib` repository.
+The build targets above require only their transitive dependency imports;
+they do not build Complexitylib's full library or result collection.
 
 For stricter verification:
 

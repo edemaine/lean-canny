@@ -95,9 +95,9 @@ private theorem guarded_decider {L : Language} (D : SpaceDecider L)
     {f : List Bool → ℕ} (hf : BinaryFn f) :
     SpaceDecider {q | coordinateValid P f (g q) ∧ q ∈ L} := by
   have H := (coordinateValid_pred h hf).comp hg
-  have F : ComputableTidilyInPolySpace (fun _ : List Bool => false) encBits encBool :=
-    .of_polyTime (ComputableTidilyInPolyTime.const false)
-  apply SpaceDecider.of_computable ((ComputableTidilyInPolySpace.of_polyTime H.computable).ite D.computable F)
+  have F : ComputableInPolySpace (fun _ : List Bool => false) encBits encBool :=
+    .of_tidyPolyTime (ComputableTidilyInPolyTime.const false)
+  apply SpaceDecider.of_computable ((ComputableInPolySpace.of_tidyPolyTime H.computable).ite D.computable F)
   intro q
   by_cases hq : coordinateValid P f (g q) <;>
     simp only [Set.mem_ofPred_eq, hq, true_and, false_and, decide_true, decide_false,

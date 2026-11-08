@@ -34,12 +34,12 @@ noncomputable def record (P : Readers) : List Bool → List Bool :=
   ImplicitGraph.findWord (test P) (fun c => (P.dim c + 3) * width (P.dim c + 2) (degree P c))
 
 theorem test_computable {P : Readers} (h : P.PolyTime) :
-    ComputableTidilyInPolySpace (test P) (encPair encBits encBits) encBool := by
+    ComputableInPolySpace (test P) (encPair encBits encBits) encBool := by
   have hc := BoundedValidity.evaluator (packet_polyTime h)
   have hp := pair_computable (ComputableTidilyInPolyTime.fst encBits encBits)
     (ComputableTidilyInPolyTime.snd encBits encBits)
   have heq := (stringEq_fppred id_mem_FP (constFn_mem_FP [true])).computable
-  have he := (ComputableTidilyInPolySpace.of_polyTime heq).comp (hc.computable.comp (.of_polyTime hp))
+  have he := (ComputableInPolySpace.of_tidyPolyTime heq).comp (hc.computable.comp (.of_tidyPolyTime hp))
   apply he.congr
   intro p
   apply Bool.eq_iff_iff.mpr

@@ -9,7 +9,7 @@ public import LeanCanny.Computation.NativeSpaceClosure
 
 /-! # Polynomial-space decision certificates
 
-The class and machine semantics are Complexitylib2's. A certificate carries only
+The class and machine semantics are Complexitylib's. A certificate carries only
 membership, with no separate transition system or execution clock.
 -/
 
@@ -28,12 +28,12 @@ structure SpaceDecider (L : LeanCanny.Language) : Prop where
 namespace SpaceDecider
 
 theorem of_computable {L : LeanCanny.Language} {f : List Bool → Bool}
-    (hf : ComputableTidilyInPolySpace f encBits encBool)
+    (hf : ComputableInPolySpace f encBits encBool)
     (hL : ∀ x, x ∈ L ↔ f x = true) : SpaceDecider L :=
   ⟨NativeSpace.of_computable hf hL⟩
 
 theorem computable {L : LeanCanny.Language} (D : SpaceDecider L) :
-    ComputableTidilyInPolySpace (fun x => @decide (x ∈ L) (Classical.propDecidable _))
+    ComputableInPolySpace (fun x => @decide (x ∈ L) (Classical.propDecidable _))
       encBits encBool := by
   classical
   obtain ⟨g, hspace, hL⟩ := NativeSpace.mem_iff.mp D.mem_PSPACE

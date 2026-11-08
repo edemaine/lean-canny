@@ -25,7 +25,7 @@ noncomputable def head (q : MvPolynomial (Fin n) ℤ) (D : ℕ) (i : Fin n) : Po
 
 theorem head_ne_zero (q : MvPolynomial (Fin n) ℤ) (D : ℕ) (hD : q.totalDegree ≤ D) (i : Fin n) :
     head q D i ≠ 0 :=
-  Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (CoerciveBoxGramEliminant.ne_zero q D hD i)
+  Polynomial.trailingCoeff_ne_zero.mpr (CoerciveBoxGramEliminant.ne_zero q D hD i)
 
 def grid (q : MvPolynomial (Fin n) ℤ) (D : ℕ) : Set (Fin n → ℝ) :=
   {x | ∀ i, (head q D i).eval₂ (Int.castRingHom ℝ) (x i) = 0}

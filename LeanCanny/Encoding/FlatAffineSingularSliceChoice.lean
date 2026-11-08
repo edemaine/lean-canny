@@ -35,7 +35,7 @@ theorem evaluator {F : Inputs} (h : F.Access) (cone : FlatAffinePowerPositive.Co
   have D := (FlatAffineSingularChildLabels.decider h cone).precompose FlatAffineSliceRegularity.query FlatAffineSliceRegularity.query_FP
   have P := pair_computable (Turing.MultiTapeTM.ComputableTidilyInPolyTime.fst Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
     (Turing.MultiTapeTM.ComputableTidilyInPolyTime.snd Turing.MultiTapeTM.encBits Turing.MultiTapeTM.encBits)
-  have E := D.computable.comp (Turing.MultiTapeTM.ComputableTidilyInPolySpace.of_polyTime P)
+  have E := D.computable.comp (Turing.MultiTapeTM.ComputableInPolySpace.of_tidyPolyTime P)
   exact ⟨ImplicitGraph.findWord_computable E (FlatAffineSliceRegularity.width_unary h cone)⟩
 
 theorem value_length (F : Inputs) (cone : FlatAffinePowerPositive.ConeCertificate (next F)) (q : List Bool) :

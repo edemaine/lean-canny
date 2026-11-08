@@ -26,7 +26,7 @@ theorem postprocess_certificates (C : Controller Q S) {encQ : Q ↪ List Bool} {
     (C.postprocess f).Certificates (encQ := encQ) (encS := encS) where
   initial := hC.initial
   halted := hC.halted
-  output := (ComputableTidilyInPolySpace.of_polyTime (FP.computable hf)).comp hC.output
+  output := (ComputableInPolySpace.of_tidyPolyTime (FP.computable hf)).comp hC.output
   needs := hC.needs
   query := hC.query
   advance := hC.advance

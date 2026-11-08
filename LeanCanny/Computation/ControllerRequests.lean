@@ -73,7 +73,7 @@ theorem evaluatorOfOrbits {encQ : Q ↪ List Bool} {encS : S ↪ List Bool}
     (hstate : ∀ root q, tasks root q → ∀ t ≤ budget q,
       (encS ((C.reference answer)^[t] (C.initial q))).length ≤ B root)
     (hanswer : ∀ root q, tasks root q → (answer q).length ≤ B root) :
-    ComputableTidilyInPolySpace answer encQ encBits := by
+    ComputableInPolySpace answer encQ encBits := by
   apply C.evaluator hC answer rank budget tasks N R B hN hR hB hroot hstop hb
     ?_ ?_ hrank htask hstate hanswer
   · intro root f hf hh

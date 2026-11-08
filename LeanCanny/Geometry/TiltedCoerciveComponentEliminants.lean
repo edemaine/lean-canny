@@ -22,7 +22,7 @@ noncomputable def coordinate (q : MvPolynomial (Fin n) ℝ) (D : ℕ) (u i : Fin
   (ParametricTiltedCoerciveEliminant.polynomial q D u i).trailingCoeff
 
 theorem coordinate_ne_zero (q : MvPolynomial (Fin n) ℝ) (D : ℕ) (hD : q.totalDegree≤D) (u i : Fin n) :
-    coordinate q D u i≠0 := Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr
+    coordinate q D u i≠0 := Polynomial.trailingCoeff_ne_zero.mpr
   (ParametricTiltedCoerciveEliminant.ne_zero Complex.ofRealHom q D hD u i)
 
 noncomputable def grid (q : MvPolynomial (Fin n) ℝ) (D : ℕ) (u : Fin n) : Set (Fin n → ℝ) :=

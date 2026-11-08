@@ -63,7 +63,7 @@ lemma exceptional_ne_zero (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCert
       (FlatAffinePowerPositive.noInfinity F hcone u) i
   · apply Finset.prod_ne_zero_iff.mpr
     intro i _
-    exact Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (certificate_ne_zero F hcone height u i)
+    exact Polynomial.trailingCoeff_ne_zero.mpr (certificate_ne_zero F hcone height u i)
 
 lemma finite_exceptional (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCertificate F)
     (height : (u : List Bool) → Fin (count F u)) (u : List Bool) :

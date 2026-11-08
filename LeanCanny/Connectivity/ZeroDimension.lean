@@ -73,16 +73,16 @@ theorem point_computable {α : Type} [Inhabited α] {enc : α ↪ List Bool}
     (hp : ComputableTidilyInPolyTime (fun a => (p a).encode) enc encBits)
     (hs : ComputableTidilyInPolyTime (fun a => (s a).encode) enc encBits)
     (ht : ComputableTidilyInPolyTime (fun a => (t a).encode) enc encBits) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun a => decide (PointQuery.mk ⟨0, p a⟩ (s a) (t a)).Reachable) enc encBool := by
   have hn : ComputableTidilyInPolyTime (fun _ : α => 0) enc encUnary := .const 0
   have hsource := EndpointValidation.exists_denotes_computable hs hn
   have htarget := EndpointValidation.exists_denotes_computable ht hn
   have hsat := satisfiable_computable hp
   have harity := ComputableTidilyInPolyTime.comp FormulaArity.value_unary hp
-  have hwell := ComputableTidilyInPolySpace.of_polyTime
+  have hwell := ComputableInPolySpace.of_tidyPolyTime
     (ComputableTidilyInPolyTime.unary_le' harity hn)
-  have hf : ComputableTidilyInPolySpace (fun _ : α => false) enc encBool := .of_polyTime (.const false)
+  have hf : ComputableInPolySpace (fun _ : α => false) enc encBool := .of_tidyPolyTime (.const false)
   apply (hwell.ite (hsource.ite (htarget.ite hsat hf) hf) hf).congr
   intro a
   apply Bool.eq_iff_iff.mpr

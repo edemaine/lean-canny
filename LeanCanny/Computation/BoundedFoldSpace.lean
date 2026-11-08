@@ -8,7 +8,7 @@ public import LeanCanny.Computation.BoundedFold
 public import LeanCanny.Computation.TidyBoundedFold
 public import LeanCanny.Computation.SpaceFunctionComposition
 
-/-! # Bounded folds in the tidy space calculus
+/-! # Bounded folds in the native space calculus
 
 The child receives the existing raw context/index/accumulator packet. Native
 composition and typed binary iteration certify the fold directly.
@@ -52,9 +52,9 @@ theorem evaluator_polyBounded {f : List Bool → List Bool} {B : List Bool → �
     (hB : PolyBounded List.length B)
     (hstate : ∀ c i, i ≤ Nat.fromBitsLE (bound c) → (fold f seed c i).length ≤ B c) :
     SpaceFunction (fun c => fold f seed c (Nat.fromBitsLE (bound c))) := by
-  have hchild := E.computable.comp (ComputableTidilyInPolySpace.of_polyTime packet_polyTime)
+  have hchild := E.computable.comp (ComputableInPolySpace.of_tidyPolyTime packet_polyTime)
   have hcount := fromBitsLE_computable.comp (FP.computable hb)
-  have hseed := ComputableTidilyInPolySpace.of_polyTime (FP.computable hs)
+  have hseed := ComputableInPolySpace.of_tidyPolyTime (FP.computable hs)
   have h := TidyBoundedFold.evaluator hchild hcount hseed
     (B := B) (by simpa only [encBits_apply] using hB) (fun c i hi => by
       rw [typed_fold_eq]

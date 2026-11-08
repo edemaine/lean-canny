@@ -127,13 +127,13 @@ theorem gapQuery_computable {α : Type} {enc : α ↪ List Bool} {p : α → For
 rejects out-of-dimension variables before interpreting the gap query. -/
 theorem connected_computable {α : Type} {enc : α ↪ List Bool} {p : α → Formula}
     (hp : ComputableTidilyInPolyTime (fun a => (p a).encode) enc encBits) :
-    ComputableTidilyInPolySpace (fun a => decide (Description.mk 1 (p a)).Connected) enc encBool := by
+    ComputableInPolySpace (fun a => decide (Description.mk 1 (p a)).Connected) enc encBool := by
   have hsat := satisfiable_computable (gapQuery_computable hp)
-  have hf : ComputableTidilyInPolySpace (fun _ : α => false) enc encBool := .of_polyTime (.const false)
-  have ht : ComputableTidilyInPolySpace (fun _ : α => true) enc encBool := .of_polyTime (.const true)
+  have hf : ComputableInPolySpace (fun _ : α => false) enc encBool := .of_tidyPolyTime (.const false)
+  have ht : ComputableInPolySpace (fun _ : α => true) enc encBool := .of_tidyPolyTime (.const true)
   have harity := ComputableTidilyInPolyTime.comp FormulaArity.value_unary hp
   have hone : ComputableTidilyInPolyTime (fun _ : α => 1) enc encUnary := .const 1
-  have hwell := ComputableTidilyInPolySpace.of_polyTime
+  have hwell := ComputableInPolySpace.of_tidyPolyTime
     (ComputableTidilyInPolyTime.unary_le' harity hone)
   apply (hwell.ite (hsat.ite hf ht) hf).congr
   intro a

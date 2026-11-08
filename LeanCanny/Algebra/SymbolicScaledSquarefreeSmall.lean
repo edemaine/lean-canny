@@ -36,7 +36,7 @@ private theorem eval_ne_zero_of_small (q : ℤ[X]) (hq : q ≠ 0) (b s : ℕ)
   intro hz
   change SignType.sign (scalarEvaluation beta q) = _ at he
   rw [hz, sign_zero] at he
-  exact (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hq) (sign_eq_zero_iff.mp he.symm)
+  exact (Polynomial.trailingCoeff_ne_zero.mpr hq) (sign_eq_zero_iff.mp he.symm)
 
 theorem small_controls (p : Polynomial Coefficient) (hp : p ≠ 0) (b : ℕ)
     (hm : ∀ k, coefficientMass (p.coeff k) ≤ 2 ^ b)

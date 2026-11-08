@@ -65,7 +65,7 @@ theorem toETR_mem_language_iff (bits : List Bool) :
     simp [hn]
 
 theorem reduces_to_etr : PolyTimeReduces language ETR.language :=
-  ⟨toETR, FP.computable toETR_mem_FP, fun bits => (toETR_mem_language_iff bits).symm⟩
+  ⟨toETR, (FP.computable toETR_mem_FP).computableInPolyTime, fun bits => (toETR_mem_language_iff bits).symm⟩
 
 theorem mem_existsReal : language ∈ LeanCanny.ExistsReal := reduces_to_etr
 

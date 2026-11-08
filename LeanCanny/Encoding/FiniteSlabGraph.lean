@@ -81,28 +81,28 @@ locator runs in polynomial time. Only the output tag width is unary. -/
 theorem encode_computable {α : Type} {eA : α ↪ List Bool}
     {s i : α → ℕ} {u : α → List Bool}
     (hs : ComputableTidilyInPolyTime s eA encUnary)
-    (hi : ComputableTidilyInPolySpace i eA encNat)
-    (hu : ComputableTidilyInPolySpace u eA encBits) :
-    ComputableTidilyInPolySpace (fun c => encode (s c) (i c) (u c)) eA encBits := by
+    (hi : ComputableInPolySpace i eA encNat)
+    (hu : ComputableInPolySpace u eA encBits) :
+    ComputableInPolySpace (fun c => encode (s c) (i c) (u c)) eA encBits := by
   have hword := ImplicitGraph.word_computable
     (ComputableTidilyInPolyTime.fst encUnary encNat)
     (ComputableTidilyInPolyTime.snd encUnary encNat)
-  have htag := (ComputableTidilyInPolySpace.of_polyTime hword).comp
-    ((ComputableTidilyInPolySpace.of_polyTime hs).prod hi)
+  have htag := (ComputableInPolySpace.of_tidyPolyTime hword).comp
+    ((ComputableInPolySpace.of_tidyPolyTime hs).prod hi)
   have happend : ComputableTidilyInPolyTime
       (fun q : List Bool × List Bool => q.1 ++ q.2) (encPair encBits encBits) encBits :=
     (ComputableTidilyInPolyTime.fst encBits encBits).append
       (ComputableTidilyInPolyTime.snd encBits encBits) (fun _ => rfl)
-  exact (ComputableTidilyInPolySpace.of_polyTime happend).comp (htag.prod hu)
+  exact (ComputableInPolySpace.of_tidyPolyTime happend).comp (htag.prod hu)
 
 theorem valid_computable {α : Type} {eA : α ↪ List Bool}
     {count s : α → ℕ} {localValid : α → ℕ → List Bool → Bool}
     (hn : ComputableTidilyInPolyTime count eA encNat)
     (hs : ComputableTidilyInPolyTime s eA encUnary)
-    (hv : ComputableTidilyInPolySpace
+    (hv : ComputableInPolySpace
       (fun q : α × ℕ × List Bool => localValid q.1 q.2.1 q.2.2)
       (encPair eA (encPair encNat encBits)) encBool) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun q : α × List Bool => valid (count q.1) (s q.1) (localValid q.1) q.2)
       (encPair eA encBits) encBool := by
   have hc := ComputableTidilyInPolyTime.fst eA encBits
@@ -110,22 +110,22 @@ theorem valid_computable {α : Type} {eA : α ↪ List Bool}
   have ht := tag_computable (hs.comp hc) hu
   have hp := payload_computable (hs.comp hc) hu
   have hg := ComputableTidilyInPolyTime.binary_lt' ht (hn.comp hc)
-  have h := (ComputableTidilyInPolySpace.of_polyTime hg).ite
-    (hv.comp (.of_polyTime (hc.prod (ht.prod hp))))
-    (.of_polyTime (ComputableTidilyInPolyTime.const false))
+  have h := (ComputableInPolySpace.of_tidyPolyTime hg).ite
+    (hv.comp (.of_tidyPolyTime (hc.prod (ht.prod hp))))
+    (.of_tidyPolyTime (ComputableTidilyInPolyTime.const false))
   exact h.congr fun q => by simp [valid]
 
 theorem edge_computable {α : Type} {eA : α ↪ List Bool}
     {count s : α → ℕ} {localEdge touch : α → ℕ → List Bool → List Bool → Bool}
     (hn : ComputableTidilyInPolyTime count eA encNat)
     (hs : ComputableTidilyInPolyTime s eA encUnary)
-    (he : ComputableTidilyInPolySpace
+    (he : ComputableInPolySpace
       (fun q : α × ℕ × List Bool × List Bool => localEdge q.1 q.2.1 q.2.2.1 q.2.2.2)
       (encPair eA (encPair encNat (encPair encBits encBits))) encBool)
-    (htouch : ComputableTidilyInPolySpace
+    (htouch : ComputableInPolySpace
       (fun q : α × ℕ × List Bool × List Bool => touch q.1 q.2.1 q.2.2.1 q.2.2.2)
       (encPair eA (encPair encNat (encPair encBits encBits))) encBool) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun q : α × List Bool × List Bool => edge (count q.1) (s q.1)
         (localEdge q.1) (touch q.1) q.2.1 q.2.2)
       (encPair eA (encPair encBits encBits)) encBool := by
@@ -135,12 +135,12 @@ theorem edge_computable {α : Type} {eA : α ↪ List Bool}
   have hb := tag_computable (hs.comp hc) hr.snd'
   have hu := payload_computable (hs.comp hc) hr.fst'
   have hv := payload_computable (hs.comp hc) hr.snd'
-  have hfalse := ComputableTidilyInPolySpace.of_polyTime
+  have hfalse := ComputableInPolySpace.of_tidyPolyTime
     (ComputableTidilyInPolyTime.const
       (encIn := encPair eA (encPair encBits encBits)) (encMid := encBool) false)
-  have hlocal := he.comp (.of_polyTime (hc.prod (ha.prod (hu.prod hv))))
-  have hleft := htouch.comp (.of_polyTime (hc.prod (ha.prod (hu.prod hv))))
-  have hright := htouch.comp (.of_polyTime (hc.prod (hb.prod (hv.prod hu))))
+  have hlocal := he.comp (.of_tidyPolyTime (hc.prod (ha.prod (hu.prod hv))))
+  have hleft := htouch.comp (.of_tidyPolyTime (hc.prod (ha.prod (hu.prod hv))))
+  have hright := htouch.comp (.of_tidyPolyTime (hc.prod (hb.prod (hv.prod hu))))
   have hab := ComputableTidilyInPolyTime.decide_eq encNat |>.comp (ha.prod hb)
   have ha1 := ComputableTidilyInPolyTime.binary_add' ha (ComputableTidilyInPolyTime.const 1)
   have hb1 := ComputableTidilyInPolyTime.binary_add' hb (ComputableTidilyInPolyTime.const 1)
@@ -148,11 +148,11 @@ theorem edge_computable {α : Type} {eA : α ↪ List Bool}
   have hba1 := ComputableTidilyInPolyTime.decide_eq encNat |>.comp (hb1.prod ha)
   have ga := ComputableTidilyInPolyTime.binary_lt' ha (hn.comp hc)
   have gb := ComputableTidilyInPolyTime.binary_lt' hb (hn.comp hc)
-  have h := (ComputableTidilyInPolySpace.of_polyTime ga).ite
-    ((ComputableTidilyInPolySpace.of_polyTime gb).ite
-      ((ComputableTidilyInPolySpace.of_polyTime hab).ite hlocal
-        ((ComputableTidilyInPolySpace.of_polyTime hab1).ite hleft
-          ((ComputableTidilyInPolySpace.of_polyTime hba1).ite hright hfalse))) hfalse) hfalse
+  have h := (ComputableInPolySpace.of_tidyPolyTime ga).ite
+    ((ComputableInPolySpace.of_tidyPolyTime gb).ite
+      ((ComputableInPolySpace.of_tidyPolyTime hab).ite hlocal
+        ((ComputableInPolySpace.of_tidyPolyTime hab1).ite hleft
+          ((ComputableInPolySpace.of_tidyPolyTime hba1).ite hright hfalse))) hfalse) hfalse
   exact h.congr fun q => by simp [edge]
 
 end LeanCanny.Encoding.FiniteSlabGraph

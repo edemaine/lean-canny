@@ -40,7 +40,7 @@ private theorem iterated_scan (p : (ℝ[X])[X]) (k : ℕ) (hk : p.natDegree < k)
     exact ((RealInfinitesimalSignSpace.tag_nil _).mpr (by simp)).symm
   · exact RealInfinitesimalSignSpace.scan_first _ p.natTrailingDegree k
       (p.natTrailingDegree_le_natDegree.trans_lt hk)
-      (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (Polynomial.coeff_natTrailingDegree_ne_zero.mpr hp))
+      (Polynomial.trailingCoeff_ne_zero.mpr (Polynomial.coeff_natTrailingDegree_ne_zero.mpr hp))
       (fun i hi => by rw [Polynomial.coeff_eq_zero_of_lt_natTrailingDegree hi, Polynomial.trailingCoeff_zero])
 
 private theorem lex_sign_congr (p q : (ℝ[X])[X])

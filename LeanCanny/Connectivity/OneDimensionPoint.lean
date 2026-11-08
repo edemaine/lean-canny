@@ -200,7 +200,7 @@ theorem point_computable {α : Type} [Inhabited α] {enc : α ↪ List Bool}
     (hp : ComputableTidilyInPolyTime (fun a => (p a).encode) enc encBits)
     (hs : ComputableTidilyInPolyTime (fun a => (s a).encode) enc encBits)
     (ht : ComputableTidilyInPolyTime (fun a => (t a).encode) enc encBits) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun a => decide (PointQuery.mk ⟨1, p a⟩ (s a) (t a)).Reachable) enc encBool := by
   have hone : ComputableTidilyInPolyTime (fun _ : α => 1) enc encUnary := .const 1
   have hsource := EndpointValidation.exists_denotes_computable hs hone
@@ -208,10 +208,10 @@ theorem point_computable {α : Type} [Inhabited α] {enc : α ↪ List Bool}
   have hsourceMem := satisfiable_computable (andQuery_computable hp hs)
   have htargetMem := satisfiable_computable (andQuery_computable hp ht)
   have hsep := satisfiable_computable (separationQuery_computable hp hs ht)
-  have hf : ComputableTidilyInPolySpace (fun _ : α => false) enc encBool := .of_polyTime (.const false)
-  have htrue : ComputableTidilyInPolySpace (fun _ : α => true) enc encBool := .of_polyTime (.const true)
+  have hf : ComputableInPolySpace (fun _ : α => false) enc encBool := .of_tidyPolyTime (.const false)
+  have htrue : ComputableInPolySpace (fun _ : α => true) enc encBool := .of_tidyPolyTime (.const true)
   have harity := ComputableTidilyInPolyTime.comp FormulaArity.value_unary hp
-  have hwell := ComputableTidilyInPolySpace.of_polyTime
+  have hwell := ComputableInPolySpace.of_tidyPolyTime
     (ComputableTidilyInPolyTime.unary_le' harity hone)
   apply (hwell.ite (hsource.ite (htarget.ite (hsourceMem.ite
     (htargetMem.ite (hsep.ite hf htrue) hf) hf) hf) hf) hf).congr

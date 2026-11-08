@@ -45,7 +45,7 @@ noncomputable def coordinate (c : List Bool) (a : Fin (d c) → ℝ) (i : Fin (N
     Polynomial (Polynomial ℝ) := (eliminant c a i).trailingCoeff
 
 theorem coordinate_ne_zero (c : List Bool) (a : Fin (d c) → ℝ) (i : Fin (N c+d c+1)) : coordinate c a i≠0 :=
-  Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (eliminant_ne_zero c a i)
+  Polynomial.trailingCoeff_ne_zero.mpr (eliminant_ne_zero c a i)
 
 noncomputable def bad (c : List Bool) (a : Fin (d c) → ℝ) : Set ℝ :=
   {r | ∃ i, (coordinate c a i).leadingCoeff.eval r=0}

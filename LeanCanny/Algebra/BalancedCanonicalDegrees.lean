@@ -115,9 +115,9 @@ theorem evaluator (B : Family) (A : Readers B) (hne : ∀ c, B.polynomial c ≠ 
     (width_binary hn).mul (BinaryFn.fromBits BalancedParameterContext.indexWord_FP)
   have hquery := pair_computable (BalancedParameterContext.original_FP.comp hc)
     (natBits_computable.comp (ComputableTidilyInPolyTime.binary_add' (hs.comp hc) hi))
-  have hleaf := (leafEvaluator B A hne count hn).computable.comp (ComputableTidilyInPolySpace.of_polyTime hquery)
-  have hvalue := (ComputableTidilyInPolySpace.of_polyTime fromBitsLE_computable).comp hleaf
-  have hd : ComputableTidilyInPolySpace
+  have hleaf := (leafEvaluator B A hne count hn).computable.comp (ComputableInPolySpace.of_tidyPolyTime hquery)
+  have hvalue := (ComputableInPolySpace.of_tidyPolyTime fromBitsLE_computable).comp hleaf
+  have hd : ComputableInPolySpace
       (fun p : List Bool × ℕ => leafDegree B count (original p.1) (width count p.1 * index p.1 + p.2))
       (encPair encBits encNat) encNat :=
     hvalue.congr fun p => by
@@ -134,7 +134,7 @@ theorem evaluator (B : Family) (A : Readers B) (hne : ∀ c, B.polynomial c ≠ 
       apply ComputableTidilyInO.length_encNat_mono
       exact (product_bound B count D hne hdegree _ _ _).trans
         (Nat.pow_le_pow_right (by omega) (hk.trans (width_le count p))))
-  exact ⟨((ComputableTidilyInPolySpace.of_polyTime natBits_computable).comp E).congr
+  exact ⟨((ComputableInPolySpace.of_tidyPolyTime natBits_computable).comp E).congr
     (fun _ => rfl)⟩
 
 end LeanCanny.Algebra.BalancedCanonicalDegrees

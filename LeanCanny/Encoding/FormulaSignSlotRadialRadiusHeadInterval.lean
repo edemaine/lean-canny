@@ -69,7 +69,7 @@ theorem trailing_empty_iff (c : List Bool) (a : Fin (d (pairFst c)) → ℝ) (ta
     FormulaSignSlotRadialRadiusHeadEvaluation.trailing c a tau D ell H
   rw [HE]
   apply empty_iff
-  · exact Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr
+  · exact Polynomial.trailingCoeff_ne_zero.mpr
       (FormulaSignSlotRadialParameterEliminant.coordinate_ne_zero _ _ _)
   · exact hb
 

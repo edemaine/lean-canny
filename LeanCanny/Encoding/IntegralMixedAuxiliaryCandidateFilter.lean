@@ -29,7 +29,7 @@ theorem filtered_decider {n : List Bool→ℕ} {t : List Bool→Term}
       (fun z=>decide (z=InfinitesimalSign.encode 0))
       (stringEq_fppred id_mem_FP (constFn_mem_FP (InfinitesimalSign.encode 0))).flag_mem_FP
       (fun _=>by simp only [Z,Set.mem_ofPred_eq,Function.comp_apply,decide_eq_true_eq])
-  have HF := ComputableTidilyInPolySpace.of_polyTime
+  have HF := ComputableInPolySpace.of_tidyPolyTime
     (ComputableTidilyInPolyTime.const (encIn:=encBits) (encMid:=encBool) false)
   apply SpaceDecider.of_computable ((decider hn ht ha).computable.ite DZ.computable HF)
   intro q

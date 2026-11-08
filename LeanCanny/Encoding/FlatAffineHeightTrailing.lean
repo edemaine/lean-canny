@@ -79,7 +79,7 @@ theorem coefficientEvaluator {F : Inputs} (h : F.Access) (height row : (u : List
 theorem trailing_ne_zero (F : Inputs) (hcone : FlatAffinePowerPositive.ConeCertificate F)
     (height row : (u : List Bool) → Fin (count F u)) (u : List Bool) :
     (polynomial F height row u).trailingCoeff ≠ 0 :=
-  Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (FlatAffineHeightValues.ne_zero F hcone height row u)
+  Polynomial.trailingCoeff_ne_zero.mpr (FlatAffineHeightValues.ne_zero F hcone height row u)
 
 theorem trailing_degree_le (F : Inputs) (height row : (u : List Bool) → Fin (count F u)) (u : List Bool) :
     (polynomial F height row u).trailingCoeff.natDegree ≤ innerBound F row u :=

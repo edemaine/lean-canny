@@ -51,7 +51,7 @@ theorem coeff_inverse (p : Polynomial R) (k : ℕ) :
   rw [inverse, coeff_neg, coeff_divX, coeff_tail]
 
 theorem denominator_ne_zero (p : Polynomial R) (hp : p ≠ 0) : denominator p ≠ 0 :=
-  trailingCoeff_nonzero_iff_nonzero.mpr hp
+  trailingCoeff_ne_zero.mpr hp
 
 theorem natDegree_inverse_le (p : Polynomial R) : (inverse p).natDegree ≤ p.natDegree := by
   apply Polynomial.natDegree_le_iff_coeff_eq_zero.mpr

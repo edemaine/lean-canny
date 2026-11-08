@@ -13,7 +13,7 @@ set_option backward.isDefEq.respectTransparency false
 
 def outputPacket (s : State) : List Bool := pair s.1 s.2.2
 
-theorem outputPacket_space : ComputableTidilyInPolySpace outputPacket encState encBits := by
+theorem outputPacket_space : ComputableInPolySpace outputPacket encState encBits := by
   unfold outputPacket encState
   fun_prop
 

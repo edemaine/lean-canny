@@ -43,15 +43,15 @@ attribute [local irreducible] test Encoding.BoundedOriginalQuery.MarkedPoint
 theorem test_computable {P : Readers} {endpoint piece : List Bool → Formula} (h : P.PolyTime)
     (ht : ∀ c, (TermView.term (P.source c)).arity ≤ P.dim c)
     (hp : (fun c => (endpoint c).encode) ∈ FP) (hq : (fun c => (piece c).encode) ∈ FP) :
-    ComputableTidilyInPolySpace (fun p : List Bool × List Bool => test P endpoint piece p.1 p.2)
+    ComputableInPolySpace (fun p : List Bool × List Bool => test P endpoint piece p.1 p.2)
       (encPair encBits encBits) encBool := by
   have he := Encoding.BoundedOriginalQuery.marked_evaluator (P := P.comp LeanCanny.pairFst)
     (p := fun c => Formula.and (endpoint (LeanCanny.pairFst c)) (piece c)) (h.comp pairFst_mem_FP)
     (fun c => ht (LeanCanny.pairFst c)) (and_encode_mem_FP (mem_FP_comp pairFst_mem_FP hp) hq)
   have hpair := pair_computable (ComputableTidilyInPolyTime.fst encBits encBits)
     (ComputableTidilyInPolyTime.snd encBits encBits)
-  obtain ⟨T, S, hS, hraw⟩ := he.computable.comp (.of_polyTime hpair)
-  refine ⟨T, S, hS, hraw.of_enc_eq ?_⟩
+  obtain ⟨S, hS, hraw⟩ := (he.computable.comp (.of_tidyPolyTime hpair)).exists_inSpace
+  refine ComputableInPolySpace.of_inSpace hS (hraw.of_enc_eq ?_)
   intro p
   simp only [encBits_apply, encBool_apply, LeanCanny.pairFst_pair, test]
   change [decide (∃ x, MarkedAssignment P p.1 x ∧

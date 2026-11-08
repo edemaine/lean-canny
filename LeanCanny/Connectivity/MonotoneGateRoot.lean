@@ -58,7 +58,7 @@ theorem wire_zero (F : MonotoneGateSource.Family) (c : List Bool) (x : Fin (base
     ∀ i (hi : i < F.count c), value F c x ⟨i,hi⟩=0 ↔ boolWire F c x i=true := by
   intro i
   induction i using Nat.strong_induction_on with
-  | h i IH =>
+  | ind i IH =>
     intro hi
     rw [gate_value F c x ha ⟨i,hi⟩,body_eval,bool_step F c x i hi]
     apply operation_zero_iff (hk _) (atom_zero F c x ha i hi)

@@ -51,7 +51,7 @@ theorem certificates (a : Access) (hd : a.direction ∈ FP) (sourceTask : List B
       (encQ := encBits) (encS := SingleCall.encState) := by
   have hq := mem_FP_comp coefficientInput_mem_FP hs
   exact (program a sourceTask).certificates_of_space (constFn_mem_FP [true]) hq
-    (.of_polyTime (FP.computable (constFn_mem_FP []))) (finish_space a hd).computable
+    (.of_tidyPolyTime (FP.computable (constFn_mem_FP []))) (finish_space a hd).computable
 
 theorem value_eq (a : Access) (sourceTask answer : List Bool → List Bool)
     (hs : ∀ p, answer (sourceTask p) = a.coefficient p) (p : List Bool) :

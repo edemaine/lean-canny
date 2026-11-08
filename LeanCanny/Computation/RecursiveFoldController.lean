@@ -124,14 +124,14 @@ theorem orbit_length (answer : List Bool → List Bool) (q : List Bool) (t B : �
 theorem certificates (hc : BinaryFn P.count) (hs : P.seed ∈ FP)
     (he : P.entryTask ∈ FP) (hf : P.finish ∈ FP) :
     P.controller.Certificates (encQ := encBits) (encS := encState) := by
-  have hcount := ComputableTidilyInPolySpace.of_polyTime hc
-  have hseed := ComputableTidilyInPolySpace.of_polyTime (FP.computable hs)
-  have hentry := ComputableTidilyInPolySpace.of_polyTime (FP.computable he)
-  have hfinish := ComputableTidilyInPolySpace.of_polyTime (FP.computable hf)
-  have hbits : ComputableTidilyInPolySpace BinaryNatCode.encode encNat encBits := .of_polyTime natBits_computable
-  have hpacket := ComputableTidilyInPolySpace.of_polyTime BoundedFold.packet_polyTime
+  have hcount := ComputableInPolySpace.of_tidyPolyTime hc
+  have hseed := ComputableInPolySpace.of_tidyPolyTime (FP.computable hs)
+  have hentry := ComputableInPolySpace.of_tidyPolyTime (FP.computable he)
+  have hfinish := ComputableInPolySpace.of_tidyPolyTime (FP.computable hf)
+  have hbits : ComputableInPolySpace BinaryNatCode.encode encNat encBits := .of_tidyPolyTime natBits_computable
+  have hpacket := ComputableInPolySpace.of_tidyPolyTime BoundedFold.packet_polyTime
   constructor
-  · change ComputableTidilyInPolySpace (fun q : List Bool => (q, 0, P.seed q)) _ _
+  · change ComputableInPolySpace (fun q : List Bool => (q, 0, P.seed q)) _ _
     fun_prop (config := { maxSteps := 256, maxTransitionDepth := 2 })
   all_goals dsimp only [controller, child, encState]
   all_goals fun_prop (config := { maxSteps := 256, maxTransitionDepth := 2 })

@@ -40,7 +40,7 @@ private theorem full_covers_at (P : SpatialSource n) (S B : ℕ)
     ∀ k,FullCoverAt P S B k := by
   intro k
   induction k using Nat.strong_induction_on with
-  | h k IH =>
+  | ind k IH =>
     intro m ι _ x F Hk Hbudget HF HA HP φ z hz hφ values H
     have HC : (F.frozenᶜ).card=k := by
       rw [Finset.card_compl,Fintype.card_fin]

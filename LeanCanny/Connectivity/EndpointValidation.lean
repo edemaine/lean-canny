@@ -132,7 +132,7 @@ theorem exists_denotes_computable {α : Type} [Inhabited α] {enc : α ↪ List 
     {p : α → Formula} {n : α → ℕ}
     (hp : ComputableTidilyInPolyTime (fun a => (p a).encode) enc encBits)
     (hn : ComputableTidilyInPolyTime n enc encUnary) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun a => decide (∃ x : Fin (n a) → ℝ, Denotes (n a) (p a) x)) enc encBool := by
   have hpar := ComputableTidilyInPolyTime.fst enc encNat
   have hcounter := ComputableTidilyInPolyTime.snd enc encNat
@@ -148,21 +148,21 @@ theorem exists_denotes_computable {α : Type} [Inhabited α] {enc : α ↪ List 
     simp [Cslib.BitString.boundedBinaryValue_eq, Cslib.BitString.binaryValue_reverse_bits,
       encNat_apply, Nat.min_comm]
   have hqueries := satisfiable_computable (distinctQuery_computable (hp.comp hpar) hindex)
-  have hfalse : ComputableTidilyInPolySpace (fun _ : α × ℕ => false)
-      (encPair enc encNat) encBool := .of_polyTime (.const false)
-  have htrue : ComputableTidilyInPolySpace (fun _ : α × ℕ => true)
-      (encPair enc encNat) encBool := .of_polyTime (.const true)
+  have hfalse : ComputableInPolySpace (fun _ : α × ℕ => false)
+      (encPair enc encNat) encBool := .of_tidyPolyTime (.const false)
+  have htrue : ComputableInPolySpace (fun _ : α × ℕ => true)
+      (encPair enc encNat) encBool := .of_tidyPolyTime (.const true)
   have hnot := hqueries.ite hfalse htrue
   have hall := ImplicitGraph.forall_below_computable hnot
     (ComputableTidilyInPolyTime.unary_to_binary.comp hn)
   have hsat := satisfiable_computable hp
-  have hf : ComputableTidilyInPolySpace (fun _ : α => false) enc encBool := .of_polyTime (.const false)
+  have hf : ComputableInPolySpace (fun _ : α => false) enc encBool := .of_tidyPolyTime (.const false)
   have harity : ComputableTidilyInPolyTime (fun a => (p a).arity) enc encUnary := by
     apply (ComputableTidilyInPolyTime.comp FormulaArity.value_unary hp).of_enc_eq
     intro a
     exact congrArg encUnary (FormulaArity.value_encode (p a)).symm
   have hwell := ComputableTidilyInPolyTime.unary_le' harity hn
-  apply ((ComputableTidilyInPolySpace.of_polyTime hwell).ite (hsat.ite hall hf) hf).congr
+  apply ((ComputableInPolySpace.of_tidyPolyTime hwell).ite (hsat.ite hall hf) hf).congr
   intro a
   apply Bool.eq_iff_iff.mpr
   simp only [decide_eq_true_eq, Function.comp_apply]
@@ -205,9 +205,9 @@ theorem validEndpoints_mem_PSPACE : validEndpointLanguage ∈ PSPACE := by
     (FormulaView.encoded_computable.comp (Input.field_mem_FP 3)) hn
   have ht := exists_denotes_computable
     (FormulaView.encoded_computable.comp (Input.field_mem_FP 4)) hn
-  have hf : ComputableTidilyInPolySpace (fun _ : List Bool => false) encBits encBool :=
-    .of_polyTime (.const false)
-  have hp := ComputableTidilyInPolySpace.of_polyTime Input.isPoint_fppred.computable
+  have hf : ComputableInPolySpace (fun _ : List Bool => false) encBits encBool :=
+    .of_tidyPolyTime (.const false)
+  have hp := ComputableInPolySpace.of_tidyPolyTime Input.isPoint_fppred.computable
   apply NativeSpace.of_computable (hp.ite (hs.ite ht hf) hf)
   intro bits
   by_cases hpoint : Input.IsPoint bits

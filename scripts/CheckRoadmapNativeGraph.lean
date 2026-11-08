@@ -7316,7 +7316,6 @@ example {n birth :ℕ} (d :Descriptor n birth) (hk :d.labels.length<n+1)
   exact data_normalized_height d hk g j hg hj _ _ values
 example (k :ℕ) :¬k<k:=Nat.lt_irrefl k
 example (a b i :ℕ) (hab :a=b) :a-1-i=b-1-i:=congrArg (fun v=>v-1-i) hab
-#check IntegralMixedRoadmapProperRow.exists_original_interpretation
 #check data_normalized
 #check data_normalized_height
 #print axioms IntegralMixedRoadmapProperRow.exists_original_interpretation
@@ -11512,7 +11511,7 @@ private theorem mass_X : coefficientMass (X : ℤ[X]) = 1 := by
 noncomputable def head : Polynomial Coefficient := X ^ 2 - C (X : ℤ[X])
 noncomputable def queries : Fin 3 → Polynomial Coefficient := ![0, head, X]
 
-theorem head_degree : head.natDegree ≤ 2 := (Polynomial.natDegree_X_pow_sub_C).le
+theorem head_degree : head.natDegree ≤ 2 := (Polynomial.natDegree_X_pow_sub_C (X : ℤ[X])).le
 
 theorem head_nonzero : head ≠ 0 := Polynomial.X_pow_sub_C_ne_zero (by decide) _
 
@@ -18375,9 +18374,9 @@ example (c : List Bool) : encode c (FormulaSignSlotRadialJointLayout.spatialCoun
 example (c : List Bool) (j : ℕ) (hj : j<FormulaSignSlotRadialJointLayout.spatialCount c) :
     encode c j (degree c) (degree c) (degree c)<count c :=
   encode_lt c j _ _ _ hj (by unfold limit; omega) (by unfold limit; omega) (by unfold limit; omega)
-example (c : List Bool) (j : ℕ) (v : ℕ → ℝ) :
+example (c : List Bool) (j : ℕ) (hj : j<FormulaSignSlotRadialJointLayout.spatialCount c) (v : ℕ → ℝ) :
     (family.feature c (encode c j 0 0 0)).eval₂ (Int.castRingHom ℝ) (fun i=>v i.val)=coefficientValue c j 0 0 0 v :=
-  feature_coefficient c j 0 0 0 (by unfold limit; omega) (by unfold limit; omega) (by unfold limit; omega) v
+  feature_coefficient c j 0 0 0 hj (by unfold limit; omega) (by unfold limit; omega) (by unfold limit; omega) v
 example (c : List Bool) (j : ℕ) (hj : j<FormulaSignSlotRadialJointLayout.spatialCount c)
     (x y : FormulaSignSlotRadialJointSelectionStratum.Point c)
     (HS : FormulaSignSlotRadialJointSelectionStratum.Signs c x y) (tau D : ℕ) :

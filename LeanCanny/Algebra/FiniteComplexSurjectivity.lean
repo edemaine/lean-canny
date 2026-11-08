@@ -28,7 +28,7 @@ theorem range_finrank_eq (d e : (k : ℕ) → V (k + 1) →ₗ[K] V k)
       Module.finrank K (LinearMap.range (d j)) = Module.finrank K (LinearMap.range (e j)) := by
     intro m
     induction m using Nat.strong_induction_on with
-    | h m ih =>
+    | ind m ih =>
       intro j hm hj
       by_cases hjN : j = N
       · subst j

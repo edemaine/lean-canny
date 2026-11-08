@@ -51,14 +51,14 @@ theorem numerator_lowest (source active : List Bool → List Bool)
 
 theorem numerator_ne_zero (source active : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) : numerator source active n d ell c ≠ 0 := by
-  apply Polynomial.trailingCoeff_nonzero_iff_nonzero.mp
+  apply Polynomial.trailingCoeff_ne_zero.mp
   rw [(numerator_lowest source active n d ell c).2]
   exact TubeDeformation.characteristicLowest_ne_zero source active n d ell c
 
 theorem denominator_ne_zero (source active : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) :
     TubeExtraneous.characteristicPolynomial source active n d ell c ≠ 0 :=
-  Polynomial.trailingCoeff_nonzero_iff_nonzero.mp (TubeExtraneous.characteristicLowest_ne_zero source active n d ell c)
+  Polynomial.trailingCoeff_ne_zero.mp (TubeExtraneous.characteristicLowest_ne_zero source active n d ell c)
 
 theorem numerator_shifted (source active : List Bool → List Bool)
     (n d : List Bool → ℕ → Polynomial ℤ) (ell : List Bool → ℕ → ℤ) (c : List Bool) :

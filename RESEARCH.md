@@ -249,9 +249,10 @@ exports the unconditional ETR and ExistsReal PSPACE theorems.
 
 ## Complexity foundation and verification
 
-The development uses Complexitylib's tidy multitape calculus throughout.
+The development uses Complexitylib's multitape calculus: tidy certificates for
+polynomial-time routines and plain certificates for polynomial-space routines.
 [`SpaceFunction`](LeanCanny/Computation/SpaceFunction.lean) is a proof-only
-wrapper around `ComputableTidilyInPolySpace`;
+wrapper around `ComputableInPolySpace`;
 [`SpaceDecider`](LeanCanny/Computation/SpaceDecider.lean) carries membership in
 Complexitylib's machine-based PSPACE class. P, FP, and polynomial-time
 many-one reductions also use this foundation directly.
@@ -286,8 +287,8 @@ The polynomial-time iteration adapters now use
 native `PolyBounded` operations, avoiding a second fold construction and the
 extraction and reconstruction of polynomial bounds.
 
-The binary-counted space folds and recursive stack already use native
-`ComputableTidilyInPolySpace.iterate`. Ordinary polynomial-time list folds do
+The binary-counted space folds use native `ComputableInPolySpace.natFold`;
+the recursive stack uses native `ComputableInPolySpace.iterate`. Ordinary polynomial-time list folds do
 not replace them: counts may be exponential and a child may require arbitrary
 time in polynomial space. Their accumulator, rank, and task-word invariants
 remain necessary.
@@ -313,7 +314,7 @@ in `ControllerDispatch`, rather than Berkowitz-specific storage proofs.
 explicit polynomial witnesses only at interfaces that need them. `PolyBound`
 is a native `PolyBounded` specialization; its closure operations compose native
 certificates. [`NativeSpaceClosure`](LeanCanny/Computation/NativeSpaceClosure.lean)
-provides encoding-parametric PSPACE/tidy equivalence and reduction closure with
+provides encoding-parametric PSPACE/decider equivalence and reduction closure with
 narrow imports. It is a candidate for a lightweight upstream space-closure module;
 it avoids the hierarchy, probability, and Savitch dependencies of the broad
 `Classes.Inclusions` module.
@@ -328,8 +329,8 @@ correctness from the coercive algebraic specialization.
 
 Complexitylib's canonical repository is now
 [`cslib-community/complexitylib`](https://github.com/cslib-community/complexitylib).
-The project keeps its pre-rename revision and Lake identifier `complexitylib2`;
-this link migration does not change the checked foundation or its pins.
+The project uses the renamed Lake package `complexitylib`, pinned to revision
+`9ab0bda6` with Lean `v4.36.0-rc2` and the matching CSLib/Mathlib dependency pins.
 
 ## Unused tube route: remaining quantitative choices
 

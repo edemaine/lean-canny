@@ -75,7 +75,7 @@ theorem no_nonzero_root_iff_variable_ideal_pow (p : ι → MvPolynomial σ K) :
       apply Ideal.span_le.mpr
       rintro _ ⟨j, rfl⟩
       exact Ideal.mem_radical_iff.mpr (hc j)
-    exact Ideal.exists_pow_le_of_le_radical_of_fg hr (MvPolynomial.idealOfVars_fg σ K)
+    exact Ideal.exists_pow_le_of_le_radical_of_fg hr (MvPolynomial.fg_idealOfVars σ K)
   · rintro ⟨N, hN⟩
     apply (no_nonzero_root_iff_coordinate_powers p).mpr
     intro j

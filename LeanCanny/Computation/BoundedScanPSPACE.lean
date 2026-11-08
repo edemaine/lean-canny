@@ -22,11 +22,11 @@ theorem decider {L : Language} (D : SpaceDecider L)
   have hc := ComputableTidilyInPolyTime.fst encBits (encPair encNat encBool)
   have hr := ComputableTidilyInPolyTime.snd encBits (encPair encNat encBool)
   have hquery := pair_computable hc (natBits_computable.comp hr.fst')
-  have hchild : ComputableTidilyInPolySpace child
+  have hchild : ComputableInPolySpace child
       (TidyBoundedFold.encPacket encBits encBool) encBool := by
-    have hraw := (ComputableTidilyInPolySpace.of_polyTime hr.snd').ite
-      (D.computable.comp (ComputableTidilyInPolySpace.of_polyTime hquery))
-      (ComputableTidilyInPolySpace.of_polyTime (ComputableTidilyInPolyTime.const false))
+    have hraw := (ComputableInPolySpace.of_tidyPolyTime hr.snd').ite
+      (D.computable.comp (ComputableInPolySpace.of_tidyPolyTime hquery))
+      (ComputableInPolySpace.of_tidyPolyTime (ComputableTidilyInPolyTime.const false))
     exact hraw.congr fun p => by
       apply Bool.eq_iff_iff.mpr
       cases hp : p.2.2 <;>
@@ -34,7 +34,7 @@ theorem decider {L : Language} (D : SpaceDecider L)
       exact decide_eq_true_iff.symm
   have h := TidyBoundedFold.evaluator_spec hchild
     (fromBitsLE_computable.comp (FP.computable hb))
-    (ComputableTidilyInPolySpace.of_polyTime (ComputableTidilyInPolyTime.const true))
+    (ComputableInPolySpace.of_tidyPolyTime (ComputableTidilyInPolyTime.const true))
     (allBelow L) (fun _ => rfl) (fun c k _ => by simp only [child, allBelow])
     (B := fun _ => 1) (PolyBounded.const 1) (fun _ _ _ => by simp)
   apply SpaceDecider.of_computable h

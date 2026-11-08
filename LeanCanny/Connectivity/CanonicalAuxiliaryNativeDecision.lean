@@ -17,7 +17,7 @@ variable (D:SpaceDecider FormulaSignSlotRadialGuardedFeasibility.language)
 include D in
 theorem connected_mem_PSPACE:connectedLanguage∈PSPACE:=by
   have HC:=(CanonicalAuxiliaryNativeGraph.connected_computable D).comp
-    (.of_polyTime Input.wholeFrame_mem_FP)
+    (.of_tidyPolyTime Input.wholeFrame_mem_FP)
   apply CanonicalEndpointNative.connected_mem_PSPACE_of_test HC
   intro d hd
   simpa only [Function.comp_apply, CanonicalEndpointNative.wholeFrame_whole, decide_eq_true_eq]

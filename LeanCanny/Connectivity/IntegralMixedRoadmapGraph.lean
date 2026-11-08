@@ -53,20 +53,20 @@ noncomputable def edges (_c a b : List Bool):=decide (IntegralMixedRoadmapEdge.A
   (IntegralMixedRoadmapWordLabel.decode a) (IntegralMixedRoadmapWordLabel.decode b))
 noncomputable def vertices (c r : List Bool):=decide (Valid hn ht ha hR0 c r)
 
-theorem edge_computable : ComputableTidilyInPolySpace
+theorem edge_computable : ComputableInPolySpace
     (fun p : List Bool×List Bool×List Bool=>edges hn ht ha hR0 p.1 p.2.1 p.2.2)
     (encPair encBits (encPair encBits encBits)) encBool :=by
   have HD:=(IntegralMixedRoadmapEdge.decider hn ht ha hR0).precompose edgePacket edgePacket_FP
   have hp:=ComputableTidilyInPolyTime.fst encBits (encPair encBits encBits)
   have hr:=ComputableTidilyInPolyTime.snd encBits (encPair encBits encBits)
-  have H:=HD.computable.comp (.of_polyTime (pair_computable hp (pair_computable hr.fst' hr.snd')))
+  have H:=HD.computable.comp (.of_tidyPolyTime (pair_computable hp (pair_computable hr.fst' hr.snd')))
   exact H.congr (fun p=>by simp only [Set.mem_preimage,edgePacket,pairFst_pair,pairSnd_pair,edges,IntegralMixedRoadmapEdge.Adjacent])
 
-theorem vertex_computable : ComputableTidilyInPolySpace
+theorem vertex_computable : ComputableInPolySpace
     (fun p : List Bool×List Bool=>vertices hn ht ha hR0 p.1 p.2)
     (encPair encBits encBits) encBool :=by
   have HD:=valid_decider hn ht ha hR0
-  have H:=HD.computable.comp (.of_polyTime (pair_computable
+  have H:=HD.computable.comp (.of_tidyPolyTime (pair_computable
     (ComputableTidilyInPolyTime.fst encBits encBits) (ComputableTidilyInPolyTime.snd encBits encBits)))
   exact H.congr (fun p=>by simp only [validLanguage,Set.mem_ofPred_eq,pairFst_pair,pairSnd_pair,vertices])
 

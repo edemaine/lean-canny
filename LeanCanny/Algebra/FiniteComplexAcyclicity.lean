@@ -82,7 +82,7 @@ theorem exactAt_of_bounded_ext (C : ChainComplex (ModuleCat.{u} R) ℕ) (n : ℕ
         (hExt t ht htn k (by omega) j (by omega)) (ih.1 t ht htn (j + 1) (by omega))
     exact ⟨hv, fun hpos => exactAt_of_ext_zero C k (hv k hpos (by omega) 0 hpos)⟩
   intro k hk hkn
-  have hP : P k := Nat.decreasingInduction' (m := k) (n := n + 1) (P := P) (fun l hl _ ih => hs l hl ih) (by omega) hb
+  have hP : P k := Nat.decreasingInduction' (m := k) (n := n + 1) (motive := P) (fun l hl _ ih => hs l hl ih) (by omega) hb
   exact hP.2 hk
 
 end LeanCanny.Algebra.FiniteComplexAcyclicity

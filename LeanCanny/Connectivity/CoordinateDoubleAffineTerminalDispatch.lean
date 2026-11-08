@@ -132,7 +132,7 @@ theorem certificates {P : BoundedFullWriter.Readers} (hP : P.PolyTime)
     (program P depth objective level).controller.Certificates
       (encQ := encBits) (encS := SingleCall.encState) :=
   (program P depth objective level).certificates_of_space (constFn_mem_FP [false]) id_mem_FP
-    (decider hP hd ho hl hA).flagEvaluator.computable (.of_polyTime pairSnd_mem_FP)
+    (decider hP hd ho hl hA).flagEvaluator.computable (.of_tidyPolyTime pairSnd_mem_FP)
 
 theorem no_requests (P : BoundedFullWriter.Readers) (depth objective : List Bool → ℕ)
     (level : List Bool → List Bool) (answer : List Bool → List Bool) (budget : List Bool → ℕ)

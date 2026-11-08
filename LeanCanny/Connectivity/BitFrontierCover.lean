@@ -115,10 +115,10 @@ variable {α : Type} {eA : α ↪ List Bool} {Y : α → Type*}
   [∀ c, TopologicalSpace (Y c)]
   {edges : α → List Bool → List Bool → Bool} {valids : α → List Bool → Bool}
   {width : α → ℕ} (covers : ∀ c, BitFrontierCover (Y c) (width c) (edges c) (valids c))
-  (he : ComputableTidilyInPolySpace
+  (he : ComputableInPolySpace
     (fun p : α × List Bool × List Bool => edges p.1 p.2.1 p.2.2)
     (encPair eA (encPair encBits encBits)) encBool)
-  (hv : ComputableTidilyInPolySpace (fun p : α × List Bool => valids p.1 p.2)
+  (hv : ComputableInPolySpace (fun p : α × List Bool => valids p.1 p.2)
     (encPair eA encBits) encBool)
   (hw : ComputableTidilyInPolyTime width eA encUnary)
 
@@ -126,7 +126,7 @@ include covers he hv hw
 
 /-- Native PSPACE accounts for all workspace of frontier adjacency and validity. -/
 theorem connected_computable [Inhabited α] :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun c => decide (IsPreconnected (univ : Set (Y c)))) eA encBool := by
   apply (ImplicitGraph.connected_computable he hv hw).congr
   intro c
@@ -136,13 +136,13 @@ theorem connected_computable [Inhabited α] :
 
 /-- Polynomial-space endpoint locators suffice; coordinates may be irrational. -/
 theorem joinedIn_computable {src dst : α → List Bool}
-    (hs : ComputableTidilyInPolySpace src eA encBits)
-    (hd : ComputableTidilyInPolySpace dst eA encBits)
+    (hs : ComputableInPolySpace src eA encBits)
+    (hd : ComputableInPolySpace dst eA encBits)
     (hsrc : ∀ c, (src c).length = width c) (hdst : ∀ c, (dst c).length = width c)
     {x y : (c : α) → Y c}
     (hx : ∀ c, x c ∈ (covers c).piece ⟨src c, hsrc c⟩)
     (hy : ∀ c, y c ∈ (covers c).piece ⟨dst c, hdst c⟩) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun c => decide (JoinedIn univ (x c) (y c))) eA encBool := by
   apply (ImplicitGraph.reachable_computable he hv hw hs hd hsrc hdst).congr
   intro c
@@ -154,11 +154,11 @@ theorem joinedIn_computable {src dst : α → List Bool}
 once an original piece containing the queried point can be located. Invalid
 component records are rejected by the same guarded reachability algorithm. -/
 theorem component_membership_computable {label src : α → List Bool}
-    (hl : ComputableTidilyInPolySpace label eA encBits)
-    (hs : ComputableTidilyInPolySpace src eA encBits)
+    (hl : ComputableInPolySpace label eA encBits)
+    (hs : ComputableInPolySpace src eA encBits)
     (hlabel : ∀ c, (label c).length = width c) (hsrc : ∀ c, (src c).length = width c)
     {x : (c : α) → Y c} (hx : ∀ c, x c ∈ (covers c).piece ⟨src c, hsrc c⟩) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun c => decide (x c ∈ (covers c).componentCover.piece ⟨label c, hlabel c⟩)) eA encBool := by
   apply (ImplicitGraph.reachable_computable he hv hw hl hs hlabel hsrc).congr
   intro c

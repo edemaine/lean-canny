@@ -62,7 +62,7 @@ theorem sign_eval_eq_trailingCoeff (p : ℝ[X]) :
   obtain ⟨q, hq, hq0⟩ := factor_at_trailingDegree p
   have hzero : q.eval 0 ≠ 0 := by
     rw [← Polynomial.coeff_zero_eq_eval_zero, hq0]
-    exact Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr hp
+    exact Polynomial.trailingCoeff_ne_zero.mpr hp
   have hsame : ∀ᶠ x in 𝓝 (0 : ℝ), SignType.sign (q.eval x) = SignType.sign (q.eval 0) := by
     have hcont : ContinuousAt (fun x : ℝ => SignType.sign (q.eval x)) 0 :=
       ContinuousAt.comp (f := fun x : ℝ => q.eval x) (x := 0)

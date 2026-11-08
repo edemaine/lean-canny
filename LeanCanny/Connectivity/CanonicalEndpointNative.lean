@@ -30,7 +30,7 @@ noncomputable def valid (c label : List Bool) : Bool :=
     (endpointValid 3 c) (endpointValid 4 c) label
 
 theorem endpoint_computable (k : ℕ) :
-    ComputableTidilyInPolySpace (endpointValid k) encBits encBool :=
+    ComputableInPolySpace (endpointValid k) encBits encBool :=
   EndpointSingletonPieces.nonempty_computable
     (Codec.unaryValue_unary.comp (Input.field_mem_FP 1))
     (FormulaView.encoded_computable.comp (Input.field_mem_FP 2))
@@ -41,11 +41,11 @@ theorem baseWidth_unary : UnaryFn baseWidth :=
 theorem width_unary : UnaryFn width := baseWidth_unary.add (UnaryFn.const 2)
 
 theorem valid_computable :
-    ComputableTidilyInPolySpace (fun p : List Bool×List Bool=>valid p.1 p.2)
+    ComputableInPolySpace (fun p : List Bool×List Bool=>valid p.1 p.2)
       (encPair encBits encBits) encBool := by
   have HA:=ComputableTidilyInPolyTime.fst encBits encBits
   have HV:=CanonicalAuxiliaryBitFrontier.vertex_computable.comp
-    (.of_polyTime ((Input.wholeFrame_mem_FP.comp HA).prod (ComputableTidilyInPolyTime.snd encBits encBits)))
+    (.of_tidyPolyTime ((Input.wholeFrame_mem_FP.comp HA).prod (ComputableTidilyInPolyTime.snd encBits encBits)))
   exact BitEndpointFrontier.valid_computable (v:=fun c u=>CanonicalAuxiliaryBitFrontier.valid (Input.wholeFrame c) u)
     baseWidth_unary HV (endpoint_computable 3) (endpoint_computable 4)
 

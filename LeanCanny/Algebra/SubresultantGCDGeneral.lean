@@ -118,7 +118,7 @@ private theorem gcd_data_aux (n : ℕ) : ∀ p q : K[X], q ≠ 0 → q.natDegree
     psc p q p.natDegree q.natDegree (EuclideanDomain.gcd p q).natDegree ≠ 0 ∧
     ∀ j < (EuclideanDomain.gcd p q).natDegree, psc p q p.natDegree q.natDegree j = 0 := by
   induction n using Nat.strong_induction_on with
-  | h n ih =>
+  | ind n ih =>
     intro p q hq hn hlt
     have hlc : q.leadingCoeff ≠ 0 := leadingCoeff_ne_zero.mpr hq
     by_cases hr : p % q = 0

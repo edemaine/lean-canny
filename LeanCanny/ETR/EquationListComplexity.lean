@@ -55,7 +55,7 @@ theorem toSingleEquation_correct (bits : List Bool) :
       exact False.elim (Formula.not_satisfiable_eqZero_one h)
 
 theorem reduces_to_singleEquation : PolyTimeReduces language SingleEquation.language :=
-  ⟨toSingleEquation, FP.computable toSingleEquation_mem_FP, toSingleEquation_correct⟩
+  ⟨toSingleEquation, (FP.computable toSingleEquation_mem_FP).computableInPolyTime, toSingleEquation_correct⟩
 
 theorem reduces_to_etr : PolyTimeReduces language ETR.language :=
   reduces_to_singleEquation.trans SingleEquation.reduces_to_etr

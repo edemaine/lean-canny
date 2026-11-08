@@ -37,9 +37,9 @@ private theorem satisfiable_iff_tuple {p : Formula} {n : ℕ} (hp : p.arity ≤ 
 truth routine, charged for both query construction and ETR evaluation. -/
 theorem satisfiable_computable {α : Type} {enc : α ↪ List Bool} {query : α → Formula}
     (hq : ComputableTidilyInPolyTime (fun a => (query a).encode) enc encBits) :
-    ComputableTidilyInPolySpace (fun a => decide (query a).Satisfiable) enc encBool := by
+    ComputableInPolySpace (fun a => decide (query a).Satisfiable) enc encBool := by
   obtain ⟨f, hf, hL⟩ := NativeSpace.mem_iff.mp etr_mem_PSPACE
-  apply (hf.comp (.of_polyTime hq)).congr
+  apply (hf.comp (.of_tidyPolyTime hq)).congr
   intro a
   apply Bool.eq_iff_iff.mpr
   rw [decide_eq_true_eq, ← hL, encode_mem_language]
@@ -178,14 +178,14 @@ theorem locateEndpoint_computable [Inhabited α] {endpoint : α → Formula}
       (fun p : α × List Bool =>
         (overlapQuery (spaces p.1) ((covers p.1).formula p.2) (endpoint p.1)).encode)
       (encPair enc encBits) encBits) :
-    ComputableTidilyInPolySpace (locateEndpoint covers endpoint) enc encBits :=
+    ComputableInPolySpace (locateEndpoint covers endpoint) enc encBits :=
   ImplicitGraph.findWord_computable (satisfiable_computable hq) hw
 
 include hw hn he in
 /-- Once the cover and its query writers are supplied, whole-space
 connectivity is polynomial-space computable by the completed ETR theorem. -/
 theorem connected_computable [Inhabited α] :
-    ComputableTidilyInPolySpace (fun a => decide (spaces a).Connected) enc encBool := by
+    ComputableInPolySpace (fun a => decide (spaces a).Connected) enc encBool := by
   have H := BitPathCover.connected_computable (fun a => (covers a).toBitPathCover)
     (satisfiable_computable he) (satisfiable_computable hn) hw
   apply H.congr
@@ -204,13 +204,13 @@ include hw hn he in
 /-- Endpoint pieces are supplied by polynomial-space identifiers. Their membership proofs
 must be established by the geometric construction. -/
 theorem joinedIn_computable {src dst : α → List Bool}
-    (hs : ComputableTidilyInPolySpace src enc encBits)
-    (hd : ComputableTidilyInPolySpace dst enc encBits)
+    (hs : ComputableInPolySpace src enc encBits)
+    (hd : ComputableInPolySpace dst enc encBits)
     (hsrc : ∀ a, (src a).length = width a) (hdst : ∀ a, (dst a).length = width a)
     {x y : (a : α) → (spaces a).realization}
     (hx : ∀ a, x a ∈ formulaPiece (spaces a) ((covers a).formula (src a)))
     (hy : ∀ a, y a ∈ formulaPiece (spaces a) ((covers a).formula (dst a))) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun a => decide (JoinedIn (spaces a).realization (x a).val (y a).val)) enc encBool := by
   have H := BitPathCover.joinedIn_computable (fun a => (covers a).toBitPathCover)
     (satisfiable_computable he) (satisfiable_computable hn) hw hs hd hsrc hdst hx hy
@@ -224,15 +224,15 @@ include hw hn he in
 /-- Transfer to the specified point-query semantics, including unique endpoint
 descriptions. Endpoint validation and piece attachment remain hypotheses. -/
 theorem pointQuery_computable {src dst : α → List Bool}
-    (hs : ComputableTidilyInPolySpace src enc encBits)
-    (hd : ComputableTidilyInPolySpace dst enc encBits)
+    (hs : ComputableInPolySpace src enc encBits)
+    (hd : ComputableInPolySpace dst enc encBits)
     (hsrc : ∀ a, (src a).length = width a) (hdst : ∀ a, (dst a).length = width a)
     {source target : α → Formula} {x y : (a : α) → (spaces a).realization}
     (hx : ∀ a, x a ∈ formulaPiece (spaces a) ((covers a).formula (src a)))
     (hy : ∀ a, y a ∈ formulaPiece (spaces a) ((covers a).formula (dst a)))
     (hsource : ∀ a, Denotes (spaces a).dimension (source a) (x a).val)
     (htarget : ∀ a, Denotes (spaces a).dimension (target a) (y a).val) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun a => decide (PointQuery.mk (spaces a) (source a) (target a)).Reachable)
       enc encBool := by
   apply (joinedIn_computable covers hw hn he hs hd hsrc hdst hx hy).congr
@@ -257,7 +257,7 @@ theorem pointQuery_computable_of_queryWriters [Inhabited α] {source target : α
     {x y : (a : α) → (spaces a).realization}
     (hx : ∀ a, Denotes (spaces a).dimension (source a) (x a).val)
     (hy : ∀ a, Denotes (spaces a).dimension (target a) (y a).val) :
-    ComputableTidilyInPolySpace
+    ComputableInPolySpace
       (fun a => decide (PointQuery.mk (spaces a) (source a) (target a)).Reachable)
       enc encBool :=
   pointQuery_computable covers hw hn he

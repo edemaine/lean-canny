@@ -79,17 +79,17 @@ theorem reach_decider {n : List Bool → ℕ} {t : List Bool → Term}
     SpaceDecider (reachLanguage hn ht ha adjacent allowed) := by
   have hp := ComputableTidilyInPolyTime.fst encBits (encPair encBits encBits)
   have hr := ComputableTidilyInPolyTime.snd encBits (encPair encBits encBits)
-  have HE := (edge_computable hE).comp (.of_polyTime ((pairFst_mem_FP.comp hp).prod hr))
-  have HV := (vertex_computable hn ht ha hA).comp (.of_polyTime
+  have HE := (edge_computable hE).comp (.of_tidyPolyTime ((pairFst_mem_FP.comp hp).prod hr))
+  have HV := (vertex_computable hn ht ha hA).comp (.of_tidyPolyTime
     ((pairFst_mem_FP.comp (ComputableTidilyInPolyTime.fst encBits encBits)).prod
       (ComputableTidilyInPolyTime.snd encBits encBits)))
   have HR := ImplicitGraph.reachable_computable
     (edge:=fun q => edges adjacent (pairFst q)) (valid:=fun q => vertices hn ht ha allowed (pairFst q))
     HE HV ((IntegralMixedAuxiliaryCandidate.labelWidth_unary hn ht ha).comp pairFst_mem_FP)
-    (.of_polyTime (normalizedSource_FP hn ht ha)) (.of_polyTime (normalizedTarget_FP hn ht ha))
+    (.of_tidyPolyTime (normalizedSource_FP hn ht ha)) (.of_tidyPolyTime (normalizedTarget_FP hn ht ha))
     (fun q => IntegralMixedAuxiliaryCandidate.pad_length _ _) (fun q => IntegralMixedAuxiliaryCandidate.pad_length _ _)
-  have HG := ComputableTidilyInPolySpace.of_polyTime (endpoint_guard_FP hn ht ha).computable
-  have HF := ComputableTidilyInPolySpace.of_polyTime
+  have HG := ComputableInPolySpace.of_tidyPolyTime (endpoint_guard_FP hn ht ha).computable
+  have HF := ComputableInPolySpace.of_tidyPolyTime
     (ComputableTidilyInPolyTime.const (encIn:=encBits) (encMid:=encBool) false)
   apply SpaceDecider.of_computable (HG.ite HR HF)
   intro q

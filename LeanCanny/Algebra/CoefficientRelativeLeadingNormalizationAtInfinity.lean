@@ -37,7 +37,7 @@ theorem normalizeAt_map_native_after_mass
   · intro k hk
     rw [coeff_eq_zero_of_lt_natTrailingDegree hk,map_zero]
   · exact integer_survivor _
-      (Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr (Matrix.charpoly_monic _).ne_zero)
+      (Polynomial.trailingCoeff_ne_zero.mpr (Matrix.charpoly_monic _).ne_zero)
       massBits (hMass _) t ht
 
 theorem normalizeAt_map_native_finBasis_after_mass {w :ℕ}
