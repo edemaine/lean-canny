@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 public import LeanCanny.Encoding.FlatSyntax
-public import LeanCanny.Computation.BoundedImagePSPACE
+public import Complexity.Computability.Complexity.Classes.Space.Image
 public import LeanCanny.ETR.CoercivePSPACE
 public import LeanCanny.Connectivity.NativeConnectivityPSPACE
 public import LeanCanny.Connectivity.InputFP
@@ -33,8 +33,9 @@ def pointLanguage : Language :=
     bits = pointCode q.space.dimension q.space.formula q.source q.target ∧ q.Reachable}
 
 theorem etr_mem_PSPACE : etrLanguage ∈ PSPACE := by
-  have H := Computation.bounded_image_mem_PSPACE (bound := fun z => 100 * z.length) ETR.etr_mem_PSPACE translate_FP
-    ((UnaryFn.const 100).mul (UnaryFn.length id_mem_FP))
+  have H := Cslib.Complexity.bounded_image_mem_PSPACE (bound := fun z => 100 * z.length)
+    ETR.etr_mem_PSPACE (FP.computable translate_FP).computableInPolyTime
+    ((UnaryFn.const 100).mul (UnaryFn.length id_mem_FP)).computableInPolyTime
     (fun w hw => by
       obtain ⟨p, rfl, _⟩ := (ETR.mem_language_iff w).mp hw
       rw [translate_formula]
@@ -109,8 +110,9 @@ theorem point_balance (q : Connectivity.PointQuery) :
   omega
 
 theorem connected_mem_PSPACE : connectedLanguage ∈ PSPACE := by
-  have H := Computation.bounded_image_mem_PSPACE (bound := fun z => 100 * z.length) Connectivity.connectedLanguage_mem_PSPACE translateSpace_FP
-    ((UnaryFn.const 100).mul (UnaryFn.length id_mem_FP))
+  have H := Cslib.Complexity.bounded_image_mem_PSPACE (bound := fun z => 100 * z.length)
+    Connectivity.connectedLanguage_mem_PSPACE (FP.computable translateSpace_FP).computableInPolyTime
+    ((UnaryFn.const 100).mul (UnaryFn.length id_mem_FP)).computableInPolyTime
     (fun w hw => by
       obtain ⟨d, rfl, _⟩ := hw
       simpa only [translateSpace_whole] using space_balance d)
@@ -121,8 +123,9 @@ theorem connected_mem_PSPACE : connectedLanguage ∈ PSPACE := by
   exact HE ▸ H
 
 theorem point_mem_PSPACE : pointLanguage ∈ PSPACE := by
-  have H := Computation.bounded_image_mem_PSPACE (bound := fun z => 100 * z.length) Connectivity.pointLanguage_mem_PSPACE translatePoint_FP
-    ((UnaryFn.const 100).mul (UnaryFn.length id_mem_FP))
+  have H := Cslib.Complexity.bounded_image_mem_PSPACE (bound := fun z => 100 * z.length)
+    Connectivity.pointLanguage_mem_PSPACE (FP.computable translatePoint_FP).computableInPolyTime
+    ((UnaryFn.const 100).mul (UnaryFn.length id_mem_FP)).computableInPolyTime
     (fun w hw => by
       obtain ⟨q, rfl, _⟩ := hw
       simpa only [translatePoint_point] using point_balance q)

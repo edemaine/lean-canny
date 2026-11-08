@@ -8,7 +8,7 @@ package lean_canny where
 
 require complexitylib from git
   "https://github.com/cslib-community/complexitylib" @
-  "0f605ae2e501305b219028db1273d1ef42fe1c8b"
+  "393e2b13778f7ef37d173b9bbbccbf264a31450a"
 
 -- Pin the foundation's common CSLib/Mathlib versions.
 require cslib from git

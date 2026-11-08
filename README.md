@@ -175,7 +175,7 @@ Build the connectivity extension with `lake build LeanCannyConnectivity`.
 Import the formal abstract with `import LeanCanny.Abstract`, or build it with
 `lake build --wfail LeanCanny.Abstract`. It is also included in the default build.
 
-Dependencies are pinned to Complexitylib revision `0f605ae2` and Lean
+Dependencies are pinned to Complexitylib revision `393e2b13` and Lean
 `v4.36.0-rc2`, with matching CSLib and Mathlib revisions. The Lake package is
 `complexitylib`, from its canonical `cslib-community/complexitylib` repository.
 The build targets above require only their transitive dependency imports;

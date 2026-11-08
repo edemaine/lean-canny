@@ -117,8 +117,8 @@ query headers use library containers at fixed depth.
 translation from the original bracket encoding, its correctness on every
 formula, and linear size bounds in both directions. Its complete intermediate
 stack is polynomially bounded even on malformed words.
-[`BoundedImagePSPACE`](LeanCanny/Computation/BoundedImagePSPACE.lean) transfers
-PSPACE membership through polynomially balanced images by bounded inverse
+Complexitylib's [`bounded_image_mem_PSPACE`](https://github.com/cslib-community/complexitylib/blob/393e2b13778f7ef37d173b9bbbccbf264a31450a/Complexity/Computability/Complexity/Classes/Space/Image.lean)
+transfers PSPACE membership through polynomially balanced images by bounded inverse
 search. [`AbstractEncodingBridge`](LeanCanny/AbstractEncodingBridge.lean) applies
 this to all three languages, with exact image equalities that reject malformed
 inputs. These upper bounds need no polynomial-time inverse translator.
@@ -330,7 +330,7 @@ correctness from the coercive algebraic specialization.
 Complexitylib's canonical repository is now
 [`cslib-community/complexitylib`](https://github.com/cslib-community/complexitylib).
 The project uses the renamed Lake package `complexitylib`, pinned to revision
-`0f605ae2` with Lean `v4.36.0-rc2` and the matching CSLib/Mathlib dependency pins.
+`393e2b13` with Lean `v4.36.0-rc2` and the matching CSLib/Mathlib dependency pins.
 
 ## Unused tube route: remaining quantitative choices
 
