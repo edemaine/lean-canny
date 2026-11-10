@@ -103,12 +103,12 @@ theorem state_length (left right post answer : List Bool → List Bool) (q : Lis
   rcases t with _ | (_ | t)
   · change (RecursiveFold.encState (q, 0, [])).length ≤ _
     rw [RecursiveFold.Program.state_length]
-    have H := ComputableTidilyInO.length_encNat_mono (by decide : 0 ≤ 2)
+    have H := Turing.MultiTapeTM.length_encNat_mono (by decide : 0 ≤ 2)
     simp only [List.length_nil]
     omega
   · change (RecursiveFold.encState ((controller left right post).reference answer (q, 0, []))).length ≤ _
     rw [reference_zero, RecursiveFold.Program.state_length]
-    have H := ComputableTidilyInO.length_encNat_mono (by decide : 1 ≤ 2)
+    have H := Turing.MultiTapeTM.length_encNat_mono (by decide : 1 ≤ 2)
     omega
   · rw [show t + 1 + 1 = t + 2 by omega, iterate_two_add, RecursiveFold.Program.state_length]
     omega

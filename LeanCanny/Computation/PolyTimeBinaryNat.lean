@@ -5,12 +5,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Computation.PolyTimeBinary
-public import Complexity.Tactic.PolyTime.Init
+public import CslibFrontier.Tactic.PolyTime.Init
 
 /-! # Native polynomial-time arithmetic with binary natural outputs
 
 Unlike unary output certificates, these permit exponentially large values.
-All arithmetic below is supplied by Complexitylib2's native machine calculus.
+All arithmetic below is supplied by CSLib Frontier's native machine calculus.
 -/
 
 @[expose] public section

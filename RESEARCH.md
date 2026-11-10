@@ -5,7 +5,7 @@
 [`CoercivePSPACE`](LeanCanny/ETR/CoercivePSPACE.lean) proves
 `LeanCanny.ETR.etr_mem_PSPACE` and
 `LeanCanny.ETR.existsReal_subset_PSPACE`: the project's encoded ETR language
-belongs to Complexitylib's PSPACE, and every language polynomial-time reducible
+belongs to CSLib Frontier's PSPACE, and every language polynomial-time reducible
 to it does too. The final theorem composes actual native readers and preparation
 programs; it has no supplied coefficient, metadata, finite-fiber, or geometric
 parameter-selection hypothesis.
@@ -97,7 +97,7 @@ input-size bounds. The completed route uses this uncompactified equation,
 avoiding boundary zeros introduced by compactification.
 
 [`ExistsReal`](LeanCanny/ETR/Complexity.lean) is defined as the downward closure
-of this ETR language under Complexitylib polynomial-time many-one reductions.
+of this ETR language under CSLib Frontier polynomial-time many-one reductions.
 ETR is complete for that class by definition. The class inclusion follows from
 the ETR algorithm and proved PSPACE reduction closure. Relating the encoding
 to other standard ETR presentations and proving the NP lower inclusion are
@@ -109,7 +109,7 @@ separate future results.
 prefix token lists locally. `derive_syntax_encoding` inspects the inductives
 and generates their token functions, numbering constructors automatically. Its
 metaprogram lives in the proof bridge; the generated definitions belong to the
-abstract and have no implementation dependencies. Complexitylib's `encIntBin`,
+abstract and have no implementation dependencies. CSLib Frontier's `encIntBin`,
 `encUnary`, `encSum` and `encList` supply the binary serialization. Each token is framed once;
 query headers use library containers at fixed depth.
 
@@ -117,7 +117,7 @@ query headers use library containers at fixed depth.
 translation from the original bracket encoding, its correctness on every
 formula, and linear size bounds in both directions. Its complete intermediate
 stack is polynomially bounded even on malformed words.
-Complexitylib's [`bounded_image_mem_PSPACE`](https://github.com/cslib-community/complexitylib/blob/393e2b13778f7ef37d173b9bbbccbf264a31450a/Complexity/Computability/Complexity/Classes/Space/Image.lean)
+CSLib Frontier's [`bounded_image_mem_PSPACE`](https://github.com/cslib-community/cslib-frontier/blob/834a718bac09af5d720eafbd40974c6ecdc3f121/CslibFrontier/Computability/Complexity/Classes/Space/Image.lean)
 transfers PSPACE membership through polynomially balanced images by bounded inverse
 search. [`AbstractEncodingBridge`](LeanCanny/AbstractEncodingBridge.lean) applies
 this to all three languages, with exact image equalities that reject malformed
@@ -249,12 +249,12 @@ exports the unconditional ETR and ExistsReal PSPACE theorems.
 
 ## Complexity foundation and verification
 
-The development uses Complexitylib's multitape calculus: tidy certificates for
+The development uses CSLib Frontier's multitape calculus: tidy certificates for
 polynomial-time routines and plain certificates for polynomial-space routines.
 [`SpaceFunction`](LeanCanny/Computation/SpaceFunction.lean) is a proof-only
 wrapper around `ComputableInPolySpace`;
 [`SpaceDecider`](LeanCanny/Computation/SpaceDecider.lean) carries membership in
-Complexitylib's machine-based PSPACE class. P, FP, and polynomial-time
+CSLib Frontier's machine-based PSPACE class. P, FP, and polynomial-time
 many-one reductions also use this foundation directly.
 
 Composition, pairing, branches, binary folds, modular scans, matrix powering,
@@ -327,10 +327,10 @@ retaining their respective polynomial representatives. Generic fixed-width,
 homogenization, and residue-reader helpers similarly separate reusable packet
 correctness from the coercive algebraic specialization.
 
-Complexitylib's canonical repository is now
-[`cslib-community/complexitylib`](https://github.com/cslib-community/complexitylib).
-The project uses the renamed Lake package `complexitylib`, pinned to revision
-`393e2b13` with Lean `v4.36.0-rc2` and the matching CSLib/Mathlib dependency pins.
+CSLib Frontier's canonical repository is now
+[`cslib-community/cslib-frontier`](https://github.com/cslib-community/cslib-frontier).
+The project uses the renamed Lake package `cslib-frontier`, pinned to revision
+`834a718b` with Lean `v4.36.0-rc2` and the matching CSLib/Mathlib dependency pins.
 
 ## Unused tube route: remaining quantitative choices
 

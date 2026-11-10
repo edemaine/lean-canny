@@ -66,7 +66,7 @@ theorem degreeEvaluator (F : Family) (A : Readers F) (hne : ∀ c, F.polynomial 
   have hcount := ComputableTidilyInPolyTime.unary_to_binary.comp hn
   have hout := TidyBoundedFold.product_evaluator (factor := leafDegree F) hleaf hcount
     hbound.polyBounded_length (fun c k hk =>
-      ComputableTidilyInO.length_encNat_mono ((degreeProduct_bound F count D hne hdegree c k hk).trans
+      Turing.MultiTapeTM.length_encNat_mono ((degreeProduct_bound F count D hne hdegree c k hk).trans
         (Nat.pow_le_pow_right (by omega) hk)))
   have hparam : ComputableInPolySpace (fun c => (parameter F count hne c).natDegree) encBits encNat :=
     hout.congr fun c => (parameter_degree F count hne c).symm

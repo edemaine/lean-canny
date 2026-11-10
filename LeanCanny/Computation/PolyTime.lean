@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Complexity.Computability.Complexity.Reduction
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Basic
+public import CslibFrontier.Computability.Complexity.Reduction
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Basic
 
 /-! # Native polynomial-time classes on binary languages
 
-These abbreviations specialize Complexitylib2's encoding-parametric definitions
+These abbreviations specialize CSLib Frontier's encoding-parametric definitions
 to raw binary strings. In particular, reductions accept arbitrary native tidy
 polynomial-time certificates, independently of the legacy FP bridge.
 -/

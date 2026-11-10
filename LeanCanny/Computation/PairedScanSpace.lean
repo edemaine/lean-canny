@@ -53,7 +53,7 @@ theorem orbit_length (answer : List Bool → List Bool) (q : List Bool) (t : ℕ
   have HM := Nat.mod_lt t (by decide : 0 < 2)
   have HD := Nat.mod_add_div t 2
   have HK : t / 2 ≤ P.count q := by omega
-  have HL := ComputableTidilyInO.length_encNat_mono HK
+  have HL := Turing.MultiTapeTM.length_encNat_mono HK
   by_cases he : t % 2 = 0
   · have HE : t = 2 * (t / 2) := by omega
     rw [HE, P.iterate_even answer q _ HK, state_length]

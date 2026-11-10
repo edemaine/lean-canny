@@ -4,10 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Complexity.Computability.Complexity.Classes.Space
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolySpace.Plain
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.InSpace.Plain
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Plain
+public import CslibFrontier.Computability.Complexity.Classes.Space
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolySpace.Plain
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.InSpace.Plain
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Plain
 
 /-! # Lightweight native polynomial-space interfaces
 

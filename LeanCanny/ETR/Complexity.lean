@@ -11,7 +11,7 @@ public import LeanCanny.Computation.PolyTime
 # The complexity class ∃ℝ
 
 `ExistsReal` is the downward closure of the explicitly encoded ETR language under
-Complexitylib2's polynomial-time many-one reductions. These are reductions on every binary
+CSLib Frontier's polynomial-time many-one reductions. These are reductions on every binary
 string, including malformed inputs. This module proves the basic closure and completeness
 laws. It does not assert Canny's polynomial-space upper bound.
 -/

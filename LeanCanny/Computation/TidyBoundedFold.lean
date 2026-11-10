@@ -6,8 +6,8 @@ module
 
 public import LeanCanny.Computation.NativeSpaceClosure
 
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.InSpaceLib
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolySpace.Fold
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.InSpaceLib
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolySpace.Fold
 
 /-! # Binary-counted folds through the native plain space calculus
 

@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Computation.PolyTimeBinary
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat.Div
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat.Div
 
 /-! # Native unary arithmetic used by the encoders -/
 

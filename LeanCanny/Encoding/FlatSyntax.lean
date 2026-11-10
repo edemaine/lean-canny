@@ -6,9 +6,9 @@ module
 public import LeanCanny.Encoding.ContextTreeFold
 public import LeanCanny.ETR.NNFFP
 public import LeanCanny.ETR.IntegerResidueFP
-public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.IntBinary
-public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.Sum
-public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.List
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.IntBinary
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.Sum
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.List
 
 /-! # Flat library encodings of arithmetic syntax
 

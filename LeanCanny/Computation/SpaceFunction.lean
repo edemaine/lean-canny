@@ -8,7 +8,7 @@ public import LeanCanny.Computation.SpaceDecider
 
 /-! # Compositional polynomial-space output certificates
 
-This proof-only interface contains exactly Complexitylib's plain space
+This proof-only interface contains exactly CSLib Frontier's plain space
 certificate. Composition and iteration use the library's machine combinators.
 -/
 

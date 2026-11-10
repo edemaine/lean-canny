@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Computation.SpaceIteration
-public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.Length
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.Length
 
 /-! # A uniform call stack for recursive space computations
 

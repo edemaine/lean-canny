@@ -18,11 +18,11 @@ LeanCanny.ETR.existsReal_subset_PSPACE : LeanCanny.ExistsReal ⊆ LeanCanny.PSPA
 ```
 
 These are unconditional theorems for the project's encoded ETR language and
-[Complexitylib](https://github.com/cslib-community/complexitylib)'s
+[CSLib Frontier](https://github.com/cslib-community/cslib-frontier)'s
 machine-based PSPACE class. The coefficient algorithms,
 metadata preparation, recursive evaluation, and final sign decisions are
-constructed internally. The development uses Lean 4.36.0-rc1 with pinned
-Mathlib, CSLib, and Complexitylib dependencies.
+constructed internally. The development uses Lean 4.36.0-rc2 with pinned
+Mathlib, CSLib, and CSLib Frontier dependencies.
 
 This establishes the report's ETR and connectivity PSPACE upper bounds for the
 encoded problems below. Explicit roadmap output and motion-planning interfaces
@@ -42,7 +42,7 @@ and theorem statements to assess the claimed result; Lean verifies the proofs
 through [`AbstractBridge.lean`](LeanCanny/AbstractBridge.lean) and the development.
 All public definitions are local to the abstract or use background libraries.
 A declaration-driven command generates the local flat token encoding using
-Complexitylib encoders; its PSPACE transfer is checked
+CSLib Frontier encoders; its PSPACE transfer is checked
 in [`AbstractEncodingBridge.lean`](LeanCanny/AbstractEncodingBridge.lean).
 
 ## ETR proof outline
@@ -82,10 +82,10 @@ Selected entry points:
 | Final decision | [`CoerciveInfinitesimalSemantics`](LeanCanny/ETR/CoerciveInfinitesimalSemantics.lean), [`CoercivePSPACE`](LeanCanny/ETR/CoercivePSPACE.lean) |
 
 [`SpaceFunction`](LeanCanny/Computation/SpaceFunction.lean) wraps
-Complexitylib's `ComputableInPolySpace`.
+CSLib Frontier's `ComputableInPolySpace`.
 [`SpaceDecider`](LeanCanny/Computation/SpaceDecider.lean) carries membership in
 its native PSPACE class. Polynomial-time reductions and all FP controls also
-use Complexitylib directly. Space composition charges the original readers;
+use CSLib Frontier directly. Space composition charges the original readers;
 no free coefficient oracle or execution-time bound on a space-bounded child
 is assumed.
 
@@ -175,11 +175,11 @@ Build the connectivity extension with `lake build LeanCannyConnectivity`.
 Import the formal abstract with `import LeanCanny.Abstract`, or build it with
 `lake build --wfail LeanCanny.Abstract`. It is also included in the default build.
 
-Dependencies are pinned to Complexitylib revision `393e2b13` and Lean
+Dependencies are pinned to CSLib Frontier revision `834a718b` and Lean
 `v4.36.0-rc2`, with matching CSLib and Mathlib revisions. The Lake package is
-`complexitylib`, from its canonical `cslib-community/complexitylib` repository.
+`cslib-frontier`, from its canonical `cslib-community/cslib-frontier` repository.
 The build targets above require only their transitive dependency imports;
-they do not build Complexitylib's full library or result collection.
+they do not build CSLib Frontier's full library or result collection.
 
 For stricter verification:
 
@@ -226,6 +226,6 @@ The axiom and space audits include all three library targets. The axiom audit ch
 declarations in the `LeanCanny` namespace, local Nat
 codec extensions, and their transitive dependencies, allowing only Lean's
 standard `propext`, `Classical.choice`, and `Quot.sound` axioms. The foundation
-checks enforce the native Complexitylib time and space interfaces and reject
+checks enforce the native CSLib Frontier time and space interfaces and reject
 legacy machine dependencies. `CheckAbstract` also follows public definitions
 and statement dependencies to reject hidden implementation references.

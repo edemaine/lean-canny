@@ -125,7 +125,7 @@ theorem state_length_at (S : Source) (a : Access S) (originalLeading frozenSum r
       change 0 ≤ _
       exact Nat.zero_le _
   have HC : (encNat ((program S originalLeading frozenSum).count q)).length ≤ (encNat 2).length := by
-    apply ComputableTidilyInO.length_encNat_mono
+    apply Turing.MultiTapeTM.length_encNat_mono
     by_cases hz : zeroTarget S q <;> simp only [program, hz, ite_true, ite_false] <;> omega
   exact (H HB).trans (by dsimp only [stateBound]; omega)
 

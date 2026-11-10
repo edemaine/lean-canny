@@ -7,13 +7,13 @@ module
 public import Mathlib.Topology.Connected.Basic
 public import Mathlib.Topology.Path
 
-public import Complexity.Computability.Complexity.Classes.Space
-public import Complexity.Computability.Complexity.Reduction
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.Primitives
-public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.IntBinary
-public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.List
-public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.Pair
-public import Complexity.Computability.Machines.Turing.MultiTape.Encodings.Sum
+public import CslibFrontier.Computability.Complexity.Classes.Space
+public import CslibFrontier.Computability.Complexity.Reduction
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.Primitives
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.IntBinary
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.List
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.Pair
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.Sum
 
 public import LeanCanny.AbstractBridge
 
@@ -25,9 +25,9 @@ ETR ∈ PSPACE, ∃ℝ ⊆ PSPACE, and PSPACE bounds for point and whole-space
 connectivity. To check that these are the intended results, a reader only needs
 to inspect the definitions and theorem statements here. Lean checks the proofs
 through `AbstractBridge` and the rest of the development.
-The input encodings below use Complexitylib's standard encoders.
+The input encodings below use CSLib Frontier's standard encoders.
 
-The background complexity library is Complexitylib. Its PSPACE class means
+The background complexity library is CSLib Frontier. Its PSPACE class means
 that one deterministic Turing machine halts on every input and decides membership
 using polynomially many work-tape cells in the input's bit length.
 -/
@@ -93,7 +93,7 @@ order. Integer leaves use binary encoding; variable indices use unary encoding.
 Other constructors receive consecutive unary tags, considering `Term` before
 `Formula`; index tokens are shifted past those tags. The command below generates
 local `Token`, `Term.tokens`, `Formula.tokens`, and `encoding` definitions.
-Complexitylib frames each token once. Dimensions are unary; query framing has
+CSLib Frontier frames each token once. Dimensions are unary; query framing has
 fixed depth.
 -/
 

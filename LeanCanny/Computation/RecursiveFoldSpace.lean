@@ -60,7 +60,7 @@ theorem evaluator (hc : BinaryFn P.count) (hs : P.seed ∈ FP) (he : P.entryTask
     omega
   · intro root q hq t _ht
     have HS := P.orbit_length answer q t (V root) (hacc root q hq)
-    have HI := ComputableTidilyInO.length_encNat_mono (hcount root q hq)
+    have HI := Turing.MultiTapeTM.length_encNat_mono (hcount root q hq)
     have HW := hword root q hq
     change (RecursiveFold.encState ((P.controller.reference answer)^[t] (P.initial q))).length ≤ B root
     dsimp only [B]

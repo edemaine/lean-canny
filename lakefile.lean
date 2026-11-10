@@ -6,14 +6,14 @@ package lean_canny where
   version := v!"0.1.0"
   leanOptions := #[⟨`relaxedAutoImplicit, false⟩, ⟨`maxHeartbeats, 2000000⟩]
 
-require complexitylib from git
-  "https://github.com/cslib-community/complexitylib" @
-  "393e2b13778f7ef37d173b9bbbccbf264a31450a"
+require «cslib-frontier» from git
+  "https://github.com/cslib-community/cslib-frontier" @
+  "834a718bac09af5d720eafbd40974c6ecdc3f121"
 
 -- Pin the foundation's common CSLib/Mathlib versions.
 require cslib from git
   "https://github.com/leanprover/cslib" @
-  "254e30e6d4299c51323aaeaf5f51a4763b375d4a"
+  "bbd24fa3168878912552ee490c57775f5013e52d"
 
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4" @

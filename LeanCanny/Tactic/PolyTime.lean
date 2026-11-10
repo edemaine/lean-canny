@@ -9,13 +9,13 @@ public import LeanCanny.Computation.PolyTimeArithmetic
 public import LeanCanny.Computation.PolyTimeIteration
 public import LeanCanny.Computation.PolyTimeRange
 public import LeanCanny.Tactic.PolyTime.Init
-public import Complexity.Tactic.PolyTime
+public import CslibFrontier.Tactic.PolyTime
 public import Mathlib.Data.Finset.Card
 
-/-! # Polynomial-time automation through Complexitylib
+/-! # Polynomial-time automation through CSLib Frontier
 
 `polytime` normalizes the project's `FP`, `UnaryFn`, and `FPPred` interfaces,
-then uses Complexitylib's `fun_prop` and `PolyTime` certificate search. Local
+then uses CSLib Frontier's `fun_prop` and `PolyTime` certificate search. Local
 predicate certificates expose their Boolean verdicts. The project contributes
 only rules for its raw packet/range conventions and convenient unary bounds;
 composition, named routine lookup, and search belong to the upstream tools.
@@ -153,7 +153,7 @@ theorem native_bits {n : List Bool → ℕ}
     (hn : ComputableTidilyInPolyTime n encBits encUnary) :
     ComputableTidilyInPolyTime (fun z => (n z).bits) encBits encBits := bits_mem_FP hn
 
-/-- Normalize project interfaces, then use Complexitylib's certificate search. -/
+/-- Normalize project interfaces, then use CSLib Frontier's certificate search. -/
 macro "native_polytime" : tactic => `(tactic|
   (classical
    canny_native_certificates

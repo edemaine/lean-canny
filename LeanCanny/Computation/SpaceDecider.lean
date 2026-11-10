@@ -9,7 +9,7 @@ public import LeanCanny.Computation.NativeSpaceClosure
 
 /-! # Polynomial-space decision certificates
 
-The class and machine semantics are Complexitylib's. A certificate carries only
+The class and machine semantics are CSLib Frontier's. A certificate carries only
 membership, with no separate transition system or execution clock.
 -/
 

@@ -10,7 +10,7 @@ import LeanCanny.Encoding.BinaryDivFP
 import Lean.Util.CollectAxioms
 
 /-! The replacement foundation must compile without importing any legacy
-Complexitylib module. This independent check does not need the rest of the
+CSLib Frontier module. This independent check does not need the rest of the
 Canny development. -/
 
 open Turing.MultiTapeTM

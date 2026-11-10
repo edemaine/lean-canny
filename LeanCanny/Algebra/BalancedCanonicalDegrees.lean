@@ -131,7 +131,7 @@ theorem evaluator (B : Family) (A : Readers B) (hne : ∀ c, B.polynomial c ≠ 
   have E := TidyBoundedFold.product_evaluator
     (factor := fun p i => leafDegree B count (original p) (width count p * index p + i))
     hd (width_binary hn) hbound.polyBounded_length (fun p k hk => by
-      apply ComputableTidilyInO.length_encNat_mono
+      apply Turing.MultiTapeTM.length_encNat_mono
       exact (product_bound B count D hne hdegree _ _ _).trans
         (Nat.pow_le_pow_right (by omega) (hk.trans (width_le count p))))
   exact ⟨((ComputableInPolySpace.of_tidyPolyTime natBits_computable).comp E).congr

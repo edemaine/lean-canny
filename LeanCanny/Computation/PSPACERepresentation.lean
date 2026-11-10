@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.Computation.SpaceDecider
 
-/-! # The decider interface is exactly Complexitylib PSPACE membership -/
+/-! # The decider interface is exactly CSLib Frontier PSPACE membership -/
 
 @[expose] public section
 

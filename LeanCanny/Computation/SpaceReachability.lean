@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.Space.Reachability
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.Space.Reachability
 public import LeanCanny.Computation.SpaceFunction
 
 /-! # Native Savitch evaluation with polynomial-space adjacency and preprocessing

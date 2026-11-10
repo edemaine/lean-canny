@@ -5,9 +5,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Computation.SpaceFunctionBranch
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat.Binary
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.List
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat.Binary
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.List
 
 /-! # Iterating space-bounded transitions
 

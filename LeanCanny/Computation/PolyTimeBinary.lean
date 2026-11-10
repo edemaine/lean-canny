@@ -6,8 +6,8 @@ module
 
 public import LeanCanny.Computation.PolyTimeFunctions
 public import LeanCanny.Encoding.BinaryNatCode
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.BitString
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat.Binary
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.BitString
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat.Binary
 
 /-! # Native polynomial-time certificates for binary natural codecs -/
 

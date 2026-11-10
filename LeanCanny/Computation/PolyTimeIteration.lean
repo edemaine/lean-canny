@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.Computation.PolyTimePairing
 public import LeanCanny.Computation.PolyTimeBounds
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Iteration
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Iteration
 
 /-! # Native polynomial-time loops and right folds
 

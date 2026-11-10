@@ -6,9 +6,9 @@ module
 
 public import LeanCanny.Computation.PolynomialBounds
 public import LeanCanny.Encoding.Pairing
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.List
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.BitString
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.List
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.BitString
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat
 
 /-! # Native certificates for polynomial-time string functions
 

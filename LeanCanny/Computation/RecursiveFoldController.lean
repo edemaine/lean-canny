@@ -117,7 +117,7 @@ theorem orbit_length (answer : List Bool → List Bool) (q : List Bool) (t B : �
     (encState ((P.controller.reference answer)^[t] (P.initial q))).length ≤
       2 * q.length + 2 * (encNat (P.count q)).length + B + 2 := by
   rw [P.reference_iterate, state_length]
-  have HI := ComputableTidilyInO.length_encNat_mono (min_le_right t (P.count q))
+  have HI := Turing.MultiTapeTM.length_encNat_mono (min_le_right t (P.count q))
   have HV := hB (min t (P.count q)) (min_le_right _ _)
   omega
 

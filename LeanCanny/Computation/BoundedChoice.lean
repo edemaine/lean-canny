@@ -105,7 +105,7 @@ theorem computable {L : Language} (D : SpaceDecider L)
     (ComputableInPolySpace.of_tidyPolyTime (ComputableTidilyInPolyTime.const 0))
     (search L) (fun _ => rfl) (fun c k _ => by simp only [child, search])
     hn.polyBounded_length (fun c k hk =>
-      ComputableTidilyInO.length_encNat_mono ((search_le L c k).trans hk))
+      Turing.MultiTapeTM.length_encNat_mono ((search_le L c k).trans hk))
 
 theorem evaluator {L : Language} (D : SpaceDecider L)
     (bound : List Bool → List Bool) (hb : bound ∈ FP) :

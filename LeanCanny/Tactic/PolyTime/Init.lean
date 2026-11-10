@@ -4,6 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Samuel Schlesinger
 -/
 module
-public import Complexity.Tactic.PolyTime.Init
+public import CslibFrontier.Tactic.PolyTime.Init
 
 /-! The project uses upstream `program_certificate` registration. -/

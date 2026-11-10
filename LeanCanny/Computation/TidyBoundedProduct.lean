@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Computation.TidyBoundedFold
-public import Complexity.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat.Binary
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.PolyTime.Nat.Binary
 public import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 
 /-! # Binary range products in polynomial space

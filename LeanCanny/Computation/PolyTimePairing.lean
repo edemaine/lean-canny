@@ -5,8 +5,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Computation.PolyTimeFunctions
-public import Complexity.Computability.Machines.Turing.MultiTape.Combinators.Transducer
-public import Complexity.Tactic.PolyTime.Init
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Combinators.Transducer
+public import CslibFrontier.Tactic.PolyTime.Init
 
 /-! # Native polynomial-time certificates for the existing pair codec
 

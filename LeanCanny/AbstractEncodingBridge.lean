@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 module
 public import LeanCanny.Encoding.FlatSyntax
-public import Complexity.Computability.Complexity.Classes.Space.Image
+public import CslibFrontier.Computability.Complexity.Classes.Space.Image
 public import LeanCanny.ETR.CoercivePSPACE
 public import LeanCanny.Connectivity.NativeConnectivityPSPACE
 public import LeanCanny.Connectivity.InputFP

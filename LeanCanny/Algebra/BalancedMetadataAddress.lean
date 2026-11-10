@@ -5,7 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public import LeanCanny.Algebra.BalancedMetadataTable
-public import Complexity.Computability.Machines.Turing.MultiTape.Combinators.Transducer
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Combinators.Transducer
 
 /-! # Decoding a metadata cell into its tree node
 
