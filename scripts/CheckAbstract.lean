@@ -44,8 +44,8 @@ run_cmd do
 #print axioms LeanCanny.Abstract.etr_in_PSPACE
 #print axioms LeanCanny.Abstract.existsReal_subset_PSPACE
 #print axioms LeanCanny.Abstract.connectedLanguage_in_PSPACE
-#print axioms LeanCanny.Abstract.pointLanguage_in_PSPACE
+#print axioms LeanCanny.Abstract.reachableLanguage_in_PSPACE
 
 #print axioms LeanCanny.Abstract.etr_in_CountingLevel
 #print axioms LeanCanny.Abstract.existsReal_subset_CountingLevel
-#print axioms LeanCanny.Abstract.existsForall_in_CountingLevel
+#print axioms LeanCanny.Abstract.existsForallReal_in_CountingLevel

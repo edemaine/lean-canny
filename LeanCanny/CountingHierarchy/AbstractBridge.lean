@@ -119,13 +119,9 @@ theorem etr_upper_bound
       (falsum := falsum) (eqZero := eqZero) (ltZero := ltZero) (neg := neg) (conj := conj) (disj := disj)
       (eval := eval) (solutions := solutions) (termCode := termCode) (formulaCode := formulaCode)
       := by constructor <;> intros <;> rfl) :
-    {encoding (@formulaCode n p) | (n : ℕ) (p : F n) (_ : ∃ x, holds x p)} ∈
+    (⋃ n, (fun p => encoding (@formulaCode n p)) '' {p | ∃ x, holds x p}) ∈
       Cslib.Complexity.CountingLevel 26 encBits := by
-  have he : {encoding (@formulaCode n p) | (n : ℕ) (p : F n) (_ : ∃ x, holds x p)} =
-      ⋃ n, (fun p => encoding (@formulaCode n p)) '' {p | ∃ x, holds x p} := by
-    ext w
-    simp
-  rw [he, etr_language_eq termInduction formulaInduction laws]
+  rw [etr_language_eq termInduction formulaInduction laws]
   exact FlatSentenceEncoding.etr_mem
 
 /-- The two finite quantifier blocks use the same syntax and input convention. -/

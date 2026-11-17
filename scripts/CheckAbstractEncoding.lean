@@ -87,17 +87,17 @@ example : LeanCanny.Abstract.ETR ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.Abstract.etr_in_PSPACE
 example : LeanCanny.Abstract.ETR ∈ Cslib.Complexity.CountingLevel 26 encBits :=
   LeanCanny.Abstract.etr_in_CountingLevel
-example : LeanCanny.Abstract.ExistsForall ∈ Cslib.Complexity.CountingLevel 60 encBits :=
-  LeanCanny.Abstract.existsForall_in_CountingLevel
+example : LeanCanny.Abstract.ExistsForallReal ∈ Cslib.Complexity.CountingLevel 60 encBits :=
+  LeanCanny.Abstract.existsForallReal_in_CountingLevel
 
 -- The public two-block semantics includes empty blocks and keeps the
 -- existential choice outside the universal block.
-example : LeanCanny.Abstract.SentenceHolds (r := 0) (s := 0)
-    (LeanCanny.Abstract.Formula.not .falsum) := by
+example : (LeanCanny.Abstract.Formula.forallSolutionSet (r := 0) (s := 0)
+    (.not .falsum)).Nonempty := by
   exact ⟨fun i => Fin.elim0 i, fun _ => id⟩
 
-example : ¬LeanCanny.Abstract.SentenceHolds (r := 1) (s := 1)
-    (.eqZero (.add (.var 0) (.mul (.const (-1)) (.var 1)))) := by
+example : ¬(LeanCanny.Abstract.Formula.forallSolutionSet (r := 1) (s := 1)
+    (.eqZero (.add (.var 0) (.mul (.const (-1)) (.var 1))))).Nonempty := by
   rintro ⟨x, hx⟩
   have h := hx (fun _ => x 0 + 1)
   simp only [LeanCanny.Abstract.Formula.solutionSet, Set.mem_ofPred_eq,

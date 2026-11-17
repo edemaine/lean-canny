@@ -102,20 +102,19 @@ Other constructors receive consecutive unary tags, considering `Term` before
 `Formula`; index tokens are shifted past those tags. The command below generates
 local `Token`, `Term.tokens`, `Formula.tokens`, and `encoding` definitions.
 CSLib Frontier frames each token once. Dimensions are unary; query framing has
-fixed depth. Every language below contains exactly the encodings of its
-specified mathematical inputs and rejects every other bitstring.
+fixed depth. For a set `S` and function `f`, `S.image f` is the set of values
+`f x` for `x ∈ S` (equivalently, `f '' S`). Each language below applies an encoding
+to its set of valid mathematical inputs and rejects every other bitstring.
 -/
 
 derive_syntax_encoding Term Formula
   (integers := binary) (indices := unary)
 
-/-! ## Existential real arithmetic -/
+/-! ## ∃ℝ -/
 
-/-- ETR consists of the encodings of real-satisfiable formulas. `(_ : P)` means
-an unnamed proof of `P`, so the final binder restricts the comprehension to
-formulas with a nonempty solution set. The proof is not encoded. -/
+/-- ETR consists of the encodings of real-satisfiable formulas. -/
 def ETR : Set (List Bool) :=
-  {encoding p.tokens | (n : ℕ) (p : Formula n) (_ : p.solutionSet.Nonempty)}
+  ⋃ n, {p : Formula n | p.solutionSet.Nonempty}.image (fun p => encoding p.tokens)
 
 /-- Theorem (Canny, 1988): existential real satisfiability is decidable in deterministic
 polynomial space, including rejection of malformed binary inputs. -/
@@ -149,27 +148,26 @@ theorem existsReal_subset_CountingLevel :
 
 /-! ## ∃∀ℝ -/
 
-/-- A sentence of ∃∀ℝ chooses a real tuple of length `r` and
-requires the formula to hold for every real tuple of length `s`. `Fin.addCases`
-concatenates the two tuples, with the existential coordinates first. Either
-block may be empty. -/
-def SentenceHolds {r s : ℕ} (p : Formula (r + s)) : Prop :=
-  ∃ x : Fin r → ℝ, ∀ y : Fin s → ℝ, Fin.addCases x y ∈ p.solutionSet
+/-- The universally quantified solution set contains the real tuples `x` of
+length `r` for which every real tuple `y` of length `s` satisfies `p`.
+`Fin.addCases` concatenates the tuples, with the existential coordinates first.
+Either block may be empty; nonemptiness of this set expresses ∃∀ℝ truth. -/
+def Formula.forallSolutionSet {r s : ℕ} (p : Formula (r + s)) : Set (Fin r → ℝ) :=
+  {x | ∀ y : Fin s → ℝ, Fin.addCases x y ∈ p.solutionSet}
 
 /-- The language ∃∀ℝ consists of true existential-universal real sentences.
 It uses the same formula encoding as ETR and records the unary existential block
 length. The union allows all finite block sizes; unused coordinates do not affect
 truth. Every other word is rejected. -/
-def ExistsForall : Set (List Bool) :=
-  ⋃ r, ⋃ s, (fun p : Formula (r + s) =>
-    Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary encoding (r, p.tokens)) ''
-      {p | SentenceHolds p}
+def ExistsForallReal : Set (List Bool) :=
+  ⋃ r, ⋃ s, {p : Formula (r + s) | p.forallSolutionSet.Nonempty}.image (fun p =>
+    Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary encoding (r, p.tokens))
 
 /-- Theorem (OpenAI, 2026): ∃∀ℝ belongs to CH.
 This formalization supplies the fixed level C₆₀P, independent of variable counts,
 polynomial degrees, and coefficient magnitudes. -/
-theorem existsForall_in_CountingLevel :
-    ExistsForall ∈ Cslib.Complexity.CountingLevel 60 Turing.MultiTapeTM.encBits :=
+theorem existsForallReal_in_CountingLevel :
+    ExistsForallReal ∈ Cslib.Complexity.CountingLevel 60 Turing.MultiTapeTM.encBits :=
   CountingHierarchy.AbstractBridge.twoBlock_upper_bound
 
 /-! ## Whole-space connectivity -/
@@ -181,8 +179,8 @@ def ConnectedFormulas (n : ℕ) : Set (Formula n) :=
 
 /-- Whole-space connectivity applies the input encoding to connected formulas. -/
 def ConnectedLanguage : Set (List Bool) :=
-  ⋃ n, (fun p : Formula n => Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary
-    encoding (n, p.tokens)) '' ConnectedFormulas n
+  ⋃ n, (ConnectedFormulas n).image (fun p =>
+    Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary encoding (n, p.tokens))
 
 /-- Theorem (Canny, 1988): connectivity of an integer semialgebraic set is in PSPACE,
 including singular and unbounded sets and accepting the empty set. -/
@@ -190,7 +188,7 @@ theorem connectedLanguage_in_PSPACE :
     ConnectedLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.connected_upper_bound
 
-/-! ## Point connectivity -/
+/-! ## Point reachability -/
 
 /-- Reachable endpoint pairs describe two unique points joined by a continuous
 path inside the solution set of `p`. Mathlib's root-level `Path x y` is a
@@ -200,16 +198,16 @@ def ReachableEndpoints {n : ℕ} (p : Formula n) : Set (Formula n × Formula n) 
   {(a, b) | ∃ x y, a.solutionSet = {x} ∧ b.solutionSet = {y} ∧
     ∃ γ : _root_.Path x y, ∀ t, γ t ∈ p.solutionSet}
 
-/-- Point connectivity applies the input encoding to reachable endpoint pairs. -/
-def PointLanguage : Set (List Bool) :=
-  ⋃ n, ⋃ p : Formula n, (fun (a, b) =>
+/-- Reachability applies the input encoding to reachable endpoint pairs. -/
+def ReachableLanguage : Set (List Bool) :=
+  ⋃ n, ⋃ p : Formula n, (ReachableEndpoints p).image (fun (a, b) =>
     Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary (Turing.MultiTapeTM.encList encoding)
-      (n, [p.tokens, a.tokens, b.tokens])) '' ReachableEndpoints p
+      (n, [p.tokens, a.tokens, b.tokens]))
 
 /-- Theorem (Canny, 1988): path connectivity between two formula-described points
 in an integer semialgebraic set is in PSPACE, including endpoint validation. -/
-theorem pointLanguage_in_PSPACE :
-    PointLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
+theorem reachableLanguage_in_PSPACE :
+    ReachableLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.point_upper_bound
 
 end LeanCanny.Abstract
