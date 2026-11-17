@@ -50,9 +50,9 @@ and theorem statements to assess the claimed result; Lean verifies the proofs
 through the [PSPACE bridge](LeanCanny/AbstractBridge.lean),
 [CH bridge](LeanCanny/CountingHierarchy/AbstractBridge.lean), and the development.
 All public definitions are local to the abstract or use background libraries.
-A declaration-driven command generates the local flat token encoding using
-CSLib Frontier encoders; its PSPACE transfer is checked
-in [`AbstractEncodingBridge.lean`](LeanCanny/AbstractEncodingBridge.lean).
+The flat token serializers and their CSLib Frontier encoding are defined
+explicitly in the abstract; the PSPACE transfer is checked in
+[`AbstractEncodingBridge.lean`](LeanCanny/AbstractEncodingBridge.lean).
 
 ## ETR proof outline
 

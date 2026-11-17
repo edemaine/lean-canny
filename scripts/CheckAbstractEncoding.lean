@@ -8,55 +8,12 @@ public meta import LeanCanny.CountingHierarchy.FlatSentenceEncoding
 public meta import LeanCanny.ETR.Syntax
 public meta import LeanCanny.ETR.Encoding
 
-/-! Check that derivation uses constructor metadata rather than the names,
-arities or tag count of the arithmetic syntax. Run after building the abstract:
+/-! Check the public encoding against the native inverse compiler and exercise
+empty quantifier blocks and quantifier order. Run after building the abstract:
 `lake env lean scripts/CheckAbstractEncoding.lean`.
 -/
 
 public section
-namespace GeneratedEncodingCheck
-
-inductive Expr where
-  | number : ℤ → Expr
-  | symbol : ℕ → Expr
-  | empty : Expr
-  | join : Expr → Expr → Expr
-  | wrap : Expr → Expr
-
-LeanCanny.AbstractBridge.derive_syntax_encoding Expr (integers := binary) (indices := unary)
-
--- Three structural constructors give tags 0–2 and shift indices by three.
-example (z : ℤ) : (Expr.number z).tokens = [.inl z] := rfl
-example (i : ℕ) : (Expr.symbol i).tokens = [.inr (i + 3)] := rfl
-example : Expr.empty.tokens = [.inr 0] := rfl
-example (a b : Expr) : (Expr.join a b).tokens = .inr 1 :: (a.tokens ++ b.tokens) := rfl
-example (a : Expr) : (Expr.wrap a).tokens = .inr 2 :: a.tokens := rfl
-
--- The generated serializer uses only the selected library encoders.
-example : encoding = Turing.MultiTapeTM.encList
-    (Turing.MultiTapeTM.encSum Turing.MultiTapeTM.encIntBin Turing.MultiTapeTM.encUnary) := rfl
-
-namespace Ambiguous
-inductive Expr where
-  | first : ℤ → Expr
-  | second : ℤ → Expr
-
-/-- error: Multiple integer leaf constructors in GeneratedEncodingCheck.Ambiguous.Expr -/
-#guard_msgs in
-LeanCanny.AbstractBridge.derive_syntax_encoding Expr (integers := binary) (indices := unary)
-end Ambiguous
-
-namespace Unsupported
-inductive Expr where
-  | boolean : Bool → Expr
-
-/-- error: Unsupported field type Bool in GeneratedEncodingCheck.Unsupported.Expr.boolean; expected a supplied syntax type or a single integer/index leaf -/
-#guard_msgs in
-LeanCanny.AbstractBridge.derive_syntax_encoding Expr (integers := binary) (indices := unary)
-end Unsupported
-
-end GeneratedEncodingCheck
-
 /-! The unified abstract uses this same encoding for the PSPACE and CH results.
 Exercise the inverse compiler on signed leaves, every Boolean constructor,
 noncanonical tokens, and trailing input. -/
@@ -67,6 +24,14 @@ open Turing.MultiTapeTM
 private def mixed : Formula :=
   .or (.and (.eqZero (.add (.mul (.var 2) (.var 0)) (.const (-7))))
     (.ltZero (.const 3))) (.not .falsum)
+
+private def abstractMixed : Abstract.Formula 3 :=
+  .or (.and (.eqZero (.add (.mul (.var 2) (.var 0)) (.const (-7))))
+    (.ltZero (.const 3))) (.not .false)
+
+-- The independently specified public encoding agrees with the native compiler's input.
+example : Abstract.encoding abstractMixed.tokens =
+    FlatSyntax.encoding (FlatSyntax.formulaTokens mixed) := rfl
 
 #guard FlatSyntaxInverse.parse (FlatSyntax.encoding (FlatSyntax.formulaTokens mixed)) = mixed.encode
 #guard CountingHierarchy.FlatSentenceEncoding.compile (FlatSyntax.encoding (FlatSyntax.formulaTokens mixed)) = mixed.encode

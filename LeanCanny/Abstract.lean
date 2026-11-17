@@ -99,16 +99,36 @@ def Formula.solutionSet {n : ℕ} : Formula n → Set (Fin n → ℝ)
 A flat prefix list records each constructor before its children, in field
 order. Integer leaves use binary encoding; variable indices use unary encoding.
 Other constructors receive consecutive unary tags, considering `Term` before
-`Formula`; index tokens are shifted past those tags. The command below generates
-local `Token`, `Term.tokens`, `Formula.tokens`, and `encoding` definitions.
+`Formula`; index tokens are shifted past those eight tags. A token is either
+an integer coefficient or a natural-number tag or shifted variable index.
 CSLib Frontier frames each token once. Dimensions are unary; query framing has
 fixed depth. For a set `S` and function `f`, `S.image f` is the set of values
 `f x` for `x ∈ S` (equivalently, `f '' S`). Each language below applies an encoding
 to its set of valid mathematical inputs and rejects every other bitstring.
 -/
 
-LeanCanny.AbstractBridge.derive_syntax_encoding Term Formula
-  (integers := binary) (indices := unary)
+abbrev Token := ℤ ⊕ ℕ
+
+/-- Serialize polynomial expressions as prefix token lists. -/
+def Term.tokens {n : ℕ} : Term n → List Token
+  | .const z => [.inl z]
+  | .var i => [.inr (i.val + 8)]
+  | .add a b => .inr 0 :: (a.tokens ++ b.tokens)
+  | .mul a b => .inr 1 :: (a.tokens ++ b.tokens)
+
+/-- Serialize Boolean formulas using tags distinct from the term constructors. -/
+def Formula.tokens {n : ℕ} : Formula n → List Token
+  | .false => [.inr 2]
+  | .eqZero t => .inr 3 :: t.tokens
+  | .ltZero t => .inr 4 :: t.tokens
+  | .not p => .inr 5 :: p.tokens
+  | .and p q => .inr 6 :: (p.tokens ++ q.tokens)
+  | .or p q => .inr 7 :: (p.tokens ++ q.tokens)
+
+/-- Encode a token list with the library's binary-integer and unary-natural encodings. -/
+def encoding : List Token ↪ List Bool :=
+  Turing.MultiTapeTM.encList
+    (Turing.MultiTapeTM.encSum Turing.MultiTapeTM.encIntBin Turing.MultiTapeTM.encUnary)
 
 /-! ## ∃ℝ -/
 
