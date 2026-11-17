@@ -219,9 +219,10 @@ lift are proved. Native controlled families instantiate the full construction:
 `Controlled.twoBlock_mem` places existential-universal zero avoidance for any
 controlled `F_a` polynomial family in `C_(a+60) P`, including empty blocks.
 
-`ExistsForall.mem_CountingLevel` places the total encoded existential-universal
-real language in `C_60 P`. Its encoding pairs a unary existential block length
-with an arbitrary Boolean formula over integer polynomial expression trees;
+`ExistsForall.mem_CountingLevel` places the total encoded language ∃∀ℝ
+(true existential-universal real sentences) in `C_60 P`. Its encoding pairs a unary
+existential block length with an arbitrary Boolean formula over integer polynomial
+expression trees;
 all remaining variables are universal. The equation compiler preserves the
 existential prefix while introducing counterexample variables. Noncanonical
 frames and malformed formulas are rejected. `ExistsForall.RealClass` is the
@@ -241,7 +242,7 @@ does not expand a circuit into its computed polynomial.
 | Controlled feasibility in `C_(a+26) P` | [ControlledFeasibility.lean](LeanCanny/CountingHierarchy/ControlledFeasibility.lean) |
 | Encoded ETR and ∃ℝ in `C_26 P` | [ExistentialUpperBound.lean](LeanCanny/CountingHierarchy/ExistentialUpperBound.lean) |
 | Controlled two-block zero avoidance in `C_(a+60) P` | [ControlledTwoBlockDecision.lean](LeanCanny/CountingHierarchy/ControlledTwoBlockDecision.lean) |
-| Encoded existential-universal sentences in `C_60 P` | [ExistsForallUpperBound.lean](LeanCanny/CountingHierarchy/ExistsForallUpperBound.lean) |
+| Encoded ∃∀ℝ in `C_60 P` | [ExistsForallUpperBound.lean](LeanCanny/CountingHierarchy/ExistsForallUpperBound.lean) |
 | Shared-circuit semantics and native writers | [RealCircuit.lean](LeanCanny/CountingHierarchy/RealCircuit.lean) |
 
 ```sh

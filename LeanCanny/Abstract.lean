@@ -24,7 +24,7 @@ public import LeanCanny.CountingHierarchy.AbstractBridge
 This file introduces integer polynomial expressions, their real solution sets,
 and a shared binary encoding. It proves ETR ∈ PSPACE, ∃ℝ ⊆ PSPACE, and PSPACE
 bounds for semialgebraic connectivity following Canny (1988). It also proves
-ETR ∈ C₂₆P, ∃ℝ ⊆ C₂₆P, and existential-universal real truth ∈ C₆₀P following
+ETR ∈ C₂₆P, ∃ℝ ⊆ C₂₆P, and ∃∀ℝ ∈ C₆₀P following
 OpenAI, *Existential–universal real sentences in the counting hierarchy*
 (October 4, 2026):
 https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf
@@ -135,24 +135,25 @@ theorem existsReal_subset_CountingLevel :
     ExistsReal ⊆ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits :=
   CountingHierarchy.AbstractBridge.existsReal_upper_bound etr_mem_CountingLevel
 
-/-! ## Existential-universal real arithmetic -/
+/-! ## ∃∀ℝ -/
 
-/-- An existential-universal sentence chooses a real tuple of length `r` and
+/-- A sentence of ∃∀ℝ chooses a real tuple of length `r` and
 requires the formula to hold for every real tuple of length `s`. `Fin.addCases`
 concatenates the two tuples, with the existential coordinates first. Either
 block may be empty. -/
 def SentenceHolds {r s : ℕ} (p : Formula (r + s)) : Prop :=
   ∃ x : Fin r → ℝ, ∀ y : Fin s → ℝ, Fin.addCases x y ∈ p.solutionSet
 
-/-- Existential-universal truth uses the same formula encoding as ETR and
-records the unary existential block length. The union allows all finite block
-sizes; unused coordinates do not affect truth. Every other word is rejected. -/
+/-- The language ∃∀ℝ consists of true existential-universal real sentences.
+It uses the same formula encoding as ETR and records the unary existential block
+length. The union allows all finite block sizes; unused coordinates do not affect
+truth. Every other word is rejected. -/
 def ExistsForall : Set (List Bool) :=
   ⋃ r, ⋃ s, (fun p : Formula (r + s) =>
     Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary encoding (r, p.tokens)) ''
       {p | SentenceHolds p}
 
-/-- Theorem (OpenAI, 2026): existential-universal real truth is in CH.
+/-- Theorem (OpenAI, 2026): ∃∀ℝ belongs to CH.
 This formalization supplies the fixed level C₆₀P, independent of variable counts,
 polynomial degrees, and coefficient magnitudes. -/
 theorem existsForall_mem_CountingLevel :

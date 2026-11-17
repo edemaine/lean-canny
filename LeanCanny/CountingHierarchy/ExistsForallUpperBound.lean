@@ -10,7 +10,7 @@ public import LeanCanny.CountingHierarchy.ControlledConditional
 public import LeanCanny.CountingHierarchy.ControlledTwoBlockDecision
 public import LeanCanny.ETR.Complexity
 
-/-! # The encoded existential-universal theory of the reals in C₆₀P
+/-! # The encoded language ∃∀ℝ in C₆₀P
 
 The counting-hierarchy result follows OpenAI,
 *Existential–universal real sentences in the counting hierarchy* (October 4, 2026):
@@ -83,8 +83,8 @@ noncomputable def controlledGuardedCounterexample : Controlled guardedCounterexa
     (Controlled.constant controlledCounterexample.arity_computable (fun _ => 0) (.const 0))
     frameFlag frameFlag_polyTime
 
-/-- Every encoded existential-universal real sentence is decided at one fixed
-counting level, with no promise on the input word. -/
+/-- The total encoded language ∃∀ℝ is decided at one fixed counting level,
+with no promise on the input word. -/
 theorem mem_CountingLevel : language ∈ CountingLevel 60 encBits := by
   have hn := ComputableInPolyTime.unary_sub'
     (TermEvaluation.arity_unary source source_mem_FP).computableInPolyTime
@@ -96,10 +96,10 @@ theorem mem_CountingLevel : language ∈ CountingLevel 60 encBits := by
   exact guardedCounterexample_avoidance w
 
 /-- The complexity class defined by polynomial-time many-one reductions to the
-encoded two-block real language. -/
+encoded language ∃∀ℝ. -/
 def RealClass : Set Language := {L | PolyTimeReduces L language}
 
-/-- Every problem reducible to the two-block real theory has the same bound. -/
+/-- Every problem reducible to ∃∀ℝ has the same bound. -/
 theorem realClass_subset_CountingLevel : RealClass ⊆ CountingLevel 60 encBits := by
   intro L hL
   exact hL.mem_CountingLevel mem_CountingLevel

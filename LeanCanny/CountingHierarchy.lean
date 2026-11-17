@@ -77,7 +77,7 @@ of every controlled F_a family in C_(a+26) P. The native modular tree evaluator
 and equation compiler place the encoded ETR language and all of ∃ℝ in C_26 P.
 The source-derived two-test construction decides controlled two-block zero
 avoidance in C_(a+60) P. A fiber-preserving native Boolean compiler gives the
-total encoded existential-universal real language in C_60 P, and the same bound
+total encoded language ∃∀ℝ in C_60 P, and the same bound
 for every language polynomial-time many-one reducible to it. Shared arithmetic
 circuits retain their intermediate wires through a proved gate-equation bridge
 and native matrix writers, with C_26 P and C_60 P bounds for native circuit families.

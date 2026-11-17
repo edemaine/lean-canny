@@ -6,7 +6,7 @@ module
 
 public import LeanCanny.CountingHierarchy.ExistsForallSource
 
-/-! # The encoded existential-universal real language -/
+/-! # The encoded language ∃∀ℝ -/
 
 @[expose] public section
 
