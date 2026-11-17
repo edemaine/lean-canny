@@ -111,6 +111,118 @@ verification commands below.
 See [`RESEARCH.md`](RESEARCH.md) for prior work,
 proof details, and the unused tube route's precise gaps.
 
+## Counting-hierarchy extension
+
+The optional `LeanCannyCountingHierarchy` target (`import LeanCanny.CountingHierarchy`)
+formalizes the fixed counting-level upper bounds of OpenAI's October 4, 2026 preprint
+[*Existential–universal real sentences in the counting hierarchy*](https://github.com/openai/math/blob/main/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf).
+It uses CSLib Frontier's fixed-oracle, majority-verifier counting levels.
+
+`Controlled` supplies binary degree, coefficient-mass exponent and prime-cutoff
+bounds, unary arity, and one uniform modular evaluator. Constants, variables,
+addition, multiplication and binary-indexed powers have constructed evaluators
+at the same function level. Controlled zero-variable families inherit Frontier's
+`F_(max(a,5)+3)` sign bound.
+
+Finite-field orthogonality gives simultaneous multivariate coefficient extraction
+as one grid sum, including zero variables. A base-`p` address decodes the entire
+point in polynomial time, so the uniform multivariate evaluator has a checked
+`F_a → F_(a+1)` certificate with variable unary arity. It returns the canonical
+coefficient residue when the total degree and coordinate indices are below `p-1`.
+Addressed coefficients of controlled integer families inherit the original mass
+bound and have signs in `F_(max(a+1,5)+3)`.
+
+Binary-indexed factorial residues are available in `F_3`. The truncated-exponential
+module constructs the polynomial expression used in characteristic reconstruction,
+its modular evaluation and its indexed coefficient evaluator, with fixed CH bounds.
+Divided negative trace slots are constructed by modular powering. Supplied
+`F_(a+2)` trace residues yield an `F_(a+8)` indexed exponential coefficient evaluator,
+including reversal of the coefficient index and zero above the dimension.
+Jacobi's polynomial determinant identity gives Newton's recurrence over arbitrary
+commutative rings. Over fields with nonzero denominators through the truncation
+degree, the finite exponential satisfies that recurrence and has the same
+coefficients as the reversed characteristic polynomial. The modular evaluator
+therefore returns actual characteristic coefficients from modular power traces,
+including zero above the dimension.
+
+For pure-power systems, a finite residue functional descends to the actual relation
+ideal. Degree induction and the residue pairing prove that the normal monomials
+form a basis over any commutative coefficient ring. A normalized Bezout kernel
+then proves the multiplication trace–residue identity, including multiple roots
+and specialization to arbitrary characteristic.
+
+Uniform `F_a` evaluators for the objective, lower relations and Jacobian now
+construct power traces in `F_(a+5)` and indexed characteristic coefficients in
+`F_(a+8)`. The proof uses the actual normal-basis multiplication matrix and
+commutes with arbitrary coefficient-ring specialization. No trace or
+characteristic-coefficient oracle is assumed.
+
+The complete finite determinant criterion is proved for nonnegative integer
+polynomials. Coercive minima and the explicit separated centers give a monic,
+separable critical-value specialization with source-derived degree and log-mass
+bounds. Integer value resultants bound nonzero algebraic test values, including
+nonmonic and repeated-root source polynomials. Rational sign products and positive
+denominator clearing turn short derivative-test lists into integer root labels
+with uniform margins. Conjugate-pair products then identify feasibility with a
+negative actual quotient multiplication determinant for one short label and shift.
+
+Native evaluators construct the objective, relations and small Jacobian from
+source evaluations, using one additional level for simultaneous first and mixed
+second derivatives. The critical coefficients cost nine levels, the sparse label
+thirteen, the final integer norm twenty-one and its sign twenty-four. Polynomial-width
+coded witnesses and one bounded existential step prove `Controlled.feasibility_mem`:
+real feasibility of any controlled `F_a` family lies in `C_(a+26) P`.
+
+The native modular expression-tree evaluator connects this result to the existing
+equation compiler: `etr_mem_CountingLevel` proves the repository's total encoded ETR
+language belongs to `C_26 P`, and `existsReal_subset_CountingLevel` transfers the bound
+to all of ∃ℝ. The controlled-family theorem supports general degrees.
+
+For the two-block construction, finite-field fingerprints now select any prescribed
+real root. Their integer positivity labels have uniform margins and explicit degree
+and log-mass bounds; addressed coefficients give a native label evaluator in
+`F_(max(a,3)+8)`. Joint continuity of coercive fiber minima and their divergence on
+empty fibers are proved. Coordinate characteristic polynomials supply one integer
+candidate grid meeting every nonempty relatively clopen part of a zero set, using
+the existing constrained compactness argument. The fixed-power algebraic growth test,
+local constancy of empty fibers on degree pieces, and the inverse-variable closed
+lift are proved. Native controlled families instantiate the full construction:
+`Controlled.twoBlock_mem` places existential-universal zero avoidance for any
+controlled `F_a` polynomial family in `C_(a+60) P`, including empty blocks.
+
+`ExistsForall.mem_CountingLevel` places the total encoded existential-universal
+real language in `C_60 P`. Its encoding pairs a unary existential block length
+with an arbitrary Boolean formula over integer polynomial expression trees;
+all remaining variables are universal. The equation compiler preserves the
+existential prefix while introducing counterexample variables. Noncanonical
+frames and malformed formulas are rejected. `ExistsForall.RealClass` is the
+polynomial-time many-one downward closure, with the same `C_60 P` bound.
+
+Shared arithmetic circuits use shallow equations for their intermediate wires.
+`RealCircuit.sentence_iff` proves that universally quantified wire values under
+these equations agree with the actual acyclic circuit run; the original two
+blocks are preserved. `RealCircuit.guardedBits_mem_FP` supplies the native matrix
+writer, and `RealCircuit.generated_mem_CountingLevel` transfers the `C_60 P`
+bound to native circuit families. The existential circuit bridge similarly
+retains the sharper `C_26 P` bound. Gate equations retain sharing, so the bridge
+does not expand a circuit into its computed polynomial.
+
+| Result | Entry point |
+| --- | --- |
+| Controlled feasibility in `C_(a+26) P` | [ControlledFeasibility.lean](LeanCanny/CountingHierarchy/ControlledFeasibility.lean) |
+| Encoded ETR and ∃ℝ in `C_26 P` | [ExistentialUpperBound.lean](LeanCanny/CountingHierarchy/ExistentialUpperBound.lean) |
+| Controlled two-block zero avoidance in `C_(a+60) P` | [ControlledTwoBlockDecision.lean](LeanCanny/CountingHierarchy/ControlledTwoBlockDecision.lean) |
+| Encoded existential-universal sentences in `C_60 P` | [ExistsForallUpperBound.lean](LeanCanny/CountingHierarchy/ExistsForallUpperBound.lean) |
+| Shared-circuit semantics and native writers | [RealCircuit.lean](LeanCanny/CountingHierarchy/RealCircuit.lean) |
+
+```sh
+lake build LeanCannyCountingHierarchy --wfail --iofail
+lake env lean scripts/CheckCountingHierarchy.lean
+```
+
+The standalone check also audits the CH declarations and their transitive
+dependencies for standard Lean axioms.
+
 ## Connectivity
 
 The separate `LeanCannyConnectivity` target (`import LeanCanny.Connectivity`)
@@ -175,7 +287,7 @@ Build the connectivity extension with `lake build LeanCannyConnectivity`.
 Import the formal abstract with `import LeanCanny.Abstract`, or build it with
 `lake build --wfail LeanCanny.Abstract`. It is also included in the default build.
 
-Dependencies are pinned to CSLib Frontier revision `834a718b` and Lean
+Dependencies are pinned to CSLib Frontier revision `1a0acf76` and Lean
 `v4.36.0-rc2`, with matching CSLib and Mathlib revisions. The Lake package is
 `cslib-frontier`, from its canonical `cslib-community/cslib-frontier` repository.
 The build targets above require only their transitive dependency imports;
@@ -184,7 +296,7 @@ they do not build CSLib Frontier's full library or result collection.
 For stricter verification:
 
 ```sh
-lake build LeanCanny LeanCannyAlternatives LeanCannyConnectivity --wfail --iofail
+lake build LeanCanny LeanCannyAlternatives LeanCannyConnectivity LeanCannyCountingHierarchy --wfail --iofail
 lake env lean scripts/CheckCoreImports.lean
 lake env lean scripts/CheckAxioms.lean
 lake env lean scripts/CheckAbstract.lean
@@ -192,6 +304,7 @@ lake env lean scripts/CheckAbstractEncoding.lean
 lake env lean scripts/CheckGrammar.lean
 lake env lean scripts/CheckSpaceFoundation.lean
 lake env lean scripts/CheckPolyTimeFoundation.lean
+lake env lean scripts/CheckCountingHierarchy.lean
 lake env lean scripts/CheckConnectivity.lean
 lake env lean scripts/CheckJointFrontier.lean
 lake env lean scripts/CheckConnectivityPSPACE.lean
@@ -222,7 +335,8 @@ lake env lean scripts/CheckRoadmapOrigins.lean
 
 The core import check keeps the ETR endpoint independent of the optional tube
 route. The formal abstract also imports connectivity and its shared algebra.
-The axiom and space audits include all three library targets. The axiom audit checks
+The axiom audit includes all four library targets; the space audit covers the
+three PSPACE targets. The axiom audit checks
 declarations in the `LeanCanny` namespace, local Nat
 codec extensions, and their transitive dependencies, allowing only Lean's
 standard `propext`, `Classical.choice`, and `Quot.sound` axioms. The foundation

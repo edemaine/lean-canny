@@ -15,7 +15,7 @@ open Turing.MultiTapeTM
 
 theorem BinaryFn.sum {n f : List Bool → ℕ} (hn : UnaryFn n) (hf : BinaryFn f) :
     BinaryFn (fun z => ∑ i ∈ Finset.range (n z), f (pair z (List.replicate i true))) := by
-  have h := ComputableTidilyInPolyTime.binary_sum.comp
+  have h := ComputableInPolyTime.binary_sum.tidy.comp
     (ComputableTidilyInPolyTime.mapWithInput
       (f := fun z i => f (pair z (List.replicate i true)))
       (ComputableTidilyInPolyTime.range.comp hn) (hf.comp unaryPair_computable))

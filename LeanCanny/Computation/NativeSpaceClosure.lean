@@ -36,15 +36,8 @@ variable {α : Type} {enc : α ↪ List Bool} {A : Set α}
 /-- Native class membership agrees with a Boolean polynomial-space decider. -/
 theorem mem_iff : A ∈ Cslib.Complexity.PSPACE enc ↔
     ∃ f : α → Bool, ComputableInPolySpace f enc encBool ∧
-      ∀ a, a ∈ A ↔ f a = true := by
-  constructor
-  · rintro ⟨f, ⟨t, s, hs, hf⟩, hA⟩
-    obtain ⟨c, d, hcd⟩ := hs.exists_le
-    refine ⟨f, ⟨t, fun n => c * (n + 1) ^ d + 1, by fun_prop,
-      hf.mono (fun _ => le_rfl) (fun a => (hcd a).trans (Nat.le_succ _)),
-      fun _ => by simp⟩, hA⟩
-  · rintro ⟨f, ⟨t, s, hs, hf, _⟩, hA⟩
-    exact ⟨f, ⟨t, _, .of_polynomiallyBounded _ hs, hf⟩, hA⟩
+      ∀ a, a ∈ A ↔ f a = true :=
+  Cslib.Complexity.mem_PSPACE
 
 /-- A Boolean space certificate gives native class membership. -/
 theorem of_computable {f : α → Bool} (hf : ComputableInPolySpace f enc encBool)
