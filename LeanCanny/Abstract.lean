@@ -119,8 +119,14 @@ def ETR : Set (List Bool) :=
 
 /-- Theorem (Canny, 1988): existential real satisfiability is decidable in deterministic
 polynomial space, including rejection of malformed binary inputs. -/
-theorem etr_mem_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
+theorem etr_in_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.etr_upper_bound
+
+/-- Theorem (OpenAI, 2026): ETR belongs to the fixed counting level C₂₆P,
+with the same encoded language used in the PSPACE theorem above. -/
+theorem etr_in_CountingLevel :
+    ETR ∈ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits :=
+  CountingHierarchy.AbstractBridge.etr_upper_bound
 
 /-- The class ∃ℝ consists of binary languages reducible to ETR in polynomial time.
 A reduction is a polynomial-time algorithm on all input strings that preserves
@@ -135,17 +141,11 @@ theorem existsReal_subset_PSPACE :
     ExistsReal ⊆ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.existsReal_upper_bound
 
-/-- Theorem (OpenAI, 2026): ETR belongs to the fixed counting level C₂₆P,
-with the same encoded language used in the PSPACE theorem above. -/
-theorem etr_mem_CountingLevel :
-    ETR ∈ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits :=
-  CountingHierarchy.AbstractBridge.etr_upper_bound
-
 /-- Corollary (OpenAI, 2026): every problem in ∃ℝ belongs to that same fixed
 counting level. -/
 theorem existsReal_subset_CountingLevel :
     ExistsReal ⊆ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits :=
-  CountingHierarchy.AbstractBridge.existsReal_upper_bound etr_mem_CountingLevel
+  CountingHierarchy.AbstractBridge.existsReal_upper_bound etr_in_CountingLevel
 
 /-! ## ∃∀ℝ -/
 
@@ -168,7 +168,7 @@ def ExistsForall : Set (List Bool) :=
 /-- Theorem (OpenAI, 2026): ∃∀ℝ belongs to CH.
 This formalization supplies the fixed level C₆₀P, independent of variable counts,
 polynomial degrees, and coefficient magnitudes. -/
-theorem existsForall_mem_CountingLevel :
+theorem existsForall_in_CountingLevel :
     ExistsForall ∈ Cslib.Complexity.CountingLevel 60 Turing.MultiTapeTM.encBits :=
   CountingHierarchy.AbstractBridge.twoBlock_upper_bound
 
@@ -186,7 +186,7 @@ def ConnectedLanguage : Set (List Bool) :=
 
 /-- Theorem (Canny, 1988): connectivity of an integer semialgebraic set is in PSPACE,
 including singular and unbounded sets and accepting the empty set. -/
-theorem connectedLanguage_mem_PSPACE :
+theorem connectedLanguage_in_PSPACE :
     ConnectedLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.connected_upper_bound
 
@@ -208,7 +208,7 @@ def PointLanguage : Set (List Bool) :=
 
 /-- Theorem (Canny, 1988): path connectivity between two formula-described points
 in an integer semialgebraic set is in PSPACE, including endpoint validation. -/
-theorem pointLanguage_mem_PSPACE :
+theorem pointLanguage_in_PSPACE :
     PointLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.point_upper_bound
 

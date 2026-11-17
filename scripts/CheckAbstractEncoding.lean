@@ -84,11 +84,11 @@ example : FlatSyntax.encoding (FlatSyntax.termTokens (.const 0)) ∉
   cases p <;> simp [FlatSyntax.formulaTokens, FlatSyntax.termTokens, FlatSyntax.op] at he
 
 example : LeanCanny.Abstract.ETR ∈ Cslib.Complexity.PSPACE encBits :=
-  LeanCanny.Abstract.etr_mem_PSPACE
+  LeanCanny.Abstract.etr_in_PSPACE
 example : LeanCanny.Abstract.ETR ∈ Cslib.Complexity.CountingLevel 26 encBits :=
-  LeanCanny.Abstract.etr_mem_CountingLevel
+  LeanCanny.Abstract.etr_in_CountingLevel
 example : LeanCanny.Abstract.ExistsForall ∈ Cslib.Complexity.CountingLevel 60 encBits :=
-  LeanCanny.Abstract.existsForall_mem_CountingLevel
+  LeanCanny.Abstract.existsForall_in_CountingLevel
 
 -- The public two-block semantics includes empty blocks and keeps the
 -- existential choice outside the universal block.

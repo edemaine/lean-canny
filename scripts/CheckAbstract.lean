@@ -41,11 +41,11 @@ run_cmd do
   if roots = 0 then throwError "No abstract declarations found"
   logInfo m!"Audited {roots} abstract declarations and {visited.size} statement/definition dependencies: no implementation references or unexpected axioms."
 
-#print axioms LeanCanny.Abstract.etr_mem_PSPACE
+#print axioms LeanCanny.Abstract.etr_in_PSPACE
 #print axioms LeanCanny.Abstract.existsReal_subset_PSPACE
-#print axioms LeanCanny.Abstract.connectedLanguage_mem_PSPACE
-#print axioms LeanCanny.Abstract.pointLanguage_mem_PSPACE
+#print axioms LeanCanny.Abstract.connectedLanguage_in_PSPACE
+#print axioms LeanCanny.Abstract.pointLanguage_in_PSPACE
 
-#print axioms LeanCanny.Abstract.etr_mem_CountingLevel
+#print axioms LeanCanny.Abstract.etr_in_CountingLevel
 #print axioms LeanCanny.Abstract.existsReal_subset_CountingLevel
-#print axioms LeanCanny.Abstract.existsForall_mem_CountingLevel
+#print axioms LeanCanny.Abstract.existsForall_in_CountingLevel
