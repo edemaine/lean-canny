@@ -112,12 +112,13 @@ def ExistsReal : Set (Set (List Bool)) :=
   {L | Cslib.Complexity.PolyTimeReducible Turing.MultiTapeTM.encBits
     Turing.MultiTapeTM.encBits L ETR}
 
-/-- Theorem (Canny): existential real satisfiability is decidable in deterministic
+/-- Theorem (Canny, 1988): existential real satisfiability is decidable in deterministic
 polynomial space, including rejection of malformed binary inputs. -/
 theorem etr_mem_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.etr_upper_bound
 
-/-- Corollary: every problem in ∃ℝ is decidable in deterministic polynomial space. -/
+/-- Corollary (Canny, 1988): every problem in ∃ℝ is decidable in deterministic
+polynomial space. -/
 theorem existsReal_subset_PSPACE :
     ExistsReal ⊆ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.existsReal_upper_bound
@@ -129,7 +130,8 @@ theorem etr_mem_CountingLevel :
   CountingHierarchy.AbstractBridge.etr_upper_bound
     (termInduction := @Term.rec)
 
-/-- Corollary: every problem in ∃ℝ belongs to that same fixed counting level. -/
+/-- Corollary (OpenAI, 2026): every problem in ∃ℝ belongs to that same fixed
+counting level. -/
 theorem existsReal_subset_CountingLevel :
     ExistsReal ⊆ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits := by
   intro L hL
@@ -172,7 +174,7 @@ def ConnectedLanguage : Set (List Bool) :=
   ⋃ n, (fun p : Formula n => Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary
     encoding (n, p.tokens)) '' ConnectedFormulas n
 
-/-- Theorem: connectivity of an integer semialgebraic set is in PSPACE,
+/-- Theorem (Canny, 1988): connectivity of an integer semialgebraic set is in PSPACE,
 including singular and unbounded sets and accepting the empty set. -/
 theorem connectedLanguage_mem_PSPACE :
     ConnectedLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
@@ -194,8 +196,8 @@ def PointLanguage : Set (List Bool) :=
     Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary (Turing.MultiTapeTM.encList encoding)
       (n, [p.tokens, a.tokens, b.tokens])) '' ReachableEndpoints p
 
-/-- Theorem: path connectivity between two formula-described points in an
-integer semialgebraic set is in PSPACE, including endpoint validation. -/
+/-- Theorem (Canny, 1988): path connectivity between two formula-described points
+in an integer semialgebraic set is in PSPACE, including endpoint validation. -/
 theorem pointLanguage_mem_PSPACE :
     PointLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.point_upper_bound
