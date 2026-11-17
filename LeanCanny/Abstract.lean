@@ -133,9 +133,8 @@ theorem etr_mem_CountingLevel :
 /-- Corollary (OpenAI, 2026): every problem in ∃ℝ belongs to that same fixed
 counting level. -/
 theorem existsReal_subset_CountingLevel :
-    ExistsReal ⊆ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits := by
-  intro L hL
-  exact hL.mem_CountingLevel etr_mem_CountingLevel
+    ExistsReal ⊆ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits :=
+  CountingHierarchy.AbstractBridge.existsReal_upper_bound etr_mem_CountingLevel
 
 /-! ## Existential-universal real arithmetic -/
 

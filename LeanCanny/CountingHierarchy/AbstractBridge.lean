@@ -139,4 +139,12 @@ theorem twoBlock_upper_bound
   rw [twoBlock_language_eq termInduction formulaInduction laws]
   exact FlatSentenceEncoding.twoBlock_mem
 
+/-- Polynomial-time reductions transfer the existential bound to all of ∃ℝ. -/
+theorem existsReal_upper_bound {L : Set (List Bool)}
+    (hL : L ∈ Cslib.Complexity.CountingLevel 26 encBits) :
+    {K | Cslib.Complexity.PolyTimeReducible encBits encBits K L} ⊆
+      Cslib.Complexity.CountingLevel 26 encBits := by
+  intro K hK
+  exact hK.mem_CountingLevel hL
+
 end LeanCanny.CountingHierarchy.AbstractBridge
