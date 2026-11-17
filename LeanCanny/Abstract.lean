@@ -111,20 +111,22 @@ derive_syntax_encoding Term Formula
 
 /-! ## Existential real arithmetic -/
 
-/-- ETR consists of the encodings of real-satisfiable formulas. -/
-def ETR : Set (List Bool) := ⋃ n, (fun p : Formula n => encoding p.tokens) '' {p | p.solutionSet.Nonempty}
-
-/-- The class ∃ℝ consists of binary languages reducible to ETR in polynomial time.
-A reduction is a total algorithm on all input strings that preserves yes/no
-answers; the background library's `PolyTimeReducible` includes its time bound. -/
-def ExistsReal : Set (Set (List Bool)) :=
-  {L | Cslib.Complexity.PolyTimeReducible Turing.MultiTapeTM.encBits
-    Turing.MultiTapeTM.encBits L ETR}
+/-- ETR consists of the encodings of real-satisfiable formulas. The final binder
+restricts the comprehension to formulas with a nonempty solution set. -/
+def ETR : Set (List Bool) :=
+  {encoding p.tokens | (n : ℕ) (p : Formula n) (_ : p.solutionSet.Nonempty)}
 
 /-- Theorem (Canny, 1988): existential real satisfiability is decidable in deterministic
 polynomial space, including rejection of malformed binary inputs. -/
 theorem etr_mem_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.etr_upper_bound
+
+/-- The class ∃ℝ consists of binary languages reducible to ETR in polynomial time.
+A reduction is a polynomial-time algorithm on all input strings that preserves
+yes/no answers; the background library's `PolyTimeReducible` includes its time bound. -/
+def ExistsReal : Set (Set (List Bool)) :=
+  {L | Cslib.Complexity.PolyTimeReducible Turing.MultiTapeTM.encBits
+    Turing.MultiTapeTM.encBits L ETR}
 
 /-- Corollary (Canny, 1988): every problem in ∃ℝ is decidable in deterministic
 polynomial space. -/

@@ -347,9 +347,11 @@ theorem etr_upper_bound
       (neg := neg) (conj := conj) (disj := disj)
       (eval := eval) (solutions := solutions) (termCode := termCode) (formulaCode := formulaCode)
       := by constructor <;> intros <;> rfl) :
-    (⋃ n, (fun p => encoding (@formulaCode n p)) '' {p | ∃ x, holds x p}) ∈
-      Cslib.Complexity.PSPACE encBits :=
-  finite_etr_upper_bound termInduction formulaInduction laws
+    {encoding (@formulaCode n p) | (n : ℕ) (p : F n) (_ : ∃ x, holds x p)} ∈
+      Cslib.Complexity.PSPACE encBits := by
+  convert finite_etr_upper_bound termInduction formulaInduction laws using 1
+  ext w
+  simp
 
 theorem connected_upper_bound
     (formulaInduction : ∀ {n} {P : F n → Prop}, P falsum → (∀ t, P (eqZero t)) →
