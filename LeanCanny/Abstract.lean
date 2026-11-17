@@ -111,8 +111,9 @@ derive_syntax_encoding Term Formula
 
 /-! ## Existential real arithmetic -/
 
-/-- ETR consists of the encodings of real-satisfiable formulas. The final binder
-restricts the comprehension to formulas with a nonempty solution set. -/
+/-- ETR consists of the encodings of real-satisfiable formulas. `(_ : P)` means
+an unnamed proof of `P`, so the final binder restricts the comprehension to
+formulas with a nonempty solution set. The proof is not encoded. -/
 def ETR : Set (List Bool) :=
   {encoding p.tokens | (n : ℕ) (p : Formula n) (_ : p.solutionSet.Nonempty)}
 
