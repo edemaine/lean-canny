@@ -65,6 +65,13 @@ inductive Term (n : ℕ) where
   | add : Term n → Term n → Term n
   | mul : Term n → Term n → Term n
 
+/-- Evaluate an integer polynomial expression at a real assignment `x`. -/
+def Term.eval {n : ℕ} (x : Fin n → ℝ) : Term n → ℝ
+  | .const z => z
+  | .var i => x i
+  | .add a b => a.eval x + b.eval x
+  | .mul a b => a.eval x * b.eval x
+
 /-- A Boolean formula compares polynomial expressions with zero, using equality
 or strict inequality, and combines these assertions by negation, conjunction,
 and disjunction. ETR existentially quantifies all occurring variables;
@@ -76,13 +83,6 @@ inductive Formula (n : ℕ) where
   | not : Formula n → Formula n
   | and : Formula n → Formula n → Formula n
   | or : Formula n → Formula n → Formula n
-
-/-- Evaluate an integer polynomial expression at a real assignment `x`. -/
-def Term.eval {n : ℕ} (x : Fin n → ℝ) : Term n → ℝ
-  | .const z => z
-  | .var i => x i
-  | .add a b => a.eval x + b.eval x
-  | .mul a b => a.eval x * b.eval x
 
 /-- A formula describes a solution set in `ℝⁿ`, represented by `Fin n → ℝ`.
 Negation, conjunction, and disjunction give complement, intersection, and union. -/
