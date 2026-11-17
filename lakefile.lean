@@ -33,3 +33,7 @@ lean_lib LeanCannyConnectivity where
 -- Counting-hierarchy constructions are developed separately from the PSPACE endpoint.
 lean_lib LeanCannyCountingHierarchy where
   roots := #[`LeanCanny.CountingHierarchy]
+
+-- Independent public abstract of OpenAI's counting-hierarchy upper bounds.
+@[default_target]
+lean_lib RealCountingHierarchy

@@ -1,11 +1,11 @@
 import LeanCanny.Alternatives
 import LeanCanny.Connectivity
-import LeanCanny.CountingHierarchy
+import RealCountingHierarchy
 import Lean.Util.CollectAxioms
 
 /-! Audit every declaration in the project's namespace and the local Nat codec
 extensions, including transitive dependencies.
-Run with `lake env lean scripts/CheckAxioms.lean` after building all four library targets.
+Run with `lake env lean scripts/CheckAxioms.lean` after building all five library targets.
 -/
 
 open Lean in
@@ -16,11 +16,11 @@ run_cmd do
     let natCodec := match env.getModuleIdxFor? name with
       | some idx => env.header.moduleNames[idx.toNat]! == `LeanCanny.Encoding.NatBits
       | none => false
-    if (`LeanCanny).isPrefixOf name || natCodec then
+    if (`LeanCanny).isPrefixOf name || (`RealCountingHierarchy).isPrefixOf name || natCodec then
       checked := checked + 1
       for ax in ← collectAxioms name do
         unless #[`propext, `Classical.choice, `Quot.sound].contains ax do
           throwError "{name} depends on unexpected axiom {ax}"
   if checked = 0 then
-    throwError "No LeanCanny declarations found"
+    throwError "No project declarations found"
   logInfo m!"Audited {checked} declarations: only propext, Classical.choice, and Quot.sound allowed."

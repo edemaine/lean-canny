@@ -11,6 +11,11 @@ public import LeanCanny.ETR.Complexity
 
 /-! # The encoded existential theory of the reals in C₂₆P
 
+The counting-hierarchy result follows OpenAI,
+*Existential–universal real sentences in the counting hierarchy* (October 4, 2026):
+https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf
+The historical `LeanCanny` namespace records the host project, not authorship.
+
 The native equation compiler and modular tree evaluator provide the controlled
 source family. The generic feasibility theorem then decides every binary input,
 including malformed formulas. Polynomial-time reductions transfer the bound

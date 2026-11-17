@@ -10,7 +10,13 @@ public import LeanCanny.CountingHierarchy.SelectionCounterexampleCorrectness
 public import LeanCanny.CountingHierarchy.CounterexampleVariableOrder
 public import LeanCanny.CountingHierarchy.BoundedTwoTestDecision
 
-/-! # A fixed counting-level decision for controlled existential-universal zero avoidance -/
+/-! # A fixed counting-level decision for controlled existential-universal zero avoidance
+
+The counting-hierarchy result follows OpenAI,
+*Existential–universal real sentences in the counting hierarchy* (October 4, 2026):
+https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf
+The historical `LeanCanny` namespace records the host project, not authorship.
+-/
 
 public section
 

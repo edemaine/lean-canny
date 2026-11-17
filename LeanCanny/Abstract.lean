@@ -27,6 +27,9 @@ to inspect the definitions and theorem statements here. Lean checks the proofs
 through `AbstractBridge` and the rest of the development.
 The input encodings below use CSLib Frontier's standard encoders.
 
+OpenAI's 2026 counting-hierarchy results have a separate formal abstract in
+`RealCountingHierarchy.Abstract`; they are not attributed to Canny here.
+
 The background complexity library is CSLib Frontier. Its PSPACE class means
 that one deterministic Turing machine halts on every input and decides membership
 using polynomially many work-tape cells in the input's bit length.

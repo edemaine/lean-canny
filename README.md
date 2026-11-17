@@ -1,6 +1,10 @@
-# lean-canny
+# Real-algebraic complexity in Lean
 
-A Lean formalization of the theorem that the
+Formalizations of Canny's PSPACE bounds and OpenAI's counting-hierarchy bounds.
+The repository's historical name and implementation namespace are `lean-canny`
+and `LeanCanny`.
+
+The PSPACE development proves that the
 Existential Theory of the Reals (ETR) is in PSPACE,
 or stated in terms of complexity-theory classes: ∃ℝ ⊆ PSPACE,
 and native PSPACE bounds for semialgebraic point and whole-space connectivity.
@@ -9,7 +13,11 @@ This theorem is from John Canny's 1988 technical report
 (stored in this repo as [`canny-tr.pdf`](canny-tr.pdf)), published as a
 [STOC ’88 paper](https://doi.org/10.1145/62212.62257) (pp. 460–467).
 
-The main results in
+The separate **RealCountingHierarchy** library formalizes the counting-hierarchy
+upper bounds of **OpenAI (2026)**, described [below](#counting-hierarchy-upper-bounds-openai-2026).
+Its public name and formal abstract distinguish that work from Canny's results.
+
+The PSPACE endpoints in
 [`ETR/CoercivePSPACE.lean`](LeanCanny/ETR/CoercivePSPACE.lean) are:
 
 ```lean
@@ -111,12 +119,29 @@ verification commands below.
 See [`RESEARCH.md`](RESEARCH.md) for prior work,
 proof details, and the unused tube route's precise gaps.
 
-## Counting-hierarchy extension
+## Counting-hierarchy upper bounds (OpenAI, 2026)
 
-The optional `LeanCannyCountingHierarchy` target (`import LeanCanny.CountingHierarchy`)
-formalizes the fixed counting-level upper bounds of OpenAI's October 4, 2026 preprint
+The `RealCountingHierarchy` target (`import RealCountingHierarchy.Abstract`)
+formalizes the fixed counting-level upper bounds of **OpenAI**,
 [*Existential–universal real sentences in the counting hierarchy*](https://github.com/openai/math/blob/main/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf).
+The source's [supplied citation](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/README.md)
+identifies OpenAI as the author and October 4, 2026 as the date. These CH results
+are distinct from Canny's PSPACE results. The formalization gives the explicit
+two-block level 60 where the manuscript states membership in some fixed level.
 It uses CSLib Frontier's fixed-oracle, majority-verifier counting levels.
+
+The independently readable [formal abstract](RealCountingHierarchy/Abstract.lean)
+contains the mathematical definitions and checked main theorem statements.
+A reader checks those statements and definitions; Lean checks the proofs through
+[AbstractBridge.lean](RealCountingHierarchy/AbstractBridge.lean) and the development.
+The bridge proves exact equality of encoded inputs and supplies native polynomial-time
+identity reductions, including malformed inputs. The public statements use only
+this abstract's definitions and background libraries.
+
+`lake build` builds both this abstract and the existing
+[PSPACE abstract](LeanCanny/Abstract.lean). The CH implementation retains its
+historical `LeanCanny.CountingHierarchy` namespace and `LeanCannyCountingHierarchy`
+target for compatibility; this prefix does not attribute its results to Canny.
 
 `Controlled` supplies binary degree, coefficient-mass exponent and prime-cutoff
 bounds, unary arity, and one uniform modular evaluator. Constants, variables,
@@ -216,7 +241,8 @@ does not expand a circuit into its computed polynomial.
 | Shared-circuit semantics and native writers | [RealCircuit.lean](LeanCanny/CountingHierarchy/RealCircuit.lean) |
 
 ```sh
-lake build LeanCannyCountingHierarchy --wfail --iofail
+lake build RealCountingHierarchy --wfail --iofail
+lake env lean scripts/CheckCountingHierarchyAbstract.lean
 lake env lean scripts/CheckCountingHierarchy.lean
 ```
 
@@ -278,14 +304,16 @@ lake build
 ```
 
 [`lean-toolchain`](lean-toolchain) and [`lake-manifest.json`](lake-manifest.json)
-record the versions used. The default entry point is [`LeanCanny.lean`](LeanCanny.lean).
-`lake build` checks the formal abstract and its completed proofs. To build the
+record the versions used. The default entry points are [`LeanCanny.lean`](LeanCanny.lean)
+and [`RealCountingHierarchy.lean`](RealCountingHierarchy.lean). `lake build` checks
+both formal abstracts and their completed proofs. To build the
 retained alternative constructions, run `lake build LeanCannyAlternatives`;
 their entry point is [`Alternatives.lean`](LeanCanny/Alternatives.lean).
 Build the connectivity extension with `lake build LeanCannyConnectivity`.
 
-Import the formal abstract with `import LeanCanny.Abstract`, or build it with
-`lake build --wfail LeanCanny.Abstract`. It is also included in the default build.
+Import the PSPACE abstract with `import LeanCanny.Abstract` or the CH abstract
+with `import RealCountingHierarchy.Abstract`. Build either independently with
+`lake build LeanCanny` or `lake build RealCountingHierarchy`; both are default targets.
 
 Dependencies are pinned to CSLib Frontier revision `1a0acf76` and Lean
 `v4.36.0-rc2`, with matching CSLib and Mathlib revisions. The Lake package is
@@ -296,7 +324,7 @@ they do not build CSLib Frontier's full library or result collection.
 For stricter verification:
 
 ```sh
-lake build LeanCanny LeanCannyAlternatives LeanCannyConnectivity LeanCannyCountingHierarchy --wfail --iofail
+lake build LeanCanny LeanCannyAlternatives LeanCannyConnectivity LeanCannyCountingHierarchy RealCountingHierarchy --wfail --iofail
 lake env lean scripts/CheckCoreImports.lean
 lake env lean scripts/CheckAxioms.lean
 lake env lean scripts/CheckAbstract.lean
@@ -305,6 +333,7 @@ lake env lean scripts/CheckGrammar.lean
 lake env lean scripts/CheckSpaceFoundation.lean
 lake env lean scripts/CheckPolyTimeFoundation.lean
 lake env lean scripts/CheckCountingHierarchy.lean
+lake env lean scripts/CheckCountingHierarchyAbstract.lean
 lake env lean scripts/CheckConnectivity.lean
 lake env lean scripts/CheckJointFrontier.lean
 lake env lean scripts/CheckConnectivityPSPACE.lean
@@ -335,7 +364,7 @@ lake env lean scripts/CheckRoadmapOrigins.lean
 
 The core import check keeps the ETR endpoint independent of the optional tube
 route. The formal abstract also imports connectivity and its shared algebra.
-The axiom audit includes all four library targets; the space audit covers the
+The axiom audit includes all five library targets; the space audit covers the
 three PSPACE targets. The axiom audit checks
 declarations in the `LeanCanny` namespace, local Nat
 codec extensions, and their transitive dependencies, allowing only Lean's

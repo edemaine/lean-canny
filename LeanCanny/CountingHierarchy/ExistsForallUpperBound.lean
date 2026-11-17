@@ -12,6 +12,11 @@ public import LeanCanny.ETR.Complexity
 
 /-! # The encoded existential-universal theory of the reals in C₆₀P
 
+The counting-hierarchy result follows OpenAI,
+*Existential–universal real sentences in the counting hierarchy* (October 4, 2026):
+https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf
+The historical `LeanCanny` namespace records the host project, not authorship.
+
 Integer polynomial terms and arbitrary Boolean matrices are accepted. The outer
 real block has a unary length, the remaining variables are universally quantified,
 and malformed binary inputs are rejected. All source polynomials and their

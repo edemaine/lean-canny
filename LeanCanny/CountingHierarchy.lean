@@ -58,6 +58,11 @@ public import LeanCanny.CountingHierarchy.IndexedSystemFunction
 
 /-! # Counting-hierarchy access to implicit real-algebraic constructions
 
+The counting-hierarchy result follows OpenAI,
+*Existential–universal real sentences in the counting hierarchy* (October 4, 2026):
+https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf
+The historical `LeanCanny` namespace records the host project, not authorship.
+
 The controlled-polynomial access layer uses CSLib Frontier's fixed-oracle
 counting hierarchy. It includes coefficient extraction, factorial residues, and
 indexed coefficients of the truncated exponential of divided negative traces.
