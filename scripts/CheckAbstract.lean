@@ -30,7 +30,8 @@ run_cmd do
     visited := visited.insert name
     if let some idx := env.getModuleIdxFor? name then
       let owner := env.header.moduleNames[idx.toNat]!
-      if (`LeanCanny).isPrefixOf owner && !abstractModules.contains owner then
+      if ((`LeanCanny).isPrefixOf owner || (`RealCountingHierarchy).isPrefixOf owner) &&
+          !abstractModules.contains owner then
         throwError "Public abstract depends on implementation declaration {name} from {owner}"
     if let some info := env.find? name then
       pending := pending ++ info.type.getUsedConstants
@@ -44,3 +45,7 @@ run_cmd do
 #print axioms LeanCanny.Abstract.existsReal_subset_PSPACE
 #print axioms LeanCanny.Abstract.connectedLanguage_mem_PSPACE
 #print axioms LeanCanny.Abstract.pointLanguage_mem_PSPACE
+
+#print axioms LeanCanny.Abstract.etr_mem_CountingLevel
+#print axioms LeanCanny.Abstract.existsReal_subset_CountingLevel
+#print axioms LeanCanny.Abstract.existsForall_mem_CountingLevel

@@ -13,9 +13,9 @@ This theorem is from John Canny's 1988 technical report
 (stored in this repo as [`canny-tr.pdf`](canny-tr.pdf)), published as a
 [STOC ’88 paper](https://doi.org/10.1145/62212.62257) (pp. 460–467).
 
-The separate **RealCountingHierarchy** library formalizes the counting-hierarchy
-upper bounds of **OpenAI (2026)**, described [below](#counting-hierarchy-upper-bounds-openai-2026).
-Its public name and formal abstract distinguish that work from Canny's results.
+The [unified formal abstract](LeanCanny/Abstract.lean) presents both sets of
+results using one polynomial syntax, solution-set semantics, and binary encoding.
+It attributes the PSPACE results to Canny and the CH results to OpenAI.
 
 The PSPACE endpoints in
 [`ETR/CoercivePSPACE.lean`](LeanCanny/ETR/CoercivePSPACE.lean) are:
@@ -44,10 +44,11 @@ collinear solutions can produce a cubic GCD where the construction requires a
 linear one, regardless of the projection coefficients. The completed PSPACE
 proof avoids this failed step.
 
-For independently readable, checked statements of all three PSPACE bounds, see
+For independently readable, checked statements of the PSPACE and CH bounds, see
 [`Abstract.lean`](LeanCanny/Abstract.lean). A reader can inspect its definitions
 and theorem statements to assess the claimed result; Lean verifies the proofs
-through [`AbstractBridge.lean`](LeanCanny/AbstractBridge.lean) and the development.
+through the [PSPACE bridge](LeanCanny/AbstractBridge.lean),
+[CH bridge](LeanCanny/CountingHierarchy/AbstractBridge.lean), and the development.
 All public definitions are local to the abstract or use background libraries.
 A declaration-driven command generates the local flat token encoding using
 CSLib Frontier encoders; its PSPACE transfer is checked
@@ -99,8 +100,8 @@ is assumed.
 
 ## Alternative constructions
 
-The default `LeanCanny` library and `import LeanCanny` contain the completed
-ETR and connectivity proofs through the formal abstract. The optional
+The default `LeanCanny` library and `import LeanCanny` contain the unified
+formal abstract and its PSPACE and CH proofs. The optional
 `LeanCannyAlternatives` library is available through
 `import LeanCanny.Alternatives`; it also imports
 the completed result. All source modules retain their existing paths.
@@ -121,7 +122,7 @@ proof details, and the unused tube route's precise gaps.
 
 ## Counting-hierarchy upper bounds (OpenAI, 2026)
 
-The `RealCountingHierarchy` target (`import RealCountingHierarchy.Abstract`)
+The unified abstract (`import LeanCanny.Abstract` or `import RealCountingHierarchy`)
 formalizes the fixed counting-level upper bounds of **OpenAI**,
 [*Existential–universal real sentences in the counting hierarchy*](https://github.com/openai/math/blob/main/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf).
 The source's [supplied citation](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/README.md)
@@ -130,18 +131,21 @@ are distinct from Canny's PSPACE results. The formalization gives the explicit
 two-block level 60 where the manuscript states membership in some fixed level.
 It uses CSLib Frontier's fixed-oracle, majority-verifier counting levels.
 
-The independently readable [formal abstract](RealCountingHierarchy/Abstract.lean)
-contains the mathematical definitions and checked main theorem statements.
-A reader checks those statements and definitions; Lean checks the proofs through
-[AbstractBridge.lean](RealCountingHierarchy/AbstractBridge.lean) and the development.
-The bridge proves exact equality of encoded inputs and supplies native polynomial-time
-identity reductions, including malformed inputs. The public statements use only
-this abstract's definitions and background libraries.
+The [formal abstract](LeanCanny/Abstract.lean) contains the mathematical definitions
+and checked theorem statements for both PSPACE and CH. A reader checks those
+statements and definitions; Lean checks their proofs through the separate
+[PSPACE](LeanCanny/AbstractBridge.lean) and
+[CH](LeanCanny/CountingHierarchy/AbstractBridge.lean) bridges.
+The [native inverse compiler](LeanCanny/Encoding/FlatSyntaxInverse.lean) translates
+the shared flat encoding in polynomial time, preserving the fixed CH bounds
+and rejecting malformed inputs. The public definitions and statements depend
+only on the abstract and background libraries.
 
-`lake build` builds both this abstract and the existing
-[PSPACE abstract](LeanCanny/Abstract.lean). The CH implementation retains its
-historical `LeanCanny.CountingHierarchy` namespace and `LeanCannyCountingHierarchy`
-target for compatibility; this prefix does not attribute its results to Canny.
+`lake build` builds the unified abstract. The `RealCountingHierarchy` target is a
+neutral alternative import of that same abstract; it defines no second syntax
+or language. The CH implementation retains its historical
+`LeanCanny.CountingHierarchy` namespace and `LeanCannyCountingHierarchy` target;
+this prefix does not attribute its results to Canny.
 
 `Controlled` supplies binary degree, coefficient-mass exponent and prime-cutoff
 bounds, unary arity, and one uniform modular evaluator. Constants, variables,
@@ -242,7 +246,7 @@ does not expand a circuit into its computed polynomial.
 
 ```sh
 lake build RealCountingHierarchy --wfail --iofail
-lake env lean scripts/CheckCountingHierarchyAbstract.lean
+lake env lean scripts/CheckAbstract.lean
 lake env lean scripts/CheckCountingHierarchy.lean
 ```
 
@@ -304,16 +308,16 @@ lake build
 ```
 
 [`lean-toolchain`](lean-toolchain) and [`lake-manifest.json`](lake-manifest.json)
-record the versions used. The default entry points are [`LeanCanny.lean`](LeanCanny.lean)
-and [`RealCountingHierarchy.lean`](RealCountingHierarchy.lean). `lake build` checks
-both formal abstracts and their completed proofs. To build the
+record the versions used. The default entry point is [`LeanCanny.lean`](LeanCanny.lean);
+[`RealCountingHierarchy.lean`](RealCountingHierarchy.lean) imports the same abstract.
+`lake build` checks the unified abstract and its completed proofs. To build the
 retained alternative constructions, run `lake build LeanCannyAlternatives`;
 their entry point is [`Alternatives.lean`](LeanCanny/Alternatives.lean).
 Build the connectivity extension with `lake build LeanCannyConnectivity`.
 
-Import the PSPACE abstract with `import LeanCanny.Abstract` or the CH abstract
-with `import RealCountingHierarchy.Abstract`. Build either independently with
-`lake build LeanCanny` or `lake build RealCountingHierarchy`; both are default targets.
+Import the unified abstract with `import LeanCanny.Abstract` or the neutral
+`import RealCountingHierarchy`. Build with `lake build LeanCanny` or
+`lake build RealCountingHierarchy`; the default build includes the same proof closure.
 
 Dependencies are pinned to CSLib Frontier revision `1a0acf76` and Lean
 `v4.36.0-rc2`, with matching CSLib and Mathlib revisions. The Lake package is
@@ -333,7 +337,6 @@ lake env lean scripts/CheckGrammar.lean
 lake env lean scripts/CheckSpaceFoundation.lean
 lake env lean scripts/CheckPolyTimeFoundation.lean
 lake env lean scripts/CheckCountingHierarchy.lean
-lake env lean scripts/CheckCountingHierarchyAbstract.lean
 lake env lean scripts/CheckConnectivity.lean
 lake env lean scripts/CheckJointFrontier.lean
 lake env lean scripts/CheckConnectivityPSPACE.lean

@@ -34,6 +34,5 @@ lean_lib LeanCannyConnectivity where
 lean_lib LeanCannyCountingHierarchy where
   roots := #[`LeanCanny.CountingHierarchy]
 
--- Independent public abstract of OpenAI's counting-hierarchy upper bounds.
-@[default_target]
+-- Neutral entry point for the unified real-algebraic complexity abstract.
 lean_lib RealCountingHierarchy

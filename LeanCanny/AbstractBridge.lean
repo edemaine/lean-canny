@@ -226,6 +226,24 @@ private theorem solution_eq {n} {p : F n} {a : ETR.Formula}
   ext x
   exact hp.2.2 x
 
+
+include ti fi h in
+/-- A finite abstract formula has the same tokens and real truth as a bounded
+implementation formula. This correspondence is also used by the CH bridge. -/
+theorem finite_formula_to_raw {n} (p : F n) :
+    ∃ a : ETR.Formula, a.arity ≤ n ∧ formulaCode p = formulaTokens a ∧
+      ∀ x : Fin n → ℝ, holds x p ↔ a.Holds (ETR.Formula.extend x) :=
+  formula_to_raw ti fi h p
+
+include h in
+/-- Every bounded implementation formula has an abstract representative. -/
+theorem finite_formula_from_raw {n} (a : ETR.Formula) (ha : a.arity ≤ n) :
+    ∃ p : F n, formulaCode p = formulaTokens a ∧
+      ∀ x : Fin n → ℝ, holds x p ↔ a.Holds (ETR.Formula.extend x) := by
+  obtain ⟨p, hp⟩ := formula_from_raw h a ha
+  exact ⟨p, hp.2.1, hp.2.2⟩
+
+
 private theorem whole_code {n} {p : F n} {a : ETR.Formula}
     (hp : FormulaRep (solutions := solutions) (formulaCode := formulaCode) p a) :
     encPair encUnary encoding (n, formulaCode p) =

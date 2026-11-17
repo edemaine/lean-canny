@@ -7,6 +7,7 @@ module
 public import Mathlib.Topology.Connected.Basic
 public import Mathlib.Topology.Path
 
+public import CslibFrontier.Computability.Complexity.Classes.CountingHierarchy
 public import CslibFrontier.Computability.Complexity.Classes.Space
 public import CslibFrontier.Computability.Complexity.Reduction
 public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.Primitives
@@ -16,23 +17,29 @@ public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.Pa
 public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.Sum
 
 public import LeanCanny.AbstractBridge
+public import LeanCanny.CountingHierarchy.AbstractBridge
 
-/-! # A formal abstract of Canny's real-algebraic PSPACE bounds
+/-! # A formal abstract of real-algebraic complexity bounds
 
-This file introduces integer polynomial expressions, existential real
-satisfiability, semialgebraic connectivity, and their binary encodings. It proves
-ETR ∈ PSPACE, ∃ℝ ⊆ PSPACE, and PSPACE bounds for point and whole-space
-connectivity. To check that these are the intended results, a reader only needs
-to inspect the definitions and theorem statements here. Lean checks the proofs
-through `AbstractBridge` and the rest of the development.
-The input encodings below use CSLib Frontier's standard encoders.
+This file introduces integer polynomial expressions, their real solution sets,
+and a shared binary encoding. It proves ETR ∈ PSPACE, ∃ℝ ⊆ PSPACE, and PSPACE
+bounds for semialgebraic connectivity following Canny (1988). It also proves
+ETR ∈ C₂₆P, ∃ℝ ⊆ C₂₆P, and existential-universal real truth ∈ C₆₀P following
+OpenAI, *Existential–universal real sentences in the counting hierarchy*
+(October 4, 2026):
+https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf
 
-OpenAI's 2026 counting-hierarchy results have a separate formal abstract in
-`RealCountingHierarchy.Abstract`; they are not attributed to Canny here.
+To assess these claims, the reader need only inspect the definitions and theorem
+statements here. Lean verifies the proofs through the PSPACE and CH bridges and
+the development. Both parts use exactly the same syntax, solution sets, and input
+convention. The displayed grammar uses expression trees; the implementation also
+supplies shared-circuit bridges through shallow gate equations.
 
-The background complexity library is CSLib Frontier. Its PSPACE class means
-that one deterministic Turing machine halts on every input and decides membership
-using polynomially many work-tape cells in the input's bit length.
+CSLib Frontier supplies the background machine-based complexity classes. PSPACE
+means one deterministic machine halts on every input using polynomially many
+work-tape cells. C₀P is polynomial time, and Cⱼ₊₁P is strict-majority polynomial
+time with one fixed oracle from CⱼP. The statements below include malformed input
+rejection and one uniform machine for all input lengths.
 -/
 
 @[expose] public section
@@ -76,6 +83,13 @@ def Formula.solutionSet {n : ℕ} : Formula n → Set (Fin n → ℝ)
   | .and p q => p.solutionSet ∩ q.solutionSet
   | .or p q => p.solutionSet ∪ q.solutionSet
 
+/-- An existential-universal sentence chooses a real tuple of length `r` and
+requires the formula to hold for every real tuple of length `s`. `Fin.addCases`
+concatenates the two tuples, with the existential coordinates first. Either
+block may be empty. -/
+def SentenceHolds {r s : ℕ} (p : Formula (r + s)) : Prop :=
+  ∃ x : Fin r → ℝ, ∀ y : Fin s → ℝ, Fin.addCases x y ∈ p.solutionSet
+
 /-- Connected formulas describe connected solution sets in `ℝⁿ`, allowing the
 empty set (Mathlib's root-level `IsPreconnected`). -/
 def ConnectedFormulas (n : ℕ) : Set (Formula n) :=
@@ -112,6 +126,14 @@ and, for point queries, the formula describing the space.
 
 /-- ETR consists of the encodings of real-satisfiable formulas. -/
 def ETR : Set (List Bool) := ⋃ n, (fun p : Formula n => encoding p.tokens) '' {p | p.solutionSet.Nonempty}
+
+/-- Existential-universal truth uses the same formula encoding as ETR and
+records the unary existential block length. The union allows all finite block
+sizes; unused coordinates do not affect truth. Every other word is rejected. -/
+def ExistsForall : Set (List Bool) :=
+  ⋃ r, ⋃ s, (fun p : Formula (r + s) =>
+    Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary encoding (r, p.tokens)) ''
+      {p | SentenceHolds p}
 
 /-- Whole-space connectivity applies the input encoding to connected formulas. -/
 def ConnectedLanguage : Set (List Bool) :=
@@ -152,5 +174,26 @@ integer semialgebraic set is in PSPACE, including endpoint validation. -/
 theorem pointLanguage_mem_PSPACE :
     PointLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.point_upper_bound
+
+/-- Theorem (OpenAI, 2026): ETR belongs to the fixed counting level C₂₆P,
+with the same encoded language used in the PSPACE theorem above. -/
+theorem etr_mem_CountingLevel :
+    ETR ∈ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits :=
+  CountingHierarchy.AbstractBridge.etr_upper_bound
+    (termInduction := @Term.rec)
+
+/-- Corollary: every problem in ∃ℝ belongs to that same fixed counting level. -/
+theorem existsReal_subset_CountingLevel :
+    ExistsReal ⊆ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits := by
+  intro L hL
+  exact hL.mem_CountingLevel etr_mem_CountingLevel
+
+/-- Theorem (OpenAI, 2026): existential-universal real truth is in CH.
+This formalization supplies the fixed level C₆₀P, independent of variable counts,
+polynomial degrees, and coefficient magnitudes. -/
+theorem existsForall_mem_CountingLevel :
+    ExistsForall ∈ Cslib.Complexity.CountingLevel 60 Turing.MultiTapeTM.encBits :=
+  CountingHierarchy.AbstractBridge.twoBlock_upper_bound
+    (termInduction := @Term.rec)
 
 end LeanCanny.Abstract
