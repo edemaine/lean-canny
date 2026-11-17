@@ -106,13 +106,15 @@ private theorem twoBlock_language_eq :
     refine ⟨r, s, p, ⟨x, fun y => (he _).mpr (hx y)⟩, ?_⟩
     exact (congrArg (fun ts => encPair encUnary encoding (r, ts)) hc).trans hw.symm
 
-/-- The flat encoding is compiled natively, retaining the existential bound. -/
+/-- The flat encoding is compiled natively, retaining the existential bound.
+Inferring formula induction first determines the arithmetic term type, so both
+syntax recursors can be supplied by the bridge's default arguments. -/
 theorem etr_upper_bound
-    (termInduction : ∀ {n} {P : T n → Prop}, (∀ z, P (const z)) → (∀ i, P (var i)) →
-      (∀ a b, P a → P b → P (add a b)) → (∀ a b, P a → P b → P (mul a b)) → ∀ t, P t := by bridge_induction)
     (formulaInduction : ∀ {n} {P : F n → Prop}, P falsum → (∀ t, P (eqZero t)) → (∀ t, P (ltZero t)) →
       (∀ p, P p → P (neg p)) → (∀ p q, P p → P q → P (conj p q)) →
       (∀ p q, P p → P q → P (disj p q)) → ∀ p, P p := by bridge_induction)
+    (termInduction : ∀ {n} {P : T n → Prop}, (∀ z, P (const z)) → (∀ i, P (var i)) →
+      (∀ a b, P a → P b → P (add a b)) → (∀ a b, P a → P b → P (mul a b)) → ∀ t, P t := by bridge_induction)
     (laws : LeanCanny.AbstractBridge.FiniteLaws (const := const) (var := var) (add := add) (mul := mul)
       (falsum := falsum) (eqZero := eqZero) (ltZero := ltZero) (neg := neg) (conj := conj) (disj := disj)
       (eval := eval) (solutions := solutions) (termCode := termCode) (formulaCode := formulaCode)
@@ -124,11 +126,11 @@ theorem etr_upper_bound
 
 /-- The two finite quantifier blocks use the same syntax and input convention. -/
 theorem twoBlock_upper_bound
-    (termInduction : ∀ {n} {P : T n → Prop}, (∀ z, P (const z)) → (∀ i, P (var i)) →
-      (∀ a b, P a → P b → P (add a b)) → (∀ a b, P a → P b → P (mul a b)) → ∀ t, P t := by bridge_induction)
     (formulaInduction : ∀ {n} {P : F n → Prop}, P falsum → (∀ t, P (eqZero t)) → (∀ t, P (ltZero t)) →
       (∀ p, P p → P (neg p)) → (∀ p q, P p → P q → P (conj p q)) →
       (∀ p q, P p → P q → P (disj p q)) → ∀ p, P p := by bridge_induction)
+    (termInduction : ∀ {n} {P : T n → Prop}, (∀ z, P (const z)) → (∀ i, P (var i)) →
+      (∀ a b, P a → P b → P (add a b)) → (∀ a b, P a → P b → P (mul a b)) → ∀ t, P t := by bridge_induction)
     (laws : LeanCanny.AbstractBridge.FiniteLaws (const := const) (var := var) (add := add) (mul := mul)
       (falsum := falsum) (eqZero := eqZero) (ltZero := ltZero) (neg := neg) (conj := conj) (disj := disj)
       (eval := eval) (solutions := solutions) (termCode := termCode) (formulaCode := formulaCode)

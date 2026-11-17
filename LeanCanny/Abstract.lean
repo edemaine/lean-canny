@@ -128,7 +128,6 @@ with the same encoded language used in the PSPACE theorem above. -/
 theorem etr_mem_CountingLevel :
     ETR ∈ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits :=
   CountingHierarchy.AbstractBridge.etr_upper_bound
-    (termInduction := @Term.rec)
 
 /-- Corollary (OpenAI, 2026): every problem in ∃ℝ belongs to that same fixed
 counting level. -/
@@ -159,7 +158,6 @@ polynomial degrees, and coefficient magnitudes. -/
 theorem existsForall_mem_CountingLevel :
     ExistsForall ∈ Cslib.Complexity.CountingLevel 60 Turing.MultiTapeTM.encBits :=
   CountingHierarchy.AbstractBridge.twoBlock_upper_bound
-    (termInduction := @Term.rec)
 
 /-! ## Whole-space connectivity -/
 
