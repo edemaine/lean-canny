@@ -403,7 +403,7 @@ end
 
 /-! ## Generated input encodings
 
-`derive_syntax_encoding` inspects the supplied inductive declarations. A sole
+`LeanCanny.AbstractBridge.derive_syntax_encoding` inspects the supplied inductive declarations. A sole
 integer or natural/finite-index field is a scalar leaf; every other field must
 be another supplied syntax type. Non-leaf constructors receive consecutive
 unary tags in declaration order across the supplied types. Index leaves are
@@ -467,7 +467,7 @@ private def encodingAlts (types : Array InductiveVal) (ind : InductiveVal)
 /-- Generate local flat syntax encoders from constructor metadata. Integer and
 index leaf constructors emit scalar tokens. Other constructors receive global
 consecutive tags in the supplied type/declaration order. -/
-elab "derive_syntax_encoding " inputs:ident+
+elab "LeanCanny.AbstractBridge.derive_syntax_encoding " inputs:ident+
     "(" &"integers" ":=" &"binary" ")" "(" &"indices" ":=" &"unary" ")" : command => do
   let mut types : Array InductiveVal := #[]
   for input in inputs do

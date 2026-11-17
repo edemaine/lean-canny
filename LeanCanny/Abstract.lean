@@ -77,7 +77,7 @@ or strict inequality, and combines these assertions by negation, conjunction,
 and disjunction. ETR existentially quantifies all occurring variables;
 connectivity treats them as coordinates of the described space. -/
 inductive Formula (n : ℕ) where
-  | falsum : Formula n
+  | false : Formula n
   | eqZero : Term n → Formula n
   | ltZero : Term n → Formula n
   | not : Formula n → Formula n
@@ -87,7 +87,7 @@ inductive Formula (n : ℕ) where
 /-- A formula describes a solution set in `ℝⁿ`, represented by `Fin n → ℝ`.
 Negation, conjunction, and disjunction give complement, intersection, and union. -/
 def Formula.solutionSet {n : ℕ} : Formula n → Set (Fin n → ℝ)
-  | .falsum => ∅
+  | .false => ∅
   | .eqZero t => {x | t.eval x = 0}
   | .ltZero t => {x | t.eval x < 0}
   | .not p => p.solutionSetᶜ
@@ -107,7 +107,7 @@ fixed depth. For a set `S` and function `f`, `S.image f` is the set of values
 to its set of valid mathematical inputs and rejects every other bitstring.
 -/
 
-derive_syntax_encoding Term Formula
+LeanCanny.AbstractBridge.derive_syntax_encoding Term Formula
   (integers := binary) (indices := unary)
 
 /-! ## ∃ℝ -/
@@ -148,11 +148,11 @@ theorem existsReal_subset_CountingLevel :
 
 /-! ## ∃∀ℝ -/
 
-/-- The universally quantified solution set contains the real tuples `x` of
-length `r` for which every real tuple `y` of length `s` satisfies `p`.
+/-- The ∃∀ℝ solution set contains the existential assignments `x` of length `r`
+for which every universal assignment `y` of length `s` satisfies `p`.
 `Fin.addCases` concatenates the tuples, with the existential coordinates first.
 Either block may be empty; nonemptiness of this set expresses ∃∀ℝ truth. -/
-def Formula.forallSolutionSet {r s : ℕ} (p : Formula (r + s)) : Set (Fin r → ℝ) :=
+def Formula.existsForallSolutionSet {r s : ℕ} (p : Formula (r + s)) : Set (Fin r → ℝ) :=
   {x | ∀ y : Fin s → ℝ, Fin.addCases x y ∈ p.solutionSet}
 
 /-- The language ∃∀ℝ consists of true existential-universal real sentences.
@@ -160,7 +160,7 @@ It uses the same formula encoding as ETR and records the unary existential block
 length. The union allows all finite block sizes; unused coordinates do not affect
 truth. Every other word is rejected. -/
 def ExistsForallReal : Set (List Bool) :=
-  ⋃ r, ⋃ s, {p : Formula (r + s) | p.forallSolutionSet.Nonempty}.image (fun p =>
+  ⋃ r, ⋃ s, {p : Formula (r + s) | p.existsForallSolutionSet.Nonempty}.image (fun p =>
     Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary encoding (r, p.tokens))
 
 /-- Theorem (OpenAI, 2026): ∃∀ℝ belongs to CH.

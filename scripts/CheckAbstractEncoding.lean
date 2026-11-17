@@ -23,7 +23,7 @@ inductive Expr where
   | join : Expr → Expr → Expr
   | wrap : Expr → Expr
 
-derive_syntax_encoding Expr (integers := binary) (indices := unary)
+LeanCanny.AbstractBridge.derive_syntax_encoding Expr (integers := binary) (indices := unary)
 
 -- Three structural constructors give tags 0–2 and shift indices by three.
 example (z : ℤ) : (Expr.number z).tokens = [.inl z] := rfl
@@ -43,7 +43,7 @@ inductive Expr where
 
 /-- error: Multiple integer leaf constructors in GeneratedEncodingCheck.Ambiguous.Expr -/
 #guard_msgs in
-derive_syntax_encoding Expr (integers := binary) (indices := unary)
+LeanCanny.AbstractBridge.derive_syntax_encoding Expr (integers := binary) (indices := unary)
 end Ambiguous
 
 namespace Unsupported
@@ -52,7 +52,7 @@ inductive Expr where
 
 /-- error: Unsupported field type Bool in GeneratedEncodingCheck.Unsupported.Expr.boolean; expected a supplied syntax type or a single integer/index leaf -/
 #guard_msgs in
-derive_syntax_encoding Expr (integers := binary) (indices := unary)
+LeanCanny.AbstractBridge.derive_syntax_encoding Expr (integers := binary) (indices := unary)
 end Unsupported
 
 end GeneratedEncodingCheck
@@ -92,11 +92,11 @@ example : LeanCanny.Abstract.ExistsForallReal ∈ Cslib.Complexity.CountingLevel
 
 -- The public two-block semantics includes empty blocks and keeps the
 -- existential choice outside the universal block.
-example : (LeanCanny.Abstract.Formula.forallSolutionSet (r := 0) (s := 0)
-    (.not .falsum)).Nonempty := by
+example : (LeanCanny.Abstract.Formula.existsForallSolutionSet (r := 0) (s := 0)
+    (.not .false)).Nonempty := by
   exact ⟨fun i => Fin.elim0 i, fun _ => id⟩
 
-example : ¬(LeanCanny.Abstract.Formula.forallSolutionSet (r := 1) (s := 1)
+example : ¬(LeanCanny.Abstract.Formula.existsForallSolutionSet (r := 1) (s := 1)
     (.eqZero (.add (.var 0) (.mul (.const (-1)) (.var 1))))).Nonempty := by
   rintro ⟨x, hx⟩
   have h := hx (fun _ => x 0 + 1)
