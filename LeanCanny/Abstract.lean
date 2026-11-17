@@ -24,10 +24,7 @@ public import LeanCanny.CountingHierarchy.AbstractBridge
 This file introduces integer polynomial expressions, their real solution sets,
 and a shared binary encoding. It proves ETR ∈ PSPACE, ∃ℝ ⊆ PSPACE, and PSPACE
 bounds for semialgebraic connectivity following Canny (1988). It also proves
-ETR ∈ C₂₆P, ∃ℝ ⊆ C₂₆P, and ∃∀ℝ ∈ C₆₀P following
-OpenAI, *Existential–universal real sentences in the counting hierarchy*
-(October 4, 2026):
-https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf
+ETR ∈ C₂₆P, ∃ℝ ⊆ C₂₆P, and ∃∀ℝ ∈ C₆₀P following OpenAI (2026).
 
 To assess these claims, the reader need only inspect the definitions and theorem
 statements here. Lean verifies the proofs through the PSPACE and CH bridges and
@@ -40,6 +37,18 @@ means one deterministic machine halts on every input using polynomially many
 work-tape cells. C₀P is polynomial time, and Cⱼ₊₁P is strict-majority polynomial
 time with one fixed oracle from CⱼP. The statements below include malformed input
 rejection and one uniform machine for all input lengths.
+
+## References
+
+* John F. Canny, *Some Algebraic and Geometric Computations in PSPACE*.
+  Technical Report UCB/CSD-88-439, University of California, Berkeley, August 1988.
+  https://www2.eecs.berkeley.edu/Pubs/TechRpts/1988/6041.html
+* John F. Canny, *Some Algebraic and Geometric Computations in PSPACE*.
+  Proceedings of the 20th Annual ACM Symposium on Theory of Computing (STOC ’88),
+  ACM, 1988, pp. 460–467. https://doi.org/10.1145/62212.62257
+* OpenAI, *Existential–universal real sentences in the counting hierarchy*.
+  OpenAI Math Release preprint, October 4, 2026.
+  https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf
 -/
 
 @[expose] public section
