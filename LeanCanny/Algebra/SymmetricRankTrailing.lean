@@ -30,7 +30,7 @@ private theorem maxGen_zero_eq_ker {K V : Type*} [Field K] [AddCommGroup V] [Mod
   · rintro ⟨n, hn⟩
     cases n with
     | zero =>
-      simp only [pow_zero, Module.End.one_apply] at hn
+      simp only [pow_zero, one_apply_eq_self] at hn
       rw [hn, map_zero]
     | succ n =>
       have hk : ker (f ^ (n + 1)) = ker f := by

@@ -65,7 +65,7 @@ theorem coeff_integerPolynomial (p : MvPolynomial ι ℤ) (s : Finset (Polynomia
   rw [integerPolynomial_decomposition, linearShift_eq]
   split_ifs <;> simp only [mul_add, mul_zero, add_zero, zero_add, AddMonoidAlgebra.coeff_add,
     Finsupp.add_apply, MvPolynomial.coeff_C_mul, coeff_integerSpatial, hf, ht]
-  all_goals ring
+  ring
 
 omit [DecidableEq ι] in
 theorem coeff_integerProjection_level (p : MvPolynomial ι ℤ) (s : Finset (PolynomialPerturbation.Constraint ι))

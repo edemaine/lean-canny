@@ -83,7 +83,7 @@ theorem entry_packet (L : Layout)
       simp only [ite_true, true_and]
       by_cases HU : u = 0
       · subst u
-        simp only [ite_true, Polynomial.coeff_one_zero, Int.cast_one, BinaryNat.succ_eq_bits]
+        simp only [ite_true, AddMonoidAlgebra.coeff_one_zero, Int.cast_one, BinaryNat.succ_eq_bits]
         change ArithmeticBits.one (BinaryNatCode.encode (Nat.fromBitsLE m + 1)) = _
         exact ArithmeticBits.one_residueBits _
       · rw [ite_eq_right HU, Polynomial.coeff_one, ite_eq_right HU, Int.cast_zero]

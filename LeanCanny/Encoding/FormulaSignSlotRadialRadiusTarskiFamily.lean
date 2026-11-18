@@ -127,6 +127,7 @@ private theorem window_as_monomials (c : List Bool) : window c=
 
 theorem window_coefficient_degree (c : List Bool) (i : ℕ) : ((window c).coeff i).totalDegree ≤ 1 := by
   rw [window_as_monomials,Polynomial.coeff_sub,Polynomial.coeff_monomial,Polynomial.coeff_monomial]
+  simp only [Finsupp.single_apply]
   apply (MvPolynomial.totalDegree_sub _ _).trans
   apply max_le
   · split_ifs <;> simp

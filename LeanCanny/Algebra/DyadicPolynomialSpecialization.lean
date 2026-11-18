@@ -26,9 +26,9 @@ theorem coeff_specialize (p : (ℤ[X])[X]) (D s i : ℕ) :
     (specialize p D s).coeff i = DyadicSpecialization.numerator (p.coeff i) D s := by
   classical
   by_cases hi : i ∈ p.support
-  · simp [specialize, Polynomial.sum, Polynomial.coeff_monomial, hi]
+  · simp [specialize, Polynomial.sum, Polynomial.coeff_monomial, Finsupp.single_apply, hi]
   · have hz : p.coeff i = 0 := Polynomial.notMem_support_iff.mp hi
-    simp [specialize, Polynomial.sum, Polynomial.coeff_monomial, hi, hz]
+    simp [specialize, Polynomial.sum, Polynomial.coeff_monomial, Finsupp.single_apply, hi, hz]
 
 @[simp] theorem specialize_zero (D s : ℕ) : specialize 0 D s = 0 := by
   ext i
@@ -64,7 +64,8 @@ theorem specialize_eq_zero_iff (p : (ℤ[X])[X]) (D s b : ℕ) (hD : ∀ i, (p.c
     specialize p D s = 0 ↔ p = 0 := by
   constructor
   · intro hz
-    apply Polynomial.ext
+    apply AddMonoidAlgebra.ext
+    apply Finsupp.ext
     intro i
     rw [Polynomial.coeff_zero]
     have hc := congrArg (fun q : ℤ[X] => q.coeff i) hz

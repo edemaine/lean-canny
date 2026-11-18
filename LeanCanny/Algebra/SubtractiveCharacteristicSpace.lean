@@ -82,7 +82,7 @@ theorem coefficient {N : ℕ} (A : Matrix (Fin N) (Fin N) (Polynomial ℤ)) (i j
       if v = 0 then (A i j).coeff u else if v = 1 ∧ u = 0 ∧ i = j then -1 else 0 := by
   unfold AffineCharacteristic.subtractiveMatrix
   rw [Polynomial.X_mul_C, Polynomial.C_mul_X_eq_monomial, Polynomial.coeff_sub,
-    Polynomial.coeff_C, Polynomial.coeff_monomial]
+    Polynomial.coeff_C, Polynomial.coeff_monomial, Finsupp.single_apply]
   by_cases hv : v = 0 <;> by_cases hv' : v = 1 <;> by_cases hu : u = 0 <;> by_cases hij : i = j <;>
     simp_all [Matrix.one_apply, Polynomial.coeff_one, eq_comm]
 
@@ -107,7 +107,7 @@ theorem inner_degree {N E : ℕ} (A : Matrix (Fin N) (Fin N) (Polynomial ℤ))
     ((AffineCharacteristic.subtractiveMatrix A i j).coeff v).natDegree ≤ E := by
   unfold AffineCharacteristic.subtractiveMatrix
   rw [Polynomial.X_mul_C, Polynomial.C_mul_X_eq_monomial, Polynomial.coeff_sub,
-    Polynomial.coeff_C, Polynomial.coeff_monomial]
+    Polynomial.coeff_C, Polynomial.coeff_monomial, Finsupp.single_apply]
   apply (Polynomial.natDegree_sub_le _ _).trans
   apply max_le
   · split_ifs

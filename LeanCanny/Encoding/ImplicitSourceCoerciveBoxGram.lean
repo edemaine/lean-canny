@@ -127,7 +127,7 @@ private theorem one_coefficient (u v : ℕ) : (((1 : (ℤ[X])[X]).coeff v).coeff
     if u=0 ∧ v=0 then 1 else 0 := by
   by_cases hv : v=0
   · subst v
-    rw [Polynomial.coeff_one_zero,Polynomial.coeff_one]
+    rw [AddMonoidAlgebra.coeff_one_zero,Polynomial.coeff_one]
     simp only [and_true]
   · rw [Polynomial.coeff_one,ite_eq_right hv,Polynomial.coeff_zero]
     simp only [hv,and_false,ite_false]

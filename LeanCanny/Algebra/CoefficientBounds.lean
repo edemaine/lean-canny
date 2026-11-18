@@ -137,7 +137,7 @@ theorem det_coeff_natAbs_le {ι : Type*} [Fintype ι] [DecidableEq ι]
     _ ≤ ∑ _σ : Equiv.Perm ι, ∏ j, B j := by
       apply Finset.sum_le_sum
       intro σ _
-      simp only [Polynomial.coeff_smul, Units.smul_def, smul_eq_mul, Int.natAbs_mul,
+      simp only [AddMonoidAlgebra.coeff_smul_apply, Units.smul_def, smul_eq_mul, Int.natAbs_mul,
         Int.units_natAbs, one_mul]
       exact coeff_natAbs_prod_le _ _ B (fun j _ => hB (σ j) j) k
     _ = _ := by simp [Fintype.card_perm]

@@ -132,7 +132,7 @@ theorem value (P : IntegralCriticalHistoryTask.Parameters) (S : IntegralEulerBit
   by_cases hd : isDerivative P c <;>
     simp only [IntegralClearedCoefficientBits.Source.value, IntegralClearedCoefficientBits.Source.targetExponent,
       source, hd, ite_true, ite_false]
-  all_goals rfl
+  rfl
 
 noncomputable def actual (P : IntegralCriticalHistoryTask.Parameters) (F : IntegralCriticalScriptGeneratorBits.Queries)
     (q : IntegralCriticalScriptQueryBits.GeneratorQueries F) := source P (IntegralCriticalFlatEulerRowsBits.source P F q)

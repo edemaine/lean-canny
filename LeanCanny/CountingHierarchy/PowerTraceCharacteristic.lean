@@ -37,7 +37,8 @@ theorem charpoly_eq_of_power_traces {K ι κ : Type*} [Field K]
     apply coefficients_eq_of_newton (Fintype.card ι) (fun j => (M ^ j).trace)
       M.charpolyRev N.charpolyRev hK _ (fun j _ => charpolyRev_newton M j) hQ k hk
     simp only [coeff_zero_eq_eval_zero, Matrix.eval_charpolyRev]
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro k
   by_cases hk : k ≤ Fintype.card ι
   · have h := hrev (Fintype.card ι - k) (Nat.sub_le _ _)

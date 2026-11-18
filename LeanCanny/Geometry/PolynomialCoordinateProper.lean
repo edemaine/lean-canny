@@ -28,14 +28,14 @@ noncomputable def bound (Q : Polynomial (Polynomial ℝ)) (t : ℝ) : NNReal :=
 lemma continuous_bound (Q : Polynomial (Polynomial ℝ)) (s : Set ℝ)
     (hl : ∀ t ∈ s, Q.leadingCoeff.eval t ≠ 0) : ContinuousOn (bound Q) s := by
   have hn : Continuous (fun t => (Finset.range Q.natDegree).sup (fun i => ‖(Q.coeff i).eval t‖₊)) :=
-    Continuous.finset_sup_apply (fun i _ => (Q.coeff i).continuous.nnnorm)
-  have hd : Continuous (fun t => ‖Q.leadingCoeff.eval t‖₊) := Q.leadingCoeff.continuous.nnnorm
+    Continuous.finset_sup_apply (fun i _ => (Q.coeff i).continuous.nnNorm)
+  have hd : Continuous (fun t => ‖Q.leadingCoeff.eval t‖₊) := Q.leadingCoeff.continuous.nnNorm
   exact (hn.continuousOn.div₀ hd.continuousOn (fun t ht => by
     intro hz
     apply hl t ht
     apply norm_eq_zero.mp
     have H := congrArg (fun v : NNReal => (v : ℝ)) hz
-    simpa only [coe_nnnorm, NNReal.coe_zero] using H)).add continuousOn_const
+    simpa only [coe_nnNorm, NNReal.coe_zero] using H)).add continuousOn_const
 
 lemma bound_eq (Q : Polynomial (Polynomial ℝ)) (t : ℝ) (hl : Q.leadingCoeff.eval t ≠ 0) :
     bound Q t = (Q.map (Polynomial.evalRingHom t)).cauchyBound := by

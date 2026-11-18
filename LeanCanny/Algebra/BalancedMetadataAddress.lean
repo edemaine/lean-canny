@@ -53,7 +53,8 @@ private theorem prefixT_run (w : List Bool) : prefixT.run false w = zeroPrefix w
       exact prefixT_done t
 
 theorem zeroPrefix_FP : zeroPrefix ∈ FP := by
-  refine ComputableTidilyInPolyTime.of_linear ⟨8, ?_⟩
+  refine ⟨(fun w => 8 * (w.length + 1)), (fun _ => 0),
+    .of_forall_le 8 1 (fun _ => by simp), .const 0, ?_⟩
   exact (prefixT.computableTidilyInTimeAndSpace fun w => (prefixT_run w).symm).mono
     (fun w => by simp only [encBits_apply]; omega) (fun _ => Nat.zero_le _)
 

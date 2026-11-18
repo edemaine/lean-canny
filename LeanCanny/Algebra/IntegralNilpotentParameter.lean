@@ -29,7 +29,7 @@ theorem purePower_normalization (c : A) (d N : ℕ) (hd : d ≤ N) :
     ext k
     rw [FixedDegreeIntegralNormalization.coefficient, coeff_X_pow]
     have H (hk : k < d) : (monomial d c).coeff k = 0 := by
-      rw [coeff_monomial, ite_eq_right (by omega)]
+      rw [coeff_monomial, Finsupp.single_apply, ite_eq_right (by omega)]
     by_cases hk : k < d
     · rw [ite_eq_left hk, H hk, zero_mul, add_zero]
     · rw [ite_eq_right hk, add_zero]

@@ -50,9 +50,12 @@ and theorem statements to assess the claimed result; Lean verifies the proofs
 through the [PSPACE bridge](LeanCanny/AbstractBridge.lean),
 [CH bridge](LeanCanny/CountingHierarchy/AbstractBridge.lean), and the development.
 All public definitions are local to the abstract or use background libraries.
-The flat token serializers and their CSLib Frontier encoding are defined
-explicitly in the abstract; the PSPACE transfer is checked in
-[`AbstractEncodingBridge.lean`](LeanCanny/AbstractEncodingBridge.lean).
+Two CSLib Frontier `derive_encoding` declarations generate the syntax encodings
+under an explicit binary-integer/unary-index policy. Uniform polynomial-time
+conversions and strict malformed-input checks are proved in
+[`DerivedSyntax.lean`](LeanCanny/Encoding/DerivedSyntax.lean);
+[`DerivedEncodingBridge.lean`](LeanCanny/DerivedEncodingBridge.lean) transfers
+the PSPACE bounds.
 
 ## ETR proof outline
 

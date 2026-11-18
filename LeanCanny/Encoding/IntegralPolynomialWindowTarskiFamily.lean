@@ -83,6 +83,7 @@ theorem window_monomials (N:List Bool→ℕ) (c:List Bool):window N c=
   ring
 theorem window_coefficient_degree (N:List Bool→ℕ) (c:List Bool) (i:ℕ):((window N c).coeff i).totalDegree ≤ 1:=by
   rw [window_monomials,Polynomial.coeff_sub,Polynomial.coeff_monomial,Polynomial.coeff_monomial]
+  simp only [Finsupp.single_apply]
   apply (MvPolynomial.totalDegree_sub _ _).trans
   apply max_le
   · split_ifs <;> simp

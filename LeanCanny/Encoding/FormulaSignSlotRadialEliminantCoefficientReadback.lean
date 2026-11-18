@@ -35,7 +35,7 @@ private theorem extract_integer (c : List Bool) (r : ℕ) (v : Fin (d c) →₀ 
   change (((1 : Polynomial (MvPolynomial (Fin (d c)) ℤ)).coeff r).coeff v) = _
   by_cases hr : r = 0
   · subst r
-    simp only [Polynomial.coeff_one_zero, MvPolynomial.coeff_one, true_and, eq_comm]
+    simp only [AddMonoidAlgebra.coeff_one_zero, MvPolynomial.coeff_one, true_and, eq_comm]
   · rw [Polynomial.coeff_one]
     simp only [hr, ite_false, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, false_and]
 

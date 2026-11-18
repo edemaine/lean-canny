@@ -23,7 +23,7 @@ theorem hom_eq_of_quotients {n S B m :ℕ} {P :SpatialSource n} {ι :Type}
   apply x.sampler.scalarPrefix.basis.algHom_ext
   intro i
   rw [←hx i]
-  exact (div_left_inj' (Int.cast_ne_zero.mpr (x.denominator_ne_zero i))).mp (h i)
+  exact (div_left_inj₀ (Int.cast_ne_zero.mpr (x.denominator_ne_zero i))).mp (h i)
 
 noncomputable def Data.CutReceipt (d :Data) (hm :d.birth≤d.horizon)
     (cmd :Command d.source d.width) (values :ℕ→ℝ) (a :ℝ) :Prop:=

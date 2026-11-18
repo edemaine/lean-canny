@@ -53,7 +53,8 @@ theorem pointwise (keep : Bool) (A : List Bool→ℕ)
       cases keep <;> rfl
     · rw [embedding_succ]
       rfl
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro y
   simp only [common,lift,Polynomial.coeff_map,MvPolynomial.coe_eval₂Hom]
   change (MvPolynomial.rename (Fin.cast (arity_eq (A c)))
@@ -68,7 +69,8 @@ theorem evaluated (keep : Bool) (A : List Bool→ℕ)
     ((common keep A p c).map (MvTwoParameterCoefficient.evaluate (Int.castRingHom ℝ) z)).map
       (RealIteratedTarski.evaluate ε δ)=
         (p c).map (MvPolynomial.eval₂Hom (Int.castRingHom ℝ) (Fin.cons (if keep then δ else ε) z)) :=by
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro y
   simp only [Polynomial.coeff_map]
   rw [MvTwoParameterCoefficient.point_evaluate]

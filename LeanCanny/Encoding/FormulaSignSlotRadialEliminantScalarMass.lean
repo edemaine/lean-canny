@@ -68,7 +68,7 @@ private theorem extract_one_abs (c : List Bool) (r : ℕ) (v : Fin (d c) →₀ 
   change ((((1 : Polynomial (MvPolynomial (Fin (d c)) ℤ)).coeff r).coeff v)).natAbs ≤ 1
   by_cases HR : r = 0
   · subst r
-    rw [Polynomial.coeff_one_zero, MvPolynomial.coeff_one]
+    rw [AddMonoidAlgebra.coeff_one_zero, MvPolynomial.coeff_one]
     split_ifs <;> decide
   · rw [Polynomial.coeff_one, ite_eq_right HR]
     simp

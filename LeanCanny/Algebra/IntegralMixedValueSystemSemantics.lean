@@ -39,7 +39,7 @@ theorem zero_selection (x : ℤ) (a c k D : ℕ) (same : Prop) [Decidable same] 
         (if a - c = 0 ∧ k = D ∧ same then 1 else 0) else 0) := by
   by_cases HL : c ≤ a <;> by_cases HD : a - c = 1 <;> by_cases HE : a = c <;>
     by_cases HS : same <;> by_cases HK : k = D <;> simp_all
-  all_goals omega
+  omega
 
 def packet (F : Family) (_I : Indices F) (q : List Bool)
     (j : Fin (F.ambient q - (F.rule q).critical.offset.val + 1 + 1))

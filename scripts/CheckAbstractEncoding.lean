@@ -1,10 +1,12 @@
 module
 
 public import LeanCanny.Abstract
-public import LeanCanny.CountingHierarchy.FlatSentenceEncoding
+public import LeanCanny.CountingHierarchy.DerivedSentenceEncoding
+public meta import LeanCanny.Abstract
 public meta import LeanCanny.Encoding.FlatSyntax
+public meta import LeanCanny.Encoding.DerivedSyntax
 public meta import LeanCanny.Encoding.FlatSyntaxInverse
-public meta import LeanCanny.CountingHierarchy.FlatSentenceEncoding
+public meta import LeanCanny.CountingHierarchy.DerivedSentenceEncoding
 public meta import LeanCanny.ETR.Syntax
 public meta import LeanCanny.ETR.Encoding
 
@@ -16,7 +18,7 @@ empty quantifier blocks and quantifier order. Run after building the abstract:
 public section
 /-! The unified abstract uses this same encoding for the PSPACE and CH results.
 Exercise the inverse compiler on signed leaves, every Boolean constructor,
-noncanonical tokens, and trailing input. -/
+malformed words, and trailing input. -/
 namespace UnifiedEncodingCheck
 open LeanCanny LeanCanny.Encoding LeanCanny.ETR
 open Turing.MultiTapeTM
@@ -30,23 +32,24 @@ private def abstractMixed : Abstract.Formula 3 :=
     (.ltZero (.const 3))) (.not .false)
 
 -- The independently specified public encoding agrees with the native compiler's input.
-example : Abstract.encoding abstractMixed.tokens =
-    FlatSyntax.encoding (FlatSyntax.formulaTokens mixed) := rfl
+example : Abstract.encFormula 3 abstractMixed = DerivedSyntax.formulaEncoding mixed := rfl
 
 #guard FlatSyntaxInverse.parse (FlatSyntax.encoding (FlatSyntax.formulaTokens mixed)) = mixed.encode
-#guard CountingHierarchy.FlatSentenceEncoding.compile (FlatSyntax.encoding (FlatSyntax.formulaTokens mixed)) = mixed.encode
-#guard Formula.decode (CountingHierarchy.FlatSentenceEncoding.compile []) = none
-#guard CountingHierarchy.FlatSentenceEncoding.compile
-  (FlatSyntax.encoding (FlatSyntax.formulaTokens (.not .falsum)) ++ [false]) = Formula.falsum.encode
+#guard CountingHierarchy.DerivedSentenceEncoding.compile (Abstract.encFormula 3 abstractMixed) = mixed.encode
+#guard CountingHierarchy.DerivedSentenceEncoding.compile [] = Formula.falsum.encode
+#guard CountingHierarchy.DerivedSentenceEncoding.compile
+  (Abstract.encFormula 0 (.not .false) ++ [false]) = Formula.falsum.encode
 
--- A term-only token stream is rejected as a formula.
-example : FlatSyntax.encoding (FlatSyntax.termTokens (.const 0)) ∉
-    CountingHierarchy.FlatSentenceEncoding.etrLanguage := by
-  rintro ⟨p, hp, _⟩
-  change FlatSyntax.encoding (FlatSyntax.termTokens (.const 0)) =
-    FlatSyntax.encoding (FlatSyntax.formulaTokens p) at hp
-  have he := FlatSyntax.encoding.injective hp
-  cases p <;> simp [FlatSyntax.formulaTokens, FlatSyntax.termTokens, FlatSyntax.op] at he
+-- Deeply nested formulas and dimension changes use the same uniform compiler.
+private def negations (depth : ℕ) : Abstract.Formula 3 :=
+  Nat.rec (.eqZero (.var 2)) (fun _ p => .not p) depth
+
+#guard Formula.decode (CountingHierarchy.DerivedSentenceEncoding.compile
+  (Abstract.encFormula 3 (negations 32))) = some (Nat.rec (.eqZero (.var 2)) (fun _ p => .not p) 32)
+
+example : Abstract.encFormula 3 (.eqZero (.var 2)) =
+    Abstract.encFormula 10000 (.eqZero (.var 2)) := by
+  simp [DerivedSyntax.finite_variable_encoding]
 
 example : LeanCanny.Abstract.ETR ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.Abstract.etr_in_PSPACE

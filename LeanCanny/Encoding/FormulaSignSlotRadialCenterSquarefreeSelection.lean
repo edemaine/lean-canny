@@ -24,7 +24,7 @@ noncomputable def truncate {R : Type*} [Semiring R] (p : Polynomial R) (D : ℕ)
 
 theorem truncate_coefficient {R : Type*} [Semiring R] (p : Polynomial R) (D j : ℕ) :
     (truncate p D).coeff j = if j ≤ D then p.coeff j else 0 := by
-  simp [truncate, Polynomial.finsetSum_coeff, Polynomial.coeff_monomial]
+  simp [truncate, Polynomial.coeff_monomial, Finsupp.single_apply]
 
 theorem truncate_degree {R : Type*} [Semiring R] (p : Polynomial R) (D : ℕ) :
     (truncate p D).natDegree ≤ D := by
@@ -45,7 +45,8 @@ theorem polynomial_map (c : List Bool) (a : Fin (d (pairFst c)) → ℝ) (tau D 
     (polynomial c tau D).map (FormulaSignSlotRadialFormalCenter.radiusMap (pairFst c) a) = coordinate c a := by
   have HE := FormulaSignSlotRadialCenterSelection.coordinate_at c a tau D h
   have HD := (FormulaSignSlotRadialCenterSelection.guards_iff c a tau D).mp h |>.2
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro j
   rw [Polynomial.coeff_map, polynomial, truncate_coefficient]
   by_cases hj : j ≤ D

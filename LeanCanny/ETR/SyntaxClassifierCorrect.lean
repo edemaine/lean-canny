@@ -218,7 +218,7 @@ theorem classify_syntax_iff (d : Data) :
     · rw [classify, finish_summary, term_image_l]
       rcases xs with _ | ⟨a, _ | ⟨b, _ | ⟨c, _ | ⟨e, rest⟩⟩⟩⟩ <;>
         simp [direct, classify_tag_iff, classify_integer_iff, classify_unary_iff, ht]
-      all_goals aesop
+      aesop
     · rw [classify, finish_summary, formula_image_l]
       rcases xs with _ | ⟨a, _ | ⟨b, _ | ⟨c, _ | ⟨e, rest⟩⟩⟩⟩ <;>
         simp [direct, classify_tag_iff, ht, hp]

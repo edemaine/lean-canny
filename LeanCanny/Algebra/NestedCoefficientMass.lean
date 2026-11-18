@@ -152,7 +152,8 @@ theorem high_le (p : (ℤ[X])[X]) (d : ℕ) : mass (PseudoRemainder.high d p) �
     rw [he]
     omega
   · have hz : PseudoRemainder.high d p = 0 := by
-      apply Polynomial.ext
+      apply AddMonoidAlgebra.ext
+      apply Finsupp.ext
       intro i
       rw [PseudoRemainder.high_coeff, coeff_zero]
       exact coeff_eq_zero_of_natDegree_lt (by omega)

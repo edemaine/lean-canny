@@ -42,7 +42,7 @@ noncomputable def unitTestAccess : unitTest.Access where
     · rw [ite_eq_left hk]
       change ArithmeticBits.one (BinaryNat.succ (BinaryNatCode.encode (m - 1))) = _
       rw [hd]
-      simpa only [unitTest, hk, Polynomial.coeff_one_zero, IntegerTarskiSeedBits.integerResidue, Int.cast_one] using
+      simpa only [unitTest, hk, AddMonoidAlgebra.coeff_one_zero, IntegerTarskiSeedBits.integerResidue, Int.cast_one] using
         ArithmeticBits.one_residueBits m
     · rw [ite_eq_right hk]
       simp [unitTest, Polynomial.coeff_one, hk, IntegerTarskiSeedBits.integerResidue, residueBits, BinaryNatCode.encode]

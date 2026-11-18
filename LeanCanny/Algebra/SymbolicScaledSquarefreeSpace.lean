@@ -110,7 +110,7 @@ theorem oneEvaluator : SpaceFunction (coefficient (fun _ => (1 : Polynomial Coef
     (((1 : Polynomial Coefficient).coeff (Nat.fromBitsLE (target q))).coeff (Nat.fromBitsLE (alpha q)))
     (Nat.fromBitsLE (modulus q)+1)
   by_cases ht : Nat.fromBitsLE (target q)=0 <;> by_cases ha : Nat.fromBitsLE (alpha q)=0
-  · simp only [ht, ha, and_self, ite_true, coeff_one_zero, oneValue, BinaryNat.mod_pair,
+  · simp only [ht, ha, and_self, ite_true, AddMonoidAlgebra.coeff_one_zero, oneValue, BinaryNat.mod_pair,
       BinaryNat.succ_eq_bits, Nat.fromBitsLE_bits, SymbolicFixedTableEntryBits.integerResidue,
       residueBits, BinaryNatCode.encode, Int.cast_one, ZMod.val_one_eq_one_mod]
   all_goals simp [ht, ha, coeff_one, SymbolicFixedTableEntryBits.integerResidue, residueBits, BinaryNatCode.encode]

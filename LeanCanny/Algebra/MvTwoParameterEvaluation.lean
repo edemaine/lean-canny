@@ -29,9 +29,11 @@ theorem point_evaluate (f : R→+*ℝ) (z : Fin m→ℝ) (p : MvPolynomial (Fin 
 /-- Equality after every ordered real specialization determines the formal head. -/
 theorem polynomial_ext (p q : ((ℝ[X])[X])[X])
     (h : ∀ε δ,(p.map (RealIteratedTarski.evaluate ε δ))=(q.map (RealIteratedTarski.evaluate ε δ))) : p=q :=by
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro y
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro d
   apply Polynomial.funext
   intro ε

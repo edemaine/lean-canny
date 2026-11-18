@@ -37,7 +37,7 @@ theorem coefficient_selected (P : Parameters) (D : Plan P) (H : IntegralMixedFra
     (W : List Bool → ℕ) (q : List Bool) (hq : selected P D H W q) :
     coefficient P D H W q=IntegralMixedFramedBankProductBits.value P D H index q := by
   unfold coefficient
-  rw [encoded_polynomial,ite_eq_left hq.1,Polynomial.coeff_monomial,ite_eq_left hq.2.symm]
+  rw [encoded_polynomial,ite_eq_left hq.1,Polynomial.coeff_monomial,Finsupp.single_apply,ite_eq_left hq.2.symm]
   rfl
 
 theorem coefficient_outside (P : Parameters) (D : Plan P) (H : IntegralMixedFramedHistoryFamilyBits.Data P D)
@@ -46,7 +46,7 @@ theorem coefficient_outside (P : Parameters) (D : Plan P) (H : IntegralMixedFram
   rw [encoded_polynomial]
   by_cases hi : index q<count P D H q
   · have HD : encodedDegree P D H W q≠Nat.fromBitsLE (PaddedIntegralGeneratorSource.col q) := fun he => hq ⟨hi,he.symm⟩
-    rw [ite_eq_left hi,Polynomial.coeff_monomial,ite_eq_right HD,Int.cast_zero]
+    rw [ite_eq_left hi,Polynomial.coeff_monomial,Finsupp.single_apply,ite_eq_right HD,Int.cast_zero]
     exact (ArithmeticBits.zero_residueBits _).symm
   · rw [ite_eq_right hi,Polynomial.coeff_zero,Int.cast_zero]
     exact (ArithmeticBits.zero_residueBits _).symm

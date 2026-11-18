@@ -43,7 +43,7 @@ private theorem determinant_bound {I : Type*} [Fintype I] [DecidableEq I]
   rw [Matrix.det_apply]
   apply sum_bound
   intro e _ k
-  rw [Polynomial.coeff_smul]
+  rw [AddMonoidAlgebra.coeff_smul_apply]
   apply (MvPolynomial.totalDegree_smul_le _ _).trans
   simpa only [Finset.sum_const, Finset.card_univ, smul_eq_mul] using
     product_bound Finset.univ (fun i => M (e i) i) (fun _ => E) (fun i _ => hM (e i) i) k

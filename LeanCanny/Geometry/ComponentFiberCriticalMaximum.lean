@@ -25,8 +25,8 @@ variable {E F : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace
 theorem component_mem_nhds (f : E → F) (c : F) (a : RegularFiber.Fiber f c)
     (hf : ContDiffAt ℝ 1 f a.val) (hD : Function.Surjective (fderiv ℝ f a.val)) :
     connectedComponent a ∈ 𝓝 a := by
-  let e := RegularFiber.chart f c a (fderiv ℝ f a.val) (hf.hasStrictFDerivAt one_ne_zero) hD
-  have ha : a ∈ e.source := RegularFiber.mem_chart_source f c a _ (hf.hasStrictFDerivAt one_ne_zero) hD
+  let e := RegularFiber.chart f c a (fderiv ℝ f a.val) (hf.hasStrictFDerivAt_fderiv one_ne_zero) hD
+  have ha : a ∈ e.source := RegularFiber.mem_chart_source f c a _ (hf.hasStrictFDerivAt_fderiv one_ne_zero) hD
   let : LocallyPathConnectedSpace e.target := e.open_target.locallyPathConnectedSpace
   let : LocallyPathConnectedSpace e.source := e.toHomeomorphSourceTarget.symm.locallyPathConnectedSpace
   let a' : e.source := ⟨a, ha⟩

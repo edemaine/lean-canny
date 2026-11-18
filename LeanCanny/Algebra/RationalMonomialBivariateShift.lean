@@ -22,8 +22,8 @@ noncomputable def coefficientMap (F : Family) (negative : Bool) (W : List Bool�
 noncomputable def head (F : Family) (negative : Bool) (W : List Bool→ℕ)
     (p : (c : List Bool)→Polynomial (MvPolynomial (Fin (F.arity c+1)) ℤ)) (c : List Bool) :
     Polynomial (MvPolynomial (Fin (F.arity c+1)) ℤ) :=
-  Polynomial.ofFinsupp (AddMonoidAlgebra.ofCoeff (Finsupp.mapRange (coefficientMap F negative W c) (map_zero _)
-    (AddMonoidAlgebra.coeff (p c).toFinsupp)))
+  AddMonoidAlgebra.ofCoeff (Finsupp.mapRange (coefficientMap F negative W c) (map_zero _)
+    (AddMonoidAlgebra.coeff (p c)))
 
 theorem coefficient (F : Family) (negative : Bool) (W : List Bool→ℕ)
     (p : (c : List Bool)→Polynomial (MvPolynomial (Fin (F.arity c+1)) ℤ)) (c : List Bool) (y : ℕ) :

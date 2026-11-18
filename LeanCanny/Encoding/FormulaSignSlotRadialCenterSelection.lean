@@ -72,7 +72,8 @@ theorem target_zero_iff (c : List Bool) (a : Fin (d (pairFst c)) → ℝ) (s : �
     (∀ t < bound c + 1, ∀ r < bound c + 1, Zero c a s t r) ↔ (specialized c a).coeff s = 0 := by
   constructor
   · intro H
-    apply Polynomial.ext
+    apply AddMonoidAlgebra.ext
+    apply Finsupp.ext
     intro t
     rw [Polynomial.coeff_zero]
     by_cases ht : t < bound c + 1

@@ -107,7 +107,7 @@ theorem value_packet {A : Type*} [CommRing A] [Nontrivial A] (F : Family) (c : L
         (PaddedIntegralNormalization.monic _ _ _) (PaddedIntegralNormalization.natDegree _ _ _)))
         (AdjoinRoot.root _) (F.oldRow c, F.row c) (F.oldCol c, F.col c) : ℤ) : ZMod (F.modulus c)) := by
   rw [Family.value, PaddedIntegralParameterExtension.tower_root_matrix]
-  split_ifs <;> try simp only [Int.cast_one, Int.cast_zero]
+  split_ifs <;> simp only [Int.cast_one, Int.cast_zero]
   rw [hc, hc, ← Matrix.map_pow, ← Matrix.map_mul]
   simp only [Matrix.map_apply, Int.cast_neg]
   rfl

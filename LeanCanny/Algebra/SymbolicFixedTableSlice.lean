@@ -26,9 +26,9 @@ noncomputable def slice {R : Type*} [Semiring R] (p : Polynomial (Polynomial R))
 theorem slice_coeff {R : Type*} [Semiring R] (p : Polynomial (Polynomial R)) (u k : ℕ) :
     (slice p u).coeff k = (p.coeff k).coeff u := by
   by_cases hk : k < p.natDegree + 1
-  · simp [slice, coeff_monomial, hk]
+  · simp [slice, coeff_monomial, Finsupp.single_apply, hk]
   · have hz : p.coeff k = 0 := coeff_eq_zero_of_natDegree_lt (by omega)
-    simp [slice, coeff_monomial, hk, hz]
+    simp [slice, coeff_monomial, Finsupp.single_apply, hk, hz]
 
 theorem slice_zero {R : Type*} [Semiring R] (u : ℕ) : slice (0 : Polynomial (Polynomial R)) u = 0 := by
   ext k

@@ -73,11 +73,11 @@ theorem coeff_flatten (q : MvPolynomial (Fin n) (Polynomial R)) (a : Fin (n + 1)
     (flatten q).coeff a = (q.coeff (tailExponent a)).coeff (a 0) := by
   induction q using MvPolynomial.induction_on' with
   | add p q hp hq =>
-    simp only [map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, Polynomial.coeff_add, hp, hq]
+    simp only [map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hp, hq]
   | monomial e c =>
     induction c using Polynomial.induction_on' with
     | add p q hp hq =>
-      simp only [map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, Polynomial.coeff_add, hp, hq]
+      simp only [map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hp, hq]
     | monomial k c =>
       rw [flatten_monomial_monomial, coeff_monomial, coeff_monomial]
       by_cases he : e = tailExponent a <;> by_cases hk : k = a 0 <;>

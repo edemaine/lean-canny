@@ -58,7 +58,7 @@ theorem coeff {R : Type*} [CommRing R] (f g : Polynomial R) (m n k r : ℕ) :
       if k < m ∧ k < n ∧ r ≤ k then (minor f g m n k r).det else 0 := by
   classical
   by_cases h : k < m ∧ k < n
-  · simp [polynomial, h, Polynomial.coeff_monomial, Finset.mem_range]
+  · simp [polynomial, h, Polynomial.coeff_monomial, Finsupp.single_apply, Finset.mem_range]
   · simp only [polynomial, ite_eq_right h, Polynomial.coeff_zero]
     have h' : ¬ (k < m ∧ k < n ∧ r ≤ k) := by tauto
     rw [ite_eq_right h']

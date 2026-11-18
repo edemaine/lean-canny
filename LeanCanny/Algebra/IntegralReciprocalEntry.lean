@@ -28,7 +28,7 @@ theorem zero_coefficient {A : Type*} [CommRing A] {n : ℕ}
   rw [RelativeValueSystemMap.reciprocal, Fin.cases_zero, AddMonoidAlgebra.coeff_sub, Finsupp.sub_apply,
     MvPolynomial.coeff_C_mul, MvPolynomial.coeff_map, MvPolynomial.coeff_X_pow, Polynomial.coeff_sub,
     mul_comm, ← pow_one (Polynomial.X : Polynomial A), Polynomial.C_mul_X_pow_eq_monomial,
-    Polynomial.coeff_monomial]
+    Polynomial.coeff_monomial, Finsupp.single_apply]
   congr 1 <;> split_ifs <;> simp_all [Polynomial.coeff_one]
 
 theorem succ_coefficient {A : Type*} [CommRing A] {n : ℕ}

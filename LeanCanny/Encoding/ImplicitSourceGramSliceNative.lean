@@ -101,7 +101,7 @@ theorem evaluator (S : Source) (A : IntegralFramedBankPolynomialModel.Access S)
     simp only [scalar, p, hzero, ite_true, one]
     rw [BinaryNat.succ_eq_bits]
     by_cases hpower : power q = 0
-    · simp only [hpower, ite_true, Polynomial.coeff_one_zero, Int.cast_one]
+    · simp only [hpower, ite_true, AddMonoidAlgebra.coeff_one_zero, Int.cast_one]
       exact ArithmeticBits.one_residueBits _
     · simp only [hpower, ite_false, Polynomial.coeff_one, Int.cast_zero, residueBits, ZMod.val_zero,
         BinaryNatCode.encode, Nat.zero_bits]

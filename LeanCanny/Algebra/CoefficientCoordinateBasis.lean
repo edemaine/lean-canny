@@ -132,7 +132,7 @@ noncomputable def polynomial (b : CoefficientCoordinateBasis R A m N) (p : Polyn
 theorem polynomial_coefficient (b : CoefficientCoordinateBasis R A m N) (p : Polynomial A) (i : ℕ) :
     (b.polynomial p).coeff i = b.representative (p.coeff i) := by
   rw [polynomial, Polynomial.finsetSum_coeff]
-  simp only [Polynomial.coeff_monomial, Finset.sum_ite_eq']
+  simp only [Polynomial.coeff_monomial, Finsupp.single_apply, Finset.sum_ite_eq']
   by_cases hi : i ∈ p.support
   · rw [ite_eq_left hi]
   · rw [ite_eq_right hi, Polynomial.notMem_support_iff.mp hi, representative_zero]

@@ -40,7 +40,7 @@ theorem unity_weightedSum_injective (ell : ℕ) (hell : ell ≠ 0) (R : ℕ)
     by_cases hk : k < n
     · have hc : P.coeff k = z ⟨k, hk⟩ - w ⟨k, hk⟩ := ofFn_coeff_eq_val_of_lt _ hk
       apply NNReal.coe_le_coe.mp
-      simp only [coe_nnnorm, NNReal.coe_ofNat, hc]
+      simp only [coe_nnNorm, NNReal.coe_ofNat, hc]
       exact (norm_sub_le _ _).trans_eq (by
         rw [Complex.norm_eq_one_of_pow_eq_one (hz _) hell,
           Complex.norm_eq_one_of_pow_eq_one (hw _) hell]; norm_num)
@@ -55,10 +55,10 @@ theorem unity_weightedSum_injective (ell : ℕ) (hell : ell ≠ 0) (R : ℕ)
     exact (leadingCoeff_ne_zero.mpr hP) (by rw [hlead, h, sub_self])
   have hsep : 1 ≤ (ell : ℝ≥0) * ‖P.leadingCoeff‖₊ := by
     apply NNReal.coe_le_coe.mp
-    simpa only [NNReal.coe_one, NNReal.coe_mul, NNReal.coe_natCast, coe_nnnorm, hlead] using
+    simpa only [NNReal.coe_one, NNReal.coe_mul, NNReal.coe_natCast, coe_nnNorm, hlead] using
       one_le_mul_norm_unity_sub ell hell (z j) (w j) (hz j) (hw j) hj
   have hleadpos : 0 < ‖P.leadingCoeff‖₊ := by
-    exact nnnorm_pos.mpr (leadingCoeff_ne_zero.mpr hP)
+    exact nnNorm_pos.mpr (leadingCoeff_ne_zero.mpr hP)
   have hb : P.cauchyBound ≤ 2 * (ell : ℝ≥0) + 1 := by
     unfold Polynomial.cauchyBound
     apply add_le_add _ le_rfl

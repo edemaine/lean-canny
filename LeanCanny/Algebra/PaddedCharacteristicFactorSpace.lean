@@ -39,7 +39,7 @@ theorem baseValue_eq (q : List Bool) :
   unfold baseValue
   split_ifs with H0 H1
   · rw [H0]
-    simp only [Polynomial.coeff_sub, Polynomial.coeff_one_zero, Polynomial.coeff_X_zero,
+    simp only [Polynomial.coeff_sub, AddMonoidAlgebra.coeff_one_zero, Polynomial.coeff_X_zero,
       sub_zero, Int.cast_one, BinaryNat.succ_eq_bits]
     exact ArithmeticBits.one_residueBits _
   · rw [H1]

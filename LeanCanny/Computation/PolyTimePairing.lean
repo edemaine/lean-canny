@@ -33,7 +33,8 @@ private theorem delimitT_run (w : List Bool) : delimitT.run () w = delimit w := 
   | cons b w ih => rw [Transducer.run_cons, ih, delimit_cons]; rfl
 
 theorem delimit_mem_FP : delimit ∈ FP := by
-  refine ComputableTidilyInPolyTime.of_linear ⟨8, ?_⟩
+  refine ⟨(fun w => 8 * (w.length + 1)), (fun _ => 0),
+    .of_forall_le 8 1 (fun _ => by simp), .const 0, ?_⟩
   exact (delimitT.computableTidilyInTimeAndSpace fun w => (delimitT_run w).symm).mono
     (fun w => by simp only [encBits_apply]; omega) (fun _ => Nat.zero_le _)
 
@@ -110,14 +111,16 @@ private theorem pairT_run (first : Bool) (w : List Bool) :
         · exact False.elim (htrue w rfl)
 
 theorem pairFst_mem_FP : pairFst ∈ FP := by
-  refine ComputableTidilyInPolyTime.of_linear ⟨8, ?_⟩
+  refine ⟨(fun w => 8 * (w.length + 1)), (fun _ => 0),
+    .of_forall_le 8 1 (fun _ => by simp), .const 0, ?_⟩
   exact ((pairT true).computableTidilyInTimeAndSpace fun w => by
     change pairFst w = (pairT true).run (.inr none) w
     exact (pairT_run true w).symm).mono
     (fun w => by simp only [encBits_apply]; omega) (fun _ => Nat.zero_le _)
 
 theorem pairSnd_mem_FP : pairSnd ∈ FP := by
-  refine ComputableTidilyInPolyTime.of_linear ⟨8, ?_⟩
+  refine ⟨(fun w => 8 * (w.length + 1)), (fun _ => 0),
+    .of_forall_le 8 1 (fun _ => by simp), .const 0, ?_⟩
   exact ((pairT false).computableTidilyInTimeAndSpace fun w => by
     change pairSnd w = (pairT false).run (.inr none) w
     exact (pairT_run false w).symm).mono

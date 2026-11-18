@@ -56,7 +56,8 @@ theorem representative_map (a :A) :
 
 theorem polynomial_map (p :Polynomial A) :
     (b.polynomial p).map (MvPolynomial.map φ)=c.polynomial (p.map ψ):=by
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro i
   rw [Polynomial.coeff_map,polynomial_coefficient,polynomial_coefficient,Polynomial.coeff_map]
   exact H.representative_map _

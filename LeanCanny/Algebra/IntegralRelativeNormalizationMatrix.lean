@@ -40,7 +40,7 @@ theorem coefficient_eq (b : Module.Basis ι ℤ A) (p : Polynomial A) (d k : ℕ
   · subst k
     rw [ite_eq_left rfl, coefficient]
   · have H' : d ≠ k := Ne.symm H
-    simp only [IntegralRelativeLeadingNormalization.normalize, coeff_add, coeff_monomial, H', ite_false,
+    simp only [IntegralRelativeLeadingNormalization.normalize, coeff_add, coeff_monomial, Finsupp.single_apply, H', ite_false,
       coeff_C_mul, coeff_sub, sub_zero, zero_add, ite_eq_right H]
 
 theorem matrix_eq (b : Module.Basis ι ℤ A) (p : Polynomial A) (d k : ℕ) :

@@ -69,7 +69,7 @@ theorem gradient (q : MvPolynomial (Fin n) R) (D : ℕ) (u j : Fin n)
           · rw [ite_eq_right he, ite_eq_right (Ne.symm he)]
             simp only [Polynomial.coeff_zero]
         · rw [TiltedCoerciveCriticalFibers.tilt, ite_eq_right hj, ite_eq_right hj]
-          simp only [map_zero, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply, Polynomial.coeff_zero]
+          simp only [map_zero, AddMonoidAlgebra.coeff_zero, Finsupp.zero_apply]
     · rw [ite_eq_right hw, ite_eq_right hw]
       simp only [Polynomial.coeff_zero]
   · rw [MvPolynomial.coeff_monomial, hz]

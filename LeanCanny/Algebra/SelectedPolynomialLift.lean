@@ -23,7 +23,7 @@ noncomputable def lift (p : Polynomial A) (representative : A→B) (d : ℕ) : P
 
 theorem coefficient (p : Polynomial A) (representative : A→B) (d k : ℕ) :
     (lift p representative d).coeff k=if k≤d then representative (p.coeff k) else 0 := by
-  simp [lift,Polynomial.coeff_monomial]
+  simp [lift,Polynomial.coeff_monomial,Finsupp.single_apply]
 
 theorem map_lift_coefficients (p : Polynomial A) (representative : A→B) (d : ℕ)
     (select : A→+*C) (evaluate : B→+*C)

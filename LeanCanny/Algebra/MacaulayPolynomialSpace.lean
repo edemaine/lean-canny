@@ -77,7 +77,7 @@ theorem constantEntry_packet (modulus : List Bool → List Bool) (c : List Bool)
   simp only [packet, pairFst_pair, pairSnd_pair, fromBits_encode, hm]
   by_cases hD : D = 0 <;> by_cases hrs : r = s
   · subst D
-    simp only [hrs, ite_true, Polynomial.coeff_one_zero]
+    simp only [hrs, ite_true, AddMonoidAlgebra.coeff_one_zero]
     exact MatrixPower.ArithmeticBits.one_residueBits m
   · simp only [hD, hrs, ite_false, and_false, Polynomial.coeff_zero]
     simp [MatrixPower.residueBits, BinaryNatCode.encode]

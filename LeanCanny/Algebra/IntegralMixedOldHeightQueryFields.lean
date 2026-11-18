@@ -21,7 +21,7 @@ theorem reader_packet (P : Parameters) (R : Routing) (q : List Bool) (f : Field)
       if f = .slot15 then R.context (packet P q) else 0) := by
   cases f <;> simp only [reader, pairFst_pair, pairSnd_pair, BinaryNatCode.encode,
     Nat.fromBitsLE_bits, Field.code, reduceCtorEq, ite_true, ite_false, Nat.reduceEqDiff, Nat.zero_bits]
-  all_goals rfl
+  rfl
 
 theorem writer_get (P : Parameters) (R : Routing) (q : List Bool) (f : Field) :
     get P f (writer P R q) =

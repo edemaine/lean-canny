@@ -40,7 +40,7 @@ lemma oneValue_eq (rootDegree parameterDegree modulus : List Bool → List Bool)
   rw [BinaryNat.succ_eq_bits]
   by_cases hr : Nat.fromBitsLE (rootDegree c) = 0 <;>
     by_cases hp : Nat.fromBitsLE (parameterDegree c) = 0
-  · simpa only [hr, hp, and_self, ite_true, Polynomial.coeff_one_zero, Int.cast_one, BinaryNatCode.encode] using
+  · simpa only [hr, hp, and_self, ite_true, AddMonoidAlgebra.coeff_one_zero, Int.cast_one, BinaryNatCode.encode] using
       ArithmeticBits.one_residueBits (Nat.fromBitsLE (modulus c) + 1)
   all_goals simp [hr, hp, Polynomial.coeff_one, residueBits, BinaryNatCode.encode]
 

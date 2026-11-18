@@ -60,9 +60,9 @@ theorem coordinateEvaluators (A : Readers B) (hn : UnaryFn count) (hD : BinaryFn
   let FR := F.reindex (childQuery true count)
   have E := CanonicalNodeBits.coefficientEvaluator B count D b hne hdegree hheight A hn hD hb
   have DE := CanonicalNodeBits.degreeEvaluator B count D b hne hdegree hheight A hn hD hb
-  have EL : SpaceFunction (PrimitivePairBits.coefficient FL.polynomial) := PrimitivePairBits.withContextEvaluator _
+  have EL : SpaceFunction (PrimitivePairBits.coefficient FL.polynomial) := PrimitivePairBits.withContextEvaluator F.polynomial
     (childQuery false count) (SpaceFunction.ofFP _ (childQuery_FP false hn)) E
-  have ER : SpaceFunction (PrimitivePairBits.coefficient FR.polynomial) := PrimitivePairBits.withContextEvaluator _
+  have ER : SpaceFunction (PrimitivePairBits.coefficient FR.polynomial) := PrimitivePairBits.withContextEvaluator F.polynomial
     (childQuery true count) (SpaceFunction.ofFP _ (childQuery_FP true hn)) E
   have DL0 := DE.precompose (childQuery false count) (childQuery_FP false hn)
   have DR0 := DE.precompose (childQuery true count) (childQuery_FP true hn)

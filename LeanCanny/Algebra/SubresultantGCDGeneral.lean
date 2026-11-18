@@ -30,7 +30,7 @@ theorem coefficientForm_coeff {R : Type*} [CommRing R]
     (coefficientForm p q m n j).coeff k =
       if k ≤ j then subresultantCoeff p q m n j k else 0 := by
   classical
-  simp [coefficientForm, coeff_monomial, Finset.mem_range]
+  simp [coefficientForm, coeff_monomial, Finsupp.single_apply, Finset.mem_range]
 
 theorem subresultantCoeff_eq_minor_det {R : Type*} [CommRing R]
     (p q : R[X]) (m n j k : ℕ) :

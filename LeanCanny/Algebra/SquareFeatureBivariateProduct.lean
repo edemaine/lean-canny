@@ -132,7 +132,7 @@ theorem coefficient_packet (F : Family) (q : List Bool) (u v : ℕ) :
       by_cases HU : u=0
       · subst u
         simp only [and_self, ite_true, oneCode, BivariateQueryProductBits.modulus,
-          pairFst_pair, BinaryNat.succ_eq_bits, coeff_one_zero]
+          pairFst_pair, BinaryNat.succ_eq_bits, AddMonoidAlgebra.coeff_one_zero]
         exact ArithmeticBits.one_residueBits _
       · simp only [HU, and_false, ite_false, coeff_one, ite_false, Int.cast_zero, residueBits, ZMod.val_zero, BinaryNatCode.encode, Nat.zero_bits]
     · have H10 : 1 ≠ v := Ne.symm H1

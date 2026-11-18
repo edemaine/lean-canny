@@ -25,12 +25,12 @@ theorem abs_root_lt_coefficientMass_add_one (p : ℤ[X]) (hp : p ≠ 0) (a : ℝ
   have hq : q ≠ 0 := (Polynomial.map_ne_zero_iff hinj).mpr hp
   have hcoeff (i : ℕ) : ‖q.coeff i‖₊ ≤ (coefficientMass p : NNReal) := by
     apply NNReal.coe_le_coe.mp
-    simp only [NNReal.coe_natCast, coe_nnnorm, Real.norm_eq_abs, q, coeff_map,
+    simp only [NNReal.coe_natCast, coe_nnNorm, Real.norm_eq_abs, q, coeff_map,
       Int.coe_castRingHom, ← Int.cast_abs, ← Int.natCast_natAbs]
     exact_mod_cast coeff_natAbs_le_coefficientMass p i
   have hlc : (1 : NNReal) ≤ ‖q.leadingCoeff‖₊ := by
     apply NNReal.coe_le_coe.mp
-    rw [coe_nnnorm, Real.norm_eq_abs]
+    rw [coe_nnNorm, Real.norm_eq_abs]
     have he : q.leadingCoeff = (p.leadingCoeff : ℝ) := leadingCoeff_map_of_injective hinj p
     rw [he, ← Int.cast_abs]
     have h : (1 : ℤ) ≤ |p.leadingCoeff| := by

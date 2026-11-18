@@ -66,7 +66,8 @@ theorem zero_iff (c : List Bool) (a : Fin (d (pairFst (original c))) → ℝ) (j
     (∀ r < degreeBound c + 1, (polynomial c j r).eval₂ (Int.castRingHom ℝ) a = 0) ↔ specialized c a j = 0 := by
   constructor
   · intro H
-    apply Polynomial.ext
+    apply AddMonoidAlgebra.ext
+    apply Finsupp.ext
     intro r
     rw [Polynomial.coeff_zero]
     by_cases hr : r < degreeBound c + 1

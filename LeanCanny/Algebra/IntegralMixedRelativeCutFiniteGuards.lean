@@ -51,7 +51,8 @@ theorem factor_map_zero_iff (x : State P S B m ι) (hm : m≤S) (r : Rule n)
     have HE:=congrArg (fun p : Polynomial ℝ=>p.coeff k) H
     simpa only [Polynomial.coeff_map,Polynomial.coeff_zero] using HE
   · intro H
-    apply Polynomial.ext
+    apply AddMonoidAlgebra.ext
+    apply Finsupp.ext
     intro k
     rw [Polynomial.coeff_map,Polynomial.coeff_zero]
     by_cases hk : k≤IntegralMixedExceptionalBounds.auxiliaryCap (n+1) P.degree

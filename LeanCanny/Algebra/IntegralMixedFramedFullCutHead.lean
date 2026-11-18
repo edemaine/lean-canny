@@ -90,7 +90,7 @@ theorem head_coefficient (c : List Bool) (k : ℕ) : (head P D H parent d c).coe
     if IntegralMixedFramedFullCutProbeBits.Active P (parent c) ∧ k≤degree P parent d c then
       coefficientAt P D H (saved P parent c) k else 0 :=by
   by_cases ha : IntegralMixedFramedFullCutProbeBits.Active P (parent c)
-  · simp [head,ha,Polynomial.coeff_monomial,eq_comm]
+  · simp [head,ha,Polynomial.coeff_monomial,Finsupp.single_apply,eq_comm]
   · simp [head,ha]
 
 theorem head_degree (c : List Bool) : (head P D H parent d c).natDegree≤degree P parent d c :=by

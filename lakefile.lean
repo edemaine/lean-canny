@@ -8,16 +8,16 @@ package lean_canny where
 
 require «cslib-frontier» from git
   "https://github.com/cslib-community/cslib-frontier" @
-  "1a0acf760168bfc0eb306bfc4da5b6cece7dc479"
+  "6a504006935b57c5a45cc64fdf597ec883724ea5"
 
 -- Pin the foundation's common CSLib/Mathlib versions.
 require cslib from git
   "https://github.com/leanprover/cslib" @
-  "ee99dd30bd1a9f466c25a51b39a5cb0bfe4d2342"
+  "98f9a62ac1fafa0d5091bbd78bc24091c5923aab"
 
 require mathlib from git
   "https://github.com/leanprover-community/mathlib4" @
-  "69552756cd8a2d2d48763cf7279fd814d6a1224d"
+  "bbff2954fe5ee3b7a4b33cc26ef873a1c3277d91"
 
 @[default_target]
 lean_lib LeanCanny

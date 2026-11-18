@@ -24,7 +24,7 @@ lemma coefficient (n : ℕ) (i : Fin (n + 1)) (m : Fin (n + 1) →₀ ℕ) (j : 
       if j = 0 then -((X 0 : MvPolynomial (Fin (n + 1)) ℤ).coeff m)
       else if j = 1 then (X i : MvPolynomial (Fin (n + 1)) ℤ).coeff m else 0 := by
   simp only [coeff_sub, coeff_C_mul, coeff_X]
-  split_ifs <;> simp_all [Polynomial.coeff_sub, Polynomial.coeff_X, Polynomial.coeff_one] <;> omega
+  split_ifs <;> simp_all [Polynomial.coeff_X, Polynomial.coeff_one] <;> omega
 
 noncomputable def value (N W : List Bool → ℕ) (coordinate : (c : List Bool) → Fin (N c))
     (parameter modulus : List Bool → List Bool) (q : List Bool) : List Bool :=

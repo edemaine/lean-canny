@@ -105,11 +105,22 @@ separate future results.
 
 ### Flat library encoding of the abstract
 
-[`Abstract`](LeanCanny/Abstract.lean) explicitly defines its syntax, solution sets,
-and flat prefix token lists. Constructor tags and both token functions are
-visible in the abstract. CSLib Frontier's `encIntBin`, `encUnary`, `encSum` and
-`encList` supply the binary serialization. Each token is framed once; query
-headers use library containers at fixed depth.
+[`Abstract`](LeanCanny/Abstract.lean) defines its syntax and solution sets locally.
+Two CSLib Frontier `derive_encoding` declarations derive the term and formula
+encodings under the named `BinaryIntUnaryFin` policy. The policy selects binary
+integer coefficients and unary finite-variable indices. Each recursive stream
+frames constructor tokens once; comparison tokens carry complete term words.
+
+[`DerivedSyntax`](LeanCanny/Encoding/DerivedSyntax.lean) relates these encodings
+to dimension-independent implementation syntax with natural variable indices.
+Its strict codecs recognize exactly the encoding images, and uniform native
+polynomial-time transformations convert the words to the original flat format.
+[`DerivedEncodingBridge`](LeanCanny/DerivedEncodingBridge.lean) combines strict
+image recognition and inverse translation to transfer PSPACE membership.
+[`DerivedSentenceEncoding`](LeanCanny/CountingHierarchy/DerivedSentenceEncoding.lean)
+compiles the new words to the native sentence languages without changing the
+C₂₆P and C₆₀P bounds. These resource proofs use one algorithm across all dimensions;
+they do not assume that certificates for fixed parameters establish uniformity.
 
 [`FlatSyntax`](LeanCanny/Encoding/FlatSyntax.lean) proves a native polynomial-time
 translation from the original bracket encoding, its correctness on every
@@ -124,7 +135,7 @@ inputs. These upper bounds need no polynomial-time inverse translator.
 The independent definitions and theorem statements are checked transitively by
 `scripts/CheckAbstract.lean`; only the abstract module and background libraries
 are allowed in those dependencies. Project-specific translations occur in
-proofs only. The earlier standalone encoding prototype has been superseded.
+proofs only.
 
 ## Effective bounded critical samples
 

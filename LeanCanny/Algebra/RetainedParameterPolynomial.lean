@@ -26,7 +26,7 @@ theorem coefficient (p : Polynomial ℤ) (m : Fin (n + 1) →₀ ℕ) :
   induction p using Polynomial.induction_on' with
   | add p q hp hq =>
     rw [map_add]
-    simp only [AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hp, hq, Polynomial.coeff_add]
+    simp only [AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hp, hq]
     split_ifs <;> simp
   | monomial k a =>
     have he : (Finsupp.single (0 : Fin (n + 1)) k : Fin (n + 1) →₀ ℕ) = m ↔
@@ -41,7 +41,7 @@ theorem coefficient (p : Polynomial ℤ) (m : Fin (n + 1) →₀ ℕ) :
         · simpa only [Finsupp.single_eq_same] using h0.symm
         · simp only [Finsupp.single_eq_of_ne (by simp : i.succ ≠ 0), hs]
     simp only [IndexedMultivariateRational.parameter, Polynomial.coe_eval₂RingHom, Polynomial.eval₂_monomial,
-      C_mul_X_pow_eq_monomial, coeff_monomial, Polynomial.coeff_monomial, he]
+      C_mul_X_pow_eq_monomial, coeff_monomial, Polynomial.coeff_monomial, Finsupp.single_apply, he]
     by_cases hs : ∀ i : Fin n, m i.succ = 0
     · simp [hs, eq_comm]
     · simp only [hs, and_false, ite_false]

@@ -72,15 +72,15 @@ theorem matrix_apply (p : R[X]) (d D : ℕ) (hp : p.natDegree ≤ d)
     ext k
     rw [high_coeff]
     by_cases hj : d ≤ j.val
-    · simp only [ite_eq_left hj, coeff_monomial]
+    · simp only [ite_eq_left hj, coeff_monomial, Finsupp.single_apply]
       have he : j.val = k + d ↔ j.val - d = k := by omega
       simp only [he]
-    · simp only [ite_eq_right hj, coeff_zero, coeff_monomial]
+    · simp only [ite_eq_right hj, coeff_zero, coeff_monomial, Finsupp.single_apply]
       rw [ite_eq_right (by omega)]
   rw [matrix, step_identity p d hp, coeff_sub, coeff_C_mul, hh]
   have he : j.val = i.val ↔ i = j :=
     ⟨fun h => Fin.ext h.symm, fun h => congrArg Fin.val h.symm⟩
-  simp only [coeff_monomial, mul_ite, mul_one, mul_zero, he]
+  simp only [coeff_monomial, Finsupp.single_apply, mul_ite, mul_one, mul_zero, he]
   by_cases hj : d ≤ j.val
   · simp only [hj, ↓reduceIte, monomial_one_right_eq_X_pow, coeff_mul_X_pow', true_and]
   · simp only [hj, ↓reduceIte, coeff_zero, false_and]

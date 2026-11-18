@@ -28,7 +28,7 @@ lemma system_coefficient_inner_degree
     (((system H coordinate j).coeff e).coeff k).natDegree ≤ E := by
   refine Fin.cases ?_ (fun i => ?_) j
   · simp only [system, Fin.cases_zero, coeff_sub, coeff_C_mul, coeff_X]
-    split_ifs <;> simp [Polynomial.coeff_sub, Polynomial.coeff_X, Polynomial.coeff_one] <;>
+    split_ifs <;> simp [Polynomial.coeff_X, Polynomial.coeff_one] <;>
       split_ifs <;> simp
   · simp only [system, Fin.cases_succ, MvPolynomial.coeff_map, Polynomial.coeff_C]
     split_ifs

@@ -230,7 +230,7 @@ theorem one_packed : SpaceFunction (PrimitivePairBits.coefficient (fun _ => (1 :
   exact E.congr (funext fun c => by
     unfold PrimitivePairBits.coefficient RationalSubstitution.IntegerBits.coefficientResidue
     by_cases HC : Nat.fromBitsLE (selectedDegree c)=0
-    · simp only [HC,decide_true,ite_true,Polynomial.coeff_one_zero,Int.cast_one]
+    · simp only [HC,decide_true,ite_true,AddMonoidAlgebra.coeff_one_zero,Int.cast_one]
       rw [BinaryNat.succ_eq_bits]
       exact ArithmeticBits.one_residueBits _
     · simp only [HC,decide_false,Bool.false_eq_true,ite_false,Polynomial.coeff_one,Int.cast_zero,

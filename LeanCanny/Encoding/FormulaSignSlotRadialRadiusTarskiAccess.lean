@@ -156,7 +156,7 @@ noncomputable def windowReader :CertifiedPolynomial.BivariateReader
       · by_cases hv2:v=2
         · subst v
           by_cases hu:u=0 <;> simp [Polynomial.coeff_monomial,Polynomial.coeff_one,hu,eq_comm]
-        · simp [Polynomial.coeff_monomial,hv1,hv2,Ne.symm hv1,Ne.symm hv2]
+        · simp [Polynomial.coeff_monomial,hv1,hv2]
     rw [HC]
     by_cases H1:v=1 ∧u=1
     · rw [ite_eq_left H1,ite_eq_left H1,HO]

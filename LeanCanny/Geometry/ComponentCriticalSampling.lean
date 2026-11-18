@@ -58,7 +58,7 @@ theorem exists_joined_critical (p : MvPolynomial ι ℝ) (base : ι) (v : ι →
   have hlocal' : IsLocalMaxOn (ProjectionCritical.projection v) {z | g z = g y.val} y.val := by
     simpa only [y.property] using hlocal
   obtain ⟨Λ, hΛ⟩ := ActiveExtremum.exists_normalized g (ProjectionCritical.projection v) y.val
-    _ _ hlocal' (hsmooth.contDiffAt.hasStrictFDerivAt one_ne_zero)
+    _ _ hlocal' (hsmooth.contDiffAt.hasStrictFDerivAt_fderiv one_ne_zero)
     (ProjectionCritical.projection v).hasStrictFDerivAt (hregular y.val y.property)
   have hscalar (i : ι) : v i = Λ 1 * (pderiv i p).eval y.val := by
     have he := hΛ (Pi.single i 1)

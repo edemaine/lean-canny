@@ -113,7 +113,7 @@ theorem swap_coefficient (p : Polynomial (Polynomial R)) (i j : ℕ) :
     | add p q hp hq => simp only [map_add, Polynomial.coeff_add, hp, hq]
     | monomial l a =>
       rw [Polynomial.Bivariate.swap_monomial_monomial]
-      simp only [Polynomial.coeff_monomial]
+      simp only [Polynomial.coeff_monomial, Finsupp.single_apply]
       split_ifs <;> simp_all [Polynomial.coeff_monomial]
 
 theorem inner_degree_iff_swap (p : Polynomial (Polynomial R)) (D : ℕ) :

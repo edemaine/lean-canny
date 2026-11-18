@@ -7,14 +7,12 @@ module
 public import Mathlib.Topology.Connected.Basic
 public import Mathlib.Topology.Path
 
+public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.Policy.BinaryIntUnaryFin
 public import CslibFrontier.Computability.Complexity.Classes.CountingHierarchy
 public import CslibFrontier.Computability.Complexity.Classes.Space
 public import CslibFrontier.Computability.Complexity.Reduction
-public import CslibFrontier.Computability.Machines.Turing.MultiTape.Complexity.Primitives
-public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.IntBinary
 public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.List
 public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.Pair
-public import CslibFrontier.Computability.Machines.Turing.MultiTape.Encodings.Sum
 
 public import LeanCanny.AbstractBridge
 public import LeanCanny.CountingHierarchy.AbstractBridge
@@ -96,56 +94,41 @@ def Formula.solutionSet {n : ℕ} : Formula n → Set (Fin n → ℝ)
 
 /-! ## Binary input convention
 
-A flat prefix list records each constructor before its children, in field
-order. Integer leaves use binary encoding; variable indices use unary encoding.
-Other constructors receive consecutive unary tags, considering `Term` before
-`Formula`; index tokens are shifted past those eight tags. A token is either
-an integer coefficient or a natural-number tag or shifted variable index.
-CSLib Frontier frames each token once. Dimensions are unary; query framing has
-fixed depth. For a set `S` and function `f`, `S.image f` is the set of values
-`f x` for `x ∈ S` (equivalently, `f '' S`). Each language below applies an encoding
-to its set of valid mathematical inputs and rejects every other bitstring.
+CSLib Frontier’s `derive_encoding` command generates a flat constructor stream
+for each syntax type. Integer coefficients use binary encoding and variable
+indices use unary encoding.
+The named policy makes these choices explicit; the formula encoding reuses the
+term encoding. Constructor tokens are framed individually; comparison tokens
+carry complete term words. Dimensions are unary; query framing has fixed depth.
+
+For a set `S` and function `f`, `S.image f` is the set of values `f x` for `x ∈ S`
+(equivalently, `f '' S`). Each language below applies an encoding to its set of
+valid mathematical inputs and rejects every other bitstring.
 -/
 
-abbrev Token := ℤ ⊕ ℕ
+open scoped Turing.MultiTapeTM.EncodingPolicy.BinaryIntUnaryFin
 
-/-- Serialize polynomial expressions as prefix token lists. -/
-def Term.tokens {n : ℕ} : Term n → List Token
-  | .const z => [.inl z]
-  | .var i => [.inr (i.val + 8)]
-  | .add a b => .inr 0 :: (a.tokens ++ b.tokens)
-  | .mul a b => .inr 1 :: (a.tokens ++ b.tokens)
-
-/-- Serialize Boolean formulas using tags distinct from the term constructors. -/
-def Formula.tokens {n : ℕ} : Formula n → List Token
-  | .false => [.inr 2]
-  | .eqZero t => .inr 3 :: t.tokens
-  | .ltZero t => .inr 4 :: t.tokens
-  | .not p => .inr 5 :: p.tokens
-  | .and p q => .inr 6 :: (p.tokens ++ q.tokens)
-  | .or p q => .inr 7 :: (p.tokens ++ q.tokens)
-
-/-- Encode a token list with the library's binary-integer and unary-natural encodings. -/
-def encoding : List Token ↪ List Bool :=
-  Turing.MultiTapeTM.encList
-    (Turing.MultiTapeTM.encSum Turing.MultiTapeTM.encIntBin Turing.MultiTapeTM.encUnary)
+derive_encoding encTerm (n : ℕ) : Term n
+derive_encoding encFormula (n : ℕ) : Formula n
 
 /-! ## ∃ℝ -/
 
 /-- ETR consists of the encodings of real-satisfiable formulas. -/
 def ETR : Set (List Bool) :=
-  ⋃ n, {p : Formula n | p.solutionSet.Nonempty}.image (fun p => encoding p.tokens)
+  ⋃ n, {p : Formula n | p.solutionSet.Nonempty}.image (encFormula n)
 
 /-- Theorem (Canny, 1988): existential real satisfiability is decidable in deterministic
 polynomial space, including rejection of malformed binary inputs. -/
 theorem etr_in_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.etr_upper_bound
+    (termCode := fun {n} t => encTerm n t) (formulaCode := fun {n} p => encFormula n p)
 
 /-- Theorem (OpenAI, 2026): ETR belongs to the fixed counting level C₂₆P,
 with the same encoded language used in the PSPACE theorem above. -/
 theorem etr_in_CountingLevel :
     ETR ∈ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits :=
   CountingHierarchy.AbstractBridge.etr_upper_bound
+    (termCode := fun {n} t => encTerm n t) (formulaCode := fun {n} p => encFormula n p)
 
 /-- The class ∃ℝ consists of binary languages reducible to ETR in polynomial time.
 A reduction is a polynomial-time algorithm on all input strings that preserves
@@ -158,7 +141,7 @@ def ExistsReal : Set (Set (List Bool)) :=
 polynomial space. -/
 theorem existsReal_subset_PSPACE :
     ExistsReal ⊆ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.existsReal_upper_bound
+  AbstractBridge.existsReal_upper_bound etr_in_PSPACE
 
 /-- Corollary (OpenAI, 2026): every problem in ∃ℝ belongs to that same fixed
 counting level. -/
@@ -181,7 +164,8 @@ length. The union allows all finite block sizes; unused coordinates do not affec
 truth. Every other word is rejected. -/
 def ExistsForallReal : Set (List Bool) :=
   ⋃ r, ⋃ s, {p : Formula (r + s) | p.existsForallSolutionSet.Nonempty}.image (fun p =>
-    Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary encoding (r, p.tokens))
+    Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary Turing.MultiTapeTM.encBits
+      (r, encFormula (r + s) p))
 
 /-- Theorem (OpenAI, 2026): ∃∀ℝ belongs to CH.
 This formalization supplies the fixed level C₆₀P, independent of variable counts,
@@ -189,6 +173,8 @@ polynomial degrees, and coefficient magnitudes. -/
 theorem existsForallReal_in_CountingLevel :
     ExistsForallReal ∈ Cslib.Complexity.CountingLevel 60 Turing.MultiTapeTM.encBits :=
   CountingHierarchy.AbstractBridge.twoBlock_upper_bound
+    (termCode := fun {n} t => encTerm n t) (formulaCode := fun {n} p => encFormula n p)
+    (solutions := @Formula.solutionSet)
 
 /-! ## Whole-space connectivity -/
 
@@ -200,13 +186,15 @@ def ConnectedFormulas (n : ℕ) : Set (Formula n) :=
 /-- Whole-space connectivity applies the input encoding to connected formulas. -/
 def ConnectedLanguage : Set (List Bool) :=
   ⋃ n, (ConnectedFormulas n).image (fun p =>
-    Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary encoding (n, p.tokens))
+    Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary Turing.MultiTapeTM.encBits
+      (n, encFormula n p))
 
 /-- Theorem (Canny, 1988): connectivity of an integer semialgebraic set is in PSPACE,
 including singular and unbounded sets and accepting the empty set. -/
 theorem connectedLanguage_in_PSPACE :
     ConnectedLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.connected_upper_bound
+    (termCode := fun {n} t => encTerm n t) (formulaCode := fun {n} p => encFormula n p)
 
 /-! ## Point reachability -/
 
@@ -221,13 +209,15 @@ def ReachableEndpoints {n : ℕ} (p : Formula n) : Set (Formula n × Formula n) 
 /-- Reachability applies the input encoding to reachable endpoint pairs. -/
 def ReachableLanguage : Set (List Bool) :=
   ⋃ n, ⋃ p : Formula n, (ReachableEndpoints p).image (fun (a, b) =>
-    Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary (Turing.MultiTapeTM.encList encoding)
-      (n, [p.tokens, a.tokens, b.tokens]))
+    Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary
+      (Turing.MultiTapeTM.encList Turing.MultiTapeTM.encBits)
+      (n, [encFormula n p, encFormula n a, encFormula n b]))
 
 /-- Theorem (Canny, 1988): path connectivity between two formula-described points
 in an integer semialgebraic set is in PSPACE, including endpoint validation. -/
 theorem reachableLanguage_in_PSPACE :
     ReachableLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
   AbstractBridge.point_upper_bound
+    (termCode := fun {n} t => encTerm n t) (formulaCode := fun {n} p => encFormula n p)
 
 end LeanCanny.Abstract

@@ -39,14 +39,14 @@ theorem denominator_ne_zero (b : Module.Basis ι ℤ A) (a : A) : denominator b 
 
 theorem coefficient (b : Module.Basis ι ℤ A) (p : Polynomial A) (d : ℕ) :
     (normalize b p d).coeff d = (denominator b (p.coeff d) : A) := by
-  simp only [normalize, coeff_add, coeff_monomial, ite_true, coeff_C_mul, coeff_sub, sub_self, mul_zero, add_zero]
+  simp only [normalize, coeff_add, coeff_monomial, Finsupp.single_apply, ite_true, coeff_C_mul, coeff_sub, sub_self, mul_zero, add_zero]
 
 theorem natDegree_le (b : Module.Basis ι ℤ A) (p : Polynomial A) (d : ℕ) (hd : p.natDegree ≤ d) :
     (normalize b p d).natDegree ≤ d := by
   apply natDegree_le_iff_coeff_eq_zero.mpr
   intro k hk
   have H : d ≠ k := by omega
-  simp only [normalize, coeff_add, coeff_monomial, H, ite_false, coeff_C_mul, coeff_sub,
+  simp only [normalize, coeff_add, coeff_monomial, Finsupp.single_apply, H, ite_false, coeff_C_mul, coeff_sub,
     coeff_eq_zero_of_natDegree_lt (hd.trans_lt hk), sub_zero, mul_zero, add_zero]
 
 theorem inverseValue_eval (b : Module.Basis ι ℤ A) (a : A) (φ : A →ₐ[ℤ] ℝ) :

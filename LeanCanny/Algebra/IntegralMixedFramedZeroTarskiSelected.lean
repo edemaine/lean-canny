@@ -27,7 +27,8 @@ theorem head_evaluated (c : List Bool) (z : Fin (arity P D H terminal c)→ℝ) 
       (RealIteratedTarski.evaluate ε δ)=
         (IntegralMixedFramedTerminalCoordinateHeadBits.polynomial P D H parent terminal d e c).map
           (MvPolynomial.eval₂Hom (Int.castRingHom ℝ) (Fin.cons 0 z)) :=by
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro y
   simp only [Polynomial.coeff_map]
   rw [MvTwoParameterCoefficient.point_evaluate]
@@ -47,7 +48,8 @@ theorem query_evaluated (power : List Bool→Fin 3) (negative : Bool) (c : List 
       (MvTwoParameterCoefficient.evaluate (Int.castRingHom ℝ) z)).map (RealIteratedTarski.evaluate ε δ)=
         (IntegralMixedFramedWindowQuery.polynomial P D H L F C hs terminal selected negative c).map
           (MvPolynomial.eval₂Hom (Int.castRingHom ℝ) (Fin.cons ε z)) :=by
-    apply Polynomial.ext
+    apply AddMonoidAlgebra.ext
+    apply Finsupp.ext
     intro y
     simp only [Polynomial.coeff_map]
     rw [MvTwoParameterCoefficient.point_evaluate]
@@ -106,7 +108,8 @@ theorem head_model (hcore : IntegralMixedFramedCoordinateCoefficientSpaceBits.Co
   rw [head_evaluated P D H parent terminal fd fe q z ε δ,
     IntegralMixedFramedTerminalCoordinateSelected.full_selected P D H parent terminal q hcore hcount φ z hφ 0,
     IntegralMixedSelectedCoordinateOrderedQueries.evaluated_head]
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro y
   simp only [Polynomial.coeff_map,Polynomial.coe_evalRingHom,Polynomial.eval_C]
 

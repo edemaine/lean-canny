@@ -53,8 +53,12 @@ noncomputable def reductionAccess {F : Family} (A : Access F) : PolynomialPseudo
   degree := A.degree
   bound := A.bound
 
-noncomputable def reader {F : Family} (A : Access F) : CertifiedPolynomial.BivariateReader F.seed :=
-  PolynomialPseudoRemainderBits.reader (reductionAccess A)
+noncomputable def reader {F : Family} (A : Access F) : CertifiedPolynomial.BivariateReader F.seed := by
+  have he : F.reduction.reduced = F.seed := by
+    funext c
+    rfl
+  rw [← he]
+  exact PolynomialPseudoRemainderBits.reader (reductionAccess A)
 
 theorem coefficient_evaluator {F : Family} (A : Access F) : SpaceFunction (reader A).coefficient :=
   (reader A).evaluator

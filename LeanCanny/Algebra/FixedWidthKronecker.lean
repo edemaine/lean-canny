@@ -59,7 +59,7 @@ theorem coefficient (A W : ℕ) (p : MvPolynomial (Fin A) R)
     (hp : ∀ m ∈ p.support, ∀ i, m i < 2 ^ W) (r : Fin (count A W)) :
     (encode A W p).coeff r.val = p.coeff (vector A W r) := by
   rw [encode_eq_sum A W p hp, Polynomial.finsetSum_coeff]
-  simp only [Polynomial.coeff_monomial]
+  simp only [Polynomial.coeff_monomial, Finsupp.single_apply]
   rw [Finset.sum_eq_single r]
   · simp
   · intro s _ hs
@@ -72,7 +72,7 @@ theorem coefficient_of_ge (A W : ℕ) (p : MvPolynomial (Fin A) R)
   rw [encode_eq_sum A W p hp, Polynomial.finsetSum_coeff]
   apply Finset.sum_eq_zero
   intro s _
-  rw [Polynomial.coeff_monomial]
+  rw [Polynomial.coeff_monomial, Finsupp.single_apply]
   exact ite_eq_right (by have := s.isLt; omega)
 
 noncomputable def native {σ : Type*} {A : ℕ} (f : σ ≃ Fin A) (W : ℕ) :

@@ -64,7 +64,7 @@ lemma unit_packet (modulus : List Bool → List Bool) (c : List Bool) (a b u v :
   rw [BinaryNat.succ_eq_bits]
   by_cases hu : u = 0 <;> by_cases hv : v = 0
   · subst u; subst v
-    simpa only [and_self, ite_true, scalar, Polynomial.coeff_one_zero, Int.cast_one, BinaryNatCode.encode] using
+    simpa only [and_self, ite_true, scalar, AddMonoidAlgebra.coeff_one_zero, Int.cast_one, BinaryNatCode.encode] using
       ArithmeticBits.one_residueBits (Nat.fromBitsLE (modulus c) + 1)
   all_goals simp [hu, hv, scalar, Polynomial.coeff_one, residueBits, BinaryNatCode.encode]
 

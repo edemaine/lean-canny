@@ -38,7 +38,8 @@ theorem bivariate_swap_degree_le (P : Polynomial (Polynomial R)) (H : ℕ)
     (hH : ∀ j, (P.coeff j).natDegree ≤ H) : (Bivariate.swap P).natDegree ≤ H := by
   apply Polynomial.natDegree_le_iff_coeff_eq_zero.mpr
   intro i hi
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro j
   rw [bivariate_swap_coeff, Polynomial.coeff_zero]
   exact Polynomial.coeff_eq_zero_of_natDegree_lt ((hH j).trans_lt hi)

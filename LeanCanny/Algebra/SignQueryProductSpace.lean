@@ -46,7 +46,7 @@ theorem unitCoefficient_packet (modulus : List Bool → List Bool) (c : List Boo
   by_cases hk : k = 0
   · subst k
     simp only [unitCoefficient, pairFst_pair, pairSnd_pair, show BinaryNatCode.encode 0 = [] from rfl,
-      BinaryNat.normalize, ↓reduceIte, Polynomial.coeff_one_zero]
+      BinaryNat.normalize, ↓reduceIte, AddMonoidAlgebra.coeff_one_zero]
     simpa only [BinaryNat.succ_eq_bits, BinaryNatCode.encode] using
       ArithmeticBits.one_residueBits (Nat.fromBitsLE (modulus c) + 1)
   · have hbits : BinaryNat.normalize (BinaryNatCode.encode k) ≠ [] := by

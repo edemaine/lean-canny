@@ -52,7 +52,8 @@ theorem seed_natDegree_le (p f : (ℤ[X])[X]) : (seed p f).natDegree ≤ p.natDe
   by_cases hd : p.natDegree = 0
   · have hl : ∀ g : (ℤ[X])[X], PseudoRemainder.low 0 g = 0 := by
       intro g
-      apply Polynomial.ext
+      apply AddMonoidAlgebra.ext
+      apply Finsupp.ext
       intro i
       simp only [PseudoRemainder.low_coeff, Nat.not_lt_zero, ↓reduceIte, coeff_zero]
     have hs : ∀ g : (ℤ[X])[X], PseudoRemainder.step p 0 g = 0 := by

@@ -101,7 +101,8 @@ theorem epsilon_selected (A : List Bool→ℕ)
     (c : List Bool) (z : Fin (A c)→ℝ) (δ ε : ℝ) :
     (epsilonHead A p c).map (MvPolynomial.eval₂Hom (Int.castRingHom ℝ) (Fin.cons δ (Fin.cons ε z)))=
       (p c).map (MvPolynomial.eval₂Hom (Int.castRingHom ℝ) (Fin.cons ε z)) :=by
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro y
   simp only [Polynomial.coeff_map,epsilon_coefficient,MvPolynomial.coe_eval₂Hom,MvPolynomial.eval₂_rename]
   rfl

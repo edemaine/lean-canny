@@ -75,7 +75,7 @@ theorem unit_packet (c : List Bool) (i k m : ℕ) (hm : 0 < m) :
     BinaryNatCode.encode, Nat.fromBitsLE_bits, Nat.sub_add_cancel hm]
   by_cases hk : k = 0
   · subst k
-    simp only [ite_true, Polynomial.coeff_one_zero]
+    simp only [ite_true, AddMonoidAlgebra.coeff_one_zero]
     simpa only [BinaryNatCode.encode, Int.cast_one] using ArithmeticBits.one_residueBits m
   · simp only [hk, ite_false, Polynomial.coeff_one, Int.cast_zero]
     simp [residueBits, BinaryNatCode.encode]

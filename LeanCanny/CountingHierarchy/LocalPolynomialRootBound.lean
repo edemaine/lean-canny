@@ -27,8 +27,8 @@ theorem exists_local_polynomial_root_bound (P : A → Polynomial ℝ) (d : ℕ)
     ∃ R : ℝ, 0 < R ∧ ∀ᶠ x in 𝓝 x₀, ∀ v : ℝ, R ≤ v → (P x).eval v ≠ 0 := by
   let M : A → NNReal := fun x => ∑ i ∈ Finset.range (d + 1), ‖(P x).coeff i‖₊
   let B : A → NNReal := fun x => M x / ‖(P x).coeff d‖₊ + 1
-  have hM : Continuous M := continuous_finsetSum _ (fun i _ => (hcoeff i).nnnorm)
-  have hB : Continuous B := (hM.div (hcoeff d).nnnorm (fun x => (by simpa only [ne_eq, nnnorm_eq_zero] using hlead x))).add continuous_const
+  have hM : Continuous M := continuous_finsetSum _ (fun i _ => (hcoeff i).nnNorm)
+  have hB : Continuous B := (hM.div (hcoeff d).nnNorm (fun x => (by simpa only [ne_eq, nnNorm_eq_zero] using hlead x))).add continuous_const
   have hBreal : Continuous (fun x => (B x : ℝ)) := continuous_subtype_val.comp hB
   have hbound (x : A) : (P x).cauchyBound ≤ B x := by
     have hd : (P x).natDegree = d := le_antisymm (hdegree x) (le_natDegree_of_ne_zero (hlead x))

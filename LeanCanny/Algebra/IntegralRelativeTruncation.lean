@@ -25,7 +25,7 @@ noncomputable def truncate (p : Polynomial A) (d : ℕ) : Polynomial A :=
 
 theorem coefficient (p : Polynomial A) (d k : ℕ) :
     (truncate p d).coeff k = if k ≤ d then p.coeff k else 0 := by
-  simp [truncate, Polynomial.coeff_monomial, eq_comm]
+  simp [truncate, Polynomial.coeff_monomial, Finsupp.single_apply, eq_comm]
 
 theorem natDegree_le (p : Polynomial A) (d : ℕ) : (truncate p d).natDegree ≤ d := by
   apply Polynomial.natDegree_le_iff_coeff_eq_zero.mpr

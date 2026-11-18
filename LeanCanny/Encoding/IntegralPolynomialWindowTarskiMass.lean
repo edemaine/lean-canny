@@ -41,6 +41,7 @@ private theorem window_square (N:List Bool→ℕ) (c:List Bool):(window N c)^2=
   ring
 private theorem window_mass (N:List Bool→ℕ) (c:List Bool) (i:ℕ):MvMass.mass ((window N c).coeff i) ≤ 2:=by
   rw [window_monomials,Polynomial.coeff_sub,Polynomial.coeff_monomial,Polynomial.coeff_monomial]
+  simp only [Finsupp.single_apply]
   apply (MvMass.sub_le _ _).trans
   have HA:MvMass.mass (if 1=i then MvPolynomial.X (0:Fin (arity N c)) else 0) ≤ 1:=by split_ifs <;> simp
   have HB:MvMass.mass (if 2=i then (1:MvPolynomial (Fin (arity N c)) ℤ) else 0) ≤ 1:=by split_ifs <;> simp
@@ -48,6 +49,7 @@ private theorem window_mass (N:List Bool→ℕ) (c:List Bool) (i:ℕ):MvMass.mas
 private theorem window_square_mass (N:List Bool→ℕ) (c:List Bool) (i:ℕ):MvMass.mass (((window N c)^2).coeff i) ≤ 4:=by
   rw [window_square,Polynomial.coeff_add,Polynomial.coeff_sub,Polynomial.coeff_monomial,
     Polynomial.coeff_monomial,Polynomial.coeff_monomial]
+  simp only [Finsupp.single_apply]
   apply (MvMass.add_le _ _).trans
   apply (Nat.add_le_add_right (MvMass.sub_le _ _) _).trans
   have HA:MvMass.mass (if 2=i then MvPolynomial.X (0:Fin (arity N c))^2 else 0) ≤ 1:=by

@@ -30,7 +30,7 @@ noncomputable def vectorPolynomial (v : Fin n → K) : K[X] :=
   ∑ i, monomial i.val (v i)
 
 theorem coefficient (v : Fin n → K) (i : Fin n) : (vectorPolynomial v).coeff i.val = v i := by
-  simp only [vectorPolynomial, finsetSum_coeff, coeff_monomial]
+  simp only [vectorPolynomial, finsetSum_coeff, coeff_monomial, Finsupp.single_apply]
   rw [Finset.sum_eq_single i]
   · simp
   · intro j _ hji

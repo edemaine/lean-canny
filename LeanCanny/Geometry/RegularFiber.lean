@@ -141,9 +141,9 @@ theorem locallyPathConnected (f : E → F) (c : F)
     (hD : ∀ x : Fiber f c, Function.Surjective (fderiv ℝ f x.val)) :
     LocallyPathConnectedSpace (Fiber f c) := by
   let charts (x : Fiber f c) := chart f c x (fderiv ℝ f x.val)
-    ((hf x).hasStrictFDerivAt one_ne_zero) (hD x)
+    ((hf x).hasStrictFDerivAt_fderiv one_ne_zero) (hD x)
   exact locallyPathConnected_of_charts charts
-    (fun x => mem_chart_source f c x _ ((hf x).hasStrictFDerivAt one_ne_zero) (hD x))
+    (fun x => mem_chart_source f c x _ ((hf x).hasStrictFDerivAt_fderiv one_ne_zero) (hD x))
 
 theorem joined_iff_component_eq (f : E → F) (c : F)
     (hf : ∀ x : Fiber f c, ContDiffAt ℝ 1 f x.val)

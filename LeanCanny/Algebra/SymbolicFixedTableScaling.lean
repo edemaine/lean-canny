@@ -103,9 +103,9 @@ noncomputable def clear (p : Polynomial Coefficient) (E s : ℕ) : ℤ[X] :=
 theorem clear_coeff (p : Polynomial Coefficient) (E s k : ℕ) :
     (clear p E s).coeff k = DyadicSpecialization.numerator (p.coeff k) E s := by
   by_cases hk : k < p.natDegree + 1
-  · simp [clear, coeff_monomial, hk]
+  · simp [clear, coeff_monomial, Finsupp.single_apply, hk]
   · have hz : p.coeff k = 0 := coeff_eq_zero_of_natDegree_lt (by omega)
-    simp [clear, coeff_monomial, hk, hz]
+    simp [clear, coeff_monomial, Finsupp.single_apply, hk, hz]
 
 theorem clear_map (p : Polynomial Coefficient) (E s : ℕ)
     (hE : ∀ k, (p.coeff k).natDegree ≤ E) :

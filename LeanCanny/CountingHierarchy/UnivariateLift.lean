@@ -50,10 +50,10 @@ theorem liftUnivariate_mass_le (p : Polynomial ℤ) : MvMass.mass (liftUnivariat
 theorem liftUnivariate_coeff (p : Polynomial ℤ) (k : ℕ) :
     (liftUnivariate p).coeff (Finsupp.single 0 k) = p.coeff k := by
   induction p using Polynomial.induction_on' with
-  | add p q hp hq => simp only [map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, Polynomial.coeff_add, hp, hq]
+  | add p q hp hq => simp only [map_add, AddMonoidAlgebra.coeff_add, Finsupp.add_apply, hp, hq]
   | monomial i a =>
     rw [liftUnivariate_monomial, MvPolynomial.C_mul_X_pow_eq_monomial]
-    simp only [MvPolynomial.coeff_monomial, Polynomial.coeff_monomial,
+    simp only [MvPolynomial.coeff_monomial, Polynomial.coeff_monomial, Finsupp.single_apply,
       (Finsupp.single_injective (0 : Fin 1)).eq_iff]
 
 theorem liftUnivariate_degree_eq (p : Polynomial ℤ) : (liftUnivariate p).totalDegree = p.natDegree := by

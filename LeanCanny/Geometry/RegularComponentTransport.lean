@@ -63,7 +63,7 @@ theorem exists_charts (f : E → F) (S : Set F)
       ∃ chart : OpenPartialHomeomorph (f ⁻¹' S) (S × (fderiv ℝ f x.val).ker),
         x ∈ chart.source ∧ ∀ y ∈ chart.source, (chart y).1 = p y := by
     let D := fderiv ℝ f x.val
-    have hder := (hf x.val x.property).hasStrictFDerivAt one_ne_zero
+    have hder := (hf x.val x.property).hasStrictFDerivAt_fderiv one_ne_zero
     have hrange : D.range = ⊤ := LinearMap.range_eq_top.mpr (hregular x.val x.property)
     let e := hder.implicitToOpenPartialHomeomorph f D hrange
     exact LocalProductFibers.exists_restricted_chart f S e x

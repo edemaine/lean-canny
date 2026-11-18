@@ -21,7 +21,7 @@ variable {R S T : Type*} [CommRing R] [Fintype S] [Fintype T] [DecidableEq T]
 
 theorem det_mul_expansion (B : Matrix T S R) (D : Matrix S T R) :
     (B * D).det = ∑ f : T → S, (∏ t, B t (f t)) * (D.submatrix f id).det := by
-  let F : MultilinearMap R (fun _ : T => T → R) R := Matrix.detRowAlternating.toMultilinearMap
+  let F : MultilinearMap (RingHom.id R) (fun _ : T => T → R) R := Matrix.detRowAlternating.toMultilinearMap
   have hm : (fun t => (B * D : Matrix T T R) t) = (fun t => ∑ s, B t s • D s) := by
     funext t u
     simp only [Matrix.mul_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
@@ -31,7 +31,7 @@ theorem det_mul_expansion (B : Matrix T S R) (D : Matrix S T R) :
   intro f _
   have he := F.map_smul_univ (fun t => B t (f t)) (fun t => D (f t))
   rw [show F (fun t => D (f t)) = (D.submatrix f id).det by rfl] at he
-  simpa only [smul_eq_mul] using he
+  simpa only [smul_eq_mul, RingHom.id_apply] using he
 
 theorem dvd_det_mul (B : Matrix T S R) (D : Matrix S T R) (q : R)
     (hq : ∀ f : T → S, q ∣ (D.submatrix f id).det) : q ∣ (B * D).det := by

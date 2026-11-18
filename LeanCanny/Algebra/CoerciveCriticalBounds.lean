@@ -108,7 +108,7 @@ lemma parameter_s (a : ℤ) : EntryBounds ((a : Coefficient) * Polynomial.X) a.n
   refine ⟨by simp only [NestedMass.monomial, coefficientMass_C]; exact le_rfl,
     Polynomial.natDegree_monomial_le _, ?_⟩
   intro k
-  rw [Polynomial.coeff_monomial]
+  rw [Polynomial.coeff_monomial, Finsupp.single_apply]
   split_ifs <;> simp only [Polynomial.natDegree_C, Polynomial.natDegree_zero, Nat.zero_le]
 
 lemma parameter_t : EntryBounds (Polynomial.C Polynomial.X : Coefficient) 1 := by

@@ -89,7 +89,7 @@ theorem holds_toSigned (p : Formula) (positive : Bool) (env : ℕ → ℝ) :
   classical
   induction p generalizing positive <;> cases positive <;>
     simp_all [toSigned, Holds, SignedFormula.Holds]
-  all_goals tauto
+  tauto
 
 end Formula
 

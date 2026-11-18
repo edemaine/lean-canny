@@ -28,7 +28,7 @@ noncomputable def polynomial (p : Polynomial R) (d : ℕ) : Polynomial R :=
 theorem coefficient (p : Polynomial R) (d k : ℕ) :
     (polynomial p d).coeff k =
       (if k = d then 1 else 0) + (if k < d then p.coeff k * p.coeff d ^ (d - 1 - k) else 0) := by
-  simp [polynomial, Polynomial.coeff_monomial, eq_comm]
+  simp [polynomial, Polynomial.coeff_monomial, Finsupp.single_apply, eq_comm]
 
 theorem coefficient_top (p : Polynomial R) (d : ℕ) : (polynomial p d).coeff d = 1 := by
   simp only [coefficient, ↓reduceIte, Nat.lt_irrefl, add_zero]

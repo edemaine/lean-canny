@@ -56,7 +56,7 @@ theorem correct (B : Bank) (refs : List Bool → List Bool) (V : List Bool → �
   · have HC : reference refs (context q) (Nat.fromBitsLE (indexWord q)) <
         (atKey B.parameters B.plan B.data (key B (context q))).count := by rwa [← HR]
     have HM : min (requested refs q) (count B q) = requested refs q := min_eq_left h.le
-    rw [ite_eq_left HC, Polynomial.coeff_monomial]
+    rw [ite_eq_left HC, Polynomial.coeff_monomial, Finsupp.single_apply]
     have HE : UniformIntegralPowerSchedule.birth (B.parameters.cap (pairFst (key B (context q))) + 1)
         (2 ^ B.parameters.width (pairFst (key B (context q))))
           (reference refs (context q) (Nat.fromBitsLE (indexWord q))) *

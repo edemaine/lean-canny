@@ -29,7 +29,8 @@ theorem point {m : ℕ} (p : MvPolynomial (Fin (m+1)) ℤ) (z : Fin m→ℝ) (η
 theorem map_point {m : ℕ} (p : Polynomial (MvPolynomial (Fin (m+1)) ℤ)) (z : Fin m→ℝ) (η : ℝ) :
     (p.map (SelectedMultivariatePolynomialLift.evaluate (MvPolynomial.aeval z).toRingHom)).map
       (Polynomial.evalRingHom η)=p.map (MvPolynomial.eval₂Hom (Int.castRingHom ℝ) (Fin.cons η z)) :=by
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro y
   simp only [Polynomial.coeff_map,Polynomial.coe_evalRingHom]
   exact point (p.coeff y) z η
@@ -61,7 +62,8 @@ theorem suffix {a b : ℕ} (h : a≤b) (p : Polynomial (MvPolynomial (Fin (a+1))
         omega
       rw [HE]
       rfl
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro y
   simp only [enlarged,Polynomial.coeff_map,MvPolynomial.coe_eval₂Hom]
   change (MvPolynomial.rename (Fin.cast (layout h))

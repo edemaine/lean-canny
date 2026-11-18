@@ -31,7 +31,7 @@ theorem coefficient_height (b : Module.Basis (Fin M) ℤ A)
   refine Fin.cases ?_ (fun j => ?_) j
   · have HT : (Algebra.leftMulMatrix b ((Polynomial.X * Polynomial.C (p.coeff e)).coeff k) u v).natAbs ≤ 2 ^ HP := by
       rw [mul_comm, ← pow_one (Polynomial.X : Polynomial A), Polynomial.C_mul_X_pow_eq_monomial,
-        Polynomial.coeff_monomial]
+        Polynomial.coeff_monomial, Finsupp.single_apply]
       split_ifs
       · exact hp e u v
       · rw [map_zero, Matrix.zero_apply, Int.natAbs_zero]

@@ -15,7 +15,8 @@ theorem evaluate_degree (f : R→+*K) (z : Fin m→K) (p : MvPolynomial (Fin (m+
     (evaluate f z p).natDegree≤p.totalDegree :=by
   apply Polynomial.natDegree_le_iff_coeff_eq_zero.mpr
   intro δ hδ
-  apply Polynomial.ext
+  apply AddMonoidAlgebra.ext
+  apply Finsupp.ext
   intro ε
   rw [selected_coefficient,eq_zero p δ ε (Or.inl hδ),MvPolynomial.eval₂_zero,Polynomial.coeff_zero]
 
