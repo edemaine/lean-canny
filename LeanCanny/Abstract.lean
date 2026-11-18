@@ -94,16 +94,17 @@ def Formula.solutionSet {n : ℕ} : Formula n → Set (Fin n → ℝ)
 
 /-! ## Binary input convention
 
+Each language below consists of the encodings of its valid mathematical inputs
+and rejects every other bitstring. For a set `S` and encoding function `f`,
+`S.image f` is the set of encoded values `f x` for `x ∈ S`.
+
 CSLib Frontier’s `derive_encoding` command generates a flat constructor stream
 for each syntax type. Integer coefficients use binary encoding and variable
 indices use unary encoding.
-The named policy makes these choices explicit; the formula encoding reuses the
-term encoding. Constructor tokens are framed individually; comparison tokens
-carry complete term words. Dimensions are unary; query framing has fixed depth.
-
-For a set `S` and function `f`, `S.image f` is the set of values `f x` for `x ∈ S`
-(equivalently, `f '' S`). Each language below applies an encoding to its set of
-valid mathematical inputs and rejects every other bitstring.
+Opening the named policy scope selects these field encodings; the formula
+encoding reuses the term encoding. Constructor tokens are framed individually;
+comparison tokens carry complete term words. Dimensions are unary; query framing
+has fixed depth.
 -/
 
 open scoped Turing.MultiTapeTM.EncodingPolicy.BinaryIntUnaryFin
@@ -119,16 +120,14 @@ def ETR : Set (List Bool) :=
 
 /-- Theorem (Canny, 1988): existential real satisfiability is decidable in deterministic
 polynomial space, including rejection of malformed binary inputs. -/
-theorem etr_in_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.etr_upper_bound
-    (termCode := fun {n} t => encTerm n t) (formulaCode := fun {n} p => encFormula n p)
+theorem etr_in_PSPACE : ETR ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
+  bridge_bound AbstractBridge.etr_upper_bound
 
 /-- Theorem (OpenAI, 2026): ETR belongs to the fixed counting level C₂₆P,
 with the same encoded language used in the PSPACE theorem above. -/
 theorem etr_in_CountingLevel :
-    ETR ∈ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits :=
-  CountingHierarchy.AbstractBridge.etr_upper_bound
-    (termCode := fun {n} t => encTerm n t) (formulaCode := fun {n} p => encFormula n p)
+    ETR ∈ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits := by
+  bridge_bound CountingHierarchy.AbstractBridge.etr_upper_bound
 
 /-- The class ∃ℝ consists of binary languages reducible to ETR in polynomial time.
 A reduction is a polynomial-time algorithm on all input strings that preserves
@@ -141,13 +140,13 @@ def ExistsReal : Set (Set (List Bool)) :=
 polynomial space. -/
 theorem existsReal_subset_PSPACE :
     ExistsReal ⊆ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.existsReal_upper_bound etr_in_PSPACE
+  AbstractBridge.existsReal_upper_bound
 
 /-- Corollary (OpenAI, 2026): every problem in ∃ℝ belongs to that same fixed
 counting level. -/
 theorem existsReal_subset_CountingLevel :
     ExistsReal ⊆ Cslib.Complexity.CountingLevel 26 Turing.MultiTapeTM.encBits :=
-  CountingHierarchy.AbstractBridge.existsReal_upper_bound etr_in_CountingLevel
+  CountingHierarchy.AbstractBridge.existsReal_upper_bound
 
 /-! ## ∃∀ℝ -/
 
@@ -171,10 +170,8 @@ def ExistsForallReal : Set (List Bool) :=
 This formalization supplies the fixed level C₆₀P, independent of variable counts,
 polynomial degrees, and coefficient magnitudes. -/
 theorem existsForallReal_in_CountingLevel :
-    ExistsForallReal ∈ Cslib.Complexity.CountingLevel 60 Turing.MultiTapeTM.encBits :=
-  CountingHierarchy.AbstractBridge.twoBlock_upper_bound
-    (termCode := fun {n} t => encTerm n t) (formulaCode := fun {n} p => encFormula n p)
-    (solutions := @Formula.solutionSet)
+    ExistsForallReal ∈ Cslib.Complexity.CountingLevel 60 Turing.MultiTapeTM.encBits := by
+  bridge_bound CountingHierarchy.AbstractBridge.twoBlock_upper_bound
 
 /-! ## Whole-space connectivity -/
 
@@ -192,9 +189,8 @@ def ConnectedLanguage : Set (List Bool) :=
 /-- Theorem (Canny, 1988): connectivity of an integer semialgebraic set is in PSPACE,
 including singular and unbounded sets and accepting the empty set. -/
 theorem connectedLanguage_in_PSPACE :
-    ConnectedLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.connected_upper_bound
-    (termCode := fun {n} t => encTerm n t) (formulaCode := fun {n} p => encFormula n p)
+    ConnectedLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
+  bridge_bound AbstractBridge.connected_upper_bound
 
 /-! ## Point reachability -/
 
@@ -216,8 +212,7 @@ def ReachableLanguage : Set (List Bool) :=
 /-- Theorem (Canny, 1988): path connectivity between two formula-described points
 in an integer semialgebraic set is in PSPACE, including endpoint validation. -/
 theorem reachableLanguage_in_PSPACE :
-    ReachableLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits :=
-  AbstractBridge.point_upper_bound
-    (termCode := fun {n} t => encTerm n t) (formulaCode := fun {n} p => encFormula n p)
+    ReachableLanguage ∈ Cslib.Complexity.PSPACE Turing.MultiTapeTM.encBits := by
+  bridge_bound AbstractBridge.point_upper_bound
 
 end LeanCanny.Abstract

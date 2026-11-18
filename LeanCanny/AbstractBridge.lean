@@ -5,6 +5,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 module
 
 public meta import Lean.Elab.Tactic.Basic
+public meta import Lean.Util.FoldConsts
 public import LeanCanny.DerivedEncodingBridge
 
 /-! # Transfer from the independent mathematical abstract
@@ -38,6 +39,32 @@ elab "bridge_induction" : tactic => withMainContext do
     discard <| getConstInfoInduct name
     return name.str "rec"
   evalTactic (← `(tactic| exact @$(mkCIdent name)))
+
+open Lean Lean.Meta Lean.Elab Lean.Elab.Tactic in
+/-- Supply the abstract suite's encoders and solution sets to a bridge theorem.
+The displayed language identifies the suite; all arguments are checked by Lean. -/
+elab "bridge_bound " endpoint:ident : tactic => withMainContext do
+  let target ← instantiateMVars (← getMainTarget)
+  let mut scope : Option Name := none
+  for name in target.getUsedConstants do
+    if let .str ns leaf := name then
+      if ["ETR", "ExistsForallReal", "ConnectedLanguage", "ReachableLanguage"].contains leaf then
+        scope := some ns
+  let some ns := scope | throwError "Expected a named abstract language in {target}"
+  evalTactic (← `(tactic| exact $endpoint:ident
+    (termCode := fun {n} t => $(mkCIdent (ns ++ `encTerm)) n t)
+    (formulaCode := fun {n} p => $(mkCIdent (ns ++ `encFormula)) n p)
+    (solutions := @$(mkCIdent (ns ++ `Formula.solutionSet)))))
+
+open Lean Lean.Meta Lean.Elab Lean.Elab.Tactic in
+/-- Reuse the abstract's established ETR bound when applying reduction closure. -/
+elab "bridge_existing_bound " result:ident : tactic => withMainContext do
+  let target ← instantiateMVars (← getMainTarget)
+  let mut scope : Option Name := none
+  for name in target.getUsedConstants do
+    if let .str ns "ETR" := name then scope := some ns
+  let some ns := scope | throwError "Expected the abstract ETR language in {target}"
+  evalTactic (← `(tactic| exact $(mkCIdent (ns ++ result.getId))))
 
 /-! ## Dimension-indexed abstract syntax
 
@@ -394,9 +421,9 @@ theorem point_upper_bound
 
 end Finite
 
-/-- Reduction closure applied to the supplied arithmetic upper bound. -/
+/-- Reduction closure reuses the abstract's established arithmetic upper bound. -/
 theorem existsReal_upper_bound {L : Set (List Bool)}
-    (hL : L ∈ Cslib.Complexity.PSPACE encBits) :
+    (hL : L ∈ Cslib.Complexity.PSPACE encBits := by bridge_existing_bound etr_in_PSPACE) :
     {K | Cslib.Complexity.PolyTimeReducible encBits encBits K L} ⊆
       Cslib.Complexity.PSPACE encBits :=
   reduction_closure hL

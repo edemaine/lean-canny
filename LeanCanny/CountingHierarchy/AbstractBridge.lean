@@ -145,7 +145,8 @@ theorem twoBlock_upper_bound
 
 /-- Polynomial-time reductions transfer the existential bound to all of ∃ℝ. -/
 theorem existsReal_upper_bound {L : Set (List Bool)}
-    (hL : L ∈ Cslib.Complexity.CountingLevel 26 encBits) :
+    (hL : L ∈ Cslib.Complexity.CountingLevel 26 encBits := by
+      bridge_existing_bound etr_in_CountingLevel) :
     {K | Cslib.Complexity.PolyTimeReducible encBits encBits K L} ⊆
       Cslib.Complexity.CountingLevel 26 encBits := by
   intro K hK
