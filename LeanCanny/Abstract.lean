@@ -102,9 +102,9 @@ encoding reuses the term encoding. Constructor tokens are framed individually;
 comparison tokens carry complete term words. Dimensions are unary; query framing
 has fixed depth.
 
-Each language below consists of the encodings of its valid mathematical inputs
-and rejects every other bitstring. For a set `S` and encoding function `f`,
-`S.image f` is the set of encoded values `f x` for `x ∈ S`.
+Each language below is defined by taking the set `S` of valid mathematical
+inputs and applying its encoding `f` using `S.image f`. This is the set of
+values `f x` for `x ∈ S`; every other bitstring is rejected.
 -/
 
 open scoped Turing.MultiTapeTM.EncodingPolicy.BinaryIntUnaryFin
