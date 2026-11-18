@@ -94,10 +94,6 @@ def Formula.solutionSet {n : ℕ} : Formula n → Set (Fin n → ℝ)
 
 /-! ## Binary input convention
 
-Each language below consists of the encodings of its valid mathematical inputs
-and rejects every other bitstring. For a set `S` and encoding function `f`,
-`S.image f` is the set of encoded values `f x` for `x ∈ S`.
-
 CSLib Frontier’s `derive_encoding` command generates a flat constructor stream
 for each syntax type. Integer coefficients use binary encoding and variable
 indices use unary encoding.
@@ -105,6 +101,10 @@ Opening the named policy scope selects these field encodings; the formula
 encoding reuses the term encoding. Constructor tokens are framed individually;
 comparison tokens carry complete term words. Dimensions are unary; query framing
 has fixed depth.
+
+Each language below consists of the encodings of its valid mathematical inputs
+and rejects every other bitstring. For a set `S` and encoding function `f`,
+`S.image f` is the set of encoded values `f x` for `x ∈ S`.
 -/
 
 open scoped Turing.MultiTapeTM.EncodingPolicy.BinaryIntUnaryFin
