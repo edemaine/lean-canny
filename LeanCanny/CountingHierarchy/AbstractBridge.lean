@@ -152,4 +152,16 @@ theorem existsReal_upper_bound {L : Set (List Bool)}
   intro K hK
   exact hK.mem_CountingLevel hL
 
+/-- Argument-free proof term for the abstract's existential counting bound. -/
+macro "AbstractBridge.etr_in_CountingLevel" : term =>
+  `(by bridge_bound LeanCanny.CountingHierarchy.AbstractBridge.etr_upper_bound)
+
+/-- Argument-free proof term for reduction closure of the existential bound. -/
+macro "AbstractBridge.existsReal_subset_CountingLevel" : term =>
+  `(LeanCanny.CountingHierarchy.AbstractBridge.existsReal_upper_bound)
+
+/-- Argument-free proof term for the abstract's two-block counting bound. -/
+macro "AbstractBridge.existsForallReal_in_CountingLevel" : term =>
+  `(by bridge_bound LeanCanny.CountingHierarchy.AbstractBridge.twoBlock_upper_bound)
+
 end LeanCanny.CountingHierarchy.AbstractBridge

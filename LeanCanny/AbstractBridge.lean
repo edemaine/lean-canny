@@ -428,6 +428,21 @@ theorem existsReal_upper_bound {L : Set (List Bool)}
       Cslib.Complexity.PSPACE encBits :=
   reduction_closure hL
 
+/-! Argument-free proof terms instantiate the generic bridge theorems using
+the named language in the expected type. Lean checks every expanded proof. -/
+
+macro "AbstractBridge.etr_in_PSPACE" : term =>
+  `(by bridge_bound LeanCanny.AbstractBridge.etr_upper_bound)
+
+macro "AbstractBridge.existsReal_subset_PSPACE" : term =>
+  `(LeanCanny.AbstractBridge.existsReal_upper_bound)
+
+macro "AbstractBridge.connectedLanguage_in_PSPACE" : term =>
+  `(by bridge_bound LeanCanny.AbstractBridge.connected_upper_bound)
+
+macro "AbstractBridge.reachableLanguage_in_PSPACE" : term =>
+  `(by bridge_bound LeanCanny.AbstractBridge.point_upper_bound)
+
 end LeanCanny.AbstractBridge
 
 end
