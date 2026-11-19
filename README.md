@@ -1,21 +1,126 @@
-# Real-algebraic complexity in Lean
+# Semialgebraic Complexity in Lean
 
-Formalizations of Canny's PSPACE bounds and OpenAI's counting-hierarchy bounds.
-The repository's historical name and implementation namespace are `lean-canny`
-and `LeanCanny`.
+This repository contains Lean formalizations of complexity upper
+bounds for quantified semialgebraic formula satisfiability
+(**theory of the reals**) and
+semialgebraic configuration space connectivity.
+Specifically, it proves these theorems:
 
-The PSPACE development proves that the
-Existential Theory of the Reals (ETR) is in PSPACE,
-or stated in terms of complexity-theory classes: ∃ℝ ⊆ PSPACE,
-and native PSPACE bounds for semialgebraic point and whole-space connectivity.
-This theorem is from John Canny's 1988 technical report
-[*Some Algebraic and Geometric Computations in PSPACE*](https://www2.eecs.berkeley.edu/Pubs/TechRpts/1988/6041.html)
-(stored in this repo as [`canny-tr.pdf`](canny-tr.pdf)), published as a
-[STOC ’88 paper](https://doi.org/10.1145/62212.62257) (pp. 460–467).
+- **[Existential Theory of the Reals (ETR)](https://en.wikipedia.org/wiki/Existential_theory_of_the_reals) / [∃ℝ](https://en.wikipedia.org/wiki/Existential_theory_of_the_reals)** ≈
+  SAT / NP over the reals, with polynomial equations and inequalities.
+  - ETR ∈ [PSPACE](https://en.wikipedia.org/wiki/PSPACE) and ∃ℝ ⊆ PSPACE
+    [[Canny 1988](#ref-canny-1988)].
+  - ETR ∈ C₂₆P and ∃ℝ ⊆ C₂₆P [[OpenAI 2026](#ref-openai-2026)], where C₂₆P is a fixed level of the
+    [counting hierarchy (CH)](https://en.wikipedia.org/wiki/Counting_hierarchy).
+- **Existential–Universal Theory of the Reals / ∃∀ℝ** ≈
+  [Σ₂ᴾ](https://en.wikipedia.org/wiki/Polynomial_hierarchy#Quantified_Boolean_formulae_definition) over the reals.
+  - ∃∀ℝ ⊆ C₆₀P [[OpenAI 2026](#ref-openai-2026)], where C₆₀P is a fixed level of the
+    [counting hierarchy (CH)](https://en.wikipedia.org/wiki/Counting_hierarchy).
+    OpenAI's manuscript states a fixed but unspecified level; this formalization supplies 60.
+- **Semialgebraic connectivity:**
+  [semialgebraic set](https://en.wikipedia.org/wiki/Semialgebraic_set)
+  point-to-point reachability and whole-set connectivity
+  are in PSPACE [[Canny 1988](#ref-canny-1988)].
+- **Arithmetic circuits:** the same CH bounds hold for
+  inputs that share intermediate computations (DAGs instead of trees)
+  [[OpenAI 2026](#ref-openai-2026)].
 
-The [unified formal abstract](LeanCanny/Abstract.lean) presents both sets of
-results using one polynomial syntax, solution-set semantics, and binary encoding.
-It attributes the PSPACE results to Canny and the CH results to OpenAI.
+Approximate sizes of the formalizations:
+
+| Result | Lean source lines |
+| --- | ---: |
+| ETR ∈ PSPACE; ∃ℝ ⊆ PSPACE | ≈ 91,000 |
+| ETR ∈ C₂₆P; ∃ℝ ⊆ C₂₆P | ≈ 42,000 |
+| ∃∀ℝ ⊆ C₆₀P | ≈ 69,000 |
+| Point reachability and whole-set connectivity in PSPACE | ≈ 503,000 |
+| Arithmetic-circuit CH bounds | ≈ 70,000 |
+
+Counts include each implementation’s transitive local imports, comments, and
+blank lines; they exclude Mathlib, CSLib, and CSLib Frontier. Shared files count
+toward every result that uses them.
+
+## Motivation
+
+I started this project because I was worried that Canny's PSPACE membership
+proofs from 1988 were simultaneously very important, very complicated, but not
+very thoroughly checked (e.g., no journal version). Luckily, it turns out that
+the main complexity bounds hold! However, there was one small bug: see the
+[coordinate-recovery counterexample and how the completed proof avoids it](RESEARCH.md#gap-in-cannys-symmetric-coordinate-recovery).
+
+Then the project grew to formalize the counting-hierarchy results of
+OpenAI's 2026 strengthening of the ETR bounds,
+which had yet to be formalized.
+
+## Formal abstract
+
+To verify that this repository proves what it should, read
+[`Abstract.lean`](LeanCanny/Abstract.lean), which presents
+independently readable definitions and checked theorem statements.
+Those definitions and statements use only notions introduced in that file,
+[Mathlib](https://github.com/leanprover-community/mathlib4), and
+[CSLib Frontier](https://github.com/cslib-community/cslib-frontier).
+Lean verifies the proofs through two bridge files:
+[one for PSPACE results](LeanCanny/AbstractBridge.lean) and
+[one for CH results](LeanCanny/CountingHierarchy/AbstractBridge.lean).
+
+## Build and verification
+
+Install [elan](https://github.com/leanprover/elan), then run:
+
+```sh
+lake update
+lake exe cache get
+lake build
+```
+
+[`lean-toolchain`](lean-toolchain) and [`lake-manifest.json`](lake-manifest.json)
+record the pinned versions of Lean and the dependencies. The default build checks
+the unified abstract and its PSPACE, CH, and connectivity proofs. Import it with
+`import LeanCanny` or `import RealCountingHierarchy`.
+
+To audit the abstract's definitions, statements, axioms, and encoding:
+
+```sh
+lake env lean scripts/CheckAbstract.lean
+lake env lean scripts/CheckAbstractEncoding.lean
+```
+
+The axiom checks allow only Lean's standard `propext`, `Classical.choice`, and
+`Quot.sound` axioms. The abstract audit also checks that public definitions and
+statements do not depend on implementation declarations.
+
+Run [the verification script](scripts/verify.sh) with Bash:
+
+```sh
+bash scripts/verify.sh
+```
+
+It builds all five library targets, then runs every `scripts/Check*.lean` audit
+with warnings treated as errors, stopping on the first failure. New audit files
+are included automatically.
+
+<details>
+<summary>Optional build targets and audit details</summary>
+
+The optional `LeanCannyAlternatives` target builds the retained alternative
+constructions (`import LeanCanny.Alternatives`). The connectivity and CH
+implementations can also be built separately with `LeanCannyConnectivity` and
+`LeanCannyCountingHierarchy`, respectively.
+
+The core import check keeps the ETR endpoint independent of the optional tube
+route. The formal abstract also imports connectivity and its shared algebra.
+The axiom audit includes all five library targets; the space audit covers the
+three PSPACE targets. The axiom audit checks
+declarations in the `LeanCanny` namespace, local Nat
+codec extensions, and their transitive dependencies, allowing only Lean's
+standard `propext`, `Classical.choice`, and `Quot.sound` axioms. The foundation
+checks enforce the native CSLib Frontier time and space interfaces and reject
+legacy machine dependencies. `CheckAbstract` also follows public definitions
+and statement dependencies to reject hidden implementation references.
+
+</details>
+
+## PSPACE upper bounds [[Canny 1988](#ref-canny-1988)]
 
 The PSPACE endpoints in
 [`ETR/CoercivePSPACE.lean`](LeanCanny/ETR/CoercivePSPACE.lean) are:
@@ -25,39 +130,12 @@ LeanCanny.ETR.etr_mem_PSPACE : LeanCanny.ETR.language ∈ LeanCanny.PSPACE
 LeanCanny.ETR.existsReal_subset_PSPACE : LeanCanny.ExistsReal ⊆ LeanCanny.PSPACE
 ```
 
-These are unconditional theorems for the project's encoded ETR language and
-[CSLib Frontier](https://github.com/cslib-community/cslib-frontier)'s
-machine-based PSPACE class. The coefficient algorithms,
-metadata preparation, recursive evaluation, and final sign decisions are
-constructed internally. The development uses Lean 4.36.0-rc2 with pinned
-Mathlib, CSLib, and CSLib Frontier dependencies.
+These theorems concern the project's encoded ETR language and CSLib Frontier's
+machine-based PSPACE class. The proof uses a coercive one-parameter sampling
+construction rather than following every intermediate construction in Canny's
+report verbatim.
 
-This establishes the report's ETR and connectivity PSPACE upper bounds for the
-encoded problems below. Explicit roadmap output and motion-planning interfaces
-are separate from these language-membership results.
-The proof uses a coercive one-parameter sampling construction; it does not
-formalize every intermediate construction in the report verbatim.
-
-The formalization also identifies a [gap in Canny's coordinate-recovery
-argument](RESEARCH.md#gap-in-cannys-symmetric-coordinate-recovery): three
-collinear solutions can produce a cubic GCD where the construction requires a
-linear one, regardless of the projection coefficients. The completed PSPACE
-proof avoids this failed step.
-
-For independently readable, checked statements of the PSPACE and CH bounds, see
-[`Abstract.lean`](LeanCanny/Abstract.lean). A reader can inspect its definitions
-and theorem statements to assess the claimed result; Lean verifies the proofs
-through the [PSPACE bridge](LeanCanny/AbstractBridge.lean),
-[CH bridge](LeanCanny/CountingHierarchy/AbstractBridge.lean), and the development.
-All public definitions are local to the abstract or use background libraries.
-Two CSLib Frontier `derive_encoding` declarations generate the syntax encodings
-under an explicit binary-integer/unary-index policy. Uniform polynomial-time
-conversions and strict malformed-input checks are proved in
-[`DerivedSyntax.lean`](LeanCanny/Encoding/DerivedSyntax.lean);
-[`DerivedEncodingBridge.lean`](LeanCanny/DerivedEncodingBridge.lean) transfers
-the PSPACE bounds.
-
-## ETR proof outline
+### ETR proof outline
 
 1. **Compile ETR to one integer equation.** The binary grammar, normalization,
    and equation compiler have native polynomial-time certificates. Correctness
@@ -93,174 +171,57 @@ Selected entry points:
 | Coordinates and cleared queries | [`CoerciveCoordinatePairReaders`](LeanCanny/ETR/CoerciveCoordinatePairReaders.lean), [`CoerciveClearedQueryCoefficient`](LeanCanny/ETR/CoerciveClearedQueryCoefficient.lean) |
 | Final decision | [`CoerciveInfinitesimalSemantics`](LeanCanny/ETR/CoerciveInfinitesimalSemantics.lean), [`CoercivePSPACE`](LeanCanny/ETR/CoercivePSPACE.lean) |
 
-[`SpaceFunction`](LeanCanny/Computation/SpaceFunction.lean) wraps
-CSLib Frontier's `ComputableInPolySpace`.
-[`SpaceDecider`](LeanCanny/Computation/SpaceDecider.lean) carries membership in
-its native PSPACE class. Polynomial-time reductions and all FP controls also
-use CSLib Frontier directly. Space composition charges the original readers;
-no free coefficient oracle or execution-time bound on a space-bounded child
-is assumed.
+## Counting-hierarchy upper bounds [[OpenAI 2026](#ref-openai-2026)]
 
-## Alternative constructions
+The encoded-language bounds are proved in
+[`ExistentialUpperBound.lean`](LeanCanny/CountingHierarchy/ExistentialUpperBound.lean)
+and [`ExistsForallUpperBound.lean`](LeanCanny/CountingHierarchy/ExistsForallUpperBound.lean).
+The proof replaces real quantification with determinant-sign tests and bounded
+searches whose counting-hierarchy levels can be tracked explicitly.
 
-The default `LeanCanny` library and `import LeanCanny` contain the unified
-formal abstract and its PSPACE and CH proofs. The optional
-`LeanCannyAlternatives` library is available through
-`import LeanCanny.Alternatives`; it also imports
-the completed result. All source modules retain their existing paths.
+### Counting-hierarchy proof outline
 
-The repository also develops Canny's compact tube and generic projection
-constructions, projective elimination, finite-root sign feasibility, and
-nonsingular tube sampling. These are independently proved ingredients and
-alternative samplers. The tube route's effective epsilon/delta/direction and
-retained-level choices are unresolved; the completed ETR theorem uses the
-coercive route and does not depend on those choices.
+1. **Compile the real formulas.** For ETR, Boolean combinations of polynomial
+   comparisons become one polynomial equation. For an existential–universal
+   sentence, compile a counterexample to its matrix: truth means that some
+   existential assignment admits no universal counterexample.
+2. **Compute critical-value information without expanding polynomials.**
+   Modular polynomial evaluations supply coefficient access. A finite quotient
+   algebra and a trace–residue identity give power traces; Newton's identities
+   recover characteristic coefficients. These computations stay within fixed
+   counting levels even when the expanded polynomials are large.
+3. **Reduce real feasibility to determinant signs.** Coercive perturbations
+   yield critical samples. Short algebraic root labels and quantitative separation
+   bounds turn feasibility into a determinant-sign test with a bounded witness.
+   Tracking the evaluation and sign costs gives ETR ∈ C₂₆P; closure under
+   polynomial-time reductions gives ∃ℝ ⊆ C₂₆P.
+4. **Handle the universal block with two feasibility tests.** A finite candidate
+   grid and root-selection labels identify existential assignments. For each
+   selected candidate, one test establishes that it exists and a second checks
+   for a universal counterexample. Continuity and algebraic growth bounds prove
+   that the candidate search is complete. The resulting decision procedure and
+   reduction closure give ∃∀ℝ ⊆ C₆₀P.
+5. **Preserve the bounds for encoded formulas and circuits.** Polynomial-time
+   translations connect the mathematical tests to the input languages and reject
+   malformed strings. Circuits introduce equations for shared intermediate values,
+   preserving the quantifier blocks without expanding the circuit into a tree.
 
-Further work includes relating this encoding to other ETR presentations,
-proving the NP lower inclusion, and constructing explicit roadmaps and
-motion-planning interfaces. The alternative library remains checked by the full
-verification commands below.
-See [`RESEARCH.md`](RESEARCH.md) for prior work,
-proof details, and the unused tube route's precise gaps.
-
-## Counting-hierarchy upper bounds (OpenAI, 2026)
-
-The unified abstract (`import LeanCanny.Abstract` or `import RealCountingHierarchy`)
-formalizes the fixed counting-level upper bounds of **OpenAI**,
-[*Existential–universal real sentences in the counting hierarchy*](https://github.com/openai/math/blob/main/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf).
-The source's [supplied citation](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/README.md)
-identifies OpenAI as the author and October 4, 2026 as the date. These CH results
-are distinct from Canny's PSPACE results. The formalization gives the explicit
-two-block level 60 where the manuscript states membership in some fixed level.
-It uses CSLib Frontier's fixed-oracle, majority-verifier counting levels.
-
-The [formal abstract](LeanCanny/Abstract.lean) contains the mathematical definitions
-and checked theorem statements for both PSPACE and CH. A reader checks those
-statements and definitions; Lean checks their proofs through the separate
-[PSPACE](LeanCanny/AbstractBridge.lean) and
-[CH](LeanCanny/CountingHierarchy/AbstractBridge.lean) bridges.
-The [native inverse compiler](LeanCanny/Encoding/FlatSyntaxInverse.lean) translates
-the shared flat encoding in polynomial time, preserving the fixed CH bounds
-and rejecting malformed inputs. The public definitions and statements depend
-only on the abstract and background libraries.
-
-`lake build` builds the unified abstract. The `RealCountingHierarchy` target is a
-neutral alternative import of that same abstract; it defines no second syntax
-or language. The CH implementation retains its historical
-`LeanCanny.CountingHierarchy` namespace and `LeanCannyCountingHierarchy` target;
-this prefix does not attribute its results to Canny.
-
-`Controlled` supplies binary degree, coefficient-mass exponent and prime-cutoff
-bounds, unary arity, and one uniform modular evaluator. Constants, variables,
-addition, multiplication and binary-indexed powers have constructed evaluators
-at the same function level. Controlled zero-variable families inherit Frontier's
-`F_(max(a,5)+3)` sign bound.
-
-Finite-field orthogonality gives simultaneous multivariate coefficient extraction
-as one grid sum, including zero variables. A base-`p` address decodes the entire
-point in polynomial time, so the uniform multivariate evaluator has a checked
-`F_a → F_(a+1)` certificate with variable unary arity. It returns the canonical
-coefficient residue when the total degree and coordinate indices are below `p-1`.
-Addressed coefficients of controlled integer families inherit the original mass
-bound and have signs in `F_(max(a+1,5)+3)`.
-
-Binary-indexed factorial residues are available in `F_3`. The truncated-exponential
-module constructs the polynomial expression used in characteristic reconstruction,
-its modular evaluation and its indexed coefficient evaluator, with fixed CH bounds.
-Divided negative trace slots are constructed by modular powering. Supplied
-`F_(a+2)` trace residues yield an `F_(a+8)` indexed exponential coefficient evaluator,
-including reversal of the coefficient index and zero above the dimension.
-Jacobi's polynomial determinant identity gives Newton's recurrence over arbitrary
-commutative rings. Over fields with nonzero denominators through the truncation
-degree, the finite exponential satisfies that recurrence and has the same
-coefficients as the reversed characteristic polynomial. The modular evaluator
-therefore returns actual characteristic coefficients from modular power traces,
-including zero above the dimension.
-
-For pure-power systems, a finite residue functional descends to the actual relation
-ideal. Degree induction and the residue pairing prove that the normal monomials
-form a basis over any commutative coefficient ring. A normalized Bezout kernel
-then proves the multiplication trace–residue identity, including multiple roots
-and specialization to arbitrary characteristic.
-
-Uniform `F_a` evaluators for the objective, lower relations and Jacobian now
-construct power traces in `F_(a+5)` and indexed characteristic coefficients in
-`F_(a+8)`. The proof uses the actual normal-basis multiplication matrix and
-commutes with arbitrary coefficient-ring specialization. No trace or
-characteristic-coefficient oracle is assumed.
-
-The complete finite determinant criterion is proved for nonnegative integer
-polynomials. Coercive minima and the explicit separated centers give a monic,
-separable critical-value specialization with source-derived degree and log-mass
-bounds. Integer value resultants bound nonzero algebraic test values, including
-nonmonic and repeated-root source polynomials. Rational sign products and positive
-denominator clearing turn short derivative-test lists into integer root labels
-with uniform margins. Conjugate-pair products then identify feasibility with a
-negative actual quotient multiplication determinant for one short label and shift.
-
-Native evaluators construct the objective, relations and small Jacobian from
-source evaluations, using one additional level for simultaneous first and mixed
-second derivatives. The critical coefficients cost nine levels, the sparse label
-thirteen, the final integer norm twenty-one and its sign twenty-four. Polynomial-width
-coded witnesses and one bounded existential step prove `Controlled.feasibility_mem`:
-real feasibility of any controlled `F_a` family lies in `C_(a+26) P`.
-
-The native modular expression-tree evaluator connects this result to the existing
-equation compiler: `etr_mem_CountingLevel` proves the repository's total encoded ETR
-language belongs to `C_26 P`, and `existsReal_subset_CountingLevel` transfers the bound
-to all of ∃ℝ. The controlled-family theorem supports general degrees.
-
-For the two-block construction, finite-field fingerprints now select any prescribed
-real root. Their integer positivity labels have uniform margins and explicit degree
-and log-mass bounds; addressed coefficients give a native label evaluator in
-`F_(max(a,3)+8)`. Joint continuity of coercive fiber minima and their divergence on
-empty fibers are proved. Coordinate characteristic polynomials supply one integer
-candidate grid meeting every nonempty relatively clopen part of a zero set, using
-the existing constrained compactness argument. The fixed-power algebraic growth test,
-local constancy of empty fibers on degree pieces, and the inverse-variable closed
-lift are proved. Native controlled families instantiate the full construction:
-`Controlled.twoBlock_mem` places existential-universal zero avoidance for any
-controlled `F_a` polynomial family in `C_(a+60) P`, including empty blocks.
-
-`ExistsForall.mem_CountingLevel` places the total encoded language ∃∀ℝ
-(true existential-universal real sentences) in `C_60 P`. Its encoding pairs a unary
-existential block length with an arbitrary Boolean formula over integer polynomial
-expression trees;
-all remaining variables are universal. The equation compiler preserves the
-existential prefix while introducing counterexample variables. Noncanonical
-frames and malformed formulas are rejected. `ExistsForall.RealClass` is the
-polynomial-time many-one downward closure, with the same `C_60 P` bound.
-
-Shared arithmetic circuits use shallow equations for their intermediate wires.
-`RealCircuit.sentence_iff` proves that universally quantified wire values under
-these equations agree with the actual acyclic circuit run; the original two
-blocks are preserved. `RealCircuit.guardedBits_mem_FP` supplies the native matrix
-writer, and `RealCircuit.generated_mem_CountingLevel` transfers the `C_60 P`
-bound to native circuit families. The existential circuit bridge similarly
-retains the sharper `C_26 P` bound. Gate equations retain sharing, so the bridge
-does not expand a circuit into its computed polynomial.
+Selected entry points:
 
 | Result | Entry point |
 | --- | --- |
 | Controlled feasibility in `C_(a+26) P` | [ControlledFeasibility.lean](LeanCanny/CountingHierarchy/ControlledFeasibility.lean) |
 | Encoded ETR and ∃ℝ in `C_26 P` | [ExistentialUpperBound.lean](LeanCanny/CountingHierarchy/ExistentialUpperBound.lean) |
 | Controlled two-block zero avoidance in `C_(a+60) P` | [ControlledTwoBlockDecision.lean](LeanCanny/CountingHierarchy/ControlledTwoBlockDecision.lean) |
-| Encoded ∃∀ℝ in `C_60 P` | [ExistsForallUpperBound.lean](LeanCanny/CountingHierarchy/ExistsForallUpperBound.lean) |
+| Existential–universal truth and ∃∀ℝ in `C_60 P` | [ExistsForallUpperBound.lean](LeanCanny/CountingHierarchy/ExistsForallUpperBound.lean) |
 | Shared-circuit semantics and native writers | [RealCircuit.lean](LeanCanny/CountingHierarchy/RealCircuit.lean) |
 
-```sh
-lake build RealCountingHierarchy --wfail --iofail
-lake env lean scripts/CheckAbstract.lean
-lake env lean scripts/CheckCountingHierarchy.lean
-```
-
-The standalone check also audits the CH declarations and their transitive
-dependencies for standard Lean axioms.
+See the [CH construction details](RESEARCH.md#counting-hierarchy-construction-details)
+for the polynomial-family interfaces, coefficient algorithms, and level accounting.
 
 ## Connectivity
 
-The separate `LeanCannyConnectivity` target (`import LeanCanny.Connectivity`)
-proves both original connectivity languages are in native PSPACE:
+The connectivity implementation (`import LeanCanny.Connectivity`) proves:
 
 ```lean
 LeanCanny.Connectivity.pointLanguage_mem_PSPACE :
@@ -278,6 +239,8 @@ allowing irrational algebraic points. Whole-space connectivity means
 and nonunique endpoint inputs are rejected. Neither theorem takes a geometric
 model, component oracle, edge evaluator or radius bound as a premise.
 
+### Connectivity proof outline
+
 The construction checks both original component labels, the actual radial grid
 and every interval cut on one complete sampler tuple. The original frontier
 edge is exactly projected-sample equality or oriented guarded joint feasibility.
@@ -289,93 +252,39 @@ for the construction and the failed shortcuts it must avoid. Detailed
 [construction notes](CONNECTIVITY-PROTOTYPE.txt) and the
 [historical checkpoint ledger](CONNECTIVITY-HISTORY.md) are separate.
 
-## Attribution and report integrity
+## Alternatives and future work
+
+The repository also develops Canny's compact tube and generic projection
+constructions, projective elimination, finite-root sign feasibility, and
+nonsingular tube sampling. These are independently proved ingredients and
+alternative samplers. The tube route's effective epsilon/delta/direction and
+retained-level choices are unresolved; the completed ETR theorem uses the
+coercive route and does not depend on those choices.
+
+Further work includes relating this encoding to other ETR presentations,
+proving the NP lower inclusion, and constructing explicit roadmaps and
+motion-planning interfaces. The alternative library is included in the full
+verification commands above.
+See [`RESEARCH.md`](RESEARCH.md) for prior work,
+proof details, and the unused tube route's precise gaps.
+
+## References
+
+- <a id="ref-canny-1988"></a>John F. Canny. [*Some Algebraic and Geometric Computations in PSPACE*](https://www2.eecs.berkeley.edu/Pubs/TechRpts/1988/6041.html).
+  Technical Report UCB/CSD-88-439, University of California, Berkeley, August 1988.
+  [PDF in this repository](canny-tr.pdf).
+- John F. Canny. [*Some Algebraic and Geometric Computations in PSPACE*](https://doi.org/10.1145/62212.62257).
+  Proceedings of the 20th Annual ACM Symposium on Theory of Computing (STOC ’88),
+  ACM, 1988, pp. 460–467.
+- <a id="ref-openai-2026"></a>OpenAI. [*Existential–universal real sentences in the counting hierarchy*](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf).
+  OpenAI Math Release preprint, October 4, 2026.
+
+## Attribution
 
 The Sturm–Tarski proof adaptation and its changes are documented in
 [`STURM_SOURCES.md`](STURM_SOURCES.md).
 
 The report PDF [`canny-tr.pdf`](canny-tr.pdf) is from the
 [Berkeley Technical Reports archive](https://www2.eecs.berkeley.edu/Pubs/TechRpts/1988/Archive/CSD-88-439.pdf).
-The downloaded file has 936,246 bytes and SHA-256
-`7606d41dea23ac1160562a759c196267906d8aec0f754cd4998fdd14fcd185f8`.
 The report retains its original rights; the source-code license does not apply
 to it.
-
-## Build and verification
-
-Install [elan](https://github.com/leanprover/elan), then run:
-
-```sh
-lake update
-lake exe cache get
-lake build
-```
-
-[`lean-toolchain`](lean-toolchain) and [`lake-manifest.json`](lake-manifest.json)
-record the versions used. The default entry point is [`LeanCanny.lean`](LeanCanny.lean);
-[`RealCountingHierarchy.lean`](RealCountingHierarchy.lean) imports the same abstract.
-`lake build` checks the unified abstract and its completed proofs. To build the
-retained alternative constructions, run `lake build LeanCannyAlternatives`;
-their entry point is [`Alternatives.lean`](LeanCanny/Alternatives.lean).
-Build the connectivity extension with `lake build LeanCannyConnectivity`.
-
-Import the unified abstract with `import LeanCanny.Abstract` or the neutral
-`import RealCountingHierarchy`. Build with `lake build LeanCanny` or
-`lake build RealCountingHierarchy`; the default build includes the same proof closure.
-
-Dependencies are pinned to CSLib Frontier revision `1a0acf76` and Lean
-`v4.36.0-rc2`, with matching CSLib and Mathlib revisions. The Lake package is
-`cslib-frontier`, from its canonical `cslib-community/cslib-frontier` repository.
-The build targets above require only their transitive dependency imports;
-they do not build CSLib Frontier's full library or result collection.
-
-For stricter verification:
-
-```sh
-lake build LeanCanny LeanCannyAlternatives LeanCannyConnectivity LeanCannyCountingHierarchy RealCountingHierarchy --wfail --iofail
-lake env lean scripts/CheckCoreImports.lean
-lake env lean scripts/CheckAxioms.lean
-lake env lean scripts/CheckAbstract.lean
-lake env lean scripts/CheckAbstractEncoding.lean
-lake env lean scripts/CheckGrammar.lean
-lake env lean scripts/CheckSpaceFoundation.lean
-lake env lean scripts/CheckPolyTimeFoundation.lean
-lake env lean scripts/CheckCountingHierarchy.lean
-lake env lean scripts/CheckConnectivity.lean
-lake env lean scripts/CheckJointFrontier.lean
-lake env lean scripts/CheckConnectivityPSPACE.lean
-lake env lean scripts/CheckImplicitStratumSampler.lean
-lake env lean scripts/CheckEffectiveBallConnections.lean
-lake env lean scripts/CheckProviderAtomic.lean
-lake env lean scripts/CheckProviderSemantics.lean
-lake env lean scripts/CheckProviderRecursive.lean
-lake env lean scripts/CheckAlgebraicArcs.lean
-lake env lean scripts/CheckAffineShiftArcs.lean
-lake env lean scripts/CheckIntegerGridValues.lean
-lake env lean scripts/CheckIntegerGridArcs.lean
-lake env lean scripts/CheckFiniteFiberSlabs.lean
-lake env lean scripts/CheckBinaryValueReaders.lean
-lake env lean scripts/CheckGridValueReaders.lean
-lake env lean scripts/CheckEndpointMidpoints.lean
-lake env lean scripts/CheckAffineShiftReaders.lean
-lake env lean scripts/CheckActualHeightReaders.lean
-lake env lean scripts/CheckRoadmapBridges.lean
-lake env lean scripts/CheckRoadmapChains.lean
-lake env lean scripts/CheckRoadmapEncoding.lean
-lake env lean scripts/CheckRoadmapInternal.lean
-lake env lean scripts/CheckRoadmapLevels.lean
-lake env lean scripts/CheckRoadmapNativeGraph.lean
-lake env lean scripts/CheckRoadmapOccurrences.lean
-lake env lean scripts/CheckRoadmapOrigins.lean
-```
-
-The core import check keeps the ETR endpoint independent of the optional tube
-route. The formal abstract also imports connectivity and its shared algebra.
-The axiom audit includes all five library targets; the space audit covers the
-three PSPACE targets. The axiom audit checks
-declarations in the `LeanCanny` namespace, local Nat
-codec extensions, and their transitive dependencies, allowing only Lean's
-standard `propext`, `Classical.choice`, and `Quot.sound` axioms. The foundation
-checks enforce the native CSLib Frontier time and space interfaces and reject
-legacy machine dependencies. `CheckAbstract` also follows public definitions
-and statement dependencies to reject hidden implementation references.

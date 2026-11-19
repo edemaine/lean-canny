@@ -338,8 +338,116 @@ correctness from the coercive algebraic specialization.
 
 CSLib Frontier's canonical repository is now
 [`cslib-community/cslib-frontier`](https://github.com/cslib-community/cslib-frontier).
-The project uses the renamed Lake package `cslib-frontier`, pinned to revision
-`834a718b` with Lean `v4.36.0-rc2` and the matching CSLib/Mathlib dependency pins.
+The project uses the renamed Lake package `cslib-frontier`.
+[`lakefile.lean`](lakefile.lean), [`lake-manifest.json`](lake-manifest.json), and
+[`lean-toolchain`](lean-toolchain) record the current dependency and Lean pins.
+
+## Counting-hierarchy construction details
+
+The following construction proves the counting-hierarchy bounds summarized in
+[the README](README.md#counting-hierarchy-upper-bounds-openai-2026), following
+OpenAI's [*Existential–universal real sentences in the counting hierarchy*](https://github.com/openai/math/blob/adc7f1241b42e322a6451854ab7e4b4c146bf78a/preprints/Existential-universal-real-sentences-in-the-counting-hierarchy-October-4-2026/etr-counting-hierarchy.pdf).
+Here `F_a` denotes CSLib Frontier's function class at counting level `a`.
+
+### Controlled polynomial families and coefficient access
+
+`Controlled` supplies binary degree, coefficient-mass exponent and prime-cutoff
+bounds, unary arity, and one uniform modular evaluator. Constants, variables,
+addition, multiplication and binary-indexed powers have constructed evaluators
+at the same function level. Controlled zero-variable families inherit Frontier's
+`F_(max(a,5)+3)` sign bound.
+
+Finite-field orthogonality gives simultaneous multivariate coefficient extraction
+as one grid sum, including zero variables. A base-`p` address decodes the entire
+point in polynomial time, so the uniform multivariate evaluator has a checked
+`F_a → F_(a+1)` certificate with variable unary arity. It returns the canonical
+coefficient residue when the total degree and coordinate indices are below `p-1`.
+Addressed coefficients of controlled integer families inherit the original mass
+bound and have signs in `F_(max(a+1,5)+3)`.
+
+### Traces and characteristic coefficients
+
+Binary-indexed factorial residues are available in `F_3`. The truncated-exponential
+module constructs the polynomial expression used in characteristic reconstruction,
+its modular evaluation and its indexed coefficient evaluator, with fixed CH bounds.
+Divided negative trace slots are constructed by modular powering. Supplied
+`F_(a+2)` trace residues yield an `F_(a+8)` indexed exponential coefficient evaluator,
+including reversal of the coefficient index and zero above the dimension.
+Jacobi's polynomial determinant identity gives Newton's recurrence over arbitrary
+commutative rings. Over fields with nonzero denominators through the truncation
+degree, the finite exponential satisfies that recurrence and has the same
+coefficients as the reversed characteristic polynomial. The modular evaluator
+therefore returns actual characteristic coefficients from modular power traces,
+including zero above the dimension.
+
+For pure-power systems, a finite residue functional descends to the actual relation
+ideal. Degree induction and the residue pairing prove that the normal monomials
+form a basis over any commutative coefficient ring. A normalized Bezout kernel
+then proves the multiplication trace–residue identity, including multiple roots
+and specialization to arbitrary characteristic.
+
+Uniform `F_a` evaluators for the objective, lower relations and Jacobian
+construct power traces in `F_(a+5)` and indexed characteristic coefficients in
+`F_(a+8)`. The proof uses the actual normal-basis multiplication matrix and
+commutes with arbitrary coefficient-ring specialization. No trace or
+characteristic-coefficient oracle is assumed.
+
+### Feasibility and its level accounting
+
+The complete finite determinant criterion is proved for nonnegative integer
+polynomials. Coercive minima and the explicit separated centers give a monic,
+separable critical-value specialization with source-derived degree and log-mass
+bounds. Integer value resultants bound nonzero algebraic test values, including
+nonmonic and repeated-root source polynomials. Rational sign products and positive
+denominator clearing turn short derivative-test lists into integer root labels
+with uniform margins. Conjugate-pair products then identify feasibility with a
+negative actual quotient multiplication determinant for one short label and shift.
+
+Native evaluators construct the objective, relations and small Jacobian from
+source evaluations, using one additional level for simultaneous first and mixed
+second derivatives. The critical coefficients cost nine levels, the sparse label
+thirteen, the final integer norm twenty-one and its sign twenty-four. Polynomial-width
+coded witnesses and one bounded existential step prove `Controlled.feasibility_mem`:
+real feasibility of any controlled `F_a` family lies in `C_(a+26) P`.
+
+The native modular expression-tree evaluator connects this result to the existing
+equation compiler: `etr_mem_CountingLevel` proves the repository's total encoded ETR
+language belongs to `C_26 P`, and `existsReal_subset_CountingLevel` transfers the bound
+to all of ∃ℝ. The controlled-family theorem supports general degrees.
+
+### Two quantifier blocks
+
+For the two-block construction, finite-field fingerprints select any prescribed
+real root. Their integer positivity labels have uniform margins and explicit degree
+and log-mass bounds; addressed coefficients give a native label evaluator in
+`F_(max(a,3)+8)`. Joint continuity of coercive fiber minima and their divergence on
+empty fibers are proved. Coordinate characteristic polynomials supply one integer
+candidate grid meeting every nonempty relatively clopen part of a zero set, using
+the existing constrained compactness argument. The fixed-power algebraic growth test,
+local constancy of empty fibers on degree pieces, and the inverse-variable closed
+lift are proved. Native controlled families instantiate the full construction:
+`Controlled.twoBlock_mem` places existential-universal zero avoidance for any
+controlled `F_a` polynomial family in `C_(a+60) P`, including empty blocks.
+
+### Encoded sentences and shared circuits
+
+`ExistsForall.mem_CountingLevel` places the total encoded existential–universal
+truth language in `C_60 P`. Its encoding pairs a unary
+existential block length with an arbitrary Boolean formula over integer polynomial
+expression trees;
+all remaining variables are universal. The equation compiler preserves the
+existential prefix while introducing counterexample variables. Noncanonical
+frames and malformed formulas are rejected. `ExistsForall.RealClass` is the
+class ∃∀ℝ, its polynomial-time many-one downward closure, with the same `C_60 P` bound.
+
+Shared arithmetic circuits use shallow equations for their intermediate wires.
+`RealCircuit.sentence_iff` proves that universally quantified wire values under
+these equations agree with the actual acyclic circuit run; the original two
+blocks are preserved. `RealCircuit.guardedBits_mem_FP` supplies the native matrix
+writer, and `RealCircuit.generated_mem_CountingLevel` transfers the `C_60 P`
+bound to native circuit families. The existential circuit bridge similarly
+retains the sharper `C_26 P` bound. Gate equations retain sharing, so the bridge
+does not expand a circuit into its computed polynomial.
 
 ## Unused tube route: remaining quantitative choices
 
