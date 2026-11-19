@@ -143,14 +143,29 @@ theorem twoBlock_upper_bound
   rw [twoBlock_language_eq termInduction formulaInduction laws]
   exact DerivedSentenceEncoding.twoBlock_mem
 
+/-- Fixed counting levels are closed under polynomial-time many-one reductions. -/
+theorem reduction_closure {k : ℕ} {L : Set (List Bool)}
+    (hL : L ∈ Cslib.Complexity.CountingLevel k encBits) :
+    {K | Cslib.Complexity.PolyTimeReducible encBits encBits K L} ⊆
+      Cslib.Complexity.CountingLevel k encBits := by
+  intro K hK
+  exact hK.mem_CountingLevel hL
+
 /-- Polynomial-time reductions transfer the existential bound to all of ∃ℝ. -/
 theorem existsReal_upper_bound {L : Set (List Bool)}
     (hL : L ∈ Cslib.Complexity.CountingLevel 26 encBits := by
       bridge_existing_bound etr_in_CountingLevel) :
     {K | Cslib.Complexity.PolyTimeReducible encBits encBits K L} ⊆
-      Cslib.Complexity.CountingLevel 26 encBits := by
-  intro K hK
-  exact hK.mem_CountingLevel hL
+      Cslib.Complexity.CountingLevel 26 encBits :=
+  reduction_closure hL
+
+/-- Polynomial-time reductions transfer the two-block bound to all of ∃∀ℝ. -/
+theorem existsForallReal_upper_bound {L : Set (List Bool)}
+    (hL : L ∈ Cslib.Complexity.CountingLevel 60 encBits := by
+      bridge_existing_bound existsForallTheory_in_CountingLevel) :
+    {K | Cslib.Complexity.PolyTimeReducible encBits encBits K L} ⊆
+      Cslib.Complexity.CountingLevel 60 encBits :=
+  reduction_closure hL
 
 /-- Argument-free proof term for the abstract's existential counting bound. -/
 macro "AbstractBridge.etr_in_CountingLevel" : term =>
@@ -161,7 +176,11 @@ macro "AbstractBridge.existsReal_subset_CountingLevel" : term =>
   `(LeanCanny.CountingHierarchy.AbstractBridge.existsReal_upper_bound)
 
 /-- Argument-free proof term for the abstract's two-block counting bound. -/
-macro "AbstractBridge.existsForallReal_in_CountingLevel" : term =>
+macro "AbstractBridge.existsForallTheory_in_CountingLevel" : term =>
   `(by bridge_bound LeanCanny.CountingHierarchy.AbstractBridge.twoBlock_upper_bound)
+
+/-- Argument-free proof term for reduction closure of the two-block bound. -/
+macro "AbstractBridge.existsForallReal_subset_CountingLevel" : term =>
+  `(LeanCanny.CountingHierarchy.AbstractBridge.existsForallReal_upper_bound)
 
 end LeanCanny.CountingHierarchy.AbstractBridge

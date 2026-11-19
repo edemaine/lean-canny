@@ -48,7 +48,7 @@ elab "bridge_bound " endpoint:ident : tactic => withMainContext do
   let mut scope : Option Name := none
   for name in target.getUsedConstants do
     if let .str ns leaf := name then
-      if ["ETR", "ExistsForallReal", "ConnectedLanguage", "ReachableLanguage"].contains leaf then
+      if ["ETR", "ExistsForallTheory", "ConnectedLanguage", "ReachableLanguage"].contains leaf then
         scope := some ns
   let some ns := scope | throwError "Expected a named abstract language in {target}"
   evalTactic (← `(tactic| exact $endpoint:ident
@@ -57,13 +57,14 @@ elab "bridge_bound " endpoint:ident : tactic => withMainContext do
     (solutions := @$(mkCIdent (ns ++ `Formula.solutionSet)))))
 
 open Lean Lean.Meta Lean.Elab Lean.Elab.Tactic in
-/-- Reuse the abstract's established ETR bound when applying reduction closure. -/
+/-- Reuse an established abstract language bound when applying reduction closure. -/
 elab "bridge_existing_bound " result:ident : tactic => withMainContext do
   let target ← instantiateMVars (← getMainTarget)
   let mut scope : Option Name := none
   for name in target.getUsedConstants do
-    if let .str ns "ETR" := name then scope := some ns
-  let some ns := scope | throwError "Expected the abstract ETR language in {target}"
+    if let .str ns leaf := name then
+      if ["ETR", "ExistsForallTheory"].contains leaf then scope := some ns
+  let some ns := scope | throwError "Expected an abstract truth language in {target}"
   evalTactic (← `(tactic| exact $(mkCIdent (ns ++ result.getId))))
 
 /-! ## Dimension-indexed abstract syntax

@@ -22,11 +22,11 @@ public import LeanCanny.CountingHierarchy.AbstractBridge
 This file introduces integer polynomial expressions, their real solution sets,
 and a shared binary encoding. It proves ETR ∈ PSPACE, ∃ℝ ⊆ PSPACE, and PSPACE
 bounds for semialgebraic connectivity following Canny (1988). It also proves
-ETR ∈ C₂₆P, ∃ℝ ⊆ C₂₆P, and ∃∀ℝ ∈ C₆₀P following OpenAI (2026).
+ETR ∈ C₂₆P, ∃ℝ ⊆ C₂₆P, and ∃∀ℝ ⊆ C₆₀P following OpenAI (2026).
 
 To assess these claims, the reader need only inspect the definitions and theorem
-statements here. Lean verifies the proofs through the PSPACE and CH bridges and
-the development. Both parts use exactly the same syntax, solution sets, and input
+statements here. Lean verifies the proofs through the PSPACE and CH bridges.
+Both parts use exactly the same syntax, solution sets, and input
 convention. The displayed grammar uses expression trees; the implementation also
 supplies shared-circuit bridges through shallow gate equations.
 
@@ -150,28 +150,40 @@ theorem existsReal_subset_CountingLevel :
 
 /-! ## ∃∀ℝ -/
 
-/-- The ∃∀ℝ solution set contains the existential assignments `x` of length `r`
+/-- The existential–universal solution set contains the assignments `x` of length `r`
 for which every universal assignment `y` of length `s` satisfies `p`.
 `Fin.addCases` concatenates the tuples, with the existential coordinates first.
-Either block may be empty; nonemptiness of this set expresses ∃∀ℝ truth. -/
+Either block may be empty; nonemptiness of this set expresses truth of the sentence. -/
 def Formula.existsForallSolutionSet {r s : ℕ} (p : Formula (r + s)) : Set (Fin r → ℝ) :=
   {x | ∀ y : Fin s → ℝ, Fin.addCases x y ∈ p.solutionSet}
 
-/-- The language ∃∀ℝ consists of true existential-universal real sentences.
+/-- The existential–universal theory consists of true existential-universal real sentences.
 It uses the same formula encoding as ETR and records the unary existential block
 length. The union allows all finite block sizes; unused coordinates do not affect
 truth. Every other word is rejected. -/
-def ExistsForallReal : Set (List Bool) :=
+def ExistsForallTheory : Set (List Bool) :=
   ⋃ r, ⋃ s, {p : Formula (r + s) | p.existsForallSolutionSet.Nonempty}.image (fun p =>
     Turing.MultiTapeTM.encPair Turing.MultiTapeTM.encUnary Turing.MultiTapeTM.encBits
       (r, encFormula (r + s) p))
 
-/-- Theorem (OpenAI, 2026): ∃∀ℝ belongs to CH.
+/-- Theorem (OpenAI, 2026): existential–universal real truth belongs to CH.
 This formalization supplies the fixed level C₆₀P, independent of variable counts,
 polynomial degrees, and coefficient magnitudes. -/
-theorem existsForallReal_in_CountingLevel :
-    ExistsForallReal ∈ Cslib.Complexity.CountingLevel 60 Turing.MultiTapeTM.encBits :=
-  AbstractBridge.existsForallReal_in_CountingLevel
+theorem existsForallTheory_in_CountingLevel :
+    ExistsForallTheory ∈ Cslib.Complexity.CountingLevel 60 Turing.MultiTapeTM.encBits :=
+  AbstractBridge.existsForallTheory_in_CountingLevel
+
+/-- The class ∃∀ℝ consists of binary languages reducible to the
+existential–universal truth problem in polynomial time. -/
+def ExistsForallReal : Set (Set (List Bool)) :=
+  {L | Cslib.Complexity.PolyTimeReducible Turing.MultiTapeTM.encBits
+    Turing.MultiTapeTM.encBits L ExistsForallTheory}
+
+/-- Corollary (OpenAI, 2026): every problem in ∃∀ℝ belongs to that same fixed
+counting level. -/
+theorem existsForallReal_subset_CountingLevel :
+    ExistsForallReal ⊆ Cslib.Complexity.CountingLevel 60 Turing.MultiTapeTM.encBits :=
+  AbstractBridge.existsForallReal_subset_CountingLevel
 
 /-! ## Whole-space connectivity -/
 

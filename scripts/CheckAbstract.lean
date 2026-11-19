@@ -48,4 +48,5 @@ run_cmd do
 
 #print axioms LeanCanny.Abstract.etr_in_CountingLevel
 #print axioms LeanCanny.Abstract.existsReal_subset_CountingLevel
-#print axioms LeanCanny.Abstract.existsForallReal_in_CountingLevel
+#print axioms LeanCanny.Abstract.existsForallTheory_in_CountingLevel
+#print axioms LeanCanny.Abstract.existsForallReal_subset_CountingLevel

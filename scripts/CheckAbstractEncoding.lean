@@ -55,8 +55,10 @@ example : LeanCanny.Abstract.ETR ∈ Cslib.Complexity.PSPACE encBits :=
   LeanCanny.Abstract.etr_in_PSPACE
 example : LeanCanny.Abstract.ETR ∈ Cslib.Complexity.CountingLevel 26 encBits :=
   LeanCanny.Abstract.etr_in_CountingLevel
-example : LeanCanny.Abstract.ExistsForallReal ∈ Cslib.Complexity.CountingLevel 60 encBits :=
-  LeanCanny.Abstract.existsForallReal_in_CountingLevel
+example : LeanCanny.Abstract.ExistsForallTheory ∈ Cslib.Complexity.CountingLevel 60 encBits :=
+  LeanCanny.Abstract.existsForallTheory_in_CountingLevel
+example : LeanCanny.Abstract.ExistsForallReal ⊆ Cslib.Complexity.CountingLevel 60 encBits :=
+  LeanCanny.Abstract.existsForallReal_subset_CountingLevel
 
 -- The public two-block semantics includes empty blocks and keeps the
 -- existential choice outside the universal block.
